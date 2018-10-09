@@ -45,11 +45,11 @@ export default {
       year: null,
       view: null,
     },
+    weekDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     months: [
       "January", "February", "March", "April", "May", "June",
       "July", "August", "September", "October", "November", "December"
     ],
-    weekDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
     monthDays: Array[31],
     view: {
       title: '',
@@ -81,8 +81,6 @@ export default {
           class: fromYear + i === this.current.year ? 'current' : ''
         }
       })
-
-      console.log(this.view)
     },
 
     loadMonthView () {
@@ -94,13 +92,16 @@ export default {
       this.view.cells = Array.apply(null, Array(35)).map((cell, i) => {
         if (!firstDayReached && days[0].getDay() === (i % 7) + 1) firstDayReached = true
 
+        let isToday = firstDayReached && days[i] && this.isDateToday(days[i])
+
         return {
           label: firstDayReached && days[i] ? days[i].getDate() : '',
-          class: i ? 'empty' : ''
+          class: {
+            empty: i,
+            today: isToday
+          }
         }
       })
-
-      console.log(this.view)
     },
 
     loadWeekView (week = null, year = null) {
@@ -115,7 +116,6 @@ export default {
         thisDay.setDate(firstDayOfweek.getDate() + i)
         let isToday = this.isDateToday(thisDay)
 
-        console.log('here', this.formatDate(thisDay), this.formatDate(this.now))
         if (isToday) this.view.cells[i].class = 'today'
 
         return {
@@ -317,7 +317,6 @@ const getDateOfWeek = (w, y) => {
 
   &__cell {
     width: 100%;
-    height: 100%;
     border: 1px solid #ddd;
     border-top: none;
     display: flex;
@@ -332,11 +331,8 @@ const getDateOfWeek = (w, y) => {
       width: 14.2857%;
     }
 
-    .vuecal.year & {
-      width: 20%;
-    }
-
-    .vuecal.month & {}
+    .vuecal.year & {width: 20%;min-height: 9em;}
+    .vuecal.month & {min-height: 9em;}
     .vuecal.week & {min-height: 15em;}
     .vuecal.day & {flex: 1;}
   }
