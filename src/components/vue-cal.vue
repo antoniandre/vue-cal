@@ -12,6 +12,8 @@
           span {{ view.title }}
 
         .vuecal__flex-wrapper
+          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(current.view) > -1")
+            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex-wrapper(column)
             .vuecal__headings
               .vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
@@ -21,6 +23,16 @@
 
 <script>
 export default {
+  props: {
+    showTimeColumn: {
+      type: Boolean,
+      default: true
+    },
+    timeIncrement: {
+      type: Number,
+      default: 60 // In minutes.
+    }
+  },
   data: () => ({
     now: new Date(),
     current: {
@@ -39,7 +51,8 @@ export default {
     view: {
       title: '',
       headings: [],
-      cells: []
+      cells: [],
+      timeCells: []
     }
   }),
 
@@ -124,6 +137,18 @@ export default {
       return this.formatDate(date) === this.formatDate(this.now)
     },
 
+    formatTime(time, format = 'HH') {
+      time /= 60
+      switch (format) {
+        default:
+        case 'HH':
+          time = (time < 10 ? '0' : '') + time
+          break
+      }
+
+      return time
+    },
+
     formatDate(date, format = 'yyyy-mm-dd') {
       let d = date.getDate()
       let dd = (d < 10 ? '0' : '') + d
@@ -150,6 +175,10 @@ export default {
   created () {
     this.weekDays = this.weekDays.map(day => ({ label: day }))
     this.months = this.months.map(month => ({ label: month }))
+
+    for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
+      this.view.timeCells.push({ label: this.formatTime(i), value: i })
+    }
 
     this.current.year = this.now.getFullYear()
     this.current.month = this.now.getMonth()
