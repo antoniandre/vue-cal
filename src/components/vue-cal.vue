@@ -2,6 +2,7 @@
   .vuecal(:class="this.current.view")
     .vuecal__header
       ul.vuecal__menu
+        li(:class="{ active: current.view === 'year' }" @click="switchView('year')") Year
         li(:class="{ active: current.view === 'month' }" @click="switchView('month')") Month
         li(:class="{ active: current.view === 'week' }" @click="switchView('week')") Week
         li(:class="{ active: current.view === 'day' }" @click="switchView('day')") Day
@@ -9,7 +10,9 @@
     .vuecal__body
       .vuecal__calendar
         .vuecal__title
+          .arrow.arrow--prev(@click="") <
           span {{ view.title }}
+          .arrow.arrow--next(@click="") >
 
         .vuecal__flex-wrapper
           .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(current.view) > -1")
@@ -68,6 +71,20 @@ export default {
       this['load' + this.current.view.replace(/\b\w/g, l => l.toUpperCase()) + 'View']()
     },
 
+    loadYearView (fromYear = null) {
+      fromYear = fromYear || 2000
+      this.view.title = 'Years'
+      this.view.headings = []
+      this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
+        return {
+          label: fromYear + i,
+          class: fromYear + i === this.current.year ? 'current' : ''
+        }
+      })
+
+      console.log(this.view)
+    },
+
     loadMonthView () {
       this.view.title = this.months[this.current.month].label
       let days = this.getDaysInMonth(this.current.month, this.current.year)
@@ -98,6 +115,7 @@ export default {
         thisDay.setDate(firstDayOfweek.getDate() + i)
         let isToday = this.isDateToday(thisDay)
 
+        console.log('here', this.formatDate(thisDay), this.formatDate(this.now))
         if (isToday) this.view.cells[i].class = 'today'
 
         return {
@@ -312,6 +330,10 @@ const getDateOfWeek = (w, y) => {
     .vuecal.week &,
     .vuecal.day & {
       width: 14.2857%;
+    }
+
+    .vuecal.year & {
+      width: 20%;
     }
 
     .vuecal.month & {}
