@@ -1,21 +1,21 @@
 <template lang="pug">
-  .vuecal(:class="this.current.view")
+  .vuecal(:class="this.selected.view")
     .vuecal__header
       ul.vuecal__menu
-        li(:class="{ active: current.view === 'year' }" @click="switchView('year')") Year
-        li(:class="{ active: current.view === 'month' }" @click="switchView('month')") Month
-        li(:class="{ active: current.view === 'week' }" @click="switchView('week')") Week
-        li(:class="{ active: current.view === 'day' }" @click="switchView('day')") Day
+        li(:class="{ active: selected.view === 'year' }" @click="switchView('year')") Year
+        li(:class="{ active: selected.view === 'month' }" @click="switchView('month')") Month
+        li(:class="{ active: selected.view === 'week' }" @click="switchView('week')") Week
+        li(:class="{ active: selected.view === 'day' }" @click="switchView('day')") Day
 
     .vuecal__body
       .vuecal__calendar
         .vuecal__title
-          .arrow.arrow--prev(@click="") <
+          .arrow.arrow--prev(@click="previous") <
           span {{ view.title }}
-          .arrow.arrow--next(@click="") >
+          .arrow.arrow--next(@click="next") >
 
         .vuecal__flex-wrapper
-          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(current.view) > -1")
+          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(selected.view) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex-wrapper(column)
             .vuecal__headings
@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import { isDateToday, getDateOfWeek, formatDate, formatTime } from '@/date-utils'
+
 export default {
   props: {
     showTimeColumn: {
@@ -37,8 +39,15 @@ export default {
     }
   },
   data: () => ({
-    now: new Date(),
-    current: {
+    now: {
+      Date: new Date(),
+      day: null,
+      week: null,
+      month: null,
+      year: null,
+    },
+    selected: {
+      Date: null,
       day: null,
       week: null,
       month: null,
@@ -46,10 +55,8 @@ export default {
       view: null,
     },
     weekDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    months: [
-      "January", "February", "March", "April", "May", "June",
-      "July", "August", "September", "October", "November", "December"
-    ],
+    months: ["January", "February", "March", "April", "May", "June",
+             "July", "August", "September", "October", "November", "December"],
     monthDays: Array[31],
     view: {
       title: '',
@@ -60,15 +67,25 @@ export default {
   }),
 
   methods: {
-    switchView (view) {
-      this.current.view = view
+    previous () {
+      switch(this.selected.view) {
+        case 'week':
+          let firstDayOfWeek = getDateOfWeek(this.selected.week, this.selected.year)
+          let firstDayOfPrevWeek = firstDayOfWeek.subtractDays(7)
+          console.log(firstDayOfPrevWeek)
 
-      this.loadView()
+          this.switchView(this.selected.view, firstDayOfPrevWeek.getWeek(), this.selected.year, firstDayOfPrevWeek)
+          break
+      }
     },
 
-    loadView () {
-      // Common code here.
-      this['load' + this.current.view.replace(/\b\w/g, l => l.toUpperCase()) + 'View']()
+    next () {
+    },
+
+    switchView (view, ...params) {
+      this.selected.view = view
+
+      this['load' + this.selected.view.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
     },
 
     loadYearView (fromYear = null) {
@@ -78,43 +95,46 @@ export default {
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
         return {
           label: fromYear + i,
-          class: fromYear + i === this.current.year ? 'current' : ''
+          class: fromYear + i === this.now.year ? 'current' : ''
         }
       })
     },
 
-    loadMonthView () {
-      this.view.title = this.months[this.current.month].label
-      let days = this.getDaysInMonth(this.current.month, this.current.year)
+    loadMonthView (month = null, year = null) {
+      month = month || this.now.month
+      year = year || this.now.year
+      this.view.title = this.months[month].label
+      let days = this.getDaysInMonth(month, year)
       this.view.headings = this.weekDays
 
       let firstDayReached = 0
       this.view.cells = Array.apply(null, Array(35)).map((cell, i) => {
         if (!firstDayReached && days[0].getDay() === (i % 7) + 1) firstDayReached = true
 
-        let isToday = firstDayReached && days[i] && this.isDateToday(days[i])
+        let isToday = firstDayReached && days[i] && isDateToday(days[i])
 
         return {
           label: firstDayReached && days[i] ? days[i].getDate() : '',
           class: {
-            empty: i,
+            empty: !!i,
             today: isToday
           }
         }
       })
     },
 
-    loadWeekView (week = null, year = null) {
-      week = week || this.current.week
-      year = year || this.current.year
-      let firstDayOfweek = getDateOfWeek(week, year)
-      this.view.title = 'Week ' + this.current.week
+    loadWeekView (week = null, year = null, firstDayOfWeek = null) {
+      week = week || this.now.week
+      year = year || this.now.year
+      let firstDayOfweek = firstDayOfWeek || getDateOfWeek(week, year)
 
+      this.selected.week = week
+      this.selected.year = year
+      this.view.title = 'Week ' + week
       this.view.cells = this.weekDays.map(cell => ({ label: 'No event' }))
       this.view.headings = this.weekDays.map((cell, i) => {
-        let thisDay = new Date()
-        thisDay.setDate(firstDayOfweek.getDate() + i)
-        let isToday = this.isDateToday(thisDay)
+        let thisDay = firstDayOfweek.addDays(i)
+        let isToday = isDateToday(thisDay)
 
         if (isToday) this.view.cells[i].class = 'today'
 
@@ -127,8 +147,11 @@ export default {
     },
 
     loadDayView (date = null) {
-      date = date || this.now
-      this.view.title = this.formatDate(date, 'dddd dd mmmm yyyy')
+      date = date || this.now.Date
+      this.selected.week = date.getWeek()
+      this.selected.year = date.getFullYear()
+      this.selected.day = date.getDate()
+      this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
       this.view.cells = [{ label: 'No event' }]
 
@@ -150,44 +173,6 @@ export default {
 
       return days
     },
-
-    isDateToday(date) {
-      return this.formatDate(date) === this.formatDate(this.now)
-    },
-
-    formatTime(time, format = 'HH') {
-      time /= 60
-      switch (format) {
-        default:
-        case 'HH':
-          time = (time < 10 ? '0' : '') + time
-          break
-      }
-
-      return time
-    },
-
-    formatDate(date, format = 'yyyy-mm-dd') {
-      let d = date.getDate()
-      let dd = (d < 10 ? '0' : '') + d
-      let m = date.getMonth()
-      let mm = (m < 10 ? '0' : '') + m
-      let yyyy = date.getFullYear()
-
-      switch (format) {
-        default:
-        case 'yyyy-mm-dd':
-          date = `${yyyy}-${mm}-${dd}`
-          break
-        case 'dddd dd mmmm yyyy':
-          let mmmm = this.months[m].label
-          let dddd = this.weekDays[date.getDay()].label
-          date = `${dddd} ${dd}, ${mmmm} ${yyyy}`
-          break
-      }
-
-      return date
-    }
   },
 
   created () {
@@ -195,13 +180,13 @@ export default {
     this.months = this.months.map(month => ({ label: month }))
 
     for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
-      this.view.timeCells.push({ label: this.formatTime(i), value: i })
+      this.view.timeCells.push({ label: formatTime(i), value: i })
     }
 
-    this.current.year = this.now.getFullYear()
-    this.current.month = this.now.getMonth()
-    this.current.week = this.now.getWeek()
-    this.current.day = this.now.getDay()
+    this.now.year = this.now.Date.getFullYear()
+    this.now.month = this.now.Date.getMonth()
+    this.now.week = this.now.Date.getWeek()
+    this.now.day = this.now.Date.getDay()
 
     this.switchView('week')
   },
@@ -209,19 +194,6 @@ export default {
   computed: {
 
   }
-}
-
-Date.prototype.getWeek = function () {
-  let d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
-  let dayNum = d.getUTCDay() || 7
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-  let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1))
-  return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
-}
-
-const getDateOfWeek = (w, y) => {
-  var d = (1 + (w - 1) * 7); // 1st of January + 7 days for each week
-  return new Date(y, 0, d);
 }
 </script>
 
