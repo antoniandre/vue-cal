@@ -58,18 +58,18 @@ export const formatDate = (date, format = 'yyyy-mm-dd') => {
   let d = date.getDate()
   let m = date.getMonth()
   let dateObj = {
-    DDD: weekDays[date.getDay()].substr(0, 3),
-    DDDD: weekDays[date.getDay()],
-    d: d,
-    dd: (d < 10 ? '0' : '') + d,
-    D: date.getDay(),
-    S: nth(d),
-    m: date.getMonth(),
-    mm: (m < 10 ? '0' : '') + m,
-    mmm: months[m].substr(0, 3),
-    mmmm: months[m],
-    yyyy: date.getFullYear(),
-    yy: date.getFullYear().toString().substr(2, 4)
+    D: date.getDay(),// 0 to 6
+    DDD: weekDays[date.getDay()].substr(0, 3),// Mon to Sun
+    DDDD: weekDays[date.getDay()],// Monday to Sunday
+    d: d,// 1 to 31
+    dd: (d < 10 ? '0' : '') + d,// 01 to 31
+    S: nth(d),// st, nd, rd, th
+    m: date.getMonth(),// 1 to 12
+    mm: (m < 10 ? '0' : '') + m,// 01 to 12
+    mmm: months[m].substr(0, 3),// Jan to Dec
+    mmmm: months[m],// January to December
+    yyyy: date.getFullYear(),// 2018
+    yy: date.getFullYear().toString().substr(2, 4)// 18
   }
 
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (match, contents) => {
