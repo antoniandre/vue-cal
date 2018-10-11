@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { isDateToday, getDateOfWeek, formatDate, formatTime } from '@/date-utils'
+import { isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
 
 export default {
   props: {
@@ -43,6 +43,7 @@ export default {
       Date: new Date(),
       day: null,
       week: null,
+      weekFirstDay: null,
       month: null,
       year: null,
     },
@@ -50,6 +51,7 @@ export default {
       Date: null,
       day: null,
       week: null,
+      weekFirstDay: null,
       month: null,
       year: null,
       view: null,
@@ -70,16 +72,19 @@ export default {
     previous () {
       switch(this.selected.view) {
         case 'week':
-          let firstDayOfWeek = getDateOfWeek(this.selected.week, this.selected.year)
-          let firstDayOfPrevWeek = firstDayOfWeek.subtractDays(7)
-          console.log(firstDayOfPrevWeek)
-
-          this.switchView(this.selected.view, firstDayOfPrevWeek.getWeek(), this.selected.year, firstDayOfPrevWeek)
+          let firstDayOfPrevWeek = this.selected.weekFirstDay.subtractDays(7)
+          this.switchView(this.selected.view, firstDayOfPrevWeek)
           break
       }
     },
 
     next () {
+      switch(this.selected.view) {
+        case 'week':
+          let firstDayOfNextWeek = this.selected.weekFirstDay.addDays(7)
+          this.switchView(this.selected.view, firstDayOfNextWeek)
+          break
+      }
     },
 
     switchView (view, ...params) {
@@ -104,7 +109,7 @@ export default {
       month = month || this.now.month
       year = year || this.now.year
       this.view.title = this.months[month].label
-      let days = this.getDaysInMonth(month, year)
+      let days = getDaysInMonth(month, year)
       this.view.headings = this.weekDays
 
       let firstDayReached = 0
@@ -123,17 +128,16 @@ export default {
       })
     },
 
-    loadWeekView (week = null, year = null, firstDayOfWeek = null) {
-      week = week || this.now.week
-      year = year || this.now.year
-      let firstDayOfweek = firstDayOfWeek || getDateOfWeek(week, year)
+    loadWeekView (firstDayOfWeek = null) {
+      firstDayOfWeek = firstDayOfWeek || this.now.weekFirstDay
 
-      this.selected.week = week
-      this.selected.year = year
-      this.view.title = 'Week ' + week
+      this.selected.weekFirstDay = firstDayOfWeek
+      this.selected.week = firstDayOfWeek.getWeek()
+      this.selected.year = firstDayOfWeek.getFullYear()
+      this.view.title = `Week ${this.selected.week} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
       this.view.cells = this.weekDays.map(cell => ({ label: 'No event' }))
       this.view.headings = this.weekDays.map((cell, i) => {
-        let thisDay = firstDayOfweek.addDays(i)
+        let thisDay = firstDayOfWeek.addDays(i)
         let isToday = isDateToday(thisDay)
 
         if (isToday) this.view.cells[i].class = 'today'
@@ -154,25 +158,7 @@ export default {
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
       this.view.cells = [{ label: 'No event' }]
-
-      console.log(this.view)
-    },
-
-    /**
-     * @param {int} The month number, 0 based
-     * @param {int} The year, not zero based, required to account for leap years
-     * @return {Date[]} List with date objects for each day of the month
-     */
-    getDaysInMonth (month, year) {
-      var date = new Date(year, month, 1)
-      var days = []
-      while (date.getMonth() === month) {
-        days.push(new Date(date))
-        date.setDate(date.getDate() + 1)
-      }
-
-      return days
-    },
+    }
   },
 
   created () {
@@ -186,6 +172,7 @@ export default {
     this.now.year = this.now.Date.getFullYear()
     this.now.month = this.now.Date.getMonth()
     this.now.week = this.now.Date.getWeek()
+    this.now.weekFirstDay = getPreviousMonday(this.now.Date)
     this.now.day = this.now.Date.getDay()
 
     this.switchView('week')
