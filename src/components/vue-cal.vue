@@ -10,9 +10,9 @@
     .vuecal__body
       .vuecal__calendar
         .vuecal__title
-          .arrow.arrow--prev(@click="previous") <
+          .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
           span {{ view.title }}
-          .arrow.arrow--next(@click="next") >
+          .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
 
         .vuecal__flex-wrapper
           .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(selected.view) > -1")
@@ -28,6 +28,7 @@
 import { isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
 
 export default {
+  name: 'vue-cal',
   props: {
     showTimeColumn: {
       type: Boolean,
@@ -231,6 +232,12 @@ export default {
     align-items: center;
     justify-content: space-between;
     font-size: 2em;
+  }
+
+  &__arrow {
+    font-family: sans-serif;
+    cursor: pointer;
+    padding: 0.3em;
   }
 
   &__flex-wrapper {
