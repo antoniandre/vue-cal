@@ -1,7 +1,9 @@
 <template lang="pug">
   #app
     img(alt="Vue logo" src="./assets/logo.png" height="80")
-    p A Vue JS full calendar, no dependency, no BS. :metal:
+    p.
+      A Vue JS full calendar, no dependency, no BS. :metal:
+      #[br]#[em - under construction -]
     vue-cal
 </template>
 
