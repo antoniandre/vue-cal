@@ -1,11 +1,28 @@
 {
   "name": "vue-cal",
   "version": "0.1.0",
-  "description": "A vue JS Full calendar. No dependency.",
+  "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
+  "repository": "https://github.com/antoniandre/vue-cal",
+  "author": "Antoni Andre <antoniandre.web@gmail.com>",
+  "license": "MIT",
+  "main": "./dist/vue-cal.common.js",
+  "unpkg": "dist/vue-cal.umd.min.js",
+  "keywords": [
+    "calendar",
+    "vue",
+    "vuejs",
+    "ui"
+  ],
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-bundle": "vue-cli-service build --target dist",
+    "build-bundle": "vue-cli-service build --target lib --name vueCal ./src/components/vue-cal.vue --dest ./dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
