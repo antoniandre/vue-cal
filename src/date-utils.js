@@ -1,7 +1,7 @@
-const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-const months = ["January", "February", "March", "April", "May", "June",
+export const weekDays = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
+export const months = ["January", "February", "March", "April", "May", "June",
                 "July", "August", "September", "October", "November", "December"]
-const now = new Date()
+export const now = new Date()
 
 Date.prototype.addDays = function (days) {
   let date = new Date(this.valueOf())
@@ -19,7 +19,7 @@ Date.prototype.getWeek = function () {
   let d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
   let dayNum = d.getUTCDay() || 7
   d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-  let yearStart = new Date(Date.UTC(d.getUTCFullYear(),0,1))
+  let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
   return Math.ceil((((d - yearStart) / 86400000) + 1)/7)
 }
 
@@ -81,8 +81,8 @@ export const formatDate = (date, format = 'yyyy-mm-dd') => {
   let m = date.getMonth() + 1
   let dateObj = {
     D: date.getDay(),// 0 to 6
-    DDD: weekDays[date.getDay()].substr(0, 3),// Mon to Sun
-    DDDD: weekDays[date.getDay()],// Monday to Sunday
+    DDD: weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3),// Mon to Sun
+    DDDD: weekDays[(date.getDay() - 1 + 7) % 7],// Monday to Sunday
     d: d,// 1 to 31
     dd: (d < 10 ? '0' : '') + d,// 01 to 31
     S: nth(d),// st, nd, rd, th

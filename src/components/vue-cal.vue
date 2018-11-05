@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
+import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
 
 export default {
   name: 'vue-cal',
@@ -57,9 +57,8 @@ export default {
       year: null,
       view: null,
     },
-    weekDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    months: ["January", "February", "March", "April", "May", "June",
-             "July", "August", "September", "October", "November", "December"],
+    weekDays,
+    months,
     monthDays: Array[31],
     view: {
       title: '',
@@ -73,7 +72,7 @@ export default {
     previous () {
       switch(this.selected.view) {
         case 'week':
-          let firstDayOfPrevWeek = this.selected.weekFirstDay.subtractDays(7)
+          const firstDayOfPrevWeek = this.selected.weekFirstDay.subtractDays(7)
           this.switchView(this.selected.view, firstDayOfPrevWeek)
           break
       }
@@ -82,7 +81,7 @@ export default {
     next () {
       switch(this.selected.view) {
         case 'week':
-          let firstDayOfNextWeek = this.selected.weekFirstDay.addDays(7)
+          const firstDayOfNextWeek = this.selected.weekFirstDay.addDays(7)
           this.switchView(this.selected.view, firstDayOfNextWeek)
           break
       }
