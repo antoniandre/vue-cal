@@ -32,6 +32,7 @@ export const getDateOfWeek = (w, y) => {
   return new Date(y, 0, d)
 }
 
+// Returns today if it's Monday or previous Monday otherwise.
 export const getPreviousMonday = (date = null) => {
   let prevMonday = date && new Date(date.valueOf()) || new Date()
   prevMonday.setDate(prevMonday.getDate() - (prevMonday.getDay() + 6) % 7)
@@ -47,6 +48,17 @@ export const getDaysInMonth = (month, year) => {
   let date = new Date(year, month, 1)
   let days = []
   while (date.getMonth() === month) {
+    days.push(new Date(date))
+    date.setDate(date.getDate() + 1)
+  }
+
+  return days
+}
+
+export const getDaysInWeek = (date) => {
+  date = getPreviousMonday(date)
+  let days = []
+  for (let i = 0; i < 7; i++) {
     days.push(new Date(date))
     date.setDate(date.getDate() + 1)
   }
