@@ -1,11 +1,11 @@
 <template lang="pug">
-  .vuecal(:class="this.selected.view")
+  .vuecal(:class="this.view.name")
     .vuecal__header
       ul.vuecal__menu
-        li(:class="{ active: selected.view === 'year' }" @click="switchView('year')") Year
-        li(:class="{ active: selected.view === 'month' }" @click="switchView('month')") Month
-        li(:class="{ active: selected.view === 'week' }" @click="switchView('week')") Week
-        li(:class="{ active: selected.view === 'day' }" @click="switchView('day')") Day
+        li(:class="{ active: view.name === 'year' }" @click="switchView('year')") Year
+        li(:class="{ active: view.name === 'month' }" @click="switchView('month')") Month
+        li(:class="{ active: view.name === 'week' }" @click="switchView('week')") Week
+        li(:class="{ active: view.name === 'day' }" @click="switchView('day')") Day
 
     .vuecal__body
       .vuecal__calendar
@@ -15,7 +15,7 @@
           .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
 
         .vuecal__flex-wrapper
-          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(selected.view) > -1")
+          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex-wrapper(column)
             .vuecal__headings
@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
+import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, getDaysInWeek, formatDate, formatTime } from '@/date-utils'
 
 export default {
   name: 'vue-cal',
@@ -48,53 +48,64 @@ export default {
       month: null,
       year: null,
     },
-    selected: {
+    selectedDate: {
       Date: null,
       day: null,
       week: null,
       weekFirstDay: null,
       month: null,
       year: null,
-      view: null,
     },
     weekDays,
     months,
     monthDays: Array[31],
     view: {
+      name: '',
       title: '',
       headings: [],
       cells: [],
-      timeCells: []
+      timeCells: [],// For week & day views.
+      startDate: null
     }
   }),
 
   methods: {
     previous () {
-      switch(this.selected.view) {
+      switch(this.view.name) {
         case 'week':
-          const firstDayOfPrevWeek = this.selected.weekFirstDay.subtractDays(7)
-          this.switchView(this.selected.view, firstDayOfPrevWeek)
+          const firstDayOfPrevWeek = getPreviousMonday(this.view.startDate).subtractDays(7)
+          this.switchView(this.view.name, firstDayOfPrevWeek)
+          break
+        case 'day':
+          const day = this.view.startDate.subtractDays(1)
+          this.switchView(this.view.name, day)
           break
       }
     },
 
     next () {
-      switch(this.selected.view) {
+      switch(this.view.name) {
         case 'week':
-          const firstDayOfNextWeek = this.selected.weekFirstDay.addDays(7)
-          this.switchView(this.selected.view, firstDayOfNextWeek)
+          const firstDayOfNextWeek = getPreviousMonday(this.view.startDate).addDays(7)
+          this.switchView(this.view.name, firstDayOfNextWeek)
+          break
+        case 'day':
+          const day = this.view.startDate.addDays(1)
+          this.switchView(this.view.name, day)
           break
       }
     },
 
     switchView (view, ...params) {
-      this.selected.view = view
+      this.view.name = view
 
-      this['load' + this.selected.view.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
+      this['load' + this.view.name.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
     },
 
     loadYearView (fromYear = null) {
       fromYear = fromYear || 2000
+
+      this.view.name = 'year'
       this.view.title = 'Years'
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
@@ -105,40 +116,63 @@ export default {
       })
     },
 
-    loadMonthView (month = null, year = null) {
-      month = month || this.now.month
-      year = year || this.now.year
-      this.view.title = this.months[month].label
+    loadMonthView (date) {
+      date = date || this.view.startDate
+      const month = date.getMonth()
+      const year = date.getFullYear()
       let days = getDaysInMonth(month, year)
+      const firstOfMonthDayOfWeek = days[0].getDay()
+
+      // If the first day of the month is not a Monday, prepend missing days to the days array.
+      if (days[0].getDay() !== 1) {
+        let d = getPreviousMonday(days[0])
+        let prevWeek = []
+        for (let i = 0; i < 7; i++) {
+          prevWeek.push(new Date(d))
+          d.setDate(d.getDate() + 1)
+
+          if (d.getDay() === firstOfMonthDayOfWeek) break
+        }
+
+        days.unshift(...prevWeek)
+      }
+
+      this.view.name = 'month'
+      this.view.startDate = new Date(year, month, 1)
+      this.view.title = this.months[month].label
       this.view.headings = this.weekDays
 
-      let firstDayReached = 0
+      // Create 35 cells (5 x 7 days) and populate them with days.
       this.view.cells = Array.apply(null, Array(35)).map((cell, i) => {
-        if (!firstDayReached && days[0].getDay() === (i % 7) + 1) firstDayReached = true
-
-        let isToday = firstDayReached && days[i] && isDateToday(days[i])
+        console.log(days[i], i)
+        const isToday = days[i] && isDateToday(days[i])
 
         return {
-          label: firstDayReached && days[i] ? days[i].getDate() : '',
+          label: days[i] ? days[i].getDate() : '',
           class: {
             empty: !!i,
-            today: isToday
+            today: isToday,
+            outOfScope: days[i] && days[i].getMonth() !== month
           }
         }
       })
     },
 
     loadWeekView (firstDayOfWeek = null) {
-      firstDayOfWeek = firstDayOfWeek || this.now.weekFirstDay
+      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.view.startDate)
 
-      this.selected.weekFirstDay = firstDayOfWeek
-      this.selected.week = firstDayOfWeek.getWeek()
-      this.selected.year = firstDayOfWeek.getFullYear()
-      this.view.title = `Week ${this.selected.week} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
+      // this.selectedDate.weekFirstDay = firstDayOfWeek
+      // this.selectedDate.Date = firstDayOfWeek
+      // this.selectedDate.week = firstDayOfWeek.getWeek()
+      // this.selectedDate.year = firstDayOfWeek.getFullYear()
+
+      this.view.name = 'week'
+      this.view.startDate = firstDayOfWeek
+      this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
       this.view.cells = this.weekDays.map(cell => ({ label: 'No event' }))
       this.view.headings = this.weekDays.map((cell, i) => {
-        let thisDay = firstDayOfWeek.addDays(i)
-        let isToday = isDateToday(thisDay)
+        const thisDay = firstDayOfWeek.addDays(i)
+        const isToday = isDateToday(thisDay)
 
         if (isToday) this.view.cells[i].class = 'today'
 
@@ -151,15 +185,26 @@ export default {
     },
 
     loadDayView (date = null) {
-      date = date || this.now.Date
-      this.selected.week = date.getWeek()
-      this.selected.year = date.getFullYear()
-      this.selected.day = date.getDate()
+      date = date || this.view.startDate
+      // this.selectedDate.week = date.getWeek()
+      // this.selectedDate.year = date.getFullYear()
+      // this.selectedDate.day = date.getDate()
+      // this.selectedDate.Date = date
+
+      this.view.name = 'day'
+      this.view.startDate = date
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
       this.view.cells = [{ label: 'No event' }]
     }
   },
+
+  // selectDate (date) {
+  //   this.selectedDate.week = date.getWeek()
+  //   this.selectedDate.year = date.getFullYear()
+  //   this.selectedDate.day = date.getDate()
+  //   this.selectedDate.Date = date
+  // },
 
   created () {
     this.weekDays = this.weekDays.map(day => ({ label: day }))
@@ -175,7 +220,9 @@ export default {
     this.now.weekFirstDay = getPreviousMonday(this.now.Date)
     this.now.day = this.now.Date.getDay()
 
-    this.switchView('week')
+    this.selectedDate = this.now
+
+    this.loadWeekView(this.now.weekFirstDay)
   },
 
   computed: {
@@ -309,6 +356,10 @@ export default {
 
   &__cell.current {
     border: 1px solid #aaf;
+  }
+
+  &__cell.outOfScope {
+    color: #ccc;
   }
 }
 </style>
