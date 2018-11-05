@@ -147,12 +147,12 @@ export default {
 
       this.view.name = 'month'
       this.view.startDate = new Date(year, month, 1)
-      this.view.title = this.months[month].label
+      this.view.title = `${this.months[month].label} ${year}`
       this.view.headings = this.weekDays
 
-      // Create 35 cells (5 x 7 days) and populate them with days.
+      // Create 42 cells (6 x 7 days) and populate them with days.
       let todayFound = false
-      this.view.cells = Array.apply(null, Array(35)).map((cell, i) => {
+      this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
         const isToday = days[i] && !todayFound && days[i].getDate() === this.now.Date.getDate()
                         && days[i].getMonth() === this.now.month
                         && days[i].getFullYear() === this.now.year
