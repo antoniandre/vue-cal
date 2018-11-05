@@ -143,9 +143,13 @@ export default {
       this.view.headings = this.weekDays
 
       // Create 35 cells (5 x 7 days) and populate them with days.
+      let todayFound = false
       this.view.cells = Array.apply(null, Array(35)).map((cell, i) => {
-        console.log(days[i], i)
-        const isToday = days[i] && isDateToday(days[i])
+        const isToday = days[i] && !todayFound && days[i].getDate() === this.now.Date.getDate()
+                        && days[i].getMonth() === this.now.month
+                        && days[i].getFullYear() === this.now.year
+        // To increase performance skip checking isToday if today already found.
+        if (isToday) todayFound = true
 
         return {
           label: days[i] ? days[i].getDate() : '',
