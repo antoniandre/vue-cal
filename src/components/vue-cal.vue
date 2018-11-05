@@ -72,6 +72,10 @@ export default {
   methods: {
     previous () {
       switch(this.view.name) {
+        case 'month':
+          const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() - 1, 1)
+          this.switchView(this.view.name, firstDayOfMonth)
+          break
         case 'week':
           const firstDayOfPrevWeek = getPreviousMonday(this.view.startDate).subtractDays(7)
           this.switchView(this.view.name, firstDayOfPrevWeek)
@@ -85,6 +89,10 @@ export default {
 
     next () {
       switch(this.view.name) {
+        case 'month':
+          const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() + 1, 1)
+          this.switchView(this.view.name, firstDayOfMonth)
+          break
         case 'week':
           const firstDayOfNextWeek = getPreviousMonday(this.view.startDate).addDays(7)
           this.switchView(this.view.name, firstDayOfNextWeek)
