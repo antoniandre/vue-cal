@@ -161,11 +161,6 @@ export default {
     loadWeekView (firstDayOfWeek = null) {
       firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.view.startDate)
 
-      // this.selectedDate.weekFirstDay = firstDayOfWeek
-      // this.selectedDate.Date = firstDayOfWeek
-      // this.selectedDate.week = firstDayOfWeek.getWeek()
-      // this.selectedDate.year = firstDayOfWeek.getFullYear()
-
       this.view.name = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
@@ -186,10 +181,6 @@ export default {
 
     loadDayView (date = null) {
       date = date || this.view.startDate
-      // this.selectedDate.week = date.getWeek()
-      // this.selectedDate.year = date.getFullYear()
-      // this.selectedDate.day = date.getDate()
-      // this.selectedDate.Date = date
 
       this.view.name = 'day'
       this.view.startDate = date
