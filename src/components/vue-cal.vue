@@ -22,7 +22,7 @@
             .vuecal__headings
               .vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
             .vuecal__cells
-              .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class") {{ cell.label }}
+              .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
 </template>
 
 <script>
@@ -184,6 +184,7 @@ export default {
 
       // Create 42 cells (6 x 7 days) and populate them with days.
       let todayFound = false
+      let nextMonthFirstDay = new Date(year)
       let nextMonthDays = 1
       this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
         const isToday = days[i] && !todayFound && days[i].getDate() === this.now.Date.getDate()
@@ -197,7 +198,8 @@ export default {
           class: {
             today: isToday,
             outOfScope: (days[i] && days[i].getMonth() !== month) || !days[i]
-          }
+          },
+          date: days[i] || new Date(year)
         }
       })
     },
@@ -208,7 +210,7 @@ export default {
       this.view.name = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
-      this.view.cells = this.weekDays.map(cell => ({ label: 'No event' }))
+      this.view.cells = this.weekDays.map((cell, i) => ({ label: 'No event', date: firstDayOfWeek.addDays(i) }))
       this.view.headings = this.weekDays.map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
@@ -231,15 +233,20 @@ export default {
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
       this.view.cells = [{ label: 'No event' }]
+    },
+
+    // selectDate (date) {
+    //   this.selectedDate.week = date.getWeek()
+    //   this.selectedDate.year = date.getFullYear()
+    //   this.selectedDate.day = date.getDate()
+    //   this.selectedDate.Date = date
+    // },
+
+    selectCell (cell) {
+      console.log(cell)
+
     }
   },
-
-  // selectDate (date) {
-  //   this.selectedDate.week = date.getWeek()
-  //   this.selectedDate.year = date.getFullYear()
-  //   this.selectedDate.day = date.getDate()
-  //   this.selectedDate.Date = date
-  // },
 
   created () {
     this.weekDays = this.weekDays.map(day => ({ label: day }))
