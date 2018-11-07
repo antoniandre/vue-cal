@@ -152,6 +152,7 @@ export default {
 
       // Create 42 cells (6 x 7 days) and populate them with days.
       let todayFound = false
+      let nextMonthDays = 1
       this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
         const isToday = days[i] && !todayFound && days[i].getDate() === this.now.Date.getDate()
                         && days[i].getMonth() === this.now.month
@@ -160,11 +161,10 @@ export default {
         if (isToday) todayFound = true
 
         return {
-          label: days[i] ? days[i].getDate() : '',
+          label: days[i] ? days[i].getDate() : nextMonthDays++,
           class: {
-            empty: !!i,
             today: isToday,
-            outOfScope: days[i] && days[i].getMonth() !== month
+            outOfScope: (days[i] && days[i].getMonth() !== month) || !days[i]
           }
         }
       })
