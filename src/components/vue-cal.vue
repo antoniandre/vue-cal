@@ -2,6 +2,7 @@
   .vuecal(:class="this.view.name")
     .vuecal__header
       ul.vuecal__menu
+        li(:class="{ active: view.name === 'years' }" @click="switchView('years')") Years
         li(:class="{ active: view.name === 'year' }" @click="switchView('year')") Year
         li(:class="{ active: view.name === 'month' }" @click="switchView('month')") Month
         li(:class="{ active: view.name === 'week' }" @click="switchView('week')") Week
@@ -72,6 +73,13 @@ export default {
   methods: {
     previous () {
       switch(this.view.name) {
+        case 'years':
+          this.switchView(this.view.name, this.view.startDate.getFullYear() - 25)
+          break
+        case 'year':
+          const firstDayOfYear = new Date(this.view.startDate.getFullYear() - 1, 1, 1)
+          this.switchView(this.view.name, firstDayOfYear)
+          break
         case 'month':
           const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() - 1, 1)
           this.switchView(this.view.name, firstDayOfMonth)
@@ -89,6 +97,13 @@ export default {
 
     next () {
       switch(this.view.name) {
+        case 'years':
+          this.switchView(this.view.name, this.view.startDate.getFullYear() + 25)
+          break
+        case 'year':
+          const firstDayOfYear = new Date(this.view.startDate.getFullYear() + 1, 1, 1)
+          this.switchView(this.view.name, firstDayOfYear)
+          break
         case 'month':
           const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() + 1, 1)
           this.switchView(this.view.name, firstDayOfMonth)
@@ -110,16 +125,33 @@ export default {
       this['load' + this.view.name.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
     },
 
-    loadYearView (fromYear = null) {
+    loadYearsView (fromYear = null) {
       fromYear = fromYear || 2000
 
-      this.view.name = 'year'
+      this.view.name = 'years'
+      this.view.startDate = new Date(fromYear, 1, 1)
       this.view.title = 'Years'
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
         return {
           label: fromYear + i,
           class: fromYear + i === this.now.year ? 'current' : ''
+        }
+      })
+    },
+
+    loadYearView (date) {
+      date = date || this.view.startDate
+      let year = date.getFullYear()
+
+      this.view.name = 'year'
+      this.view.startDate = new Date(year, 1, 1)
+      this.view.title = year
+      this.view.headings = []
+      this.view.cells = Array.apply(null, Array(12)).map((cell, i) => {
+        return {
+          label: this.months[i].label,
+          class: i === this.now.month && year === this.now.year ? 'current' : ''
         }
       })
     },
@@ -241,7 +273,7 @@ export default {
 }
 
 .vuecal {
-  margin-top: 5em;
+  margin: 5em 2em;
   border: 1px solid #eee;
   border-radius: 3px;
 
@@ -346,7 +378,8 @@ export default {
       width: 14.2857%;
     }
 
-    .vuecal.year & {width: 20%;min-height: 9em;}
+    .vuecal.years & {width: 20%;min-height: 9em;}
+    .vuecal.year & {width: 25%;min-height: 9em;}
     .vuecal.month & {min-height: 9em;}
     .vuecal.week & {min-height: 15em;}
     .vuecal.day & {flex: 1;}
