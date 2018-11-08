@@ -49,14 +49,7 @@ export default {
       month: null,
       year: null,
     },
-    selectedDate: {
-      Date: null,
-      day: null,
-      week: null,
-      weekFirstDay: null,
-      month: null,
-      year: null,
-    },
+    selectedDate: null,
     weekDays,
     months,
     monthDays: Array[31],
@@ -101,7 +94,7 @@ export default {
           this.switchView(this.view.name, this.view.startDate.getFullYear() + 25)
           break
         case 'year':
-          const firstDayOfYear = new Date(this.view.startDate.getFullYear() + 1, 1, 1)
+          const firstDayOfYear = new Date(this.view.startDate.getFullYear() + 1, 0, 1)
           this.switchView(this.view.name, firstDayOfYear)
           break
         case 'month':
@@ -129,35 +122,43 @@ export default {
       fromYear = fromYear || 2000
 
       this.view.name = 'years'
-      this.view.startDate = new Date(fromYear, 1, 1)
+      this.view.startDate = new Date(fromYear, 0, 1)
       this.view.title = 'Years'
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
         return {
           label: fromYear + i,
-          class: fromYear + i === this.now.year ? 'current' : ''
+          date: new Date(fromYear + i, 0, 1),
+          class: {
+            current: fromYear + i === this.now.year,
+            selected: this.selectedDate && (fromYear + i) === this.selectedDate.getFullYear()
+          }
         }
       })
     },
 
     loadYearView (date) {
-      date = date || this.view.startDate
+      date = date || this.selectedDate || this.view.startDate
       let year = date.getFullYear()
 
       this.view.name = 'year'
-      this.view.startDate = new Date(year, 1, 1)
+      this.view.startDate = new Date(year, 0, 1)
       this.view.title = year
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(12)).map((cell, i) => {
         return {
           label: this.months[i].label,
-          class: i === this.now.month && year === this.now.year ? 'current' : ''
+          date: new Date(year, i, 1),
+          class: {
+            current: i === this.now.month && year === this.now.year,
+            selected: i === date.getMonth() && year === date.getFullYear()
+          }
         }
       })
     },
 
     loadMonthView (date) {
-      date = date || this.view.startDate
+      date = date || this.selectedDate || this.view.startDate
       const month = date.getMonth()
       const year = date.getFullYear()
       let days = getDaysInMonth(month, year)
@@ -182,69 +183,74 @@ export default {
       this.view.title = `${this.months[month].label} ${year}`
       this.view.headings = this.weekDays
 
-      // Create 42 cells (6 x 7 days) and populate them with days.
       let todayFound = false
-      let nextMonthFirstDay = new Date(year)
-      let nextMonthDays = 1
+      let nextMonthDays = 0
+      // Create 42 cells (6 x 7 days) and populate them with days.
       this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
-        const isToday = days[i] && !todayFound && days[i].getDate() === this.now.Date.getDate()
-                        && days[i].getMonth() === this.now.month
-                        && days[i].getFullYear() === this.now.year
+        const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
+        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.Date.getDate()
+                        && cellDate.getMonth() === this.now.month
+                        && cellDate.getFullYear() === this.now.year
         // To increase performance skip checking isToday if today already found.
         if (isToday) todayFound = true
 
         return {
-          label: days[i] ? days[i].getDate() : nextMonthDays++,
+          label: cellDate.getDate(),
+          date: cellDate,
           class: {
             today: isToday,
-            outOfScope: (days[i] && days[i].getMonth() !== month) || !days[i]
-          },
-          date: days[i] || new Date(year)
+            outOfScope: cellDate.getMonth() !== month,
+            selected: this.selectedDate && cellDate.getTime() === this.selectedDate.getTime()
+          }
         }
       })
     },
 
     loadWeekView (firstDayOfWeek = null) {
-      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.view.startDate)
+      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.selectedDate) || getPreviousMonday(this.view.startDate)
 
       this.view.name = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
-      this.view.cells = this.weekDays.map((cell, i) => ({ label: 'No event', date: firstDayOfWeek.addDays(i) }))
+      this.view.cells = this.weekDays.map((cell, i) => ({
+        label: 'No event',
+        date: firstDayOfWeek.addDays(i),
+        class: {
+          today: false,
+          selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime()
+        }
+      }))
       this.view.headings = this.weekDays.map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
 
-        if (isToday) this.view.cells[i].class = 'today'
+        if (isToday) this.view.cells[i].class.today = true
 
         return {
           label: `${cell.label} ${thisDay.getDate()}`,
-          class: isToday ? 'today' : ''
+          class: {
+            today: isToday
+          }
         }
       })
-
     },
 
     loadDayView (date = null) {
-      date = date || this.view.startDate
+      date = date || this.selectedDate || this.view.startDate
 
       this.view.name = 'day'
       this.view.startDate = date
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
-      this.view.cells = [{ label: 'No event' }]
+      this.view.cells = [{ label: 'No event', date, class: {} }]
     },
 
-    // selectDate (date) {
-    //   this.selectedDate.week = date.getWeek()
-    //   this.selectedDate.year = date.getFullYear()
-    //   this.selectedDate.day = date.getDate()
-    //   this.selectedDate.Date = date
-    // },
-
     selectCell (cell) {
-      console.log(cell)
-
+      this.selectedDate = cell.date
+      this.view.cells.forEach(cell => {
+        if (cell.class.selected) cell.class.selected = false
+        if (cell.date === this.selectedDate) cell.class.selected = true
+      })
     }
   },
 
@@ -253,7 +259,7 @@ export default {
     this.months = this.months.map(month => ({ label: month }))
 
     for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
-      this.view.timeCells.push({ label: formatTime(i), value: i })
+       this.view.timeCells.push({ label: formatTime(i), value: i })
     }
 
     this.now.year = this.now.Date.getFullYear()
@@ -262,13 +268,12 @@ export default {
     this.now.weekFirstDay = getPreviousMonday(this.now.Date)
     this.now.day = this.now.Date.getDay()
 
-    this.selectedDate = this.now
+    this.selectedDate = new Date(this.now.year, this.now.month, this.now.Date.getDate())
 
-    this.loadWeekView(this.now.weekFirstDay)
+    this.loadWeekView()
   },
 
   computed: {
-
   }
 }
 </script>
@@ -399,6 +404,10 @@ export default {
 
   &__cell.current {
     border: 1px solid #aaf;
+  }
+
+  &__cell.selected {
+    border: 1px solid orange;
   }
 
   &__cell.outOfScope {
