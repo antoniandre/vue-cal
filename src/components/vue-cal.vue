@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, getDaysInWeek, formatDate, formatTime } from '@/date-utils'
+import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
 
 export default {
   name: 'vue-cal',
@@ -47,7 +47,7 @@ export default {
       week: null,
       weekFirstDay: null,
       month: null,
-      year: null,
+      year: null
     },
     selectedDate: null,
     weekDays,
@@ -58,14 +58,14 @@ export default {
       title: '',
       headings: [],
       cells: [],
-      timeCells: [],// For week & day views.
+      timeCells: [], // For week & day views.
       startDate: null
     }
   }),
 
   methods: {
     previous () {
-      switch(this.view.name) {
+      switch (this.view.name) {
         case 'years':
           this.switchView(this.view.name, this.view.startDate.getFullYear() - 25)
           break
@@ -89,7 +89,7 @@ export default {
     },
 
     next () {
-      switch(this.view.name) {
+      switch (this.view.name) {
         case 'years':
           this.switchView(this.view.name, this.view.startDate.getFullYear() + 25)
           break
@@ -188,9 +188,9 @@ export default {
       // Create 42 cells (6 x 7 days) and populate them with days.
       this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
         const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
-        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.Date.getDate()
-                        && cellDate.getMonth() === this.now.month
-                        && cellDate.getFullYear() === this.now.year
+        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.Date.getDate() &&
+                        cellDate.getMonth() === this.now.month &&
+                        cellDate.getFullYear() === this.now.year
         // To increase performance skip checking isToday if today already found.
         if (isToday) todayFound = true
 
@@ -259,7 +259,7 @@ export default {
     this.months = this.months.map(month => ({ label: month }))
 
     for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
-       this.view.timeCells.push({ label: formatTime(i), value: i })
+      this.view.timeCells.push({ label: formatTime(i), value: i })
     }
 
     this.now.year = this.now.Date.getFullYear()
@@ -382,7 +382,6 @@ export default {
     align-items: center;
     justify-content: center;
     box-sizing: border-box;
-
 
     .vuecal.month &,
     .vuecal.week &,
