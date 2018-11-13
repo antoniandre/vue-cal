@@ -33,7 +33,7 @@ export const isDateToday = (date) => {
 }
 
 export const getDateOfWeek = (w, y) => {
-  let d = (1 + (w - 1) * 7) // 1st of January + 7 days for each week
+  let d = (1 + (w - 1) * 7) // 1st of January + 7 days for each week.
   return new Date(y, 0, d)
 }
 
@@ -45,9 +45,9 @@ export const getPreviousMonday = (date = null) => {
 }
 
 /**
- * @param {int} The month number, 0 based
- * @param {int} The year, not zero based, required to account for leap years
- * @return {Date[]} List with date objects for each day of the month
+ * @param {int} The month number, 0 based.
+ * @param {int} The year, not zero based, required to account for leap years.
+ * @return {Date[]} List with date objects for each day of the month.
  */
 export const getDaysInMonth = (month, year) => {
   let date = new Date(year, month, 1)
@@ -94,9 +94,9 @@ export const formatTime = (time, format = 'HH') => {
 }
 
 export const formatDate = (date, format = 'yyyy-mm-dd') => {
-  let d = date.getDate()
-  let m = date.getMonth() + 1
-  let dateObj = {
+  const d = date.getDate()
+  const m = date.getMonth() + 1
+  const dateObj = {
     D: date.getDay(), // 0 to 6.
     DDD: weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
     DDDD: weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
@@ -111,7 +111,5 @@ export const formatDate = (date, format = 'yyyy-mm-dd') => {
     yy: date.getFullYear().toString().substr(2, 4) // 18.
   }
 
-  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (match, contents) => {
-    return dateObj[contents.replace(/\{|\}/g, '')]
-  })
+  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => dateObj[contents.replace(/\{|\}/g, '')])
 }
