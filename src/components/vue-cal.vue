@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal(:class="this.view.name")
+  .vuecal__flex.vuecal(column :class="[this.view.name, view.name === 'week' && showTimeColumn ? 'view-with-time' : '' ]")
     .vuecal__header
       ul.vuecal__menu
         li(:class="{ active: view.name === 'years' }" @click="switchView('years')") Years
@@ -8,21 +8,20 @@
         li(:class="{ active: view.name === 'week' }" @click="switchView('week')") Week
         li(:class="{ active: view.name === 'day' }" @click="switchView('day')") Day
 
-    .vuecal__body
-      .vuecal__calendar
-        .vuecal__title
-          .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
-          span {{ view.title }}
-          .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
+    .vuecal__title
+      .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
+      span {{ view.title }}
+      .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
 
-        .vuecal__flex-wrapper
-          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
-          .vuecal__flex-wrapper(column)
-            .vuecal__headings
-              .vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
-            .vuecal__cells
-              .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
+    .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length")
+      .vuecal__flex.vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
+
+    .vuecal__flex.vuecal__body(grow)
+      .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
+        .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
+      .vuecal__flex(column)
+        .vuecal__cells
+          .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
 </template>
 
 <script>
@@ -284,13 +283,33 @@ export default {
   padding: 0;
 }
 
+$time-column-width: 3em;
+
 .vuecal {
-  margin: 5em 2em;
-  border: 1px solid #eee;
-  border-radius: 3px;
+  height: 100%;
+  overflow: hidden;
 
   &__header {
     background-color: #42b983;
+  }
+
+  &__title {
+    background-color: #e4f5ef;
+    min-height: 2.5em;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 2em;
+  }
+
+  &__arrow {
+    font-family: sans-serif;
+    cursor: pointer;
+    padding: 0.3em;
+  }
+
+  &__body {
+    overflow: auto;
   }
 
   &__menu {
@@ -312,28 +331,7 @@ export default {
     }
   }
 
-  &__calendar {
-    min-height: 200px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  &__title {
-    background-color: #e4f5ef;
-    min-height: 2.5em;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    font-size: 2em;
-  }
-
-  &__arrow {
-    font-family: sans-serif;
-    cursor: pointer;
-    padding: 0.3em;
-  }
-
-  &__flex-wrapper {
+  &__flex {
     display: flex;
     flex-direction: row;
 
@@ -341,11 +339,14 @@ export default {
       flex-direction: column;
       flex: 1;
     }
+
+    &[grow] {
+      flex-grow: 1;
+    }
   }
 
   &__time-column {
-    margin-top: 2em;
-    width: 3em;
+    width: $time-column-width;
     height: 100%;
 
     .vuecal__time-cell {
@@ -353,12 +354,11 @@ export default {
     }
   }
 
-  &__headings {
-    display: flex;
+  .view-with-time &__weekdays-headings {
+    padding-left: $time-column-width;
   }
 
   &__heading {
-    display: flex;
     width: 100%;
     height: 2em;
     border: 1px solid #ddd;
@@ -389,10 +389,10 @@ export default {
       width: 14.2857%;
     }
 
-    .vuecal.years & {width: 20%;min-height: 9em;}
-    .vuecal.year & {width: 25%;min-height: 9em;}
-    .vuecal.month & {min-height: 9em;}
-    .vuecal.week & {min-height: 15em;}
+    .vuecal.years & {width: 20%;}
+    .vuecal.year & {width: 25%;}
+    // .vuecal.month & {}
+    // .vuecal.week & {}
     .vuecal.day & {flex: 1;}
   }
 
