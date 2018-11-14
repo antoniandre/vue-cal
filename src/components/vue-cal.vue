@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[this.view.name, view.name === 'week' && showTimeColumn ? 'view-with-time' : '' ]")
+  .vuecal__flex.vuecal(column :class="[this.view.name, hasTimeColumn ? 'view-with-time' : '' ]")
     .vuecal__header
       ul.vuecal__menu
         li(:class="{ active: view.name === 'years' }" @click="switchView('years')") Years
@@ -17,11 +17,12 @@
       .vuecal__flex.vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
 
     .vuecal__flex.vuecal__body(grow)
-      .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
-        .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
-      .vuecal__flex(column)
-        .vuecal__cells
-          .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
+      div(style="width: 100%" :class="{ vuecal__flex: !hasTimeColumn }" :data-test="hasTimeColumn ? 'true' : 'false'")
+        .vuecal__flex(grow)
+          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
+            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
+          .vuecal__flex.vuecal__cells(grow)
+            .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
 </template>
 
 <script>
@@ -273,6 +274,9 @@ export default {
   },
 
   computed: {
+    hasTimeColumn () {
+      return this.showTimeColumn && ['week', 'day'].indexOf(this.view.name) > -1
+    }
   }
 }
 </script>
@@ -310,6 +314,7 @@ $time-column-width: 3em;
 
   &__body {
     overflow: auto;
+    flex-basis: 0;
   }
 
   &__menu {
@@ -351,6 +356,8 @@ $time-column-width: 3em;
 
     .vuecal__time-cell {
       border: 1px solid #eee;
+      color: #999;
+      height: 3em;
     }
   }
 
@@ -360,7 +367,7 @@ $time-column-width: 3em;
 
   &__heading {
     width: 100%;
-    height: 2em;
+    height: 3em;
     border: 1px solid #ddd;
     font-weight: bold;
     justify-content: center;
@@ -368,9 +375,6 @@ $time-column-width: 3em;
   }
 
   &__cells {
-    display: flex;
-    height: 100%;
-    flex-grow: 1;
     flex-wrap: wrap;
   }
 
