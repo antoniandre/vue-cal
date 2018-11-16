@@ -10,9 +10,9 @@
       p Support for scheddule events coming soon!
 
       h3.mt-5 # Demo 1
-      p Given time range and time step, 24-hour format.
+      p Given time range and time step, 24-hour format, hide weekends.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:click-to-navigate="false" :time-from="8 * 60" :time-to="22 * 60" :time-step="60")
+        vue-cal(:click-to-navigate="false" :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
 
       h3.mt-5 # Demo 2
       p.

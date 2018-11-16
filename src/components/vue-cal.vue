@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
+  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', hideWeekends ? 'hide-weekends' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
     .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" @click="switchView(id)") {{ v.label }}
@@ -59,6 +59,10 @@ export default {
       default: false
     },
     '12Hour': {
+      type: Boolean,
+      default: false
+    },
+    'hideWeekends': {
       type: Boolean,
       default: false
     }
@@ -222,7 +226,7 @@ export default {
       this.view.id = 'month'
       this.view.startDate = new Date(year, month, 1)
       this.view.title = `${this.months[month].label} ${year}`
-      this.view.headings = this.weekDays.map(cell => ({
+      this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map(cell => ({
         label: this.small || this.xsmall ? cell.label.substr(0, 3) : cell.label,
         class: {}
       }))
@@ -248,6 +252,10 @@ export default {
           }
         }
       })
+
+      if (this.hideWeekends) {
+        this.view.cells = this.view.cells.filter(cell => cell.date.getDay() > 0 && cell.date.getDay() < 6)
+      }
     },
 
     loadWeekView (firstDayOfWeek = null) {
@@ -256,7 +264,7 @@ export default {
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')})`
-      this.view.cells = this.weekDays.map((cell, i) => ({
+      this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => ({
         content: '<span class="vuecal__no-event">No event</span>',
         date: firstDayOfWeek.addDays(i),
         class: {
@@ -264,7 +272,7 @@ export default {
           selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime()
         }
       }))
-      this.view.headings = this.weekDays.map((cell, i) => {
+      this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
         const weekDayLabel = this.small || this.xsmall ? cell.label.substr(0, 3) : cell.label
@@ -476,6 +484,12 @@ $time-column-width-12: 4em;
     .vuecal.week &,
     .vuecal.day & {
       width: 14.2857%;
+    }
+
+    .hide-weekends.vuecal.month &,
+    .hide-weekends.vuecal.week &,
+    .hide-weekends.vuecal.day & {
+      width: 20%;
     }
 
     .vuecal.years & {width: 20%;}
