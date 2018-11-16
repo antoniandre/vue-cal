@@ -5,10 +5,18 @@
       p.
         A Vue JS full calendar, no dependency, no BS. :metal:
         #[br]#[em - under construction -]
-      v-card.my-5.ma-auto.main-content
+
+      h2.mt-5 To do...
+      p Support for scheddule events coming soon!
+
+      h3.mt-5 # Demo 1
+      p Click cell to go narrower view, and view title to go broader view.
+      v-card.my-2.ma-auto.main-content
         vue-cal
 
-      v-card.my-5.ma-auto.main-content(style="width: 460px;height: 400px;")
+      h3.mt-5 # Demo 2
+      p Smaller view, 12-hour time convention, hidden header.
+      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;")
         vue-cal(small hide-header 12-hour)
 </template>
 
