@@ -1,23 +1,23 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '']")
+  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
     .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
-        li(v-for="(v, id) in views" :class="{ active: view.id === id }" @click="switchView(id)") {{ v.label }}
+        li(:class="{ active: view.id === id }" v-for="(v, id) in views" @click="switchView(id)") {{ v.label }}
     .vuecal__title
       .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
       span(@click="switchToBroaderView()") {{ view.title }}
       .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
 
     .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length")
-      .vuecal__flex.vuecal__heading(v-for="(heading, i) in view.headings" :key="i" :class="heading.class") {{ heading.label }}
+      .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
 
     .vuecal__flex.vuecal__body(grow)
-      div(style="width: 100%" :class="{ vuecal__flex: !hasTimeColumn }" :data-test="hasTimeColumn ? 'true' : 'false'")
-        .vuecal__flex(grow)
-          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.id) > -1")
+      div(:class="{ vuecal__flex: !hasTimeColumn }" style="width: 100%" :data-test="hasTimeColumn ? 'true' : 'false'")
+        .vuecal__flex.vuecal__bg(grow)
+          .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex.vuecal__cells(grow)
-            .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
+            .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" v-html="cell.content")
 </template>
 
 <script>
@@ -26,15 +26,27 @@ import { now, weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, 
 export default {
   name: 'vue-cal',
   props: {
-    showTimeColumn: {
+    time: {
       type: Boolean,
       default: true
     },
-    timeIncrement: {
+    timeFrom: {
+      type: Number,
+      default: 0 // In minutes.
+    },
+    timeTo: {
+      type: Number,
+      default: 24 * 60 // In minutes.
+    },
+    timeStep: {
       type: Number,
       default: 30 // In minutes.
     },
     small: {
+      type: Boolean,
+      default: false
+    },
+    xsmall: {
       type: Boolean,
       default: false
     },
@@ -156,7 +168,7 @@ export default {
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
         return {
-          label: fromYear + i,
+          content: fromYear + i,
           date: new Date(fromYear + i, 0, 1),
           class: {
             current: fromYear + i === this.now.year,
@@ -176,7 +188,7 @@ export default {
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(12)).map((cell, i) => {
         return {
-          label: this.months[i].label,
+          content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
           date: new Date(year, i, 1),
           class: {
             current: i === this.now.month && year === this.now.year,
@@ -211,7 +223,7 @@ export default {
       this.view.startDate = new Date(year, month, 1)
       this.view.title = `${this.months[month].label} ${year}`
       this.view.headings = this.weekDays.map(cell => ({
-        label: this.small ? cell.label.substr(0, 3) : cell.label,
+        label: this.small || this.xsmall ? cell.label.substr(0, 3) : cell.label,
         class: {}
       }))
 
@@ -227,7 +239,7 @@ export default {
         if (isToday) todayFound = true
 
         return {
-          label: cellDate.getDate(),
+          content: cellDate.getDate(),
           date: cellDate,
           class: {
             today: isToday,
@@ -243,9 +255,9 @@ export default {
 
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
-      this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
+      this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')})`
       this.view.cells = this.weekDays.map((cell, i) => ({
-        label: 'No event',
+        content: '<span class="vuecal__no-event">No event</span>',
         date: firstDayOfWeek.addDays(i),
         class: {
           today: false,
@@ -255,7 +267,7 @@ export default {
       this.view.headings = this.weekDays.map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
-        const weekDayLabel = this.small ? cell.label.substr(0, 3) : cell.label
+        const weekDayLabel = this.small || this.xsmall ? cell.label.substr(0, 3) : cell.label
 
         if (isToday) this.view.cells[i].class.today = true
 
@@ -273,7 +285,7 @@ export default {
       this.view.startDate = date
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
-      this.view.cells = [{ label: 'No event', date, class: {} }]
+      this.view.cells = [{ content: '<span class="vuecal__no-event">No event</span>', date, class: {} }]
     },
 
     selectCell (cell) {
@@ -283,7 +295,7 @@ export default {
         if (cell.date === this.selectedDate) cell.class.selected = true
       })
 
-      this.switchToNarrowerView()
+      if (this.clickToNavigate) this.switchToNarrowerView()
     }
   },
 
@@ -291,8 +303,11 @@ export default {
     this.weekDays = this.weekDays.map(day => ({ label: day }))
     this.months = this.months.map(month => ({ label: month }))
 
-    for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
-      this.view.timeCells.push({ label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'), value: i })
+    for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
+      this.view.timeCells.push({
+        label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'),
+        value: i
+      })
     }
 
     this.now.year = this.now.Date.getFullYear()
@@ -308,7 +323,7 @@ export default {
 
   computed: {
     hasTimeColumn () {
-      return this.showTimeColumn && ['week', 'day'].indexOf(this.view.id) > -1
+      return this.time && ['week', 'day'].indexOf(this.view.id) > -1
     }
   }
 }
@@ -326,6 +341,8 @@ $time-column-width-12: 4em;
 .vuecal {
   height: 100%;
   overflow: hidden;
+
+  &--xsmall {font-size: 0.9em;}
 
   &__flex {
     display: flex;
@@ -370,7 +387,9 @@ $time-column-width-12: 4em;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    font-size: 2em;
+    font-size: 1.8em;
+
+    .vuecal--xsmall & {font-size: 1.4em;}
   }
 
   &.click-to-navigate .vuecal__title span {
@@ -388,9 +407,14 @@ $time-column-width-12: 4em;
     flex-basis: 0;
   }
 
+  &__bg {
+    position: relative;
+  }
+
   &__time-column {
     width: $time-column-width;
     height: 100%;
+    border-right: 1px solid #eee;
 
     .time-12-hour & {
       width: $time-column-width-12;
@@ -398,14 +422,20 @@ $time-column-width-12: 4em;
     }
 
     .vuecal__time-cell {
-      border: 1px solid #eee;
       color: #999;
       height: 3em;
+
+      &:before {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        border-top: 1px solid #eee;
+      }
     }
   }
 
   &__weekdays-headings {
-
     .view-with-time & {
       padding-left: $time-column-width;
     }
@@ -423,6 +453,8 @@ $time-column-width-12: 4em;
     font-weight: bold;
     justify-content: center;
     align-items: center;
+
+    .vuecal--xsmall & {padding: 0 0.2em;}
   }
 
   &__cells {
@@ -434,9 +466,11 @@ $time-column-width-12: 4em;
     border: 1px solid #ddd;
     border-top: none;
     display: flex;
-    align-items: center;
     justify-content: center;
+    align-items: center;
+    text-align: center;
     box-sizing: border-box;
+    position: relative;
 
     .vuecal.month &,
     .vuecal.week &,
@@ -451,6 +485,7 @@ $time-column-width-12: 4em;
     .vuecal.day & {flex: 1;}
 
     .click-to-navigate & {cursor: pointer;}
+    .view-with-time & {display: block;}
   }
   &__cell.today,
   &__cell.current {
@@ -463,6 +498,13 @@ $time-column-width-12: 4em;
 
   &__cell.outOfScope {
     color: #ccc;
+  }
+
+  &__no-event {
+    position: sticky;
+    top: 2em;
+    color: #aaa;
+    user-select: none;
   }
 }
 </style>

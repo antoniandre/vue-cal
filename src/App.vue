@@ -10,14 +10,22 @@
       p Support for scheddule events coming soon!
 
       h3.mt-5 # Demo 1
-      p Click cell to go narrower view, and view title to go broader view.
+      p Given time range and time step, 24-hour format.
       v-card.my-2.ma-auto.main-content
-        vue-cal
+        vue-cal(:click-to-navigate="false" :time-from="8 * 60" :time-to="22 * 60" :time-step="60")
 
       h3.mt-5 # Demo 2
-      p Smaller view, 12-hour time convention, hidden header.
+      p.
+        Smaller view, 12-hour time format, hidden header.#[br]
+        Click cell to go narrower view, and view title to go broader view (clickToNavigate).
       v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;")
         vue-cal(small hide-header 12-hour)
+
+      h3.mt-5 # Demo 3
+      p.
+        Extra-small, no timeline.#[br]
+      v-card.my-2.ma-auto.main-content(style="width: 260px;height: 260px;")
+        vue-cal(hide-header :time="false" xsmall)
 </template>
 
 <script>
