@@ -22,20 +22,18 @@ Date.prototype.subtractDays = function (days) {
 // eslint-disable-next-line
 Date.prototype.getWeek = function () {
   let d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
-  let dayNum = d.getUTCDay() || 7
+  const dayNum = d.getUTCDay() || 7
   d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-  let yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
-export const isDateToday = (date) => {
-  return formatDate(date) === formatDate(now)
-}
+export const isDateToday = (date) => formatDate(date) === formatDate(now)
 
-export const getDateOfWeek = (w, y) => {
+/* export const getDateOfWeek = (w, y) => {
   let d = (1 + (w - 1) * 7) // 1st of January + 7 days for each week.
   return new Date(y, 0, d)
-}
+} */
 
 // Returns today if it's Monday or previous Monday otherwise.
 export const getPreviousMonday = (date = null) => {
@@ -60,7 +58,7 @@ export const getDaysInMonth = (month, year) => {
   return days
 }
 
-export const getDaysInWeek = (date) => {
+/* export const getDaysInWeek = (date) => {
   date = getPreviousMonday(date)
   let days = []
   for (let i = 0; i < 7; i++) {
@@ -69,7 +67,7 @@ export const getDaysInWeek = (date) => {
   }
 
   return days
-}
+} */
 
 const nth = (d) => {
   if (d > 3 && d < 21) return 'th'
@@ -81,16 +79,23 @@ const nth = (d) => {
   }
 }
 
-export const formatTime = (time, format = 'HH') => {
-  time /= 60
-  switch (format) {
-    default:
-    case 'HH':
-      time = (time < 10 ? '0' : '') + time
-      break
+export const formatTime = (time, format = 'HH:mm') => {
+  const H = Math.floor(time / 60)
+  const h = H % 12 ? H % 12 : 12
+  const am = H < 12 ? 'am' : 'pm'
+  const m = time % 60
+  const timeObj = {
+    H,
+    h,
+    HH: (H < 10 ? '0' : '') + H,
+    hh: (h < 10 ? '0' : '') + h,
+    am,
+    AM: am.toUpperCase(),
+    m,
+    mm: (m < 10 ? '0' : '') + m
   }
 
-  return time
+  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => timeObj[contents.replace(/\{|\}/g, '')])
 }
 
 export const formatDate = (date, format = 'yyyy-mm-dd') => {
@@ -100,10 +105,10 @@ export const formatDate = (date, format = 'yyyy-mm-dd') => {
     D: date.getDay(), // 0 to 6.
     DDD: weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
     DDDD: weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
-    d: d, // 1 to 31.
+    d, // 1 to 31.
     dd: (d < 10 ? '0' : '') + d, // 01 to 31.
     S: nth(d), // st, nd, rd, th.
-    m: m, // 1 to 12.
+    m, // 1 to 12.
     mm: (m < 10 ? '0' : '') + m, // 01 to 12.
     mmm: months[m - 1].substr(0, 3), // Jan to Dec.
     mmmm: months[m - 1], // January to December.
