@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '' ]")
+  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '']")
     .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
         li(v-for="(v, id) in views" :class="{ active: view.id === id }" @click="switchView(id)") {{ v.label }}
@@ -37,6 +37,10 @@ export default {
     small: {
       type: Boolean,
       default: false
+    },
+    clickToNavigate: {
+      type: Boolean,
+      default: true
     },
     hideHeader: {
       type: Boolean,
@@ -369,6 +373,10 @@ $time-column-width-12: 4em;
     font-size: 2em;
   }
 
+  &.click-to-navigate .vuecal__title span {
+    cursor: pointer;
+  }
+
   &__arrow {
     font-family: sans-serif;
     cursor: pointer;
@@ -441,8 +449,9 @@ $time-column-width-12: 4em;
     // .vuecal.month & {}
     // .vuecal.week & {}
     .vuecal.day & {flex: 1;}
-  }
 
+    .click-to-navigate & {cursor: pointer;}
+  }
   &__cell.today,
   &__cell.current {
     background-color: #f8f8ff;
