@@ -37,7 +37,11 @@ export default {
     },
     timeIncrement: {
       type: Number,
-      default: 60 // In minutes.
+      default: 30 // In minutes.
+    },
+    small: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -181,7 +185,10 @@ export default {
       this.view.name = 'month'
       this.view.startDate = new Date(year, month, 1)
       this.view.title = `${this.months[month].label} ${year}`
-      this.view.headings = this.weekDays
+      this.view.headings = this.weekDays.map(cell => ({
+        label: this.small ? cell.label.substr(0, 3) : cell.label,
+        class: {}
+      }))
 
       let todayFound = false
       let nextMonthDays = 0
@@ -223,11 +230,12 @@ export default {
       this.view.headings = this.weekDays.map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
+        const weekDayLabel = this.small ? cell.label.substr(0, 3) : cell.label
 
         if (isToday) this.view.cells[i].class.today = true
 
         return {
-          label: `${cell.label} ${thisDay.getDate()}`,
+          label: `${weekDayLabel} ${thisDay.getDate()}`,
           class: {}
         }
       })
@@ -291,8 +299,41 @@ $time-column-width: 3em;
   height: 100%;
   overflow: hidden;
 
+  &__flex {
+    display: flex;
+    flex-direction: row;
+
+    &[column] {
+      flex-direction: column;
+      flex: 1;
+    }
+
+    &[grow] {
+      flex-grow: 1;
+    }
+  }
+
   &__header {
     background-color: #42b983;
+  }
+
+  &__menu {
+    list-style-type: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    li {
+      padding: 0.4em 1em;
+      cursor: pointer;
+      font-size: 1.3em;
+      border-bottom: 3px solid transparent;
+      color: #fff;
+    }
+
+    li.active {
+      border-bottom-color: #fff;
+    }
   }
 
   &__title {
@@ -315,39 +356,6 @@ $time-column-width: 3em;
     flex-basis: 0;
   }
 
-  &__menu {
-    list-style-type: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    li {
-      padding: 0.4em 1em;
-      cursor: pointer;
-      font-size: 1.3em;
-      border-bottom: 3px solid transparent;
-      color: #fff;
-    }
-
-    li.active {
-      border-bottom-color: #fff;
-    }
-  }
-
-  &__flex {
-    display: flex;
-    flex-direction: row;
-
-    &[column] {
-      flex-direction: column;
-      flex: 1;
-    }
-
-    &[grow] {
-      flex-grow: 1;
-    }
-  }
-
   &__time-column {
     width: $time-column-width;
     height: 100%;
@@ -359,8 +367,11 @@ $time-column-width: 3em;
     }
   }
 
-  .view-with-time &__weekdays-headings {
-    padding-left: $time-column-width;
+  &__weekdays-headings {
+
+    .view-with-time & {
+      padding-left: $time-column-width;
+    }
   }
 
   &__heading {

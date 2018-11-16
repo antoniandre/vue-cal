@@ -5,8 +5,11 @@
       p.
         A Vue JS full calendar, no dependency, no BS. :metal:
         #[br]#[em - under construction -]
-      v-card.ma-5(style="height: 650px")
+      v-card.my-5.ma-auto.main-content
         vue-cal
+
+      v-card.my-5.ma-auto.main-content(style="width: 460px;height: 400px;")
+        vue-cal(small)
 </template>
 
 <script>
@@ -28,5 +31,10 @@ export default {
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+}
+
+.main-content {
+  max-width: 800px;
+  height: 650px;
 }
 </style>
