@@ -1,16 +1,11 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[this.view.name, hasTimeColumn ? 'view-with-time' : '' ]")
-    .vuecal__header
+  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '' ]")
+    .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
-        li(:class="{ active: view.name === 'years' }" @click="switchView('years')") Years
-        li(:class="{ active: view.name === 'year' }" @click="switchView('year')") Year
-        li(:class="{ active: view.name === 'month' }" @click="switchView('month')") Month
-        li(:class="{ active: view.name === 'week' }" @click="switchView('week')") Week
-        li(:class="{ active: view.name === 'day' }" @click="switchView('day')") Day
-
+        li(v-for="(v, id) in views" :class="{ active: view.id === id }" @click="switchView(id)") {{ v.label }}
     .vuecal__title
       .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
-      span {{ view.title }}
+      span(@click="switchToBroaderView()") {{ view.title }}
       .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
 
     .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length")
@@ -19,14 +14,14 @@
     .vuecal__flex.vuecal__body(grow)
       div(style="width: 100%" :class="{ vuecal__flex: !hasTimeColumn }" :data-test="hasTimeColumn ? 'true' : 'false'")
         .vuecal__flex(grow)
-          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.name) > -1")
+          .vuecal__time-column(v-if="showTimeColumn && ['week', 'day'].indexOf(view.id) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex.vuecal__cells(grow)
             .vuecal__cell(v-for="(cell, i) in view.cells" :key="i" :class="cell.class" @click="selectCell(cell)") {{ cell.label }}
 </template>
 
 <script>
-import { weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
+import { now, weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
 
 export default {
   name: 'vue-cal',
@@ -42,11 +37,26 @@ export default {
     small: {
       type: Boolean,
       default: false
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false
+    },
+    '12Hour': {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
+    views: {
+      years: { label: 'Years' },
+      year: { label: 'Year' },
+      month: { label: 'Month' },
+      week: { label: 'Week' },
+      day: { label: 'Day' }
+    },
     now: {
-      Date: new Date(),
+      Date: now,
       day: null,
       week: null,
       weekFirstDay: null,
@@ -58,7 +68,7 @@ export default {
     months,
     monthDays: Array[31],
     view: {
-      name: '',
+      id: '',
       title: '',
       headings: [],
       cells: [],
@@ -69,63 +79,74 @@ export default {
 
   methods: {
     previous () {
-      switch (this.view.name) {
+      switch (this.view.id) {
         case 'years':
-          this.switchView(this.view.name, this.view.startDate.getFullYear() - 25)
+          this.switchView(this.view.id, this.view.startDate.getFullYear() - 25)
           break
         case 'year':
           const firstDayOfYear = new Date(this.view.startDate.getFullYear() - 1, 1, 1)
-          this.switchView(this.view.name, firstDayOfYear)
+          this.switchView(this.view.id, firstDayOfYear)
           break
         case 'month':
           const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() - 1, 1)
-          this.switchView(this.view.name, firstDayOfMonth)
+          this.switchView(this.view.id, firstDayOfMonth)
           break
         case 'week':
           const firstDayOfPrevWeek = getPreviousMonday(this.view.startDate).subtractDays(7)
-          this.switchView(this.view.name, firstDayOfPrevWeek)
+          this.switchView(this.view.id, firstDayOfPrevWeek)
           break
         case 'day':
           const day = this.view.startDate.subtractDays(1)
-          this.switchView(this.view.name, day)
+          this.switchView(this.view.id, day)
           break
       }
     },
 
     next () {
-      switch (this.view.name) {
+      switch (this.view.id) {
         case 'years':
-          this.switchView(this.view.name, this.view.startDate.getFullYear() + 25)
+          this.switchView(this.view.id, this.view.startDate.getFullYear() + 25)
           break
         case 'year':
           const firstDayOfYear = new Date(this.view.startDate.getFullYear() + 1, 0, 1)
-          this.switchView(this.view.name, firstDayOfYear)
+          this.switchView(this.view.id, firstDayOfYear)
           break
         case 'month':
           const firstDayOfMonth = new Date(this.view.startDate.getFullYear(), this.view.startDate.getMonth() + 1, 1)
-          this.switchView(this.view.name, firstDayOfMonth)
+          this.switchView(this.view.id, firstDayOfMonth)
           break
         case 'week':
           const firstDayOfNextWeek = getPreviousMonday(this.view.startDate).addDays(7)
-          this.switchView(this.view.name, firstDayOfNextWeek)
+          this.switchView(this.view.id, firstDayOfNextWeek)
           break
         case 'day':
           const day = this.view.startDate.addDays(1)
-          this.switchView(this.view.name, day)
+          this.switchView(this.view.id, day)
           break
       }
     },
 
-    switchView (view, ...params) {
-      this.view.name = view
+    switchToBroaderView () {
+      const views = Object.keys(this.views)
+      const view = views[views.indexOf(this.view.id) - 1]
+      if (view) this.switchView(view)
+    },
 
-      this['load' + this.view.name.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
+    switchToNarrowerView () {
+      const views = Object.keys(this.views)
+      const view = views[views.indexOf(this.view.id) + 1]
+      if (view) this.switchView(view)
+    },
+
+    switchView (view, ...params) {
+      this.view.id = view
+      this['load' + this.view.id.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
     },
 
     loadYearsView (fromYear = null) {
       fromYear = fromYear || 2000
 
-      this.view.name = 'years'
+      this.view.id = 'years'
       this.view.startDate = new Date(fromYear, 0, 1)
       this.view.title = 'Years'
       this.view.headings = []
@@ -145,7 +166,7 @@ export default {
       date = date || this.selectedDate || this.view.startDate
       let year = date.getFullYear()
 
-      this.view.name = 'year'
+      this.view.id = 'year'
       this.view.startDate = new Date(year, 0, 1)
       this.view.title = year
       this.view.headings = []
@@ -182,7 +203,7 @@ export default {
         days.unshift(...prevWeek)
       }
 
-      this.view.name = 'month'
+      this.view.id = 'month'
       this.view.startDate = new Date(year, month, 1)
       this.view.title = `${this.months[month].label} ${year}`
       this.view.headings = this.weekDays.map(cell => ({
@@ -216,7 +237,7 @@ export default {
     loadWeekView (firstDayOfWeek = null) {
       firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.selectedDate) || getPreviousMonday(this.view.startDate)
 
-      this.view.name = 'week'
+      this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, 'mmmm yyyy')})`
       this.view.cells = this.weekDays.map((cell, i) => ({
@@ -244,7 +265,7 @@ export default {
     loadDayView (date = null) {
       date = date || this.selectedDate || this.view.startDate
 
-      this.view.name = 'day'
+      this.view.id = 'day'
       this.view.startDate = date
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
@@ -257,6 +278,8 @@ export default {
         if (cell.class.selected) cell.class.selected = false
         if (cell.date === this.selectedDate) cell.class.selected = true
       })
+
+      this.switchToNarrowerView()
     }
   },
 
@@ -265,7 +288,7 @@ export default {
     this.months = this.months.map(month => ({ label: month }))
 
     for (let i = 0, max = 24 * 60; i <= max; i += this.timeIncrement) {
-      this.view.timeCells.push({ label: formatTime(i), value: i })
+      this.view.timeCells.push({ label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'), value: i })
     }
 
     this.now.year = this.now.Date.getFullYear()
@@ -281,7 +304,7 @@ export default {
 
   computed: {
     hasTimeColumn () {
-      return this.showTimeColumn && ['week', 'day'].indexOf(this.view.name) > -1
+      return this.showTimeColumn && ['week', 'day'].indexOf(this.view.id) > -1
     }
   }
 }
@@ -294,6 +317,7 @@ export default {
 }
 
 $time-column-width: 3em;
+$time-column-width-12: 4em;
 
 .vuecal {
   height: 100%;
@@ -360,6 +384,11 @@ $time-column-width: 3em;
     width: $time-column-width;
     height: 100%;
 
+    .time-12-hour & {
+      width: $time-column-width-12;
+      font-size: 0.9em;
+    }
+
     .vuecal__time-cell {
       border: 1px solid #eee;
       color: #999;
@@ -371,6 +400,11 @@ $time-column-width: 3em;
 
     .view-with-time & {
       padding-left: $time-column-width;
+    }
+
+    .view-with-time.time-12-hour & {
+      font-size: 0.9em;
+      padding-left: $time-column-width-12;
     }
   }
 

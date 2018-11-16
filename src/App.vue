@@ -9,7 +9,7 @@
         vue-cal
 
       v-card.my-5.ma-auto.main-content(style="width: 460px;height: 400px;")
-        vue-cal(small)
+        vue-cal(small hide-header 12-hour)
 </template>
 
 <script>
