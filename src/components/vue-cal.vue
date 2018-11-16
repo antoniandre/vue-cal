@@ -228,9 +228,7 @@ export default {
 
         return {
           label: `${cell.label} ${thisDay.getDate()}`,
-          class: {
-            today: isToday
-          }
+          class: {}
         }
       })
     },
@@ -400,17 +398,13 @@ $time-column-width: 3em;
     .vuecal.day & {flex: 1;}
   }
 
-  &__heading.today,
-  &__cell.today {
-    border: 1px solid #faa;
-  }
-
+  &__cell.today,
   &__cell.current {
-    border: 1px solid #aaf;
+    background-color: #f8f8ff;
   }
 
   &__cell.selected {
-    border: 1px solid orange;
+    background-color: #f6fffb;
   }
 
   &__cell.outOfScope {
