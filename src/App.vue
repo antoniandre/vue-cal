@@ -16,10 +16,10 @@
 
       h3.mt-5 # Demo 2
       p.
-        Smaller view, 12-hour time format, hidden header.#[br]
+        Smaller view, 12-hour time format, hidden header, default month view.#[br]
         Click cell to go narrower view, and view title to go broader view (clickToNavigate).
       v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;")
-        vue-cal(small hide-header 12-hour)
+        vue-cal(small hide-header 12-hour default-view="month")
 
       h3.mt-5 # Demo 3
       p.

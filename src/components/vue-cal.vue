@@ -65,6 +65,10 @@ export default {
     'hideWeekends': {
       type: Boolean,
       default: false
+    },
+    'defaultView': {
+      type: String,
+      default: 'week'
     }
   },
   data: () => ({
@@ -326,7 +330,7 @@ export default {
 
     this.selectedDate = new Date(this.now.year, this.now.month, this.now.Date.getDate())
 
-    this.loadWeekView()
+    this.switchView(this.defaultView)
   },
 
   computed: {
