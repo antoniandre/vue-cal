@@ -32,6 +32,12 @@
         I18n.#[br]
       v-card.my-2.ma-auto.main-content(style="width: 460px;height: 320px;")
         vue-cal(hide-header :time="false" xsmall locale="fr")
+
+      h3.mt-5 # Demo 5
+      p.
+        Different layout.
+      v-card.my-2.ma-auto.main-content.round(style="width: 280px;height: 300px;")
+        vue-cal(small hide-header 12-hour :time="false" default-view="month")
 </template>
 
 <script>
@@ -58,5 +64,26 @@ export default {
 .main-content {
   max-width: 800px;
   height: 650px;
+}
+
+.round {
+  .vuecal__heading {border: 0;font-size: 12px;}
+  .vuecal__title {font-size: 1.3em;}
+  .vuecal__cell {background: none;border: none;}
+  .vuecal__cell.out-of-scope {opacity: 0.4;}
+  .vuecal__cell-content {
+    width: 32px;
+    height: 32px;
+    font-size: 12px;
+    background: #f1faf7;
+    color: #333;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .vuecal--year-view .vuecal__cell {width: 33.33%;}
+  .vuecal--year-view .vuecal__cell-content {width: 85px;}
+  .vuecal--years-view .vuecal__cell-content {width: 52px;}
 }
 </style>

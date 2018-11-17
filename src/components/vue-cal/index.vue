@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[view.id, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', hideWeekends ? 'hide-weekends' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
+  .vuecal__flex.vuecal(column :class="[`vuecal--${view.id}-view`, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', hideWeekends ? 'hide-weekends' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
     .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" @click="switchView(id)") {{ v.label }}
@@ -17,7 +17,8 @@
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
           .vuecal__flex.vuecal__cells(grow)
-            .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" v-html="cell.content")
+            .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)")
+              .vuecal__cell-content(v-html="cell.content")
 </template>
 
 <script>
@@ -253,7 +254,7 @@ export default {
           date: cellDate,
           class: {
             today: isToday,
-            outOfScope: cellDate.getMonth() !== month,
+            'out-of-scope': cellDate.getMonth() !== month,
             selected: this.selectedDate && cellDate.getTime() === this.selectedDate.getTime()
           }
         }
@@ -427,6 +428,7 @@ $time-column-width-12: 4em;
   &__body {
     overflow: auto;
     flex-basis: 0;
+    margin: -1px;
   }
 
   &__bg {
@@ -458,6 +460,8 @@ $time-column-width-12: 4em;
   }
 
   &__weekdays-headings {
+    margin: -1px;
+
     .view-with-time & {
       padding-left: $time-column-width;
     }
@@ -494,23 +498,23 @@ $time-column-width-12: 4em;
     box-sizing: border-box;
     position: relative;
 
-    .vuecal.month &,
-    .vuecal.week &,
-    .vuecal.day & {
+    .vuecal--month-view &,
+    .vuecal--week-view &,
+    .vuecal--day-view & {
       width: 14.2857%;
     }
 
-    .hide-weekends.vuecal.month &,
-    .hide-weekends.vuecal.week &,
-    .hide-weekends.vuecal.day & {
+    .hide-weekends.vuecal--month-view &,
+    .hide-weekends.vuecal--week-view &,
+    .hide-weekends.vuecal--day-view & {
       width: 20%;
     }
 
-    .vuecal.years & {width: 20%;}
-    .vuecal.year & {width: 25%;}
-    // .vuecal.month & {}
-    // .vuecal.week & {}
-    .vuecal.day & {flex: 1;}
+    .vuecal--years-view & {width: 20%;}
+    .vuecal--year-view & {width: 25%;}
+    // .vuecal--month-view & {}
+    // .vuecal--week-view & {}
+    .vuecal--day-view & {flex: 1;}
 
     .click-to-navigate & {cursor: pointer;}
     .view-with-time & {display: block;}
@@ -524,7 +528,7 @@ $time-column-width-12: 4em;
     background-color: #f6fffb;
   }
 
-  &__cell.outOfScope {
+  &__cell.out-of-scope {
     color: #ccc;
   }
 
