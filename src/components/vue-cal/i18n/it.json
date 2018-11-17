@@ -4,5 +4,6 @@
   "years": "Anni",
   "week": "Settimana",
   "today": "Oggi",
-  "noEvent": "No evento"
+  "noEvent": "No evento",
+  "dateFormat": "DDDD d mmmm yyyy"
 }

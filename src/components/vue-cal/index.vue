@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="[`vuecal--${view.id}-view`, hasTimeColumn ? 'view-with-time' : '', this['12Hour'] ? 'time-12-hour' : '', clickToNavigate ? 'click-to-navigate' : '', hideWeekends ? 'hide-weekends' : '', small ? 'vuecal--small' : '', xsmall ? 'vuecal--xsmall' : '']")
+  .vuecal__flex.vuecal(column :class="cssClasses")
     .vuecal__header(v-if="!hideHeader")
       ul.vuecal__menu
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" @click="switchView(id)") {{ v.label }}
@@ -270,7 +270,7 @@ export default {
 
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
-      this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')})`
+      this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
       this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => ({
         content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`,
         date: firstDayOfWeek.addDays(i),
@@ -298,7 +298,7 @@ export default {
 
       this.view.id = 'day'
       this.view.startDate = date
-      this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
+      this.view.title = formatDate(date, this.texts.dateFormat, this.locale)
       this.view.headings = []
       this.view.cells = [{ content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`, date, class: {} }]
     },
@@ -337,7 +337,7 @@ export default {
 
   computed: {
     texts () {
-      return texts
+      return texts[this.locale]
     },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
@@ -347,6 +347,17 @@ export default {
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
+    },
+    cssClasses () {
+      return {
+        [`vuecal--${this.view.id}-view`]: true,
+        'view-with-time': this.hasTimeColumn,
+        'time-12-hour': this['12Hour'],
+        'click-to-navigate': this.clickToNavigate,
+        'hide-weekends': this.hideWeekends,
+        'vuecal--small': this.small,
+        'vuecal--xsmall': this.xsmall
+      }
     }
   }
 }
