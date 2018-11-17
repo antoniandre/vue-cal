@@ -26,10 +26,16 @@
         Extra-small, no timeline.#[br]
       v-card.my-2.ma-auto.main-content(style="width: 260px;height: 260px;")
         vue-cal(hide-header :time="false" xsmall)
+
+      h3.mt-5 # Demo 4
+      p.
+        I18n.#[br]
+      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 320px;")
+        vue-cal(hide-header :time="false" xsmall locale="fr")
 </template>
 
 <script>
-import VueCal from './components/vue-cal.vue'
+import VueCal from '@/components/vue-cal'
 
 export default {
   name: 'app',

@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { now, weekDays, months, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from '@/date-utils'
+import { setLocale, now, texts, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from './date-utils'
 
 export default {
   name: 'vue-cal',
@@ -69,6 +69,10 @@ export default {
     'defaultView': {
       type: String,
       default: 'week'
+    },
+    locale: {
+      type: String,
+      default: 'en'
     }
   },
   data: () => ({
@@ -88,8 +92,6 @@ export default {
       year: null
     },
     selectedDate: null,
-    weekDays,
-    months,
     monthDays: Array[31],
     view: {
       id: '',
@@ -172,7 +174,7 @@ export default {
 
       this.view.id = 'years'
       this.view.startDate = new Date(fromYear, 0, 1)
-      this.view.title = 'Years'
+      this.view.title = this.texts.years
       this.view.headings = []
       this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
         return {
@@ -267,9 +269,9 @@ export default {
 
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
-      this.view.title = `Week ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')})`
+      this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')})`
       this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => ({
-        content: '<span class="vuecal__no-event">No event</span>',
+        content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`,
         date: firstDayOfWeek.addDays(i),
         class: {
           today: false,
@@ -297,7 +299,7 @@ export default {
       this.view.startDate = date
       this.view.title = formatDate(date, 'DDDD mmmm dd{S}, yyyy')
       this.view.headings = []
-      this.view.cells = [{ content: '<span class="vuecal__no-event">No event</span>', date, class: {} }]
+      this.view.cells = [{ content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`, date, class: {} }]
     },
 
     selectCell (cell) {
@@ -312,8 +314,7 @@ export default {
   },
 
   created () {
-    this.weekDays = this.weekDays.map(day => ({ label: day }))
-    this.months = this.months.map(month => ({ label: month }))
+    if (this.locale !== 'en') setLocale(this.locale)
 
     for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
       this.view.timeCells.push({
@@ -334,8 +335,17 @@ export default {
   },
 
   computed: {
+    texts () {
+      return texts
+    },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
+    },
+    weekDays () {
+      return this.texts.weekDays.map(day => ({ label: day }))
+    },
+    months () {
+      return this.texts.months.map(month => ({ label: month }))
     }
   }
 }
