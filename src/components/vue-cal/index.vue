@@ -74,16 +74,13 @@ export default {
     locale: {
       type: String,
       default: 'en'
+    },
+    disableViews: {
+      type: Array,
+      default: () => []
     }
   },
   data: () => ({
-    views: {
-      years: { label: 'Years' },
-      year: { label: 'Year' },
-      month: { label: 'Month' },
-      week: { label: 'Week' },
-      day: { label: 'Day' }
-    },
     now: {
       Date: now,
       day: null,
@@ -154,14 +151,19 @@ export default {
     },
 
     switchToBroaderView () {
-      const views = Object.keys(this.views)
-      const view = views[views.indexOf(this.view.id) - 1]
+      let views = Object.keys(this.views)
+      views = views.slice(0, views.indexOf(this.view.id))
+      views.reverse()
+      const view = views.find(v => this.views[v].enabled)
+
       if (view) this.switchView(view)
     },
 
     switchToNarrowerView () {
-      const views = Object.keys(this.views)
-      const view = views[views.indexOf(this.view.id) + 1]
+      let views = Object.keys(this.views)
+      views = views.slice(views.indexOf(this.view.id) + 1)
+      const view = views.find(v => this.views[v].enabled)
+
       if (view) this.switchView(view)
     },
 
@@ -338,6 +340,15 @@ export default {
   computed: {
     texts () {
       return texts[this.locale]
+    },
+    views () {
+      return {
+        years: { label: 'Years', enabled: this.disableViews.indexOf('years') },
+        year: { label: 'Year', enabled: this.disableViews.indexOf('year') },
+        month: { label: 'Month', enabled: this.disableViews.indexOf('month') },
+        week: { label: 'Week', enabled: this.disableViews.indexOf('week') },
+        day: { label: 'Day', enabled: this.disableViews.indexOf('day') }
+      }
     },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1

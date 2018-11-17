@@ -35,9 +35,9 @@
 
       h3.mt-5 # Demo 5
       p.
-        Different layout.
+        Different layout. Week view disabled.
       v-card.my-2.ma-auto.main-content.round(style="width: 280px;height: 300px;")
-        vue-cal(xsmall hide-header 12-hour :time="false" default-view="month")
+        vue-cal(xsmall hide-header 12-hour :time="false" default-view="month" :disable-views="['week']")
 </template>
 
 <script>
