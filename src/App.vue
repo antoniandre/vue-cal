@@ -29,7 +29,7 @@
 
       h3.mt-5 # Demo 4
       p.
-        I18n.#[br]
+        i18n.#[br]
       v-card.my-2.ma-auto.main-content(style="width: 460px;height: 320px;")
         vue-cal(hide-view-selector :time="false" xsmall locale="fr")
 
@@ -43,7 +43,13 @@
       p.
         Split days passing a CSS class &amp; a label per split. Disabled views years, year, month.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]")
+        vue-cal(:time-from="8 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]")
+
+      h3.mt-5 # Demo 7
+      p.
+        Events.
+      v-card.my-2.ma-auto.main-content
+        vue-cal(:time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
 </template>
 
 <script>
@@ -53,7 +59,26 @@ export default {
   name: 'app',
   components: {
     VueCal
-  }
+  },
+  data: () => ({
+    events: [
+      {
+        start: '2018-11-16 10:30',
+        end: '2018-11-16 11:30',
+        title: 'Doctor appointment 1'
+      },
+      {
+        start: '2018-11-19 10:30',
+        end: '2018-11-19 11:30',
+        title: 'Doctor appointment'
+      },
+      {
+        start: '2018-11-19 20:30',
+        end: '2018-11-19 21:30',
+        title: 'Dentist appointment'
+      }
+    ]
+  })
 }
 </script>
 

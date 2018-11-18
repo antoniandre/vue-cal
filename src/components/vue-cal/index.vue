@@ -20,22 +20,19 @@
             //- Only for splitDays.
             .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
               .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
-            //- Only for splitDays.
             .vuecal__flex(v-if="hasSplits" grow)
-              .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
-                .vuecal__cell-content(:class="splitDays[i - 1].class" v-for="i in (hasSplits ? splitDays.length : 1)")
-                  .split-label(v-html="splitDays[i - 1].label")
-                  div(v-html="cell.content")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            .vuecal__cell(:class="cell.class" v-else v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
-              .vuecal__cell-content(v-for="i in (hasSplits ? splitDays.length : 1)" v-html="cell.content")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in view.cells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
 import { setLocale, now, texts, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from './date-utils'
+import Cell from './cell'
 
 export default {
   name: 'vue-cal',
+  components: { 'vuecal-cell': Cell },
   props: {
     time: {
       type: Boolean,
@@ -94,6 +91,10 @@ export default {
       default: 'en'
     },
     disableViews: {
+      type: Array,
+      default: () => []
+    },
+    'events': {
       type: Array,
       default: () => []
     }
@@ -264,9 +265,13 @@ export default {
         // To increase performance skip checking isToday if today already found.
         if (isToday) todayFound = true
 
+        const events = (this.events.length &&
+                        this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.locale)]) || []
+
         return {
           content: cellDate.getDate(),
           date: cellDate,
+          events,
           class: {
             today: isToday,
             'out-of-scope': cellDate.getMonth() !== month,
@@ -286,15 +291,21 @@ export default {
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
       this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
-      this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => ({
-        content: `<div class="vuecal__no-event">${this.texts.noEvent}</div>`,
-        date: firstDayOfWeek.addDays(i),
-        class: {
-          today: false,
-          selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime(),
-          splitted: this.hasSplits
+      this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+        const date = firstDayOfWeek.addDays(i)
+        const events = (this.events.length &&
+                        this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
+
+        return {
+          date,
+          events,
+          class: {
+            today: false,
+            selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime(),
+            splitted: this.hasSplits
+          }
         }
-      }))
+      })
       this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
         const thisDay = firstDayOfWeek.addDays(i)
         const isToday = isDateToday(thisDay)
@@ -311,7 +322,8 @@ export default {
 
     loadDayView (date = null) {
       date = date || this.selectedDate || this.view.startDate
-      let cellContent = `<div class="vuecal__no-event">${this.texts.noEvent}</div>`
+      const events = (this.events.length &&
+                      this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
 
       this.view.id = 'day'
       this.view.startDate = date
@@ -319,8 +331,8 @@ export default {
       this.view.headings = []
       this.view.cells = [
         {
-          content: `<div class="vuecal__no-event">${this.texts.noEvent}</div>`,
           date,
+          events,
           class: {
             splitted: this.hasSplits
           }
@@ -392,6 +404,17 @@ export default {
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
+    },
+    calEvents () {
+      let events = {}
+      this.events.forEach(event => {
+        const date = event.start.substr(0, 10)
+        const time = event.start.substr(11)
+        if (!events[date]) events[date] = []
+        events[date].push({ ...event, startTime: time })
+      })
+
+      return events
     },
     cssClasses () {
       return {
@@ -502,7 +525,7 @@ $weekdays-headings-height: 3em;
   &__heading {
     width: 100%;
     height: $weekdays-headings-height;
-    font-weight: bold;
+    font-weight: 400;
     justify-content: center;
     align-items: center;
     user-select: none;
@@ -561,81 +584,6 @@ $weekdays-headings-height: 3em;
       flex-wrap: nowrap;
       overflow: auto hidden;
     }
-  }
-
-  &__cell {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    position: relative;
-    .vuecal--month-view &,
-    .vuecal--week-view &,
-    .vuecal--day-view & {
-      width: 14.2857%;
-    }
-
-    .vuecal--hide-weekends.vuecal--month-view &,
-    .vuecal--hide-weekends.vuecal--week-view &,
-    .vuecal--hide-weekends.vuecal--day-view & {
-      width: 20%;
-    }
-
-    .vuecal--years-view & {width: 20%;}
-    .vuecal--year-view & {width: 33.33%;}
-    // .vuecal--month-view & {}
-    // .vuecal--week-view & {}
-    .vuecal--day-view & {flex: 1;}
-
-    .click-to-navigate & {cursor: pointer;}
-    .view-with-time & {display: block;}
-
-    &.splitted {
-      flex-direction: row;
-      display: flex;
-    }
-
-    &.splitted &-content {
-      display: flex;
-      flex-grow: 1;
-      flex-direction: column;
-      height: 100%;
-    }
-
-    &:before {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: -1px;
-      bottom: -1px;
-      border: 1px solid #ddd;
-      content: '';
-    }
-  }
-  &__cell.today,
-  &__cell.current {
-    background-color: rgba(240, 240, 255, 0.4);
-    z-index: 1;
-  }
-
-  &__cell.selected {
-    background-color: rgba(235, 255, 245, 0.4);
-    z-index: 2;
-
-    &:before {
-      border-color: rgba(66, 185, 131, 0.5);
-    }
-  }
-
-  &__cell.out-of-scope {
-    color: #ccc;
-  }
-
-  &__no-event {
-    padding-top: 1em;
-    color: #aaa;
-    user-select: none;
   }
 }
 </style>
