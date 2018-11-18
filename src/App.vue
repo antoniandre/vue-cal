@@ -43,7 +43,7 @@
       p.
         Split days passing a CSS class &amp; a label per split. Disabled views years, year, month.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" :split-days="2" :split-days-classes="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]")
+        vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]")
 </template>
 
 <script>
@@ -103,16 +103,10 @@ export default {
 }
 
 // Split days example.
-.vuecal--split-days.vuecal--week-view .vuecal__time-column {margin-top: 3em;}
-.vuecal--split-days .vuecal__weekdays-headings {padding-left: 0;}
 .vuecal--split-days .vuecal__heading,
 .vuecal--split-days.vuecal--week-view .vuecal__,
 .vuecal--split-days.vuecal--week-view .vuecal__cell,
 .vuecal--split-days.vuecal--day-view .vuecal__cell {min-width: 400px;}
-.vuecal--split-days.vuecal--week-view .vuecal__cells {
-  flex-wrap: nowrap;
-  overflow: auto hidden;
-}
 
 .vuecal__cell-content.him {background-color: rgba(221, 238, 255, 0.6);}
 .vuecal__cell-content.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}

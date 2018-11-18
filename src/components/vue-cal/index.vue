@@ -23,12 +23,12 @@
             //- Only for splitDays.
             .vuecal__flex(v-if="hasSplits" grow)
               .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
-                .vuecal__cell-content(:class="splitDaysClasses[i - 1].class" v-for="i in (hasSplits ? splitDays : 1)")
-                  .split-label(v-html="splitDaysClasses[i - 1].label")
+                .vuecal__cell-content(:class="splitDays[i - 1].class" v-for="i in (hasSplits ? splitDays.length : 1)")
+                  .split-label(v-html="splitDays[i - 1].label")
                   div(v-html="cell.content")
             //- Only for not splitDays.
             .vuecal__cell(:class="cell.class" v-else v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
-              .vuecal__cell-content(v-for="i in (hasSplits ? splitDays : 1)" v-html="cell.content")
+              .vuecal__cell-content(v-for="i in (hasSplits ? splitDays.length : 1)" v-html="cell.content")
 </template>
 
 <script>
@@ -86,10 +86,6 @@ export default {
       default: 'week'
     },
     'splitDays': {
-      type: Number,
-      default: 1
-    },
-    'splitDaysClasses': {
       type: Array,
       default: () => []
     },
@@ -389,7 +385,7 @@ export default {
     },
     // Whether the current view has days splits.
     hasSplits () {
-      return this.splitDays > 1 && ['week', 'day'].indexOf(this.view.id) > -1
+      return !!this.splitDays.length && ['week', 'day'].indexOf(this.view.id) > -1
     },
     weekDays () {
       return this.texts.weekDays.map(day => ({ label: day }))
@@ -404,7 +400,7 @@ export default {
         'vuecal--time-12-hour': this['12Hour'],
         'click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
-        'vuecal--split-days': this.splitDays > 1,
+        'vuecal--split-days': this.splitDays.length,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall
       }
@@ -415,12 +411,15 @@ export default {
 
 <style lang="scss">
 $time-column-width: 3em;
-$time-column-width-12: 4em;
+$time-column-width-12: 4em; // 12-hour clock has am/pm.
+$weekdays-headings-height: 3em;
 
 .vuecal {
   height: 100%;
   overflow: hidden;
 
+  // General.
+  //==================================//
   .clickable {cursor: pointer;}
 
   &--xsmall {font-size: 0.9em;}
@@ -439,6 +438,8 @@ $time-column-width-12: 4em;
     }
   }
 
+  // Header.
+  //==================================//
   &__header {
     user-select: none;
   }
@@ -480,6 +481,37 @@ $time-column-width-12: 4em;
     padding: 0.3em;
   }
 
+  &__weekdays-headings {
+    border-bottom: 1px solid #ddd;
+    margin-bottom: -1px;
+
+    .view-with-time & {
+      padding-left: $time-column-width;
+    }
+
+    .view-with-time.vuecal--time-12-hour & {
+      font-size: 0.9em;
+      padding-left: $time-column-width-12;
+    }
+
+    .vuecal--split-days.view-with-time & {
+      padding-left: 0;
+    }
+  }
+
+  &__heading {
+    width: 100%;
+    height: $weekdays-headings-height;
+    font-weight: bold;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+
+    .vuecal--xsmall & {padding: 0 0.2em;}
+  }
+
+  // Calendar body.
+  //==================================//
   &__body {
     overflow: auto;
     flex-basis: 0;
@@ -500,6 +532,10 @@ $time-column-width-12: 4em;
       font-size: 0.9em;
     }
 
+    .vuecal--split-days.vuecal--week-view & {
+      margin-top: $weekdays-headings-height;
+    }
+
     .vuecal__time-cell {
       color: #999;
       height: 3em;
@@ -515,34 +551,16 @@ $time-column-width-12: 4em;
     }
   }
 
-  &__weekdays-headings {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: -1px;
-
-    .view-with-time & {
-      padding-left: $time-column-width;
-    }
-
-    .view-with-time.vuecal--time-12-hour & {
-      font-size: 0.9em;
-      padding-left: $time-column-width-12;
-    }
-  }
-
-  &__heading {
-    width: 100%;
-    height: 3em;
-    font-weight: bold;
-    justify-content: center;
-    align-items: center;
-    user-select: none;
-
-    .vuecal--xsmall & {padding: 0 0.2em;}
-  }
-
+  // Calendar cells.
+  //==================================//
   &__cells {
     flex-wrap: wrap;
     overflow: hidden;
+
+    .vuecal--split-days.vuecal--week-view & {
+      flex-wrap: nowrap;
+      overflow: auto hidden;
+    }
   }
 
   &__cell {
