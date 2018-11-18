@@ -1,24 +1,34 @@
 <template lang="pug">
   .vuecal__flex.vuecal(column :class="cssClasses")
-    .vuecal__header(v-if="!hideHeader")
-      ul.vuecal__menu
-        li(:class="{ active: view.id === id }" v-for="(v, id) in views" @click="switchView(id)") {{ v.label }}
-    .vuecal__title
-      .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
-      span(@click="switchToBroaderView()") {{ view.title }}
-      .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
-
-    .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length")
-      .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
+    .vuecal__header
+      ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
+        li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
+      .vuecal__title
+        .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
+        span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ view.title }}
+        .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
+      .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length && !(hasSplits && view.id === 'week')")
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
 
     .vuecal__flex.vuecal__body(grow)
-      div(:class="{ vuecal__flex: !hasTimeColumn }" style="width: 100%" :data-test="hasTimeColumn ? 'true' : 'false'")
+      div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__flex.vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
             .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
-          .vuecal__flex.vuecal__cells(grow)
-            .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)")
-              .vuecal__cell-content(v-html="cell.content")
+
+          .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
+            //- Only for splitDays.
+            .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
+              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
+            //- Only for splitDays.
+            .vuecal__flex(v-if="hasSplits" grow)
+              .vuecal__cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
+                .vuecal__cell-content(:class="splitDaysClasses[i - 1].class" v-for="i in (hasSplits ? splitDays : 1)")
+                  .split-label(v-html="splitDaysClasses[i - 1].label")
+                  div(v-html="cell.content")
+            //- Only for not splitDays.
+            .vuecal__cell(:class="cell.class" v-else v-for="(cell, i) in view.cells" :key="i" @click="selectCell(cell)" @dblclick="dblClickToNavigate && switchToNarrowerView()")
+              .vuecal__cell-content(v-for="i in (hasSplits ? splitDays : 1)" v-html="cell.content")
 </template>
 
 <script>
@@ -53,9 +63,13 @@ export default {
     },
     clickToNavigate: {
       type: Boolean,
+      default: false
+    },
+    dblClickToNavigate: {
+      type: Boolean,
       default: true
     },
-    hideHeader: {
+    hideViewSelector: {
       type: Boolean,
       default: false
     },
@@ -70,6 +84,14 @@ export default {
     'defaultView': {
       type: String,
       default: 'week'
+    },
+    'splitDays': {
+      type: Number,
+      default: 1
+    },
+    'splitDaysClasses': {
+      type: Array,
+      default: () => []
     },
     locale: {
       type: String,
@@ -151,12 +173,7 @@ export default {
     },
 
     switchToBroaderView () {
-      let views = Object.keys(this.views)
-      views = views.slice(0, views.indexOf(this.view.id))
-      views.reverse()
-      const view = views.find(v => this.views[v].enabled)
-
-      if (view) this.switchView(view)
+      if (this.broaderView) this.switchView(this.broaderView)
     },
 
     switchToNarrowerView () {
@@ -274,11 +291,12 @@ export default {
       this.view.startDate = firstDayOfWeek
       this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
       this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => ({
-        content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`,
+        content: `<div class="vuecal__no-event">${this.texts.noEvent}</div>`,
         date: firstDayOfWeek.addDays(i),
         class: {
           today: false,
-          selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime()
+          selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime(),
+          splitted: this.hasSplits
         }
       }))
       this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
@@ -297,12 +315,21 @@ export default {
 
     loadDayView (date = null) {
       date = date || this.selectedDate || this.view.startDate
+      let cellContent = `<div class="vuecal__no-event">${this.texts.noEvent}</div>`
 
       this.view.id = 'day'
       this.view.startDate = date
       this.view.title = formatDate(date, this.texts.dateFormat, this.locale)
       this.view.headings = []
-      this.view.cells = [{ content: `<span class="vuecal__no-event">${this.texts.noEvent}</span>`, date, class: {} }]
+      this.view.cells = [
+        {
+          content: `<div class="vuecal__no-event">${this.texts.noEvent}</div>`,
+          date,
+          class: {
+            splitted: this.hasSplits
+          }
+        }
+      ]
     },
 
     selectCell (cell) {
@@ -343,15 +370,26 @@ export default {
     },
     views () {
       return {
-        years: { label: 'Years', enabled: this.disableViews.indexOf('years') },
-        year: { label: 'Year', enabled: this.disableViews.indexOf('year') },
-        month: { label: 'Month', enabled: this.disableViews.indexOf('month') },
-        week: { label: 'Week', enabled: this.disableViews.indexOf('week') },
-        day: { label: 'Day', enabled: this.disableViews.indexOf('day') }
+        years: { label: 'Years', enabled: this.disableViews.indexOf('years') === -1 },
+        year: { label: 'Year', enabled: this.disableViews.indexOf('year') === -1 },
+        month: { label: 'Month', enabled: this.disableViews.indexOf('month') === -1 },
+        week: { label: 'Week', enabled: this.disableViews.indexOf('week') === -1 },
+        day: { label: 'Day', enabled: this.disableViews.indexOf('day') === -1 }
       }
+    },
+    broaderView () {
+      let views = Object.keys(this.views)
+      views = views.slice(0, views.indexOf(this.view.id))
+      views.reverse()
+
+      return views.find(v => this.views[v].enabled)
     },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
+    },
+    // Whether the current view has days splits.
+    hasSplits () {
+      return this.splitDays > 1 && ['week', 'day'].indexOf(this.view.id) > -1
     },
     weekDays () {
       return this.texts.weekDays.map(day => ({ label: day }))
@@ -363,9 +401,10 @@ export default {
       return {
         [`vuecal--${this.view.id}-view`]: true,
         'view-with-time': this.hasTimeColumn,
-        'time-12-hour': this['12Hour'],
+        'vuecal--time-12-hour': this['12Hour'],
         'click-to-navigate': this.clickToNavigate,
-        'hide-weekends': this.hideWeekends,
+        'vuecal--hide-weekends': this.hideWeekends,
+        'vuecal--split-days': this.splitDays > 1,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall
       }
@@ -375,17 +414,14 @@ export default {
 </script>
 
 <style lang="scss">
-* {
-  margin: 0;
-  padding: 0;
-}
-
 $time-column-width: 3em;
 $time-column-width-12: 4em;
 
 .vuecal {
   height: 100%;
   overflow: hidden;
+
+  .clickable {cursor: pointer;}
 
   &--xsmall {font-size: 0.9em;}
 
@@ -404,41 +440,38 @@ $time-column-width-12: 4em;
   }
 
   &__header {
-    background-color: #42b983;
+    user-select: none;
   }
 
   &__menu {
     list-style-type: none;
-    display: flex;
-    align-items: center;
+    background-color: #42b983;
     justify-content: center;
 
     li {
-      padding: 0.4em 1em;
-      cursor: pointer;
+      padding: 0.3em 1em;
+      height: 2.2em;
       font-size: 1.3em;
-      border-bottom: 3px solid transparent;
+      border-bottom: 0 solid #fff;
       color: #fff;
+      cursor: pointer;
+      transition: 0.2s;
     }
 
     li.active {
-      border-bottom-color: #fff;
+      border-bottom-width: 2px;
+      background: rgba(255, 255, 255, 0.15);
     }
   }
 
   &__title {
     background-color: #e4f5ef;
-    min-height: 2.5em;
     display: flex;
     align-items: center;
     justify-content: space-between;
     font-size: 1.8em;
 
     .vuecal--xsmall & {font-size: 1.4em;}
-  }
-
-  &.click-to-navigate .vuecal__title span {
-    cursor: pointer;
   }
 
   &__arrow {
@@ -450,7 +483,6 @@ $time-column-width-12: 4em;
   &__body {
     overflow: auto;
     flex-basis: 0;
-    margin: -1px;
   }
 
   &__bg {
@@ -461,8 +493,9 @@ $time-column-width-12: 4em;
     width: $time-column-width;
     height: 100%;
     border-right: 1px solid #eee;
+    margin-right: -1px;
 
-    .time-12-hour & {
+    .vuecal--time-12-hour & {
       width: $time-column-width-12;
       font-size: 0.9em;
     }
@@ -470,6 +503,7 @@ $time-column-width-12: 4em;
     .vuecal__time-cell {
       color: #999;
       height: 3em;
+      user-select: none;
 
       &:before {
         content: '';
@@ -482,13 +516,14 @@ $time-column-width-12: 4em;
   }
 
   &__weekdays-headings {
-    margin: -1px;
+    border-bottom: 1px solid #ddd;
+    margin-bottom: -1px;
 
     .view-with-time & {
       padding-left: $time-column-width;
     }
 
-    .view-with-time.time-12-hour & {
+    .view-with-time.vuecal--time-12-hour & {
       font-size: 0.9em;
       padding-left: $time-column-width-12;
     }
@@ -497,57 +532,82 @@ $time-column-width-12: 4em;
   &__heading {
     width: 100%;
     height: 3em;
-    border: 1px solid #ddd;
     font-weight: bold;
     justify-content: center;
     align-items: center;
+    user-select: none;
 
     .vuecal--xsmall & {padding: 0 0.2em;}
   }
 
   &__cells {
     flex-wrap: wrap;
+    overflow: hidden;
   }
 
   &__cell {
     width: 100%;
-    border: 1px solid #ddd;
-    border-top: none;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
-    box-sizing: border-box;
     position: relative;
-
     .vuecal--month-view &,
     .vuecal--week-view &,
     .vuecal--day-view & {
       width: 14.2857%;
     }
 
-    .hide-weekends.vuecal--month-view &,
-    .hide-weekends.vuecal--week-view &,
-    .hide-weekends.vuecal--day-view & {
+    .vuecal--hide-weekends.vuecal--month-view &,
+    .vuecal--hide-weekends.vuecal--week-view &,
+    .vuecal--hide-weekends.vuecal--day-view & {
       width: 20%;
     }
 
     .vuecal--years-view & {width: 20%;}
-    .vuecal--year-view & {width: 25%;}
+    .vuecal--year-view & {width: 33.33%;}
     // .vuecal--month-view & {}
     // .vuecal--week-view & {}
     .vuecal--day-view & {flex: 1;}
 
     .click-to-navigate & {cursor: pointer;}
     .view-with-time & {display: block;}
+
+    &.splitted {
+      flex-direction: row;
+      display: flex;
+    }
+
+    &.splitted &-content {
+      display: flex;
+      flex-grow: 1;
+      flex-direction: column;
+      height: 100%;
+    }
+
+    &:before {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: -1px;
+      bottom: -1px;
+      border: 1px solid #ddd;
+      content: '';
+    }
   }
   &__cell.today,
   &__cell.current {
-    background-color: #f8f8ff;
+    background-color: rgba(240, 240, 255, 0.4);
+    z-index: 1;
   }
 
   &__cell.selected {
-    background-color: #f6fffb;
+    background-color: rgba(235, 255, 245, 0.4);
+    z-index: 2;
+
+    &:before {
+      border-color: rgba(66, 185, 131, 0.5);
+    }
   }
 
   &__cell.out-of-scope {
@@ -555,8 +615,7 @@ $time-column-width-12: 4em;
   }
 
   &__no-event {
-    position: sticky;
-    top: 2em;
+    padding-top: 1em;
     color: #aaa;
     user-select: none;
   }
