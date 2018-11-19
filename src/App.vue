@@ -68,7 +68,7 @@ export default {
         title: 'Doctor appointment 1'
       },
       {
-        start: '2018-11-19 10:30',
+        start: '2018-11-19 10:35',
         end: '2018-11-19 11:30',
         title: 'Doctor appointment'
       },

@@ -13,7 +13,11 @@
     .vuecal__cell-content(v-if="content" v-html="content")
     .vuecal__cell-content(v-else)
       .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-      .vuecal__event(v-else v-for="(event, i) in events" :key="i") {{ event.title }}
+      .vuecal__event(v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)")
+        .vuecal__event-title {{ event.title }}
+        .vuecal__event-time
+          | {{ event.startTime }}
+          span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
 </template>
 
 <script>
@@ -43,6 +47,23 @@ export default {
   data: () => ({
 
   }),
+
+  methods: {
+    eventPosition (event) {
+      let [hoursStart, minutesStart] = event.startTime.split(':')
+      hoursStart = parseInt(hoursStart)
+      minutesStart = parseInt(minutesStart)
+      const top = Math.round((hoursStart + minutesStart / 60) * parseInt(this.$parent.timeCellHeight))
+
+      let [hoursEnd, minutesEnd] = event.endTime.split(':')
+      hoursEnd = parseInt(hoursEnd)
+      minutesEnd = parseInt(minutesEnd)
+      const bottom = Math.round((hoursEnd + minutesEnd / 60) * parseInt(this.$parent.timeCellHeight))
+      // console.log(hoursEnd, minutesEnd, minutesEnd / 60)
+
+      return { top: top + 'px', height: (bottom - top) + 'px' }
+    }
+  },
 
   computed: {
     texts () {
@@ -134,5 +155,17 @@ export default {
   color: #666;
   background-color: #f8f8f8;
   border: 1px solid #ddd;
+
+  .view-with-time & {
+    position: absolute;
+    left: 0;
+    right: 0;
+    overflow: hidden;
+
+    &:hover {
+      z-index: 2;
+      height: auto !important;
+    }
+  }
 }
 </style>

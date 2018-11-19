@@ -14,7 +14,7 @@
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__flex.vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i") {{ cell.label }}
+            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i" :style="`height: ${timeCellHeight}`") {{ cell.label }}
 
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
@@ -49,6 +49,10 @@ export default {
     timeStep: {
       type: Number,
       default: 30 // In minutes.
+    },
+    timeCellHeight: {
+      type: String,
+      default: '40px'
     },
     small: {
       type: Boolean,
@@ -408,10 +412,10 @@ export default {
     calEvents () {
       let events = {}
       this.events.forEach(event => {
-        const date = event.start.substr(0, 10)
-        const time = event.start.substr(11)
-        if (!events[date]) events[date] = []
-        events[date].push({ ...event, startTime: time })
+        const [startDate, startTime] = event.start.split(' ')
+        const [, endTime] = event.end.split(' ')
+        if (!events[startDate]) events[startDate] = []
+        events[startDate].push({ ...event, startTime, endTime })
       })
 
       return events
