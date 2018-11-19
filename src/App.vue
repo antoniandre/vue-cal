@@ -65,17 +65,32 @@ export default {
       {
         start: '2018-11-16 10:30',
         end: '2018-11-16 11:30',
-        title: 'Doctor appointment 1'
+        title: 'Doctor appointment 1',
+        class: 'health'
       },
       {
         start: '2018-11-19 10:35',
         end: '2018-11-19 11:30',
-        title: 'Doctor appointment'
+        title: 'Doctor appointment',
+        class: 'health'
       },
       {
         start: '2018-11-19 20:30',
         end: '2018-11-19 21:30',
-        title: 'Dentist appointment'
+        title: 'Dentist appointment',
+        class: 'health'
+      },
+      {
+        start: '2018-11-20 18:30',
+        end: '2018-11-20 20:30',
+        title: 'Karate',
+        class: 'sport'
+      },
+      {
+        start: '2018-11-21 11:00',
+        end: '2018-11-21 13:00',
+        title: 'Brunch with Jane',
+        class: 'leisure'
       }
     ]
   })
@@ -137,4 +152,8 @@ export default {
 .vuecal__cell-content.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
 .vuecal__cell-content.her {background-color: rgba(255, 232, 251, 0.6);}
 .vuecal__cell-content.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+
+.vuecal__event.leisure {background-color: rgb(253, 156, 66);color: #fff;}
+.vuecal__event.health {background-color: rgb(164, 230, 210);}
+.vuecal__event.sport {background-color: rgb(255, 102, 102);color: #fff;}
 </style>

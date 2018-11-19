@@ -6,14 +6,14 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-        .vuecal__event(v-else v-for="(event, i) in events" :key="i") {{ event.title }}
+        .vuecal__event(:class="event.class" v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)") {{ event.title }}
 
   //- Only for not splits.
   .vuecal__cell(:class="cssClass" v-else)
     .vuecal__cell-content(v-if="content" v-html="content")
     .vuecal__cell-content(v-else)
       .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-      .vuecal__event(v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)")
+      .vuecal__event(:class="event.class" v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)")
         .vuecal__event-title {{ event.title }}
         .vuecal__event-time
           | {{ event.startTime }}
@@ -61,7 +61,7 @@ export default {
       const bottom = Math.round((hoursEnd + minutesEnd / 60) * parseInt(this.$parent.timeCellHeight))
       // console.log(hoursEnd, minutesEnd, minutesEnd / 60)
 
-      return { top: top + 'px', height: (bottom - top) + 'px' }
+      return { top: top + 'px', height: (bottom - top) + 'px', minHeight: (bottom - top) + 'px' }
     }
   },
 
