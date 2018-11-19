@@ -305,8 +305,7 @@ export default {
           events,
           class: {
             today: false,
-            selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime(),
-            splitted: this.hasSplits
+            selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime()
           }
         }
       })
@@ -337,9 +336,7 @@ export default {
         {
           date,
           events,
-          class: {
-            splitted: this.hasSplits
-          }
+          class: {}
         }
       ]
     },

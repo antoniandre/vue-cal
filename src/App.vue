@@ -41,15 +41,17 @@
 
       h3.mt-5 # Demo 6
       p.
-        Split days passing a CSS class &amp; a label per split. Disabled views years, year, month.
+        Flat events (unmovable, uneditable) with custom HTML content and css class (for event types).#[br]
+        Disabled views: years, year, month.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]")
+        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
 
       h3.mt-5 # Demo 7
       p.
-        Events.
+        Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
+        Allow split-specific events.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]" :events="events")
 </template>
 
 <script>
@@ -66,31 +68,81 @@ export default {
         start: '2018-11-16 10:30',
         end: '2018-11-16 11:30',
         title: 'Doctor appointment 1',
-        class: 'health'
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'health',
+        split: 1
       },
       {
         start: '2018-11-19 10:35',
         end: '2018-11-19 11:30',
         title: 'Doctor appointment',
-        class: 'health'
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'health',
+        split: 1
       },
       {
         start: '2018-11-19 20:30',
         end: '2018-11-19 21:30',
         title: 'Dentist appointment',
-        class: 'health'
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'health',
+        split: 1
       },
       {
         start: '2018-11-20 18:30',
         end: '2018-11-20 20:30',
-        title: 'Karate',
-        class: 'sport'
+        title: 'Crossfit',
+        content: '<i class="v-icon material-icons">fitness_center</i>',
+        class: 'sport',
+        split: 1
       },
       {
         start: '2018-11-21 11:00',
         end: '2018-11-21 13:00',
         title: 'Brunch with Jane',
-        class: 'leisure'
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2018-11-21 20:00',
+        end: '2018-11-21 22:00',
+        title: 'Salsa',
+        content: '<i class="v-icon material-icons">directions_walk</i>',
+        class: 'sport',
+        split: 2
+      },
+      {
+        start: '2018-11-22 19:30',
+        end: '2018-11-22 21:00',
+        title: 'Swimming lesson',
+        content: '<i class="v-icon material-icons">pool</i>',
+        class: 'sport',
+        split: 1
+      },
+      {
+        start: '2018-11-23 12:30',
+        end: '2018-11-23 13:00',
+        title: 'Macca\'s with Mark',
+        content: '<i class="v-icon material-icons">fastfood</i>',
+        class: 'leisure',
+        split: 2
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Movie time',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Movie time',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 2
       }
     ]
   })
@@ -148,10 +200,10 @@ export default {
 .vuecal--split-days.vuecal--week-view .vuecal__cell,
 .vuecal--split-days.vuecal--day-view .vuecal__cell {min-width: 400px;}
 
-.vuecal__cell-content.him {background-color: rgba(221, 238, 255, 0.6);}
-.vuecal__cell-content.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
-.vuecal__cell-content.her {background-color: rgba(255, 232, 251, 0.6);}
-.vuecal__cell-content.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
+.vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
+.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
+.vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgb(253, 156, 66);color: #fff;}
 .vuecal__event.health {background-color: rgb(164, 230, 210);}

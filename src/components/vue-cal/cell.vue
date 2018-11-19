@@ -1,23 +1,16 @@
 <template lang="pug">
-  //- Only for splits.
-  .vuecal__cell(:class="cssClass" v-if="splits.length")
-    .vuecal__cell-content(:class="splits[i - 1].class" v-for="i in splits.length")
-      .split-label(v-html="splits[i - 1].label")
+  .vuecal__cell(:class="[cssClass, splits.length ? 'splitted' : '']")
+    .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
+      .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-        .vuecal__event(:class="event.class" v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)") {{ event.title }}
-
-  //- Only for not splits.
-  .vuecal__cell(:class="cssClass" v-else)
-    .vuecal__cell-content(v-if="content" v-html="content")
-    .vuecal__cell-content(v-else)
-      .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-      .vuecal__event(:class="event.class" v-else v-for="(event, i) in events" :key="i" :style="eventPosition(event)")
-        .vuecal__event-title {{ event.title }}
-        .vuecal__event-time
-          | {{ event.startTime }}
-          span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
+        .vuecal__event(:class="event.class" v-else v-for="(event, i) in (splits.length ? splitEvents[i] : events)" :key="i" :style="eventPosition(event)")
+          .vuecal__event-title {{ event.title }}
+          .vuecal__event-time
+            | {{ event.startTime }}
+            span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
+          .vuecal__event-content(v-html="event.content")
 </template>
 
 <script>
@@ -45,29 +38,46 @@ export default {
     }
   },
   data: () => ({
-
   }),
 
   methods: {
     eventPosition (event) {
+      const timeCellHeight = parseInt(this.$parent.timeCellHeight)
+      const timeStep = parseInt(this.$parent.timeStep)
+
       let [hoursStart, minutesStart] = event.startTime.split(':')
-      hoursStart = parseInt(hoursStart)
-      minutesStart = parseInt(minutesStart)
-      const top = Math.round((hoursStart + minutesStart / 60) * parseInt(this.$parent.timeCellHeight))
+      let startInMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+      let minutesFromTop = startInMinutes - this.$parent.timeFrom
+      let top = Math.round(minutesFromTop * timeCellHeight / timeStep)
 
       let [hoursEnd, minutesEnd] = event.endTime.split(':')
-      hoursEnd = parseInt(hoursEnd)
-      minutesEnd = parseInt(minutesEnd)
-      const bottom = Math.round((hoursEnd + minutesEnd / 60) * parseInt(this.$parent.timeCellHeight))
-      // console.log(hoursEnd, minutesEnd, minutesEnd / 60)
+      let endInMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+      minutesFromTop = endInMinutes - this.$parent.timeFrom
+      let bottom = Math.round(minutesFromTop * timeCellHeight / timeStep)
 
-      return { top: top + 'px', height: (bottom - top) + 'px', minHeight: (bottom - top) + 'px' }
+      const height = bottom - top
+
+      return {
+        top: top + 'px',
+        height: height + 'px',
+        minHeight: height + 'px'
+      }
     }
   },
 
   computed: {
     texts () {
       return this.$parent.texts
+    },
+    splitEvents () {
+      let splitEvents = []
+      this.events.forEach(event => {
+        if (event.split) {
+          if (!splitEvents[event.split]) splitEvents[event.split] = []
+          splitEvents[event.split].push(event)
+        }
+      })
+      return splitEvents
     }
   }
 }
@@ -107,11 +117,12 @@ export default {
     display: flex;
   }
 
-  &.splitted &-content {
+  .vuecal__cell-split {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
     height: 100%;
+    position: relative;
   }
 
   &:before {
@@ -154,7 +165,6 @@ export default {
   padding: 0.3em;
   color: #666;
   background-color: #f8f8f8;
-  border: 1px solid #ddd;
 
   .view-with-time & {
     position: absolute;
