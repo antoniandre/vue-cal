@@ -38,7 +38,10 @@ export default {
     }
   },
   data: () => ({
-    splitEvents: []
+    splitEvents: [],
+    // For each event, compare with others if overlapping.
+    // Keep track of what is already check in this indexed array not to redo the check.
+    comparedEvents: {}
   }),
 
   methods: {
@@ -62,19 +65,18 @@ export default {
     },
     checkOverlappingEvents (event) {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(evt => {
-        // Don't compare with itself.
-        if (event.id !== evt.id) {
+        // Don't compare with itself or with already compared item.
+        if (event.id !== evt.id && this.comparedEvents[event.id].indexOf(evt.id) === -1 && (this.comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
           const eventStartsFirst = event.startTimeMinutes > evt.startTimeMinutes
-          // console.log(this.events, event.startTimeMinutes, event.endTimeMinutes, evt.startTimeMinutes, evt.endTimeMinutes)
 
-          if ((!eventStartsFirst && event.startTimeMinutes < evt.endTimeMinutes) ||
+          if ((eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes) ||
               (event.startTimeMinutes < evt.startTimeMinutes && event.endTimeMinutes > evt.startTimeMinutes)) {
-            // console.log('overlapping here')
-
-            evt.class += eventStartsFirst ? ' overlapping' : ' overlapped'
-            event.class += eventStartsFirst ? ' overlapped' : ' overlapping'
+            evt.class += eventStartsFirst ? ' overlapped' : ' overlapping'
+            event.class += eventStartsFirst ? ' overlapping' : ' overlapped'
           }
         }
+
+        this.comparedEvents[event.id].push(evt.id)
       })
     }
   },
@@ -84,7 +86,11 @@ export default {
       return this.$parent.texts
     },
     cellEvents () {
+      this.comparedEvents = {}
+
       return this.events.map(event => {
+        this.comparedEvents[event.id] = []
+
         // Only for splits.
         if (this.splits.length && event.split) {
           if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
@@ -190,9 +196,11 @@ export default {
     overflow: hidden;
 
     &:hover {
-      // z-index: 2;
       height: auto !important;
     }
   }
+
+  &.overlapped {right: 20%;}
+  &.overlapping {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
 }
 </style>
