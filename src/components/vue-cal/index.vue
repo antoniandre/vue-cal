@@ -121,7 +121,8 @@ export default {
       cells: [],
       timeCells: [], // For week & day views.
       startDate: null
-    }
+    },
+    eventIdIncrement: 1
   }),
 
   methods: {
@@ -410,9 +411,15 @@ export default {
       let events = {}
       this.events.forEach(event => {
         const [startDate, startTime] = event.start.split(' ')
+        const [hoursStart, minutesStart] = startTime.split(':')
+        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+
         const [, endTime] = event.end.split(' ')
+        const [hoursEnd, minutesEnd] = endTime.split(':')
+        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+
         if (!events[startDate]) events[startDate] = []
-        events[startDate].push({ ...event, startTime, endTime })
+        events[startDate].push({ ...event, id: this.eventIdIncrement++, startTime, startTimeMinutes, endTime, endTimeMinutes })
       })
 
       return events

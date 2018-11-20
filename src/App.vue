@@ -52,6 +52,15 @@
         Allow split-specific events.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]" :events="events")
+
+      h3.mt-5 # Demo 8
+      p.
+        Overlapping events.
+      v-card.my-2.ma-auto.main-content
+        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+
+    v-footer.justify-end.px-3(color="white")
+      em 2018 &copy; Antoni Andre.
 </template>
 
 <script>
@@ -100,6 +109,14 @@ export default {
         start: '2018-11-21 11:00',
         end: '2018-11-21 13:00',
         title: 'Brunch with Jane',
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2018-11-21 12:00',
+        end: '2018-11-21 12:30',
+        title: 'Call mum',
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure',
         split: 1
@@ -205,7 +222,7 @@ export default {
 .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
 .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
 
-.vuecal__event.leisure {background-color: rgb(253, 156, 66);color: #fff;}
-.vuecal__event.health {background-color: rgb(164, 230, 210);}
-.vuecal__event.sport {background-color: rgb(255, 102, 102);color: #fff;}
+.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+.vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
+.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 </style>

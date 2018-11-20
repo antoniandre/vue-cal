@@ -4,8 +4,8 @@
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
       div(v-else)
-        .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
-        .vuecal__event(:class="event.class" v-else v-for="(event, i) in (splits.length ? splitEvents[i] : events)" :key="i" :style="eventPosition(event)")
+        .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
+        .vuecal__event(:class="event.class" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j" :style="eventPosition(event, i)")
           .vuecal__event-title {{ event.title }}
           .vuecal__event-time
             | {{ event.startTime }}
@@ -38,22 +38,19 @@ export default {
     }
   },
   data: () => ({
+    splitEvents: []
   }),
 
   methods: {
-    eventPosition (event) {
+    eventPosition (event, split = 0) {
       const timeCellHeight = parseInt(this.$parent.timeCellHeight)
       const timeStep = parseInt(this.$parent.timeStep)
 
-      let [hoursStart, minutesStart] = event.startTime.split(':')
-      let startInMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-      let minutesFromTop = startInMinutes - this.$parent.timeFrom
-      let top = Math.round(minutesFromTop * timeCellHeight / timeStep)
+      let minutesFromTop = event.startTimeMinutes - this.$parent.timeFrom
+      const top = Math.round(minutesFromTop * timeCellHeight / timeStep)
 
-      let [hoursEnd, minutesEnd] = event.endTime.split(':')
-      let endInMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-      minutesFromTop = endInMinutes - this.$parent.timeFrom
-      let bottom = Math.round(minutesFromTop * timeCellHeight / timeStep)
+      minutesFromTop = event.endTimeMinutes - this.$parent.timeFrom
+      const bottom = Math.round(minutesFromTop * timeCellHeight / timeStep)
 
       const height = bottom - top
 
@@ -62,6 +59,23 @@ export default {
         height: height + 'px',
         minHeight: height + 'px'
       }
+    },
+    checkOverlappingEvents (event) {
+      (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(evt => {
+        // Don't compare with itself.
+        if (event.id !== evt.id) {
+          const eventStartsFirst = event.startTimeMinutes > evt.startTimeMinutes
+          // console.log(this.events, event.startTimeMinutes, event.endTimeMinutes, evt.startTimeMinutes, evt.endTimeMinutes)
+
+          if ((!eventStartsFirst && event.startTimeMinutes < evt.endTimeMinutes) ||
+              (event.startTimeMinutes < evt.startTimeMinutes && event.endTimeMinutes > evt.startTimeMinutes)) {
+            // console.log('overlapping here')
+
+            evt.class += eventStartsFirst ? ' overlapping' : ' overlapped'
+            event.class += eventStartsFirst ? ' overlapped' : ' overlapping'
+          }
+        }
+      })
     }
   },
 
@@ -69,15 +83,18 @@ export default {
     texts () {
       return this.$parent.texts
     },
-    splitEvents () {
-      let splitEvents = []
-      this.events.forEach(event => {
-        if (event.split) {
-          if (!splitEvents[event.split]) splitEvents[event.split] = []
-          splitEvents[event.split].push(event)
+    cellEvents () {
+      return this.events.map(event => {
+        // Only for splits.
+        if (this.splits.length && event.split) {
+          if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+          this.splitEvents[event.split].push(event)
         }
+
+        this.checkOverlappingEvents(event)
+
+        return event
       })
-      return splitEvents
     }
   }
 }
@@ -173,7 +190,7 @@ export default {
     overflow: hidden;
 
     &:hover {
-      z-index: 2;
+      // z-index: 2;
       height: auto !important;
     }
   }
