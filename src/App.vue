@@ -55,8 +55,8 @@
       h2
         a(href="#installation") Installation
         a(name="installation")
-      p You have two options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
-      h3 Via NPM - COMING SOON!
+      p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
+      h3 Via NPM - COMING END OF THIS WEEK!
       div(style="opacity: 0.25")
         ssh-pre(language="shell" label="Shell") npm install vue-cal --save-dev
         p Then import the component and use it:
@@ -74,7 +74,7 @@
             ...
           }
 
-      h3 Via #[span.code &lt;script&gt;] tag - COMING SOON!
+      h3 Via #[span.code &lt;script&gt;] tag - COMING END OF THIS WEEK!
       div(style="opacity: 0.25")
         p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
         ssh-pre(language="html" label="HTML").
@@ -88,7 +88,7 @@
       h2.mt-5
         a(href="#examples") Examples
         a(name="examples")
-      h3.mt-3 # Demo 1
+      h3.mt-3 # Example 1
       p Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
@@ -96,7 +96,7 @@
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
 
-      h3.mt-5 # Demo 2
+      h3.mt-5 # Example 2
       p.
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
         Simple click cell to go narrower view.
@@ -111,7 +111,7 @@
       highlight-message(type="tips")
         | The default-view parameter accepts one of the available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
-      h3.mt-5 # Demo 3
+      h3.mt-5 # Example 3
       p.
         Extra-small, no timeline.#[br]
       v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
@@ -119,7 +119,7 @@
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" xsmall&gt;&lt;/vue-cal&gt;
 
-      h3.mt-5 # Demo 4
+      h3.mt-5 # Example 4
       p.
         i18n.
       v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;")
@@ -143,7 +143,7 @@
             "dateFormat": "DDDD d mmmm yyyy"
           }
 
-      h3.mt-5 # Demo 5
+      h3.mt-5 # Example 5
       p.
         Different layout. Week view disabled.
       v-card.my-2.ma-auto.main-content.round(style="width: 280px;height: 300px;")
@@ -154,12 +154,12 @@
       highlight-message(type="tips")
         | The disable-views parameter accepts an array of available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
-      h3.mt-5 # Demo 6
+      h3.mt-5 # Example 6
       p.
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.my-2.ma-auto.main-content
-        //- vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
 
@@ -191,50 +191,49 @@
           ]
         })
 
-      h3.mt-5 # Demo 7
-      p.
-        Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
-        Allow split-specific events.
-      v-card.my-2.ma-auto.main-content
-        //- vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
-      ssh-pre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="events"&gt;&lt;/vue-cal&gt;
-
-      ssh-pre(language="js" label="Javascript").
-        data: () => ({
-          events: [
-            {
-              start: '2018-11-19 10:35',
-              end: '2018-11-19 11:30',
-              title: 'Doctor appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
-              class: 'health'
-            },
-            {
-              start: '2018-11-19 18:30',
-              end: '2018-11-19 19:15',
-              title: 'Dentist appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
-              class: 'health'
-            },
-            {
-              start: '2018-11-20 18:30',
-              end: '2018-11-20 20:30',
-              title: 'Crossfit',
-              content: '<i class="v-icon material-icons">fitness_center</i>',
-              class: 'sport'
-            },
-            ...
-          ]
-        })
-
-      h3.mt-5 # Demo 8
+      h3.mt-5 # Example 7
       p.
         Overlapping events.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+
+      ssh-pre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-19 10:35',
+              end: '2018-11-19 11:30',
+              title: 'Doctor appointment',
+              content: '<i class="v-icon material-icons">local_hospital</i>',
+              class: 'health'
+            },
+            {
+              start: '2018-11-19 18:30',
+              end: '2018-11-19 19:15',
+              title: 'Dentist appointment',
+              content: '<i class="v-icon material-icons">local_hospital</i>',
+              class: 'health'
+            },
+            {
+              start: '2018-11-20 18:30',
+              end: '2018-11-20 20:30',
+              title: 'Crossfit',
+              content: '<i class="v-icon material-icons">fitness_center</i>',
+              class: 'sport'
+            },
+            ...
+          ]
+        })
+      h3.mt-5 # Example 8
+      p.
+        Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
+        Allow split-specific events.
+      v-card.my-2.ma-auto.main-content
+        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="events"&gt;&lt;/vue-cal&gt;
 
       ssh-pre(language="js" label="Javascript").
         data: () => ({
@@ -316,14 +315,6 @@ const events = [
     split: 1
   },
   {
-    start: '2018-11-21 20:00',
-    end: '2018-11-21 22:00',
-    title: 'Salsa',
-    content: '<i class="v-icon material-icons">directions_walk</i>',
-    class: 'sport',
-    split: 2
-  },
-  {
     start: '2018-11-22 19:30',
     end: '2018-11-22 21:00',
     title: 'Swimming lesson',
@@ -375,10 +366,34 @@ export default {
         content: '<i class="v-icon material-icons">local_play</i>',
         class: 'leisure',
         split: 2
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Movie time',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 2
       }
     ],
     splitEvents: [
       ...events,
+      {
+        start: '2018-11-21 12:00',
+        end: '2018-11-21 12:30',
+        title: 'Call mum',
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2018-11-21 20:00',
+        end: '2018-11-21 22:00',
+        title: 'Salsa',
+        content: '<i class="v-icon material-icons">directions_walk</i>',
+        class: 'sport',
+        split: 2
+      },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',

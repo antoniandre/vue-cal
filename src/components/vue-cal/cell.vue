@@ -64,36 +64,24 @@ export default {
       }
     },
     checkOverlappingEvents (event, comparedEvents) {
-      (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(evt => {
+      (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(event2 => {
         // Don't compare with itself or with already compared item.
-        if (event.id !== evt.id && comparedEvents[event.id].indexOf(evt.id) === -1 && (comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
-          const event1startsFirst = event.startTimeMinutes < evt.startTimeMinutes
+        if (event.id !== event2.id && comparedEvents[event.id].indexOf(event2.id) === -1 && (comparedEvents[event2.id] || []).indexOf(event.id) === -1) {
+          const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
           const event2startsFirst = !event1startsFirst
-          const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > evt.startTimeMinutes
-          const event2overlapsEvent1 = event2startsFirst && evt.endTimeMinutes > event.startTimeMinutes
-
-          if (event.title === "Brunch with Jane" && evt.title === "Call mum")
-            // console.log({
-            //   event1overlapsEvent2,
-            //   event2overlapsEvent1,
-            //   eventTitle: event.title,
-            //   eventStart: event.startTimeMinutes,
-            //   eventEnd: event.endTimeMinutes,
-            //   evtTitle: evt.title,
-            //   evtStart: evt.startTimeMinutes,
-            //   evtEnd: evt.endTimeMinutes
-            // })
+          const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
+          const event2overlapsEvent1 = event2startsFirst && event2.endTimeMinutes > event.startTimeMinutes
 
           if (event1overlapsEvent2 || event2overlapsEvent1) {
             event.class += event1startsFirst ? ' overlapped' : ' overlapping'
-            evt.class += event1startsFirst ? ' overlapping' : ' overlapped'
+            event2.class += event1startsFirst ? ' overlapping' : ' overlapped'
 
-            evt.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
-            event.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
+            event2.class += event.startTimeMinutes === event2.startTimeMinutes ? ' split-half' : ''
+            event.class += event.startTimeMinutes === event2.startTimeMinutes ? ' split-half' : ''
           }
         }
 
-        comparedEvents[event.id].push(evt.id)
+        comparedEvents[event.id].push(event2.id)
       })
 
       return comparedEvents
