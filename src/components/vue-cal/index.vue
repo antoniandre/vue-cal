@@ -500,6 +500,7 @@ $weekdays-headings-height: 3em;
     background-color: #e4f5ef;
     display: flex;
     align-items: center;
+    text-align: center;
     justify-content: space-between;
     font-size: 1.8em;
 
@@ -535,6 +536,7 @@ $weekdays-headings-height: 3em;
     height: $weekdays-headings-height;
     font-weight: 400;
     justify-content: center;
+    text-align: center;
     align-items: center;
     user-select: none;
 
