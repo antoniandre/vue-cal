@@ -1,18 +1,64 @@
 <template lang="pug">
-  v-app.ma-0
-    v-content.white
-      img(alt="Vue logo" src="./assets/logo.png" width="50")
-      p.
-        A Vue JS full calendar, no dependency, no BS. :metal:
-        #[br]#[em - under construction -]
+  v-app.ma-0.white
+    v-container
+      .text-xs-center
+        img(alt="Vue logo" src="./assets/logo.png" width="50")
+        p.
+          A Vue JS full calendar, no dependency, no BS. :metal:
 
-      h2.mt-5 To do...
-      p Support for scheddule events coming soon!
+        div(style="margin: 7em auto;max-width: 700px")
+          h2.mt-5 To do...
+          p Here is my ongoing to do list.
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | default active view
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Enable / disable views
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Hide / show weekends
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Add timeline w/ timerange &amp; increment
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Add timeline
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | time format 12/24 h
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Support for i18n
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Split days
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 access_time
+            | Support events
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 access_time
+            | Overlap events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
+            | Drag events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
+            | Resize events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
+            | Keep only default style in CSS
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
+            | Release to NPM
 
       h3.mt-5 # Demo 1
       p Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
+        &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
 
       h3.mt-5 # Demo 2
       p.
@@ -20,44 +66,108 @@
         Simple click cell to go narrower view.
       v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;")
         vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate)
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
+
+      highlight-message(type="tips")
+        | The default-view parameter accepts one of the available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
       h3.mt-5 # Demo 3
       p.
         Extra-small, no timeline.#[br]
       v-card.my-2.ma-auto.main-content(style="width: 260px;height: 260px;")
         vue-cal(hide-view-selector :time="false" xsmall)
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal hide-view-selector :time="false" xsmall&gt;&lt;/vue-cal&gt;
 
       h3.mt-5 # Demo 4
       p.
-        i18n.#[br]
-      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 320px;")
-        vue-cal(hide-view-selector :time="false" xsmall locale="fr")
+        i18n.
+      v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;")
+        vue-cal(hide-view-selector :time="false" small default-view="year" locale="fr")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
+
+      highlight-message(type="info")
+        | Currently available languages are English, French, Italian.#[br]
+        | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
+        | this is what a language json looks like.
+
+        ssh-pre(language="json").
+          {
+            "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+            "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+            "years": "Années",
+            "week": "Semaine",
+            "today": "Aujourd'hui",
+            "noEvent": "Aucun événement",
+            "dateFormat": "DDDD d mmmm yyyy"
+          }
 
       h3.mt-5 # Demo 5
       p.
         Different layout. Week view disabled.
       v-card.my-2.ma-auto.main-content.round(style="width: 280px;height: 300px;")
         vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']"&gt;&lt;/vue-cal&gt;
+
+      highlight-message(type="tips")
+        | The disable-views parameter accepts an array of available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
       h3.mt-5 # Demo 6
       p.
-        Flat events (unmovable, uneditable) with custom HTML content and css class (for event types).#[br]
+        Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+
+      ssh-pre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-19 10:35',
+              end: '2018-11-19 11:30',
+              title: 'Doctor appointment',
+              content: '<i class="v-icon material-icons">local_hospital</i>',
+              class: 'health'
+            },
+            {
+              start: '2018-11-19 18:30',
+              end: '2018-11-19 19:15',
+              title: 'Dentist appointment',
+              content: '<i class="v-icon material-icons">local_hospital</i>',
+              class: 'health'
+            },
+            {
+              start: '2018-11-20 18:30',
+              end: '2018-11-20 20:30',
+              title: 'Crossfit',
+              content: '<i class="v-icon material-icons">fitness_center</i>',
+              class: 'sport'
+            },
+            ...
+          ]
+        })
 
       h3.mt-5 # Demo 7
       p.
         Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
         Allow split-specific events.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him'}, { class: 'her', label: 'Her'}]" :events="events")
+        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="events"&gt;&lt;/vue-cal&gt;
 
       h3.mt-5 # Demo 8
       p.
         Overlapping events.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
 
     v-footer.justify-end.px-3(color="white")
       em 2018 &copy; Antoni Andre.
@@ -65,54 +175,104 @@
 
 <script>
 import VueCal from '@/components/vue-cal'
+import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
+import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
+import highlightMessage from '@/components/highlight-message'
+
+const events = [
+  {
+    start: '2018-11-16 10:30',
+    end: '2018-11-16 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="v-icon material-icons">local_hospital</i>',
+    class: 'health',
+    split: 1
+  },
+  {
+    start: '2018-11-19 10:35',
+    end: '2018-11-19 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="v-icon material-icons">local_hospital</i>',
+    class: 'health',
+    split: 1
+  },
+  {
+    start: '2018-11-19 18:30',
+    end: '2018-11-19 19:15',
+    title: 'Dentist appointment',
+    content: '<i class="v-icon material-icons">local_hospital</i>',
+    class: 'health',
+    split: 2
+  },
+  {
+    start: '2018-11-20 18:30',
+    end: '2018-11-20 20:30',
+    title: 'Crossfit',
+    content: '<i class="v-icon material-icons">fitness_center</i>',
+    class: 'sport',
+    split: 1
+  },
+  {
+    start: '2018-11-21 11:00',
+    end: '2018-11-21 13:00',
+    title: 'Brunch with Jane',
+    content: '<i class="v-icon material-icons">local_cafe</i>',
+    class: 'leisure',
+    split: 1
+  },
+  {
+    start: '2018-11-21 20:00',
+    end: '2018-11-21 22:00',
+    title: 'Salsa',
+    content: '<i class="v-icon material-icons">directions_walk</i>',
+    class: 'sport',
+    split: 2
+  },
+  {
+    start: '2018-11-22 19:30',
+    end: '2018-11-22 21:00',
+    title: 'Swimming lesson',
+    content: '<i class="v-icon material-icons">pool</i>',
+    class: 'sport',
+    split: 1
+  },
+  {
+    start: '2018-11-23 12:30',
+    end: '2018-11-23 13:00',
+    title: 'Macca\'s with Mark',
+    content: '<i class="v-icon material-icons">fastfood</i>',
+    class: 'leisure',
+    split: 2
+  },
+  {
+    start: '2018-11-23 21:00',
+    end: '2018-11-23 23:30',
+    title: 'Movie time',
+    content: '<i class="v-icon material-icons">local_play</i>',
+    class: 'leisure',
+    split: 1
+  },
+  {
+    start: '2018-11-23 21:00',
+    end: '2018-11-23 23:30',
+    title: 'Movie time',
+    content: '<i class="v-icon material-icons">local_play</i>',
+    class: 'leisure',
+    split: 2
+  }
+]
 
 export default {
   name: 'app',
   components: {
-    VueCal
+    VueCal,
+    sshPre: simpleSyntaxHighlighter,
+    highlightMessage
   },
   data: () => ({
-    events: [
-      {
-        start: '2018-11-16 10:30',
-        end: '2018-11-16 11:30',
-        title: 'Doctor appointment 1',
-        content: '<i class="v-icon material-icons">local_hospital</i>',
-        class: 'health',
-        split: 1
-      },
-      {
-        start: '2018-11-19 10:35',
-        end: '2018-11-19 11:30',
-        title: 'Doctor appointment',
-        content: '<i class="v-icon material-icons">local_hospital</i>',
-        class: 'health',
-        split: 1
-      },
-      {
-        start: '2018-11-19 20:30',
-        end: '2018-11-19 21:30',
-        title: 'Dentist appointment',
-        content: '<i class="v-icon material-icons">local_hospital</i>',
-        class: 'health',
-        split: 1
-      },
-      {
-        start: '2018-11-20 18:30',
-        end: '2018-11-20 20:30',
-        title: 'Crossfit',
-        content: '<i class="v-icon material-icons">fitness_center</i>',
-        class: 'sport',
-        split: 1
-      },
-      {
-        start: '2018-11-21 11:00',
-        end: '2018-11-21 13:00',
-        title: 'Brunch with Jane',
-        content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure',
-        split: 1
-      },
+    events,
+    overlappingEvents: [
+      ...events,
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -120,39 +280,10 @@ export default {
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure',
         split: 1
-      },
-      {
-        start: '2018-11-21 20:00',
-        end: '2018-11-21 22:00',
-        title: 'Salsa',
-        content: '<i class="v-icon material-icons">directions_walk</i>',
-        class: 'sport',
-        split: 2
-      },
-      {
-        start: '2018-11-22 19:30',
-        end: '2018-11-22 21:00',
-        title: 'Swimming lesson',
-        content: '<i class="v-icon material-icons">pool</i>',
-        class: 'sport',
-        split: 1
-      },
-      {
-        start: '2018-11-23 12:30',
-        end: '2018-11-23 13:00',
-        title: 'Macca\'s with Mark',
-        content: '<i class="v-icon material-icons">fastfood</i>',
-        class: 'leisure',
-        split: 2
-      },
-      {
-        start: '2018-11-23 21:00',
-        end: '2018-11-23 23:30',
-        title: 'Movie time',
-        content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 1
-      },
+      }
+    ],
+    splitEvents: [
+      ...events,
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
@@ -176,7 +307,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }

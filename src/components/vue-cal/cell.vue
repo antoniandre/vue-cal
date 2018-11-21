@@ -6,11 +6,11 @@
       div(v-else)
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
         .vuecal__event(:class="event.class" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j" :style="eventPosition(event, i)")
-          .vuecal__event-title {{ event.title }}
+          .vuecal__event-title(v-if="event.title") {{ event.title }}
           .vuecal__event-time
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
-          .vuecal__event-content(v-html="event.content")
+          .vuecal__event-content(v-if="event.content" v-html="event.content")
 </template>
 
 <script>
@@ -63,10 +63,10 @@ export default {
         minHeight: height + 'px'
       }
     },
-    checkOverlappingEvents (event) {
+    checkOverlappingEvents (event, comparedEvents) {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(evt => {
         // Don't compare with itself or with already compared item.
-        if (event.id !== evt.id && this.comparedEvents[event.id].indexOf(evt.id) === -1 && (this.comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
+        if (event.id !== evt.id && comparedEvents[event.id].indexOf(evt.id) === -1 && (comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
           const eventStartsFirst = event.startTimeMinutes > evt.startTimeMinutes
 
           if ((eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes) ||
@@ -76,8 +76,10 @@ export default {
           }
         }
 
-        this.comparedEvents[event.id].push(evt.id)
+        comparedEvents[event.id].push(evt.id)
       })
+
+      return comparedEvents
     }
   },
 
@@ -86,18 +88,20 @@ export default {
       return this.$parent.texts
     },
     cellEvents () {
-      this.comparedEvents = {}
+      let comparedEvents = {}
 
       return this.events.map(event => {
-        this.comparedEvents[event.id] = []
+        comparedEvents[event.id] = []
 
         // Only for splits.
         if (this.splits.length && event.split) {
+          // eslint-disable-next-line
           if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+          // eslint-disable-next-line
           this.splitEvents[event.split].push(event)
         }
 
-        this.checkOverlappingEvents(event)
+        comparedEvents = this.checkOverlappingEvents(event, comparedEvents)
 
         return event
       })
