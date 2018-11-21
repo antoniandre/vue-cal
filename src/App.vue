@@ -159,7 +159,7 @@
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        //- vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
 
@@ -196,7 +196,7 @@
         Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
         Allow split-specific events.
       v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
+        //- vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="events"&gt;&lt;/vue-cal&gt;
 

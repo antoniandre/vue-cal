@@ -67,14 +67,26 @@ export default {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(evt => {
         // Don't compare with itself or with already compared item.
         if (event.id !== evt.id && comparedEvents[event.id].indexOf(evt.id) === -1 && (comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
-          const eventStartsFirst = event.startTimeMinutes > evt.startTimeMinutes
+          const event1startsFirst = event.startTimeMinutes < evt.startTimeMinutes
+          const event2startsFirst = !event1startsFirst
+          const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > evt.startTimeMinutes
+          const event2overlapsEvent1 = event2startsFirst && evt.endTimeMinutes > event.startTimeMinutes
 
-          // console.log(eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes, event.endTimeMinutes > evt.startTimeMinutes, event.title, evt.title)
+          if (event.title === "Brunch with Jane" && evt.title === "Call mum")
+            // console.log({
+            //   event1overlapsEvent2,
+            //   event2overlapsEvent1,
+            //   eventTitle: event.title,
+            //   eventStart: event.startTimeMinutes,
+            //   eventEnd: event.endTimeMinutes,
+            //   evtTitle: evt.title,
+            //   evtStart: evt.startTimeMinutes,
+            //   evtEnd: evt.endTimeMinutes
+            // })
 
-          if ((eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes) ||
-              (!eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes)) {
-            evt.class += eventStartsFirst ? ' overlapped' : ' overlapping'
-            event.class += eventStartsFirst ? ' overlapping' : ' overlapped'
+          if (event1overlapsEvent2 || event2overlapsEvent1) {
+            event.class += event1startsFirst ? ' overlapped' : ' overlapping'
+            evt.class += event1startsFirst ? ' overlapping' : ' overlapped'
 
             evt.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
             event.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
