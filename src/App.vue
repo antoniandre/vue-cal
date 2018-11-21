@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app.ma-0.white
+  v-app.white
     v-container
       .text-xs-center
         img(alt="Vue logo" src="./assets/logo.png" width="50")
@@ -52,7 +52,43 @@
             v-icon.mr-2 close
             | Release to NPM
 
-      h3.mt-5 # Demo 1
+      h2
+        a(href="#installation") Installation
+        a(name="installation")
+      p You have two options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
+      h3 Via NPM - COMING SOON!
+      div(style="opacity: 0.25")
+        ssh-pre(language="shell" label="Shell") npm install vue-cal --save-dev
+        p Then import the component and use it:
+        ssh-pre(language="js" label="Javascript").
+          // In your VueJS component.
+          import { VueCal } from 'vue-cal'
+          import 'vue-cal/dist/vue-cal.min.css'
+          ...
+
+          export default {
+            components: { VueCal },
+            data: () => ({
+              ...
+            }),
+            ...
+          }
+
+      h3 Via #[span.code &lt;script&gt;] tag - COMING SOON!
+      div(style="opacity: 0.25")
+        p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
+        ssh-pre(language="html" label="HTML").
+          &lt;head&gt;
+            ...
+            &lt;script src="https://unpkg.com/vue/dist/vue.min.js"&gt;&lt;/script&gt;
+            &lt;script src="https://unpkg.com/vue-cal/dist/vue-cal.min.js"&gt;&lt;/script&gt;
+            &lt;link href="https://unpkg.com/vue-cal/dist/vue-cal.min.css" rel="stylesheet"&gt;
+          &lt;/head&gt;
+
+      h2.mt-5
+        a(href="#examples") Examples
+        a(name="examples")
+      h3.mt-3 # Demo 1
       p Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
@@ -310,14 +346,6 @@ const events = [
     content: '<i class="v-icon material-icons">local_play</i>',
     class: 'leisure',
     split: 1
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Movie time',
-    content: '<i class="v-icon material-icons">local_play</i>',
-    class: 'leisure',
-    split: 2
   }
 ]
 
@@ -339,6 +367,14 @@ export default {
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure',
         split: 1
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Movie time',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 2
       }
     ],
     splitEvents: [
@@ -357,9 +393,22 @@ export default {
 </script>
 
 <style lang="scss">
+$primary: #42b983;
+
 * {
   margin: 0;
   padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: $primary !important;
+
+  &[name] {
+    position: relative;
+    top: -4em;
+    display: block;
+  }
 }
 
 #app {
@@ -367,7 +416,6 @@ export default {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
-  margin-top: 60px;
 }
 
 .main-content {
