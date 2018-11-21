@@ -36,8 +36,11 @@
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 access_time
             | Support events
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 access_time
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Background events
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
             | Overlap events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 close
@@ -53,12 +56,21 @@
             | Release to NPM
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 close
+            | Recurring events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
             | Allow custom date format for everything
 
       highlight-message(type="warning")
         strong Important Notes#[br]
         | As this is a new component it is likely that options, CSS classes &amp; internal layout change with new version release.#[br]
         | But this is for the better! Keep checking the #[a(href="#release-notes") Release Notes]!
+
+      highlight-message(type="info")
+        strong Philosophy:&nbsp;
+        | Vue Cal tries to separate logic &amp; styles.#[br]
+        | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
+        | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.
 
       h2.mt-5
         a(href="#installation") Installation
@@ -234,6 +246,7 @@
             ...
           ]
         })
+
       h3.mt-5 # Example 8
       p.
         Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
@@ -275,6 +288,8 @@
         })
 
       ssh-pre(language="css" label="CSS").
+        /* This style allows you to overflow the content horizontally and have a scrollbar if needed.
+        If you want everything to fit, you don't need it. */
         .vuecal--split-days .vuecal__heading,
         .vuecal--split-days.vuecal--week-view .vuecal__,
         .vuecal--split-days.vuecal--week-view .vuecal__cell,
@@ -291,7 +306,50 @@
         .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
         .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
-      h2.mt-5
+      h3.mt-5 # Example 9
+      p.
+        Background events.
+      v-card.my-2.ma-auto.main-content
+        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
+      ssh-pre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+
+      ssh-pre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-19 12:00',
+              end: '2018-11-19 14:00',
+              title: 'LUNCH',
+              class: 'lunch',
+              background: true
+            },
+            {
+              start: '2018-11-20 12:00',
+              end: '2018-11-20 14:00',
+              title: 'LUNCH',
+              class: 'lunch',
+              background: true
+            },
+            ...
+          ]
+        })
+
+      ssh-pre(language="css" label="CSS").
+        .vuecal__event.lunch {
+          background-color: rgb(145, 145, 145);
+          background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
+          color: #999;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+        .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
+
+      highlight-message(type="info")
+        | Recurring events will be available in a next release.
+
+      h2.mt-5.pt-5
         a(href="#release-notes") Release Notes
         a(name="release-notes")
       p No public release for the moment!
@@ -435,6 +493,44 @@ export default {
         class: 'leisure',
         split: 2
       }
+    ],
+    backgroundEvents: [
+      ...events,
+      {
+        start: '2018-11-19 12:00',
+        end: '2018-11-19 14:00',
+        title: 'LUNCH',
+        class: 'lunch',
+        background: true
+      },
+      {
+        start: '2018-11-20 12:00',
+        end: '2018-11-20 14:00',
+        title: 'LUNCH',
+        class: 'lunch',
+        background: true
+      },
+      {
+        start: '2018-11-21 12:00',
+        end: '2018-11-21 14:00',
+        title: 'LUNCH',
+        class: 'lunch',
+        background: true
+      },
+      {
+        start: '2018-11-22 12:00',
+        end: '2018-11-22 14:00',
+        title: 'LUNCH',
+        class: 'lunch',
+        background: true
+      },
+      {
+        start: '2018-11-23 12:00',
+        end: '2018-11-23 14:00',
+        title: 'LUNCH',
+        class: 'lunch',
+        background: true
+      }
     ]
   })
 }
@@ -510,4 +606,14 @@ a {
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
+.vuecal__event.lunch {
+  background-color: rgb(145, 145, 145);
+  background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
+  color: #999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 </style>

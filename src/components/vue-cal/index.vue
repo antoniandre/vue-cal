@@ -424,7 +424,6 @@ export default {
           ...event,
           // eslint-disable-next-line
           id: this.eventIdIncrement++,
-          class: { [event.class]: true },
           startTime,
           startTimeMinutes,
           endTime,
