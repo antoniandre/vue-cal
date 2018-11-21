@@ -68,16 +68,24 @@ export default {
         // Don't compare with itself or with already compared item.
         if (event.id !== event2.id && comparedEvents[event.id].indexOf(event2.id) === -1 && (comparedEvents[event2.id] || []).indexOf(event.id) === -1) {
           const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-          const event2startsFirst = !event1startsFirst
           const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
-          const event2overlapsEvent1 = event2startsFirst && event2.endTimeMinutes > event.startTimeMinutes
+          const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
 
           if (event1overlapsEvent2 || event2overlapsEvent1) {
-            event.class += event1startsFirst ? ' overlapped' : ' overlapping'
-            event2.class += event1startsFirst ? ' overlapping' : ' overlapped'
+            event.class.overlapped = event1startsFirst
+            event.class.overlapping = !event1startsFirst
 
-            event2.class += event.startTimeMinutes === event2.startTimeMinutes ? ' split-half' : ''
-            event.class += event.startTimeMinutes === event2.startTimeMinutes ? ' split-half' : ''
+            event2.class.overlapped = !event1startsFirst
+            event2.class.overlapping = event1startsFirst
+
+            // If up to 3 events start at the same time.
+            if (event.startTimeMinutes === event2.startTimeMinutes) {
+              event.class['split-third'] = event.class['split-half']
+              event.class['split-half'] = true
+              event2.class['split-third'] = event2.class['split-half']
+              event2.class['split-half'] = true
+              event2.class.middle = event.class['split-half'] && !event2.class.middle
+            }
           }
         }
 
@@ -210,8 +218,11 @@ export default {
   }
 
   &.overlapped {right: 20%;}
-  &.overlapping {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &.overlapping:not(.split-half):not(.split-third) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
   &.overlapped.split-half {right: 50%;}
-  &.overlapping.split-half {left: 50%;box-shadow: none;}
+  &.overlapping.split-half {left: 50%;}
+  &.overlapped.split-third {right: 66.66%;}
+  &.overlapping.split-third {left: 66.66%;}
+  &.overlapping.split-third.middle {left: 33.33%;right: 33.33%;}
 }
 </style>

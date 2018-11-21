@@ -117,6 +117,7 @@ export const formatDate = (date, format = 'yyyy-mm-dd', locale = 'en') => {
   const m = date.getMonth() + 1
   const dateObj = {
     D: date.getDay(), // 0 to 6.
+    DD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7][0], // M to S.
     DDD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
     DDDD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
     d, // 1 to 31.

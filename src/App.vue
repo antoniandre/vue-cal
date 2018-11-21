@@ -51,8 +51,16 @@
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 close
             | Release to NPM
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 close
+            | Allow custom date format for everything
 
-      h2
+      highlight-message(type="warning")
+        strong Important Notes#[br]
+        | As this is a new component it is likely that options, CSS classes &amp; internal layout change with new version release.#[br]
+        | But this is for the better! Keep checking the #[a(href="#release-notes") Release Notes]!
+
+      h2.mt-5
         a(href="#installation") Installation
         a(name="installation")
       p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
@@ -193,7 +201,7 @@
 
       h3.mt-5 # Example 7
       p.
-        Overlapping events.
+        Overlapping events. Up to 3 overlapping events starting at the same time.
       v-card.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       ssh-pre(language="html-vue" label="Vue Template").
@@ -243,25 +251,50 @@
               end: '2018-11-19 11:30',
               title: 'Doctor appointment',
               content: '<i class="v-icon material-icons">local_hospital</i>',
-              class: 'health'
+              class: 'health',
+              split: 1
             },
             {
               start: '2018-11-19 18:30',
               end: '2018-11-19 19:15',
               title: 'Dentist appointment',
               content: '<i class="v-icon material-icons">local_hospital</i>',
-              class: 'health'
+              class: 'health',
+              split: 2
             },
             {
               start: '2018-11-20 18:30',
               end: '2018-11-20 20:30',
               title: 'Crossfit',
               content: '<i class="v-icon material-icons">fitness_center</i>',
-              class: 'sport'
+              class: 'sport',
+              split: 2
             },
             ...
           ]
         })
+
+      ssh-pre(language="css" label="CSS").
+        .vuecal--split-days .vuecal__heading,
+        .vuecal--split-days.vuecal--week-view .vuecal__,
+        .vuecal--split-days.vuecal--week-view .vuecal__cell,
+        .vuecal--split-days.vuecal--day-view .vuecal__cell {min-width: 400px;}
+
+        /* You can easily set a different style for each split of your days. */
+        .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
+        .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
+        .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
+        .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+
+        /* Different color for different event types. */
+        .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+        .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
+        .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
+      h2.mt-5
+        a(href="#release-notes") Release Notes
+        a(name="release-notes")
+      p No public release for the moment!
 
     v-footer.justify-end.px-3(color="white")
       em 2018 &copy; Antoni Andre.
@@ -362,7 +395,7 @@ export default {
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
-        title: 'Movie time',
+        title: 'Eat pop corns',
         content: '<i class="v-icon material-icons">local_play</i>',
         class: 'leisure',
         split: 2
@@ -370,7 +403,7 @@ export default {
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
-        title: 'Movie time',
+        title: 'Enjoy the movie',
         content: '<i class="v-icon material-icons">local_play</i>',
         class: 'leisure',
         split: 2
