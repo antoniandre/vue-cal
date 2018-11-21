@@ -69,10 +69,15 @@ export default {
         if (event.id !== evt.id && comparedEvents[event.id].indexOf(evt.id) === -1 && (comparedEvents[evt.id] || []).indexOf(event.id) === -1) {
           const eventStartsFirst = event.startTimeMinutes > evt.startTimeMinutes
 
+          // console.log(eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes, event.endTimeMinutes > evt.startTimeMinutes, event.title, evt.title)
+
           if ((eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes) ||
-              (event.startTimeMinutes < evt.startTimeMinutes && event.endTimeMinutes > evt.startTimeMinutes)) {
+              (!eventStartsFirst && event.endTimeMinutes > evt.startTimeMinutes)) {
             evt.class += eventStartsFirst ? ' overlapped' : ' overlapping'
             event.class += eventStartsFirst ? ' overlapping' : ' overlapped'
+
+            evt.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
+            event.class += event.startTimeMinutes === evt.startTimeMinutes ? ' split-half' : ''
           }
         }
 
@@ -206,5 +211,7 @@ export default {
 
   &.overlapped {right: 20%;}
   &.overlapping {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &.overlapped.split-half {right: 50%;}
+  &.overlapping.split-half {left: 50%;box-shadow: none;}
 }
 </style>

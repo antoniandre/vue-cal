@@ -419,6 +419,7 @@ export default {
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
         if (!events[startDate]) events[startDate] = []
+        // eslint-disable-next-line
         events[startDate].push({ ...event, id: this.eventIdIncrement++, startTime, startTimeMinutes, endTime, endTimeMinutes })
       })
 
