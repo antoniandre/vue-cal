@@ -1,10 +1,15 @@
 <template lang="pug">
-  v-app.white
+  v-app.white(:class="{ ready: ready }")
     v-container
       .text-xs-center
-        img(alt="Vue logo" src="./assets/logo.png" width="50")
-        p.
-          A Vue JS full calendar, no dependency, no BS. :metal:
+        .logo
+          img(alt="Vue logo" src="./assets/logo.png" width="50")
+          v-icon.calendar event
+          v-icon.time access_time
+
+        p
+          .headline Vue Cal#[br]
+          | A Vue JS full calendar, no dependency, no BS. :metal:
 
         div(style="margin: 7em auto;max-width: 700px")
           h2.mt-5 To do...
@@ -120,7 +125,7 @@
       p.
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
         Simple click cell to go narrower view.
-      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;")
+      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
         vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate)
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
@@ -142,7 +147,7 @@
       h3.mt-5 # Example 4
       p.
         i18n.
-      v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;")
+      v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
         vue-cal(hide-view-selector :time="false" small default-view="year" locale="fr")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
@@ -439,6 +444,7 @@ export default {
     highlightMessage
   },
   data: () => ({
+    ready: false,
     events,
     overlappingEvents: [
       ...events,
@@ -532,7 +538,10 @@ export default {
         background: true
       }
     ]
-  })
+  }),
+  created () {
+    setTimeout(() => (this.ready = true), 500)
+  }
 }
 </script>
 
@@ -560,6 +569,46 @@ a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+}
+
+.logo {
+  position: relative;
+  display: inline-block;
+
+  img {z-index: 1;position: relative;}
+
+  .v-icon {
+    position: absolute;
+    left: 50%;
+    font-size: 3em;
+    opacity: 0;
+    transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    transform: rotate(0deg) scale(0.3);
+    z-index: 0;
+    color: #ddd;
+  }
+
+  .v-icon.calendar {
+    margin-left: -25px;
+    transform-origin: 75% 100%;
+
+    .ready & {
+      transform: translateX(-75%) rotate(-30deg) scale(0.8);
+    }
+  }
+
+  .v-icon.time {
+    margin-left: -19px;
+    transform-origin: 25% 100%;
+
+    .ready & {
+      transform: translateX(75%) rotate(30deg) scale(0.8);
+    }
+  }
+
+  .ready & .v-icon {
+    opacity: 1;
+  }
 }
 
 .main-content {

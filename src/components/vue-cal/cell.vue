@@ -201,6 +201,10 @@ export default {
   }
 }
 
+.vuecal--split-days.vuecal--week-view .vuecal__cell.splitted {
+  overflow: hidden;
+}
+
 .vuecal__no-event {
   padding-top: 1em;
   color: #aaa;

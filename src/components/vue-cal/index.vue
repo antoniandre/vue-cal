@@ -582,6 +582,8 @@ $weekdays-headings-height: 3em;
       color: #999;
       height: 3em;
       user-select: none;
+      text-align: right;
+      padding-right: 2px;
 
       &:before {
         content: '';
@@ -601,7 +603,7 @@ $weekdays-headings-height: 3em;
 
     .vuecal--split-days.vuecal--week-view & {
       flex-wrap: nowrap;
-      overflow: auto hidden;
+      overflow: auto;
     }
   }
 }
