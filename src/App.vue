@@ -115,14 +115,30 @@
         a(name="examples")
       h3.mt-3 # Example 1
       p
-        | Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
-        | By the way you can easily change the color theme of the calendar before you see the CSS code bellow try this
-        v-btn(:color="example1theme === 'green' ? 'blue lighten-2' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
+        | Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends.
+        | Double click cell to go narrower view.#[br]
+        | By the way, you can easily change the color theme of the calendar, which by default is grey.#[br]
+        | before you look at the CSS code bellow try this
+        v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
       v-card.my-2.ma-auto.main-content(:class="`${example1theme}-theme`")
         vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
+      p.
+        So this is what a standard color theme looks like.
+        You can copy and change any color to quickly get a nice render.#[br]
+        Of course you can even change more in your CSS.
+
+      ssh-pre(language="css" label="CSS").
+        /* Green-theme. */
+        .vuecal__menu {background-color: #42b983;}
+        .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+        .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+        .vuecal__title {background-color: #e4f5ef;}
+        .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+        .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+        .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
 
       h3.mt-5 # Example 2
       p.
@@ -362,8 +378,7 @@
 
       ssh-pre(language="css" label="CSS").
         .vuecal__event.lunch {
-          background-color: rgb(145, 145, 145);
-          background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
+          background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
           color: #999;
           display: flex;
           justify-content: center;
@@ -654,7 +669,7 @@ a {
   .vuecal__menu {background-color: rgba(66, 163, 185, 0.8);}
   .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-  .vuecal__title {background-color: rgba(0, 165, 188, 0.5);}
+  .vuecal__title {background-color: rgba(0, 165, 188, 0.3);}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
@@ -706,7 +721,6 @@ a {
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
 .vuecal__event.lunch {
-  background-color: rgb(145, 145, 145);
   background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
   color: #999;
   display: flex;
