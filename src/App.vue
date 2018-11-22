@@ -114,8 +114,11 @@
         a(href="#examples") Examples
         a(name="examples")
       h3.mt-3 # Example 1
-      p Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
-      v-card.my-2.ma-auto.main-content
+      p
+        | Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
+        | By the way you can easily change the color theme of the calendar before you see the CSS code bellow try this
+        v-btn(:color="example1theme === 'green' ? 'blue lighten-2' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
+      v-card.my-2.ma-auto.main-content(:class="`${example1theme}-theme`")
         vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
@@ -125,7 +128,7 @@
       p.
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
         Simple click cell to go narrower view.
-      v-card.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
+      v-card.green-theme.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
         vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate)
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
@@ -138,16 +141,21 @@
 
       h3.mt-5 # Example 3
       p.
-        Extra-small, no timeline.#[br]
-      v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
+        Extra-small, no timeline, custom arrows (using the reserved slots `arrowPrev` &amp; `arrowNext`).#[br]
+      v-card.green-theme.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
         vue-cal(hide-view-selector :time="false" xsmall)
+          v-icon(slot="arrowPrev") undo
+          v-icon(slot="arrowNext") redo
       ssh-pre(language="html-vue" label="Vue Template").
-        &lt;vue-cal hide-view-selector :time="false" xsmall&gt;&lt;/vue-cal&gt;
+        &lt;vue-cal hide-view-selector :time="false" xsmall&gt;
+          &lt;i slot="arrowPrev" aria-hidden="true" class="v-icon material-icons"&gt;undo&lt;/i&gt;
+          &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;redo&lt;/i&gt;
+        &lt;/vue-cal&gt;
 
       h3.mt-5 # Example 4
       p.
         i18n.
-      v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
+      v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
         vue-cal(hide-view-selector :time="false" small default-view="year" locale="fr")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
@@ -162,7 +170,10 @@
             "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
             "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
             "years": "Années",
+            "year": "Année",
+            "month": "Mois",
             "week": "Semaine",
+            "day": "Jour",
             "today": "Aujourd'hui",
             "noEvent": "Aucun événement",
             "dateFormat": "DDDD d mmmm yyyy"
@@ -171,8 +182,11 @@
       h3.mt-5 # Example 5
       p.
         Different layout. Week view disabled.
-      v-card.my-2.ma-auto.main-content.round(style="width: 280px;height: 300px;")
-        vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      v-layout.my-2.ma-auto(row justify-center)
+        v-card.blue-theme.mx-2.main-content.round(style="width: 280px;height: 300px;")
+          vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+        v-card.green-theme.mx-2.main-content.round(style="width: 280px;height: 300px;")
+          vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']"&gt;&lt;/vue-cal&gt;
 
@@ -183,7 +197,7 @@
       p.
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
-      v-card.my-2.ma-auto.main-content
+      v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
@@ -219,7 +233,7 @@
       h3.mt-5 # Example 7
       p.
         Overlapping events. Up to 3 overlapping events starting at the same time.
-      v-card.my-2.ma-auto.main-content
+      v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
@@ -253,16 +267,29 @@
         })
 
       h3.mt-5 # Example 8
-      p.
-        Split days passing a CSS class &amp; a label per split. Disabled views: years, year, month.#[br]
-        Allow split-specific events.
-      v-card.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents")
-      ssh-pre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="events"&gt;&lt;/vue-cal&gt;
+      p.mb-4
+        | Split days passing a CSS class &amp; a label per split, disabled views: years, year, month, and allow split-specific events.#[br]
+        | You can also overflow your content using a min-width on cells, like in this example, or fit to container
+        v-btn(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
+          v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
+          | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
+      v-card.green-theme.my-2.ma-auto.main-content
+        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
+      ssh-pre(language="html-vue" label="Vue Template" v-pre).
+        &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
+          {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
+        &lt;/button&gt;
+        &lt;vue-cal :time-from="8 * 60"
+                 :time-step="30"
+                 :disable-views="['years', 'year', 'month']"
+                 :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+                 :events="events"
+                 :min-cell-width="minCellWidth"&gt;
+        &lt;/vue-cal&gt;
 
       ssh-pre(language="js" label="Javascript").
         data: () => ({
+          splitsExampleMinCellWidth: 400,
           events: [
             {
               start: '2018-11-19 10:35',
@@ -293,13 +320,6 @@
         })
 
       ssh-pre(language="css" label="CSS").
-        /* This style allows you to overflow the content horizontally and have a scrollbar if needed.
-        If you want everything to fit, you don't need it. */
-        .vuecal--split-days .vuecal__heading,
-        .vuecal--split-days.vuecal--week-view .vuecal__,
-        .vuecal--split-days.vuecal--week-view .vuecal__cell,
-        .vuecal--split-days.vuecal--day-view .vuecal__cell {min-width: 400px;}
-
         /* You can easily set a different style for each split of your days. */
         .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
         .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
@@ -314,7 +334,7 @@
       h3.mt-5 # Example 9
       p.
         Background events.
-      v-card.my-2.ma-auto.main-content
+      v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
@@ -445,6 +465,8 @@ export default {
   },
   data: () => ({
     ready: false,
+    splitsExampleMinCellWidth: 400,
+    example1theme: 'green',
     events,
     overlappingEvents: [
       ...events,
@@ -616,13 +638,35 @@ a {
   height: 650px;
 }
 
+// Default vue-cal demo style.
+.green-theme {
+  .vuecal__menu {background-color: #42b983;}
+  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: #e4f5ef;}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+  .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+}
+
+// Default blue vue-cal demo style.
+.blue-theme {
+  .vuecal__menu {background-color: rgba(66, 163, 185, 0.8);}
+  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: rgba(0, 165, 188, 0.5);}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
+  .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
+}
+
+// Rounded cells example.
 .round {
   .vuecal__weekdays-headings {border: none;}
   .vuecal__heading {font-size: 12px;}
   .vuecal__title {font-size: 1.3em;}
   .vuecal__cell, .vuecal__cell:before {background: none;border: none;}
   .vuecal__cell.out-of-scope {opacity: 0.4;}
-  .selected .vuecal__cell-content {border-color: #42b983;}
   .vuecal__cell-content {
     width: 32px;
     height: 32px;
@@ -639,14 +683,19 @@ a {
   .vuecal--year-view .vuecal__cell {width: 33.33%;}
   .vuecal--year-view .vuecal__cell-content {width: 85px;}
   .vuecal--years-view .vuecal__cell-content {width: 52px;}
+  .vuecal__cell {background-color: transparent !important;}
+
+  &.green-theme {
+    .selected .vuecal__cell-content {border-color: #42b983;}
+  }
+
+  &.blue-theme {
+    .vuecal:not(.vuecal--day-view) .vuecal__cell-content {background-color: rgba(100, 182, 255, 0.2);}
+    .selected .vuecal__cell-content {border-color: #61a9e0;}
+  }
 }
 
 // Split days example.
-.vuecal--split-days .vuecal__heading,
-.vuecal--split-days.vuecal--week-view .vuecal__,
-.vuecal--split-days.vuecal--week-view .vuecal__cell,
-.vuecal--split-days.vuecal--day-view .vuecal__cell {min-width: 400px;}
-
 .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
 .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
 .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}

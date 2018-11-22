@@ -4,11 +4,15 @@
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
       .vuecal__title
-        .vuecal__arrow.vuecal__arrow--prev(@click="previous") &larr;
+        .vuecal__arrow.vuecal__arrow--prev(@click="previous")
+          slot(name="arrowPrev")
+            i.angle
         span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ view.title }}
-        .vuecal__arrow.vuecal__arrow--next(@click="next") &rarr;
+        .vuecal__arrow.vuecal__arrow--next(@click="next")
+          slot(name="arrowNext")
+            i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length && !(hasSplits && view.id === 'week')")
-        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i" :style="weekdayCellStyles") {{ heading.label }}
 
     .vuecal__flex.vuecal__body(grow)
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
@@ -19,7 +23,7 @@
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
             .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
-              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i") {{ heading.label }}
+              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i" :style="weekdayCellStyles") {{ heading.label }}
             .vuecal__flex(v-if="hasSplits" grow)
               vuecal-cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
@@ -61,6 +65,10 @@ export default {
     xsmall: {
       type: Boolean,
       default: false
+    },
+    minCellWidth: {
+      type: Number,
+      default: 0
     },
     clickToNavigate: {
       type: Boolean,
@@ -433,12 +441,15 @@ export default {
 
       return events
     },
+    weekdayCellStyles () {
+      return { minWidth: `${this.minCellWidth}px` || null }
+    },
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,
-        'view-with-time': this.hasTimeColumn,
+        'vuecal--view-with-time': this.hasTimeColumn,
         'vuecal--time-12-hour': this['12Hour'],
-        'click-to-navigate': this.clickToNavigate,
+        'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.splitDays.length,
         'vuecal--small': this.small,
@@ -480,21 +491,18 @@ $weekdays-headings-height: 3em;
 
   // Header.
   //==================================//
-  &__header {
-    user-select: none;
-  }
+  &__header {user-select: none;}
 
   &__menu {
     list-style-type: none;
-    background-color: #42b983;
     justify-content: center;
+    background-color: #fafafa;
 
     li {
       padding: 0.3em 1em;
       height: 2.2em;
       font-size: 1.3em;
-      border-bottom: 0 solid #fff;
-      color: #fff;
+      border-bottom: 0 solid currentColor;
       cursor: pointer;
       transition: 0.2s;
     }
@@ -506,36 +514,48 @@ $weekdays-headings-height: 3em;
   }
 
   &__title {
-    background-color: #e4f5ef;
+    background-color: #f2f2f2;
     display: flex;
     align-items: center;
     text-align: center;
     justify-content: space-between;
     font-size: 1.8em;
+    min-height: 2em;
 
     .vuecal--xsmall & {font-size: 1.4em;}
   }
 
   &__arrow {
-    font-family: sans-serif;
     cursor: pointer;
-    padding: 0.3em;
+
+    &--prev {padding-left: 0.6em;}
+    &--next {padding-right: 0.6em;}
+
+    i.angle {
+      display: inline-block;
+      border: solid currentColor;
+      border-width: 0 2px 2px 0;
+      padding: 0.25em;
+      transform: rotate(-45deg);
+    }
+
+    &--prev i.angle {border-width: 2px 0 0 2px;}
   }
 
   &__weekdays-headings {
     border-bottom: 1px solid #ddd;
     margin-bottom: -1px;
 
-    .view-with-time & {
+    .vuecal--view-with-time & {
       padding-left: $time-column-width;
     }
 
-    .view-with-time.vuecal--time-12-hour & {
+    .vuecal--view-with-time.vuecal--time-12-hour & {
       font-size: 0.9em;
       padding-left: $time-column-width-12;
     }
 
-    .vuecal--split-days.view-with-time & {
+    .vuecal--split-days.vuecal--view-with-time & {
       padding-left: 0;
     }
   }

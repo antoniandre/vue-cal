@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__cell(:class="[cssClass, splits.length ? 'splitted' : '']")
+  .vuecal__cell(:class="[cssClass, splits.length ? 'splitted' : '']" :style="cellStyles")
     .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
@@ -104,6 +104,9 @@ export default {
     texts () {
       return this.$parent.texts
     },
+    cellStyles () {
+      return { minWidth: `${this.$parent.minCellWidth}px` || null }
+    },
     cellEvents () {
       let comparedEvents = {}
 
@@ -155,8 +158,8 @@ export default {
   // .vuecal--week-view & {}
   .vuecal--day-view & {flex: 1;}
 
-  .click-to-navigate & {cursor: pointer;}
-  .view-with-time & {display: block;}
+  .vuecal--click-to-navigate & {cursor: pointer;}
+  .vuecal--view-with-time & {display: block;}
 
   &.splitted {
     flex-direction: row;
@@ -190,10 +193,6 @@ export default {
   &.selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
-
-    &:before {
-      border-color: rgba(66, 185, 131, 0.5);
-    }
   }
 
   &.out-of-scope {
@@ -217,7 +216,7 @@ export default {
   background-color: #f8f8f8;
   z-index: 1;
 
-  .view-with-time & {
+  .vuecal--view-with-time & {
     position: absolute;
     left: 0;
     right: 0;
