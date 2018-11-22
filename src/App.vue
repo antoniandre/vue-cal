@@ -38,8 +38,8 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Split days
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 access_time
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
             | Support events
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
@@ -47,24 +47,40 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Overlap events
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Keep only default style in CSS
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Allow custom arrows
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Double tap on touch devices
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Default active date
+          v-chip.pr-1.white--text(color="deep-orange" small disabled)
+            v-icon.mr-2 access_time
+            strong First NPM Release
+          .my-2 Then
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
+            v-icon.mr-2 access_time
             | Drag events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
+            v-icon.mr-2 access_time
             | Resize events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
-            | Keep only default style in CSS
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
-            | Release to NPM
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
+            v-icon.mr-2 access_time
             | Recurring events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 close
-            | Allow custom date format for everything
+            v-icon.mr-2 access_time
+            | More control on all date formats
+          v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
+            | Highlight current time
+          v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
+            strong Second NPM Release
 
       highlight-message(type="warning")
         strong Important Notes#[br]
