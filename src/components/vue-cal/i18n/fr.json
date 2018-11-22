@@ -2,7 +2,10 @@
   "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
   "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
   "years": "Années",
+  "year": "Année",
+  "month": "Mois",
   "week": "Semaine",
+  "day": "Jour",
   "today": "Aujourd'hui",
   "noEvent": "Aucun événement",
   "dateFormat": "DDDD d mmmm yyyy"
