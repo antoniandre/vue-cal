@@ -5,7 +5,7 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
-        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j" :style="eventPosition(event, i)")
+        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j" :style="eventPosition(event, i)")
           .vuecal__event-title(v-if="event.title") {{ event.title }}
           .vuecal__event-time
             | {{ event.startTime }}
@@ -109,6 +109,10 @@ export default {
     },
     cellEvents () {
       let comparedEvents = {}
+      // eslint-disable-next-line
+      this.splitEvents = []
+
+      console.log('here la', this.events.length)
 
       return this.events.map(event => {
         comparedEvents[event.id] = []
@@ -211,7 +215,6 @@ export default {
 }
 
 .vuecal__event {
-  padding: 0.3em;
   color: #666;
   background-color: #f8f8f8;
   z-index: 1;
