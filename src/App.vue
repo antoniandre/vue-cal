@@ -113,6 +113,8 @@
       h2.mt-5
         a(href="#examples") Examples
         a(name="examples")
+
+      //- Example.
       h3.mt-3 # Example 1
       p
         | Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends. Double click cell to go narrower view.
@@ -124,12 +126,13 @@
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
 
+      //- Example.
       h3.mt-5 # Example 2
       p.
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
-        Simple click cell to go narrower view.
+        Simple click cell to go narrower view. Pre-selected date
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
-        vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate)
+        vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2018-11-21 00:00")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
 
@@ -139,6 +142,7 @@
       highlight-message(type="tips")
         | The default-view parameter accepts one of the available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
+      //- Example.
       h3.mt-5 # Example 3
       p.
         Extra-small, no timeline, custom arrows (using the reserved slots `arrowPrev` &amp; `arrowNext`).#[br]
@@ -152,6 +156,7 @@
           &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;redo&lt;/i&gt;
         &lt;/vue-cal&gt;
 
+      //- Example.
       h3.mt-5 # Example 4
       p.
         i18n.
@@ -179,6 +184,7 @@
             "dateFormat": "DDDD d mmmm yyyy"
           }
 
+      //- Example.
       h3.mt-5 # Example 5
       p.
         Different layout. Week view disabled.
@@ -193,6 +199,7 @@
       highlight-message(type="tips")
         | The disable-views parameter accepts an array of available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
 
+      //- Example.
       h3.mt-5 # Example 6
       p.
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
@@ -230,6 +237,7 @@
           ]
         })
 
+      //- Example.
       h3.mt-5 # Example 7
       p.
         Overlapping events. Up to 3 overlapping events starting at the same time.
@@ -266,6 +274,7 @@
           ]
         })
 
+      //- Example.
       h3.mt-5 # Example 8
       p.mb-4
         | Split days passing a CSS class &amp; a label per split, disabled views: years, year, month, and allow split-specific events.#[br]
@@ -331,6 +340,7 @@
         .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
         .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
+      //- Example.
       h3.mt-5 # Example 9
       p.
         Background events.

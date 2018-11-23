@@ -82,19 +82,23 @@ export default {
       type: Boolean,
       default: false
     },
+    hideWeekends: {
+      type: Boolean,
+      default: false
+    },
     '12Hour': {
       type: Boolean,
       default: false
     },
-    'hideWeekends': {
-      type: Boolean,
-      default: false
-    },
-    'defaultView': {
+    defaultView: {
       type: String,
       default: 'week'
     },
-    'splitDays': {
+    selectedDate: {
+      type: String,
+      default: ''
+    },
+    splitDays: {
       type: Array,
       default: () => []
     },
@@ -106,7 +110,7 @@ export default {
       type: Array,
       default: () => []
     },
-    'events': {
+    events: {
       type: Array,
       default: () => []
     }
@@ -114,13 +118,12 @@ export default {
   data: () => ({
     now: {
       Date: now,
-      day: null,
-      week: null,
-      weekFirstDay: null,
-      month: null,
-      year: null
+      day: now.getDay(),
+      week: now.getWeek(),
+      weekFirstDay: getPreviousMonday(now),
+      month: now.getMonth(),
+      year: now.getFullYear()
     },
-    selectedDate: null,
     monthDays: Array[31],
     view: {
       id: '',
@@ -128,7 +131,8 @@ export default {
       headings: [],
       cells: [],
       timeCells: [], // For week & day views.
-      startDate: null
+      startDate: null,
+      selectedDate: null
     },
     eventIdIncrement: 1
   }),
@@ -212,14 +216,14 @@ export default {
           date: new Date(fromYear + i, 0, 1),
           class: {
             current: fromYear + i === this.now.year,
-            selected: this.selectedDate && (fromYear + i) === this.selectedDate.getFullYear()
+            selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
           }
         }
       })
     },
 
     loadYearView (date) {
-      date = date || this.selectedDate || this.view.startDate
+      date = date || this.view.selectedDate || this.view.startDate
       let year = date.getFullYear()
 
       this.view.id = 'year'
@@ -239,7 +243,7 @@ export default {
     },
 
     loadMonthView (date) {
-      date = date || this.selectedDate || this.view.startDate
+      date = date || this.view.selectedDate || this.view.startDate
       const month = date.getMonth()
       const year = date.getFullYear()
       let days = getDaysInMonth(month, year)
@@ -288,7 +292,7 @@ export default {
           class: {
             today: isToday,
             'out-of-scope': cellDate.getMonth() !== month,
-            selected: this.selectedDate && cellDate.getTime() === this.selectedDate.getTime()
+            selected: this.view.selectedDate && cellDate.getTime() === this.view.selectedDate.getTime()
           }
         }
       })
@@ -299,7 +303,7 @@ export default {
     },
 
     loadWeekView (firstDayOfWeek = null) {
-      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.selectedDate) || getPreviousMonday(this.view.startDate)
+      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.view.selectedDate) || getPreviousMonday(this.view.startDate)
 
       this.view.id = 'week'
       this.view.startDate = firstDayOfWeek
@@ -314,7 +318,7 @@ export default {
           events,
           class: {
             today: false,
-            selected: this.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.selectedDate.getTime()
+            selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
           }
         }
       })
@@ -333,7 +337,7 @@ export default {
     },
 
     loadDayView (date = null) {
-      date = date || this.selectedDate || this.view.startDate
+      date = date || this.view.selectedDate || this.view.startDate
       const events = (this.events.length &&
                       this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
 
@@ -351,10 +355,10 @@ export default {
     },
 
     selectCell (cell) {
-      this.selectedDate = cell.date
+      this.view.selectedDate = cell.date
       this.view.cells.forEach(cell => {
         if (cell.class.selected) cell.class.selected = false
-        if (cell.date === this.selectedDate) cell.class.selected = true
+        if (cell.date === this.view.selectedDate) cell.class.selected = true
       })
 
       if (this.clickToNavigate) this.switchToNarrowerView()
@@ -371,13 +375,8 @@ export default {
       })
     }
 
-    this.now.year = this.now.Date.getFullYear()
-    this.now.month = this.now.Date.getMonth()
-    this.now.week = this.now.Date.getWeek()
-    this.now.weekFirstDay = getPreviousMonday(this.now.Date)
-    this.now.day = this.now.Date.getDay()
-
-    this.selectedDate = new Date(this.now.year, this.now.month, this.now.Date.getDate())
+    this.view.selectedDate = this.now.Date
+    // this.view.selectedDate = this.selectedDate || new Date(selectedDate.year, selectedDate.month, selectedDate.Date.getDate())
 
     this.switchView(this.defaultView)
   },
