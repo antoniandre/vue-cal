@@ -112,8 +112,6 @@ export default {
       // eslint-disable-next-line
       this.splitEvents = []
 
-      console.log('here la', this.events.length)
-
       return this.events.map(event => {
         comparedEvents[event.id] = []
 

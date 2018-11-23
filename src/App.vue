@@ -53,12 +53,12 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Allow custom arrows
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Default active date
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 timer
             | Double tap on touch devices
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
-            | Default active date
           v-chip.pr-1.white--text(color="deep-orange" small disabled)
             v-icon.mr-2 access_time
             strong First NPM Release
@@ -162,9 +162,9 @@
       h3.mt-5 # Example 2
       p.
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
-        Simple click cell to go narrower view. Pre-selected date
+        Simple click cell to go narrower view. Pre-selected date: 1st of January, 2000.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
-        vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2018-11-21 00:00")
+        vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2000-01-01 00:01")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
 
@@ -193,7 +193,7 @@
       p.
         i18n.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-        vue-cal(hide-view-selector :time="false" small default-view="year" locale="fr")
+        vue-cal(:time="false" small default-view="year" locale="fr")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
 
@@ -727,11 +727,13 @@ a {
   .vuecal__cell {background-color: transparent !important;}
 
   &.green-theme {
+    .today .vuecal__cell-content {background-color: #42b983;color: #fff;}
     .selected .vuecal__cell-content {border-color: #42b983;}
   }
 
   &.blue-theme {
     .vuecal:not(.vuecal--day-view) .vuecal__cell-content {background-color: rgba(100, 182, 255, 0.2);}
+    .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
     .selected .vuecal__cell-content {border-color: #61a9e0;}
   }
 }

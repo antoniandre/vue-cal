@@ -248,6 +248,8 @@ export default {
       const year = date.getFullYear()
       let days = getDaysInMonth(month, year)
       const firstOfMonthDayOfWeek = days[0].getDay()
+      let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
+      selectedDateAtMidnight.setHours(0, 0, 0, 0)
 
       // If the first day of the month is not a Monday, prepend missing days to the days array.
       if (days[0].getDay() !== 1) {
@@ -292,7 +294,7 @@ export default {
           class: {
             today: isToday,
             'out-of-scope': cellDate.getMonth() !== month,
-            selected: this.view.selectedDate && cellDate.getTime() === this.view.selectedDate.getTime()
+            selected: this.view.selectedDate && cellDate.getTime() === selectedDateAtMidnight.getTime()
           }
         }
       })
@@ -375,8 +377,11 @@ export default {
       })
     }
 
-    this.view.selectedDate = this.now.Date
-    // this.view.selectedDate = this.selectedDate || new Date(selectedDate.year, selectedDate.month, selectedDate.Date.getDate())
+    if (this.selectedDate) {
+      let [, y, m, d, h, min] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/)
+      this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
+    }
+    else this.view.selectedDate = this.now.Date
 
     this.switchView(this.defaultView)
   },
@@ -387,11 +392,11 @@ export default {
     },
     views () {
       return {
-        years: { label: 'Years', enabled: this.disableViews.indexOf('years') === -1 },
-        year: { label: 'Year', enabled: this.disableViews.indexOf('year') === -1 },
-        month: { label: 'Month', enabled: this.disableViews.indexOf('month') === -1 },
-        week: { label: 'Week', enabled: this.disableViews.indexOf('week') === -1 },
-        day: { label: 'Day', enabled: this.disableViews.indexOf('day') === -1 }
+        years: { label: this.texts.years, enabled: this.disableViews.indexOf('years') === -1 },
+        year: { label: this.texts.year, enabled: this.disableViews.indexOf('year') === -1 },
+        month: { label: this.texts.month, enabled: this.disableViews.indexOf('month') === -1 },
+        week: { label: this.texts.week, enabled: this.disableViews.indexOf('week') === -1 },
+        day: { label: this.texts.day, enabled: this.disableViews.indexOf('day') === -1 }
       }
     },
     broaderView () {
