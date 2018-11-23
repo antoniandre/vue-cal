@@ -220,10 +220,10 @@
       h3.mt-5 # Example 5
       p.
         Different layout. Week view disabled.
-      v-layout.my-2.ma-auto(row justify-center)
-        v-card.blue-theme.mx-2.main-content.round(style="width: 280px;height: 300px;")
+      v-layout.ma-auto(row justify-center wrap)
+        v-card.blue-theme.ma-2.main-content.round(style="width: 280px;height: 300px;")
           vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
-        v-card.green-theme.mx-2.main-content.round(style="width: 280px;height: 300px;")
+        v-card.green-theme.ma-2.main-content.round(style="width: 280px;height: 300px;")
           vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
       ssh-pre(language="html-vue" label="Vue Template").
         &lt;vue-cal xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']"&gt;&lt;/vue-cal&gt;

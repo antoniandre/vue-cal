@@ -499,6 +499,7 @@ $weekdays-headings-height: 3em;
   &__header {user-select: none;}
 
   &__menu {
+    padding: 0;
     list-style-type: none;
     justify-content: center;
     background-color: #fafafa;
