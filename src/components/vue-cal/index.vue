@@ -384,6 +384,10 @@ export default {
           this.switchToNarrowerView()
         }
       }
+    },
+
+    refreshView () {
+      this.$nextTick(() => this.switchView(this.view.id))
     }
   },
 
@@ -403,7 +407,7 @@ export default {
   computed: {
     texts () {
       // Refresh the leftover dates in previous language.
-      this.$nextTick(() => this.switchView(this.view.id))
+      this.refreshView()
       return texts[this.locale]
     },
     views () {
