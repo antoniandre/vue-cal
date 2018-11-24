@@ -217,15 +217,16 @@ export default {
   background-color: #f8f8f8;
   z-index: 1;
 
+  // Reactivate user selection in events.
+  .vuecal__cell & * {user-select: auto;}
+
   .vuecal--view-with-time & {
     position: absolute;
     left: 0;
     right: 0;
     overflow: hidden;
 
-    &:hover {
-      height: auto !important;
-    }
+    &:hover {height: auto !important;}
   }
 
   &.overlapped {right: 20%;}

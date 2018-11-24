@@ -80,7 +80,7 @@
             | Highlight current time
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
-            strong Second NPM Release
+            | Event indicator on month view
 
       highlight-message(type="warning")
         strong Important Notes#[br]
@@ -99,16 +99,16 @@
       p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
       h3 Via NPM - COMING END OF THIS WEEK!
       div(style="opacity: 0.25")
-        ssh-pre(language="shell" label="Shell") npm install vue-cal --save-dev
+        sshpre(language="shell" label="Shell") npm install vue-cal --save-dev
         p Then import the component and use it:
-        ssh-pre(language="js" label="Javascript").
+        sshpre(language="js" label="Javascript").
           // In your VueJS component.
-          import { VueCal } from 'vue-cal'
-          import 'vue-cal/dist/vue-cal.min.css'
+          import { Vuecal } from 'vue-cal'
+          import 'vue-cal/dist/vuecal.css'
           ...
 
           export default {
-            components: { VueCal },
+            components: { Vuecal },
             data: () => ({
               ...
             }),
@@ -118,12 +118,12 @@
       h3 Via #[span.code &lt;script&gt;] tag - COMING END OF THIS WEEK!
       div(style="opacity: 0.25")
         p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-        ssh-pre(language="html" label="HTML").
+        sshpre(language="html" label="HTML").
           &lt;head&gt;
             ...
-            &lt;script src="https://unpkg.com/vue/dist/vue.min.js"&gt;&lt;/script&gt;
-            &lt;script src="https://unpkg.com/vue-cal/dist/vue-cal.min.js"&gt;&lt;/script&gt;
-            &lt;link href="https://unpkg.com/vue-cal/dist/vue-cal.min.css" rel="stylesheet"&gt;
+            &lt;script src="https://unpkg.com/vue/"&gt;&lt;/script&gt;
+            &lt;script src="https://unpkg.com/vue-cal/"&gt;&lt;/script&gt;
+            &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
           &lt;/head&gt;
 
       h2.mt-5
@@ -135,28 +135,15 @@
       p
         | Given time range (8 - 22) and time step (1 hour), 24-hour format, hide weekends.
         | Double click cell to go narrower view.#[br]
-        | By the way, you can easily change the color theme of the calendar, which by default is grey.#[br]
-        | before you look at the CSS code bellow try this
+        | By default the calendar theme is grey to match with most of web pages.#[br]
+        | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
         v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
       v-card.my-2.ma-auto.main-content(:class="`${example1theme}-theme`")
-        vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
-      ssh-pre(language="html-vue" label="Vue Template").
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
+      sshpre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
-      p.
-        So this is what a standard color theme looks like.
-        You can copy and change any color to quickly get a nice render.#[br]
-        Of course you can even change more in your CSS.
-
-      ssh-pre(language="css" label="CSS").
-        /* Green-theme. */
-        .vuecal__menu {background-color: #42b983;}
-        .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
-        .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-        .vuecal__title {background-color: #e4f5ef;}
-        .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-        .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
-        .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+      highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
       //- Example.
       h3.mt-5 # Example 2
@@ -165,14 +152,10 @@
         Simple click cell to go narrower view. Pre-selected date: 1st of January, 2000.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
         vue-cal(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2000-01-01 00:01")
-      ssh-pre(language="html-vue" label="Vue Template").
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
 
-      highlight-message(type="info")
-        | The small parameter truncates the days of the week to 3 letters in month view and week view.#[br]
-
-      highlight-message(type="tips")
-        | The default-view parameter accepts one of the available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
+      highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
       //- Example.
       h3.mt-5 # Example 3
@@ -180,41 +163,25 @@
         Extra-small, no timeline, custom arrows (using the reserved slots `arrowPrev` &amp; `arrowNext`).#[br]
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
         vue-cal(hide-view-selector :time="false" xsmall)
-          v-icon(slot="arrowPrev") undo
-          v-icon(slot="arrowNext") redo
-      ssh-pre(language="html-vue" label="Vue Template").
+          v-icon(slot="arrowPrev") arrow_back
+          v-icon(slot="arrowNext") arrow_forward
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" xsmall&gt;
-          &lt;i slot="arrowPrev" aria-hidden="true" class="v-icon material-icons"&gt;undo&lt;/i&gt;
-          &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;redo&lt;/i&gt;
+          &lt;i slot="arrowPrev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
+          &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
         &lt;/vue-cal&gt;
+
+      highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
       //- Example.
       h3.mt-5 # Example 4
       p.
-        i18n.
+        i18n.#[br]
+        Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
         vue-cal(:time="false" small default-view="year" locale="fr")
-      ssh-pre(language="html-vue" label="Vue Template").
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
-
-      highlight-message(type="info")
-        | Currently available languages are English, French, Italian.#[br]
-        | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
-        | this is what a language json looks like.
-
-        ssh-pre(language="json").
-          {
-            "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
-            "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-            "years": "Années",
-            "year": "Année",
-            "month": "Mois",
-            "week": "Semaine",
-            "day": "Jour",
-            "today": "Aujourd'hui",
-            "noEvent": "Aucun événement",
-            "dateFormat": "DDDD d mmmm yyyy"
-          }
 
       //- Example.
       h3.mt-5 # Example 5
@@ -225,11 +192,9 @@
           vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
         v-card.green-theme.ma-2.main-content.round(style="width: 280px;height: 300px;")
           vue-cal(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
-      ssh-pre(language="html-vue" label="Vue Template").
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']"&gt;&lt;/vue-cal&gt;
-
-      highlight-message(type="tips")
-        | The disable-views parameter accepts an array of available views id: 'years', 'year', 'month', 'week', 'day'.#[br]
+      highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
 
       //- Example.
       h3.mt-5 # Example 6
@@ -238,31 +203,38 @@
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
-      ssh-pre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal :time-from="7 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
+      highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
 
-      ssh-pre(language="js" label="Javascript").
+      sshpre(language="js" label="Javascript").
         data: () => ({
           events: [
             {
               start: '2018-11-19 10:35',
               end: '2018-11-19 11:30',
               title: 'Doctor appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health'
             },
             {
               start: '2018-11-19 18:30',
               end: '2018-11-19 19:15',
               title: 'Dentist appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health'
             },
             {
               start: '2018-11-20 18:30',
               end: '2018-11-20 20:30',
               title: 'Crossfit',
-              content: '<i class="v-icon material-icons">fitness_center</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
               class: 'sport'
             },
             ...
@@ -275,31 +247,32 @@
         Overlapping events. Up to 3 overlapping events starting at the same time.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
-      ssh-pre(language="html-vue" label="Vue Template").
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+      highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
 
-      ssh-pre(language="js" label="Javascript").
+      sshpre(language="js" label="Javascript").
         data: () => ({
           events: [
             {
               start: '2018-11-19 10:35',
               end: '2018-11-19 11:30',
               title: 'Doctor appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health'
             },
             {
               start: '2018-11-19 18:30',
               end: '2018-11-19 19:15',
               title: 'Dentist appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health'
             },
             {
               start: '2018-11-20 18:30',
               end: '2018-11-20 20:30',
               title: 'Crossfit',
-              content: '<i class="v-icon material-icons">fitness_center</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
               class: 'sport'
             },
             ...
@@ -309,14 +282,16 @@
       //- Example.
       h3.mt-5 # Example 8
       p.mb-4
-        | Split days passing a CSS class &amp; a label per split, disabled views: years, year, month, and allow split-specific events.#[br]
-        | You can also overflow your content using a min-width on cells, like in this example, or fit to container
+        | Split days passing a CSS class &amp; a label per split,
+        | disabled views: years, year, month, and allow split-specific events.#[br]
+        | You can also overflow your content using a min-width on cells, like in this example, or fit to container#[br]
+        | Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
         v-btn(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
           v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
           | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
-      ssh-pre(language="html-vue" label="Vue Template" v-pre).
+      sshpre(language="html-vue" label="Vue Template" v-pre).
         &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
           {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
         &lt;/button&gt;
@@ -328,15 +303,15 @@
                  :min-cell-width="minCellWidth"&gt;
         &lt;/vue-cal&gt;
 
-      ssh-pre(language="js" label="Javascript").
+      sshpre(language="js" label="Javascript").
         data: () => ({
-          splitsExampleMinCellWidth: 400,
+          minCellWidth: 400,
           events: [
             {
               start: '2018-11-19 10:35',
               end: '2018-11-19 11:30',
               title: 'Doctor appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health',
               split: 1
             },
@@ -344,7 +319,7 @@
               start: '2018-11-19 18:30',
               end: '2018-11-19 19:15',
               title: 'Dentist appointment',
-              content: '<i class="v-icon material-icons">local_hospital</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
               class: 'health',
               split: 2
             },
@@ -352,7 +327,7 @@
               start: '2018-11-20 18:30',
               end: '2018-11-20 20:30',
               title: 'Crossfit',
-              content: '<i class="v-icon material-icons">fitness_center</i>',
+              content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
               class: 'sport',
               split: 2
             },
@@ -360,12 +335,12 @@
           ]
         })
 
-      ssh-pre(language="css" label="CSS").
+      sshpre(language="css" label="CSS").
         /* You can easily set a different style for each split of your days. */
         .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
-        .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
+        .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;}
         .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
-        .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+        .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;}
 
         /* Different color for different event types. */
         .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
@@ -375,13 +350,14 @@
       //- Example.
       h3.mt-5 # Example 9
       p.
-        Background events.
+        Background events.#[br]
+        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
-      ssh-pre(language="html-vue" label="Vue Template").
+      sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
 
-      ssh-pre(language="js" label="Javascript").
+      sshpre(language="js" label="Javascript").
         data: () => ({
           events: [
             {
@@ -402,7 +378,7 @@
           ]
         })
 
-      ssh-pre(language="css" label="CSS").
+      sshpre(language="css" label="CSS").
         .vuecal__event.lunch {
           background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
           color: #999;
@@ -412,8 +388,251 @@
         }
         .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
-      highlight-message(type="info")
-        | Recurring events will be available in a next release.
+      h2.mt-5.pt-5
+        a(href="#api") API
+        a(name="api")
+      p Here is the list of all the available views.
+      sshpre.mt-2(language="js").
+        ['years', 'year', 'month', 'week', 'day']
+      p Here is the list of all the parameters available.
+      sshpre.mt-2(language="js").
+        locale:             [String],  default: 'en'
+        hideViewSelector:   [Boolean], default: false
+        hideWeekends:       [Boolean], default: false
+        disableViews:       [Array],   default: []
+        defaultView:        [String],  default: 'week'
+        selectedDate:       [String],  default: ''
+        small:              [Boolean], default: false
+        xsmall:             [Boolean], default: false
+        clickToNavigate:    [Boolean], default: false
+        dblClickToNavigate: [Boolean], default: true
+        time:               [Boolean], default: true
+        timeFrom:           [Number],  default: 0 // In minutes.
+        timeTo:             [Number],  default: 24 * 60 // In minutes.
+        timeStep:           [Number],  default: 30 // In minutes.
+        timeCellHeight:     [Number],  default: 40 // In pixels.
+        12Hour:             [Boolean], default: false
+        minCellWidth:       [Number],  default: 0 // In pixels.
+        splitDays:          [Array],   default: []
+        events:             [Array],   default: []
+
+      ul.pl-0.api-options
+        li
+          code.mr-2 locale
+          span.code [String], default: 'en'
+          p.
+            Allows you to translate the calendar texts in a given language.#[br]
+          highlight-message(type="info")
+            | Currently available languages are English, French, Italian.#[br]
+            | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
+            | this is what a language json looks like.
+
+            sshpre.my-2(language="json").
+              {
+                "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+                "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+                "years": "Années",
+                "year": "Année",
+                "month": "Mois",
+                "week": "Semaine",
+                "day": "Jour",
+                "today": "Aujourd'hui",
+                "noEvent": "Aucun événement",
+                "dateFormat": "DDDD d mmmm yyyy"
+              }
+        li
+          code.mr-2 hideViewSelector
+          span.code [Boolean], default: false
+          p.
+            When set to true, the top view selector will disappear.#[br]
+            You can still navigate from a view to another by clicking a cell (narrower view) or the view title (broader view).
+        li
+          code.mr-2 hideWeekends
+          span.code [Boolean], default: false
+          p.
+            Hide the weekend and shows only Monday to Friday on month view and week view.#[br]
+            The weekend are still visible in day view not to break the behavior of the arrows.#[br]
+            Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends is true.
+        li
+          code.mr-2 disableViews
+          span.code [Array], default: []
+          p.
+            Allows you to totally disable one or more of the available views.#[br]
+            Accepted view names are 'years', 'year', 'month', 'week', 'day'.#[br]
+            Note that the navigation between views via cells click or title click won't
+            break and will only navigate to views you have allowed.
+        li
+          code.mr-2 defaultView
+          span.code [String], default: 'week'
+          p.
+            Allows you to set a default view, for the first time you load the calendar.#[br]
+            Accepts one of 'years', 'year', 'month', 'week', 'day'.
+        li
+          code.mr-2 selectedDate
+          span.code [String], default: ''
+          p.
+            Set a selected date, for the first time you load the calendar.#[br]
+            This day will be highlighted and the first view will naturally show this date.#[br]
+            E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.
+          highlight-message(type="warning").
+            a correct date format is #[code {{ currentDateFormatted }}]. Only this format will work.
+        li
+          code.mr-2 small
+          span.code [Boolean], default: false
+          p.
+            When set to true, the days of the week headings will be truncated to 3 letters.#[br]
+            Does not apply to the title of the day view.#[br]
+            3 media queries are truncating the days of the week bellow 450px,
+            read on in the #[a(href="#css-notes") CSS Notes].
+        li
+          code.mr-2 xsmall
+          span.code [Boolean], default: false
+          p.
+            When set to true, the days of the week headings will be truncated to 1 letter.#[br]
+            Does not apply to the title of the day view.#[br]
+            In Addition, the whole calendar gets applied a smaller font size of 0.9em,
+            and the current view title is also reduced.#[br]
+            3 media queries are truncating the days of the week bellow 450px,
+            read on in the #[a(href="#css-notes") CSS Notes].
+        li
+          code.mr-2 clickToNavigate
+          span.code [Boolean], default: false
+          p.
+            When set to true a single click (or tap for touch devices) will take you to a narrower view if available.#[br]
+            You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
+            The navigation to narrower view can be disabled by setting both clickToNavigate and dblClickToNavigate to false.
+        li
+          code.mr-2 dblClickToNavigate
+          span.code [Boolean], default: true
+          p.
+            When set to true a double click (or double tap for touch devices) will take you to a narrower view if available.#[br]
+            You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
+            The navigation to narrower view can be disabled by setting both clickToNavigate and dblClickToNavigate to false.
+        li
+          code.mr-2 time
+          span.code [Boolean], default: true
+          p.
+            Whether you want to display the timeline and handle events with time or only date.#[br]
+            Note that time is made of #[span.code hours:minutes] #[strong.ml-2 and no second].
+        li
+          code.mr-2 timeFrom
+          span.code [Number], default: 0
+          p.
+            If time is enabled, set the start of the timeline in minutes. By default it starts at midnight.
+        li
+          code.mr-2 timeTo
+          span.code [Number], default: 24 * 60
+          p.
+            If time is enabled, set the end of the timeline in minutes. By default it ends at 23.59.
+        li
+          code.mr-2 timeStep
+          span.code [Number], default: 30
+          p.
+            If time is enabled, set the time increment in minutes.
+        li
+          code.mr-2 timeCellHeight
+          span.code [Number], default: 40
+          p.
+            If time is enabled, set the time cell height in pixels.#[br]
+            this is very important as it is used to calculate the events position in the day.
+        li
+          code.mr-2 12Hour
+          span.code [Boolean], default: false
+          p.
+            If time is enabled, the default time format is 24hour.#[br]
+            With 12Hour set to true, the time format will show 12 hours suffixed with am/pm.
+        li
+          code.mr-2 minCellWidth
+          span.code [Number], default: 0
+          p.
+            In the current version, this is for day splits only.#[br]
+            When a number is set, in pixels, the calendar body will have a horizontal
+            scrollbar if the cells don't fit naturally in the calendar container.
+        li
+          code.mr-2 splitDays
+          span.code [Array], default: []
+          p.
+            Split each day into multiple vertical splits.#[br]
+            Accepts an array of split objects with attributes.#[br]
+            Each split object can have these attributes: #[span.code { class: 'string', label: 'string' }]
+        li
+          code.mr-2 events
+          span.code [Array], default: []
+          p.
+            Allows you to place events in the calendar.#[br]
+            Accepts an array of event objects.#[br]
+            This is what an event object must look like:
+          p
+            sshpre.mt-2(language="js").
+              {
+                start: '2018-11-19 12:00', // Required.
+                end: '2018-11-19 14:00', // Required.
+                title: 'String', // Optional.
+                content: 'String', // Optional.
+                class: 'String', // Optional.
+                background: [Boolean] // Optional. (Event type not CSS property)
+                split: [Number] // Optional.
+              }
+            ul
+              li If no #[span.code title] is provided, no title will be displayed.
+              li.
+                #[span.code content] accepts free HTML, for instance:
+                '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;'.#[br]
+                If no #[span.code content] is provided, no content will be displayed.
+              li.
+                You may need an event CSS #[span.code class] to handle different event types
+                for instance. With different classes you can apply different styles to the events.#[br]
+                E.g. backgrounds, images, borders, etc.
+              li.
+                The #[span.code background] attribute sets an event as a background event,
+                which allows overlapping and disable the ability to drag &amp; resize.
+              li.
+                When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
+                starting from 1, corresponding to the split you want the event to appear in.
+
+          highlight-message(type="warning").
+            a correct date format is #[code {{ currentDateFormatted }}]. Only this format will work.
+
+          highlight-message(type="info")
+            | Recurring events will be available in a next release.
+
+      h2.mt-5.pt-5
+        a(href="#css-notes") CSS Notes
+        a(name="css-notes")
+      p You can easily change the calendar design with CSS.
+
+      h3.mt-5 # Color Theme
+      p.
+        This is what a standard color theme looks like.
+        You can copy and change any color to quickly get a nice render.#[br]
+        Of course you can change even more in your CSS.
+
+      sshpre(language="css" label="CSS").
+        /* Green-theme. */
+        .vuecal__menu {background-color: #42b983;}
+        .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+        .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+        .vuecal__title {background-color: #e4f5ef;}
+        .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+        .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+        .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+
+      h3.mt-5 # Responsiveness &amp; Media Queries
+      p.
+        This calendar is fully responsive.#[br]
+        To help you in making the calendar always look perfect,
+        3 media queries (to keep it simple) are in place for small screens.#[br]
+        The media queries operate downward from 550px, 450px &amp; 350px, and they mostly truncate the text
+        of the days of the week from full day name to 3 letters and to 1 letter according to the space.#[br]#[br]
+
+        If this is not enough for your particular use, you can add your own in your CSS.#[br]
+        Additionally, you can use the options #[span.code small] &amp; #[span.code xsmall]
+        to truncate week days at any size.
+
+      h3.mt-5 # Disabled Text Selection
+      p.
+        By default the selection is disabled in the whole calendar except in the events.
+        you can override this by CSS.
 
       h2.mt-5.pt-5
         a(href="#release-notes") Release Notes
@@ -426,8 +645,8 @@
 
 <script>
 import VueCal from '@/components/vue-cal'
-import { simpleSyntaxHighlighter } from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/simple-syntax-highlighter.min.css'
+import Sshpre from 'simple-syntax-highlighter'
+import 'simple-syntax-highlighter/dist/sshpre.css'
 import highlightMessage from '@/components/highlight-message'
 
 const events = [
@@ -501,13 +720,14 @@ export default {
   name: 'app',
   components: {
     VueCal,
-    sshPre: simpleSyntaxHighlighter,
+    Sshpre,
     highlightMessage
   },
   data: () => ({
     ready: false,
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
+    now: new Date(),
     events,
     overlappingEvents: [
       ...events,
@@ -604,6 +824,16 @@ export default {
   }),
   created () {
     setTimeout(() => (this.ready = true), 500)
+  },
+  computed: {
+    currentDateFormatted() {
+      const y = this.now.getFullYear()
+      const m = this.now.getMonth()
+      const d = this.now.getDate()
+      const h = this.now.getHours()
+      const min = this.now.getMinutes()
+      return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
+    }
   }
 }
 </script>
@@ -678,6 +908,14 @@ a {
   max-width: 800px;
   height: 650px;
 }
+
+.code {
+  font-family: monospace, sans-serif;
+}
+
+.api-options {list-style-type: none;}
+.api-options > li {margin-top: 2em;}
+.api-options p {margin-left: 1.5em;margin-top: 0.5em;}
 
 // Default vue-cal demo style.
 .green-theme {
