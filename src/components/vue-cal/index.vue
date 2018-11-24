@@ -21,7 +21,7 @@
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__flex.vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in view.timeCells" :key="i" :style="`height: ${timeCellHeight}px`") {{ cell.label }}
+            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`") {{ cell.label }}
 
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
@@ -137,7 +137,6 @@ export default {
       title: '',
       headings: [],
       cells: [],
-      timeCells: [], // For week & day views.
       startDate: null,
       selectedDate: null
     },
@@ -398,13 +397,6 @@ export default {
   created () {
     if (this.locale !== 'en') setLocale(this.locale)
 
-    for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
-      this.view.timeCells.push({
-        label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'),
-        value: i
-      })
-    }
-
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
       this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
@@ -437,6 +429,18 @@ export default {
     },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
+    },
+    // For week & day views.
+    timeCells () {
+      let timeCells = []
+      for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
+        timeCells.push({
+          label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'),
+          value: i
+        })
+      }
+
+      return timeCells
     },
     // Whether the current view has days splits.
     hasSplits () {

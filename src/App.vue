@@ -141,7 +141,7 @@
         | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
         v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
       v-card.my-2.ma-auto.main-content(:class="`${example1theme}-theme`")
-        vue-cal(:time-from="8 * 60" 12-hour :time-to="22 * 60" :time-step="60" hide-weekends)
+        vue-cal(:time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
       sshpre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
