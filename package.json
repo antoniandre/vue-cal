@@ -5,9 +5,10 @@
   "repository": "https://github.com/antoniandre/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "license": "MIT",
-  "main": "./dist/vue-cal.common.js",
-  "unpkg": "dist/vue-cal.umd.min.js",
+  "main": "./dist/vuecal.common.js",
+  "unpkg": "dist/vuecal.umd.min.js",
   "keywords": [
+    "full calendar",
     "calendar",
     "vue",
     "vuejs",
@@ -22,7 +23,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "build-bundle": "vue-cli-service build --target lib --name vueCal ./src/components/vue-cal/index.vue --dest ./dist",
+    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {
@@ -34,7 +35,7 @@
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
-    "simple-syntax-highlighter": "^1.0.0",
+    "simple-syntax-highlighter": "^1.0.3",
     "vue": "^2.5.17",
     "vue-cli-plugin-vuetify": "^0.2.1",
     "vue-template-compiler": "^2.5.17",
