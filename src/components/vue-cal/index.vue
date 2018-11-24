@@ -123,14 +123,7 @@ export default {
     }
   },
   data: () => ({
-    now: {
-      Date: now,
-      day: now.getDay(),
-      week: now.getWeek(),
-      weekFirstDay: getPreviousMonday(now),
-      month: now.getMonth(),
-      year: now.getFullYear()
-    },
+    now,
     monthDays: Array[31],
     view: {
       id: '',
@@ -225,7 +218,7 @@ export default {
           content: fromYear + i,
           date: new Date(fromYear + i, 0, 1),
           class: {
-            current: fromYear + i === this.now.year,
+            current: fromYear + i === this.now.getFullYear(),
             selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
           }
         }
@@ -245,7 +238,7 @@ export default {
           content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
           date: new Date(year, i, 1),
           class: {
-            current: i === this.now.month && year === this.now.year,
+            current: i === this.now.getMonth() && year === this.now.getFullYear(),
             selected: i === date.getMonth() && year === date.getFullYear()
           }
         }
@@ -290,9 +283,9 @@ export default {
       // Create 42 cells (6 x 7 days) and populate them with days.
       this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
         const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
-        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.Date.getDate() &&
-                        cellDate.getMonth() === this.now.month &&
-                        cellDate.getFullYear() === this.now.year
+        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.getDate() &&
+                        cellDate.getMonth() === this.now.getMonth() &&
+                        cellDate.getFullYear() === this.now.getFullYear()
         // To increase performance skip checking isToday if today already found.
         if (isToday) todayFound = true
 
@@ -401,7 +394,7 @@ export default {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
       this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
     } else {
-      this.view.selectedDate = this.now.Date
+      this.view.selectedDate = this.now
     }
 
     this.switchView(this.defaultView)

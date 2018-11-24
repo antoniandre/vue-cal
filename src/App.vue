@@ -923,7 +923,7 @@ export default {
     setTimeout(() => (this.ready = true), 500)
   },
   computed: {
-    currentDateFormatted() {
+    currentDateFormatted () {
       const y = this.now.getFullYear()
       const m = this.now.getMonth()
       const d = this.now.getDate()
