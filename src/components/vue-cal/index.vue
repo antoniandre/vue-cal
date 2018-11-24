@@ -402,6 +402,8 @@ export default {
 
   computed: {
     texts () {
+      // Refresh the leftover dates in previous language.
+      this.$nextTick(() => this.switchView(this.view.id))
       return texts[this.locale]
     },
     views () {
