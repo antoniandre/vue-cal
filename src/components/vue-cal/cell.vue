@@ -7,7 +7,7 @@
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
         .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j" :style="eventPosition(event, i)")
           .vuecal__event-title(v-if="event.title") {{ event.title }}
-          .vuecal__event-time
+          .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
@@ -46,6 +46,8 @@ export default {
 
   methods: {
     eventPosition (event, split = 0) {
+      if (!event.startTime) return
+
       const timeCellHeight = parseInt(this.$parent.timeCellHeight)
       const timeStep = parseInt(this.$parent.timeStep)
 
@@ -161,7 +163,7 @@ export default {
   .vuecal--day-view & {flex: 1;}
 
   .vuecal--click-to-navigate & {cursor: pointer;}
-  .vuecal--view-with-time & {display: block;}
+  .vuecal--view-with-time &, .vuecal--no-time & {display: block;}
 
   &.splitted {
     flex-direction: row;

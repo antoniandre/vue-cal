@@ -56,12 +56,14 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Default active date
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
             | Double tap on touch devices
           v-chip.pr-1.white--text(color="deep-orange" small disabled)
             v-icon.mr-2 access_time
             strong First NPM Release
+          //- v-chip.pr-1(color="amber darken-1" outline small disabled)
+          //-   v-icon.mr-2 timer
           .my-2 Then
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
@@ -139,7 +141,7 @@
         | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
         v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
       v-card.my-2.ma-auto.main-content(:class="`${example1theme}-theme`")
-        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
+        vue-cal(:time-from="8 * 60" 12-hour :time-to="22 * 60" :time-step="60" hide-weekends)
       sshpre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
@@ -202,9 +204,10 @@
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="7 * 60"
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="7 * 60"
                  :time-to="23 * 60"
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
@@ -246,9 +249,16 @@
       p.
         Overlapping events. Up to 3 overlapping events starting at the same time.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+        vue-cal(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="7 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
       highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
 
       sshpre(language="js" label="Javascript").
@@ -290,12 +300,13 @@
           v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
           | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal(:time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
+        vue-cal(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
       sshpre(language="html-vue" label="Vue Template" v-pre).
         &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
           {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
         &lt;/button&gt;
-        &lt;vue-cal :time-from="8 * 60"
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="8 * 60"
                  :time-step="30"
                  :disable-views="['years', 'year', 'month']"
                  :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
@@ -353,9 +364,16 @@
         Background events.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal(:time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
+        vue-cal(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
       sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events"&gt;&lt;/vue-cal&gt;
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="7 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
 
       sshpre(language="js" label="Javascript").
         data: () => ({
@@ -387,6 +405,48 @@
           align-items: center;
         }
         .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
+
+      //- Example.
+      h3.mt-5 # Example 10
+      p.
+        Timeless Events. Dates but no time information.#[br]
+        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+      v-card.green-theme.my-2.ma-auto.main-content(style="height: 350px;")
+        vue-cal(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time="false"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
+      highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+
+      sshpre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-21',
+              end: '2018-11-23',
+              title: 'Need to go shopping',
+              content: '&lt;i class="v-icon material-icons"&gt;shopping_cart&lt;/i&gt;',
+              class: 'leisure'
+            },
+            {
+              start: '2018-11-21',
+              end: '2018-11-23',
+              title: 'Golf with John',
+              content: '&lt;i class="v-icon material-icons"&gt;golf_course&lt;/i&gt;',
+              class: 'sport'
+            },
+            {
+              start: '2018-11-22',
+              end: '2018-11-23',
+              title: 'Dad\'s birthday!',
+              content: '&lt;i class="v-icon material-icons"&gt;cake&lt;/i&gt;',
+              class: 'sport'
+            }
+          ]
 
       h2.mt-5.pt-5
         a(href="#api") API
@@ -475,7 +535,9 @@
             This day will be highlighted and the first view will naturally show this date.#[br]
             E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.
           highlight-message(type="warning").
-            a correct date format is #[code {{ currentDateFormatted }}]. Only this format will work.
+            A correct date format is #[code {{ currentDateFormatted }}] or
+            #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
+            Only these formats will work.
         li
           code.mr-2 small
           span.code [Boolean], default: false
@@ -500,14 +562,14 @@
           p.
             When set to true a single click (or tap for touch devices) will take you to a narrower view if available.#[br]
             You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
-            The navigation to narrower view can be disabled by setting both clickToNavigate and dblClickToNavigate to false.
+            The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblClickToNavigate] to false.
         li
           code.mr-2 dblClickToNavigate
           span.code [Boolean], default: true
           p.
             When set to true a double click (or double tap for touch devices) will take you to a narrower view if available.#[br]
             You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
-            The navigation to narrower view can be disabled by setting both clickToNavigate and dblClickToNavigate to false.
+            The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblClickToNavigate] to false.
         li
           code.mr-2 time
           span.code [Boolean], default: true
@@ -518,29 +580,31 @@
           code.mr-2 timeFrom
           span.code [Number], default: 0
           p.
-            If time is enabled, set the start of the timeline in minutes. By default it starts at midnight.
+            If #[span.code time] is enabled, set the start of the timeline in minutes.
+            By default it starts at midnight.
         li
           code.mr-2 timeTo
           span.code [Number], default: 24 * 60
           p.
-            If time is enabled, set the end of the timeline in minutes. By default it ends at 23.59.
+            If #[span.code time] is enabled, set the end of the timeline in minutes.
+            By default it ends at 23.59.
         li
           code.mr-2 timeStep
           span.code [Number], default: 30
           p.
-            If time is enabled, set the time increment in minutes.
+            If #[span.code time] is enabled, set the time increment in minutes.
         li
           code.mr-2 timeCellHeight
           span.code [Number], default: 40
           p.
-            If time is enabled, set the time cell height in pixels.#[br]
+            If #[span.code time] is enabled, set the time cell height in pixels.#[br]
             this is very important as it is used to calculate the events position in the day.
         li
           code.mr-2 12Hour
           span.code [Boolean], default: false
           p.
-            If time is enabled, the default time format is 24hour.#[br]
-            With 12Hour set to true, the time format will show 12 hours suffixed with am/pm.
+            If #[span.code time] is enabled, the default time format is 24hour.#[br]
+            With #[span.code 12Hour] set to true (use #[span.code 12-hour] in template), the time format will show 12 hours suffixed with am/pm.
         li
           code.mr-2 minCellWidth
           span.code [Number], default: 0
@@ -590,8 +654,11 @@
                 When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
                 starting from 1, corresponding to the split you want the event to appear in.
 
-          highlight-message(type="warning").
-            a correct date format is #[code {{ currentDateFormatted }}]. Only this format will work.
+          highlight-message(type="warning")
+            | Correct date formats are #[code {{ currentDateFormatted }}] or
+            | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
+            | Only these formats will work.#[br]
+            strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
 
           highlight-message(type="info")
             | Recurring events will be available in a next release.
@@ -819,6 +886,36 @@ export default {
         title: 'LUNCH',
         class: 'lunch',
         background: true
+      }
+    ],
+    timelessEvents: [
+      {
+        start: '2018-11-21',
+        end: '2018-11-23',
+        title: 'Need to go shopping',
+        content: '<i class="v-icon material-icons">shopping_cart</i>',
+        class: 'leisure'
+      },
+      {
+        start: '2018-11-21',
+        end: '2018-11-23',
+        title: 'Golf with John',
+        content: '<i class="v-icon material-icons">golf_course</i>',
+        class: 'sport'
+      },
+      {
+        start: '2018-11-22',
+        end: '2018-11-23',
+        title: 'Dad\'s birthday!',
+        content: '<i class="v-icon material-icons">cake</i>',
+        class: 'sport'
+      },
+      {
+        start: '2018-11-23',
+        end: '2018-11-23',
+        title: 'Black Friday',
+        content: '<i class="v-icon material-icons">shopping_cart</i>',
+        class: 'leisure'
       }
     ]
   }),

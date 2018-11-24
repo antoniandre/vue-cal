@@ -141,7 +141,11 @@ export default {
       startDate: null,
       selectedDate: null
     },
-    eventIdIncrement: 1
+    eventIdIncrement: 1,
+    dblTap: {
+      taps: 0,
+      timeout: 500
+    }
   }),
 
   methods: {
@@ -376,6 +380,18 @@ export default {
       })
 
       if (this.clickToNavigate) this.switchToNarrowerView()
+
+      // Handle double click manually for touch devices.
+      if (this.dblClickToNavigate && 'ontouchstart' in window) {
+        this.dblTap.taps++
+
+        setTimeout(() => (this.dblTap.taps = 0), this.dblTap.timeout)
+
+        if (this.dblTap.taps >= 2) {
+          this.dblTap.taps = 0
+          this.switchToNarrowerView()
+        }
+      }
     }
   },
 
@@ -390,7 +406,7 @@ export default {
     }
 
     if (this.selectedDate) {
-      let [, y, m, d, h, min] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2}) (\d{2}):(\d{2})/)
+      let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
       this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
     } else {
       this.view.selectedDate = this.now.Date
@@ -435,11 +451,11 @@ export default {
     calEvents () {
       let events = {}
       this.events.forEach(event => {
-        const [startDate, startTime] = event.start.split(' ')
+        const [startDate, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        const [, endTime] = event.end.split(' ')
+        const [, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
@@ -464,6 +480,7 @@ export default {
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,
+        'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
         'vuecal--time-12-hour': this['12Hour'],
         'vuecal--click-to-navigate': this.clickToNavigate,
@@ -600,6 +617,7 @@ $weekdays-headings-height: 2.8em;
   //==================================//
   &__body {
     overflow: auto;
+    -webkit-overflow-scrolling: touch;
     flex-basis: 0;
   }
 
@@ -627,6 +645,7 @@ $weekdays-headings-height: 2.8em;
       height: 3em;
       text-align: right;
       padding-right: 2px;
+      font-size: 13px;
 
       &:before {
         content: '';
