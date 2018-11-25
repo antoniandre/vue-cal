@@ -59,9 +59,9 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Double tap on touch devices
-          v-chip.pr-1.white--text(color="deep-orange" small disabled)
-            v-icon.mr-2 access_time
-            strong First NPM Release
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            strong First NPM Release!
           //- v-chip.pr-1(color="amber darken-1" outline small disabled)
           //-   v-icon.mr-2 timer
           .my-2 Then
@@ -84,12 +84,10 @@
             v-icon.mr-2 access_time
             | Event indicator on month view
 
-      highlight-message(type="warning")
-        strong Important Notes#[br]
-        | As this is a new component it is likely that options, CSS classes &amp; internal layout change with new version release.#[br]
-        | But this is for the better! Keep checking the #[a(href="#release-notes") Release Notes]!
-
       highlight-message(type="info")
+        strong Important Notes#[br]
+        | As this is a new component, options &amp; CSS classes may change a bit with new version release.#[br]
+        | Keep checking the #[a(href="#release-notes") Release Notes]!#[br]#[br]
         strong Philosophy:&nbsp;
         | Vue Cal tries to separate logic &amp; styles.#[br]
         | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
@@ -99,34 +97,45 @@
         a(href="#installation") Installation
         a(name="installation")
       p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
-      h3 Via NPM - COMING END OF THIS WEEK!
-      div(style="opacity: 0.25")
-        sshpre(language="shell" label="Shell") npm install vue-cal --save-dev
-        p Then import the component and use it:
-        sshpre(language="js" label="Javascript").
-          // In your VueJS component.
-          import { Vuecal } from 'vue-cal'
-          import 'vue-cal/dist/vuecal.css'
+      h3 Via NPM
+      sshpre(language="shell" label="Shell") npm install vue-cal --save-dev
+      p Then import the component and use it:
+      sshpre(language="js" label="Javascript").
+        // In your VueJS component.
+        import { Vuecal } from 'vue-cal'
+        import 'vue-cal/dist/vuecal.css'
+        ...
+
+        export default {
+          components: { Vuecal },
+          data: () => ({
+            ...
+          }),
           ...
+        }
 
-          export default {
-            components: { Vuecal },
-            data: () => ({
-              ...
-            }),
-            ...
-          }
+      h3 Via #[span.code &lt;script&gt;] tag
+      p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
+      sshpre(language="html" label="HTML").
+        &lt;head&gt;
+          ...
+          &lt;script src="https://unpkg.com/vue/"&gt;&lt;/script&gt;
+          &lt;script src="https://unpkg.com/vue-cal/"&gt;&lt;/script&gt;
+          &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
+        &lt;/head&gt;
 
-      h3 Via #[span.code &lt;script&gt;] tag - COMING END OF THIS WEEK!
-      div(style="opacity: 0.25")
-        p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-        sshpre(language="html" label="HTML").
-          &lt;head&gt;
-            ...
-            &lt;script src="https://unpkg.com/vue/"&gt;&lt;/script&gt;
-            &lt;script src="https://unpkg.com/vue-cal/"&gt;&lt;/script&gt;
-            &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
-          &lt;/head&gt;
+      h2.mt-5
+        a(href="#how-to-use") How to use
+        a(name="how-to-use")
+      highlight-message(type="warning")
+        p.mr-4.shrink.
+          Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
+          By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
+          You are also free to put a wrapping border or not.
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends style="height: 250px;border: 1px solid #eee")
+        sshpre(language="html-vue").
+          &lt;!-- If the container has no height, set a height on vue-cal --&gt;
+          &lt;vue-cal style="height: 250px;border: 1px solid #eee"&gt;&lt;/vue-cal&gt;
 
       h2.mt-5
         a(href="#examples") Examples
@@ -681,7 +690,7 @@
         .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
         .vuecal__title {background-color: #e4f5ef;}
         .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-        .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+        .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
         .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
 
       h3.mt-5 # Responsiveness &amp; Media Queries
@@ -1021,7 +1030,7 @@ a {
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title {background-color: #e4f5ef;}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-  .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+  .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
 }
 
@@ -1032,7 +1041,7 @@ a {
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title {background-color: rgba(0, 165, 188, 0.3);}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-  .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
+  .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
 }
 
@@ -1041,7 +1050,7 @@ a {
   .vuecal__weekdays-headings {border: none;}
   .vuecal__heading {font-size: 12px;}
   .vuecal__title {font-size: 1.3em;}
-  .vuecal__cell, .vuecal__cell:before {background: none;border: none;}
+  .vuecal__cell, .vuecal:not(.vuecal--day-view) .vuecal__cell:before {background: none;border: none;}
   .vuecal__cell.out-of-scope {opacity: 0.4;}
   .vuecal__cell-content {
     width: 32px;
@@ -1062,14 +1071,16 @@ a {
   .vuecal__cell {background-color: transparent !important;}
 
   &.green-theme {
-    .today .vuecal__cell-content {background-color: #42b983;color: #fff;}
-    .selected .vuecal__cell-content {border-color: #42b983;}
+    .vuecal:not(.vuecal--day-view) .today .vuecal__cell-content {background-color: #42b983;color: #fff;}
+    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(66, 185, 131, 0.05);}
+    .vuecal:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #42b983;}
   }
 
   &.blue-theme {
     .vuecal:not(.vuecal--day-view) .vuecal__cell-content {background-color: rgba(100, 182, 255, 0.2);}
-    .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
-    .selected .vuecal__cell-content {border-color: #61a9e0;}
+    .vuecal:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
+    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(143, 183, 228, 0.1);}
+    .vuecal:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #61a9e0;}
   }
 }
 

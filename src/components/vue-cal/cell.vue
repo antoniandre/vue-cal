@@ -186,6 +186,9 @@ export default {
     bottom: -1px;
     border: 1px solid #ddd;
     content: '';
+
+    .vuecal--day-view & {left: 1px;right: 0;bottom: 0;}
+    .vuecal--view-with-time.vuecal--day-view & {left: 0;}
   }
 
   &.today,
@@ -197,6 +200,9 @@ export default {
   &.selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
+
+    // .vuecal--day-view &:before {background: none;border: 1px solid rgba(235, 255, 245, 0.4);}
+    .vuecal--day-view & {background: none;}
   }
 
   &.out-of-scope {

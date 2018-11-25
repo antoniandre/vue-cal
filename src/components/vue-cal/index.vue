@@ -437,8 +437,8 @@ export default {
             date: this.view.startDate,
             events,
             class: {
-              today: isDateToday(this.view.startDate)
-              // selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
+              today: isDateToday(this.view.startDate),
+              selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
             }
           }]
           break
@@ -548,7 +548,7 @@ $weekdays-headings-height: 2.8em;
     padding: 0;
     list-style-type: none;
     justify-content: center;
-    background-color: #fafafa;
+    background-color: rgba(0, 0, 0, 0.02);
 
     li {
       padding: 0.3em 1em;
@@ -566,7 +566,7 @@ $weekdays-headings-height: 2.8em;
   }
 
   &__title {
-    background-color: #f2f2f2;
+    background-color: rgba(0, 0, 0, 0.1);
     display: flex;
     align-items: center;
     text-align: center;
@@ -634,6 +634,7 @@ $weekdays-headings-height: 2.8em;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     flex-basis: 0;
+    margin-left: -1px;
   }
 
   &__bg {
@@ -657,10 +658,9 @@ $weekdays-headings-height: 2.8em;
 
     .vuecal__time-cell {
       color: #999;
-      height: 3em;
       text-align: right;
       padding-right: 2px;
-      font-size: 13px;
+      font-size: 0.9em;
 
       &:before {
         content: '';
