@@ -158,12 +158,12 @@ export default {
 
   .vuecal--years-view & {width: 20%;}
   .vuecal--year-view & {width: 33.33%;}
-  // .vuecal--month-view & {}
-  // .vuecal--week-view & {}
   .vuecal--day-view & {flex: 1;}
 
   .vuecal--click-to-navigate & {cursor: pointer;}
-  .vuecal--view-with-time &, .vuecal--no-time & {display: block;}
+  .vuecal--view-with-time &,
+  .vuecal--week-view.vuecal--no-time &,
+  .vuecal--day-view.vuecal--no-time & {display: block;}
 
   &.splitted {
     flex-direction: row;

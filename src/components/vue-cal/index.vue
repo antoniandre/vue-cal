@@ -7,12 +7,12 @@
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ view.title }}
+        span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
-      .vuecal__flex.vuecal__weekdays-headings(v-if="view.headings.length && !(hasSplits && view.id === 'week')")
-        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i" :style="weekdayCellStyles")
+      .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
           span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
           span(v-if="heading.label4") &nbsp;
           span(v-if="heading.label4") {{ heading.label4 }}
@@ -26,15 +26,15 @@
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
             .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
-              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in view.headings" :key="i" :style="weekdayCellStyles")
+              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
                 span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
                 span(v-if="heading.label4") &nbsp;
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in view.cells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in view.cells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -128,8 +128,6 @@ export default {
     view: {
       id: '',
       title: '',
-      headings: [],
-      cells: [],
       startDate: null,
       selectedDate: null
     },
@@ -144,7 +142,7 @@ export default {
     previous () {
       switch (this.view.id) {
         case 'years':
-          this.switchView(this.view.id, this.view.startDate.getFullYear() - 25)
+          this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() - 25, 0, 1))
           break
         case 'year':
           const firstDayOfYear = new Date(this.view.startDate.getFullYear() - 1, 1, 1)
@@ -168,7 +166,7 @@ export default {
     next () {
       switch (this.view.id) {
         case 'years':
-          this.switchView(this.view.id, this.view.startDate.getFullYear() + 25)
+          this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() + 25, 0, 1))
           break
         case 'year':
           const firstDayOfYear = new Date(this.view.startDate.getFullYear() + 1, 0, 1)
@@ -201,175 +199,34 @@ export default {
       if (view) this.switchView(view)
     },
 
-    switchView (view, ...params) {
+    switchView (view, date = null) {
       this.view.id = view
-      this['load' + this.view.id.replace(/\b\w/g, l => l.toUpperCase()) + 'View'](...params)
-    },
 
-    loadYearsView (fromYear = null) {
-      fromYear = fromYear || 2000
-
-      this.view.id = 'years'
-      this.view.startDate = new Date(fromYear, 0, 1)
-      this.view.title = this.texts.years
-      this.view.headings = []
-      this.view.cells = Array.apply(null, Array(25)).map((cell, i) => {
-        return {
-          content: fromYear + i,
-          date: new Date(fromYear + i, 0, 1),
-          class: {
-            current: fromYear + i === this.now.getFullYear(),
-            selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
-          }
-        }
-      })
-    },
-
-    loadYearView (date) {
-      date = date || this.view.selectedDate || this.view.startDate
-      let year = date.getFullYear()
-
-      this.view.id = 'year'
-      this.view.startDate = new Date(year, 0, 1)
-      this.view.title = year
-      this.view.headings = []
-      this.view.cells = Array.apply(null, Array(12)).map((cell, i) => {
-        return {
-          content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
-          date: new Date(year, i, 1),
-          class: {
-            current: i === this.now.getMonth() && year === this.now.getFullYear(),
-            selected: i === date.getMonth() && year === date.getFullYear()
-          }
-        }
-      })
-    },
-
-    loadMonthView (date) {
-      date = date || this.view.selectedDate || this.view.startDate
-      const month = date.getMonth()
-      const year = date.getFullYear()
-      let days = getDaysInMonth(month, year)
-      const firstOfMonthDayOfWeek = days[0].getDay()
-      let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
-      selectedDateAtMidnight.setHours(0, 0, 0, 0)
-
-      // If the first day of the month is not a Monday, prepend missing days to the days array.
-      if (days[0].getDay() !== 1) {
-        let d = getPreviousMonday(days[0])
-        let prevWeek = []
-        for (let i = 0; i < 7; i++) {
-          prevWeek.push(new Date(d))
-          d.setDate(d.getDate() + 1)
-
-          if (d.getDay() === firstOfMonthDayOfWeek) break
-        }
-
-        days.unshift(...prevWeek)
+      if (!date) {
+        date = this.view.selectedDate || this.view.startDate
+        if (view === 'week') date = getPreviousMonday(date)
       }
 
-      this.view.id = 'month'
-      this.view.startDate = new Date(year, month, 1)
-      this.view.title = `${this.months[month].label} ${year}`
-      this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map(cell => ({
-        label1: cell.label[0],
-        label2: cell.label.substr(1, 2),
-        label3: cell.label.substr(3),
-        class: {}
-      }))
-
-      let todayFound = false
-      let nextMonthDays = 0
-      // Create 42 cells (6 x 7 days) and populate them with days.
-      this.view.cells = Array.apply(null, Array(42)).map((cell, i) => {
-        const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
-        const isToday = cellDate && !todayFound && cellDate.getDate() === this.now.getDate() &&
-                        cellDate.getMonth() === this.now.getMonth() &&
-                        cellDate.getFullYear() === this.now.getFullYear()
-        // To increase performance skip checking isToday if today already found.
-        if (isToday) todayFound = true
-
-        const events = (this.events.length &&
-                        this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.locale)]) || []
-
-        return {
-          content: cellDate.getDate(),
-          date: cellDate,
-          events,
-          class: {
-            today: isToday,
-            'out-of-scope': cellDate.getMonth() !== month,
-            selected: this.view.selectedDate && cellDate.getTime() === selectedDateAtMidnight.getTime()
-          }
-        }
-      })
-
-      if (this.hideWeekends) {
-        this.view.cells = this.view.cells.filter(cell => cell.date.getDay() > 0 && cell.date.getDay() < 6)
+      switch (view) {
+        case 'years':
+          // Always fill first cell with a multiple of 25 years, E.g. year 2000, or 2025.
+          this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
+          break
+        case 'year':
+          this.view.startDate = new Date(date.getFullYear(), 0, 1)
+          break
+        case 'month':
+          this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          break
+        case 'week':
+        case 'day':
+          this.view.startDate = date
+          break
       }
-    },
-
-    loadWeekView (firstDayOfWeek = null) {
-      firstDayOfWeek = firstDayOfWeek || getPreviousMonday(this.view.selectedDate) || getPreviousMonday(this.view.startDate)
-
-      this.view.id = 'week'
-      this.view.startDate = firstDayOfWeek
-      this.view.title = `${this.texts.week} ${firstDayOfWeek.getWeek()} (${formatDate(firstDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
-      this.view.cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
-        const date = firstDayOfWeek.addDays(i)
-        const events = (this.events.length &&
-                        this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
-
-        return {
-          date,
-          events,
-          class: {
-            today: false,
-            selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
-          }
-        }
-      })
-      this.view.headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
-        const thisDay = firstDayOfWeek.addDays(i)
-        const isToday = isDateToday(thisDay)
-        // const weekDayLabel = this.small || this.xsmall ? cell.label.substr(0, 3) : cell.label
-
-        if (isToday) this.view.cells[i].class.today = true
-
-        return {
-          label1: cell.label[0],
-          label2: cell.label.substr(1, 2),
-          label3: cell.label.substr(3),
-          label4: thisDay.getDate(),
-          class: {}
-        }
-      })
-    },
-
-    loadDayView (date = null) {
-      date = date || this.view.selectedDate || this.view.startDate
-      const events = (this.events.length &&
-                      this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
-
-      this.view.id = 'day'
-      this.view.startDate = date
-      this.view.title = formatDate(date, this.texts.dateFormat, this.locale)
-      this.view.headings = []
-      this.view.cells = [
-        {
-          date,
-          events,
-          class: {}
-        }
-      ]
     },
 
     selectCell (cell) {
       this.view.selectedDate = cell.date
-      this.view.cells.forEach(cell => {
-        if (cell.class.selected) cell.class.selected = false
-        if (cell.date === this.view.selectedDate) cell.class.selected = true
-      })
 
       if (this.clickToNavigate) this.switchToNarrowerView()
 
@@ -384,10 +241,6 @@ export default {
           this.switchToNarrowerView()
         }
       }
-    },
-
-    refreshView () {
-      this.$nextTick(() => this.switchView(this.view.id))
     }
   },
 
@@ -406,8 +259,6 @@ export default {
 
   computed: {
     texts () {
-      // Refresh the leftover dates in previous language.
-      this.refreshView()
       return texts[this.locale]
     },
     views () {
@@ -450,6 +301,167 @@ export default {
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
+    },
+    viewTitle () {
+      let title = ''
+      const date = this.view.startDate
+      const year = date.getFullYear()
+      const month = date.getMonth()
+
+      switch (this.view.id) {
+        case 'years':
+          title = this.texts.years
+          break
+        case 'year':
+          title = year
+          break
+        case 'month':
+          title = `${this.months[month].label} ${year}`
+          break
+        case 'week':
+          title = `${this.texts.week} ${date.getWeek()} (${formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
+          break
+        case 'day':
+          title = formatDate(date, this.texts.dateFormat, this.locale)
+          break
+      }
+
+      return title
+    },
+    viewCells () {
+      let cells = []
+      let fromYear = null
+      let todayFound = false
+
+      switch (this.view.id) {
+        case 'years':
+          fromYear = this.view.startDate.getFullYear()
+          cells = Array.apply(null, Array(25)).map((cell, i) => {
+            return {
+              content: fromYear + i,
+              date: new Date(fromYear + i, 0, 1),
+              class: {
+                current: fromYear + i === this.now.getFullYear(),
+                selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
+              }
+            }
+          })
+          break
+        case 'year':
+          fromYear = this.view.startDate.getFullYear()
+          cells = Array.apply(null, Array(12)).map((cell, i) => {
+            return {
+              content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
+              date: new Date(fromYear, i, 1),
+              class: {
+                current: i === this.now.getMonth() && fromYear === this.now.getFullYear(),
+                selected: i === this.view.selectedDate.getMonth() && fromYear === this.view.selectedDate.getFullYear()
+              }
+            }
+          })
+          break
+        case 'month':
+          const month = this.view.startDate.getMonth()
+          const year = this.view.startDate.getFullYear()
+          let days = getDaysInMonth(month, year)
+          const firstOfMonthDayOfWeek = days[0].getDay()
+          let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
+          selectedDateAtMidnight.setHours(0, 0, 0, 0)
+          todayFound = false
+          let nextMonthDays = 0
+
+          // If the first day of the month is not a Monday, prepend missing days to the days array.
+          if (days[0].getDay() !== 1) {
+            let d = getPreviousMonday(days[0])
+            let prevWeek = []
+            for (let i = 0; i < 7; i++) {
+              prevWeek.push(new Date(d))
+              d.setDate(d.getDate() + 1)
+
+              if (d.getDay() === firstOfMonthDayOfWeek) break
+            }
+
+            days.unshift(...prevWeek)
+          }
+
+          // Create 42 cells (6 rows x 7 days) and populate them with days.
+          cells = Array.apply(null, Array(42)).map((cell, i) => {
+            const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
+            // To increase performance skip checking isToday if today already found.
+            const isToday = !todayFound && cellDate && cellDate.getDate() === this.now.getDate() &&
+                            cellDate.getMonth() === this.now.getMonth() &&
+                            cellDate.getFullYear() === this.now.getFullYear() &&
+                            !todayFound++
+            const events = (this.events.length &&
+                            this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.locale)]) || []
+
+            return {
+              content: cellDate.getDate(),
+              date: cellDate,
+              events,
+              class: {
+                today: isToday,
+                'out-of-scope': cellDate.getMonth() !== month,
+                selected: this.view.selectedDate && cellDate.getTime() === selectedDateAtMidnight.getTime()
+              }
+            }
+          })
+
+          if (this.hideWeekends) {
+            cells = cells.filter(cell => cell.date.getDay() > 0 && cell.date.getDay() < 6)
+          }
+          break
+        case 'week':
+          todayFound = false
+          let firstDayOfWeek = this.view.startDate
+
+          cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+            const date = firstDayOfWeek.addDays(i)
+            const events = (this.events.length &&
+                            this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
+
+            return {
+              date,
+              events,
+              class: {
+                today: !todayFound && isDateToday(date) && !todayFound++,
+                selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
+              }
+            }
+          })
+          break
+        case 'day':
+          const events = (this.events.length &&
+                          this.calEvents[formatDate(this.view.startDate, 'yyyy-mm-dd', this.locale)]) || []
+          cells = [{
+            date: this.view.startDate,
+            events,
+            class: {
+              today: isDateToday(this.view.startDate)
+              // selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
+            }
+          }]
+          break
+      }
+      return cells
+    },
+    viewHeadings () {
+      let headings = []
+
+      switch (this.view.id) {
+        case 'month':
+        case 'week':
+          headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+            return {
+              label1: cell.label[0],
+              label2: cell.label.substr(1, 2),
+              label3: cell.label.substr(3),
+              ...((this.view.id === 'week' && { label4: this.view.startDate.addDays(i).getDate() }) || {})
+            }
+          })
+          break
+      }
+      return headings
     },
     calEvents () {
       let events = {}
