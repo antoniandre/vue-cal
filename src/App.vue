@@ -11,66 +11,73 @@
           .headline Vue Cal#[br]
           | A Vue JS full calendar, no dependency, no BS. :metal:
 
-        div(style="margin: 7em auto;max-width: 700px")
+        div(style="margin: 7em auto;max-width: 800px")
           h2.mt-5 To do...
           p Here is my ongoing to do list.
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | default active view
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Enable / disable views
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Hide / show weekends
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Add timeline w/ timerange &amp; increment
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Add timeline
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | time format 12/24 h
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Support for i18n
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Split days
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Support events
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Background events
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Overlap events
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Keep only default style in CSS
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Allow custom arrows
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Default active date
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            | Double tap on touch devices
-          v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
-            strong First NPM Release!
+          div(style="transform: scale(0.8);opacity: 0.7;")
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | default active view
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Enable / disable views
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Hide / show weekends
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Add timeline w/ timerange &amp; increment
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Add timeline
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | time format 12/24 h
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Support for i18n
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Split days
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Support events
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Background events
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Overlap events
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Keep only default style in CSS
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Allow custom arrows
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Default active date
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              | Double tap on touch devices
+            v-chip.pr-1(color="green" outline small disabled)
+              v-icon.mr-2 check
+              strong First NPM Release!
           //- v-chip.pr-1(color="amber darken-1" outline small disabled)
           //-   v-icon.mr-2 timer
-          .my-2 Then
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
-            | Drag events
+          .mb-2 Then
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Multiple-days events
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Built-in themes
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Resize events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
+            | Drag events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Recurring events
@@ -83,6 +90,11 @@
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Event indicator on month view
+
+      h2.mt-5.mb-3.title Github project
+      v-layout.mb-5(align-center shrink)
+        v-icon.pr-4.lightgrey--text(x-large) fab fa-github
+        a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/splitpanes #[v-icon(small color="primary") open_in_new]
 
       highlight-message(type="info")
         strong Important Notes#[br]
@@ -131,7 +143,7 @@
         p.mr-4.shrink.
           Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
           By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
-          You are also free to put a wrapping border or not.
+          You are also free to put a wrapping border or not, or box-shadow, anything you like.
         vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends style="height: 250px;border: 1px solid #eee")
         sshpre(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
@@ -710,14 +722,18 @@
         By default the selection is disabled in the whole calendar except in the events.
         you can override this by CSS.
 
-      h2.mt-5.pt-5
+      h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
-      p No public release for the moment!
+      div #[strong version 1.0.0] First public release
 
-    v-footer.justify-end.px-3(color="white")
-      em 2018 &copy; Antoni Andre.
-</template>
+    v-footer.mt-4.pa-2.pb-4(color="#fff")
+      v-layout.max-widthed(row wrap align-center justify-center)
+        v-flex.xs12.sm6.text-xs-center.text-sm-left.copyright.
+          Copyright © 2018 Antoni André, all rights reserved.
+        v-flex.xs12.sm6.text-xs-center.text-sm-right.made-with.
+          This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]#[br]
+          View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
 
 <script>
 import VueCal from '@/components/vue-cal'
@@ -1022,6 +1038,14 @@ a {
 .api-options {list-style-type: none;}
 .api-options > li {margin-top: 2em;}
 .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
+
+.v-footer {
+  font-size: 0.9em;
+
+  .v-icon {
+    font-size: 1.2em;
+  }
+}
 
 // Default vue-cal demo style.
 .green-theme {

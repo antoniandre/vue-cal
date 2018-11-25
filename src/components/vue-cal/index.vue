@@ -635,6 +635,7 @@ $weekdays-headings-height: 2.8em;
     -webkit-overflow-scrolling: touch;
     flex-basis: 0;
     margin-left: -1px;
+    min-height: 60px;
   }
 
   &__bg {
