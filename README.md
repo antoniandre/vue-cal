@@ -6,7 +6,7 @@
 
 > A Vue JS full calendar, no dependency, no BS. :metal:
 
-## Installation - coming end of this week
+## Installation
 
 ```
 npm i vue-cal --save-dev
@@ -26,4 +26,4 @@ ___
 
 ## Release Notes
 
-- __Version 1.0.0__ First public release coming this week
+- __Version 1.0.0__ First public release.
