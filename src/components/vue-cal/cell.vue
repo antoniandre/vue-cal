@@ -5,8 +5,11 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
-        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j" :style="event.startTime && { top: `${event.top}px`, height: `${event.height}px`, minHeight: `${event.height}px` }")
-          .vuecal__event-title(v-if="event.title") {{ event.title }} - {{event.height}}
+        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }"
+                       v-else
+                       v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
+                       :style="event.startTime && { top: `${event.top}px`, height: ($parent.resizeEvent || 1) && `${event.height}px` }")
+          .vuecal__event-title(v-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -48,20 +51,17 @@ export default {
   methods: {
     eventPosition (event) {
       if (!event.startTime) return
-
-      const timeCellHeight = parseInt(this.$parent.timeCellHeight)
-      const timeStep = parseInt(this.$parent.timeStep)
-
       let minutesFromTop = event.startTimeMinutes - this.$parent.timeFrom
-      const top = Math.round(minutesFromTop * timeCellHeight / timeStep)
+      const top = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
       minutesFromTop = event.endTimeMinutes - this.$parent.timeFrom
-      const bottom = Math.round(minutesFromTop * timeCellHeight / timeStep)
+      const bottom = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
       event.top = top
       event.height = bottom - top
-      event.minHeight = bottom - top
+      event.minHeight = event.height
     },
+
     checkOverlappingEvents (event, comparedEvents) {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(event2 => {
         // Don't compare with itself or with already compared item.
@@ -97,15 +97,41 @@ export default {
 
       return comparedEvents
     },
+
+    resizeEvent (event, amount) {
+      event.height = Math.max(event.originalHeight + amount, 10)
+
+      this.updateEndTimeOnResize(event)
+    },
+
+    updateEndTimeOnResize (event) {
+      const bottom = event.top + event.height
+      const endTime = bottom / this.timeCellHeight + this.timeFrom / 60
+      const hours = parseInt(endTime)
+      const minutes = parseInt((endTime - hours) * 60)
+      event.endTimeMinutes = endTime * 60
+      event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
+    },
+
     onMouseDown (e, event) {
-      // this.$parent.resizingEvent = { start: e.clientY, event }
-      // console.log('mousedown!', e.clientY)
+      event.originalHeight = event.height
+      this.$parent.resizeEvent = { start: e.clientY, event, resizeHandler: this.resizeEvent }
+      // console.log('mousedown!', e.clientY, this.$parent.resizeEvent.start, event.height)
     }
   },
 
   computed: {
     texts () {
       return this.$parent.texts
+    },
+    timeCellHeight () {
+      return parseInt(this.$parent.timeCellHeight)
+    },
+    timeFrom () {
+      return parseInt(this.$parent.timeFrom)
+    },
+    timeStep () {
+      return parseInt(this.$parent.timeStep)
     },
     cellStyles () {
       return { minWidth: `${this.$parent.minCellWidth}px` || null }
@@ -238,7 +264,7 @@ export default {
     right: 0;
     overflow: hidden;
 
-    &:hover {height: auto !important;}
+    // &:hover {height: auto !important;}
   }
 
   &.overlapped {right: 20%;}
@@ -258,5 +284,10 @@ export default {
   right: 0;
   height: 1em;
   background-color: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+  transition: 0.3s;
+  cursor: ns-resize;
+
+  .vuecal__event:hover & {opacity: 1;}
 }
 </style>

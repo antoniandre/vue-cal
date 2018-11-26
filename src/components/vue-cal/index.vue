@@ -136,8 +136,12 @@ export default {
       selectedDate: null
     },
     eventIdIncrement: 1,
-    draggingEvent: {},
-    resizingEvent: {},
+    dragEvent: {},
+    resizeEvent: {
+      start: null,
+      event: {},
+      resizeHandler: null
+    },
     dblTap: {
       taps: 0,
       timeout: 500
@@ -249,23 +253,24 @@ export default {
       }
     },
 
-    // onMouseMove (e) {
-    //   if (this.resizingEvent.start === undefined) return // e.preventDefault()
+    // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
+    // handlers in the single parent for performance.
+    onMouseMove (e) {
+      if (this.resizeEvent.start === null) return
 
-    //   this.resizingEvent.end = e.clientY
-    //   this.resizingEvent.event.height += e.clientY - this.resizingEvent.start
-    //   console.log('mousemove!', e.clientY, this.resizingEvent.event.height)
-    // },
+      this.resizeEvent.resizeHandler(this.resizeEvent.event, e.clientY - this.resizeEvent.start)
+    },
 
-    // onMouseUp (e) {
-    //   if (this.resizingEvent.start === undefined) return // e.preventDefault()
+    onMouseUp (e) {
+      if (this.resizeEvent.start === null) return
 
-    //   this.resizingEvent = {}
-    //   console.log('mouseup!', e.clientY)
-    // }
+      this.resizeEvent.start = null
+      delete this.resizeEvent.event.originalHeight
+    }
   },
 
   created () {
+    this.$emit('before-created')
     if (this.locale !== 'en') setLocale(this.locale)
 
     if (this.selectedDate) {
@@ -279,8 +284,10 @@ export default {
   },
 
   mounted () {
-    // window.addEventListener('mousemove', this.onMouseMove)
-    // window.addEventListener('mouseup', this.onMouseUp)
+    this.$emit('created')
+    const hasTouch = 'ontouchstart' in window
+    window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove)
+    window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
   },
 
   computed: {
@@ -538,7 +545,7 @@ export default {
 
 <style lang="scss">
 $time-column-width: 3em;
-$time-column-width-12: 4em; // 12-hour clock has am/pm.
+$time-column-width-12: 4em; // 12-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
 
 .vuecal {
