@@ -1,0 +1,12 @@
+{
+  "weekDays": ["Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado", "Domingo"],
+  "months": ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+  "years": "Años",
+  "year": "Año",
+  "month": "Mes",
+  "week": "Semana",
+  "day": "Dia",
+  "today": "Hoy",
+  "noEvent": "No hay envento",
+  "dateFormat": "DDDD d mmmm yyyy"
+}
