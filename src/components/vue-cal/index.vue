@@ -120,6 +120,10 @@ export default {
     events: {
       type: Array,
       default: () => []
+    },
+    resizableEvents: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -132,6 +136,8 @@ export default {
       selectedDate: null
     },
     eventIdIncrement: 1,
+    draggingEvent: {},
+    resizingEvent: {},
     dblTap: {
       taps: 0,
       timeout: 500
@@ -241,7 +247,22 @@ export default {
           this.switchToNarrowerView()
         }
       }
-    }
+    },
+
+    // onMouseMove (e) {
+    //   if (this.resizingEvent.start === undefined) return // e.preventDefault()
+
+    //   this.resizingEvent.end = e.clientY
+    //   this.resizingEvent.event.height += e.clientY - this.resizingEvent.start
+    //   console.log('mousemove!', e.clientY, this.resizingEvent.event.height)
+    // },
+
+    // onMouseUp (e) {
+    //   if (this.resizingEvent.start === undefined) return // e.preventDefault()
+
+    //   this.resizingEvent = {}
+    //   console.log('mouseup!', e.clientY)
+    // }
   },
 
   created () {
@@ -255,6 +276,11 @@ export default {
     }
 
     this.switchView(this.defaultView)
+  },
+
+  mounted () {
+    // window.addEventListener('mousemove', this.onMouseMove)
+    // window.addEventListener('mouseup', this.onMouseUp)
   },
 
   computed: {
@@ -686,6 +712,66 @@ $weekdays-headings-height: 2.8em;
   }
 }
 
+// Themes.
+//==================================//
+.vuecal--green-theme {
+  .vuecal__menu {background-color: #42b983;}
+  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: #e4f5ef;}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
+  .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+}
+
+.vuecal--blue-theme {
+  .vuecal__menu {background-color: rgba(66, 163, 185, 0.8);}
+  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: rgba(0, 165, 188, 0.3);}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
+  .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
+}
+
+// Rounded cells.
+.vuecal--rounded-theme {
+  .vuecal__weekdays-headings {border: none;}
+  .vuecal__cell, &:not(.vuecal--day-view) .vuecal__cell:before {background: none;border: none;}
+  .vuecal__cell.out-of-scope {opacity: 0.4;}
+  .vuecal__cell-content {
+    width: 32px;
+    height: 32px;
+    border: 1px solid transparent;
+    color: #333;
+    border-radius: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  &.vuecal--day-view .vuecal__cell-content {width: auto;background: none;}
+  &.vuecal--year-view .vuecal__cell {width: 33.33%;}
+  &.vuecal--year-view .vuecal__cell-content {width: 85px;}
+  &.vuecal--years-view .vuecal__cell-content {width: 52px;}
+  .vuecal__cell {background-color: transparent !important;}
+
+  &.vuecal--green-theme {
+    &:not(.vuecal--day-view) .vuecal__cell-content {background-color: #f1faf7;}
+    &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #42b983;color: #fff;}
+    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(66, 185, 131, 0.05);}
+    &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #42b983;}
+  }
+
+  &.vuecal--blue-theme {
+    &:not(.vuecal--day-view) .vuecal__cell-content {background-color: rgba(100, 182, 255, 0.2);}
+    &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
+    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(143, 183, 228, 0.1);}
+    &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #61a9e0;}
+  }
+}
+
+// Media queries.
+//==================================//
 @media screen and(max-width: 550px) {
   .vuecal__heading {
     padding-left: 1.5em;
