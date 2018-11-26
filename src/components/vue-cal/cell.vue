@@ -5,12 +5,13 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
-        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j" :style="eventPosition(event, i)")
-          .vuecal__event-title(v-if="event.title") {{ event.title }}
+        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.overlapping, overlapped: event.overlapped, split2: event.split2, split3: event.split3, 'split-middle': event.splitm }" v-else v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j" :style="event.startTime && { top: `${event.top}px`, height: `${event.height}px`, minHeight: `${event.height}px` }")
+          .vuecal__event-title(v-if="event.title") {{ event.title }} - {{event.height}}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
+          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents" @mousedown="onMouseDown($event, event)")
 </template>
 
 <script>
@@ -45,7 +46,7 @@ export default {
   }),
 
   methods: {
-    eventPosition (event, split = 0) {
+    eventPosition (event) {
       if (!event.startTime) return
 
       const timeCellHeight = parseInt(this.$parent.timeCellHeight)
@@ -57,13 +58,9 @@ export default {
       minutesFromTop = event.endTimeMinutes - this.$parent.timeFrom
       const bottom = Math.round(minutesFromTop * timeCellHeight / timeStep)
 
-      const height = bottom - top
-
-      return {
-        top: top + 'px',
-        height: height + 'px',
-        minHeight: height + 'px'
-      }
+      event.top = top
+      event.height = bottom - top
+      event.minHeight = bottom - top
     },
     checkOverlappingEvents (event, comparedEvents) {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.events).forEach(event2 => {
@@ -99,6 +96,10 @@ export default {
       })
 
       return comparedEvents
+    },
+    onMouseDown (e, event) {
+      // this.$parent.resizingEvent = { start: e.clientY, event }
+      // console.log('mousedown!', e.clientY)
     }
   },
 
@@ -128,6 +129,8 @@ export default {
         if (!event.background) {
           comparedEvents = this.checkOverlappingEvents(event, comparedEvents)
         }
+
+        this.eventPosition(event)
 
         return event
       })
@@ -223,6 +226,7 @@ export default {
 .vuecal__event {
   color: #666;
   background-color: #f8f8f8;
+  position: relative;
   z-index: 1;
 
   // Reactivate user selection in events.
@@ -245,5 +249,14 @@ export default {
   &.overlapping.split3 {left: 66.66%;}
   &.overlapping.split3.split-middle {left: 33.33%;right: 33.33%;}
   &.background {z-index: 0;}
+}
+
+.vuecal__event-resize-handle {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 1em;
+  background-color: rgba(255, 255, 255, 0.3);
 }
 </style>
