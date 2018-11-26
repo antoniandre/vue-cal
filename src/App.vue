@@ -185,11 +185,11 @@
       p.
         Extra-small, no timeline, custom arrows (using the reserved slots `arrowPrev` &amp; `arrowNext`).#[br]
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
-        vue-cal(hide-view-selector :time="false" xsmall)
+        vue-cal(hide-view-selector :time="false" default-view="month" xsmall)
           v-icon(slot="arrowPrev") arrow_back
           v-icon(slot="arrowNext") arrow_forward
       sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal hide-view-selector :time="false" xsmall&gt;
+        &lt;vue-cal hide-view-selector :time="false" default-view="month" xsmall&gt;
           &lt;i slot="arrowPrev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
           &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
         &lt;/vue-cal&gt;
