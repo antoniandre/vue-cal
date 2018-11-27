@@ -26,4 +26,5 @@ ___
 
 ## Release Notes
 
+- __Version 1.1.0__ Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
 - __Version 1.0.0__ First public release.
