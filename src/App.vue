@@ -100,7 +100,7 @@
       h2.mt-5.mb-3.title Github project
       v-layout.mb-5(align-center shrink)
         v-icon.pr-4.lightgrey--text(x-large) fab fa-github
-        a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/splitpanes #[v-icon(small color="primary") open_in_new]
+        a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
 
       highlight-message(type="info")
         strong Important Notes#[br]
