@@ -748,6 +748,7 @@
       h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
+      div #[strong version 1.1.0] Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
       div #[strong version 1.0.0] First public release
 
     v-footer.mt-4.pa-2.pb-4(color="#fff")
