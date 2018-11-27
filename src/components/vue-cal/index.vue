@@ -287,9 +287,12 @@ export default {
 
   mounted () {
     this.$emit('created')
-    const hasTouch = 'ontouchstart' in window
-    window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
-    window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+
+    if (this.resizableEvents && this.time) {
+      const hasTouch = 'ontouchstart' in window
+      window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+      window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+    }
   },
 
   computed: {

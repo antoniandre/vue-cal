@@ -14,7 +14,9 @@
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents" @mousedown="onMouseDown($event, event)" @touchstart="onMouseDown($event, event)")
+          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents"
+                                       @mousedown="$parent.resizableEvents && $parent.time && onMouseDown($event, event)"
+                                       @touchstart="$parent.resizableEvents && $parent.time && onMouseDown($event, event)")
 </template>
 
 <script>

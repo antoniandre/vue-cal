@@ -72,8 +72,8 @@
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 timer
             | Multiple-days events
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
             | Resize events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
@@ -231,7 +231,7 @@
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"
@@ -239,6 +239,7 @@
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
                  hide-weekends
+                 :resizable-events="false"
                  :events="events"&gt;
         &lt;/vue-cal&gt;
       highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
@@ -274,7 +275,7 @@
       //- Example.
       h3.mt-5 # Example 7
       p.
-        Overlapping events. Up to 3 overlapping events starting at the same time.
+        Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
@@ -502,6 +503,7 @@
         minCellWidth:       [Number],  default: 0 // In pixels.
         splitDays:          [Array],   default: []
         events:             [Array],   default: []
+        resizableEvents     [Boolean], default: true
 
       ul.pl-0.api-options
         li
@@ -647,6 +649,12 @@
             Split each day into multiple vertical splits.#[br]
             Accepts an array of split objects with attributes.#[br]
             Each split object can have these attributes: #[span.code { class: 'string', label: 'string' }]
+        li
+          code.mr-2 resizableEvents
+          span.code [Boolean], default: true
+          p.
+            when #[span.code resizableEvents] &amp; #[span.code time] are set to true,
+            allows resizing events by dragging the handle showing at the bottom of each event.
         li
           code.mr-2 events
           span.code [Array], default: []
