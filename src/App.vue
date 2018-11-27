@@ -80,6 +80,9 @@
             | Drag events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
+            | Optional tooltip on events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
             | Recurring events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time

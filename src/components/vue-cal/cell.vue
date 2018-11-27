@@ -114,11 +114,9 @@ export default {
     },
 
     onMouseDown (e, event) {
+      const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       event.originalHeight = event.height
-      const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-
-      this.$parent.resizeEvent = { start: y, event, resizeHandler: this.resizeEvent }
-      // console.log('mousedown!', e.clientY, this.$parent.resizeEvent.start, event.height)
+      this.$parent.resizeEvent = { start, event, resizeHandler: this.resizeEvent }
     }
   },
 
