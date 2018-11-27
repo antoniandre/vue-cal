@@ -507,7 +507,7 @@ export default {
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        const [, endTime = ''] = event.end.split(' ')
+        const [endDate, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
@@ -517,6 +517,8 @@ export default {
           ...event,
           // eslint-disable-next-line
           id: this.eventIdIncrement++,
+          startDate,
+          endDate,
           startTime,
           startTimeMinutes,
           endTime,
