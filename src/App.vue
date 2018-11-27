@@ -75,12 +75,15 @@
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 timer
             | Multiple-days events
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Drag events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Resize events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
-            | Drag events
+            | Drag events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Optional tooltip on events

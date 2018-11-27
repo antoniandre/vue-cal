@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "repository": "https://github.com/antoniandre/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
