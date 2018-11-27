@@ -147,8 +147,6 @@ export default {
     this.splitEvents = []
 
     this.events.forEach((event, i) => {
-      comparedEvents[event.id] = []
-
       event.classes.overlapped = false
       event.classes.overlapping = false
       event.classes.background = event.background
