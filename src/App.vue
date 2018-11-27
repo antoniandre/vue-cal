@@ -522,15 +522,15 @@
 
             sshpre.my-2(language="json").
               {
-                "weekDays": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
-                "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
-                "years": "Années",
-                "year": "Année",
-                "month": "Mois",
-                "week": "Semaine",
-                "day": "Jour",
-                "today": "Aujourd'hui",
-                "noEvent": "Aucun événement",
+                "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+                "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+                "years": "Years",
+                "year": "Year",
+                "month": "Month",
+                "week": "Week",
+                "day": "Day",
+                "today": "Today",
+                "noEvent": "No Event",
                 "dateFormat": "DDDD d mmmm yyyy"
               }
         li
@@ -751,13 +751,13 @@
       h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
-      div #[strong version 1.1.0] Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
-      div #[strong version 1.0.0] First public release
+      div #[strong Version 1.1.0] Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
+      div #[strong Version 1.0.0] First public release
 
     v-footer.mt-4.pa-2.pb-4(color="#fff")
       v-layout.max-widthed(row wrap align-center justify-center)
         v-flex.xs12.sm6.text-xs-center.text-sm-left.copyright.
-          Copyright © 2018 Antoni André, all rights reserved.
+          Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
         v-flex.xs12.sm6.text-xs-center.text-sm-right.made-with.
           This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]#[br]
           View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>

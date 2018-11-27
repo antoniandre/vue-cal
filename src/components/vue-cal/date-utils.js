@@ -1,23 +1,6 @@
-export let texts = {
-  en: {
-    weekDays: ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'],
-    months: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
-    years: 'Years',
-    year: 'Year',
-    month: 'Month',
-    week: 'Week',
-    day: 'Day',
-    today: 'Today',
-    noEvent: 'No Event',
-    dateFormat: 'DDDD mmmm d{S}, yyyy'
-  }
-}
 export const now = new Date()
-
-export const setLocale = locale => {
-  const json = require(`./i18n/${locale}.json`)
-  texts[locale] = json
-}
+// Cache today's date for better isDateToday() performances. Formatted without leading 0.
+export const todayFormatted = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
 
 // eslint-disable-next-line
 Date.prototype.addDays = function (days) {
@@ -42,7 +25,9 @@ Date.prototype.getWeek = function () {
   return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
 }
 
-export const isDateToday = (date) => formatDate(date) === formatDate(now)
+export const isDateToday = date => {
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayFormatted
+}
 
 /* export const getDateOfWeek = (w, y) => {
   let d = (1 + (w - 1) * 7) // 1st of January + 7 days for each week.
@@ -112,21 +97,22 @@ export const formatTime = (time, format = 'HH:mm') => {
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => timeObj[contents.replace(/\{|\}/g, '')])
 }
 
-export const formatDate = (date, format = 'yyyy-mm-dd', locale = 'en') => {
+export const formatDate = (date, format = 'yyyy-mm-dd', localizedTexts) => {
+  console.log(localizedTexts)
   const d = date.getDate()
   const m = date.getMonth() + 1
   const dateObj = {
     D: date.getDay(), // 0 to 6.
-    DD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7][0], // M to S.
-    DDD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
-    DDDD: texts[locale].weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
+    DD: localizedTexts.weekDays[(date.getDay() - 1 + 7) % 7][0], // M to S.
+    DDD: localizedTexts.weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
+    DDDD: localizedTexts.weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
     d, // 1 to 31.
     dd: (d < 10 ? '0' : '') + d, // 01 to 31.
     S: nth(d), // st, nd, rd, th.
     m, // 1 to 12.
     mm: (m < 10 ? '0' : '') + m, // 01 to 12.
-    mmm: texts[locale].months[m - 1].substr(0, 3), // Jan to Dec.
-    mmmm: texts[locale].months[m - 1], // January to December.
+    mmm: localizedTexts.months[m - 1].substr(0, 3), // Jan to Dec.
+    mmmm: localizedTexts.months[m - 1], // January to December.
     yyyy: date.getFullYear(), // 2018.
     yy: date.getFullYear().toString().substr(2, 4) // 18.
   }

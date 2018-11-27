@@ -38,7 +38,7 @@
 </template>
 
 <script>
-import { setLocale, now, texts, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from './date-utils'
+import { now, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from './date-utils'
 import Cell from './cell'
 
 export default {
@@ -273,7 +273,6 @@ export default {
 
   created () {
     this.$emit('before-created')
-    if (this.locale !== 'en') setLocale(this.locale)
 
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
@@ -297,7 +296,7 @@ export default {
 
   computed: {
     texts () {
-      return texts[this.locale]
+      return require(`./i18n/${this.locale}.json`)
     },
     views () {
       return {
@@ -357,10 +356,10 @@ export default {
           title = `${this.months[month].label} ${year}`
           break
         case 'week':
-          title = `${this.texts.week} ${date.getWeek()} (${formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.locale)})`
+          title = `${this.texts.week} ${date.getWeek()} (${formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)})`
           break
         case 'day':
-          title = formatDate(date, this.texts.dateFormat, this.locale)
+          title = formatDate(date, this.texts.dateFormat, this.texts)
           break
       }
 
@@ -431,7 +430,7 @@ export default {
                             cellDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
             const events = (this.events.length &&
-                            this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.locale)]) || []
+                            this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.texts)]) || []
 
             return {
               content: cellDate.getDate(),
@@ -456,7 +455,7 @@ export default {
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const events = (this.events.length &&
-                            this.calEvents[formatDate(date, 'yyyy-mm-dd', this.locale)]) || []
+                            this.calEvents[formatDate(date, 'yyyy-mm-dd', this.texts)]) || []
 
             return {
               date,
@@ -470,7 +469,7 @@ export default {
           break
         case 'day':
           const events = (this.events.length &&
-                          this.calEvents[formatDate(this.view.startDate, 'yyyy-mm-dd', this.locale)]) || []
+                          this.calEvents[formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)]) || []
           cells = [{
             date: this.view.startDate,
             events,
