@@ -14,7 +14,7 @@
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents" @mousedown="onMouseDown($event, event)")
+          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents" @mousedown="onMouseDown($event, event)" @touchstart="onMouseDown($event, event)")
 </template>
 
 <script>
@@ -115,7 +115,9 @@ export default {
 
     onMouseDown (e, event) {
       event.originalHeight = event.height
-      this.$parent.resizeEvent = { start: e.clientY, event, resizeHandler: this.resizeEvent }
+      const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
+
+      this.$parent.resizeEvent = { start: y, event, resizeHandler: this.resizeEvent }
       // console.log('mousedown!', e.clientY, this.$parent.resizeEvent.start, event.height)
     }
   },

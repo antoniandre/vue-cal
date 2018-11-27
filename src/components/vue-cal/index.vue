@@ -258,10 +258,12 @@ export default {
     onMouseMove (e) {
       if (this.resizeEvent.start === null) return
 
-      this.resizeEvent.resizeHandler(this.resizeEvent.event, e.clientY - this.resizeEvent.start)
+      e.preventDefault()
+      const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
+      this.resizeEvent.resizeHandler(this.resizeEvent.event, y - this.resizeEvent.start)
     },
 
-    onMouseUp (e) {
+    onMouseUp () {
       if (this.resizeEvent.start === null) return
 
       this.resizeEvent.start = null
@@ -286,7 +288,7 @@ export default {
   mounted () {
     this.$emit('created')
     const hasTouch = 'ontouchstart' in window
-    window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove)
+    window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
   },
 
