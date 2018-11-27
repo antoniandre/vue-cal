@@ -98,7 +98,6 @@ export const formatTime = (time, format = 'HH:mm') => {
 }
 
 export const formatDate = (date, format = 'yyyy-mm-dd', localizedTexts) => {
-  console.log(localizedTexts)
   const d = date.getDate()
   const m = date.getMonth() + 1
   const dateObj = {
