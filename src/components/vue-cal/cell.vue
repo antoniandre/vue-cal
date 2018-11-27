@@ -5,11 +5,11 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
-        .vuecal__event(:class="{ [event.class]: true, background: event.background, overlapping: event.classes.overlapping, overlapped: event.classes.overlapped, split2: event.classes.split2, split3: event.classes.split3, 'split-middle': event.classes.splitm }"
+        .vuecal__event(:class="event.classes"
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
                        :style="eventStyles(event)")
-          .vuecal__event-title(v-if="event.title") {{ event.title }} - {{event.height}}
+          .vuecal__event-title(v-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -149,7 +149,10 @@ export default {
     this.events.forEach((event, i) => {
       comparedEvents[event.id] = []
 
-      event.classes = { overlapped: false, overlapping: false }
+      event.classes.overlapped = false
+      event.classes.overlapping = false
+      event.classes.background = event.background
+
       this.$set(this.cellEvents, i, event)
 
       // Only for splits.
