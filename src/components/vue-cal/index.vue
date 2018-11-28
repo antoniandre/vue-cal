@@ -511,16 +511,18 @@ export default {
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
-        if (!events[startDate]) events[startDate] = []
+        if (!(startDate in events)) events[startDate] = []
 
-        // eslint-disable-next-line
-        this.$set(event, 'id', this.eventIdIncrement++)
-        this.$set(event, 'startDate', startDate)
-        this.$set(event, 'endDate', endDate)
-        this.$set(event, 'startTime', startTime)
-        this.$set(event, 'startTimeMinutes', startTimeMinutes)
-        this.$set(event, 'endTime', endTime)
-        this.$set(event, 'endTimeMinutes', endTimeMinutes)
+        event = Object.assign(event, {
+          // eslint-disable-next-line
+          id: this.eventIdIncrement++,
+          startDate: startDate,
+          endDate: endDate,
+          startTime: startTime,
+          startTimeMinutes: startTimeMinutes,
+          endTime: endTime,
+          endTimeMinutes: endTimeMinutes
+        })
         this.$set(event, 'classes', {
           [event.class]: true,
           overlapping: false,
@@ -531,6 +533,8 @@ export default {
           splitm: false,
           background: event.background
         })
+
+        events[startDate].push(event)
       })
 
       return events

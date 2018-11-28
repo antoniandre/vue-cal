@@ -283,8 +283,8 @@
       p.
         Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
       v-btn(@click="removeLastEvent()") remove an event
-      v-btn(@click="(overlappingEvents[3].classes || {}).overlapping = true") make event 3 overlapping
-      p {{ overlappingEvents[3] }}
+      v-btn(@click="(overlappingEvents[8].classes || {}).overlapping = true") make event 8 overlapping
+      p {{ overlappingEvents[8] }}
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").

@@ -89,6 +89,12 @@ export default {
           event2.classes.overlapped = !event1startsFirst
           event2.classes.overlapping = event1startsFirst
 
+          if (event2.id === 9) console.log(event2.title, {
+            event1startsFirst,
+            event1overlapsEvent2,
+            event2overlapsEvent1
+          })
+
           // If up to 3 events start at the same time.
           if (event.startTimeMinutes === event2.startTimeMinutes) {
             event.classes.split3 = event.classes.split2
@@ -98,10 +104,10 @@ export default {
             event2.classes.splitm = event.classes.split2 && !event2.classes.middle
           }
         } else {
-          event.classes.overlapped = false
-          event.classes.overlapping = false
-          event2.classes.overlapped = false
-          event2.classes.overlapping = false
+          // event.classes.overlapped = false
+          // event.classes.overlapping = false
+          // event2.classes.overlapped = false
+          // event2.classes.overlapping = false
         }
       })
     },
@@ -174,36 +180,6 @@ export default {
     }
   },
 
-  created () {
-    // let comparedEvents = {}
-    // // eslint-disable-next-line
-    // this.splitEvents = []
-
-    // this.events.forEach((event, i) => {
-    //   event.classes.overlapped = false
-    //   event.classes.overlapping = false
-    //   event.classes.background = event.background
-
-    //   this.$set(this.cellEvents, i, event)
-
-    //   // Only for splits.
-    //   if (this.splits.length && event.split) {
-    //     // eslint-disable-next-line
-    //     if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
-    //     // eslint-disable-next-line
-    //     this.splitEvents[event.split].push(event)
-    //   }
-
-    //   if (event.startTime) {
-    //     this.updateEventPosition(event)
-
-    //     if (!event.background) {
-    //       comparedEvents = this.checkOverlappingEvents(event, comparedEvents)
-    //     }
-    //   }
-    // })
-  },
-
   computed: {
     texts () {
       return this.$parent.texts
@@ -224,8 +200,6 @@ export default {
       return Object.assign({}, ...this.events.map(item => ({ [item.id]: item })))
     },
     cellEvents () {
-      console.log(this.events[3])
-
       let comparedEvents = {}
       let arrayOfEventsComparison = {}
       // eslint-disable-next-line
@@ -236,13 +210,6 @@ export default {
 
       evt = this.events.map(event => {
         comparedEvents[event.id] = []
-
-        // console.log('event #' + event.id, Object.keys(arrayOfEventsComparison))
-
-        // event.classes.overlapped = false
-        // event.classes.overlapping = false
-        // // event.classes.background = event.background
-        // event.classes = Object.assign({}, event.classes)
 
         // Only for splits.
         if (this.splits.length && event.split) {
@@ -264,9 +231,6 @@ export default {
         }
         return event
       })
-
-      // console.log(arrayOfEventsComparison)
-      // debugger
 
       return evt
     }
