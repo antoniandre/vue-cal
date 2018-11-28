@@ -4,7 +4,7 @@
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
       div(v-else)
-        .vuecal__no-event(v-if="!cellEvents.length") {{ texts.noEvent }}
+        .vuecal__no-event(v-if="!Object.keys(cellEvents).length") {{ texts.noEvent }}
         .vuecal__event(:class="event.classes"
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
@@ -61,6 +61,7 @@ export default {
       event.top = top
       event.height = bottom - top
       event.minHeight = event.height
+      // console.log('rerendering event styles.', this.resizingEvent)
     },
 
     eventStyles (event) {
@@ -68,7 +69,7 @@ export default {
 
       return {
         top: `${event.top}px`,
-        height: `${event.height}px`
+        height: `${this.resizeEvent.newHeight && this.resizeEvent.eventId === event.id ? this.resizeEvent.newHeight : event.height}px`
       }
     },
 
@@ -76,7 +77,7 @@ export default {
       console.log('comparing event #' + event.id + ': ' + event.title + ' with ', comparisonArray)
 
       comparisonArray.forEach(eventId => {
-        let event2 = this.eventsById[eventId]
+        let event2 = this.cellEvents[eventId]
 
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
         const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
@@ -155,12 +156,17 @@ export default {
       return comparedEvents
     }, */
 
-    onResizeEvent (event, amount) {
-      event.height = Math.max(event.originalHeight + amount, 10)
-      this.updateEndTimeOnResize(event)
+    onResizeEvent (eventId, newHeight) {
+      let event = this.cellEvents[eventId]
+      if (event) {
+        // console.log('here 2', this.cellEvents, event, eventId, newHeight)
 
-      if (!event.background) {
-        this.checkOverlappingEvents(event, {})
+        event.height = Math.max(newHeight, 10)
+        this.updateEndTimeOnResize(event)
+
+        // if (!event.background) {
+        //   // this.checkOverlappingEvents(event, {})
+        // }
       }
     },
 
@@ -175,8 +181,8 @@ export default {
 
     onMouseDown (e, event) {
       const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      event.originalHeight = event.height
-      this.$parent.resizeEvent = { start, event, resizeHandler: this.onResizeEvent }
+
+      this.$parent.resizeEvent = Object.assign(this.$parent.resizeEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
     }
   },
 
@@ -196,43 +202,68 @@ export default {
     cellStyles () {
       return { minWidth: `${this.$parent.minCellWidth}px` || null }
     },
-    eventsById () {
-      return Object.assign({}, ...this.events.map(item => ({ [item.id]: item })))
+    resizeEvent () {
+      if (this.$parent.resizeEvent.eventId) {
+        this.onResizeEvent(this.$parent.resizeEvent.eventId, this.$parent.resizeEvent.newHeight)
+      }
+      return this.$parent.resizeEvent
     },
     cellEvents () {
-      let comparedEvents = {}
+      let cellEvents = {}
       let arrayOfEventsComparison = {}
       // eslint-disable-next-line
       this.splitEvents = []
 
-      let evt = []
       let cellEventsIds = this.events.map(event => event.id.toString())
 
-      evt = this.events.map(event => {
-        comparedEvents[event.id] = []
+      this.events.forEach((event, i) => {
+        this.$set(event, Object.assign(event, {
+          height: 0,
+          top: 0,
+          classes: {
+            [event.class]: true,
+            overlapping: false,
+            overlapped: false,
+            split1: false,
+            split2: false,
+            split3: false,
+            splitm: false,
+            background: event.background
+          }
+        }))
+        // this.$set(event, 'classes', {
+        //   [event.class]: true,
+        //   overlapping: false,
+        //   overlapped: false,
+        //   split1: false,
+        //   split2: false,
+        //   split3: false,
+        //   splitm: false,
+        //   background: event.background
+        // })
 
         // Only for splits.
-        if (this.splits.length && event.split) {
-          // eslint-disable-next-line
-          if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
-          // eslint-disable-next-line
-          this.splitEvents[event.split].push(event)
-        }
+        // if (this.splits.length && event.split) {
+        //   // eslint-disable-next-line
+        //   if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+        //   // eslint-disable-next-line
+        //   this.splitEvents[event.split].push(event)
+        // }
 
         if (event.startTime) {
           this.updateEventPosition(event)
 
           if (!event.background) {
-            // comparedEvents = this.checkOverlappingEvents(event, arrayOfEventsComparison)
-            // Unique comparisons.
-            arrayOfEventsComparison[event.id] = cellEventsIds.filter(itemId => (itemId !== event.id.toString() && Object.keys(arrayOfEventsComparison).indexOf(itemId) === -1))
-            if (arrayOfEventsComparison[event.id].length) this.checkOverlappingEvents(event, arrayOfEventsComparison[event.id])
+            // Unique comparison of events.
+            // arrayOfEventsComparison[event.id] = cellEventsIds.filter(itemId => (itemId !== event.id.toString() && Object.keys(arrayOfEventsComparison).indexOf(itemId) === -1))
+            // if (arrayOfEventsComparison[event.id].length) this.checkOverlappingEvents(event, arrayOfEventsComparison[event.id])
           }
         }
-        return event
+
+        cellEvents[event.id] = event
       })
 
-      return evt
+      return cellEvents
     }
   }
 }

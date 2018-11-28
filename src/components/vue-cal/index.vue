@@ -139,8 +139,8 @@ export default {
     dragEvent: {},
     resizeEvent: {
       start: null,
-      event: {},
-      resizeHandler: null
+      eventId: 0,
+      newHeight: 0
     },
     dblTap: {
       taps: 0,
@@ -256,18 +256,21 @@ export default {
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
-      if (this.resizeEvent.start === null) return
+      if (this.resizeEvent.eventId === null) return
 
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      this.resizeEvent.resizeHandler(this.resizeEvent.event, y - this.resizeEvent.start)
+      this.resizeEvent.newHeight = this.resizeEvent.originalHeight + (y - this.resizeEvent.start)
+      // this.resizeEvent.resizeHandler(this.resizeEvent.event, y - this.resizeEvent.start)
     },
 
     onMouseUp () {
-      if (this.resizeEvent.start === null) return
+      if (this.resizeEvent.eventId === null) return
 
+      this.resizeEvent.eventId = null
       this.resizeEvent.start = null
-      delete this.resizeEvent.event.originalHeight
+      this.resizeEvent.originalHeight = null
+      this.resizeEvent.newHeight = null
     }
   },
 
@@ -365,6 +368,24 @@ export default {
 
       return title
     },
+    viewHeadings () {
+      let headings = []
+
+      switch (this.view.id) {
+        case 'month':
+        case 'week':
+          headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+            return {
+              label1: cell.label[0],
+              label2: cell.label.substr(1, 2),
+              label3: cell.label.substr(3),
+              ...((this.view.id === 'week' && { label4: this.view.startDate.addDays(i).getDate() }) || {})
+            }
+          })
+          break
+      }
+      return headings
+    },
     viewCells () {
       let cells = []
       let fromYear = null
@@ -429,8 +450,8 @@ export default {
                             cellDate.getMonth() === this.now.getMonth() &&
                             cellDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
-            const events = (this.events.length &&
-                            this.calEvents[formatDate(cellDate, 'yyyy-mm-dd', this.texts)]) || []
+            const formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
+            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
 
             return {
               content: cellDate.getDate(),
@@ -454,8 +475,8 @@ export default {
 
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
-            const events = (this.events.length &&
-                            this.calEvents[formatDate(date, 'yyyy-mm-dd', this.texts)]) || []
+            const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
+            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
 
             return {
               date,
@@ -468,8 +489,9 @@ export default {
           })
           break
         case 'day':
-          const events = (this.events.length &&
-                          this.calEvents[formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)]) || []
+          const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
+          const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
+
           cells = [{
             date: this.view.startDate,
             events,
@@ -482,26 +504,11 @@ export default {
       }
       return cells
     },
-    viewHeadings () {
-      let headings = []
+    // Object of arrays of events indexed by dates.
+    eventsPerDay () {
+      let eventsPerDay = {}
 
-      switch (this.view.id) {
-        case 'month':
-        case 'week':
-          headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
-            return {
-              label1: cell.label[0],
-              label2: cell.label.substr(1, 2),
-              label3: cell.label.substr(3),
-              ...((this.view.id === 'week' && { label4: this.view.startDate.addDays(i).getDate() }) || {})
-            }
-          })
-          break
-      }
-      return headings
-    },
-    calEvents () {
-      let events = {}
+      // Group events into dates.
       this.events.forEach(event => {
         const [startDate, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
@@ -511,9 +518,20 @@ export default {
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
-        if (!(startDate in events)) events[startDate] = []
 
-        event = Object.assign(event, {
+        // event = Object.assign({}, event, {
+        //   // eslint-disable-next-line
+        //   id: this.eventIdIncrement++,
+        //   startDate: startDate,
+        //   endDate: endDate,
+        //   startTime: startTime,
+        //   startTimeMinutes: startTimeMinutes,
+        //   endTime: endTime,
+        //   endTimeMinutes: endTimeMinutes,
+        //   height: 0,
+        //   classes: {}
+        // })
+        this.$set(event, Object.assign(event, {
           // eslint-disable-next-line
           id: this.eventIdIncrement++,
           startDate: startDate,
@@ -521,23 +539,28 @@ export default {
           startTime: startTime,
           startTimeMinutes: startTimeMinutes,
           endTime: endTime,
-          endTimeMinutes: endTimeMinutes
-        })
-        this.$set(event, 'classes', {
-          [event.class]: true,
-          overlapping: false,
-          overlapped: false,
-          split1: false,
-          split2: false,
-          split3: false,
-          splitm: false,
-          background: event.background
-        })
+          endTimeMinutes: endTimeMinutes,
+          // height: 0,
+          // top: 0,
+          // classes: {}
+        }))
+        // this.$set(event, 'classes', {
+        //   [event.class]: true,
+        //   overlapping: false,
+        //   overlapped: false,
+        //   split1: false,
+        //   split2: false,
+        //   split3: false,
+        //   splitm: false,
+        //   background: event.background
+        // })
 
-        events[startDate].push(event)
+        if (!(startDate in eventsPerDay)) eventsPerDay[startDate] = []
+        eventsPerDay[startDate].push(event)
       })
+      // console.log(eventsPerDay)
 
-      return events
+      return eventsPerDay
     },
     weekdayCellStyles () {
       return { minWidth: `${this.minCellWidth}px` || null }
