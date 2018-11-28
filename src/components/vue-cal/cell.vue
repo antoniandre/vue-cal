@@ -44,7 +44,6 @@ export default {
     }
   },
   data: () => ({
-    cellEvents: [],
     splitEvents: [],
     // For each event, compare with others if overlapping.
     // Keep track of what is already check in this indexed array not to redo the check.
@@ -73,9 +72,43 @@ export default {
       }
     },
 
-    checkOverlappingEvents (event, comparedEvents) {
+    checkOverlappingEvents (event, comparisonArray) {
+      console.log('comparing event #' + event.id + ': ' + event.title + ' with ', comparisonArray)
+
+      comparisonArray.forEach(eventId => {
+        let event2 = this.eventsById[eventId]
+
+        const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
+        const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
+        const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
+
+        if (event1overlapsEvent2 || event2overlapsEvent1) {
+          event.classes.overlapped = event1startsFirst
+          event.classes.overlapping = !event1startsFirst
+
+          event2.classes.overlapped = !event1startsFirst
+          event2.classes.overlapping = event1startsFirst
+
+          // If up to 3 events start at the same time.
+          if (event.startTimeMinutes === event2.startTimeMinutes) {
+            event.classes.split3 = event.classes.split2
+            event.classes.split2 = true
+            event2.classes.split3 = event2.classes.split2
+            event2.classes.split2 = true
+            event2.classes.splitm = event.classes.split2 && !event2.classes.middle
+          }
+        } else {
+          event.classes.overlapped = false
+          event.classes.overlapping = false
+          event2.classes.overlapped = false
+          event2.classes.overlapping = false
+        }
+      })
+    },
+
+    /* checkOverlappingEventsOld (event, comparedEvents) {
       (this.splits.length && event.split ? this.splitEvents[event.split] : this.cellEvents).forEach(event2 => {
-        if (!comparedEvents[event.id]) comparedEvents[event.id] = []
+        // if (!comparedEvents[event.id]) comparedEvents[event.id] = []
 
         // Don't compare with itself or with already compared item.
         const eventsAreDifferent = event.id !== event2.id
@@ -100,7 +133,7 @@ export default {
               event.classes.split2 = true
               event2.classes.split3 = event2.classes.split2
               event2.classes.split2 = true
-              event2.classes.splitm = event.classes.split2 && !event2.class.middle
+              event2.classes.splitm = event.classes.split2 && !event2.classes.middle
             }
           } else {
             event.classes.overlapped = false
@@ -114,7 +147,7 @@ export default {
       })
 
       return comparedEvents
-    },
+    }, */
 
     onResizeEvent (event, amount) {
       event.height = Math.max(event.originalHeight + amount, 10)
@@ -142,33 +175,33 @@ export default {
   },
 
   created () {
-    let comparedEvents = {}
-    // eslint-disable-next-line
-    this.splitEvents = []
+    // let comparedEvents = {}
+    // // eslint-disable-next-line
+    // this.splitEvents = []
 
-    this.events.forEach((event, i) => {
-      event.classes.overlapped = false
-      event.classes.overlapping = false
-      event.classes.background = event.background
+    // this.events.forEach((event, i) => {
+    //   event.classes.overlapped = false
+    //   event.classes.overlapping = false
+    //   event.classes.background = event.background
 
-      this.$set(this.cellEvents, i, event)
+    //   this.$set(this.cellEvents, i, event)
 
-      // Only for splits.
-      if (this.splits.length && event.split) {
-        // eslint-disable-next-line
-        if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
-        // eslint-disable-next-line
-        this.splitEvents[event.split].push(event)
-      }
+    //   // Only for splits.
+    //   if (this.splits.length && event.split) {
+    //     // eslint-disable-next-line
+    //     if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+    //     // eslint-disable-next-line
+    //     this.splitEvents[event.split].push(event)
+    //   }
 
-      if (event.startTime) {
-        this.updateEventPosition(event)
+    //   if (event.startTime) {
+    //     this.updateEventPosition(event)
 
-        if (!event.background) {
-          comparedEvents = this.checkOverlappingEvents(event, comparedEvents)
-        }
-      }
-    })
+    //     if (!event.background) {
+    //       comparedEvents = this.checkOverlappingEvents(event, comparedEvents)
+    //     }
+    //   }
+    // })
   },
 
   computed: {
@@ -186,6 +219,56 @@ export default {
     },
     cellStyles () {
       return { minWidth: `${this.$parent.minCellWidth}px` || null }
+    },
+    eventsById () {
+      return Object.assign({}, ...this.events.map(item => ({ [item.id]: item })))
+    },
+    cellEvents () {
+      console.log(this.events[3])
+
+      let comparedEvents = {}
+      let arrayOfEventsComparison = {}
+      // eslint-disable-next-line
+      this.splitEvents = []
+
+      let evt = []
+      let cellEventsIds = this.events.map(event => event.id.toString())
+
+      evt = this.events.map(event => {
+        comparedEvents[event.id] = []
+
+        // console.log('event #' + event.id, Object.keys(arrayOfEventsComparison))
+
+        // event.classes.overlapped = false
+        // event.classes.overlapping = false
+        // // event.classes.background = event.background
+        // event.classes = Object.assign({}, event.classes)
+
+        // Only for splits.
+        if (this.splits.length && event.split) {
+          // eslint-disable-next-line
+          if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+          // eslint-disable-next-line
+          this.splitEvents[event.split].push(event)
+        }
+
+        if (event.startTime) {
+          this.updateEventPosition(event)
+
+          if (!event.background) {
+            // comparedEvents = this.checkOverlappingEvents(event, arrayOfEventsComparison)
+            // Unique comparisons.
+            arrayOfEventsComparison[event.id] = cellEventsIds.filter(itemId => (itemId !== event.id.toString() && Object.keys(arrayOfEventsComparison).indexOf(itemId) === -1))
+            if (arrayOfEventsComparison[event.id].length) this.checkOverlappingEvents(event, arrayOfEventsComparison[event.id])
+          }
+        }
+        return event
+      })
+
+      // console.log(arrayOfEventsComparison)
+      // debugger
+
+      return evt
     }
   }
 }

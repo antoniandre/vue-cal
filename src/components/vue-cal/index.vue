@@ -513,17 +513,23 @@ export default {
 
         if (!events[startDate]) events[startDate] = []
 
-        events[startDate].push({
-          ...event,
-          // eslint-disable-next-line
-          id: this.eventIdIncrement++,
-          classes: { [event.class]: true },
-          startDate,
-          endDate,
-          startTime,
-          startTimeMinutes,
-          endTime,
-          endTimeMinutes
+        // eslint-disable-next-line
+        this.$set(event, 'id', this.eventIdIncrement++)
+        this.$set(event, 'startDate', startDate)
+        this.$set(event, 'endDate', endDate)
+        this.$set(event, 'startTime', startTime)
+        this.$set(event, 'startTimeMinutes', startTimeMinutes)
+        this.$set(event, 'endTime', endTime)
+        this.$set(event, 'endTimeMinutes', endTimeMinutes)
+        this.$set(event, 'classes', {
+          [event.class]: true,
+          overlapping: false,
+          overlapped: false,
+          split1: false,
+          split2: false,
+          split3: false,
+          splitm: false,
+          background: event.background
         })
       })
 

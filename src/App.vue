@@ -237,7 +237,7 @@
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"
@@ -282,6 +282,9 @@
       h3.mt-5 # Example 7
       p.
         Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
+      v-btn(@click="removeLastEvent()") remove an event
+      v-btn(@click="(overlappingEvents[3].classes || {}).overlapping = true") make event 3 overlapping
+      p {{ overlappingEvents[3] }}
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
@@ -334,7 +337,7 @@
           v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
           | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
+        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
       sshpre(language="html-vue" label="Vue Template" v-pre).
         &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
           {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
@@ -398,7 +401,7 @@
         Background events.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
+        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"
@@ -446,7 +449,7 @@
         Timeless Events. Dates but no time information.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="height: 350px;")
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
+        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time="false"
@@ -813,8 +816,8 @@ const events = [
     split: 1
   },
   {
-    start: '2018-11-22 19:30',
-    end: '2018-11-22 21:00',
+    start: '2018-11-21 19:30',
+    end: '2018-11-21 23:00',
     title: 'Swimming lesson',
     content: '<i class="v-icon material-icons">pool</i>',
     class: 'sport',
@@ -974,6 +977,13 @@ export default {
       }
     ]
   }),
+
+  methods: {
+    removeLastEvent () {
+      this.overlappingEvents.pop()
+      console.log(this.overlappingEvents)
+    }
+  },
   created () {
     setTimeout(() => (this.ready = true), 500)
   },
