@@ -123,7 +123,7 @@
       p Then import the component and use it:
       sshpre(language="js" label="Javascript").
         // In your VueJS component.
-        import { Vuecal } from 'vue-cal'
+        import Vuecal from 'vue-cal'
         import 'vue-cal/dist/vuecal.css'
         ...
 
