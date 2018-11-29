@@ -45,7 +45,6 @@ export default {
   },
   data: () => ({
     splitEvents: [],
-    overlappingEvents: {},
     comparisonArray: {}
   }),
 
@@ -59,7 +58,6 @@ export default {
 
       event.top = top
       event.height = bottom - top
-      event.minHeight = event.height
     },
 
     eventStyles (event) {
@@ -74,23 +72,26 @@ export default {
     eventClasses (event) {
       if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
 
-      return event.classes
+      return {
+        ...event.classes,
+        overlapping: event.overlapping > 0,
+        overlapped: event.overlapped > 0
+      }
     },
 
     checkOverlappingEvents (event) {
       this.comparisonArray[event.id].forEach((event2, i) => {
-        // console.log('comparing event #' + event.id + ': ' + event.title + ' with ', event2)
-
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-        const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
-        const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
+        const event1overlapsEvent2 = (event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes) * 1
+        const event2overlapsEvent1 = (!event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes) * 1
+        console.log('comparing event ' + event.title + ' with ', event2.title)
 
         if (event1overlapsEvent2 || event2overlapsEvent1) {
-          event.classes.overlapped = event1startsFirst
-          event.classes.overlapping = !event1startsFirst
+          event.classes.overlapped += (event1startsFirst ? 1 : 0)
+          event.classes.overlapping += (!event1startsFirst ? 1 : 0)
 
-          event2.classes.overlapped = !event1startsFirst
-          event2.classes.overlapping = event1startsFirst
+          event2.classes.overlapped += (!event1startsFirst ? 1 : 0)
+          event2.classes.overlapping += (event1startsFirst ? 1 : 0)
 
           // If up to 3 events start at the same time.
           // if (event.classes.startTimeMinutes === event2.classes.startTimeMinutes) {
@@ -101,11 +102,12 @@ export default {
           //   event2.classes.splitm = event.classes.split2 && !event2.classes.middle
           // }
         } else {
-          event.classes.overlapped = false
-          event.classes.overlapping = false
-          event2.classes.overlapped = false
-          event2.classes.overlapping = false
+          event.classes.overlapped--
+          event.classes.overlapping--
+          event2.classes.overlapped--
+          event2.classes.overlapping--
         }
+        console.log({event1startsFirst, event1overlapsEvent2, event2overlapsEvent1, overlapping: event.classes.overlapping, overlapped: event.classes.overlapped})
       })
     },
 
@@ -169,8 +171,8 @@ export default {
           top: 0,
           classes: {
             [event.class]: true,
-            overlapping: false,
-            overlapped: false,
+            overlapping: 0,
+            overlapped: 0,
             split1: false,
             split2: false,
             split3: false,
@@ -178,16 +180,6 @@ export default {
             background: event.background
           }
         }))
-        // this.$set(event, 'classes', {
-        //   [event.class]: true,
-        //   overlapping: false,
-        //   overlapped: false,
-        //   split1: false,
-        //   split2: false,
-        //   split3: false,
-        //   splitm: false,
-        //   background: event.background
-        // })
 
         // Only for splits.
         // if (this.splits.length && event.split) {
