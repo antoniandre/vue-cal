@@ -236,12 +236,12 @@ export default {
     },
 
     selectCell (cell) {
-      this.view.selectedDate = cell.date
+      if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
 
       if (this.clickToNavigate) this.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
-      if (this.dblClickToNavigate && 'ontouchstart' in window) {
+      else if (this.dblClickToNavigate && 'ontouchstart' in window) {
         this.dblTap.taps++
 
         setTimeout(() => (this.dblTap.taps = 0), this.dblTap.timeout)
@@ -261,7 +261,6 @@ export default {
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       this.resizeEvent.newHeight = this.resizeEvent.originalHeight + (y - this.resizeEvent.start)
-      // this.resizeEvent.resizeHandler(this.resizeEvent.event, y - this.resizeEvent.start)
     },
 
     onMouseUp () {
@@ -390,6 +389,8 @@ export default {
       let cells = []
       let fromYear = null
       let todayFound = false
+
+      console.count('rendering cells')// Why is this done twice when events.length > 0?
 
       switch (this.view.id) {
         case 'years':

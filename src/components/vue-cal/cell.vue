@@ -70,7 +70,7 @@ export default {
     },
 
     eventClasses (event) {
-      if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
+      // if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
 
       return {
         ...event.classes,
@@ -82,16 +82,16 @@ export default {
     checkOverlappingEvents (event) {
       this.comparisonArray[event.id].forEach((event2, i) => {
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-        const event1overlapsEvent2 = (event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes) * 1
-        const event2overlapsEvent1 = (!event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes) * 1
+        const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
+        const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
         console.log('comparing event ' + event.title + ' with ', event2.title)
 
         if (event1overlapsEvent2 || event2overlapsEvent1) {
-          event.classes.overlapped += (event1startsFirst ? 1 : 0)
-          event.classes.overlapping += (!event1startsFirst ? 1 : 0)
+          event.classes.overlapped += event1startsFirst ? 1 : 0
+          event.classes.overlapping += !event1startsFirst ? 1 : 0
 
-          event2.classes.overlapped += (!event1startsFirst ? 1 : 0)
-          event2.classes.overlapping += (event1startsFirst ? 1 : 0)
+          event2.classes.overlapped += event.classes.overlapping
+          event2.classes.overlapping += event.classes.overlapped
 
           // If up to 3 events start at the same time.
           // if (event.classes.startTimeMinutes === event2.classes.startTimeMinutes) {
@@ -102,10 +102,10 @@ export default {
           //   event2.classes.splitm = event.classes.split2 && !event2.classes.middle
           // }
         } else {
-          event.classes.overlapped--
-          event.classes.overlapping--
-          event2.classes.overlapped--
-          event2.classes.overlapping--
+          // event.classes.overlapped = Math.max(event.classes.overlapped - 1, 0)
+          // event.classes.overlapping = Math.max(event.classes.overlapping - 1, 0)
+          // event2.classes.overlapped = Math.max(event2.classes.overlapped - 1, 0)
+          // event2.classes.overlapping = Math.max(event2.classes.overlapping - 1, 0)
         }
         console.log({event1startsFirst, event1overlapsEvent2, event2overlapsEvent1, overlapping: event.classes.overlapping, overlapped: event.classes.overlapped})
       })
