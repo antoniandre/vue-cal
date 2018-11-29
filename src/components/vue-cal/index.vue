@@ -451,7 +451,7 @@ export default {
                             cellDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
             const formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
-            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
+            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
             return {
               content: cellDate.getDate(),
@@ -476,7 +476,7 @@ export default {
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
-            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
+            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
             return {
               date,
@@ -490,7 +490,7 @@ export default {
           break
         case 'day':
           const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
-          const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || []
+          const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
           cells = [{
             date: this.view.startDate,
@@ -518,47 +518,20 @@ export default {
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
-
-        // event = Object.assign({}, event, {
-        //   // eslint-disable-next-line
-        //   id: this.eventIdIncrement++,
-        //   startDate: startDate,
-        //   endDate: endDate,
-        //   startTime: startTime,
-        //   startTimeMinutes: startTimeMinutes,
-        //   endTime: endTime,
-        //   endTimeMinutes: endTimeMinutes,
-        //   height: 0,
-        //   classes: {}
-        // })
-        this.$set(event, Object.assign(event, {
+        event = Object.assign(event, {
           // eslint-disable-next-line
-          id: this.eventIdIncrement++,
+          id: (this.eventIdIncrement++).toString(),
           startDate: startDate,
           endDate: endDate,
           startTime: startTime,
           startTimeMinutes: startTimeMinutes,
           endTime: endTime,
-          endTimeMinutes: endTimeMinutes,
-          // height: 0,
-          // top: 0,
-          // classes: {}
-        }))
-        // this.$set(event, 'classes', {
-        //   [event.class]: true,
-        //   overlapping: false,
-        //   overlapped: false,
-        //   split1: false,
-        //   split2: false,
-        //   split3: false,
-        //   splitm: false,
-        //   background: event.background
-        // })
+          endTimeMinutes: endTimeMinutes
+        })
 
-        if (!(startDate in eventsPerDay)) eventsPerDay[startDate] = []
-        eventsPerDay[startDate].push(event)
+        if (!(startDate in eventsPerDay)) eventsPerDay[startDate] = {}
+        eventsPerDay[startDate][event.id] = event
       })
-      // console.log(eventsPerDay)
 
       return eventsPerDay
     },

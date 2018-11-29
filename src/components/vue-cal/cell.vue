@@ -5,7 +5,7 @@
       div(v-if="content" v-html="content")
       div(v-else)
         .vuecal__no-event(v-if="!Object.keys(cellEvents).length") {{ texts.noEvent }}
-        .vuecal__event(:class="event.classes"
+        .vuecal__event(:class="eventClasses(event)"
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
                        :style="eventStyles(event)")
@@ -31,8 +31,8 @@ export default {
       required: true
     },
     events: {
-      type: Array,
-      default: () => []
+      type: Object,
+      default: () => {}
     },
     content: {
       type: [String, Number],
@@ -45,9 +45,8 @@ export default {
   },
   data: () => ({
     splitEvents: [],
-    // For each event, compare with others if overlapping.
-    // Keep track of what is already check in this indexed array not to redo the check.
-    comparedEvents: {}
+    overlappingEvents: {},
+    comparisonArray: {}
   }),
 
   methods: {
@@ -61,7 +60,6 @@ export default {
       event.top = top
       event.height = bottom - top
       event.minHeight = event.height
-      // console.log('rerendering event styles.', this.resizingEvent)
     },
 
     eventStyles (event) {
@@ -73,11 +71,15 @@ export default {
       }
     },
 
-    checkOverlappingEvents (event, comparisonArray) {
-      console.log('comparing event #' + event.id + ': ' + event.title + ' with ', comparisonArray)
+    eventClasses (event) {
+      if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
 
-      comparisonArray.forEach(eventId => {
-        let event2 = this.cellEvents[eventId]
+      return event.classes
+    },
+
+    checkOverlappingEvents (event) {
+      this.comparisonArray[event.id].forEach((event2, i) => {
+        // console.log('comparing event #' + event.id + ': ' + event.title + ' with ', event2)
 
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
         const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
@@ -90,82 +92,31 @@ export default {
           event2.classes.overlapped = !event1startsFirst
           event2.classes.overlapping = event1startsFirst
 
-          if (event2.id === 9) console.log(event2.title, {
-            event1startsFirst,
-            event1overlapsEvent2,
-            event2overlapsEvent1
-          })
-
           // If up to 3 events start at the same time.
-          if (event.startTimeMinutes === event2.startTimeMinutes) {
-            event.classes.split3 = event.classes.split2
-            event.classes.split2 = true
-            event2.classes.split3 = event2.classes.split2
-            event2.classes.split2 = true
-            event2.classes.splitm = event.classes.split2 && !event2.classes.middle
-          }
+          // if (event.classes.startTimeMinutes === event2.classes.startTimeMinutes) {
+          //   event.classes.split3 = event.classes.split2
+          //   event.classes.split2 = true
+          //   event2.classes.split3 = event2.classes.split2
+          //   event2.classes.split2 = true
+          //   event2.classes.splitm = event.classes.split2 && !event2.classes.middle
+          // }
         } else {
-          // event.classes.overlapped = false
-          // event.classes.overlapping = false
-          // event2.classes.overlapped = false
-          // event2.classes.overlapping = false
+          event.classes.overlapped = false
+          event.classes.overlapping = false
+          event2.classes.overlapped = false
+          event2.classes.overlapping = false
         }
       })
     },
 
-    /* checkOverlappingEventsOld (event, comparedEvents) {
-      (this.splits.length && event.split ? this.splitEvents[event.split] : this.cellEvents).forEach(event2 => {
-        // if (!comparedEvents[event.id]) comparedEvents[event.id] = []
-
-        // Don't compare with itself or with already compared item.
-        const eventsAreDifferent = event.id !== event2.id
-        const eventNeverCompared = comparedEvents[event.id].indexOf(event2.id) === -1 && (comparedEvents[event2.id] || []).indexOf(event.id) === -1
-        const eventIsBackground = event.background || event2.background
-
-        if (eventsAreDifferent && eventNeverCompared && !eventIsBackground) {
-          const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-          const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
-          const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
-
-          if (event1overlapsEvent2 || event2overlapsEvent1) {
-            event.classes.overlapped = event1startsFirst
-            event.classes.overlapping = !event1startsFirst
-
-            event2.classes.overlapped = !event1startsFirst
-            event2.classes.overlapping = event1startsFirst
-
-            // If up to 3 events start at the same time.
-            if (event.startTimeMinutes === event2.startTimeMinutes) {
-              event.classes.split3 = event.classes.split2
-              event.classes.split2 = true
-              event2.classes.split3 = event2.classes.split2
-              event2.classes.split2 = true
-              event2.classes.splitm = event.classes.split2 && !event2.classes.middle
-            }
-          } else {
-            event.classes.overlapped = false
-            event.classes.overlapping = false
-            event2.classes.overlapped = false
-            event2.classes.overlapping = false
-          }
-        }
-
-        comparedEvents[event.id].push(event2.id)
-      })
-
-      return comparedEvents
-    }, */
-
     onResizeEvent (eventId, newHeight) {
-      let event = this.cellEvents[eventId]
+      let event = this.events[eventId]
       if (event) {
-        // console.log('here 2', this.cellEvents, event, eventId, newHeight)
-
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
         // if (!event.background) {
-        //   // this.checkOverlappingEvents(event, {})
+        //   this.checkOverlappingEvents(event)
         // }
       }
     },
@@ -181,7 +132,6 @@ export default {
 
     onMouseDown (e, event) {
       const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-
       this.$parent.resizeEvent = Object.assign(this.$parent.resizeEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
     }
   },
@@ -210,13 +160,10 @@ export default {
     },
     cellEvents () {
       let cellEvents = {}
-      let arrayOfEventsComparison = {}
       // eslint-disable-next-line
       this.splitEvents = []
 
-      let cellEventsIds = this.events.map(event => event.id.toString())
-
-      this.events.forEach((event, i) => {
+      Object.values(this.events).forEach((event, i) => {
         this.$set(event, Object.assign(event, {
           height: 0,
           top: 0,
@@ -255,8 +202,7 @@ export default {
 
           if (!event.background) {
             // Unique comparison of events.
-            // arrayOfEventsComparison[event.id] = cellEventsIds.filter(itemId => (itemId !== event.id.toString() && Object.keys(arrayOfEventsComparison).indexOf(itemId) === -1))
-            // if (arrayOfEventsComparison[event.id].length) this.checkOverlappingEvents(event, arrayOfEventsComparison[event.id])
+            this.comparisonArray[event.id] = Object.values(this.events).filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1))
           }
         }
 
