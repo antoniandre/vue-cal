@@ -153,7 +153,7 @@
           Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
           By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
           You are also free to put a wrapping border or not, or box-shadow, anything you like.
-        //- vue-cal.vuecal--green-theme(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends style="height: 250px;border: 1px solid #eee")
+        vue-cal.vuecal--green-theme(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends style="height: 250px;border: 1px solid #eee")
         sshpre(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
           &lt;vue-cal style="height: 250px;border: 1px solid #eee"&gt;&lt;/vue-cal&gt;
@@ -171,7 +171,7 @@
         | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
         v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
       v-card.my-2.ma-auto.main-content
-        //- vue-cal(:class="`vuecal--${example1theme}-theme`" :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
+        vue-cal(:class="`vuecal--${example1theme}-theme`" :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends)
       sshpre(language="html-vue" label="Vue Template").
         &lt;!-- Time start &amp; time end are expected in minutes. --&gt;
         &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends&gt;&lt;/vue-cal&gt;
@@ -183,7 +183,7 @@
         Smaller view, 12-hour time format, hidden header, default month view.#[br]
         Simple click cell to go narrower view. Pre-selected date: 1st of January, 2000.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 460px;height: 400px;max-width: 100%")
-        //- vue-cal.vuecal--green-theme(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2000-01-01 00:01")
+        vue-cal.vuecal--green-theme(small hide-view-selector 12-hour default-view="month" click-to-navigate selected-date="2000-01-01 00:01")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal small hide-view-selector 12-hour default-view="month" click-to-navigate&gt;&lt;/vue-cal&gt;
 
@@ -194,7 +194,7 @@
       p.
         Extra-small, no timeline, custom arrows (using the reserved slots `arrowPrev` &amp; `arrowNext`).#[br]
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
-        //- vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
+        vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
           v-icon(slot="arrowPrev") arrow_back
           v-icon(slot="arrowNext") arrow_forward
       sshpre(language="html-vue" label="Vue Template").
@@ -211,7 +211,7 @@
         i18n.#[br]
         Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-        //- vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="fr")
+        vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="fr")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
 
@@ -221,9 +221,9 @@
         Different layout. Week view disabled.
       v-layout.ma-auto(row justify-center wrap)
         v-card.ma-2.main-content(style="width: 280px;height: 300px;")
-          //- vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+          vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
         v-card.ma-2.main-content(style="width: 280px;height: 300px;")
-          //- vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+          vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme" xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']"&gt;&lt;/vue-cal&gt;
       highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
@@ -237,7 +237,7 @@
         Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
-        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"
@@ -282,7 +282,6 @@
       h3.mt-5 # Example 7
       p.
         Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
-      v-btn(@click="removeLastEvent()") remove an event
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
@@ -335,7 +334,7 @@
           v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
           | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
       v-card.green-theme.my-2.ma-auto.main-content
-        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
       sshpre(language="html-vue" label="Vue Template" v-pre).
         &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
           {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
@@ -447,7 +446,7 @@
         Timeless Events. Dates but no time information.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="height: 350px;")
-        //- vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time="false"
@@ -975,13 +974,6 @@ export default {
       }
     ]
   }),
-
-  methods: {
-    removeLastEvent () {
-      this.overlappingEvents.pop()
-      console.log(this.overlappingEvents)
-    }
-  },
   created () {
     setTimeout(() => (this.ready = true), 500)
   },

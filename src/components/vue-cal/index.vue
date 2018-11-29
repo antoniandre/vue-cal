@@ -32,9 +32,9 @@
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -136,12 +136,14 @@ export default {
       selectedDate: null
     },
     eventIdIncrement: 1,
-    dragEvent: {},
     resizeEvent: {
       start: null,
       eventId: 0,
       newHeight: 0
     },
+    focusedEventId: null,// Only one at the same time.
+    draggingEventId: null,// Only one at the same time.
+    removableEventId: null,// After a click and hold, event becomes deletable.
     dblTap: {
       taps: 0,
       timeout: 500
@@ -238,6 +240,7 @@ export default {
     selectCell (cell) {
       if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
 
+      this.focusedEventId = null
       if (this.clickToNavigate) this.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
@@ -390,8 +393,6 @@ export default {
       let fromYear = null
       let todayFound = false
 
-      console.count('rendering cells')// Why is this done twice when events.length > 0?
-
       switch (this.view.id) {
         case 'years':
           fromYear = this.view.startDate.getFullYear()
@@ -457,6 +458,7 @@ export default {
             return {
               content: cellDate.getDate(),
               date: cellDate,
+              formattedDate,
               events,
               class: {
                 today: isToday,
@@ -481,6 +483,7 @@ export default {
 
             return {
               date,
+              formattedDate,
               events,
               class: {
                 today: !todayFound && isDateToday(date) && !todayFound++,
@@ -495,6 +498,7 @@ export default {
 
           cells = [{
             date: this.view.startDate,
+            formattedDate,
             events,
             class: {
               today: isDateToday(this.view.startDate),
@@ -519,19 +523,31 @@ export default {
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
-        event = Object.assign(event, {
-          // eslint-disable-next-line
-          id: (this.eventIdIncrement++).toString(),
-          startDate: startDate,
-          endDate: endDate,
-          startTime: startTime,
-          startTimeMinutes: startTimeMinutes,
-          endTime: endTime,
-          endTimeMinutes: endTimeMinutes
+        // Keep the event ids scoped to this calendar instance.
+        // eslint-disable-next-line
+        let id = `${this._uid}_${this.eventIdIncrement++}`
+
+        event = Object.assign({}, event, {
+          id,
+          startDate,
+          endDate,
+          startTime,
+          startTimeMinutes,
+          endTime,
+          endTimeMinutes,
+          height: 0,
+          top: 0,
+          classes: {
+            [event.class]: true,
+            'vuecal__event--overlapping': false,
+            'vuecal__event--overlapped': false,
+            'vuecal__event--background': event.background
+          }
         })
 
         if (!(startDate in eventsPerDay)) eventsPerDay[startDate] = {}
-        eventsPerDay[startDate][event.id] = event
+
+        eventsPerDay[startDate][id] = event
       })
 
       return eventsPerDay

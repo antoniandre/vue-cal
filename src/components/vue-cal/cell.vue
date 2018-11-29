@@ -8,8 +8,10 @@
         .vuecal__event(:class="eventClasses(event)"
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
-                       :style="eventStyles(event)")
-          .vuecal__event-title(v-if="event.title") {{ event.title }}
+                       :style="eventStyles(event)"
+                       @click.stop="focusEvent(event)")
+          .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") x
+          .vuecal__event-title(v-if="event.title") {{ event.title }} - {{event.classes.focus}}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -23,6 +25,10 @@
 export default {
   props: {
     cssClass: {
+      type: String,
+      default: ''
+    },
+    formattedDate: {
       type: String,
       default: ''
     },
@@ -70,28 +76,39 @@ export default {
     },
 
     eventClasses (event) {
-      // if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
-
       return {
         ...event.classes,
-        overlapping: event.overlapping > 0,
-        overlapped: event.overlapped > 0
+        'vuecal__event--focus': this.focusedEventId === event.id
       }
     },
 
+    checkCellOverlappingEvents () {
+      const eventsArray = Object.values(this.cellEvents)
+      eventsArray.forEach(event => {
+        if (!event.background) {
+          // Unique comparison of events.
+          this.comparisonArray[event.id] = eventsArray.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
+          if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
+        }
+      })
+    },
     checkOverlappingEvents (event) {
-      this.comparisonArray[event.id].forEach((event2, i) => {
+        this.comparisonArray[event.id].forEach((event2, i) => {
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
         const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
         const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
-        console.log('comparing event ' + event.title + ' with ', event2.title)
+        // console.log('comparing event ' + event.title + ' with ', event2.title)
 
         if (event1overlapsEvent2 || event2overlapsEvent1) {
-          event.classes.overlapped += event1startsFirst ? 1 : 0
-          event.classes.overlapping += !event1startsFirst ? 1 : 0
+          event.classes = Object.assign(event.classes, {
+            'vuecal__event--overlapped': event1startsFirst,
+            'vuecal__event--overlapping': !event1startsFirst,
+          })
 
-          event2.classes.overlapped += event.classes.overlapping
-          event2.classes.overlapping += event.classes.overlapped
+          event2.classes = Object.assign(event2.classes, {
+            'vuecal__event--overlapped': !event1startsFirst,
+            'vuecal__event--overlapping': event1startsFirst,
+          })
 
           // If up to 3 events start at the same time.
           // if (event.classes.startTimeMinutes === event2.classes.startTimeMinutes) {
@@ -107,7 +124,7 @@ export default {
           // event2.classes.overlapped = Math.max(event2.classes.overlapped - 1, 0)
           // event2.classes.overlapping = Math.max(event2.classes.overlapping - 1, 0)
         }
-        console.log({event1startsFirst, event1overlapsEvent2, event2overlapsEvent1, overlapping: event.classes.overlapping, overlapped: event.classes.overlapped})
+        // console.log({event1startsFirst, event1overlapsEvent2, event2overlapsEvent1, overlapping: event.classes['vuecal__event--overlapping'], overlapped: event.classes['vuecal__event--overlapped']})
       })
     },
 
@@ -117,9 +134,9 @@ export default {
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
-        // if (!event.background) {
-        //   this.checkOverlappingEvents(event)
-        // }
+        if (!event.background) {
+          this.checkOverlappingEvents(event)
+        }
       }
     },
 
@@ -135,6 +152,18 @@ export default {
     onMouseDown (e, event) {
       const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       this.$parent.resizeEvent = Object.assign(this.$parent.resizeEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
+    },
+
+    deleteEvent (event) {
+      delete this.cellEvents[event.id]
+      this.$forceUpdate()
+      this.checkCellOverlappingEvents()
+    },
+
+    focusEvent (event) {
+      this.focusedEventId = event.id
+      // event.classes['vuecal__event--focus'] = true
+      this.$forceUpdate()
     }
   },
 
@@ -151,6 +180,22 @@ export default {
     timeStep () {
       return parseInt(this.$parent.timeStep)
     },
+    focusedEventId: {
+      get () {
+        return this.$parent.focusedEventId
+      },
+      set (id) {
+        return this.$parent.focusedEventId = id
+      }
+    },
+    removableEventId: {
+      get () {
+        return this.$parent.removableEventId
+      },
+      set (id) {
+        return this.$parent.removableEventId = id
+      }
+    },
     cellStyles () {
       return { minWidth: `${this.$parent.minCellWidth}px` || null }
     },
@@ -161,47 +206,28 @@ export default {
       return this.$parent.resizeEvent
     },
     cellEvents () {
-      let cellEvents = {}
-      // eslint-disable-next-line
-      this.splitEvents = []
+      const events = this.$parent.eventsPerDay[this.formattedDate] || {}
+      const eventsArray = Object.values(events)
 
-      Object.values(this.events).forEach((event, i) => {
-        this.$set(event, Object.assign(event, {
-          height: 0,
-          top: 0,
-          classes: {
-            [event.class]: true,
-            overlapping: 0,
-            overlapped: 0,
-            split1: false,
-            split2: false,
-            split3: false,
-            splitm: false,
-            background: event.background
-          }
-        }))
+      eventsArray.forEach(event => {
+        if (event.startTime) this.updateEventPosition(event)
 
         // Only for splits.
-        // if (this.splits.length && event.split) {
-        //   // eslint-disable-next-line
-        //   if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
-        //   // eslint-disable-next-line
-        //   this.splitEvents[event.split].push(event)
-        // }
-
-        if (event.startTime) {
-          this.updateEventPosition(event)
-
-          if (!event.background) {
-            // Unique comparison of events.
-            this.comparisonArray[event.id] = Object.values(this.events).filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1))
-          }
+        if (this.splits.length && event.split) {
+          // eslint-disable-next-line
+          if (!this.splitEvents[event.split]) this.splitEvents[event.split] = []
+          // eslint-disable-next-line
+          this.splitEvents[event.split].push(event)
         }
 
-        cellEvents[event.id] = event
+        if (!event.background) {
+          // Unique comparison of events.
+          this.comparisonArray[event.id] = eventsArray.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
+          if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
+        }
       })
 
-      return cellEvents
+      return events
     }
   }
 }
@@ -291,11 +317,17 @@ export default {
   user-select: none;
 }
 
+// EVENTS.
+//======================================//
 .vuecal__event {
   color: #666;
   background-color: #f8f8f8;
   position: relative;
   z-index: 1;
+  transition: box-shadow 0.3s;
+  overflow: hidden;// For sliding delete button.
+
+  &:hover {z-index: 2;}
 
   // Reactivate user selection in events.
   .vuecal__cell & * {user-select: auto;}
@@ -304,19 +336,19 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-    overflow: hidden;
 
     // &:hover {height: auto !important;}
   }
 
-  &.overlapped {right: 20%;}
-  &.overlapping:not(.split2):not(.split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &.overlapped.split2 {right: 50%;}
-  &.overlapping.split2 {left: 50%;}
-  &.overlapped.split3 {right: 66.66%;}
-  &.overlapping.split3 {left: 66.66%;}
-  &.overlapping.split3.split-middle {left: 33.33%;right: 33.33%;}
-  &.background {z-index: 0;}
+  &.vuecal__event--overlapped {right: 20%;}
+  &.vuecal__event--overlapping:not(.split2):not(.split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &.vuecal__event--overlapped.split2 {right: 50%;}
+  &.vuecal__event--overlapping.split2 {left: 50%;}
+  &.vuecal__event--overlapped.split3 {right: 66.66%;}
+  &.vuecal__event--overlapping.split3 {left: 66.66%;}
+  &.vuecal__event--overlapping.split3.split-middle {left: 33.33%;right: 33.33%;}
+  &.vuecal__event--background {z-index: 0;}
+  &.vuecal__event--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
 }
 
 .vuecal__event-resize-handle {
@@ -331,5 +363,21 @@ export default {
   cursor: ns-resize;
 
   .vuecal__event:hover & {opacity: 1;}
+}
+
+.vuecal__event-delete {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: rgba(221, 51, 51, 0.7);
+  color: #fff;
+  height: 1.2em;
+  line-height: 1.2em;
+  transform: translateY(-100%);
+  transition: 0.3s;
+  z-index: 1;
+
+  .vuecal__event--focus & {transform: translateY(0);}
 }
 </style>
