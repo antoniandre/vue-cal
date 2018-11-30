@@ -72,6 +72,12 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Resize events
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-2 check
+            | Delete events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
+            | Create an event
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 timer
             | Multiple-days events
@@ -444,6 +450,7 @@
       h3.mt-5 # Example 10
       p.
         Timeless Events. Dates but no time information.#[br]
+        Timeless events cannot be resized as they have no time or duration information.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="height: 350px;")
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
@@ -534,6 +541,8 @@
                 "day": "Day",
                 "today": "Today",
                 "noEvent": "No Event",
+                "deleteEvent": "Delete",
+                "createEvent": "Create an event",
                 "dateFormat": "DDDD d mmmm yyyy"
               }
         li
@@ -754,8 +763,19 @@
       h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
-      div #[strong Version 1.1.0] Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
-      div #[strong Version 1.0.0] First public release
+      div
+        | #[strong Version 1.2.0] Allow event deletion
+        highlight-message(type="success").
+          You now have the ability to select an event independently of a cell.#[br]
+          On event focus the event z-index is increased and a delete button appears to delete the event.#[br]
+          Hovering an event also increases its z-index so you can see the event more easily in case of overlaps.
+        highlight-message(type="warning").
+          2 new texts have been added to all the translation files: 'Delete' &amp; 'Create an event'.#[br]
+          Please do a pull request if you know the translation for Portuguese-Brasilian &amp; Spanish.
+        highlight-message(type="warning").
+          Checking overlapping events is not fully functional and will be improved in a next version.
+      div.mt-3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
+      div.mt-3 #[strong Version 1.0.0] First public release
 
     v-footer.mt-4.pa-2.pb-4(color="#fff")
       v-layout.max-widthed(row wrap align-center justify-center)

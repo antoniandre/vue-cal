@@ -546,7 +546,7 @@ export default {
           }
         })
 
-        if (!(startDate in eventsPerDay)) eventsPerDay[startDate] = {}
+        if (!(startDate in eventsPerDay)) this.$set(eventsPerDay, startDate, {})//eventsPerDay[startDate] = {}
 
         eventsPerDay[startDate][id] = event
       })

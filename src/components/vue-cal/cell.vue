@@ -10,8 +10,8 @@
                        v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
                        :style="eventStyles(event)"
                        @click.stop="focusEvent(event)")
-          .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") x
-          .vuecal__event-title(v-if="event.title") {{ event.title }} - {{event.classes.focus}}
+          .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
+          .vuecal__event-title(v-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -22,6 +22,8 @@
 </template>
 
 <script>
+import Vue from 'vue'
+
 export default {
   props: {
     cssClass: {
@@ -46,7 +48,7 @@ export default {
     }
   },
   data: () => ({
-    splitEvents: [],
+    splitEvents: {},
     comparisonArray: {}
   }),
 
@@ -153,14 +155,15 @@ export default {
     },
 
     deleteEvent (event) {
-      delete this.cellEvents[event.id]
+      delete this.$parent.eventsPerDay[this.formattedDate][event.id]
+      if (this.splits.length) delete this.splitEvents[event.split][event.id]
+
       this.$forceUpdate() // todo: get rid of that.
-      this.checkCellOverlappingEvents()
+      // this.checkCellOverlappingEvents()
     },
 
     focusEvent (event) {
       this.focusedEventId = event.id
-      this.$forceUpdate() // todo: get rid of that.
     }
   },
 
@@ -359,10 +362,11 @@ export default {
   height: 1em;
   background-color: rgba(255, 255, 255, 0.3);
   opacity: 0;
+  transform: translateY(110%);
   transition: 0.3s;
   cursor: ns-resize;
 
-  .vuecal__event:hover & {opacity: 1;}
+  .vuecal__event:hover & {opacity: 1;transform: translateY(0);}
 }
 
 .vuecal__event-delete {
@@ -372,9 +376,9 @@ export default {
   right: 0;
   background-color: rgba(221, 51, 51, 0.7);
   color: #fff;
-  height: 1.2em;
-  line-height: 1.2em;
-  transform: translateY(-100%);
+  height: 1.4em;
+  line-height: 1.4em;
+  transform: translateY(-110%);
   transition: 0.3s;
   z-index: 1;
 
