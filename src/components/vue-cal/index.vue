@@ -32,9 +32,9 @@
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :events="cell.events" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :events="cell.events" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -141,9 +141,9 @@ export default {
       eventId: 0,
       newHeight: 0
     },
-    focusedEventId: null,// Only one at the same time.
-    draggingEventId: null,// Only one at the same time.
-    removableEventId: null,// After a click and hold, event becomes deletable.
+    focusedEventId: null, // Only one at the same time.
+    draggingEventId: null, // Only one at the same time.
+    removableEventId: null, // After a click and hold, event becomes deletable.
     dblTap: {
       taps: 0,
       timeout: 500
@@ -266,9 +266,10 @@ export default {
       this.resizeEvent.newHeight = this.resizeEvent.originalHeight + (y - this.resizeEvent.start)
     },
 
-    onMouseUp () {
+    onMouseUp (e) {
       if (this.resizeEvent.eventId === null) return
 
+      e.stopPropagation() // Don't select cell on event drag or resize.
       this.resizeEvent.eventId = null
       this.resizeEvent.start = null
       this.resizeEvent.originalHeight = null
