@@ -205,6 +205,7 @@ export default {
     cellEvents () {
       const events = this.$parent.eventsPerDay[this.formattedDate] || {}
       const eventsArray = Object.values(events)
+      // eslint-disable-next-line
       this.splitEvents = {}
 
       eventsArray.forEach(event => {
