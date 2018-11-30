@@ -8,5 +8,7 @@
   "day": "Jour",
   "today": "Aujourd'hui",
   "noEvent": "Aucun événement",
+  "deleteEvent": "Supprimer",
+  "createEvent": "Créer un événement",
   "dateFormat": "DDDD d mmmm yyyy"
 }
