@@ -75,15 +75,15 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-2 check
             | Delete events
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
-            | Create an event
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
-            | Multiple-days events
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-2 timer
             | Drag events
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-2 timer
+            | Multiple-days events
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-2 access_time
+            | Create an event
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-2 access_time
             | Resize events snap to time
@@ -155,14 +155,14 @@
         a(href="#how-to-use") How to use
         a(name="how-to-use")
       highlight-message(type="warning")
-        p.mr-4.shrink.
+        p.
           Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
           By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
           You are also free to put a wrapping border or not, or box-shadow, anything you like.
-        vue-cal.vuecal--green-theme(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends style="height: 250px;border: 1px solid #eee")
-        sshpre(language="html-vue").
+        sshpre.mt-2(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
           &lt;vue-cal style="height: 250px;border: 1px solid #eee"&gt;&lt;/vue-cal&gt;
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends hide-view-selector style="height: 250px;border: 1px solid #eee")
 
       h2.mt-5
         a(href="#examples") Examples
@@ -774,16 +774,18 @@
           Please do a pull request if you know the translation for Portuguese-Brasilian &amp; Spanish.
         highlight-message(type="warning").
           Checking overlapping events is not fully functional and will be improved in a next version.
+        highlight-message.
+          The event creation feature will come after the event draggability feature.
       div.mt-3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
       div.mt-3 #[strong Version 1.0.0] First public release
 
-    v-footer.mt-4.pa-2.pb-4(color="#fff")
+    v-footer.mt-5.pa-2.pb-4(color="white")
       v-layout.max-widthed(row wrap align-center justify-center)
         v-flex.xs12.sm6.text-xs-center.text-sm-left.copyright.
           Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-        v-flex.xs12.sm6.text-xs-center.text-sm-right.made-with.
-          This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]#[br]
-          View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
+        v-flex.xs12.sm6.text-xs-center.text-sm-right.made-with
+          div.mb-1 This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]
+          | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
 
 <script>
 import VueCal from '@/components/vue-cal'
