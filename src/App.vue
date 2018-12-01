@@ -775,7 +775,8 @@
         highlight-message(type="warning").
           Checking overlapping events is not fully functional and will be improved in a next version.
         highlight-message.
-          The event creation feature will come after the event draggability feature.
+          The event creation feature will come after the event draggability feature.#[br]
+          THe event delete button will probably appear on event click and hold in a next release.
       div.mt-3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
       div.mt-3 #[strong Version 1.0.0] First public release
 
