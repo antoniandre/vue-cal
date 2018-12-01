@@ -26,5 +26,6 @@ ___
 
 ## Release Notes
 
-- __Version 1.1.0__ Add resizing feature for events + Spanish &amp; Portuguese-Brasil languages.
-- __Version 1.0.0__ First public release.
+- __Version 1.2.0__ Allow events deletion
+- __Version 1.1.0__ Allow events resizing + add Spanish &amp; Portuguese-Brasil languages
+- __Version 1.0.0__ First public release
