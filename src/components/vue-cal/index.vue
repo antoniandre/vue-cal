@@ -462,13 +462,11 @@ export default {
                             cellDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
             const formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
-            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
             return {
               content: cellDate.getDate(),
               date: cellDate,
               formattedDate,
-              events,
               class: {
                 today: isToday,
                 'out-of-scope': cellDate.getMonth() !== month,
@@ -488,12 +486,10 @@ export default {
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
-            const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
             return {
               date,
               formattedDate,
-              events,
               class: {
                 today: !todayFound && isDateToday(date) && !todayFound++,
                 selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
@@ -503,12 +499,10 @@ export default {
           break
         case 'day':
           const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
-          const events = (formattedDate in this.eventsPerDay && this.eventsPerDay[formattedDate]) || {}
 
           cells = [{
             date: this.view.startDate,
             formattedDate,
-            events,
             class: {
               today: isDateToday(this.view.startDate),
               selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
@@ -537,62 +531,25 @@ export default {
           // eslint-disable-next-line
           let id = `${this._uid}_${this.eventIdIncrement++}`
 
-          // event = Object.assign(event, {
-          //   id,
-          //   startDate,
-          //   endDate,
-          //   startTime,
-          //   startTimeMinutes,
-          //   endTime,
-          //   endTimeMinutes,
-          //   height: 0,
-          //   top: 0,
-          //   classes: {
-          //     [event.class]: true,
-          //     'vuecal__event--overlapping': false,
-          //     'vuecal__event--overlapped': false,
-          //     'vuecal__event--background': event.background
-          //   }
-          // })
-
-          // event = {
-          //   ...event,
-          //   id,
-          //   startDate,
-          //   endDate,
-          //   startTime,
-          //   startTimeMinutes,
-          //   endTime,
-          //   endTimeMinutes,
-          //   height: 0,
-          //   top: 0,
-          //   classes: {
-          //     [event.class]: true,
-          //     'vuecal__event--overlapping': false,
-          //     'vuecal__event--overlapped': false,
-          //     'vuecal__event--background': event.background
-          //   }
-          // }
-
-          this.$set(event, 'id', id)
-          this.$set(event, 'startDate', startDate)
-          this.$set(event, 'endDate', endDate)
-          this.$set(event, 'startTime', startTime)
-          this.$set(event, 'startTimeMinutes', startTimeMinutes)
-          this.$set(event, 'endTime', endTime)
-          this.$set(event, 'endTimeMinutes', endTimeMinutes)
-          this.$set(event, 'height', 0)
-          this.$set(event, 'top', 0)
-          this.$set(event, 'classes', {
-            [event.class]: true,
-            'vuecal__event--overlapping': false,
-            'vuecal__event--overlapped': false,
-            'vuecal__event--background': event.background
+          event = Object.assign(event, {
+            id,
+            startDate,
+            endDate,
+            startTime,
+            startTimeMinutes,
+            endTime,
+            endTimeMinutes,
+            height: 0,
+            top: 0,
+            classes: {
+              [event.class]: true,
+              'vuecal__event--overlapping': false,
+              'vuecal__event--overlapped': false,
+              'vuecal__event--background': event.background
+            }
           })
-          // this.$set(event, 'title', event.title)
 
           this.mutableEvents.push(event)
-          // this.$set(this.mutableEvents, this.mutableEvents.length, event)
           // if (!(startDate in eventsPerDay)) this.$set(eventsPerDay, startDate, {})//eventsPerDay[startDate] = {}
 
           return event

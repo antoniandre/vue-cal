@@ -162,7 +162,12 @@ export default {
     },
     events: {
       get () {
-        return this.$parent.mutableEvents.filter(e => e.startDate.substr(0, 10) === this.formattedDate)
+        return this.$parent.mutableEvents.filter(e => {
+          if (e.startDate.substr(0, 10) === this.formattedDate) {
+            if (e.startTime) this.updateEventPosition(e)
+          }
+          return e.startDate.substr(0, 10) === this.formattedDate
+        })
       },
       set (event) {
         return this.$parent.mutableEvents.find(e => {
