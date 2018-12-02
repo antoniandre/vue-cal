@@ -152,7 +152,7 @@ export default {
       taps: 0,
       timeout: 500
     },
-    mutableEvents: []
+    mutableEvents: {}
   }),
 
   methods: {
@@ -515,7 +515,7 @@ export default {
     // Object of arrays of events indexed by dates.
     eventsPerDay: {
       get () {
-        this.mutableEvents = []
+        this.mutableEvents = {}
 
         // Group events into dates.
         return this.events.map(event => {
@@ -549,8 +549,9 @@ export default {
             }
           })
 
-          this.mutableEvents.push(event)
-          // if (!(startDate in eventsPerDay)) this.$set(eventsPerDay, startDate, {})//eventsPerDay[startDate] = {}
+          // Make array reactive for future events creations & deletions.
+          if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+          this.mutableEvents[event.startDate].push(event)
 
           return event
         })

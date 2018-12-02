@@ -111,7 +111,9 @@ export default {
     },
 
     deleteEvent (event) {
-      this.$parent.mutableEvents = this.$parent.mutableEvents.filter(e => e.id !== event.id)
+      this.$parent.mutableEvents[this.formattedDate] = this.$parent.mutableEvents[this.formattedDate].filter(e => e.id !== event.id)
+      // this.$set(this.$parent.mutableEvents, this.formattedDate, this.$parent.mutableEvents[this.formattedDate].filter(e => e.id !== event.id))
+
       if (this.splits.length) delete this.splitEvents[event.split][event.id]
 
       // this.checkCellOverlappingEvents()
@@ -162,15 +164,24 @@ export default {
     },
     events: {
       get () {
-        return this.$parent.mutableEvents.filter(e => {
-          if (e.startDate.substr(0, 10) === this.formattedDate) {
-            if (e.startTime) this.updateEventPosition(e)
-          }
-          return e.startDate.substr(0, 10) === this.formattedDate
-        })
+        // console.log(this.$parent.mutableEvents, this.formattedDate, this.$parent.mutableEvents[this.formattedDate])
+        const events = this.$parent.mutableEvents[this.formattedDate]
+        return events ? events.map(event => {
+          if (event.startTime) this.updateEventPosition(event)
+
+          return event
+        }) : []
+
+        // WORKING.
+        // return this.$parent.mutableEvents.filter(e => {
+        //   if (e.startDate.substr(0, 10) === this.formattedDate) {
+        //     if (e.startTime) this.updateEventPosition(e)
+        //   }
+        //   return e.startDate.substr(0, 10) === this.formattedDate
+        // })
       },
       set (event) {
-        return this.$parent.mutableEvents.find(e => {
+        return this.$parent.mutableEvents[this.formattedDate].find(e => {
           if (e.id === event.id) {
             e = Object.assign(e, event)
           }
