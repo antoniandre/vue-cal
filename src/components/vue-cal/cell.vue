@@ -7,13 +7,14 @@
         .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
         .vuecal__event(:class="eventClasses(event)"
                        v-else
-                       v-for="(event, j) in events" :key="j"
+                       v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
                        @click.stop="focusEvent(event)")
           .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title(v-if="$parent.editableEvents && event.title")
             input(type="text" v-model="event.title")
-          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+            | {{ event.id }}
+          .vuecal__event-title(v-else-if="event.title") {{ event.title }} {{ event.id }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -50,7 +51,7 @@ export default {
     }
   },
   data: () => ({
-    splitEvents: {},
+    splitEvents: [],
     comparisonArray: {}
   }),
 
@@ -85,7 +86,6 @@ export default {
     onResizeEvent (eventId, newHeight) {
       let event = this.events.filter(e => e.id === eventId)[0]
       if (event) {
-        // console.log('found event:', event)
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
@@ -111,10 +111,9 @@ export default {
     },
 
     deleteEvent (event) {
-      this.$parent.mutableEvents[this.formattedDate] = this.$parent.mutableEvents[this.formattedDate].filter(e => e.id !== event.id)
-      // this.$set(this.$parent.mutableEvents, this.formattedDate, this.$parent.mutableEvents[this.formattedDate].filter(e => e.id !== event.id))
+      this.events = this.events.filter(e => e.id !== event.id)
 
-      if (this.splits.length) delete this.splitEvents[event.split][event.id]
+      if (this.splits.length) this.splitEvents = this.splitEvents[event.split].filter(e => e.id !== event.id)
 
       // this.checkCellOverlappingEvents()
     },
@@ -164,29 +163,33 @@ export default {
     },
     events: {
       get () {
-        // console.log(this.$parent.mutableEvents, this.formattedDate, this.$parent.mutableEvents[this.formattedDate])
         const events = this.$parent.mutableEvents[this.formattedDate]
+        // eslint-disable-next-line
+        this.splitEvents = []
+
         return events ? events.map(event => {
           if (event.startTime) this.updateEventPosition(event)
 
+          // Only for splits.
+          if (this.splits.length && event.split) {
+            // eslint-disable-next-line
+            if (!this.splitEvents[event.split]) this.$set(this.splitEvents, event.split, [])
+            // eslint-disable-next-line
+            this.splitEvents[event.split].push(event)
+          }
+
+          if (!event.background) {
+            // Unique comparison of events.
+            // eslint-disable-next-line
+            this.comparisonArray[event.id] = events.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
+            // if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
+          }
+
           return event
         }) : []
-
-        // WORKING.
-        // return this.$parent.mutableEvents.filter(e => {
-        //   if (e.startDate.substr(0, 10) === this.formattedDate) {
-        //     if (e.startTime) this.updateEventPosition(e)
-        //   }
-        //   return e.startDate.substr(0, 10) === this.formattedDate
-        // })
       },
-      set (event) {
-        return this.$parent.mutableEvents[this.formattedDate].find(e => {
-          if (e.id === event.id) {
-            e = Object.assign(e, event)
-          }
-          return e.id === event.id
-        })
+      set (events) {
+        return this.$parent.mutableEvents[this.formattedDate] = events
       }
     },
     /* cellEvents () {

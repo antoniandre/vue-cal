@@ -286,6 +286,7 @@ export default {
     this.$emit('before-created')
 
     // First create the array of events, and then keep listening for changes.
+    // eslint-disable-next-line
     this.eventsPerDay
 
     if (this.selectedDate) {
@@ -515,6 +516,7 @@ export default {
     // Object of arrays of events indexed by dates.
     eventsPerDay: {
       get () {
+        // eslint-disable-next-line
         this.mutableEvents = {}
 
         // Group events into dates.
@@ -531,7 +533,7 @@ export default {
           // eslint-disable-next-line
           let id = `${this._uid}_${this.eventIdIncrement++}`
 
-          event = Object.assign(event, {
+          event = Object.assign({}, event, {
             id,
             startDate,
             endDate,
@@ -551,6 +553,7 @@ export default {
 
           // Make array reactive for future events creations & deletions.
           if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+          // eslint-disable-next-line
           this.mutableEvents[event.startDate].push(event)
 
           return event
