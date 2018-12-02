@@ -4,14 +4,16 @@
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
       div(v-else)
-        .vuecal__no-event(v-if="!Object.keys(cellEvents).length") {{ texts.noEvent }}
+        .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
         .vuecal__event(:class="eventClasses(event)"
                        v-else
-                       v-for="(event, j) in (splits.length ? splitEvents[i] : cellEvents)" :key="j"
+                       v-for="(event, j) in events" :key="j"
                        :style="eventStyles(event)"
                        @click.stop="focusEvent(event)")
           .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
-          .vuecal__event-title(v-if="event.title") {{ event.title }}
+          .vuecal__event-title(v-if="$parent.editableEvents && event.title")
+            input(type="text" v-model="event.title")
+          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -80,62 +82,16 @@ export default {
       }
     },
 
-    checkCellOverlappingEvents () {
-      const eventsArray = Object.values(this.cellEvents)
-      eventsArray.forEach(event => {
-        if (!event.background) {
-          // Unique comparison of events.
-          this.comparisonArray[event.id] = eventsArray.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
-          if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
-        }
-      })
-    },
-    checkOverlappingEvents (event) {
-      this.comparisonArray[event.id].forEach((event2, i) => {
-        const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-        const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
-        const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
-        // console.log('comparing event ' + event.title + ' with ', event2.title)
-
-        if (event1overlapsEvent2 || event2overlapsEvent1) {
-          event.classes = Object.assign(event.classes, {
-            'vuecal__event--overlapped': event1startsFirst,
-            'vuecal__event--overlapping': !event1startsFirst
-          })
-
-          event2.classes = Object.assign(event2.classes, {
-            'vuecal__event--overlapped': !event1startsFirst,
-            'vuecal__event--overlapping': event1startsFirst
-          })
-
-          // If up to 3 events start at the same time.
-          // if (event.classes.startTimeMinutes === event2.classes.startTimeMinutes) {
-          //   event.classes.split3 = event.classes.split2
-          //   event.classes.split2 = true
-          //   event2.classes.split3 = event2.classes.split2
-          //   event2.classes.split2 = true
-          //   event2.classes.splitm = event.classes.split2 && !event2.classes.middle
-          // }
-        } else {
-          // event.classes.overlapped = Math.max(event.classes.overlapped - 1, 0)
-          // event.classes.overlapping = Math.max(event.classes.overlapping - 1, 0)
-          // event2.classes.overlapped = Math.max(event2.classes.overlapped - 1, 0)
-          // event2.classes.overlapping = Math.max(event2.classes.overlapping - 1, 0)
-        }
-        // console.log({event1startsFirst, event1overlapsEvent2, event2overlapsEvent1, overlapping: event.classes['vuecal__event--overlapping'], overlapped: event.classes['vuecal__event--overlapped']})
-      })
-    },
-
     onResizeEvent (eventId, newHeight) {
-      let event = this.cellEvents[eventId]
-
+      let event = this.events.filter(e => e.id === eventId)[0]
       if (event) {
+        // console.log('found event:', event)
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
-        if (!event.background) {
-          this.checkOverlappingEvents(event)
-        }
+        // if (!event.background) {
+        //   this.checkOverlappingEvents(event)
+        // }
       }
     },
 
@@ -155,10 +111,9 @@ export default {
     },
 
     deleteEvent (event) {
-      delete this.$parent.eventsPerDay[this.formattedDate][event.id]
+      this.$parent.mutableEvents = this.$parent.mutableEvents.filter(e => e.id !== event.id)
       if (this.splits.length) delete this.splitEvents[event.split][event.id]
 
-      this.$forceUpdate() // todo: get rid of that.
       // this.checkCellOverlappingEvents()
     },
 
@@ -205,8 +160,21 @@ export default {
       }
       return this.$parent.resizeEvent
     },
-    cellEvents () {
-      const events = this.$parent.eventsPerDay[this.formattedDate] || {}
+    events: {
+      get () {
+        return this.$parent.mutableEvents.filter(e => e.startDate.substr(0, 10) === this.formattedDate)
+      },
+      set (event) {
+        return this.$parent.mutableEvents.find(e => {
+          if (e.id === event.id) {
+            e = Object.assign(e, event)
+          }
+          return e.id === event.id
+        })
+      }
+    },
+    /* cellEvents () {
+      const events = this.$parent.mutableEvents[this.formattedDate] || {}
       const eventsArray = Object.values(events)
       // eslint-disable-next-line
       this.splitEvents = {}
@@ -231,7 +199,7 @@ export default {
       })
 
       return events
-    }
+    } */
   }
 }
 </script>

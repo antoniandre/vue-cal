@@ -124,6 +124,10 @@ export default {
     resizableEvents: {
       type: Boolean,
       default: true
+    },
+    editableEvents: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -147,7 +151,8 @@ export default {
     dblTap: {
       taps: 0,
       timeout: 500
-    }
+    },
+    mutableEvents: []
   }),
 
   methods: {
@@ -279,6 +284,9 @@ export default {
 
   created () {
     this.$emit('before-created')
+
+    // First create the array of events, and then keep listening for changes.
+    this.eventsPerDay
 
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
@@ -511,47 +519,88 @@ export default {
       return cells
     },
     // Object of arrays of events indexed by dates.
-    eventsPerDay () {
-      let eventsPerDay = {}
+    eventsPerDay: {
+      get () {
+        this.mutableEvents = []
 
-      // Group events into dates.
-      this.events.forEach(event => {
-        const [startDate, startTime = ''] = event.start.split(' ')
-        const [hoursStart, minutesStart] = startTime.split(':')
-        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+        // Group events into dates.
+        return this.events.map(event => {
+          const [startDate, startTime = ''] = event.start.split(' ')
+          const [hoursStart, minutesStart] = startTime.split(':')
+          const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        const [endDate, endTime = ''] = event.end.split(' ')
-        const [hoursEnd, minutesEnd] = endTime.split(':')
-        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+          const [endDate, endTime = ''] = event.end.split(' ')
+          const [hoursEnd, minutesEnd] = endTime.split(':')
+          const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
-        // Keep the event ids scoped to this calendar instance.
-        // eslint-disable-next-line
-        let id = `${this._uid}_${this.eventIdIncrement++}`
+          // Keep the event ids scoped to this calendar instance.
+          // eslint-disable-next-line
+          let id = `${this._uid}_${this.eventIdIncrement++}`
 
-        event = Object.assign({}, event, {
-          id,
-          startDate,
-          endDate,
-          startTime,
-          startTimeMinutes,
-          endTime,
-          endTimeMinutes,
-          height: 0,
-          top: 0,
-          classes: {
+          // event = Object.assign(event, {
+          //   id,
+          //   startDate,
+          //   endDate,
+          //   startTime,
+          //   startTimeMinutes,
+          //   endTime,
+          //   endTimeMinutes,
+          //   height: 0,
+          //   top: 0,
+          //   classes: {
+          //     [event.class]: true,
+          //     'vuecal__event--overlapping': false,
+          //     'vuecal__event--overlapped': false,
+          //     'vuecal__event--background': event.background
+          //   }
+          // })
+
+          // event = {
+          //   ...event,
+          //   id,
+          //   startDate,
+          //   endDate,
+          //   startTime,
+          //   startTimeMinutes,
+          //   endTime,
+          //   endTimeMinutes,
+          //   height: 0,
+          //   top: 0,
+          //   classes: {
+          //     [event.class]: true,
+          //     'vuecal__event--overlapping': false,
+          //     'vuecal__event--overlapped': false,
+          //     'vuecal__event--background': event.background
+          //   }
+          // }
+
+          this.$set(event, 'id', id)
+          this.$set(event, 'startDate', startDate)
+          this.$set(event, 'endDate', endDate)
+          this.$set(event, 'startTime', startTime)
+          this.$set(event, 'startTimeMinutes', startTimeMinutes)
+          this.$set(event, 'endTime', endTime)
+          this.$set(event, 'endTimeMinutes', endTimeMinutes)
+          this.$set(event, 'height', 0)
+          this.$set(event, 'top', 0)
+          this.$set(event, 'classes', {
             [event.class]: true,
             'vuecal__event--overlapping': false,
             'vuecal__event--overlapped': false,
             'vuecal__event--background': event.background
-          }
+          })
+          // this.$set(event, 'title', event.title)
+
+          this.mutableEvents.push(event)
+          // this.$set(this.mutableEvents, this.mutableEvents.length, event)
+          // if (!(startDate in eventsPerDay)) this.$set(eventsPerDay, startDate, {})//eventsPerDay[startDate] = {}
+
+          return event
         })
-
-        if (!(startDate in eventsPerDay)) this.$set(eventsPerDay, startDate, {})//eventsPerDay[startDate] = {}
-
-        eventsPerDay[startDate][id] = event
-      })
-
-      return eventsPerDay
+      },
+      set (events) {
+        this.mutableEvents = events
+      }
     },
     weekdayCellStyles () {
       return { minWidth: `${this.minCellWidth}px` || null }
