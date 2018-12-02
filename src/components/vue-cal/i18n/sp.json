@@ -5,10 +5,10 @@
   "year": "Año",
   "month": "Mes",
   "week": "Semana",
-  "day": "Dia",
+  "day": "Día",
   "today": "Hoy",
   "noEvent": "No hay envento",
-  "deleteEvent": "Delete",
-  "createEvent": "Create an event",
+  "deleteEvent": "Borrar",
+  "createEvent": "Crear un evento",
   "dateFormat": "DDDD d mmmm yyyy"
 }
