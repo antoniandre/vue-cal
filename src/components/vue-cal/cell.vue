@@ -11,9 +11,8 @@
                        :style="eventStyles(event)"
                        @click.stop="focusEvent(event)")
           .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
-          //- .vuecal__event-title(v-if="$parent.editableEvents && event.title")
-          //-   input(type="text" v-model="event.title")
-          .vuecal__event-title(v-if="event.title") {{ event.title }}
+          input.vuecal__event-title.vuecal__event-title--edit(v-if="$parent.editableEvents && event.title" type="text" v-model="event.title")
+          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
@@ -383,5 +382,24 @@ export default {
   z-index: 1;
 
   .vuecal__event--focus & {transform: translateY(0);}
+}
+
+.vuecal__event-title--edit {
+  border-bottom: 1px solid transparent;
+  text-align: center;
+  transition: 0.3s;
+  color: inherit;
+  background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m163 440l-91-91 251-250 90 90z m309-352l-48-48c-12-11-32-11-45 2l-45 45 91 91 45-45c13-13 13-33 2-45z m-408 275l-32 117 117-32z" fill="#000" opacity="0.4"/></svg>');
+  background-repeat: no-repeat;
+  background-position: 120%;
+  background-size: 0.4em;
+  outline: none;
+  width: 100%;
+
+  &:hover, &:focus {
+    border-color: rgba(0, 0, 0, 0.4);
+    background-position: 98%;
+    background-size: 1.2em;
+  }
 }
 </style>
