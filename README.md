@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.2.0__ Add Simplified Chinese language &amp; bug fixes
 - __Version 1.2.0__ Allow events deletion
 - __Version 1.1.0__ Allow events resizing + add Spanish &amp; Portuguese-Brasil languages
 - __Version 1.0.0__ First public release

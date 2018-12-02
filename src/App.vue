@@ -764,6 +764,8 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
       div
+        | #[strong Version 1.3.0] Add Simplified Chinese language &amp; bug fixes
+      div
         | #[strong Version 1.2.0] Allow event deletion
         highlight-message(type="success").
           You now have the ability to select an event independently of a cell.#[br]
