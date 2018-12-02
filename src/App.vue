@@ -217,9 +217,9 @@
         i18n.#[br]
         Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-        vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="fr")
+        vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="zh-cn")
       sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="fr"&gt;&lt;/vue-cal&gt;
+        &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="zh-cn"&gt;&lt;/vue-cal&gt;
 
       //- Example.
       h3.mt-5 # Example 5
@@ -526,7 +526,7 @@
             Allows you to translate the calendar texts in a given language.#[br]
             Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
-            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian.#[br]
+            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian, Simplified Chinese.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
             | this is what a language json looks like.
 
