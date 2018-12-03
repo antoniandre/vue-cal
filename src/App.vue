@@ -289,7 +289,7 @@
       p.
         Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"

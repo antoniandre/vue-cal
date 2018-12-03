@@ -9,7 +9,8 @@
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
-                       @click.stop="focusEvent(event)")
+                       @click.stop="focusEvent(event)"
+                       @mousedown.stop="onMouseDown($event, event)")
           .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
           input.vuecal__event-title.vuecal__event-title--edit(v-if="$parent.editableEvents && event.title" type="text" v-model="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
@@ -18,8 +19,8 @@
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
           .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents"
-                                       @mousedown="$parent.resizableEvents && $parent.time && onMouseDown($event, event)"
-                                       @touchstart="$parent.resizableEvents && $parent.time && onMouseDown($event, event)")
+                                       @mousedown.stop="$parent.resizableEvents && $parent.time && onDragHandleMouseDown($event, event)"
+                                       @touchstart.stop="$parent.resizableEvents && $parent.time && onDragHandleMouseDown($event, event)")
 </template>
 
 <script>
@@ -65,17 +66,19 @@ export default {
 
     eventStyles (event) {
       if (!event.startTime) return {}
+      const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
         top: `${event.top}px`,
-        height: `${this.resizeEvent.newHeight && this.resizeEvent.eventId === event.id ? this.resizeEvent.newHeight : event.height}px`
+        height: `${resizeAnEvent.newHeight && resizeAnEvent.eventId === event.id ? resizeAnEvent.newHeight : event.height}px`
       }
     },
 
     eventClasses (event) {
       return {
         ...event.classes,
-        'vuecal__event--focus': this.focusedEventId === event.id
+        'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
+        'vuecal__event--deletable': this.domEvents.clickHoldAnEvent.eventId === event.id
       }
     },
 
@@ -144,9 +147,25 @@ export default {
       event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
     },
 
+    // On an event.
     onMouseDown (e, event) {
+      let clickHold = this.domEvents.clickHoldAnEvent
+      clickHold.timeoutId = setTimeout(() => {
+        clickHold.eventId = event.id
+        window.removeEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
+      }, clickHold.timeout)
+      window.addEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
+    },
+
+    onCancelClickHold () {
+      let clickHold = this.domEvents.clickHoldAnEvent
+      clickHold.eventId = null
+      clearTimeout(clickHold.timeoutId)
+    },
+
+    onDragHandleMouseDown (e, event) {
       const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      this.$parent.resizeEvent = Object.assign(this.$parent.resizeEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
+      this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
     },
 
     deleteEvent (event) {
@@ -158,7 +177,7 @@ export default {
     },
 
     focusEvent (event) {
-      this.focusedEventId = event.id
+      this.domEvents.focusAnEvent.eventId = event.id
     }
   },
 
@@ -175,30 +194,19 @@ export default {
     timeStep () {
       return parseInt(this.$parent.timeStep)
     },
-    focusedEventId: {
+    domEvents: {
       get () {
-        return this.$parent.focusedEventId
+        if (this.$parent.domEvents.resizeAnEvent.eventId) {
+          this.onResizeEvent(this.$parent.domEvents.resizeAnEvent.eventId, this.$parent.domEvents.resizeAnEvent.newHeight)
+        }
+        return this.$parent.domEvents
       },
-      set (id) {
-        this.$parent.focusedEventId = id
-      }
-    },
-    removableEventId: {
-      get () {
-        return this.$parent.removableEventId
-      },
-      set (id) {
-        this.$parent.removableEventId = id
+      set (object) {
+        this.$parent.domEvents = object
       }
     },
     cellStyles () {
       return { minWidth: `${this.$parent.minCellWidth}px` || null }
-    },
-    resizeEvent () {
-      if (this.$parent.resizeEvent.eventId) {
-        this.onResizeEvent(this.$parent.resizeEvent.eventId, this.$parent.resizeEvent.newHeight)
-      }
-      return this.$parent.resizeEvent
     },
     events: {
       get () {
@@ -373,15 +381,32 @@ export default {
   top: 0;
   left: 0;
   right: 0;
-  background-color: rgba(221, 51, 51, 0.7);
-  color: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   height: 1.4em;
   line-height: 1.4em;
+  background-color: rgba(221, 51, 51, 0.85);
+  color: #fff;
+  z-index: 1;
+  cursor: pointer;
   transform: translateY(-110%);
   transition: 0.3s;
-  z-index: 1;
 
-  .vuecal__event--focus & {transform: translateY(0);}
+  .vuecal--full-height-delete & {
+    height: auto;
+    bottom: 0;
+
+    &:before {
+      content: '';
+      width: 1.7em;
+      height: 1.7em;
+      display: block;
+      background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m256 33c-124 0-224 100-224 224 0 124 100 224 224 224 124 0 224-100 224-224 0-124-100-224-224-224z m108 300c2 1 3 3 3 5 0 2-1 4-3 6l-21 21c-2 2-4 3-6 3-2 0-4-1-5-3l-76-75-75 76c-2 1-4 2-6 2-2 0-4-1-6-2l-21-22c-2-2-2-4-2-6 0-2 0-4 2-5l76-76-76-75c-3-3-3-9 0-12l21-21c2-2 4-3 6-3 2 0 4 1 5 3l76 74 76-74c1-2 3-3 5-3 3 0 5 1 6 3l22 21c3 3 3 9 0 12l-76 75z" transform="scale(0.046875 0.046875)" fill="#fff" opacity="0.9"/></svg>');
+    }
+  }
+  .vuecal__event--deletable & {transform: translateY(0);}
 }
 
 .vuecal__event-title--edit {

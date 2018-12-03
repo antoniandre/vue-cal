@@ -132,7 +132,6 @@ export default {
   },
   data: () => ({
     now,
-    monthDays: Array[31],
     view: {
       id: '',
       title: '',
@@ -140,19 +139,30 @@ export default {
       selectedDate: null
     },
     eventIdIncrement: 1,
-    resizeEvent: {
-      start: null,
-      eventId: 0,
-      newHeight: 0
+    domEvents: {
+      resizeAnEvent: {
+        eventId: null, // Only one at a time.
+        start: null,
+        originalHeight: 0,
+        newHeight: 0
+      },
+      dragAnEvent: {
+        eventId: null, // Only one at a time.
+      },
+      focusAnEvent: {
+        eventId: null, // Only one at a time.
+      },
+      clickHoldAnEvent: {
+        eventId: null, // Only one at a time.
+        timeout: 1200,
+        timeoutId: null
+      },
+      dblTapACell: {
+        taps: 0,
+        timeout: 500
+      }
     },
-    focusedEventId: null, // Only one at the same time.
-    draggingEventId: null, // Only one at the same time.
-    removableEventId: null, // After a click and hold, event becomes deletable.
-    dblTap: {
-      taps: 0,
-      timeout: 500
-    },
-    mutableEvents: {}
+    mutableEvents: {} // An indexed array of mutable events updated each time given events array changes.
   }),
 
   methods: {
@@ -245,17 +255,19 @@ export default {
     selectCell (cell) {
       if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
 
-      this.focusedEventId = null
+      this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
+      this.domEvents.clickHoldAnEvent.eventId = null // Cancel deletable event on cell click.
+
       if (this.clickToNavigate) this.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
       else if (this.dblClickToNavigate && 'ontouchstart' in window) {
-        this.dblTap.taps++
+        this.domEvents.dblTapACell.taps++
 
-        setTimeout(() => (this.dblTap.taps = 0), this.dblTap.timeout)
+        setTimeout(() => (this.domEvents.dblTapACell.taps = 0), this.domEvents.dblTapACell.timeout)
 
-        if (this.dblTap.taps >= 2) {
-          this.dblTap.taps = 0
+        if (this.domEvents.dblTapACell.taps >= 2) {
+          this.domEvents.dblTapACell.taps = 0
           this.switchToNarrowerView()
         }
       }
@@ -264,21 +276,23 @@ export default {
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
-      if (this.resizeEvent.eventId === null) return
+      let resizeAnEvent = this.domEvents.resizeAnEvent
+      if (resizeAnEvent.eventId === null) return
 
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      this.resizeEvent.newHeight = this.resizeEvent.originalHeight + (y - this.resizeEvent.start)
+      resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
     },
 
     onMouseUp (e) {
-      if (this.resizeEvent.eventId === null) return
+      let resizeAnEvent = this.domEvents.resizeAnEvent
+      if (resizeAnEvent.eventId === null) return
 
       e.stopPropagation() // Don't select cell on event drag or resize.
-      this.resizeEvent.eventId = null
-      this.resizeEvent.start = null
-      this.resizeEvent.originalHeight = null
-      this.resizeEvent.newHeight = null
+      resizeAnEvent.eventId = null
+      resizeAnEvent.start = null
+      resizeAnEvent.originalHeight = null
+      resizeAnEvent.newHeight = null
     }
   },
 
