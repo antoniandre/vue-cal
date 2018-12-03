@@ -388,9 +388,9 @@ export default {
         case 'week':
           headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             return {
-              label1: cell.label[0],
-              label2: cell.label.substr(1, 2),
-              label3: cell.label.substr(3),
+              label1: this.locale === 'zh-cn' ? cell.label.substr(0, 2) : cell.label[0],
+              label2: this.locale === 'zh-cn' ? cell.label.substr(2) : cell.label.substr(1, 2),
+              label3: this.locale === 'zh-cn' ? '' : cell.label.substr(3),
               ...((this.view.id === 'week' && { label4: this.view.startDate.addDays(i).getDate() }) || {})
             }
           })
@@ -569,6 +569,7 @@ export default {
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,
+        [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
         'vuecal--time-12-hour': this['12Hour'],
@@ -828,6 +829,10 @@ $weekdays-headings-height: 2.8em;
 
     .vuecal--week-view & span:nth-child(3) {display: none;}
     .vuecal--view-with-time.vuecal--week-view.vuecal--overflow-x & span:nth-child(3) {display: inline-block;}
+
+    // Chinese language.
+    .vuecal--month-view.vuecal--zh-cn & {padding: 0;}
+    .vuecal--week-view.vuecal--zh-cn & span:nth-child(1) {display: none;}
   }
 }
 
@@ -865,6 +870,12 @@ $weekdays-headings-height: 2.8em;
     .vuecal--week-view.vuecal--overflow-x & span:nth-child(2),
     .vuecal--week-view.vuecal--overflow-x & span:nth-child(3),
     .vuecal--week-view.vuecal--overflow-x & span:nth-child(4) {display: inline-block;}
+
+    // Chinese language.
+    .vuecal--month-view.vuecal--zh-cn & span:nth-child(1),
+    .vuecal--week-view.vuecal--zh-cn & span:nth-child(1) {display: none;}
+    .vuecal--month-view.vuecal--zh-cn & span:nth-child(2),
+    .vuecal--week-view.vuecal--zh-cn & span:nth-child(2) {display: block;}
   }
   .vuecal__menu li {font-size: 1.1em;}
 }

@@ -2,7 +2,7 @@
 
 [![Latest Version on NPM](https://img.shields.io/npm/v/vue-cal.svg?style=flat-square)](https://npmjs.com/package/vue-cal)
 [![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square)](LICENSE.md)
-
+[![npm](https://img.shields.io/npm/dt/vue-cal.svg?style=flat-square)](https://www.npmjs.com/package/vue-cal)
 
 > A Vue JS full calendar, no dependency, no BS. :metal:
 
@@ -26,7 +26,7 @@ ___
 
 ## Release Notes
 
-- __Version 1.2.0__ Add Simplified Chinese language &amp; bug fixes
+- __Version 1.3.0__ Add Simplified Chinese language &amp; bug fixes
 - __Version 1.2.0__ Allow events deletion
 - __Version 1.1.0__ Allow events resizing + add Spanish &amp; Portuguese-Brasil languages
 - __Version 1.0.0__ First public release
