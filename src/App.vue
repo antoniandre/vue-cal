@@ -284,10 +284,17 @@
           ]
         })
 
+      sshpre(language="css" label="CSS").
+        /* Different color for different event types. */
+        .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+        .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
+        .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
       //- Example.
       h3.mt-5 # Example 7
       p.
-        Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
+        Overlapping &amp; resizable events (by dragging handle).
+        Up to 3 overlapping events starting at the same time.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").
@@ -488,6 +495,59 @@
               class: 'sport'
             }
           ]
+
+      //- Example.
+      h3.mt-5 # Example 11
+      p.
+        Modifying the array of events outside of Vue Cal.#[br]
+      highlight-message(type="tips").
+        It is possible to modify the array of events like adding or removing an event
+        after the first load, but be aware that by doing so all the events in Vue Cal
+        will be replaced by the new array of events. You may lose your changes if you
+        modified events within Vue Cal.
+      v-btn(color="primary" small @click="overlappingEvents.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue' })")
+        v-icon.mr-2 add
+        | Add an event
+      v-btn(color="primary" small @click="overlappingEvents.pop()")
+        v-icon.mr-2 remove
+        | Remove last event
+      p.mb-0 Here is the live array of event titles:
+      pre {{ overlappingEvents.map(e => e.title) }}
+
+      v-card.green-theme.my-2.ma-auto.main-content
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;v-btn @click="events.push({
+          start: '2018-11-20 12:00',
+          end: '2018-11-20 17:00',
+          title: 'A new event',
+          class: 'blue'
+        })"&gt;Add an event&lt;/v-btn&gt;
+        &lt;v-btn @click="events.pop()")&gt;Remove last event&lt;/v-btn&gt;
+
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="7 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
+
+      sshpre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-19 10:35',
+              end: '2018-11-19 11:30',
+              title: 'Doctor appointment',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+              class: 'health'
+            },
+            ...
+          ]
+        })
+
 
       h2.mt-5.pt-5
         a(href="#api") API
@@ -1114,6 +1174,7 @@ a {
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+.vuecal__event.blue {background-color: rgba(102, 212, 255, 0.9);border: 1px solid rgb(82, 192, 235);color: #fff;}
 
 .vuecal__event.lunch {
   background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);

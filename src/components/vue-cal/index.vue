@@ -293,15 +293,60 @@ export default {
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
+    },
+
+    // Object of arrays of events indexed by dates.
+    updateMutableEvents () {
+      // eslint-disable-next-line
+      this.mutableEvents = {}
+
+      // Group events into dates.
+      this.events.map(event => {
+        const [startDate, startTime = ''] = event.start.split(' ')
+        const [hoursStart, minutesStart] = startTime.split(':')
+        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+
+        const [endDate, endTime = ''] = event.end.split(' ')
+        const [hoursEnd, minutesEnd] = endTime.split(':')
+        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+
+        // Keep the event ids scoped to this calendar instance.
+        // eslint-disable-next-line
+        let id = `${this._uid}_${this.eventIdIncrement++}`
+
+        event = Object.assign({}, event, {
+          id,
+          startDate,
+          endDate,
+          startTime,
+          startTimeMinutes,
+          endTime,
+          endTimeMinutes,
+          height: 0,
+          top: 0,
+          classes: {
+            [event.class]: true,
+            'vuecal__event--overlapping': false,
+            'vuecal__event--overlapped': false,
+            'vuecal__event--background': event.background
+          }
+        })
+
+        // Make array reactive for future events creations & deletions.
+        if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+        // eslint-disable-next-line
+        this.mutableEvents[event.startDate].push(event)
+
+        return event
+      })
     }
   },
 
   created () {
     this.$emit('before-created')
 
-    // First create the array of events, and then keep listening for changes.
-    // eslint-disable-next-line
-    this.eventsPerDay
+    // Init the array of events, then keep listening for changes in watcher.
+    this.updateMutableEvents(this.events)
 
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
@@ -527,56 +572,6 @@ export default {
       }
       return cells
     },
-    // Object of arrays of events indexed by dates.
-    eventsPerDay: {
-      get () {
-        // eslint-disable-next-line
-        this.mutableEvents = {}
-
-        // Group events into dates.
-        return this.events.map(event => {
-          const [startDate, startTime = ''] = event.start.split(' ')
-          const [hoursStart, minutesStart] = startTime.split(':')
-          const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-
-          const [endDate, endTime = ''] = event.end.split(' ')
-          const [hoursEnd, minutesEnd] = endTime.split(':')
-          const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-
-          // Keep the event ids scoped to this calendar instance.
-          // eslint-disable-next-line
-          let id = `${this._uid}_${this.eventIdIncrement++}`
-
-          event = Object.assign({}, event, {
-            id,
-            startDate,
-            endDate,
-            startTime,
-            startTimeMinutes,
-            endTime,
-            endTimeMinutes,
-            height: 0,
-            top: 0,
-            classes: {
-              [event.class]: true,
-              'vuecal__event--overlapping': false,
-              'vuecal__event--overlapped': false,
-              'vuecal__event--background': event.background
-            }
-          })
-
-          // Make array reactive for future events creations & deletions.
-          if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
-          // eslint-disable-next-line
-          this.mutableEvents[event.startDate].push(event)
-
-          return event
-        })
-      },
-      set (events) {
-        this.mutableEvents = events
-      }
-    },
     weekdayCellStyles () {
       return { minWidth: `${this.minCellWidth}px` || null }
     },
@@ -594,6 +589,11 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall
       }
+    }
+  },
+  watch: {
+    events: function(events, oldEvents) {
+      this.updateMutableEvents(events)
     }
   }
 }
