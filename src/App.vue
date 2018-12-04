@@ -288,6 +288,9 @@
       h3.mt-5 # Example 7
       p.
         Overlapping &amp; resizable events (by dragging handle). Up to 3 overlapping events starting at the same time.
+      v-btn(@click="overlappingEvents.push({ start: '2018-11-19 12:00', end: '2018-11-19 12:40', title: 'Un truc' })") Add an event
+      v-btn(@click="overlappingEvents.pop()") remove an event
+      | {{ overlappingEvents }}
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
       sshpre(language="html-vue" label="Vue Template").

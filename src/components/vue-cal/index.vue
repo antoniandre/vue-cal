@@ -518,6 +518,8 @@ export default {
       get () {
         // eslint-disable-next-line
         this.mutableEvents = {}
+        console.log(this.events, this.mutableEvents)
+
 
         // Group events into dates.
         return this.events.map(event => {
@@ -555,12 +557,56 @@ export default {
           if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
           // eslint-disable-next-line
           this.mutableEvents[event.startDate].push(event)
+          // this.$set(this.mutableEvents[event.startDate], this.mutableEvents[event.startDate].length, event)
 
           return event
         })
       },
       set (events) {
-        this.mutableEvents = events
+        console.log(this.events, this.mutableEvents)
+        // eslint-disable-next-line
+        this.mutableEvents = {}
+
+        // Group events into dates.
+        events.forEach(event => {
+          const [startDate, startTime = ''] = event.start.split(' ')
+          const [hoursStart, minutesStart] = startTime.split(':')
+          const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+
+          const [endDate, endTime = ''] = event.end.split(' ')
+          const [hoursEnd, minutesEnd] = endTime.split(':')
+          const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+
+          // Keep the event ids scoped to this calendar instance.
+          // eslint-disable-next-line
+          let id = `${this._uid}_${this.eventIdIncrement++}`
+
+          event = Object.assign({}, event, {
+            id,
+            startDate,
+            endDate,
+            startTime,
+            startTimeMinutes,
+            endTime,
+            endTimeMinutes,
+            height: 0,
+            top: 0,
+            classes: {
+              [event.class]: true,
+              'vuecal__event--overlapping': false,
+              'vuecal__event--overlapped': false,
+              'vuecal__event--background': event.background
+            }
+          })
+
+          // Make array reactive for future events creations & deletions.
+          if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+          // eslint-disable-next-line
+          this.mutableEvents[event.startDate].push(event)
+          // this.$set(this.mutableEvents[event.startDate], this.mutableEvents[event.startDate].length, event)
+
+          return event
+        })
       }
     },
     weekdayCellStyles () {
@@ -580,6 +626,11 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall
       }
+    }
+  },
+  watch: {
+    events: function(events, oldEvents) { // watch it
+      this.eventsPerDay = events
     }
   }
 }
