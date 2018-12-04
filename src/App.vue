@@ -545,6 +545,9 @@
                 "createEvent": "Create an event",
                 "dateFormat": "DDDD d mmmm yyyy"
               }
+          highlight-message(type="tips").
+            Note that 3 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
+            You can read more about it in the # Responsiveness &amp; Media Queries section in the #[a(href="#css-notes") CSS Notes].
         li
           code.mr-2 hideViewSelector
           span.code [Boolean], default: false
@@ -749,7 +752,7 @@
         To help you in making the calendar always look perfect,
         3 media queries (to keep it simple) are in place for small screens.#[br]
         The media queries operate downward from 550px, 450px &amp; 350px, and they mostly truncate the text
-        of the days of the week from full day name to 3 letters and to 1 letter according to the space.#[br]#[br]
+        of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
 
         If this is not enough for your particular use, you can add your own in your CSS.#[br]
         Additionally, you can use the options #[span.code small] &amp; #[span.code xsmall]
