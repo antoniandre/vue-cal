@@ -11,16 +11,16 @@
                        :style="eventStyles(event)"
                        @click.stop="focusEvent(event)"
                        @mousedown.stop="onMouseDown($event, event)")
-          .vuecal__event-delete(@click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
-          input.vuecal__event-title.vuecal__event-title--edit(v-if="$parent.editableEvents && event.title" type="text" v-model="event.title")
+          .vuecal__event-delete(v-if="$parent.editableEvents" @click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
+          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="event.title = $event.target.innerHTML" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="event.startTime && $parent.resizableEvents"
-                                       @mousedown.stop="$parent.resizableEvents && $parent.time && onDragHandleMouseDown($event, event)"
-                                       @touchstart.stop="$parent.resizableEvents && $parent.time && onDragHandleMouseDown($event, event)")
+          .vuecal__event-resize-handle(v-if="$parent.editableEvents && event.startTime"
+                                       @mousedown.stop="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)"
+                                       @touchstart.stop="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)")
 </template>
 
 <script>
@@ -416,14 +416,14 @@ export default {
   color: inherit;
   background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m163 440l-91-91 251-250 90 90z m309-352l-48-48c-12-11-32-11-45 2l-45 45 91 91 45-45c13-13 13-33 2-45z m-408 275l-32 117 117-32z" fill="#000" opacity="0.4"/></svg>');
   background-repeat: no-repeat;
-  background-position: 120%;
+  background-position: 120% 0.15em;
   background-size: 0.4em;
   outline: none;
   width: 100%;
 
   &:hover, &:focus {
     border-color: rgba(0, 0, 0, 0.4);
-    background-position: 98%;
+    background-position: 99% 0.15em;
     background-size: 1.2em;
   }
 }

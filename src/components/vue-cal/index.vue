@@ -121,13 +121,9 @@ export default {
       type: Array,
       default: () => []
     },
-    resizableEvents: {
-      type: Boolean,
-      default: true
-    },
     editableEvents: {
       type: Boolean,
-      default: true
+      default: false
     }
   },
   data: () => ({
@@ -361,7 +357,7 @@ export default {
   mounted () {
     this.$emit('created')
 
-    if (this.resizableEvents && this.time) {
+    if (this.editableEvents && this.time) {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)

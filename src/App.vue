@@ -240,10 +240,10 @@
       //- Example.
       h3.mt-5 # Example 6
       p.
-        Flat events (undraggable, uneditable) with custom HTML content and css class (for event types).#[br]
+        Read-only events (by default events are uneditable) with custom HTML content and css class (for event types).#[br]
         Disabled views: years, year, month.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :resizable-events="false" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="7 * 60"
@@ -251,7 +251,6 @@
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
                  hide-weekends
-                 :resizable-events="false"
                  :events="events"&gt;
         &lt;/vue-cal&gt;
       highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
@@ -293,17 +292,41 @@
       //- Example.
       h3.mt-5 # Example 7
       p.
-        Overlapping &amp; resizable events (by dragging handle).
-        Up to 3 overlapping events starting at the same time.
+        Editable events. Allow editing title, deleting (by clicking and holding an event), and resizing (by dragging handle).#[br]
+        Only week view is enabled.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month', 'day']" hide-weekends editable-events :events="events")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
-                 :time-from="7 * 60"
+                 :time-from="10 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month', 'day']"
+                 hide-weekends
+                 editable-events
+                 :events="events"
+                 class="vuecal--full-height-delete"&gt;
+        &lt;/vue-cal&gt;
+      highlight-message(type="tips").
+        By default the delete button only appears at the top of the event with a set height (1.4em).
+        If you want a full-height delete button like in this example, you can apply the CSS class #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
+      highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
+
+      //- Example.
+      h3.mt-5 # Example 8
+      p.
+        Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).
+        Up to 3 overlapping events starting at the same time.
+      v-card.green-theme.my-2.ma-auto.main-content
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="8 * 60"
                  :time-to="23 * 60"
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
                  hide-weekends
+                 editable-events
                  :events="events"&gt;
         &lt;/vue-cal&gt;
       highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
@@ -337,7 +360,7 @@
         })
 
       //- Example.
-      h3.mt-5 # Example 8
+      h3.mt-5 # Example 9
       p.mb-4
         | Split days passing a CSS class &amp; a label per split,
         | disabled views: years, year, month, and allow split-specific events.#[br]
@@ -347,7 +370,7 @@
           v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
           | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" editable-events :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
       sshpre(language="html-vue" label="Vue Template" v-pre).
         &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
           {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
@@ -357,6 +380,7 @@
                  :time-step="30"
                  :disable-views="['years', 'year', 'month']"
                  :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+                 editable-events
                  :events="events"
                  :min-cell-width="minCellWidth"&gt;
         &lt;/vue-cal&gt;
@@ -406,7 +430,7 @@
         .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
       //- Example.
-      h3.mt-5 # Example 9
+      h3.mt-5 # Example 10
       p.
         Background events.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
@@ -454,7 +478,7 @@
         .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
       //- Example.
-      h3.mt-5 # Example 10
+      h3.mt-5 # Example 11
       p.
         Timeless Events. Dates but no time information.#[br]
         Timeless events cannot be resized as they have no time or duration information.#[br]
@@ -497,7 +521,7 @@
           ]
 
       //- Example.
-      h3.mt-5 # Example 11
+      h3.mt-5 # Example 12
       p.
         Modifying the array of events outside of Vue Cal.#[br]
       highlight-message(type="tips").
@@ -576,7 +600,7 @@
         minCellWidth:       [Number],  default: 0 // In pixels.
         splitDays:          [Array],   default: []
         events:             [Array],   default: []
-        resizableEvents     [Boolean], default: true
+        editableEvents      [Boolean], default: false
 
       ul.pl-0.api-options
         li
@@ -728,11 +752,15 @@
             Accepts an array of split objects with attributes.#[br]
             Each split object can have these attributes: #[span.code { class: 'string', label: 'string' }]
         li
-          code.mr-2 resizableEvents
-          span.code [Boolean], default: true
-          p.
-            when #[span.code resizableEvents] &amp; #[span.code time] are set to true,
-            allows resizing events by dragging the handle showing at the bottom of each event.
+          code.mr-2 editableEvents
+          span.code [Boolean], default: false
+          p
+            | When #[span.code editableEvents] set to true, allows:
+            ul
+              li Dragging events (this feature is coming soon)
+              li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to true,
+              li Deleting events by click and hold an event
+              li Editing events title
         li
           code.mr-2 events
           span.code [Array], default: []
@@ -826,6 +854,15 @@
       h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
+      div
+        | #[strong Version 1.4.0] Allow editing events title
+        highlight-message
+          ul
+            li The delete button will now appear on click and hold.
+            li All the events are now read-only by default you can add the option #[span.code editableEvents] to allow edition.
+            li.
+              The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
+              Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
       div
         | #[strong Version 1.3.0] Add Simplified Chinese language &amp; bug fixes
       div
