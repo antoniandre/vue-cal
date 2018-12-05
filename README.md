@@ -26,7 +26,7 @@ ___
 
 ## Release Notes
 
-- __Version 1.4.0__ Allow edition of event title + click and hold to delete
+- __Version 1.4.0__ Allow edition of event title + click &amp; hold to delete
 - __Version 1.3.0__ Add Simplified Chinese language &amp; bug fixes
 - __Version 1.2.0__ Allow events deletion
 - __Version 1.1.0__ Allow events resizing + add Spanish &amp; Portuguese-Brasil languages
