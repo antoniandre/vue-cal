@@ -151,7 +151,8 @@ export default {
     onMouseDown (e, event) {
       let clickHold = this.domEvents.clickHoldAnEvent
       clickHold.timeoutId = setTimeout(() => {
-        clickHold.eventId = event.id
+        // Disable delete feature on mobile as not yet ready.
+        if (!('ontouchstart' in window)) clickHold.eventId = event.id
         window.removeEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
       }, clickHold.timeout)
       window.addEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
@@ -164,7 +165,7 @@ export default {
     },
 
     onDragHandleMouseDown (e, event) {
-      const start = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
+      const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
     },
 

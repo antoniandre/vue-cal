@@ -859,6 +859,7 @@
         highlight-message
           ul
             li The delete button will now appear on click and hold.
+            li The delete feature is not available on touch devices until next release.
             li All the events are now read-only by default you can add the option #[span.code editableEvents] to allow edition.
             li.
               The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
