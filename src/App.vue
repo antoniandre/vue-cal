@@ -874,7 +874,7 @@
           Hovering an event also increases its z-index so you can see the event more easily in case of overlaps.
         highlight-message(type="warning").
           2 new texts have been added to all the translation files: 'Delete' &amp; 'Create an event'.#[br]
-          Please do a pull request if you know the translation for Portuguese-Brasilian &amp; Spanish.
+          Please do a pull request if you know the translation for Portuguese-Brasilian.
         highlight-message(type="warning").
           Checking overlapping events is not fully functional and will be improved in a next version.
         highlight-message.

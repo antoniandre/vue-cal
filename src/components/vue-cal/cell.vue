@@ -9,8 +9,8 @@
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
-                       @click.stop="focusEvent(event)"
-                       @mousedown.stop="onMouseDown($event, event)")
+                       @mousedown.stop="onMouseDown($event, event)"
+                       @touchstart.stop="onMouseDown($event, event)")
           .vuecal__event-delete(v-if="$parent.editableEvents" @click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="event.title = $event.target.innerHTML" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
@@ -19,8 +19,8 @@
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
           .vuecal__event-resize-handle(v-if="$parent.editableEvents && event.startTime"
-                                       @mousedown.stop="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)"
-                                       @touchstart.stop="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)")
+                                       @mousedown="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)"
+                                       @touchstart="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)")
 </template>
 
 <script>
@@ -149,20 +149,23 @@ export default {
 
     // On an event.
     onMouseDown (e, event) {
-      let clickHold = this.domEvents.clickHoldAnEvent
-      clickHold.timeoutId = setTimeout(() => {
-        // Disable delete feature on mobile as not yet ready.
-        if (!('ontouchstart' in window)) clickHold.eventId = event.id
-        window.removeEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
-      }, clickHold.timeout)
-      window.addEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
+      console.log('on event mouse down')
+      this.focusEvent(event)
+
+      // let clickHold = this.domEvents.clickHoldAnEvent
+      // clickHold.timeoutId = setTimeout(() => {
+      //   // Disable delete feature on mobile as not yet ready.
+      //   if (!('ontouchstart' in window)) clickHold.eventId = event.id
+      //   window.removeEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
+      // }, clickHold.timeout)
+      // window.addEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
     },
 
-    onCancelClickHold () {
-      let clickHold = this.domEvents.clickHoldAnEvent
-      clickHold.eventId = null
-      clearTimeout(clickHold.timeoutId)
-    },
+    // onCancelClickHold () {
+    //   let clickHold = this.domEvents.clickHoldAnEvent
+    //   clickHold.eventId = null
+    //   clearTimeout(clickHold.timeoutId)
+    // },
 
     onDragHandleMouseDown (e, event) {
       const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY

@@ -248,12 +248,22 @@ export default {
       }
     },
 
+    findAncestor (el, Class) {
+      while ((el = el.parentElement) && !el.classList.contains(Class));
+      return el
+    },
+
+    isDOMElementAnEvent (el) {
+      return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
+    },
+
     selectCell (cell) {
       if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
 
-      this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
-      this.domEvents.clickHoldAnEvent.eventId = null // Cancel deletable event on cell click.
+      // this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
+      // this.domEvents.clickHoldAnEvent.eventId = null // Cancel deletable event on cell click.
 
+      // Switch to narrower view.
       if (this.clickToNavigate) this.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
@@ -281,14 +291,23 @@ export default {
     },
 
     onMouseUp (e) {
+      console.log('on mouse up')
       let resizeAnEvent = this.domEvents.resizeAnEvent
-      if (resizeAnEvent.eventId === null) return
 
-      e.stopPropagation() // Don't select cell on event drag or resize.
+      // If not mouse up on an event, unfocus any event except if just dragged.
+      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eventId) {
+        this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
+      }
+
+      // Any mouse up must cancel event resizing
       resizeAnEvent.eventId = null
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
+
+      // if (resizeAnEvent.eventId === null) return
+
+      // e.stopPropagation() // Don't select cell on event drag or resize.
     },
 
     // Object of arrays of events indexed by dates.
@@ -339,8 +358,6 @@ export default {
   },
 
   created () {
-    this.$emit('before-created')
-
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
@@ -355,8 +372,6 @@ export default {
   },
 
   mounted () {
-    this.$emit('created')
-
     if (this.editableEvents && this.time) {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
