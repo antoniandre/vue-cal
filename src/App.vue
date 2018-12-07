@@ -610,7 +610,7 @@
             Allows you to translate the calendar texts in a given language.#[br]
             Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
-            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian, Simplified Chinese.#[br]
+            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian, Simplified Chinese &amp; Russian.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
             | this is what a language json looks like.
 
@@ -629,6 +629,10 @@
                 "createEvent": "Create an event",
                 "dateFormat": "DDDD d mmmm yyyy"
               }
+            p.
+              Regarding the #[span.code dateFormat] translation, this is the format of the full date you can see in a single day view title.#[br]
+              #[span.code DDDD] stands for the full-letter day of week, #[span.code mmmm] stands for full-letter month, #[span.code d] stands for the date of the month (0-31), #[span.code yyyy] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
+
           highlight-message(type="tips").
             Note that 3 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
             You can read more about it in the # Responsiveness &amp; Media Queries section in the #[a(href="#css-notes") CSS Notes].
@@ -854,6 +858,8 @@
       h2.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
+      div
+        | #[strong Version 1.5.0] Add Russian language
       div
         | #[strong Version 1.4.0] Allow editing events title
         highlight-message

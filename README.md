@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.5.0__ Add Russian language
 - __Version 1.4.0__ Allow edition of event title + click &amp; hold to delete
 - __Version 1.3.0__ Add Simplified Chinese language &amp; bug fixes
 - __Version 1.2.0__ Allow events deletion
