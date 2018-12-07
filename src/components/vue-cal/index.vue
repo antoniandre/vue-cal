@@ -291,15 +291,24 @@ export default {
     },
 
     onMouseUp (e) {
-      console.log('on mouse up')
+      let focusAnEvent = this.domEvents.focusAnEvent
       let resizeAnEvent = this.domEvents.resizeAnEvent
+      let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
 
       // If not mouse up on an event, unfocus any event except if just dragged.
       if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eventId) {
-        this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
+        focusAnEvent.eventId = null // Cancel event focus.
+        clickHoldAnEvent.eventId = null // hide delete button.
       }
 
-      // Any mouse up must cancel event resizing
+      // Prevent showing delete button if click and hold was not long enough.
+      // Click & hold timeout happens in onMouseDown() in cell component.
+      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eventId) {
+        clearTimeout(clickHoldAnEvent.timeoutId)
+        clickHoldAnEvent.timeoutId = null
+      }
+
+      // Any mouse up must cancel event resizing.
       resizeAnEvent.eventId = null
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null

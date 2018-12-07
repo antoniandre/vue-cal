@@ -9,6 +9,7 @@
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
+                       @contextmenu.stop="onTouchContextMenu($event, event)"
                        @mousedown.stop="onMouseDown($event, event)"
                        @touchstart.stop="onMouseDown($event, event)")
           .vuecal__event-delete(v-if="$parent.editableEvents" @click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
@@ -149,23 +150,36 @@ export default {
 
     // On an event.
     onMouseDown (e, event) {
-      console.log('on event mouse down')
+      let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
+      let resizeAnEvent = this.domEvents.resizeAnEvent
+
+      // If the delete button is already out and event is on focus then delete event.
+      if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId) {
+        this.deleteEvent(event)
+      }
+
+      // Focus the clicked event.
       this.focusEvent(event)
 
-      // let clickHold = this.domEvents.clickHoldAnEvent
-      // clickHold.timeoutId = setTimeout(() => {
-      //   // Disable delete feature on mobile as not yet ready.
-      //   if (!('ontouchstart' in window)) clickHold.eventId = event.id
-      //   window.removeEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
-      // }, clickHold.timeout)
-      // window.addEventListener('ontouchstart' in window ? 'touchend' : 'mouseup', this.onCancelClickHold, { once: true })
+      clickHoldAnEvent.eventId = null // Reinit click hold on each click.
+
+      // Don't show delete button if dragging event or mousedown was on touch device.
+      // If touchstart, show delete on contextmenu event.
+      if (!resizeAnEvent.start && !('ontouchstart' in window)) {
+        clickHoldAnEvent.timeoutId = setTimeout(() => {
+          clickHoldAnEvent.eventId = event.id
+        }, clickHoldAnEvent.timeout)
+      }
     },
 
-    // onCancelClickHold () {
-    //   let clickHold = this.domEvents.clickHoldAnEvent
-    //   clickHold.eventId = null
-    //   clearTimeout(clickHold.timeoutId)
-    // },
+    onTouchContextMenu (e, event) {
+      // This is equal to click and hold.
+      if ('ontouchstart' in window) {
+        e.preventDefault()
+        e.stopPropagation()
+        this.domEvents.clickHoldAnEvent.eventId = event.id
+      }
+    },
 
     onDragHandleMouseDown (e, event) {
       const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
@@ -377,7 +391,8 @@ export default {
   transition: 0.3s;
   cursor: ns-resize;
 
-  .vuecal__event:hover & {opacity: 1;transform: translateY(0);}
+  .vuecal__event:hover &,
+  .vuecal__event--focus & {opacity: 1;transform: translateY(0);}
 }
 
 .vuecal__event-delete {
