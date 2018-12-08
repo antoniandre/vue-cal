@@ -9,10 +9,12 @@
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
-                       @contextmenu.stop="onTouchContextMenu($event, event)"
-                       @mousedown.stop="onMouseDown($event, event)"
-                       @touchstart.stop="onMouseDown($event, event)")
-          .vuecal__event-delete(v-if="$parent.editableEvents" @click.stop.prevent="deleteEvent(event)") {{ texts.deleteEvent }}
+                       @mousedown="onMouseDown($event, event)"
+                       @contextmenu="onContextMenu($event, event)"
+                       @touchstart="onTouchStart($event, event)")
+          .vuecal__event-delete(v-if="$parent.editableEvents"
+                                @mousedown.stop.prevent="deleteEvent(event)"
+                                @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="event.title = $event.target.innerHTML" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
@@ -149,13 +151,15 @@ export default {
     },
 
     // On an event.
-    onMouseDown (e, event) {
+    onMouseDown (e, event, touch = false) {
+      // Prevent a double mouse down on touch devices.
+      if ('ontouchstart' in window && !touch) return false
       let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
       let resizeAnEvent = this.domEvents.resizeAnEvent
 
       // If the delete button is already out and event is on focus then delete event.
-      if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId) {
-        this.deleteEvent(event)
+      if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId === event.id) {
+        return true
       }
 
       // Focus the clicked event.
@@ -165,20 +169,20 @@ export default {
 
       // Don't show delete button if dragging event or mousedown was on touch device.
       // If touchstart, show delete on contextmenu event.
-      if (!resizeAnEvent.start && !('ontouchstart' in window)) {
+      if (!resizeAnEvent.start) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           clickHoldAnEvent.eventId = event.id
         }, clickHoldAnEvent.timeout)
       }
     },
 
-    onTouchContextMenu (e, event) {
-      // This is equal to click and hold.
-      if ('ontouchstart' in window) {
-        e.preventDefault()
-        e.stopPropagation()
-        this.domEvents.clickHoldAnEvent.eventId = event.id
-      }
+    onContextMenu (e, event) {
+      e.preventDefault()
+      return false
+    },
+
+    onTouchStart (e, event) {
+      this.onMouseDown(e, event, true)
     },
 
     onDragHandleMouseDown (e, event) {
@@ -186,12 +190,18 @@ export default {
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
     },
 
-    deleteEvent (event) {
+    deleteEvent (event, touch = false) {
+      // Prevent a double mouse down on touch devices.
+      if ('ontouchstart' in window && !touch) return false
       this.events = this.events.filter(e => e.id !== event.id)
 
       if (this.splits.length) this.splitEvents = this.splitEvents[event.split].filter(e => e.id !== event.id)
 
       // this.checkCellOverlappingEvents()
+    },
+
+    touchDeleteEvent (event) {
+      this.deleteEvent(event, true)
     },
 
     focusEvent (event) {

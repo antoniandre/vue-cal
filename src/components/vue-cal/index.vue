@@ -260,9 +260,6 @@ export default {
     selectCell (cell) {
       if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
 
-      // this.domEvents.focusAnEvent.eventId = null // Cancel event focus.
-      // this.domEvents.clickHoldAnEvent.eventId = null // Cancel deletable event on cell click.
-
       // Switch to narrower view.
       if (this.clickToNavigate) this.switchToNarrowerView()
 
@@ -313,10 +310,6 @@ export default {
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
-
-      // if (resizeAnEvent.eventId === null) return
-
-      // e.stopPropagation() // Don't select cell on event drag or resize.
     },
 
     // Object of arrays of events indexed by dates.
