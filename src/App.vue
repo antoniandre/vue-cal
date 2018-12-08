@@ -859,13 +859,14 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
       div
+        | #[strong Version 1.6.0] Allow event deletion on touch devices
+      div
         | #[strong Version 1.5.0] Add Russian language
       div
         | #[strong Version 1.4.0] Allow editing events title
         highlight-message
           ul
             li The delete button will now appear on click and hold.
-            li The delete feature is not available on touch devices until next release.
             li All the events are now read-only by default you can add the option #[span.code editableEvents] to allow edition.
             li.
               The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
