@@ -143,10 +143,10 @@ export default {
         newHeight: 0
       },
       dragAnEvent: {
-        eventId: null, // Only one at a time.
+        eventId: null // Only one at a time.
       },
       focusAnEvent: {
-        eventId: null, // Only one at a time.
+        eventId: null // Only one at a time.
       },
       clickHoldAnEvent: {
         eventId: null, // Only one at a time.
@@ -605,7 +605,7 @@ export default {
     }
   },
   watch: {
-    events: function(events, oldEvents) {
+    events: function (events, oldEvents) {
       this.updateMutableEvents(events)
     }
   }
