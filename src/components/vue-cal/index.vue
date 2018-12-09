@@ -127,6 +127,7 @@ export default {
     }
   },
   data: () => ({
+    ready: false,
     now,
     view: {
       id: '',
@@ -224,6 +225,7 @@ export default {
 
     switchView (view, date = null) {
       this.view.id = view
+      if (this.ready) this.$emit('view-change', view)
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -292,10 +294,17 @@ export default {
       let resizeAnEvent = this.domEvents.resizeAnEvent
       let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
 
+      // On event resize end, emit event.
+      if (resizeAnEvent.eventId) {
+        let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
+        this.$emit('event-change', event)
+        this.$emit('event-duration-change', event)
+      }
+
       // If not mouse up on an event, unfocus any event except if just dragged.
       if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eventId) {
         focusAnEvent.eventId = null // Cancel event focus.
-        clickHoldAnEvent.eventId = null // hide delete button.
+        clickHoldAnEvent.eventId = null // Hide delete button.
       }
 
       // Prevent showing delete button if click and hold was not long enough.
@@ -379,6 +388,9 @@ export default {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     }
+
+    this.$emit('ready')
+    this.ready = true
   },
 
   computed: {

@@ -15,7 +15,7 @@
           .vuecal__event-delete(v-if="$parent.editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="event.title = $event.target.innerHTML" v-html="event.title")
+          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
@@ -128,15 +128,21 @@ export default {
       })
     },
 
-    onResizeEvent (eventId, newHeight) {
+    onEventTitleBlur (e, event) {
+      event.title = e.target.innerHTML
+      this.$parent.$emit('event-change', event)
+      this.$parent.$emit('event-title-change', event)
+    },
+
+    onResizeEvent () {
+      let { eventId, newHeight } = this.$parent.domEvents.resizeAnEvent
       let event = this.events.filter(e => e.id === eventId)[0]
+
       if (event) {
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
-        // if (!event.background) {
-        //   this.checkOverlappingEvents(event)
-        // }
+        // if (!event.background) this.checkOverlappingEvents(event)
       }
     },
 
@@ -148,6 +154,7 @@ export default {
 
       event.endTimeMinutes = endTime * 60
       event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
+      event.end = event.end.split(' ')[0] + ` ${event.endTime}`
     },
 
     // On an event.
@@ -187,12 +194,21 @@ export default {
 
     onDragHandleMouseDown (e, event) {
       const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
-      this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, { start, originalHeight: event.height, newHeight: event.height, eventId: event.id })
+      this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
+        start,
+        originalHeight: event.height,
+        newHeight: event.height,
+        eventId: event.id,
+        eventStartDate: event.startDate
+      })
     },
 
     deleteEvent (event, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
+
+      this.$parent.$emit('event-delete', event)
+
       this.events = this.events.filter(e => e.id !== event.id)
 
       if (this.splits.length) this.splitEvents = this.splitEvents[event.split].filter(e => e.id !== event.id)
@@ -205,6 +221,7 @@ export default {
     },
 
     focusEvent (event) {
+      this.$parent.$emit('event-focus', event)
       this.domEvents.focusAnEvent.eventId = event.id
     }
   },
@@ -225,7 +242,7 @@ export default {
     domEvents: {
       get () {
         if (this.$parent.domEvents.resizeAnEvent.eventId) {
-          this.onResizeEvent(this.$parent.domEvents.resizeAnEvent.eventId, this.$parent.domEvents.resizeAnEvent.newHeight)
+          this.onResizeEvent()
         }
         return this.$parent.domEvents
       },
