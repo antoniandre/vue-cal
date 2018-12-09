@@ -916,7 +916,7 @@
         Checking overlapping events is not fully functional and will be improved in a next version.
 
       div
-        | #[strong Version 1.7.0] Vue Cal emit events
+        | #[strong Version 1.7.0] Vue Cal emits events
       div
         | #[strong Version 1.6.0] Allow event deletion on touch devices
       div

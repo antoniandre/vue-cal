@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.7.0__ Vue Cal emits events
 - __Version 1.6.0__ Allow event deletion on touch devices
 - __Version 1.5.0__ Add Russian language
 - __Version 1.4.0__ Allow edition of event title + click &amp; hold to delete
