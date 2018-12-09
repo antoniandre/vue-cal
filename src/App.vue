@@ -591,7 +591,9 @@
       h3.title.mt-5.mb-2.pt-4 # Vue Cal emitted events
       p.
         Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
-        here is the list of emitted events: #[span.code ready], #[span.code view-change],
+        If you are not familiar with Vue JS events, you should read about it here:
+        #[a(href="https://vuejs.org/v2/guide/events.html" target="_blank") vuejs.org/v2/guide/events.html #[v-icon(small color="primary") open_in_new]]#[br]#[br]
+        Here is the list of emitted events: #[span.code ready], #[span.code view-change],
         #[span.code event-focus], #[span.code event-delete], #[span.code event-change],
         #[span.code event-title-change], #[span.code event-content-change],
         #[span.code event-duration-change].#[br]
@@ -621,11 +623,28 @@
           @ready="logEvents('ready', $event)"
           @view-change="logEvents('view-change', $event)"
           @event-focus="logEvents('event-focus', $event)"
-          @event-change="logEvents('event-change', $event)"
           @event-title-change="logEvents('event-title-change', $event)"
           @event-content-change="logEvents('event-content-change', $event)"
           @event-duration-change="logEvents('event-duration-change', $event)"
           @event-delete="logEvents('event-delete', $event)")
+
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="7 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 editable-events
+                 :events="events"
+                 @ready="logEvents('ready', $event)"
+                 @view-change="logEvents('view-change', $event)"
+                 @event-focus="logEvents('event-focus', $event)"
+                 @event-title-change="logEvents('event-title-change', $event)"
+                 @event-content-change="logEvents('event-content-change', $event)"
+                 @event-duration-change="logEvents('event-duration-change', $event)"
+                 @event-delete="logEvents('event-delete', $event)"&gt;
+        &lt;/vue-cal&gt;
 
       h2.headline.mt-5.pt-5
         a(href="#api") API
