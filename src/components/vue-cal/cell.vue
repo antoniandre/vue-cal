@@ -86,21 +86,31 @@ export default {
     },
 
     checkCellOverlappingEvents () {
-      this.events.forEach(event => {
-        if (!event.background) {
-          // Unique comparison of events.
-          this.comparisonArray[event.id] = this.events.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
-          if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
-        }
-      })
+      if (this.events) {
+        const foregroundEventsIdList = this.events.filter(item => !item.background).map(item => item.id)
+        let comparisonArray = {}
+
+        this.events.forEach(event => {
+          if (!event.background) {
+            // Unique comparison of events.
+            comparisonArray[event.id] = foregroundEventsIdList.filter(itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1))
+            if (comparisonArray[event.id].length) this.checkOverlappingEvents(event, comparisonArray[event.id])
+          }
+        })
+      }
     },
 
-    checkOverlappingEvents (event) {
-      this.comparisonArray[event.id].forEach((event2, i) => {
+    checkOverlappingEvents (event, comparisonArray) {
+      console.log('here checkOverlappingEvents', event.id, comparisonArray)
+      // debugger
+      comparisonArray.forEach((event2id, i) => {
+        let event2 = this.events.find(item => item.id === event2id)
+        console.log('the event 2 is: ', event2.title)
+
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
         const event1overlapsEvent2 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
         const event2overlapsEvent1 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
-        // console.log('comparing event ' + event.title + ' with ', event2.title)
+        console.log('comparing event ' + event.title + ' with ', event2.title)
         if (event1overlapsEvent2 || event2overlapsEvent1) {
           event.classes = Object.assign(event.classes, {
             'vuecal__event--overlapped': event1startsFirst,
@@ -143,6 +153,7 @@ export default {
         this.updateEndTimeOnResize(event)
 
         // if (!event.background) this.checkOverlappingEvents(event)
+        this.checkCellOverlappingEvents()
       }
     },
 
@@ -256,29 +267,34 @@ export default {
     events: {
       get () {
         const events = this.$parent.mutableEvents[this.formattedDate]
+        // const foregroundEventsIdList = events && events.filter(item => !item.background).map(item => item.id) || []
         // eslint-disable-next-line
         this.splitEvents = []
 
-        return events ? events.map(event => {
-          if (event.startTime) this.updateEventPosition(event)
+        if (events) {
+          events.forEach(event => {
+            if (event.startTime) this.updateEventPosition(event)
 
-          // Only for splits.
-          if (this.splits.length && event.split) {
-            // eslint-disable-next-line
-            if (!this.splitEvents[event.split]) this.$set(this.splitEvents, event.split, [])
-            // eslint-disable-next-line
-            this.splitEvents[event.split].push(event)
-          }
+            // Only for splits.
+            if (this.splits.length && event.split) {
+              // eslint-disable-next-line
+              if (!this.splitEvents[event.split]) this.$set(this.splitEvents, event.split, [])
+              // eslint-disable-next-line
+              this.splitEvents[event.split].push(event)
+            }
 
-          if (!event.background) {
-            // Unique comparison of events.
-            // eslint-disable-next-line
-            this.comparisonArray[event.id] = events.filter(item => (item.id !== event.id && Object.keys(this.comparisonArray).indexOf(item.id) === -1 && !item.background))
-            if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
-          }
+            // if (!event.background) {
+            //   // Unique comparison of events.
+            //   // eslint-disable-next-line
+            //   this.comparisonArray[event.id] = foregroundEventsIdList.filter(itemId => (itemId !== event.id && Object.keys(this.comparisonArray).indexOf(itemId) === -1))
+            //   if (this.comparisonArray[event.id].length) this.checkOverlappingEvents(event)
+            // }
+          })
+        }
 
-          return event
-        }) : []
+        this.$nextTick(() => this.checkCellOverlappingEvents())
+
+        return events || []
       },
       set (events) {
         this.$parent.mutableEvents[this.formattedDate] = events
