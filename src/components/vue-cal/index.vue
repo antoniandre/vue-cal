@@ -350,6 +350,8 @@ export default {
           endTimeMinutes,
           height: 0,
           top: 0,
+          overlapped: {},
+          overlapping: {},
           classes: {
             [event.class]: true,
             'vuecal__event--overlapping': false,
