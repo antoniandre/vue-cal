@@ -402,7 +402,7 @@ export default {
   background-color: #f8f8f8;
   position: relative;
   z-index: 1;
-  transition: box-shadow 0.3s;
+  transition: box-shadow 0.3s, left 0.3s, right 0.3s;
   overflow: hidden;// For sliding delete button.
 
   &:hover {z-index: 2;}
