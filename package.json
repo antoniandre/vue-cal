@@ -40,5 +40,8 @@
     "vue-cli-plugin-vuetify": "^0.2.1",
     "vue-template-compiler": "^2.5.17",
     "vuetify": "^1.2.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.26.0"
   }
 }
