@@ -51,7 +51,7 @@ export default {
     }
   },
   data: () => ({
-    splitEvents: []
+    splitEvents: {}
   }),
 
   methods: {
@@ -93,18 +93,33 @@ export default {
       }
     },
 
-    checkCellOverlappingEvents () {
+    checkCellOverlappingEvents (split = 0) {
       if (this.events) {
-        const foregroundEventsIdList = this.events.filter(item => !item.background).map(item => item.id)
-        let comparisonArray = {}
+        if (this.splits.length) {
+          const foregroundEventsList = this.events.filter(item => !item.background && (split ? item.split === split : 1))
+          const foregroundEventsIdList = foregroundEventsList.map(item => item.id)
+          // const eventsArray = this.splits.length ? foregroundEventsList : foregroundEventsIdList
+          let comparisonArray = {}
 
-        this.events.forEach(event => {
-          if (!event.background) {
-            // Unique comparison of events.
-            comparisonArray[event.id] = foregroundEventsIdList.filter(itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1))
-            if (comparisonArray[event.id].length) this.checkOverlappingEvents(event, comparisonArray[event.id])
-          }
-        })
+          this.events.forEach(event => {
+            if (!event.background) {
+              // Unique comparison of events.
+              comparisonArray[event.id] = this.splits.length ?
+                foregroundEventsList.filter(item => (
+                  item.id !== event.id && Object.keys(comparisonArray).indexOf(item.id) === -1) && item.split === event.split
+                ).map(item => item.id)
+                : foregroundEventsIdList.filter(itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1))
+
+              // comparisonArray[event.id] = eventsArray.filter(
+              //   this.splits.length
+              //     ? item => item.id !== event.id && Object.keys(comparisonArray).indexOf(item.id) === -1 && item.split === event.split
+              //     : itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1)
+              // )
+
+              if (comparisonArray[event.id].length) this.checkOverlappingEvents(event, comparisonArray[event.id])
+            }
+          })
+        }
       }
     },
 
@@ -139,6 +154,10 @@ export default {
           delete event.simultaneous[event2.id]
           delete event2.simultaneous[event.id]
         }
+
+        if (this.splits.length) {
+          this.splitEvents[event.split] = this.events.filter(e => e.split === event.split)
+        }
       })
     },
 
@@ -156,7 +175,7 @@ export default {
         event.height = Math.max(newHeight, 10)
         this.updateEndTimeOnResize(event)
 
-        if (!event.background) this.checkCellOverlappingEvents()
+        if (!event.background) this.checkCellOverlappingEvents(event.split || 0)
       }
     },
 
@@ -231,10 +250,10 @@ export default {
         Object.keys(event.overlapping).forEach(id => (delete this.events.find(item => item.id === id).overlapped[event.id]))
         Object.keys(event.simultaneous).forEach(id => (delete this.events.find(item => item.id === id).simultaneous[event.id]))
 
-        this.checkCellOverlappingEvents()
+        this.checkCellOverlappingEvents(event.split || 0)
       }
 
-      if (this.splits.length) this.splitEvents = this.events.filter(e => e.id !== event.id && e.split === event.split)
+      if (this.splits.length) this.splitEvents[event.split] = this.events.filter(e => e.id !== event.id && e.split === event.split)
     },
 
     touchDeleteEvent (event) {
@@ -301,6 +320,16 @@ export default {
       set (events) {
         this.$parent.mutableEvents[this.formattedDate] = events
       }
+    },
+    cellSplitEvents () {
+      let splitsEventIndexes = {}
+
+      this.events.forEach((e, i) => {
+        if (!splitsEventIndexes[e.split || 0]) splitsEventIndexes[e.split || 0] = {}
+        splitsEventIndexes[e.split || 0][e.id] = i
+      })
+
+      return splitsEventIndexes
     }
   }
 }
