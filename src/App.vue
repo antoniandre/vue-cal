@@ -461,11 +461,6 @@
             ...
           ]
         })
-      highlight-message(type="warning").
-        Please note that the overlapping events feature is being refactored and is currently
-        not displaying 3 overlapping events starting at the same time as it should.#[br]
-        This will be fixed in a next release and the event deletion or event resizing will
-        also trigger a rerendering of the overlapping events.
 
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Splitting days &amp; split events
@@ -931,9 +926,9 @@
       h2.headline.mt-5.pt-5.mb-2
         a(href="#release-notes") Release Notes
         a(name="release-notes")
-      highlight-message(type="warning").
-        Checking overlapping events is not fully functional and will be improved in a next version.
 
+      div
+        | #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
       div
         | #[strong Version 1.7.0] Vue Cal emits events
       div

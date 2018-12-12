@@ -93,28 +93,27 @@ export default {
       }
     },
 
+    // Will recalculate all the overlappings of the current cell or only of the given split if provided.
     checkCellOverlappingEvents (split = 0) {
       if (this.events) {
-        if (this.splits.length) {
-          const foregroundEventsList = this.events.filter(item => !item.background && (split ? item.split === split : 1))
+        const foregroundEventsList = this.events.filter(item => !item.background && (split ? item.split === split : 1))
+
+        if (foregroundEventsList.length) {
+          // Do the mapping outside of the next loop if not splitted cell.
+          // If splitted need the whole event object to compare splits.
           const foregroundEventsIdList = foregroundEventsList.map(item => item.id)
-          // const eventsArray = this.splits.length ? foregroundEventsList : foregroundEventsIdList
           let comparisonArray = {}
 
           this.events.forEach(event => {
             if (!event.background) {
+              let comparisonArrayKeys = Object.keys(comparisonArray)
+
               // Unique comparison of events.
               comparisonArray[event.id] = this.splits.length ?
                 foregroundEventsList.filter(item => (
-                  item.id !== event.id && Object.keys(comparisonArray).indexOf(item.id) === -1) && item.split === event.split
+                  item.id !== event.id && comparisonArrayKeys.indexOf(item.id) === -1) && item.split === event.split
                 ).map(item => item.id)
-                : foregroundEventsIdList.filter(itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1))
-
-              // comparisonArray[event.id] = eventsArray.filter(
-              //   this.splits.length
-              //     ? item => item.id !== event.id && Object.keys(comparisonArray).indexOf(item.id) === -1 && item.split === event.split
-              //     : itemId => (itemId !== event.id && Object.keys(comparisonArray).indexOf(itemId) === -1)
-              // )
+                : foregroundEventsIdList.filter(id => (id !== event.id && comparisonArrayKeys.indexOf(id) === -1))
 
               if (comparisonArray[event.id].length) this.checkOverlappingEvents(event, comparisonArray[event.id])
             }
