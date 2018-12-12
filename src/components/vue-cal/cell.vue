@@ -237,15 +237,10 @@ export default {
       if (this.splits.length) this.splitEvents = this.splitEvents[event.split].filter(e => e.id !== event.id)
 
       if (!event.background) {
-        const overlappedBy = Object.keys(event.overlapped)
-        const overlapping = Object.keys(event.overlapping)
-        debugger
-        overlappedBy.forEach(eventId => {
-          console.log(eventId, this.events.find(item => item.id === eventId))
-
-          delete this.events.find(item => item.id === eventId).overlapping[event.id]
-        })
-        overlapping.forEach(eventId => delete this.events.find(item => item.id === eventId).overlapped[event.id])
+        // Remove this event from possible other overlapping events of the same cell.
+        Object.keys(event.overlapped).forEach(id => (delete this.events.find(item => item.id === id).overlapping[event.id]))
+        Object.keys(event.overlapping).forEach(id => (delete this.events.find(item => item.id === id).overlapped[event.id]))
+        Object.keys(event.simultaneous).forEach(id => (delete this.events.find(item => item.id === id).simultaneous[event.id]))
 
         this.checkCellOverlappingEvents()
       }
@@ -427,9 +422,9 @@ export default {
   }
 
   &.vuecal__event--overlapped {right: 20%;}
-  &.vuecal__event--overlapping:not(.split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &.vuecal__event--overlapped.split2 {right: 0;left: 50%;}
-  &.vuecal__event--overlapping.split2 {left: 0;right: 50%;}
+  &.vuecal__event--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &.vuecal__event--overlapped.vuecal__event--split2 {right: 0;left: 50%;}
+  &.vuecal__event--overlapping.vuecal__event--split2 {left: 0;right: 50%;}
   &.vuecal__event--overlapped.vuecal__event--split3 {right: 0;left: 66.66%;}
   &.vuecal__event--overlapping.vuecal__event--split3 {left: 0;right: 66.66%;}
   &.vuecal__event--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
