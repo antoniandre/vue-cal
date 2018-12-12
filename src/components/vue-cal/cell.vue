@@ -109,8 +109,8 @@ export default {
               let comparisonArrayKeys = Object.keys(comparisonArray)
 
               // Unique comparison of events.
-              comparisonArray[event.id] = this.splits.length ?
-                foregroundEventsList.filter(item => (
+              comparisonArray[event.id] = this.splits.length
+                ? foregroundEventsList.filter(item => (
                   item.id !== event.id && comparisonArrayKeys.indexOf(item.id) === -1) && item.split === event.split
                 ).map(item => item.id)
                 : foregroundEventsIdList.filter(id => (id !== event.id && comparisonArrayKeys.indexOf(id) === -1))
