@@ -355,10 +355,6 @@ export default {
           simultaneous: {},
           classes: {
             [event.class]: true,
-            'vuecal__event--overlapping': false,
-            'vuecal__event--overlapped': false,
-            // 'vuecal__event--split2': false,
-            // 'vuecal__event--split3': false,
             'vuecal__event--background': event.background
           }
         })

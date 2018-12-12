@@ -51,8 +51,7 @@ export default {
     }
   },
   data: () => ({
-    splitEvents: [],
-    comparisonArray: {}
+    splitEvents: []
   }),
 
   methods: {
@@ -81,8 +80,6 @@ export default {
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
       const simultaneous = Object.keys(event.simultaneous).length + 1
-      if (Object.keys(event.simultaneous).length > 1) console.log(event.title, event.simultaneous)
-
 
       return {
         ...event.classes,
@@ -112,20 +109,16 @@ export default {
     },
 
     checkOverlappingEvents (event, comparisonArray) {
-      console.log('checkOverlappingEvents', event.id, comparisonArray)
-
       comparisonArray.forEach((event2id, i) => {
         let event2 = this.events.find(item => item.id === event2id)
         const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
         const event1overlapsEvent2 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
         const event2overlapsEvent1 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
-        console.log('comparing event ' + event.title + ' with ', event2.title, {e1over2: event1overlapsEvent2, e2over1: event2overlapsEvent1})
 
         if (event1overlapsEvent2) {
           event.overlapping[event2.id] = true
           event2.overlapped[event.id] = true
-        }
-        else {
+        } else {
           delete event.overlapping[event2.id]
           delete event2.overlapped[event.id]
         }
@@ -133,8 +126,7 @@ export default {
         if (event2overlapsEvent1) {
           event2.overlapping[event.id] = true
           event.overlapped[event2.id] = true
-        }
-        else {
+        } else {
           delete event2.overlapping[event.id]
           delete event.overlapped[event2.id]
         }
@@ -143,8 +135,7 @@ export default {
         if (event.startTimeMinutes === event2.startTimeMinutes) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
-        }
-        else {
+        } else {
           delete event.simultaneous[event2.id]
           delete event2.simultaneous[event.id]
         }
@@ -234,8 +225,6 @@ export default {
 
       this.events = this.events.filter(e => e.id !== event.id)
 
-      if (this.splits.length) this.splitEvents = this.splitEvents[event.split].filter(e => e.id !== event.id)
-
       if (!event.background) {
         // Remove this event from possible other overlapping events of the same cell.
         Object.keys(event.overlapped).forEach(id => (delete this.events.find(item => item.id === id).overlapping[event.id]))
@@ -244,6 +233,8 @@ export default {
 
         this.checkCellOverlappingEvents()
       }
+
+      if (this.splits.length) this.splitEvents = this.events.filter(e => e.id !== event.id && e.split === event.split)
     },
 
     touchDeleteEvent (event) {
@@ -271,9 +262,7 @@ export default {
     },
     domEvents: {
       get () {
-        if (this.$parent.domEvents.resizeAnEvent.eventId) {
-          this.onResizeEvent()
-        }
+        if (this.$parent.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
         return this.$parent.domEvents
       },
       set (object) {
@@ -302,7 +291,10 @@ export default {
         })
 
         // NextTick() prevents a cyclic redundancy.
-        this.$nextTick(() => this.checkCellOverlappingEvents())
+        this.$nextTick(() => {
+          this.checkCellOverlappingEvents()
+          this.$forceUpdate()// @todo: find a way to avoid this.
+        })
 
         return events
       },
