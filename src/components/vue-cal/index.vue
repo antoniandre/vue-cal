@@ -301,12 +301,19 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      console.log('onCellMouseDown', cell)
+      // If not mousedown on an event.
+      if (!this.isDOMElementAnEvent(e.target)) {
+        console.log('onCellMouseDown', cell)
+        this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+      }
     },
 
     onCellTouchStart (e, cell) {
-      console.log('onCellTouchStart', cell)
-      this.onCellMouseDown(e, cell, true)
+      // If not mousedown on an event.
+      if (!this.isDOMElementAnEvent(e.target)) {
+        console.log('onCellTouchStart', cell)
+        this.onCellMouseDown(e, cell, true)
+      }
     },
 
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
@@ -395,6 +402,37 @@ export default {
 
         return event
       })
+    },
+
+    createAnEvent (cell, mouseY) {
+      const d = cell.date.getDate()
+      const m = cell.date.getMonth() + 1
+      const y = cell.date.getFullYear()
+      const date = `${y}-${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d}`
+      const startTimeMinutes = 14 * 60
+      const endTimeMinutes = 16 * 60
+      console.log(date)
+
+
+      const event = {
+        id: `${this._uid}_${this.eventIdIncrement++}`,
+        start: date + '14:00',
+        startDate: date,
+        startTime: '14:00',
+        startTimeMinutes,
+        end: date + '16:00',
+        endDate: date,
+        endTime: '16:00',
+        endTimeMinutes,
+        height: 0,
+        top: 0,
+        overlapped: {},
+        overlapping: {},
+        simultaneous: {},
+        classes: { 'blue-event': true, 'vuecal__event--background': false }
+      }
+
+      this.mutableEvents[event.startDate].push(event)
     },
 
     // Cleanup event object before exporting it.
