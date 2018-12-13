@@ -27,14 +27,33 @@
             //- Only for splitDays.
             .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
               .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
-                span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+                span(v-for="j in 3" :key="j") {{ heading['label' + j] }}
                 span(v-if="heading.label4") &nbsp;
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class"
+                v-for="(cell, i) in viewCells"
+                :key="i"
+                :date="cell.date"
+                :formatted-date="cell.formattedDate"
+                :content="cell.content"
+                :splits="splitDays"
+                @mousedown.native="onCellMouseDown($event, cell)"
+                @touchstart="onCellTouchStart($event, cell)"
+                @click.native="selectCell(cell)"
+                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class"
+              v-else v-for="(cell, i) in viewCells"
+              :key="i"
+              :date="cell.date"
+              :formatted-date="cell.formattedDate"
+              :content="cell.content"
+              @mousedown.native="onCellMouseDown($event, cell)"
+              @touchstart="onCellTouchStart($event, cell)"
+              @click.native="selectCell(cell)"
+              @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -278,6 +297,18 @@ export default {
       }
     },
 
+    onCellMouseDown (e, cell, touch = false) {
+      // Prevent a double mouse down on touch devices.
+      if ('ontouchstart' in window && !touch) return false
+
+      console.log('onCellMouseDown', cell)
+    },
+
+    onCellTouchStart (e, cell) {
+      console.log('onCellTouchStart', cell)
+      this.onCellMouseDown(e, cell, true)
+    },
+
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
@@ -290,9 +321,7 @@ export default {
     },
 
     onMouseUp (e) {
-      let focusAnEvent = this.domEvents.focusAnEvent
-      let resizeAnEvent = this.domEvents.resizeAnEvent
-      let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
+      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent } = this.domEvents
 
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
@@ -368,6 +397,7 @@ export default {
       })
     },
 
+    // Cleanup event object before exporting it.
     emitWithEvent(eventName, event) {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
