@@ -297,8 +297,8 @@ export default {
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
         let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
-        this.$emit('event-change', event)
-        this.$emit('event-duration-change', event)
+        this.emitWithEvent('event-change', event)
+        this.emitWithEvent('event-duration-change', event)
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -366,6 +366,19 @@ export default {
 
         return event
       })
+    },
+
+    emitWithEvent(eventName, event) {
+      // Delete vue-cal specific props instead of returning a set of props so user
+      // can place whatever they want inside an event and see it returned.
+      let evt = { ...event }
+      delete evt.height
+      delete evt.top
+      delete evt.overlapped
+      delete evt.overlapping
+      delete evt.simultaneous
+      delete evt.classes
+      this.$emit(eventName, evt)
     }
   },
 

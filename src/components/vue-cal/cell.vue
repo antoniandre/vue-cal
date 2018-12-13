@@ -162,8 +162,8 @@ export default {
 
     onEventTitleBlur (e, event) {
       event.title = e.target.innerHTML
-      this.$parent.$emit('event-change', event)
-      this.$parent.$emit('event-title-change', event)
+      this.$parent.emitWithEvent('event-change', event)
+      this.$parent.emitWithEvent('event-title-change', event)
     },
 
     onResizeEvent () {
@@ -239,7 +239,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      this.$parent.$emit('event-delete', event)
+      this.$parent.emitWithEvent('event-delete', event)
 
       this.events = this.events.filter(e => e.id !== event.id)
 
@@ -260,7 +260,7 @@ export default {
     },
 
     focusEvent (event) {
-      this.$parent.$emit('event-focus', event)
+      this.$parent.emitWithEvent('event-focus', event)
       this.domEvents.focusAnEvent.eventId = event.id
     }
   },
