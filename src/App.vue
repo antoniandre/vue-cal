@@ -369,9 +369,60 @@
       highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
       //- Example.
+      h3.title.mt-5.mb-2.pt-4 # Overlapping events
+      p.
+        Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).#[br]
+        Up to 3 overlapping events starting at the same time. Try to resize &amp; delete events to see the overlapping redrawn. For performance, only redraw the currently modified cell or day split.#[br]
+        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+      v-card.green-theme.my-2.ma-auto.main-content
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal selected-date="2018-11-19"
+                 :time-from="8 * 60"
+                 :time-to="23 * 60"
+                 :time-step="60"
+                 :disable-views="['years', 'year', 'month']"
+                 hide-weekends
+                 editable-events
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
+
+      sshpre(language="js" label="Javascript").
+        data: () => ({
+          events: [
+            {
+              start: '2018-11-19 10:35',
+              end: '2018-11-19 11:30',
+              title: 'Doctor appointment',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+              class: 'health'
+            },
+            {
+              start: '2018-11-19 18:30',
+              end: '2018-11-19 19:15',
+              title: 'Dentist appointment',
+              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+              class: 'health'
+            },
+            {
+              start: '2018-11-20 18:30',
+              end: '2018-11-20 20:30',
+              title: 'Crossfit',
+              content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
+              class: 'sport'
+            },
+            ...
+          ]
+        })
+
+      //- Example.
       h3.title.mt-5.mb-2.pt-4 # Background events
       p.
-        Just add the property #[span.code background: true] to your events. Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+        Just add the property #[span.code background: true] to your events.#[br]
+        The particularity of background events is that they can fully be overlapped but not overlapping.#[br]
+        And they don't overlap like other events: when overlapping both events won't change width.#[br]
+        Note that you can still select a background event to put it on top of others and see it.
+        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
       sshpre(language="html-vue" label="Vue Template").
@@ -414,53 +465,6 @@
           align-items: center;
         }
         .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
-
-      //- Example.
-      h3.title.mt-5.mb-2.pt-4 # Overlapping events
-      p.
-        Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).
-        Up to 3 overlapping events starting at the same time.#[br]
-        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
-      v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents")
-      sshpre(language="html-vue" label="Vue Template").
-        &lt;vue-cal selected-date="2018-11-19"
-                 :time-from="8 * 60"
-                 :time-to="23 * 60"
-                 :time-step="60"
-                 :disable-views="['years', 'year', 'month']"
-                 hide-weekends
-                 editable-events
-                 :events="events"&gt;
-        &lt;/vue-cal&gt;
-
-      sshpre(language="js" label="Javascript").
-        data: () => ({
-          events: [
-            {
-              start: '2018-11-19 10:35',
-              end: '2018-11-19 11:30',
-              title: 'Doctor appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-              class: 'health'
-            },
-            {
-              start: '2018-11-19 18:30',
-              end: '2018-11-19 19:15',
-              title: 'Dentist appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-              class: 'health'
-            },
-            {
-              start: '2018-11-20 18:30',
-              end: '2018-11-20 20:30',
-              title: 'Crossfit',
-              content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
-              class: 'sport'
-            },
-            ...
-          ]
-        })
 
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Splitting days &amp; split events
@@ -539,17 +543,17 @@
         after the first load, but be aware that by doing so all the events in Vue Cal
         will be replaced by the new array of events. You may lose your changes if you
         modified events within Vue Cal.
-      v-btn(color="primary" small @click="overlappingEvents.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
+      v-btn(color="primary" small @click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
         v-icon.mr-2 add
         | Add an event
-      v-btn(color="primary" small @click="overlappingEvents.pop()")
+      v-btn(color="primary" small @click="eventsCopy.pop()")
         v-icon.mr-2 remove
         | Remove last event
       p.mb-0 Here is the live array of event titles:
-      pre {{ overlappingEvents.map(e => e.title) }}
+      pre {{ eventsCopy.map(e => e.title) }}
 
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="overlappingEvents")
+        vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends :events="eventsCopy")
       sshpre(language="html-vue" label="Vue Template").
         &lt;v-btn @click="events.push({
           start: '2018-11-20 12:00',
@@ -614,7 +618,7 @@
           :disable-views="['years', 'year', 'month']"
           hide-weekends
           editable-events
-          :events="overlappingEvents"
+          :events="eventsCopy2"
           @ready="logEvents('ready', $event)"
           @view-change="logEvents('view-change', $event)"
           @event-focus="logEvents('event-focus', $event)"
@@ -1076,6 +1080,36 @@ export default {
         class: 'leisure',
         split: 2
       }
+    ],
+    eventsCopy: [
+      ...events,
+      {
+        start: '2018-11-21 12:00',
+        end: '2018-11-21 12:30',
+        title: 'Call mum',
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Eat pop corns',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 2
+      },
+      {
+        start: '2018-11-23 21:00',
+        end: '2018-11-23 23:30',
+        title: 'Enjoy the movie',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 2
+      }
+    ],
+    eventsCopy2: [
+      ...events
     ],
     splitEvents: [
       ...events,
