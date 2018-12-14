@@ -146,7 +146,8 @@ export default {
         }
 
         // If up to 3 events start at the same time.
-        if (event.startTimeMinutes === event2.startTimeMinutes) {
+        if (event.startTimeMinutes === event2.startTimeMinutes ||
+            (this.$parent.noEventsOverlaps && (event1overlapsEvent2 || event2overlapsEvent1))) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         } else {

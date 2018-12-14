@@ -124,6 +124,10 @@ export default {
     editableEvents: {
       type: Boolean,
       default: false
+    },
+    noEventsOverlaps: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -368,7 +372,7 @@ export default {
       })
     },
 
-    emitWithEvent(eventName, event) {
+    emitWithEvent (eventName, event) {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       let evt = { ...event }

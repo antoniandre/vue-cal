@@ -375,7 +375,7 @@
         Up to 3 overlapping events starting at the same time. Try to resize &amp; delete events to see the overlapping redrawn. For performance, only redraw the currently modified cell or day split.#[br]
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents")
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" no-events-overlaps)
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="8 * 60"
