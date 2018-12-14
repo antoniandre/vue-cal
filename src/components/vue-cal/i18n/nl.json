@@ -10,5 +10,5 @@
   "noEvent": "Geen afspraken",
   "deleteEvent": "Verwijderen",
   "createEvent": "Nieuwe afspraak aanmaken",
-  "dateFormat": "DDDD mmmm d{S}, yyyy"
+  "dateFormat": "DDDD d mmmm yyyy"
 }

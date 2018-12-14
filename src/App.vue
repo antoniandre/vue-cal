@@ -217,7 +217,7 @@
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Internationalization (i18n)
       p.
-        Let you to translate the calendar texts into your own language (#[span.code locale]).#[br]
+        Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
         Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
         vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="zh-cn")
@@ -682,7 +682,7 @@
             Allows you to translate the calendar texts in a given language.#[br]
             Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
-            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian, Simplified Chinese &amp; Russian.#[br]
+            | Currently available languages are English, Dutch, French, Italian, Portuguese-Brasilian, Russian, Spanish &amp; Simplified Chinese.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
             | this is what a language json looks like.
 
@@ -931,6 +931,8 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.9.0] Add Dutch language
       div
         | #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
       div
