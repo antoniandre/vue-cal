@@ -625,6 +625,7 @@
           @event-title-change="logEvents('event-title-change', $event)"
           @event-content-change="logEvents('event-content-change', $event)"
           @event-duration-change="logEvents('event-duration-change', $event)"
+          @event-create="logEvents('event-create', $event)"
           @event-delete="logEvents('event-delete', $event)")
 
       sshpre(language="html-vue" label="Vue Template").
@@ -642,6 +643,7 @@
                  @event-title-change="logEvents('event-title-change', $event)"
                  @event-content-change="logEvents('event-content-change', $event)"
                  @event-duration-change="logEvents('event-duration-change', $event)"
+                 @event-create="logEvents('event-create', $event)"
                  @event-delete="logEvents('event-delete', $event)"&gt;
         &lt;/vue-cal&gt;
 

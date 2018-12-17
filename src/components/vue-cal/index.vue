@@ -173,6 +173,11 @@ export default {
         timeout: 1200,
         timeoutId: null
       },
+      clickHoldACell: {
+        cellId: null,
+        timeout: 4200,
+        timeoutId: null
+      },
       dblTapACell: {
         taps: 0,
         timeout: 500
@@ -301,10 +306,22 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
+      let clickHoldACell = this.domEvents.clickHoldACell
+      // clearTimeout(clickHoldACell.timeoutId)
+      // clickHoldACell.timeoutId = null // Reinit click hold on each click.
+      // clickHoldACell.cellId = null // Reinit click hold on each click.
+
       // If not mousedown on an event.
-      if (!this.isDOMElementAnEvent(e.target)) {
-        console.log('onCellMouseDown', cell)
-        this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+      if (!this.isDOMElementAnEvent(e.target) && ['week', 'day'].indexOf(this.view.id) > -1) {
+        // console.log('onCellMouseDown', cell)
+
+        this.domEvents.clickHoldACell.cellId = this._uid + '_' + cell.formattedDate
+        this.domEvents.clickHoldACell.timeoutId = setTimeout(() => {
+          // console.log('creating', clickHoldACell.cellId)
+
+          if (clickHoldACell.cellId) this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+        }, clickHoldACell.timeout)
+        console.log('settimeout init', {...this.domEvents.clickHoldACell})
       }
     },
 
@@ -328,7 +345,8 @@ export default {
     },
 
     onMouseUp (e) {
-      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent } = this.domEvents
+      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      console.log('on mouse up', {...clickHoldACell})
 
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
@@ -348,6 +366,18 @@ export default {
       if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eventId) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
+      }
+
+      console.log('clearing timeout ', {...clickHoldACell})
+      clearTimeout(clickHoldACell.timeoutId)
+      clickHoldACell.timeoutId = null
+      clickHoldACell.cellId = null
+      // debugger
+
+      // Prevent creating an event if click and hold was not long enough.
+      if (clickHoldACell.timeoutId) {
+        clearTimeout(clickHoldACell.timeoutId)
+        clickHoldACell.timeoutId = null
       }
 
       // Any mouse up must cancel event resizing.
@@ -411,11 +441,12 @@ export default {
       const date = `${y}-${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d}`
       const startTimeMinutes = 14 * 60
       const endTimeMinutes = 16 * 60
-      console.log(date)
-
+      console.log(date, mouseY, cell)
 
       const event = {
         id: `${this._uid}_${this.eventIdIncrement++}`,
+        title: 'New Event',
+        content: '...',
         start: date + '14:00',
         startDate: date,
         startTime: '14:00',
@@ -432,7 +463,12 @@ export default {
         classes: { 'blue-event': true, 'vuecal__event--background': false }
       }
 
+      // Make array reactive for future events creations & deletions.
+      if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+
       this.mutableEvents[event.startDate].push(event)
+      this.emitWithEvent('event-change', event)
+      this.emitWithEvent('event-create', event)
     },
 
     // Cleanup event object before exporting it.
