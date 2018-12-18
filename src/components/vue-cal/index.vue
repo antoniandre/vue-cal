@@ -175,7 +175,7 @@ export default {
       },
       clickHoldACell: {
         cellId: null,
-        timeout: 4200,
+        timeout: 3000,
         timeoutId: null
       },
       dblTapACell: {
@@ -410,7 +410,7 @@ export default {
           id,
           startDate,
           endDate,
-          startTime,
+          startTime: this.time ? startTime : null,
           startTimeMinutes,
           endTime,
           endTimeMinutes,
@@ -447,13 +447,13 @@ export default {
         id: `${this._uid}_${this.eventIdIncrement++}`,
         title: 'New Event',
         content: '...',
-        start: date + '14:00',
+        start: date + (this.time ? '14:00' : ''),
         startDate: date,
-        startTime: '14:00',
+        startTime: this.time ? '14:00' : null,
         startTimeMinutes,
-        end: date + '16:00',
+        end: date + (this.time ? '16:00' : ''),
         endDate: date,
-        endTime: '16:00',
+        endTime: this.time ? '16:00' : null,
         endTimeMinutes,
         height: 0,
         top: 0,
@@ -872,6 +872,7 @@ $weekdays-headings-height: 2.8em;
 
   &__bg {
     position: relative;
+    // display: block;
   }
 
   &__time-column {
