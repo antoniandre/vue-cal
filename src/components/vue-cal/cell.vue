@@ -79,7 +79,17 @@ export default {
     eventClasses (event) {
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
-      const simultaneous = Object.keys(event.simultaneous).length + 1
+      let simultaneous = Object.keys(event.simultaneous).length + 1
+
+      if (this.$parent.noEventsOverlaps && simultaneous === 3) {
+        let split3 = 2
+        Object.keys(event.simultaneous).forEach(eventId => {
+          if (split3) {
+            if (Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) split3--
+          }
+        })
+        if (!split3) simultaneous = 2
+      }
 
       return {
         ...event.classes,
@@ -444,10 +454,11 @@ export default {
 
   &.vuecal__event--overlapped {right: 20%;}
   &.vuecal__event--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &.vuecal__event--overlapped.vuecal__event--split2 {right: 0;left: 50%;}
-  &.vuecal__event--overlapping.vuecal__event--split2 {left: 0;right: 50%;}
-  &.vuecal__event--overlapped.vuecal__event--split3 {right: 0;left: 66.66%;}
-  &.vuecal__event--overlapping.vuecal__event--split3 {left: 0;right: 66.66%;}
+  &.vuecal__event--overlapped.vuecal__event--split2 {right: 50%;}
+  &.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;}
+  &.vuecal__event--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  &.vuecal__event--overlapped.vuecal__event--split3 {right: 66.66%;}
+  &.vuecal__event--overlapping.vuecal__event--split3 {left: 66.66%;}
   &.vuecal__event--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
   &.vuecal__event--background {z-index: 0;}
   &.vuecal__event--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
