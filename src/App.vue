@@ -372,10 +372,12 @@
       h3.title.mt-5.mb-2.pt-4 # Overlapping events
       p.
         Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).#[br]
-        Up to 3 overlapping events starting at the same time. Try to resize &amp; delete events to see the overlapping redrawn. For performance, only redraw the currently modified cell or day split.#[br]
-        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+        #[strong Up to 3 overlapping events starting at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
+        You can also use the option #[span.code no-events-overlaps] to show #[strong up to 3 events side by side] (splitting the cell space) instead of overlapping.
+      v-btn(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-events-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
+
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" no-events-overlaps)
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" :no-events-overlaps="!overlapEvents")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time-from="8 * 60"
@@ -970,6 +972,7 @@
           | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
 
 <script>
+import Vue from 'vue'
 import VueCal from '@/components/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
@@ -1053,34 +1056,39 @@ export default {
     ready: false,
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
+    overlapEvents: true,
     now: new Date(),
     log: [],
     events,
     overlappingEvents: [
       ...events,
       {
-        start: '2018-11-21 12:00',
-        end: '2018-11-21 12:30',
+        start: '2018-11-21 11:20',
+        end: '2018-11-21 11:50',
         title: 'Call mum',
         content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure',
-        split: 1
+        class: 'leisure'
+      },
+      {
+        start: '2018-11-21 13:00',
+        end: '2018-11-21 14:00',
+        title: 'Another thing',
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'blue-event'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       }
     ],
     eventsCopy: [
@@ -1090,24 +1098,21 @@ export default {
         end: '2018-11-21 12:30',
         title: 'Call mum',
         content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure',
-        split: 1
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       }
     ],
     eventsCopy2: [

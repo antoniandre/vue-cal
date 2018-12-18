@@ -12,18 +12,18 @@
                        @mousedown="onMouseDown($event, event)"
                        @contextmenu="onContextMenu($event, event)"
                        @touchstart="onTouchStart($event, event)")
-          .vuecal__event-delete(v-if="$parent.editableEvents"
+          .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="$parent.editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
           .vuecal__event-time(v-if="event.startTime")
             | {{ event.startTime }}
             span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="$parent.editableEvents && event.startTime"
-                                       @mousedown="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)"
-                                       @touchstart="$parent.editableEvents && $parent.time && onDragHandleMouseDown($event, event)")
+          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
+                                       @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
+                                       @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
 </template>
 
 <script>
@@ -56,10 +56,10 @@ export default {
 
   methods: {
     updateEventPosition (event) {
-      let minutesFromTop = event.startTimeMinutes - this.$parent.timeFrom
+      let minutesFromTop = event.startTimeMinutes - this.timeFrom
       const top = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
-      minutesFromTop = event.endTimeMinutes - this.$parent.timeFrom
+      minutesFromTop = event.endTimeMinutes - this.timeFrom
       const bottom = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
       event.top = top
@@ -81,11 +81,11 @@ export default {
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
 
-      if (this.$parent.noEventsOverlaps && simultaneous === 3) {
-        let split3 = 2
+      if (this.noEventsOverlaps && simultaneous >= 3) {
+        let split3 = simultaneous - 1
         Object.keys(event.simultaneous).forEach(eventId => {
-          if (split3) {
-            if (Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) split3--
+          if (split3 && Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
+            split3--
           }
         })
         if (!split3) simultaneous = 2
@@ -157,7 +157,7 @@ export default {
 
         // If up to 3 events start at the same time.
         if (event.startTimeMinutes === event2.startTimeMinutes ||
-            (this.$parent.noEventsOverlaps && (event1overlapsEvent2 || event2overlapsEvent1))) {
+            (this.noEventsOverlaps && (event1overlapsEvent2 || event2overlapsEvent1))) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         } else {
@@ -280,6 +280,9 @@ export default {
     texts () {
       return this.$parent.texts
     },
+    time () {
+      return this.$parent.time
+    },
     timeCellHeight () {
       return parseInt(this.$parent.timeCellHeight)
     },
@@ -288,6 +291,13 @@ export default {
     },
     timeStep () {
       return parseInt(this.$parent.timeStep)
+    },
+    editableEvents () {
+      return this.$parent.editableEvents
+    },
+    noEventsOverlaps () {
+      this.$nextTick(() => {this.checkCellOverlappingEvents()})
+      return this.$parent.noEventsOverlaps
     },
     domEvents: {
       get () {
