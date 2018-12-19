@@ -98,7 +98,7 @@ export default {
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,
-        'vuecal__event--split3': simultaneous === 3,
+        'vuecal__event--split3': simultaneous >= 3,
         'vuecal__event--split-middle': overlapped && overlapping && simultaneous === 3
       }
     },
