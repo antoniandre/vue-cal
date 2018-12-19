@@ -630,7 +630,8 @@ export default {
         'vuecal--split-days': this.splitDays.length,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
-        'vuecal--xsmall': this.xsmall
+        'vuecal--xsmall': this.xsmall,
+        'vuecal--no-events-overlaps': this.noEventsOverlaps
       }
     }
   },

@@ -81,7 +81,7 @@ export default {
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
 
-      if (this.noEventsOverlaps && simultaneous >= 3) {
+      if (/* this.noEventsOverlaps && */ simultaneous >= 3) {
         let split3 = simultaneous - 1
         Object.keys(event.simultaneous).forEach(eventId => {
           if (split3 && Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
@@ -157,7 +157,7 @@ export default {
 
         // If up to 3 events start at the same time.
         if (event.startTimeMinutes === event2.startTimeMinutes ||
-            (this.noEventsOverlaps && (event1overlapsEvent2 || event2overlapsEvent1))) {
+            (/* this.noEventsOverlaps && */ (event1overlapsEvent2 || event2overlapsEvent1))) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         } else {
@@ -462,16 +462,25 @@ export default {
     // &:hover {height: auto !important;}
   }
 
-  &.vuecal__event--overlapped {right: 20%;}
-  &.vuecal__event--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &.vuecal__event--overlapped.vuecal__event--split2 {right: 50%;}
-  &.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;}
-  &.vuecal__event--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
-  &.vuecal__event--overlapped.vuecal__event--split3 {right: 66.66%;}
-  &.vuecal__event--overlapping.vuecal__event--split3 {left: 66.66%;}
-  &.vuecal__event--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
-  &.vuecal__event--background {z-index: 0;}
-  &.vuecal__event--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
+  &--overlapped {right: 20%;}
+  &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &--overlapped.vuecal__event--split2 {right: 25%;}
+  &--overlapping.vuecal__event--split2 {left: 25%;}
+  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  &--overlapped.vuecal__event--split3 {right: 40%;}
+  &--overlapping.vuecal__event--split3 {left: 40%;}
+  &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
+
+  .vuecal--no-events-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  .vuecal--no-events-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
+  .vuecal--no-events-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
+  .vuecal--no-events-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  .vuecal--no-events-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
+  .vuecal--no-events-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
+  .vuecal--no-events-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
+
+  &--background {z-index: 0;}
+  &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
 }
 
 .vuecal__event-resize-handle {
