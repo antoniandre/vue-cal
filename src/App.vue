@@ -159,13 +159,12 @@
         a(name="how-to-use")
       highlight-message(type="warning")
         p.
-          Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
-          By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
-          You are also free to put a wrapping border or not, or box-shadow, anything you like.
+          Wait! Before you dive in, make sure you place Vue cal in a container that #[strong has a set height] (not auto or initial)!#[br]
+          By default Vue Cal will take the full width &amp; height of its container if it has set a height.
         sshpre.mt-2(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
-          &lt;vue-cal style="height: 250px;border: 1px solid #eee"&gt;&lt;/vue-cal&gt;
-        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends hide-view-selector style="height: 250px;border: 1px solid #eee")
+          &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends hide-view-selector style="height: 250px")
 
       h2.headline.mt-5.pt-5
         a(href="#examples") Examples
@@ -910,7 +909,7 @@
 
       p
         strong Rounded Theme#[br]
-        | You can apply the rounded cells theme like in Example 5, with the CSS class #[span.code vuecal--rounded-theme].
+        | You can apply the rounded cells theme like in Example #[strong # Calendar themes - Rounded cells], with the CSS class #[span.code vuecal--rounded-theme].
 
       h3.mt-5 # Responsiveness &amp; Media Queries
       p.
