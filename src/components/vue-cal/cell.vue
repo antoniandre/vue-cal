@@ -80,8 +80,9 @@ export default {
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
+      let forceLeft = false
 
-      if (/* this.noEventsOverlaps && */ simultaneous >= 3) {
+      if (simultaneous >= 3) {
         let split3 = simultaneous - 1
         Object.keys(event.simultaneous).forEach(eventId => {
           if (split3 && Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
@@ -89,6 +90,14 @@ export default {
           }
         })
         if (!split3) simultaneous = 2
+      }
+
+      else if (simultaneous === 2) {
+        const otherEvent = this.events.find(e => e.id === Object.keys(event.simultaneous)[0])
+
+        if (Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
+          forceLeft = true
+        }
       }
 
       return {
@@ -99,7 +108,8 @@ export default {
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,
         'vuecal__event--split3': simultaneous >= 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous === 3
+        'vuecal__event--split-middle': overlapped && overlapping && simultaneous === 3,
+        'vuecal__event--split-left': forceLeft
       }
     },
 
@@ -471,6 +481,7 @@ export default {
   .vuecal--no-events-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
   .vuecal--no-events-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
   .vuecal--no-events-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
+  .vuecal--no-events-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
   .vuecal--no-events-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
   .vuecal--no-events-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
   .vuecal--no-events-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
