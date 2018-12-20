@@ -1310,6 +1310,7 @@ a {
   font-family: monospace, sans-serif;
 }
 
+.v-card {box-shadow: none;}
 .api-options {list-style-type: none;}
 .api-options > li {margin-top: 2em;}
 .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
@@ -1323,9 +1324,9 @@ a {
 }
 
 // Split days example.
-.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
+.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}
 .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
-.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
+.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.5);}
 .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
