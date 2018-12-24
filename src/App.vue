@@ -370,40 +370,44 @@
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Overlapping events
       p.
-        Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).#[br]
-        #[strong Up to 3 overlapping events starting at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
-        You can also use the option #[span.code no-events-overlaps] to show #[strong up to 3 events side by side] (splitting the cell space) instead of overlapping.
-      v-btn(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-events-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
+        Overlapping, editable  &amp; deletable events.#[br]
+        #[strong Up to 3 overlapping events starting or running at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
+        You can also use the option #[span.code no-event-overlaps] to show #[strong up to 3 events side by side] (splitting the cell width) instead of overlapping.
+      v-btn.ma-0(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
 
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" :no-events-overlaps="!overlapEvents")
-      sshpre(language="html-vue" label="Vue Template").
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" :no-event-overlaps="!overlapEvents")
+      sshpre(language="html-vue" label="Vue Template" v-pre).
+        &lt;v-btn @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;:no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"&lt;/v-btn&gt;
+
         &lt;vue-cal selected-date="2018-11-19"
-                 :time-from="8 * 60"
+                 :time-from="10 * 60"
                  :time-to="23 * 60"
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
                  hide-weekends
                  editable-events
+                 :no-event-overlaps="!overlapEvents"
                  :events="events"&gt;
         &lt;/vue-cal&gt;
 
       sshpre(language="js" label="Javascript").
         data: () => ({
+          overlapEvents: true,
           events: [
             {
-              start: '2018-11-19 10:35',
-              end: '2018-11-19 11:30',
-              title: 'Doctor appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+              start: '2018-11-21 14:00',
+              end: '2018-11-21 22:00',
+              title: 'A big thing',
+              content: '&lt;i class="v-icon material-icons"&gt;sentiment_satisfied_alt&lt;/i&gt;',
               class: 'health'
             },
             {
-              start: '2018-11-19 18:30',
-              end: '2018-11-19 19:15',
-              title: 'Dentist appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-              class: 'health'
+              start: '2018-11-21 16:00',
+              end: '2018-11-21 19:00',
+              title: 'Another thing',
+              content: '&lt;i class="v-icon material-icons"&gt;thumb_up&lt;/i&gt;',
+              class: 'blue-event'
             },
             {
               start: '2018-11-20 18:30',
@@ -674,6 +678,7 @@
         splitDays:          [Array],   default: []
         events:             [Array],   default: []
         editableEvents      [Boolean], default: false
+        noEventOverlaps    [Boolean], default: false
 
       ul.pl-0.api-options
         li
@@ -839,6 +844,10 @@
               li Deleting events by click and hold an event
               li Editing events title
         li
+          code.mr-2 noEventOverlaps
+          span.code [Boolean], default: false
+          p When #[span.code noEventOverlaps] is set to true, all the overlapping events will not overlap but instead split the cell width in 2 or 3.
+        li
           code.mr-2 events
           span.code [Array], default: []
           p.
@@ -932,6 +941,8 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.10.0] Allow no event overlaps
       div
         | #[strong Version 1.9.0] Add Dutch language
       div
@@ -1062,17 +1073,17 @@ export default {
     overlappingEvents: [
       ...events,
       {
-        start: '2018-11-21 11:20',
-        end: '2018-11-21 11:50',
-        title: 'Call mum',
-        content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure'
+        start: '2018-11-21 14:00',
+        end: '2018-11-21 22:00',
+        title: 'A big thing',
+        content: '<i class="v-icon material-icons">sentiment_satisfied_alt</i>',
+        class: 'health'
       },
       {
-        start: '2018-11-21 13:00',
-        end: '2018-11-21 14:00',
+        start: '2018-11-21 16:00',
+        end: '2018-11-21 19:00',
         title: 'Another thing',
-        content: '<i class="v-icon material-icons">local_cafe</i>',
+        content: '<i class="v-icon material-icons">thumb_up</i>',
         class: 'blue-event'
       },
       {
