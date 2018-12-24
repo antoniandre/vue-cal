@@ -108,7 +108,7 @@ export default {
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,
         'vuecal__event--split3': simultaneous >= 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous === 3,
+        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
         'vuecal__event--split-left': forceLeft
       }
     },
@@ -167,7 +167,7 @@ export default {
 
         // If up to 3 events start at the same time.
         if (event.startTimeMinutes === event2.startTimeMinutes ||
-            (/* this.noEventsOverlaps && */ (event1overlapsEvent2 || event2overlapsEvent1))) {
+            (event1overlapsEvent2 || event2overlapsEvent1)) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         } else {
@@ -473,7 +473,8 @@ export default {
   &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
   &--overlapped.vuecal__event--split2 {right: 25%;}
   &--overlapping.vuecal__event--split2 {left: 25%;}
-  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
+  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
   &--overlapped.vuecal__event--split3 {right: 40%;}
   &--overlapping.vuecal__event--split3 {left: 40%;}
   &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
