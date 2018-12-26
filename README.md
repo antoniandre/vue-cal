@@ -26,6 +26,8 @@ ___
 
 ## Release Notes
 
+- __Version 1.10.0__ Allow no event overlaps
+- __Version 1.9.0__ Add Dutch language
 - __Version 1.8.0__ Display simultaneous events &amp; redraw overlaps on event resize &amp; delete
 - __Version 1.7.0__ Vue Cal emits events
 - __Version 1.6.0__ Allow event deletion on touch devices

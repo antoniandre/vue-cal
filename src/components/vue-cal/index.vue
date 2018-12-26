@@ -19,7 +19,7 @@
 
     .vuecal__flex.vuecal__body(grow)
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
-        .vuecal__flex.vuecal__bg(grow)
+        .vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
             .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`") {{ cell.label }}
 
@@ -141,6 +141,10 @@ export default {
       default: () => []
     },
     editableEvents: {
+      type: Boolean,
+      default: false
+    },
+    noEventOverlaps: {
       type: Boolean,
       default: false
     }
@@ -730,7 +734,8 @@ export default {
         'vuecal--split-days': this.splitDays.length,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
-        'vuecal--xsmall': this.xsmall
+        'vuecal--xsmall': this.xsmall,
+        'vuecal--no-event-overlaps': this.noEventOverlaps
       }
     }
   },
@@ -750,6 +755,7 @@ $weekdays-headings-height: 2.8em;
 .vuecal {
   height: 100%;
   overflow: hidden;
+  box-shadow: 0 0 0 1px inset rgba(0, 0, 0, 0.08);
 
   // Disable user selection everywhere except in events.
   * {user-select: none;}
@@ -766,11 +772,11 @@ $weekdays-headings-height: 2.8em;
 
     &[column] {
       flex-direction: column;
-      flex: 1;
+      flex: 1 1 auto;
     }
 
     &[grow] {
-      flex-grow: 1;
+      flex: 1 1 auto;
     }
   }
 
@@ -865,14 +871,19 @@ $weekdays-headings-height: 2.8em;
   &__body {
     overflow: auto;
     -webkit-overflow-scrolling: touch;
-    flex-basis: 0;
-    margin-left: -1px;
     min-height: 60px;
   }
 
   &__bg {
     position: relative;
-    // display: block;
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+    margin-bottom: 1px;
+  }
+
+  &--no-time &__bg {
+    display: block;
   }
 
   &__time-column {
@@ -910,7 +921,8 @@ $weekdays-headings-height: 2.8em;
   //==================================//
   &__cells {
     flex-wrap: wrap;
-    overflow: hidden;
+    min-height: 100%;
+    margin: 0 1px 1px 0;
 
     .vuecal--split-days.vuecal--week-view & {
       flex-wrap: nowrap;

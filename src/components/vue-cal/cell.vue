@@ -79,7 +79,26 @@ export default {
     eventClasses (event) {
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
-      const simultaneous = Object.keys(event.simultaneous).length + 1
+      let simultaneous = Object.keys(event.simultaneous).length + 1
+      let forceLeft = false
+
+      if (simultaneous >= 3) {
+        let split3 = simultaneous - 1
+        Object.keys(event.simultaneous).forEach(eventId => {
+          if (split3 && Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
+            split3--
+          }
+        })
+        if (!split3) simultaneous = 2
+      }
+
+      else if (simultaneous === 2) {
+        const otherEvent = this.events.find(e => e.id === Object.keys(event.simultaneous)[0])
+
+        if (Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
+          forceLeft = true
+        }
+      }
 
       return {
         ...event.classes,
@@ -88,8 +107,9 @@ export default {
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,
-        'vuecal__event--split3': simultaneous === 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous === 3
+        'vuecal__event--split3': simultaneous >= 3,
+        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
+        'vuecal__event--split-left': forceLeft
       }
     },
 
@@ -146,7 +166,8 @@ export default {
         }
 
         // If up to 3 events start at the same time.
-        if (event.startTimeMinutes === event2.startTimeMinutes) {
+        if (event.startTimeMinutes === event2.startTimeMinutes ||
+            (event1overlapsEvent2 || event2overlapsEvent1)) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         } else {
@@ -281,7 +302,11 @@ export default {
       return parseInt(this.$parent.timeStep)
     },
     editableEvents () {
-      return parseInt(this.$parent.editableEvents)
+      return this.$parent.editableEvents
+    },
+    noEventOverlaps () {
+      this.$nextTick(() => this.checkCellOverlappingEvents())
+      return this.$parent.noEventOverlaps
     },
     domEvents: {
       get () {
@@ -389,9 +414,6 @@ export default {
     bottom: -1px;
     border: 1px solid #ddd;
     content: '';
-
-    .vuecal--day-view & {left: 1px;right: 0;bottom: 0;}
-    .vuecal--view-with-time.vuecal--day-view & {left: 0;}
   }
 
   &.today,
@@ -446,15 +468,27 @@ export default {
     // &:hover {height: auto !important;}
   }
 
-  &.vuecal__event--overlapped {right: 20%;}
-  &.vuecal__event--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &.vuecal__event--overlapped.vuecal__event--split2 {right: 0;left: 50%;}
-  &.vuecal__event--overlapping.vuecal__event--split2 {left: 0;right: 50%;}
-  &.vuecal__event--overlapped.vuecal__event--split3 {right: 0;left: 66.66%;}
-  &.vuecal__event--overlapping.vuecal__event--split3 {left: 0;right: 66.66%;}
-  &.vuecal__event--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
-  &.vuecal__event--background {z-index: 0;}
-  &.vuecal__event--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
+  &--overlapped {right: 20%;}
+  &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  &--overlapped.vuecal__event--split2 {right: 25%;}
+  &--overlapping.vuecal__event--split2 {left: 25%;}
+  &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
+  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
+  &--overlapped.vuecal__event--split3 {right: 40%;}
+  &--overlapping.vuecal__event--split3 {left: 40%;}
+  &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
+
+  .vuecal--no-event-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
+  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
+  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
+  .vuecal--no-event-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
+  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
+  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
+
+  &--background {z-index: 0;}
+  &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
 }
 
 .vuecal__event-resize-handle {
@@ -486,7 +520,7 @@ export default {
   line-height: 1.4em;
   background-color: rgba(221, 51, 51, 0.85);
   color: #fff;
-  z-index: 1;
+  z-index: 0;
   cursor: pointer;
   transform: translateY(-110%);
   transition: 0.3s;
@@ -503,7 +537,7 @@ export default {
       background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m256 33c-124 0-224 100-224 224 0 124 100 224 224 224 124 0 224-100 224-224 0-124-100-224-224-224z m108 300c2 1 3 3 3 5 0 2-1 4-3 6l-21 21c-2 2-4 3-6 3-2 0-4-1-5-3l-76-75-75 76c-2 1-4 2-6 2-2 0-4-1-6-2l-21-22c-2-2-2-4-2-6 0-2 0-4 2-5l76-76-76-75c-3-3-3-9 0-12l21-21c2-2 4-3 6-3 2 0 4 1 5 3l76 74 76-74c1-2 3-3 5-3 3 0 5 1 6 3l22 21c3 3 3 9 0 12l-76 75z" transform="scale(0.046875 0.046875)" fill="#fff" opacity="0.9"/></svg>');
     }
   }
-  .vuecal__event--deletable & {transform: translateY(0);}
+  .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
 }
 
 .vuecal__event-title--edit {

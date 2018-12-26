@@ -11,102 +11,102 @@
           .headline Vue Cal#[br]
           | A Vue JS full calendar, no dependency, no BS. :metal:
 
-        div(style="margin: 7em auto;max-width: 800px")
+        div.todo(style="margin: 7em auto;max-width: 800px")
           h2.title.mt-5 To do...
           p.mb-2 Here is my ongoing to do list.
           div(style="transform: scale(0.8);opacity: 0.7;")
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | default active view
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Enable / disable views
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Hide / show weekends
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Add timeline w/ timerange &amp; increment
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Add timeline
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | time format 12/24 h
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Support for i18n
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Split days
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Support events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Background events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Overlap events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Keep only default style in CSS
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Allow custom arrows
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Default active date
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Double tap on touch devices
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               strong First NPM Release!
           //- v-chip.pr-1(color="amber darken-1" outline small disabled)
-          //-   v-icon.mr-2 timer
+          //-   v-icon.mr-1 timer
           .mb-2 Then
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Built-in themes
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Resize events
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Delete events
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Emit DOM events
           v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+            v-icon.mr-1 timer
+            | Create an event
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-1 timer
             | Drag events
           v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+            v-icon.mr-1 timer
             | Multiple-days events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
-            | Create an event
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Resize events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Drag events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Optional tooltip on events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Recurring events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | More control on all date formats
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Highlight current time
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Event indicator on month view
 
       h2.headline.mt-5.mb-3.title Github project
@@ -159,13 +159,12 @@
         a(name="how-to-use")
       highlight-message(type="warning")
         p.
-          Wait! Before you dive in, make sure you place Vue cal in a container that has a set height!#[br]
-          By default Vue Cal will take the full width &amp; height of its container if it has a height.#[br]
-          You are also free to put a wrapping border or not, or box-shadow, anything you like.
+          Wait! Before you dive in, make sure you place Vue cal in a container that #[strong has a set height] (not auto or initial)!#[br]
+          By default Vue Cal will take the full width &amp; height of its container if it has set a height.
         sshpre.mt-2(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
-          &lt;vue-cal style="height: 250px;border: 1px solid #eee"&gt;&lt;/vue-cal&gt;
-        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends hide-view-selector style="height: 250px;border: 1px solid #eee")
+          &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" :time-step="60" hide-weekends hide-view-selector style="height: 250px")
 
       h2.headline.mt-5.pt-5
         a(href="#examples") Examples
@@ -217,7 +216,7 @@
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Internationalization (i18n)
       p.
-        Let you to translate the calendar texts into your own language (#[span.code locale]).#[br]
+        Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
         Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
         vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="zh-cn")
@@ -371,38 +370,44 @@
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Overlapping events
       p.
-        Overlapping &amp; editable events title, deletable events (by clicking and holding an event), resizable events (by dragging handle).#[br]
-        Up to 3 overlapping events starting at the same time. Try to resize &amp; delete events to see the overlapping redrawn. For performance, only redraw the currently modified cell or day split.#[br]
-        Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+        Overlapping, editable  &amp; deletable events.#[br]
+        #[strong Up to 3 overlapping events starting or running at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
+        You can also use the option #[span.code no-event-overlaps] to show #[strong up to 3 events side by side] (splitting the cell width) instead of overlapping.
+      v-btn.ma-0(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
+
       v-card.green-theme.my-2.ma-auto.main-content
-        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents")
-      sshpre(language="html-vue" label="Vue Template").
+        vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :time-step="60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" :no-event-overlaps="!overlapEvents")
+      sshpre(language="html-vue" label="Vue Template" v-pre).
+        &lt;v-btn @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;:no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"&lt;/v-btn&gt;
+
         &lt;vue-cal selected-date="2018-11-19"
-                 :time-from="8 * 60"
+                 :time-from="10 * 60"
                  :time-to="23 * 60"
                  :time-step="60"
                  :disable-views="['years', 'year', 'month']"
                  hide-weekends
                  editable-events
+                 :no-event-overlaps="!overlapEvents"
                  :events="events"&gt;
         &lt;/vue-cal&gt;
 
       sshpre(language="js" label="Javascript").
         data: () => ({
+          overlapEvents: true,
           events: [
             {
-              start: '2018-11-19 10:35',
-              end: '2018-11-19 11:30',
-              title: 'Doctor appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+              start: '2018-11-21 14:00',
+              end: '2018-11-21 22:00',
+              title: 'A big thing',
+              content: '&lt;i class="v-icon material-icons"&gt;sentiment_satisfied_alt&lt;/i&gt;',
               class: 'health'
             },
             {
-              start: '2018-11-19 18:30',
-              end: '2018-11-19 19:15',
-              title: 'Dentist appointment',
-              content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-              class: 'health'
+              start: '2018-11-21 16:00',
+              end: '2018-11-21 19:00',
+              title: 'Another thing',
+              content: '&lt;i class="v-icon material-icons"&gt;thumb_up&lt;/i&gt;',
+              class: 'blue-event'
             },
             {
               start: '2018-11-20 18:30',
@@ -675,6 +680,7 @@
         splitDays:          [Array],   default: []
         events:             [Array],   default: []
         editableEvents      [Boolean], default: false
+        noEventOverlaps    [Boolean], default: false
 
       ul.pl-0.api-options
         li
@@ -684,7 +690,7 @@
             Allows you to translate the calendar texts in a given language.#[br]
             Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
-            | Currently available languages are English, French, Italian, Spanish, Portuguese-Brasilian, Simplified Chinese &amp; Russian.#[br]
+            | Currently available languages are English, Dutch, French, Italian, Portuguese-Brasilian, Russian, Spanish &amp; Simplified Chinese.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
             | this is what a language json looks like.
 
@@ -840,6 +846,10 @@
               li Deleting events by click and hold an event
               li Editing events title
         li
+          code.mr-2 noEventOverlaps
+          span.code [Boolean], default: false
+          p When #[span.code noEventOverlaps] is set to true, all the overlapping events will not overlap but instead split the cell width in 2 or 3.
+        li
           code.mr-2 events
           span.code [Array], default: []
           p.
@@ -910,7 +920,7 @@
 
       p
         strong Rounded Theme#[br]
-        | You can apply the rounded cells theme like in Example 5, with the CSS class #[span.code vuecal--rounded-theme].
+        | You can apply the rounded cells theme like in Example #[strong # Calendar themes - Rounded cells], with the CSS class #[span.code vuecal--rounded-theme].
 
       h3.mt-5 # Responsiveness &amp; Media Queries
       p.
@@ -933,6 +943,10 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.10.0] Allow no event overlaps
+      div
+        | #[strong Version 1.9.0] Add Dutch language
       div
         | #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
       div
@@ -970,6 +984,7 @@
           | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
 
 <script>
+import Vue from 'vue'
 import VueCal from '@/components/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
@@ -1053,34 +1068,39 @@ export default {
     ready: false,
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
+    overlapEvents: true,
     now: new Date(),
     log: [],
     events,
     overlappingEvents: [
       ...events,
       {
-        start: '2018-11-21 12:00',
-        end: '2018-11-21 12:30',
-        title: 'Call mum',
-        content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure',
-        split: 1
+        start: '2018-11-21 14:00',
+        end: '2018-11-21 22:00',
+        title: 'A big thing',
+        content: '<i class="v-icon material-icons">sentiment_satisfied_alt</i>',
+        class: 'health'
+      },
+      {
+        start: '2018-11-21 16:00',
+        end: '2018-11-21 19:00',
+        title: 'Another thing',
+        content: '<i class="v-icon material-icons">thumb_up</i>',
+        class: 'blue-event'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       }
     ],
     eventsCopy: [
@@ -1090,24 +1110,21 @@ export default {
         end: '2018-11-21 12:30',
         title: 'Call mum',
         content: '<i class="v-icon material-icons">local_cafe</i>',
-        class: 'leisure',
-        split: 1
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
         content: '<i class="v-icon material-icons">local_play</i>',
-        class: 'leisure',
-        split: 2
+        class: 'leisure'
       }
     ],
     eventsCopy2: [
@@ -1301,10 +1318,15 @@ a {
   height: 650px;
 }
 
+.todo .v-chip__content {
+  padding: 0 3px;
+}
+
 .code {
   font-family: monospace, sans-serif;
 }
 
+.v-card {box-shadow: none;}
 .api-options {list-style-type: none;}
 .api-options > li {margin-top: 2em;}
 .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
@@ -1318,9 +1340,9 @@ a {
 }
 
 // Split days example.
-.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
+.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}
 .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
-.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
+.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.5);}
 .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
