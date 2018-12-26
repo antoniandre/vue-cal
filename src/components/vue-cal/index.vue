@@ -473,7 +473,16 @@ export default {
           title = `${this.months[month].label} ${year}`
           break
         case 'week':
-          title = `${this.texts.week} ${date.getWeek()} (${formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)})`
+          const lastDayOfWeek = date.addDays(6)
+          let formattedMonthYear = formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)
+
+          // If week is not ending in the same month it started in.
+          if (lastDayOfWeek.getMonth() !== date.getMonth()) {
+            let [m1, y1] = formattedMonthYear.split(' ')
+            let [m2, y2] = formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts).split(' ')
+            formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
+          }
+          title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
         case 'day':
           title = formatDate(date, this.texts.dateFormat, this.texts)
