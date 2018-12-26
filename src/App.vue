@@ -78,14 +78,17 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-1 check
             | Emit DOM events
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-1 check
+            | Event indicator on month view
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-1 timer
             | Create an event
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-1 timer
             | Drag events
-          v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-1 timer
+          v-chip.pr-1(color="deep-orange" outline small disabled)
+            v-icon.mr-1 access_time
             | Multiple-days events
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-1 access_time
@@ -105,9 +108,6 @@
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
             v-icon.mr-1 access_time
             | Highlight current time
-          v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-1 access_time
-            | Event indicator on month view
 
       h2.headline.mt-5.mb-3.title Github project
       v-layout.mb-5(align-center shrink)
@@ -233,9 +233,9 @@
         #[a(href="#css-notes") CSS Notes] section.
 
       v-layout.ma-auto(row justify-center wrap)
-        v-card.ma-2.main-content(style="width: 280px;height: 300px;")
+        v-card.ma-2.main-content(style="width: 280px;height: 300px")
           vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
-        v-card.ma-2.main-content(style="width: 280px;height: 300px;")
+        v-card.ma-2.main-content(style="width: 280px;height: 300px")
           vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
@@ -299,6 +299,53 @@
         .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
         .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
         .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+
+      //- Example.
+      h3.title.mt-5.mb-2.pt-4 # Month view with events indicators
+      p.mb-0.
+        When you define events the month view will display an events count per day.#[br]
+        You can customize this as you wish via CSS.
+      p.layout.align-center
+        span.mr-2 Choose an indicator style:
+        v-radio-group.ma-0.pt-0.d-inline-block(v-model="indicatorStyle" hide-details row)
+          v-radio(label="count (default)" value="count" color="primary")
+          v-radio(label="dash" value="dash" color="primary")
+          v-radio(label="dot" value="dot" color="primary")
+          v-radio(label="cell background" value="cell" color="primary")
+      v-layout.ma-auto(row justify-center wrap)
+        v-card.green-theme.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+          vue-cal.vuecal--green-theme(:class="'event-indicator--' + indicatorStyle" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
+        v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+          vue-cal.vuecal--yellow-theme(:class="'event-indicator--' + indicatorStyle" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal selected-date="2018-11-19"
+                 xsmall
+                 :time-from="10 * 60"
+                 :disable-views="['years', 'year', 'day']"
+                 default-view="month"
+                 :events="events"&gt;
+        &lt;/vue-cal&gt;
+
+      sshpre(language="css" label="CSS").
+        /* Default indicator is count, but you can override it with one of the following rules. */
+
+        /* Dash indicator */
+        .vuecal__cell-events-count {
+          width: 18px;
+          height: 2px;
+          color: transparent;
+        }
+
+        /* Dot indicator */
+        .vuecal__cell-events-count {
+          width: 4px;
+          height: 4px;
+          color: transparent;
+        }
+
+        /* Cell background indicator */
+        .vuecal__cell--has-events {background-color: #fffacd;}
+        .vuecal__cell-events-count {display: none;}
 
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Timeless Events
@@ -908,7 +955,7 @@
 
       sshpre(language="css" label="CSS").
         /* Green-theme. */
-        .vuecal__menu {background-color: #42b983;}
+        .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
         .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
         .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
         .vuecal__title {background-color: #e4f5ef;}
@@ -941,6 +988,13 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.11.0] Add events indicators in month view
+        highlight-message(type="tips").
+          If you have created a theme, update it with the new indicator:
+          #[span.code .vuecal__cell-events-count]. Refer to the updated theme example in the #[a(href="#css-notes") CSS Notes].
+        highlight-message(type="success").
+          The default #[span.code time-step] option value is now 60 minutes (previously 30).
       div
         | #[strong Version 1.10.0] Allow no event overlaps
       div
@@ -1057,16 +1111,13 @@ const events = [
 
 export default {
   name: 'app',
-  components: {
-    VueCal,
-    Sshpre,
-    highlightMessage
-  },
+  components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     ready: false,
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
     overlapEvents: true,
+    indicatorStyle: 'count',
     now: new Date(),
     log: [],
     events,
@@ -1336,6 +1387,31 @@ a {
     font-size: 1.2em;
   }
 }
+
+// Yellow theme.
+.vuecal--yellow-theme {
+  .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);color: #fff;}
+  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
+  .vuecal__title {background-color: rgba(255, 236, 202, 0.5);}
+  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(255, 236, 202, 0.4);}
+  .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
+}
+
+.event-indicator--dash .vuecal__cell-events-count {
+  width: 18px;
+  height: 2px;
+  color: transparent;
+}
+
+.event-indicator--dot .vuecal__cell-events-count {
+  width: 4px;
+  height: 4px;
+  color: transparent;
+}
+
+.event-indicator--cell .vuecal__cell--has-events {background-color: #fffacd;}
+.event-indicator--cell .vuecal__cell-events-count {display: none;}
 
 // Split days example.
 .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}

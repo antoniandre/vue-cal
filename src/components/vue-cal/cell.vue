@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__cell(:class="[cssClass, splits.length ? 'splitted' : '']" :style="cellStyles")
+  .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
     .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
@@ -24,6 +24,8 @@
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
+      span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
+
 </template>
 
 <script>
@@ -434,6 +436,20 @@ export default {
   &.out-of-scope {
     color: #ccc;
   }
+
+  &-events-count {
+    background: #999;
+    color: #fff;
+    position: absolute;
+    border-radius: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 12px;
+    height: 12px;
+    margin-top: -1px;
+    line-height: 12px;
+    font-size: 10px;
+  }
 }
 
 .vuecal--split-days.vuecal--week-view .vuecal__cell.splitted {
@@ -539,6 +555,11 @@ export default {
     }
   }
   .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
+}
+
+.vuecal__event-title,
+.vuecal__event-content {
+  hyphens: auto;
 }
 
 .vuecal__event-title--edit {
