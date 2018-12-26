@@ -11,102 +11,102 @@
           .headline Vue Cal#[br]
           | A Vue JS full calendar, no dependency, no BS. :metal:
 
-        div(style="margin: 7em auto;max-width: 800px")
+        div.todo(style="margin: 7em auto;max-width: 800px")
           h2.title.mt-5 To do...
           p.mb-2 Here is my ongoing to do list.
           div(style="transform: scale(0.8);opacity: 0.7;")
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | default active view
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Enable / disable views
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Hide / show weekends
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Add timeline w/ timerange &amp; increment
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Add timeline
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | time format 12/24 h
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Support for i18n
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Split days
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Support events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Background events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Overlap events
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Keep only default style in CSS
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Allow custom arrows
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Default active date
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               | Double tap on touch devices
             v-chip.pr-1(color="green" outline small disabled)
-              v-icon.mr-2 check
+              v-icon.mr-1 check
               strong First NPM Release!
           //- v-chip.pr-1(color="amber darken-1" outline small disabled)
-          //-   v-icon.mr-2 timer
+          //-   v-icon.mr-1 timer
           .mb-2 Then
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Built-in themes
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Resize events
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Delete events
           v-chip.pr-1(color="green" outline small disabled)
-            v-icon.mr-2 check
+            v-icon.mr-1 check
             | Emit DOM events
           v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+            v-icon.mr-1 timer
+            | Create an event
+          v-chip.pr-1(color="amber darken-1" outline small disabled)
+            v-icon.mr-1 timer
             | Drag events
           v-chip.pr-1(color="amber darken-1" outline small disabled)
-            v-icon.mr-2 timer
+            v-icon.mr-1 timer
             | Multiple-days events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
-            | Create an event
-          v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Resize events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Drag events snap to time
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Optional tooltip on events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Recurring events
           v-chip.pr-1(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | More control on all date formats
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Highlight current time
           v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-2 access_time
+            v-icon.mr-1 access_time
             | Event indicator on month view
 
       h2.headline.mt-5.mb-3.title Github project
@@ -1314,6 +1314,10 @@ a {
 .main-content {
   max-width: 800px;
   height: 650px;
+}
+
+.todo .v-chip__content {
+  padding: 0 3px;
 }
 
 .code {
