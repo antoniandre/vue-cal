@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="cssClasses")
+  .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
@@ -118,7 +118,7 @@ export default {
     },
     timeStep: {
       type: Number,
-      default: 30 // In minutes.
+      default: 60 // In minutes.
     },
     timeCellHeight: {
       type: Number,
@@ -577,7 +577,16 @@ export default {
           title = `${this.months[month].label} ${year}`
           break
         case 'week':
-          title = `${this.texts.week} ${date.getWeek()} (${formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)})`
+          const lastDayOfWeek = date.addDays(6)
+          let formattedMonthYear = formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)
+
+          // If week is not ending in the same month it started in.
+          if (lastDayOfWeek.getMonth() !== date.getMonth()) {
+            let [m1, y1] = formattedMonthYear.split(' ')
+            let [m2, y2] = formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts).split(' ')
+            formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
+          }
+          title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
         case 'day':
           title = formatDate(date, this.texts.dateFormat, this.texts)
@@ -934,8 +943,8 @@ $weekdays-headings-height: 2.8em;
 // Themes.
 //==================================//
 .vuecal--green-theme {
-  .vuecal__menu {background-color: #42b983;}
-  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;color: #fff;}
+  .vuecal__menu li {border-bottom-color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title {background-color: #e4f5ef;}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
@@ -944,8 +953,8 @@ $weekdays-headings-height: 2.8em;
 }
 
 .vuecal--blue-theme {
-  .vuecal__menu {background-color: rgba(66, 163, 185, 0.8);}
-  .vuecal__menu li {border-bottom-color: #fff;color: #fff;}
+  .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(66, 163, 185, 0.8);color: #fff;}
+  .vuecal__menu li {border-bottom-color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title {background-color: rgba(0, 165, 188, 0.3);}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
