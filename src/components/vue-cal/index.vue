@@ -320,12 +320,16 @@ export default {
         // console.log('onCellMouseDown', cell)
 
         this.domEvents.clickHoldACell.cellId = this._uid + '_' + cell.formattedDate
+        this.$set(this.domEvents.clickHoldACell, 'cellId', this._uid + '_' + cell.formattedDate)
         this.domEvents.clickHoldACell.timeoutId = setTimeout(() => {
           // console.log('creating', clickHoldACell.cellId)
 
-          if (clickHoldACell.cellId) this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+          if (clickHoldACell.cellId) {
+            console.log('creating a new event.', {...clickHoldACell})
+            // this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+          }
         }, clickHoldACell.timeout)
-        console.log('settimeout init', {...this.domEvents.clickHoldACell})
+        console.log('start counting for ' + clickHoldACell.timeout + 'ms', {...this.domEvents})
       }
     },
 
@@ -350,7 +354,9 @@ export default {
 
     onMouseUp (e) {
       let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
-      console.log('on mouse up', {...clickHoldACell})
+      console.log('on mouse up', {...this.domEvents})
+
+      if (clickHoldACell.cellId) debugger
 
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
@@ -372,17 +378,17 @@ export default {
         clickHoldAnEvent.timeoutId = null
       }
 
-      console.log('clearing timeout ', {...clickHoldACell})
-      clearTimeout(clickHoldACell.timeoutId)
-      clickHoldACell.timeoutId = null
-      clickHoldACell.cellId = null
+      // console.log('clearing timeout ', {...clickHoldACell})
+      // clearTimeout(clickHoldACell.timeoutId)
+      // clickHoldACell.timeoutId = null
+      // clickHoldACell.cellId = null
       // debugger
 
       // Prevent creating an event if click and hold was not long enough.
-      if (clickHoldACell.timeoutId) {
-        clearTimeout(clickHoldACell.timeoutId)
-        clickHoldACell.timeoutId = null
-      }
+      // if (clickHoldACell.timeoutId) {
+      //   clearTimeout(clickHoldACell.timeoutId)
+      //   clickHoldACell.timeoutId = null
+      // }
 
       // Any mouse up must cancel event resizing.
       resizeAnEvent.eventId = null
