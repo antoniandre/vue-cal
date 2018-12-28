@@ -735,7 +735,7 @@
             Allows you to translate the calendar texts in a given language.#[br]
             Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
-            | Currently available languages are English, Dutch, French, Italian, Portuguese-Brasilian, Russian, Spanish &amp; Simplified Chinese.#[br]
+            | Currently available languages are English, Croatian, Dutch, French, Italian, Portuguese-Brasilian, Russian, Spanish &amp; Simplified Chinese.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
             | this is what a language json looks like.
 
@@ -988,6 +988,8 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.12.0] Add Croatian language.
       div
         | #[strong Version 1.11.0] Add events indicators in month view
         highlight-message(type="tips").

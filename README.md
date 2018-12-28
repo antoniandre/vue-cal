@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.12.0__ Add Croatian language
 - __Version 1.11.0__ Add events indicators in month view
 - __Version 1.10.0__ Allow no event overlaps
 - __Version 1.9.0__ Add Dutch language
