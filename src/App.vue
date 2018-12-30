@@ -648,11 +648,17 @@
         #[span.code event-focus], #[span.code event-delete], #[span.code event-change],
         #[span.code event-title-change], #[span.code event-content-change],
         #[span.code event-duration-change].#[br]
-      highlight-message(type="tips").
-        The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
-        #[span.code event-title-change], #[span.code event-content-change],
-        #[span.code event-duration-change]. So you have the choice to listen to
-        #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
+      highlight-message(type="tips")
+        ul
+          li.
+            The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
+            #[span.code event-title-change], #[span.code event-content-change],
+            #[span.code event-duration-change]. So you have the choice to listen to
+            #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
+          li.mt-3.
+            To help you manipulate an event's date, vue-cal returns native #[span.code Date]
+            objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
+            So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
       p.mb-0 Watch the list of emitted events as you play with Vue Cal:
       pre.mt-2.ssh-pre
         div.grey--text //&nbsp;
@@ -1038,7 +1044,6 @@
           | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].</template>
 
 <script>
-import Vue from 'vue'
 import VueCal from '@/components/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'

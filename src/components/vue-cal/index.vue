@@ -382,6 +382,18 @@ export default {
       delete evt.overlapping
       delete evt.simultaneous
       delete evt.classes
+
+      // Return date objects for easy manipulation.
+      const [date1, time1] = evt.start.split(' ')
+      const [y1, m1, d1] = (date1 && date1.split('-')) || [0, 0, 0]
+      let [h1, min1] = (time1 && time1.split(':')) || [0, 0]
+      evt.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
+
+      const [date2, time2] = evt.end.split(' ')
+      const [y2, m2, d2] = (date2 && date2.split('-')) || [0, 0, 0]
+      let [h2, min2] = (time2 && time2.split(':')) || [0, 0]
+      evt.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
+
       this.$emit(eventName, evt)
     }
   },
