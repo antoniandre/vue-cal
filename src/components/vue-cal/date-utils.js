@@ -116,5 +116,8 @@ export const formatDate = (date, format = 'yyyy-mm-dd', localizedTexts) => {
     yy: date.getFullYear().toString().substr(2, 4) // 18.
   }
 
-  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => dateObj[contents.replace(/\{|\}/g, '')])
+  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
+        const result = dateObj[contents.replace(/\{|\}/g, '')]
+        return typeof result === 'undefined' ? contents : result
+  })
 }
