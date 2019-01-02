@@ -229,7 +229,6 @@ export default {
 
     switchView (view, date = null) {
       this.view.id = view
-      if (this.ready) this.$emit('view-change', view)
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -252,6 +251,8 @@ export default {
           this.view.startDate = date
           break
       }
+
+      if (this.ready) this.$emit('view-change', { view, startDate })
     },
 
     findAncestor (el, Class) {
@@ -264,7 +265,10 @@ export default {
     },
 
     selectCell (cell) {
-      if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
+      if (this.view.selectedDate.toString() !== cell.date.toString()) {
+        this.view.selectedDate = cell.date
+        this.$emit('day-select', date)
+      }
 
       // Switch to narrower view.
       if (this.clickToNavigate) this.switchToNarrowerView()
