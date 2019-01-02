@@ -739,7 +739,7 @@
           span.code [String], default: 'en'
           p.
             Allows you to translate the calendar texts in a given language.#[br]
-            Use a 2 letter locale code unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
+            Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
           highlight-message(type="info")
             | Currently available languages are English, Croatian, Dutch, French, Italian, Portuguese-Brasilian, Russian, Spanish, Swedish &amp; Simplified Chinese.#[br]
             | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
