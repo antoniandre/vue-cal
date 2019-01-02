@@ -17,9 +17,9 @@
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-          .vuecal__event-time(v-if="event.startTime")
-            | {{ event.startTime }}
-            span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
+          .vuecal__event-time(v-if="event.startTimeMinutes")
+            | {{ event.startTimeMinutes | formatTime(timeFormat) }}
+            span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { formatTime } from './date-utils'
+
 export default {
   props: {
     cssClass: {
@@ -55,6 +57,10 @@ export default {
   data: () => ({
     splitEvents: {}
   }),
+
+  filters: {
+    formatTime: (value, format) => (value && (formatTime(value, format) || ''))
+  },
 
   methods: {
     updateEventPosition (event) {
@@ -294,6 +300,9 @@ export default {
     },
     time () {
       return this.$parent.time
+    },
+    timeFormat () {
+      return this.$parent.timeFormat || (this.$parent['12Hour'] ? 'h:mm{am}' : 'HH:mm')
     },
     timeCellHeight () {
       return parseInt(this.$parent.timeCellHeight)

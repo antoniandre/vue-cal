@@ -82,7 +82,7 @@ export const formatTime = (time, format = 'HH:mm') => {
   const H = Math.floor(time / 60)
   const h = H % 12 ? H % 12 : 12
   const am = H < 12 ? 'am' : 'pm'
-  const m = time % 60
+  const m = Math.floor(time % 60)
   const timeObj = {
     H,
     h,
@@ -117,7 +117,7 @@ export const formatDate = (date, format = 'yyyy-mm-dd', localizedTexts) => {
   }
 
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
-        const result = dateObj[contents.replace(/\{|\}/g, '')]
-        return typeof result === 'undefined' ? contents : result
+    const result = dateObj[contents.replace(/\{|\}/g, '')]
+    return result !== undefined ? result : contents
   })
 }

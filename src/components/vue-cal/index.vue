@@ -109,6 +109,10 @@ export default {
       type: Boolean,
       default: false
     },
+    'timeFormat': {
+      type: String,
+      default: ''
+    },
     minCellWidth: {
       type: Number,
       default: 0
@@ -252,7 +256,11 @@ export default {
           break
       }
 
-      if (this.ready) this.$emit('view-change', { view, startDate })
+      if (this.ready) {
+        let params = { view, startDate: this.view.startDate }
+        if (view === 'week') params.week = this.view.startDate.getWeek()
+        this.$emit('view-change', params)
+      }
     },
 
     findAncestor (el, Class) {
@@ -267,7 +275,7 @@ export default {
     selectCell (cell) {
       if (this.view.selectedDate.toString() !== cell.date.toString()) {
         this.view.selectedDate = cell.date
-        this.$emit('day-select', date)
+        this.$emit('day-focus', cell.date)
       }
 
       // Switch to narrower view.
@@ -455,7 +463,7 @@ export default {
       let timeCells = []
       for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
         timeCells.push({
-          label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'),
+          label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
       }
