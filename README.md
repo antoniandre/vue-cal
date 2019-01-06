@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.16.0__ Highlight Today's current time
 - __Version 1.15.0__ Add German language
 - __Version 1.14.0__ Add custom time format &amp; emit an event on day-focus
 - __Version 1.13.0__ Add Swedish language

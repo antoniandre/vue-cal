@@ -84,6 +84,9 @@
           v-chip.pr-1(color="green" outline small disabled)
             v-icon.mr-1 check
             | Custom time format
+          v-chip.pr-1(color="green" outline small disabled)
+            v-icon.mr-1 check
+            | Highlight current time
           v-chip.pr-1(color="amber darken-1" outline small disabled)
             v-icon.mr-1 timer
             | Create an event
@@ -108,9 +111,6 @@
           v-chip.pr-1(color="deep-orange" outline small disabled)
             v-icon.mr-1 access_time
             | More control on all date formats
-          v-chip.pr-1.white--text(color="deep-orange" outline small disabled)
-            v-icon.mr-1 access_time
-            | Highlight current time
 
       h2.headline.mt-5.mb-3.title Github project
       v-layout.mb-5(align-center shrink)
@@ -167,7 +167,7 @@
         sshpre.mt-2(language="html-vue").
           &lt;!-- If the container has no height, set a height on vue-cal --&gt;
           &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
-        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" hide-weekends hide-view-selector style="height: 250px")
+        vue-cal(small :time-from="8 * 60" :time-to="22 * 60" hide-view-selector style="height: 250px")
 
       h2.headline.mt-5.pt-5
         a(href="#examples") Examples
@@ -348,6 +348,28 @@
         /* Cell background indicator */
         .vuecal__cell--has-events {background-color: #fffacd;}
         .vuecal__cell-events-count {display: none;}
+
+      //- Example.
+      h3.title.mt-5.mb-2.pt-4 # Today's current time
+      p.mb-0.
+        When you choose to show the time in vue-cal, the current time of today's date will
+        be marked with a line (scroll to the current time to see it).#[br]
+        The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
+        You can easily customize the now-line as you wish via CSS.
+        Changing the line and arrow color is as easy as:#[br]
+      sshpre.mt-4(language="css" label="CSS").
+        .vuecal__now-line {color: #f00;}
+      p.
+        If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none;}].#[br]
+        This feature has no impact on performance.
+      v-card.green-theme.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
+        vue-cal.vuecal--green-theme(xsmall :time-from="10 * 60" default-view="day" :disable-views="['years', 'year', 'month']")
+      sshpre(language="html-vue" label="Vue Template").
+        &lt;vue-cal xsmall
+                 :time-from="10 * 60"
+                 default-view="day"
+                 :disable-views="['years', 'year', 'month']"&gt;
+        &lt;/vue-cal&gt;
 
       //- Example.
       h3.title.mt-5.mb-2.pt-4 # Timeless Events
@@ -1024,6 +1046,8 @@
         a(href="#release-notes") Release Notes
         a(name="release-notes")
 
+      div
+        | #[strong Version 1.16.0] Highlight Today's current time
       div
         | #[strong Version 1.15.0] Add German language
       div

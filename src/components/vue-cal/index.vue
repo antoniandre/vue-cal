@@ -32,9 +32,9 @@
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -603,6 +603,7 @@ export default {
               content: cellDate.getDate(),
               date: cellDate,
               formattedDate,
+              today: isToday,
               class: {
                 today: isToday,
                 'out-of-scope': cellDate.getMonth() !== month,
@@ -622,12 +623,14 @@ export default {
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
+            let isToday = !todayFound && isDateToday(date) && !todayFound++
 
             return {
               date,
               formattedDate,
+              today: isToday,
               class: {
-                today: !todayFound && isDateToday(date) && !todayFound++,
+                today: isToday,
                 selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
               }
             }
@@ -635,12 +638,14 @@ export default {
           break
         case 'day':
           const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
+          const isToday = isDateToday(this.view.startDate)
 
           cells = [{
             date: this.view.startDate,
             formattedDate,
+            today: isToday,
             class: {
-              today: isDateToday(this.view.startDate),
+              today: isToday,
               selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
             }
           }]

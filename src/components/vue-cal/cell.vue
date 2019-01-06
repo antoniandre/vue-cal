@@ -25,7 +25,7 @@
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
-
+    .vuecal__now-line(v-if="today && time" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
@@ -52,6 +52,10 @@ export default {
     splits: {
       type: Array,
       default: () => []
+    },
+    today: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -371,6 +375,15 @@ export default {
       })
 
       return splitsEventIndexes
+    },
+    todaysTimePosition () {
+      // Make sure to skip the Maths if not relevant.
+      if (!this.today || !this.time) return
+
+      const now = new Date()
+      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      let minutesFromTop = startTimeMinutes - this.timeFrom
+      return Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
     }
   }
 }
@@ -587,6 +600,25 @@ export default {
     border-color: rgba(0, 0, 0, 0.4);
     background-position: 99% 0.15em;
     background-size: 1.2em;
+  }
+}
+
+.vuecal__now-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0;
+  color: red;
+  border-top: 1px solid currentColor;
+  opacity: 0.6;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 0;
+    border: 5px solid transparent;
+    border-left-color: currentColor;
   }
 }
 </style>
