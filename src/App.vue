@@ -363,10 +363,10 @@
         If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none;}].#[br]
         This feature has no impact on performance.
       v-card.green-theme.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
-        vue-cal.vuecal--green-theme(xsmall :time-from="10 * 60" default-view="day" :disable-views="['years', 'year', 'month']")
+        vue-cal.vuecal--green-theme(xsmall :time-from="5 * 60" default-view="day" :disable-views="['years', 'year', 'month']")
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal xsmall
-                 :time-from="10 * 60"
+                 :time-from="5 * 60"
                  default-view="day"
                  :disable-views="['years', 'year', 'month']"&gt;
         &lt;/vue-cal&gt;
