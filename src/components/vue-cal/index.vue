@@ -32,9 +32,30 @@
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class"
+                v-for="(cell, i) in viewCells"
+                :key="i"
+                :date="cell.date"
+                :formatted-date="cell.formattedDate"
+                :today="cell.today"
+                :content="cell.content"
+                :splits="splitDays"
+                @mousedown.native="onCellMouseDown($event, cell)"
+                @touchstart="onCellTouchStart($event, cell)"
+                @click.native="selectCell(cell)"
+                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class"
+              v-else v-for="(cell, i) in viewCells"
+              :key="i" :date="cell.date"
+              :formatted-date="cell.formattedDate"
+              :today="cell.today"
+              :content="cell.content"
+              @mousedown.native="onCellMouseDown($event, cell)"
+              @touchstart="onCellTouchStart($event, cell)"
+              @click.native="selectCell(cell)"
+              @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -308,21 +329,16 @@ export default {
       // clickHoldACell.timeoutId = null // Reinit click hold on each click.
       // clickHoldACell.cellId = null // Reinit click hold on each click.
 
-      // If not mousedown on an event.
-      if (!this.isDOMElementAnEvent(e.target) && ['week', 'day'].indexOf(this.view.id) > -1) {
-        // console.log('onCellMouseDown', cell)
+      // If not mousedown on an event, click & hold to create an event.
+      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['week', 'day'].indexOf(this.view.id) > -1) {
+        console.log('onCellMouseDown', cell)
 
-        this.domEvents.clickHoldACell.cellId = this._uid + '_' + cell.formattedDate
-        this.$set(this.domEvents.clickHoldACell, 'cellId', this._uid + '_' + cell.formattedDate)
-        this.domEvents.clickHoldACell.timeoutId = setTimeout(() => {
-          // console.log('creating', clickHoldACell.cellId)
-
+        clickHoldACell.cellId = this._uid + '_' + cell.formattedDate
+        clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId) {
-            console.log('creating a new event.', {...clickHoldACell})
-            // this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+            this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
           }
         }, clickHoldACell.timeout)
-        console.log('start counting for ' + clickHoldACell.timeout + 'ms', {...this.domEvents})
       }
     },
 
@@ -347,9 +363,6 @@ export default {
 
     onMouseUp (e) {
       let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
-      console.log('on mouse up', {...this.domEvents})
-
-      if (clickHoldACell.cellId) debugger
 
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
@@ -371,17 +384,11 @@ export default {
         clickHoldAnEvent.timeoutId = null
       }
 
-      // console.log('clearing timeout ', {...clickHoldACell})
-      // clearTimeout(clickHoldACell.timeoutId)
-      // clickHoldACell.timeoutId = null
-      // clickHoldACell.cellId = null
-      // debugger
-
       // Prevent creating an event if click and hold was not long enough.
-      // if (clickHoldACell.timeoutId) {
-      //   clearTimeout(clickHoldACell.timeoutId)
-      //   clickHoldACell.timeoutId = null
-      // }
+      if (clickHoldACell.timeoutId) {
+        clearTimeout(clickHoldACell.timeoutId)
+        clickHoldACell.timeoutId = null
+      }
 
       // Any mouse up must cancel event resizing.
       resizeAnEvent.eventId = null
