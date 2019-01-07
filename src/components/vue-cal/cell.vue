@@ -17,18 +17,20 @@
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-          .vuecal__event-time(v-if="event.startTime")
-            | {{ event.startTime }}
-            span(v-if="event.endTime") &nbsp;- {{ event.endTime }}
+          .vuecal__event-time(v-if="event.startTimeMinutes")
+            | {{ event.startTimeMinutes | formatTime(timeFormat) }}
+            span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
-
+    .vuecal__now-line(v-if="today && time" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
+import { formatTime } from './date-utils'
+
 export default {
   props: {
     cssClass: {
@@ -50,11 +52,19 @@ export default {
     splits: {
       type: Array,
       default: () => []
+    },
+    today: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
     splitEvents: {}
   }),
+
+  filters: {
+    formatTime: (value, format) => (value && (formatTime(value, format) || ''))
+  },
 
   methods: {
     updateEventPosition (event) {
@@ -294,6 +304,9 @@ export default {
     time () {
       return this.$parent.time
     },
+    timeFormat () {
+      return this.$parent.timeFormat || (this.$parent['12Hour'] ? 'h:mm{am}' : 'HH:mm')
+    },
     timeCellHeight () {
       return parseInt(this.$parent.timeCellHeight)
     },
@@ -361,6 +374,15 @@ export default {
       })
 
       return splitsEventIndexes
+    },
+    todaysTimePosition () {
+      // Make sure to skip the Maths if not relevant.
+      if (!this.today || !this.time) return
+
+      const now = new Date()
+      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      let minutesFromTop = startTimeMinutes - this.timeFrom
+      return Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
     }
   }
 }
@@ -577,6 +599,25 @@ export default {
     border-color: rgba(0, 0, 0, 0.4);
     background-position: 99% 0.15em;
     background-size: 1.2em;
+  }
+}
+
+.vuecal__now-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0;
+  color: red;
+  border-top: 1px solid currentColor;
+  opacity: 0.6;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 0;
+    border: 5px solid transparent;
+    border-left-color: currentColor;
   }
 }
 </style>

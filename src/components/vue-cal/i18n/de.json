@@ -1,0 +1,14 @@
+{
+  "weekDays": ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"],
+  "months": ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"],
+  "years": "Jahre",
+  "year": "Jahr",
+  "month": "Monat",
+  "week": "Woche",
+  "day": "Tag",
+  "today": "Heute",
+  "noEvent": "Keine Events",
+  "deleteEvent": "Löschen",
+  "createEvent": "Event erstellen",
+  "dateFormat": "DDDD d mmmm yyyy"
+}

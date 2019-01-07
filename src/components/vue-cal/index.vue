@@ -32,28 +32,9 @@
                 span(v-if="heading.label4") {{ heading.label4 }}
 
             .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class"
-                v-for="(cell, i) in viewCells"
-                :key="i"
-                :date="cell.date"
-                :formatted-date="cell.formattedDate"
-                :content="cell.content"
-                :splits="splitDays"
-                @mousedown.native="onCellMouseDown($event, cell)"
-                @touchstart="onCellTouchStart($event, cell)"
-                @click.native="selectCell(cell)"
-                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class"
-              v-else v-for="(cell, i) in viewCells"
-              :key="i"
-              :date="cell.date"
-              :formatted-date="cell.formattedDate"
-              :content="cell.content"
-              @mousedown.native="onCellMouseDown($event, cell)"
-              @touchstart="onCellTouchStart($event, cell)"
-              @click.native="selectCell(cell)"
-              @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 </template>
 
 <script>
@@ -127,6 +108,10 @@ export default {
     '12Hour': {
       type: Boolean,
       default: false
+    },
+    'timeFormat': {
+      type: String,
+      default: ''
     },
     minCellWidth: {
       type: Number,
@@ -253,7 +238,6 @@ export default {
 
     switchView (view, date = null) {
       this.view.id = view
-      if (this.ready) this.$emit('view-change', view)
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -276,6 +260,12 @@ export default {
           this.view.startDate = date
           break
       }
+
+      if (this.ready) {
+        let params = { view, startDate: this.view.startDate }
+        if (view === 'week') params.week = this.view.startDate.getWeek()
+        this.$emit('view-change', params)
+      }
     },
 
     findAncestor (el, Class) {
@@ -288,7 +278,10 @@ export default {
     },
 
     selectCell (cell) {
-      if (this.view.selectedDate.toString() !== cell.date.toString()) this.view.selectedDate = cell.date
+      if (this.view.selectedDate.toString() !== cell.date.toString()) {
+        this.view.selectedDate = cell.date
+        this.$emit('day-focus', cell.date)
+      }
 
       // Switch to narrower view.
       if (this.clickToNavigate) this.switchToNarrowerView()
@@ -492,6 +485,18 @@ export default {
       delete evt.overlapping
       delete evt.simultaneous
       delete evt.classes
+
+      // Return date objects for easy manipulation.
+      const [date1, time1] = evt.start.split(' ')
+      const [y1, m1, d1] = (date1 && date1.split('-')) || [0, 0, 0]
+      let [h1, min1] = (time1 && time1.split(':')) || [0, 0]
+      evt.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
+
+      const [date2, time2] = evt.end.split(' ')
+      const [y2, m2, d2] = (date2 && date2.split('-')) || [0, 0, 0]
+      let [h2, min2] = (time2 && time2.split(':')) || [0, 0]
+      evt.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
+
       this.$emit(eventName, evt)
     }
   },
@@ -549,7 +554,7 @@ export default {
       let timeCells = []
       for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
         timeCells.push({
-          label: formatTime(i, this['12Hour'] ? 'h:mm{am}' : 'H:mm'),
+          label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
       }
@@ -689,6 +694,7 @@ export default {
               content: cellDate.getDate(),
               date: cellDate,
               formattedDate,
+              today: isToday,
               class: {
                 today: isToday,
                 'out-of-scope': cellDate.getMonth() !== month,
@@ -708,12 +714,14 @@ export default {
           cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
+            let isToday = !todayFound && isDateToday(date) && !todayFound++
 
             return {
               date,
               formattedDate,
+              today: isToday,
               class: {
-                today: !todayFound && isDateToday(date) && !todayFound++,
+                today: isToday,
                 selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
               }
             }
@@ -721,12 +729,14 @@ export default {
           break
         case 'day':
           const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
+          const isToday = isDateToday(this.view.startDate)
 
           cells = [{
             date: this.view.startDate,
             formattedDate,
+            today: isToday,
             class: {
-              today: isDateToday(this.view.startDate),
+              today: isToday,
               selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
             }
           }]
