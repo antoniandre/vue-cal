@@ -119,7 +119,7 @@
 
       highlight-message(type="info")
         strong Important Notes#[br]
-        | As this is a new component, options &amp; CSS classes may change a bit with new version release.#[br]
+        | Options &amp; CSS classes may change a bit with new version release.
         | Keep checking the #[a(href="#release-notes") Release Notes]!#[br]#[br]
         strong Philosophy:&nbsp;
         | Vue Cal tries to separate logic &amp; styles.#[br]
