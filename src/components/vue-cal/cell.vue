@@ -15,21 +15,17 @@
           .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-          slot(:name="`event-${event.id}`" :event="event")
-            | --{{event.id}}
-            <!-- Fallback content -->
-            .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
-            .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-            .vuecal__event-time(v-if="event.startTimeMinutes")
-              | {{ event.startTimeMinutes | formatTime(timeFormat) }}
-              span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
-            .vuecal__event-content(v-if="event.content" v-html="event.content")
-
+          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+          .vuecal__event-time(v-if="event.startTimeMinutes")
+            | {{ event.startTimeMinutes | formatTime(timeFormat) }}
+            span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
+          .vuecal__event-content(v-if="event.content" v-html="event.content")
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
-    .vuecal__now-line(v-if="today && time" :style="`top: ${todaysTimePosition}px`")
+    .vuecal__now-line(v-if="today && time && timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
@@ -318,6 +314,9 @@ export default {
     timeFrom () {
       return parseInt(this.$parent.timeFrom)
     },
+    timeTo () {
+      return parseInt(this.$parent.timeTo)
+    },
     timeStep () {
       return parseInt(this.$parent.timeStep)
     },
@@ -379,6 +378,11 @@ export default {
       })
 
       return splitsEventIndexes
+    },
+    timelineVisible () {
+      const now = new Date()
+      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      return startTimeMinutes <= this.timeTo
     },
     todaysTimePosition () {
       // Make sure to skip the Maths if not relevant.

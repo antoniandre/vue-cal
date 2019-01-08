@@ -63,7 +63,7 @@ export default {
     border-color: #f33 !important;
   }
 
-  .v-icon {
+  > .v-icon {
     position: absolute;
     left: -11px;
     color: #fff !important;
@@ -77,11 +77,11 @@ export default {
     top: 0.5em;
   }
 
-  &.info .v-icon {background: #09f !important;transform: rotate(180deg);}
-  &.success .v-icon {background-color: #6c0 !important;}
-  &.error .v-icon {background-color: #f33 !important;}
-  &.tips .v-icon {background-color: #fd0 !important;transform: rotate(180deg);}
-  &.warning .v-icon {background-color: #fa0 !important;}
-  &.info .v-icon, &.warning .v-icon {font-size: 16px;}
+  &.info > .v-icon {background: #09f !important;transform: rotate(180deg);}
+  &.success > .v-icon {background-color: #6c0 !important;}
+  &.error > .v-icon {background-color: #f33 !important;}
+  &.tips > .v-icon {background-color: #fd0 !important;transform: rotate(180deg);}
+  &.warning > .v-icon {background-color: #fa0 !important;}
+  &.info > .v-icon, &.warning > .v-icon {font-size: 16px;}
 }
 </style>

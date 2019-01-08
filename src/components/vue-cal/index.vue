@@ -22,7 +22,9 @@
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`") {{ cell.label }}
+            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+              slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
+                span.line {{ cell.label }}
 
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
@@ -462,8 +464,10 @@ export default {
     // For week & day views.
     timeCells () {
       let timeCells = []
-      for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
+      for (let i = this.timeFrom, max = this.timeTo; i < max; i += this.timeStep) {
         timeCells.push({
+          hours: Math.floor(i / 60),
+          minutes: i % 60,
           label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
@@ -842,7 +846,7 @@ $weekdays-headings-height: 2.8em;
       padding-right: 2px;
       font-size: 0.9em;
 
-      &:before {
+      .line:before {
         content: '';
         position: absolute;
         left: 0;
