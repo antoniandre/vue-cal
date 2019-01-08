@@ -15,12 +15,16 @@
           .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
-          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-          .vuecal__event-time(v-if="event.startTimeMinutes")
-            | {{ event.startTimeMinutes | formatTime(timeFormat) }}
-            span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
-          .vuecal__event-content(v-if="event.content" v-html="event.content")
+          slot(:name="`event-${event.id}`" :event="event")
+            | --{{event.id}}
+            <!-- Fallback content -->
+            .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+            .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+            .vuecal__event-time(v-if="event.startTimeMinutes")
+              | {{ event.startTimeMinutes | formatTime(timeFormat) }}
+              span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
+            .vuecal__event-content(v-if="event.content" v-html="event.content")
+
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")

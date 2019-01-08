@@ -7,7 +7,8 @@
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
+        slot(name="title" :title="viewTitle" :view="view")
+          span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle

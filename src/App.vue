@@ -379,6 +379,10 @@
         Refer to the #[span.code events] option in the #[a(href="#api") API] section.
       v-card.green-theme.my-2.ma-auto.main-content(style="height: 350px;")
         vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
+          div(slot="event-416_1" slot-scope="event")
+            | |{{ event.title }} -- {{ event.content }}|
+          div(slot="title" slot-scope="{ title, view }")
+            | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
       sshpre(language="html-vue" label="Vue Template").
         &lt;vue-cal selected-date="2018-11-19"
                  :time="false"
