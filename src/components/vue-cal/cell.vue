@@ -24,7 +24,9 @@
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
+      div(v-if="$parent.view.id === 'month'")
+        slot
+          span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
     .vuecal__now-line(v-if="today && time && timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
 

@@ -388,11 +388,17 @@
     .vuecal__cell--has-events {background-color: #fffacd;}
     .vuecal__cell-events-count {display: none;}
 
+  p.
+    You can also override the counting events method if you need.
+  v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+    vue-cal.vuecal--green-theme(ref="myVueCal" :class="`event-indicator--${indicatorStyle}`" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
+      div(slot-scope="{ events }") {{ countEventsMonthView(events) }}
+
   //- Example.
-  //- h3.title.mt-5.mb-2.pt-4 # Tweekeng vue-cal title
-  //- p.
+  h3.title.mt-5.mb-2.pt-4 # Tweeking vue-cal title
+  p.
     Using scoped slots.
-  //- v-card.my-2.ma-auto.main-content(style="height: 350px;")
+  v-card.my-2.ma-auto.main-content(style="height: 350px;")
     vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
       div(slot="title" slot-scope="{ title, view }")
         | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
@@ -1369,6 +1375,11 @@ export default {
   methods: {
     logEvents (emittedEventName, params) {
       this.log.push({ name: emittedEventName, args: JSON.stringify(params) })
+    },
+    countEventsMonthView: (events) => {
+      console.log(events)
+      debugger
+      return events ? events.filter(e => e.class === 'leisure').length : 0
     }
   },
   computed: {
