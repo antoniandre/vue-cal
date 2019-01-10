@@ -840,6 +840,7 @@
   sshpre.mt-2(language="js").
     locale:             [String],  default: 'en'
     hideViewSelector:   [Boolean], default: false
+    hideTitleBar:       [Boolean], default: false
     hideWeekends:       [Boolean], default: false
     disableViews:       [Array],   default: []
     defaultView:        [String],  default: 'week'
@@ -889,8 +890,11 @@
             "dateFormat": "DDDD d mmmm yyyy"
           }
         p.
-          Regarding the #[span.code dateFormat] translation, this is the format of the full date you can see in a single day view title.#[br]
-          #[span.code DDDD] stands for the full-letter day of week, #[span.code mmmm] stands for full-letter month, #[span.code d] stands for the date of the month (0-31), #[span.code yyyy] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
+          Regarding the #[span.code dateFormat] translation, this is the format of the full
+          date you can see in a single day view title.#[br]
+          #[span.code DDDD] stands for the full-letter day of week, #[span.code mmmm] stands for
+          full-letter month, #[span.code d] stands for the date of the month (0-31),
+          #[span.code yyyy] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
       highlight-message(type="tips").
         Note that 3 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
@@ -900,7 +904,15 @@
       span.code [Boolean], default: false
       p.
         When set to true, the top view selector will disappear.#[br]
-        You can still navigate from a view to another by clicking a cell (narrower view) or the view title (broader view).
+        You can still navigate from a view to another by clicking a cell (narrower view) or
+        the view title (broader view).
+    li
+      code.mr-2 hideTitleBar
+      span.code [Boolean], default: false
+      p.
+        When set to true, the title bar with navigating arrows will disappear.#[br]
+        You can still navigate from a view to another with the view selector and clicking
+        a cell (narrower view).
     li
       code.mr-2 hideWeekends
       span.code [Boolean], default: false

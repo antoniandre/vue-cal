@@ -3,7 +3,7 @@
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
-      .vuecal__title
+      .vuecal__title(v-if="!hideTitleBar")
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
@@ -56,6 +56,10 @@ export default {
       default: 'en'
     },
     hideViewSelector: {
+      type: Boolean,
+      default: false
+    },
+    hideTitleBar: {
       type: Boolean,
       default: false
     },
