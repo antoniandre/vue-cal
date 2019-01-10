@@ -24,8 +24,8 @@
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
-    .vuecal__now-line(v-if="today && time && timelineVisible" :style="`top: ${todaysTimePosition}px`")
+      span(v-if="view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
@@ -308,6 +308,9 @@ export default {
     texts () {
       return this.$parent.texts
     },
+    view () {
+      return this.$parent.view.id
+    },
     time () {
       return this.$parent.time
     },
@@ -386,6 +389,8 @@ export default {
       return splitsEventIndexes
     },
     timelineVisible () {
+      if (!this.today || !this.time || ['week', 'day'].indexOf(this.view) === -1) return
+
       const now = new Date()
       let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
       return startTimeMinutes <= this.timeTo
