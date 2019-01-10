@@ -388,12 +388,35 @@
     .vuecal__cell--has-events {background-color: #fffacd;}
     .vuecal__cell-events-count {display: none;}
 
-  p.
-    You can also override the counting events method if you need.
-  v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+  highlight-message(type="tips").mt-5
+    p.title Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
+    | In the following example, we only count the events which have the custom #[span.code leisure] CSS class.
+    | if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    | #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
     vue-cal.vuecal--green-theme(ref="myVueCal" :class="`event-indicator--${indicatorStyle}`" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
-      div(slot-scope="{ theevents }" slot="theevents")
-        span.vuecal__cell-events-count(v-if="countEventsMonthView(theevents)") {{ countEventsMonthView(theevents) }}
+      div(slot-scope="{ events }" slot="events-count-month-view")
+        span.vuecal__cell-events-count(v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
+  sshpre(language="html-vue" label="Vue Template" v-pre).
+    &lt;vue-cal selected-date="2018-11-19"
+              xsmall
+              :time-from="10 * 60"
+              :disable-views="['years', 'year', 'day']"
+              default-view="month"
+              :events="events"&gt;
+        &lt;div slot-scope="{ events }" slot="events-count-month-view"&gt;
+          &lt;span class="vuecal__cell-events-count" v-if="countEventsMonthView(events)"&gt;{{ countEventsMonthView(events) }}&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    // In your Vue component.
+    methods: {
+      countEventsMonthView: (events) => {
+        return events ? events.filter(e => e.class === 'leisure').length : 0
+      }
+    }
+
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4 # Tweeking vue-cal title
@@ -1377,10 +1400,7 @@ export default {
     logEvents (emittedEventName, params) {
       this.log.push({ name: emittedEventName, args: JSON.stringify(params) })
     },
-    countEventsMonthView: (events) => {
-      console.log(events)
-      return events ? events.filter(e => e.class === 'leisure').length : 0
-    }
+    countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0
   },
   computed: {
     currentDateFormatted () {

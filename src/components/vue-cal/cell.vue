@@ -25,7 +25,7 @@
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       div(v-if="$parent.view.id === 'month'")
-        slot(name="theevents" :theevents="events")
+        slot(name="events-count-month-view" :events="events")
           span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
     .vuecal__now-line(v-if="today && time && timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
