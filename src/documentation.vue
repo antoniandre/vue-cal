@@ -237,7 +237,7 @@
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Timeline tweeking
+  h3.title.mt-5.mb-2.pt-4 # Timeline tweaking
   p.mb-0.
     If you want to have more fancy time cells, you can override them with the
     #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
@@ -388,13 +388,16 @@
     .vuecal__cell--has-events {background-color: #fffacd;}
     .vuecal__cell-events-count {display: none;}
 
-  highlight-message(type="tips").mt-5
-    p.title Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-    | In the following example, we only count the events which have the custom #[span.code leisure] CSS class.
-    | if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
-    | #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  p.mt-5.title Custom events count on Month view.
+  highlight-message(type="tips").
+    Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
+    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  p.
+    In the following example, we only count the events which have the custom
+    #[span.code leisure] CSS class.
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
-    vue-cal.vuecal--green-theme(ref="myVueCal" :class="`event-indicator--${indicatorStyle}`" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
+    vue-cal.vuecal--green-theme(:class="`event-indicator--${indicatorStyle}`" ref="myVueCal" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
       div(slot-scope="{ events }" slot="events-count-month-view")
         span.vuecal__cell-events-count(v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
   sshpre(language="html-vue" label="Vue Template" v-pre).
@@ -405,27 +408,63 @@
               default-view="month"
               :events="events"&gt;
         &lt;div slot-scope="{ events }" slot="events-count-month-view"&gt;
-          &lt;span class="vuecal__cell-events-count" v-if="countEventsMonthView(events)"&gt;{{ countEventsMonthView(events) }}&lt;/span&gt;
+          &lt;span class="vuecal__cell-events-count" v-if="countEventsMonthView(events)"&gt;
+            {{ countEventsMonthView(events) }}
+          &lt;/span&gt;
         &lt;/div&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     // In your Vue component.
     methods: {
-      countEventsMonthView: (events) => {
+      countEventsMonthView: events => {
         return events ? events.filter(e => e.class === 'leisure').length : 0
       }
     }
 
-
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Tweeking vue-cal title
+  h3.title.mt-5.mb-2.pt-4 # Custom vue-cal title
+  highlight-message(type="tips").
+    Using Vue.js scoped slots, you can override the main date title.#[br]
+    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  p.mb-2.
+    In the following example, we set a custom title with Emoji.#[br]
+    2 arguments are available from the scope:
+  ul
+    li
+      | #[span.code title], the formatted title. E.g.
+      em.ml-2 "Week 2 (January 2019)"
+    li
+      | #[span.code view], an object containing the active view info. E.g.
+      sshpre(language="js").mt-3.
+        {
+          id: "week",
+          startDate: "2019-01-07T10:38:21.721Z", // Javscript Date object.
+          selectedDate: "2019-01-10T10:38:21.721Z" // Javscript Date object.
+        }
   p.
-    Using scoped slots.
+    You can use one or the other to format the title as you wish.
+    As #[span.code title] is already formatted it is not as flexible as manipulating
+    the #[span.code view.startDate] yourself.#[br]
+    The down side if you use the #[span.code view] object is that you have to handle
+    all the calendar views date cases yourself (years, year, month, week, day have different titles).
+
   v-card.my-2.ma-auto.main-content(style="height: 350px;")
     vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
       div(slot="title" slot-scope="{ title, view }")
         | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
+  sshpre(language="html-vue" label="Vue Template" v-pre).
+    &lt;vue-cal selected-date="2018-11-19"
+              :time="false"
+              :disable-views="['years', 'year', 'month', 'day']"
+              hide-weekends
+              :events="events"&gt;
+      &lt;div slot="title" slot-scope="{ title, view }"&gt;
+        🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}
+        - week {{ view.startDate.getWeek() }} 🎉
+      &lt;/div&gt;
+    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4 # Timeless Events
