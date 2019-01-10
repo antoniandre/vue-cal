@@ -7,7 +7,7 @@
   "week": "Semana",
   "day": "Día",
   "today": "Hoy",
-  "noEvent": "No hay envento",
+  "noEvent": "No hay evento",
   "deleteEvent": "Borrar",
   "createEvent": "Crear un evento",
   "dateFormat": "DDDD d mmmm yyyy"
