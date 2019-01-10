@@ -392,7 +392,8 @@
     You can also override the counting events method if you need.
   v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
     vue-cal.vuecal--green-theme(ref="myVueCal" :class="`event-indicator--${indicatorStyle}`" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
-      div(slot-scope="{ events }") {{ countEventsMonthView(events) }}
+      div(slot-scope="{ theevents }" slot="theevents")
+        span.vuecal__cell-events-count(v-if="countEventsMonthView(theevents)") {{ countEventsMonthView(theevents) }}
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4 # Tweeking vue-cal title
@@ -1378,7 +1379,6 @@ export default {
     },
     countEventsMonthView: (events) => {
       console.log(events)
-      debugger
       return events ? events.filter(e => e.class === 'leisure').length : 0
     }
   },

@@ -37,8 +37,10 @@
             .vuecal__flex(v-if="hasSplits" grow)
               vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
             //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-              slot(:events="mutableEvents[cell.formattedDate]")
+            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" v-bind="{ scopedSlots: $scopedSlots }" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              div(slot-scope="{ theevents }" :theevents="theevents" slot="theevents")
+                slot(:theevents="theevents" name="theevents")
+                  span.vuecal__cell-events-count(v-if="theevents.length") {{ theevents.length }}
 </template>
 
 <script>
