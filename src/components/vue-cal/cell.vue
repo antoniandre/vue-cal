@@ -27,7 +27,7 @@
       div(v-if="$parent.view.id === 'month'")
         slot(name="events-count-month-view" :events="events")
           span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-    .vuecal__now-line(v-if="today && time && timelineVisible" :style="`top: ${todaysTimePosition}px`")
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
@@ -166,7 +166,9 @@ export default {
         if (event1overlapsEvent2) {
           event.overlapping[event2.id] = true
           event2.overlapped[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.overlapping[event2.id]
           delete event2.overlapped[event.id]
         }
@@ -174,7 +176,9 @@ export default {
         if (event2overlapsEvent1) {
           event2.overlapping[event.id] = true
           event.overlapped[event2.id] = true
-        } else {
+        }
+
+        else {
           delete event2.overlapping[event.id]
           delete event.overlapped[event2.id]
         }
@@ -184,7 +188,9 @@ export default {
             (event1overlapsEvent2 || event2overlapsEvent1)) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.simultaneous[event2.id]
           delete event2.simultaneous[event.id]
         }
@@ -304,6 +310,9 @@ export default {
     texts () {
       return this.$parent.texts
     },
+    view () {
+      return this.$parent.view.id
+    },
     time () {
       return this.$parent.time
     },
@@ -382,6 +391,8 @@ export default {
       return splitsEventIndexes
     },
     timelineVisible () {
+      if (!this.today || !this.time || ['week', 'day'].indexOf(this.view) === -1) return
+
       const now = new Date()
       let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
       return startTimeMinutes <= this.timeTo

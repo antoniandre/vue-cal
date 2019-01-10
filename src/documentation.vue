@@ -139,8 +139,8 @@
   sshpre(language="html" label="HTML").
     &lt;head&gt;
       ...
-      &lt;script src="https://unpkg.com/vue/"&gt;&lt;/script&gt;
-      &lt;script src="https://unpkg.com/vue-cal/"&gt;&lt;/script&gt;
+      &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
+      &lt;script src="https://unpkg.com/vue-cal"&gt;&lt;/script&gt;
       &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
     &lt;/head&gt;
 
