@@ -1142,6 +1142,8 @@
     a(name="release-notes")
 
   div
+    | #[strong Version 1.18.0] Allow overriding indicators in month view
+  div
     | #[strong Version 1.17.0] Allow overriding time cells &amp; title
   div
     | #[strong Version 1.16.0] Highlight Today's current time
