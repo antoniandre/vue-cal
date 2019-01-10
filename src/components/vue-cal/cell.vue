@@ -164,7 +164,9 @@ export default {
         if (event1overlapsEvent2) {
           event.overlapping[event2.id] = true
           event2.overlapped[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.overlapping[event2.id]
           delete event2.overlapped[event.id]
         }
@@ -172,7 +174,9 @@ export default {
         if (event2overlapsEvent1) {
           event2.overlapping[event.id] = true
           event.overlapped[event2.id] = true
-        } else {
+        }
+
+        else {
           delete event2.overlapping[event.id]
           delete event.overlapped[event2.id]
         }
@@ -182,7 +186,9 @@ export default {
             (event1overlapsEvent2 || event2overlapsEvent1)) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.simultaneous[event2.id]
           delete event2.simultaneous[event.id]
         }

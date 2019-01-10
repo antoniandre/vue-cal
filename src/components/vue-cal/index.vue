@@ -420,7 +420,8 @@ export default {
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
       this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
-    } else {
+    }
+    else {
       this.view.selectedDate = this.now
     }
 
