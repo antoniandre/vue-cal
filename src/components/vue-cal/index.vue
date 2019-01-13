@@ -60,7 +60,6 @@
               @touchstart="onCellTouchStart($event, cell)"
               @click.native="selectCell(cell)"
               @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-              //- v-bind="{ scopedSlots: $scopedSlots }"
               div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
                 slot(:events="events" name="events-count-month-view")
                   span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
