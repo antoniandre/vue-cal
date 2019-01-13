@@ -1486,7 +1486,8 @@ $primary: #42b983;
 
 .scrollable {
   height: 200px;
-  overflow-y:scroll;
+  overflow-y: scroll;
+  padding-right: 1.8em;
 }
 
 .main-content {
