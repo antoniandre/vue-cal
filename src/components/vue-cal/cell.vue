@@ -208,7 +208,8 @@ export default {
     },
 
     onResizeEvent () {
-      let { eventId, newHeight } = this.domEvents.resizeAnEvent
+      // Using this.domEvents.resizeAnEvent here would end up in an infinite loop.
+      let { eventId, newHeight } = this.$parent.domEvents.resizeAnEvent
       let event = this.events.filter(e => e.id === eventId)[0]
 
       if (event) {

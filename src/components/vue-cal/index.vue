@@ -196,7 +196,7 @@ export default {
       },
       clickHoldACell: {
         cellId: null,
-        timeout: 3000,
+        timeout: 1200,
         timeoutId: null
       },
       dblTapACell: {
@@ -347,7 +347,7 @@ export default {
         clickHoldACell.cellId = this._uid + '_' + cell.formattedDate
         clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId) {
-            this.createAnEvent(cell, 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY)
+            this.createAnEvent(cell, e)
           }
         }, clickHoldACell.timeout)
       }
@@ -455,26 +455,34 @@ export default {
       })
     },
 
-    createAnEvent (cell, mouseY) {
+    getPosition (e) {
+      // 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
+      const rect = e.target.getBoundingClientRect()
+      return { x: e.clientX - rect.left, y: e.clientY - rect.top }
+    },
+
+    createAnEvent (cell, e) {
       const d = cell.date.getDate()
       const m = cell.date.getMonth() + 1
       const y = cell.date.getFullYear()
       const date = `${y}-${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d}`
-      const startTimeMinutes = 14 * 60
-      const endTimeMinutes = 16 * 60
-      // console.log(date, mouseY, cell)
+      const mouseY = this.getPosition(e).y
+      const startTimeMinutes = mouseY * 60 / parseInt(this.timeCellHeight) + this.timeFrom
+      const hours = parseInt(startTimeMinutes / 60)
+      const minutes = parseInt(startTimeMinutes % 60)
+      const endTimeMinutes = startTimeMinutes + 120
 
       const event = {
         id: `${this._uid}_${this.eventIdIncrement++}`,
         title: 'New Event',
         content: '...',
-        start: date + (this.time ? '14:00' : ''),
+        start: date + (this.time ? `${hours}:${minutes}` : ''),
         startDate: date,
-        startTime: this.time ? '14:00' : null,
+        startTime: (this.time ? `${hours}:${minutes}` : null),
         startTimeMinutes,
-        end: date + (this.time ? '16:00' : ''),
+        end: date + (this.time ? `${hours + 2}:${minutes}` : ''),
         endDate: date,
-        endTime: this.time ? '16:00' : null,
+        endTime: (this.time ? `${hours + 2}:${minutes}` : null),
         endTimeMinutes,
         height: 0,
         top: 0,
