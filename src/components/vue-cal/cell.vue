@@ -24,8 +24,10 @@
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      span(v-if="$parent.view.id === 'month' && events.length").vuecal__cell-events-count {{ events.length }}
-    .vuecal__now-line(v-if="today && time" :style="`top: ${todaysTimePosition}px`")
+      div(v-if="$parent.view.id === 'month'")
+        slot(name="events-count-month-view" :events="events")
+          span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
 </template>
 
 <script>
@@ -164,7 +166,9 @@ export default {
         if (event1overlapsEvent2) {
           event.overlapping[event2.id] = true
           event2.overlapped[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.overlapping[event2.id]
           delete event2.overlapped[event.id]
         }
@@ -172,7 +176,9 @@ export default {
         if (event2overlapsEvent1) {
           event2.overlapping[event.id] = true
           event.overlapped[event2.id] = true
-        } else {
+        }
+
+        else {
           delete event2.overlapping[event.id]
           delete event.overlapped[event2.id]
         }
@@ -182,7 +188,9 @@ export default {
             (event1overlapsEvent2 || event2overlapsEvent1)) {
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
-        } else {
+        }
+
+        else {
           delete event.simultaneous[event2.id]
           delete event2.simultaneous[event.id]
         }
@@ -226,7 +234,7 @@ export default {
     onMouseDown (e, event, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
-      let { clickHoldAnEvent, resizeAnEvent }= this.domEvents
+      let { clickHoldAnEvent, resizeAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
       if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId === event.id) {
@@ -301,6 +309,9 @@ export default {
     texts () {
       return this.$parent.texts
     },
+    view () {
+      return this.$parent.view.id
+    },
     time () {
       return this.$parent.time
     },
@@ -312,6 +323,9 @@ export default {
     },
     timeFrom () {
       return parseInt(this.$parent.timeFrom)
+    },
+    timeTo () {
+      return parseInt(this.$parent.timeTo)
     },
     timeStep () {
       return parseInt(this.$parent.timeStep)
@@ -354,10 +368,12 @@ export default {
         })
 
         // NextTick() prevents a cyclic redundancy.
-        if (this.time) this.$nextTick(() => {
-          this.checkCellOverlappingEvents()
-          this.$forceUpdate()// @todo: find a way to avoid this.
-        })
+        if (this.time) {
+          this.$nextTick(() => {
+            this.checkCellOverlappingEvents()
+            this.$forceUpdate() // @todo: find a way to avoid this.
+          })
+        }
 
         return events
       },
@@ -374,6 +390,13 @@ export default {
       })
 
       return splitsEventIndexes
+    },
+    timelineVisible () {
+      if (!this.today || !this.time || ['week', 'day'].indexOf(this.view) === -1) return
+
+      const now = new Date()
+      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      return startTimeMinutes <= this.timeTo
     },
     todaysTimePosition () {
       // Make sure to skip the Maths if not relevant.

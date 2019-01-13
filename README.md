@@ -26,6 +26,8 @@ ___
 
 ## Release Notes
 
+- __Version 1.18.0__ Allow overriding indicators in month view
+- __Version 1.17.0__ Allow overriding time cells &amp; title
 - __Version 1.16.0__ Highlight Today's current time
 - __Version 1.15.0__ Add German language
 - __Version 1.14.0__ Add custom time format &amp; emit an event on day-focus

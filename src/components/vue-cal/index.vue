@@ -3,11 +3,12 @@
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
-      .vuecal__title
+      .vuecal__title(v-if="!hideTitleBar")
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
+        slot(name="title" :title="viewTitle" :view="view")
+          span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
@@ -21,7 +22,9 @@
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`") {{ cell.label }}
+            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+              slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
+                span.line {{ cell.label }}
 
           .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
             //- Only for splitDays.
@@ -47,8 +50,9 @@
 
             //- Only for not splitDays.
             vuecal-cell(:class="cell.class"
-              v-else v-for="(cell, i) in viewCells"
-              :key="i" :date="cell.date"
+              v-else
+              v-for="(cell, i) in viewCells" :key="i"
+              :date="cell.date"
               :formatted-date="cell.formattedDate"
               :today="cell.today"
               :content="cell.content"
@@ -56,6 +60,10 @@
               @touchstart="onCellTouchStart($event, cell)"
               @click.native="selectCell(cell)"
               @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+              //- v-bind="{ scopedSlots: $scopedSlots }"
+              div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
+                slot(:events="events" name="events-count-month-view")
+                  span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
 </template>
 
 <script>
@@ -71,6 +79,10 @@ export default {
       default: 'en'
     },
     hideViewSelector: {
+      type: Boolean,
+      default: false
+    },
+    hideTitleBar: {
       type: Boolean,
       default: false
     },
@@ -451,7 +463,7 @@ export default {
       const date = `${y}-${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d}`
       const startTimeMinutes = 14 * 60
       const endTimeMinutes = 16 * 60
-      console.log(date, mouseY, cell)
+      // console.log(date, mouseY, cell)
 
       const event = {
         id: `${this._uid}_${this.eventIdIncrement++}`,
@@ -482,7 +494,7 @@ export default {
     },
 
     // Cleanup event object before exporting it.
-    emitWithEvent(eventName, event) {
+    emitWithEvent (eventName, event) {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       let evt = { ...event }
@@ -515,7 +527,8 @@ export default {
     if (this.selectedDate) {
       let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
       this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
-    } else {
+    }
+    else {
       this.view.selectedDate = this.now
     }
 
@@ -559,8 +572,10 @@ export default {
     // For week & day views.
     timeCells () {
       let timeCells = []
-      for (let i = this.timeFrom, max = this.timeTo; i <= max; i += this.timeStep) {
+      for (let i = this.timeFrom, max = this.timeTo; i < max; i += this.timeStep) {
         timeCells.push({
+          hours: Math.floor(i / 60),
+          minutes: i % 60,
           label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
@@ -939,7 +954,7 @@ $weekdays-headings-height: 2.8em;
       padding-right: 2px;
       font-size: 0.9em;
 
-      &:before {
+      .line:before {
         content: '';
         position: absolute;
         left: 0;
