@@ -3,7 +3,7 @@
     .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       div(v-if="content" v-html="content")
-      div.vuecal__flex(v-else grow :column="!time")
+      div(v-else)
         .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
         .vuecal__event(:class="eventClasses(event)"
                        v-else
