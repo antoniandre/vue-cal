@@ -9,6 +9,7 @@
                        v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
+                       @mouseenter="onMouseEnter($event, event)"
                        @mousedown="onMouseDown($event, event)"
                        @contextmenu="onContextMenu($event, event)"
                        @touchstart="onTouchStart($event, event)")
@@ -255,7 +256,10 @@ export default {
         }, clickHoldAnEvent.timeout)
       }
     },
-
+    onMouseEnter (e, event) {
+      e.preventDefault()
+      this.$parent.emitWithEvent('event-mouse-enter', event)
+    },
     onContextMenu (e, event) {
       e.preventDefault()
       return false

@@ -770,6 +770,7 @@
   p.mb-0 In all events, properties #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects:
   ul
     li #[span.code event-focus]
+    li #[span.code event-mouse-enter]
     li #[span.code event-delete]
     li #[span.code event-change]
     li #[span.code event-title-change]
@@ -791,9 +792,12 @@
     div.grey--text //&nbsp;
       strong event-name:&nbsp;
       span arguments-list
-    div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
-      strong {{ l.name }}:
-      span {{ l.args }}
+    div.scrollable
+      div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
+        strong {{ l.name }}:
+        span {{ l.args }}
+  v-btn.ma-0.mr-2(color="primary" small @click="resetLogEvents") #[span Reset log]
+  v-btn.ma-0(color="primary" small @click="logMouseEnterEvents = !logMouseEnterEvents") #[span.code {{ logMouseEnterEvents ? 'Dsiable' : 'Enable' }} @event-mouse-enter events]
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -807,6 +811,7 @@
       @view-change="logEvents('view-change', $event)"
       @day-focus="logEvents('day-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
+      @event-mouse-enter="logEvents('event-mouse-enter', $event)"
       @event-title-change="logEvents('event-title-change', $event)"
       @event-content-change="logEvents('event-content-change', $event)"
       @event-duration-change="logEvents('event-duration-change', $event)"
@@ -824,6 +829,7 @@
               @view-change="logEvents('view-change', $event)"
               @day-focus="logEvents('day-focus', $event)"
               @event-focus="logEvents('event-focus', $event)"
+              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
               @event-title-change="logEvents('event-title-change', $event)"
               @event-content-change="logEvents('event-content-change', $event)"
               @event-duration-change="logEvents('event-duration-change', $event)"
@@ -1295,6 +1301,7 @@ export default {
     now: new Date(),
     log: [],
     events,
+    logMouseEnterEvents: false,
     overlappingEvents: [
       ...events,
       {
@@ -1451,7 +1458,13 @@ export default {
   }),
   methods: {
     logEvents (emittedEventName, params) {
-      this.log.push({ name: emittedEventName, args: JSON.stringify(params) })
+      if (!this.logMouseEnterEvents && emittedEventName === 'event-mouse-enter') {
+        return
+      }
+      this.log.unshift({ name: emittedEventName, args: JSON.stringify(params) })
+    },
+    resetLogEvents () {
+      this.log = []
     },
     countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0
   },
@@ -1470,6 +1483,11 @@ export default {
 
 <style lang="scss">
 $primary: #42b983;
+
+.scrollable {
+  height: 200px;
+  overflow-y:scroll;
+}
 
 .main-content {
   max-width: 800px;
