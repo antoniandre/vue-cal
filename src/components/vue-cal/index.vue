@@ -827,10 +827,12 @@ $weekdays-headings-height: 2.8em;
     flex: 1 1 auto;
     width: 100%;
     margin-bottom: 1px;
+    overflow: hidden;
   }
 
   &--no-time &__bg {
     display: block;
+    overflow: visible;
   }
 
   &__time-column {
