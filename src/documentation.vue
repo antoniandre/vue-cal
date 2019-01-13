@@ -771,6 +771,7 @@
   ul
     li #[span.code event-focus]
     li #[span.code event-mouse-enter]
+    li #[span.code event-mouse-leave]
     li #[span.code event-delete]
     li #[span.code event-change]
     li #[span.code event-title-change]
@@ -797,7 +798,7 @@
         strong {{ l.name }}:
         span {{ l.args }}
   v-btn.ma-0.mr-2(color="primary" small @click="resetLogEvents") #[span Reset log]
-  v-btn.ma-0(color="primary" small @click="logMouseEnterEvents = !logMouseEnterEvents") #[span.code {{ logMouseEnterEvents ? 'Dsiable' : 'Enable' }} @event-mouse-enter events]
+  v-btn.ma-0(color="primary" small @click="logMouseEvents = !logMouseEvents") #[span.code {{ logMouseEvents ? 'Dsiable' : 'Enable' }} @event-mouse-X events]
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -812,6 +813,7 @@
       @day-focus="logEvents('day-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
       @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+      @event-mouse-leave="logEvents('event-mouse-leave', $event)"
       @event-title-change="logEvents('event-title-change', $event)"
       @event-content-change="logEvents('event-content-change', $event)"
       @event-duration-change="logEvents('event-duration-change', $event)"
@@ -830,6 +832,7 @@
               @day-focus="logEvents('day-focus', $event)"
               @event-focus="logEvents('event-focus', $event)"
               @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+              @event-mouse-leave="logEvents('event-mouse-leave', $event)"
               @event-title-change="logEvents('event-title-change', $event)"
               @event-content-change="logEvents('event-content-change', $event)"
               @event-duration-change="logEvents('event-duration-change', $event)"
@@ -1301,7 +1304,7 @@ export default {
     now: new Date(),
     log: [],
     events,
-    logMouseEnterEvents: false,
+    logMouseEvents: false,
     overlappingEvents: [
       ...events,
       {
@@ -1458,7 +1461,7 @@ export default {
   }),
   methods: {
     logEvents (emittedEventName, params) {
-      if (!this.logMouseEnterEvents && emittedEventName === 'event-mouse-enter') {
+      if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].indexOf(emittedEventName) !== -1) {
         return
       }
       this.log.unshift({ name: emittedEventName, args: JSON.stringify(params) })
