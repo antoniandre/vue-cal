@@ -496,8 +496,8 @@ export default {
       if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
 
       this.mutableEvents[event.startDate].push(event)
-      this.emitWithEvent('event-change', event)
       this.emitWithEvent('event-create', event)
+      this.emitWithEvent('event-change', event)
     },
 
     // Cleanup event object before exporting it.
@@ -934,10 +934,12 @@ $weekdays-headings-height: 2.8em;
     flex: 1 1 auto;
     width: 100%;
     margin-bottom: 1px;
+    overflow: hidden;
   }
 
   &--no-time &__bg {
     display: block;
+    overflow: visible;
   }
 
   &__time-column {
