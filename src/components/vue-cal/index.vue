@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
+  .vuecal__flex.vuecal(ref="vuecal" column :class="cssClasses" :lang="locale")
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
         li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
@@ -44,8 +44,8 @@
                 :content="cell.content"
                 :splits="splitDays"
                 @mousedown.native="onCellMouseDown($event, cell)"
-                @touchstart="onCellTouchStart($event, cell)"
                 @click.native="selectCell(cell)"
+                @touchstart="onCellTouchStart($event, cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
 
             //- Only for not splitDays.
@@ -57,8 +57,8 @@
               :today="cell.today"
               :content="cell.content"
               @mousedown.native="onCellMouseDown($event, cell)"
-              @touchstart="onCellTouchStart($event, cell)"
               @click.native="selectCell(cell)"
+              @touchstart="onCellTouchStart($event, cell)"
               @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
               div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
                 slot(:events="events" name="events-count-month-view")
@@ -333,12 +333,10 @@ export default {
 
     onCellMouseDown (e, cell, touch = false) {
       // Prevent a double mouse down on touch devices.
-      if ('ontouchstart' in window && !touch) return false
+      // if ('ontouchstart' in window && !touch) return false
+      console.log('onCellMouseDown', cell)
 
       let clickHoldACell = this.domEvents.clickHoldACell
-      // clearTimeout(clickHoldACell.timeoutId)
-      // clickHoldACell.timeoutId = null // Reinit click hold on each click.
-      // clickHoldACell.cellId = null // Reinit click hold on each click.
 
       // If not mousedown on an event, click & hold to create an event.
       if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['week', 'day'].indexOf(this.view.id) > -1) {
@@ -354,7 +352,9 @@ export default {
     },
 
     onCellTouchStart (e, cell) {
+      debugger
       // If not mousedown on an event.
+        console.log('onCellTouchStart', cell)
       if (!this.isDOMElementAnEvent(e.target)) {
         console.log('onCellTouchStart', cell)
         this.onCellMouseDown(e, cell, true)
@@ -547,6 +547,14 @@ export default {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+    }
+
+    // Disable context menu on touch devices on the whole vue-cal instance.
+    if ('ontouchstart' in window) {
+      this.$refs.vuecal.oncontextmenu = function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+      };
     }
 
     this.$emit('ready')

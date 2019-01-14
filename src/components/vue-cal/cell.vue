@@ -12,8 +12,8 @@
                        @mouseenter="onMouseEnter($event, event)"
                        @mouseleave="onMouseLeave($event, event)"
                        @mousedown="onMouseDown($event, event)"
-                       @contextmenu="onContextMenu($event, event)"
                        @touchstart="onTouchStart($event, event)")
+          //- @contextmenu="onContextMenu($event, event)"
           .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
@@ -268,12 +268,14 @@ export default {
       this.$parent.emitWithEvent('event-mouse-leave', event)
     },
 
-    onContextMenu (e, event) {
-      e.preventDefault()
-      return false
-    },
+    // Now handled globally in index.vue.
+    // onContextMenu (e, event) {
+    //   e.preventDefault()
+    //   return false
+    // },
 
     onTouchStart (e, event) {
+      console.log('this works')
       this.onMouseDown(e, event, true)
     },
 
