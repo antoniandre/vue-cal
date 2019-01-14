@@ -788,18 +788,24 @@
         To help you manipulate an event's date, vue-cal returns native #[span.code Date]
         objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
         So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
-  p.mb-0 Watch the list of emitted events as you play with Vue Cal:
-  pre.mt-2.ssh-pre
-    div.grey--text //&nbsp;
-      strong event-name:&nbsp;
-      span arguments-list
+  p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
+  pre.mt-2.ssh-pre.mb-2
+    v-layout(wrap)
+      div.grey--text //&nbsp;
+        strong event-name:&nbsp;
+        span arguments-list
+      v-spacer
+      v-btn.ma-0(color="primary" outline small @click="clearEventsLog")
+        v-icon(small).mr-1 clear
+        | Clear log
+      v-btn.my-0.mr-0.ml-2(color="primary" outline small @click="logMouseEvents = !logMouseEvents")
+        v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
+        | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
     div.scrollable
       div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
-        strong {{ l.name }}:
+        strong.mr-1 {{ l.name }}:
         span {{ l.args }}
-  v-btn.ma-0.mr-2(color="primary" small @click="resetLogEvents") #[span Reset log]
-  v-btn.ma-0(color="primary" small @click="logMouseEvents = !logMouseEvents") #[span.code {{ logMouseEvents ? 'Dsiable' : 'Enable' }} @event-mouse-X events]
-  v-card.my-2.ma-auto.main-content
+  v-card.mt-4.mb-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
@@ -1163,6 +1169,8 @@
     a(name="release-notes")
 
   div
+    | #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
+  div
     | #[strong Version 1.18.0] Allow overriding indicators in month view
   div
     | #[strong Version 1.17.0] Allow overriding time cells &amp; title
@@ -1466,7 +1474,7 @@ export default {
       }
       this.log.unshift({ name: emittedEventName, args: JSON.stringify(params) })
     },
-    resetLogEvents () {
+    clearEventsLog () {
       this.log = []
     },
     countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0
