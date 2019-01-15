@@ -93,6 +93,7 @@ a {
 
 .v-footer {
   font-size: 0.9em;
+  height: auto !important;
 
   .v-icon {
     font-size: 1.2em;
