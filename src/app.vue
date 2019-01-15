@@ -1,7 +1,9 @@
 <template lang="pug">
-  v-app.white(:class="{ ready: ready }")
+  v-app.white(:class="{ ready: ready }" v-scroll="onScroll")
     v-container
-      .text-xs-center
+      top-bar(:offset-top="offsetTop")
+
+      //- .text-xs-center
         .logo
           img(alt="Vue logo" src="./assets/logo.png" width="50")
           v-icon.calendar event
@@ -24,15 +26,24 @@
 
 <script>
 import Documentation from '@/documentation'
+import TopBar from '@/components/top-bar'
 
 export default {
   name: 'app',
-  components: { Documentation },
+  components: { Documentation, TopBar },
   data: () => ({
-    ready: false
+    ready: false,
+    offsetTop: 0,
+    goTopHidden: true
   }),
   created () {
     setTimeout(() => (this.ready = true), 500)
+  },
+  methods: {
+    onScroll () {
+      this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
+      this.goTopHidden = this.offsetTop < 200
+    }
   }
 }
 </script>
@@ -61,46 +72,12 @@ a {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: #2c3e50;
+  padding-top: 8em;
 }
 
-.logo {
-  position: relative;
-  display: inline-block;
-
-  img {z-index: 1;position: relative;}
-
-  .v-icon {
-    position: absolute;
-    left: 50%;
-    font-size: 3em;
-    opacity: 0;
-    transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-    transform: rotate(0deg) scale(0.3);
-    z-index: 0;
-    color: #ddd;
-  }
-
-  .v-icon.calendar {
-    margin-left: -25px;
-    transform-origin: 75% 100%;
-
-    .ready & {
-      transform: translateX(-75%) rotate(-30deg) scale(0.8);
-    }
-  }
-
-  .v-icon.time {
-    margin-left: -19px;
-    transform-origin: 25% 100%;
-
-    .ready & {
-      transform: translateX(75%) rotate(30deg) scale(0.8);
-    }
-  }
-
-  .ready & .v-icon {
-    opacity: 1;
-  }
+.application--wrap {
+  padding-top: 12em;
+  overflow-x: hidden;
 }
 
 .main-content {
