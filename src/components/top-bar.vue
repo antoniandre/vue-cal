@@ -4,7 +4,7 @@
       span.top-bar__title-line
       span.top-bar__title-line
       h1.primary--text.px-3
-        a.top-bar__logo-link(href="#top" v-scroll-to="'#top'")
+        a.layout.align-center.top-bar__logo-link(href="#top" v-scroll-to="'#top'")
           .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
           div.top-bar__logo-title Vue Cal&nbsp;
         span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
@@ -25,7 +25,7 @@
           span Examples
         v-list(dense).no-wrap
           v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide-weekends
-          v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, hide view selector &amp; custom arrows
+          v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
           v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
@@ -79,12 +79,17 @@ $lighter-text: #ccc;
     padding: 0;
   }
 
+  h1 {
+    height: 100%;
+  }
+
   &__title {
     position: relative;
     overflow: visible;
     margin-left: auto !important;
     margin-right: auto !important;
     width: 15.5em;
+    height: 100%;
     transition: 0.3s ease-in-out;
     font-size: 1em;
   }
@@ -157,8 +162,9 @@ $lighter-text: #ccc;
   }
 
   &__logo-link {
-    display: inline-block;
+    display: inline-flex;
     background-color: rgba(255, 255, 255, 0.7);
+    height: 100%;
   }
 
   &__logo-title {
@@ -256,7 +262,6 @@ $lighter-text: #ccc;
 @media screen and (max-width: 600px) {
   .scrolled .top-bar__logo {
     transform: scale(0.7);
-    transform-origin: 50% 20%;
   }
 
   .top-bar.scrolled .v-toolbar__content,
