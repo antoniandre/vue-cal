@@ -804,6 +804,8 @@
   p.mb-0 In all events, properties #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects:
   ul
     li #[span.code event-focus]
+    li #[span.code event-mouse-enter]
+    li #[span.code event-mouse-leave]
     li #[span.code event-delete]
     li #[span.code event-change]
     li #[span.code event-title-change]
@@ -820,15 +822,24 @@
         To help you manipulate an event's date, vue-cal returns native #[span.code Date]
         objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
         So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
-  p.mb-0 Watch the list of emitted events as you play with Vue Cal:
-  pre.mt-2.ssh-pre
-    div.grey--text //&nbsp;
-      strong event-name:&nbsp;
-      span arguments-list
-    div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
-      strong {{ l.name }}:
-      span {{ l.args }}
-  v-card.my-2.ma-auto.main-content
+  p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
+  pre.mt-2.ssh-pre.mb-2
+    v-layout(wrap)
+      div.grey--text //&nbsp;
+        strong event-name:&nbsp;
+        span arguments-list
+      v-spacer
+      v-btn.ma-0(color="primary" outline small @click="clearEventsLog")
+        v-icon(small).mr-1 clear
+        | Clear log
+      v-btn.my-0.mr-0.ml-2(color="primary" outline small @click="logMouseEvents = !logMouseEvents")
+        v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
+        | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
+    div.scrollable
+      div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
+        strong.mr-1 {{ l.name }}:
+        span {{ l.args }}
+  v-card.mt-4.mb-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
@@ -841,6 +852,8 @@
       @view-change="logEvents('view-change', $event)"
       @day-focus="logEvents('day-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
+      @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+      @event-mouse-leave="logEvents('event-mouse-leave', $event)"
       @event-title-change="logEvents('event-title-change', $event)"
       @event-content-change="logEvents('event-content-change', $event)"
       @event-duration-change="logEvents('event-duration-change', $event)"
@@ -858,6 +871,8 @@
               @view-change="logEvents('view-change', $event)"
               @day-focus="logEvents('day-focus', $event)"
               @event-focus="logEvents('event-focus', $event)"
+              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+              @event-mouse-leave="logEvents('event-mouse-leave', $event)"
               @event-title-change="logEvents('event-title-change', $event)"
               @event-content-change="logEvents('event-content-change', $event)"
               @event-duration-change="logEvents('event-duration-change', $event)"
@@ -1188,6 +1203,8 @@
     a(name="release-notes")
 
   div
+    | #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
+  div
     | #[strong Version 1.18.0] Allow overriding indicators in month view
   div
     | #[strong Version 1.17.0] Allow overriding time cells &amp; title
@@ -1329,6 +1346,7 @@ export default {
     now: new Date(),
     log: [],
     events,
+    logMouseEvents: false,
     overlappingEvents: [
       ...events,
       {
@@ -1485,7 +1503,13 @@ export default {
   }),
   methods: {
     logEvents (emittedEventName, params) {
-      this.log.push({ name: emittedEventName, args: JSON.stringify(params) })
+      if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].indexOf(emittedEventName) !== -1) {
+        return
+      }
+      this.log.unshift({ name: emittedEventName, args: JSON.stringify(params) })
+    },
+    clearEventsLog () {
+      this.log = []
     },
     countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0
   },
@@ -1504,6 +1528,12 @@ export default {
 
 <style lang="scss">
 $primary: #42b983;
+
+.scrollable {
+  height: 200px;
+  overflow-y: scroll;
+  padding-right: 1.8em;
+}
 
 .main-content {
   max-width: 800px;
