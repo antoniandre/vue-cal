@@ -1,6 +1,6 @@
 <template lang="pug">
 .documentation
-  .text-xs-center.todo(style="margin: 7em auto;max-width: 800px")
+  .text-xs-center.todo(style="margin: 0 auto 7em;max-width: 800px")
     h2.title.mt-5 To do...
     p.mb-2 Here is my ongoing to do list.
     div(style="transform: scale(0.8);opacity: 0.7;")
@@ -97,7 +97,7 @@
       | Recurring events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | More control on all date formats
+      | More control on events rendering
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
@@ -115,7 +115,7 @@
 
   h2.headline.mt-5
     a(href="#installation") Installation
-    a(name="installation")
+    a#installation(name="installation")
   p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
   h3 Via NPM
   sshpre(language="shell" label="Shell") npm install vue-cal --save-dev
@@ -146,7 +146,7 @@
 
   h2.headline.mt-5.pt-5
     a(href="#how-to-use") How to use
-    a(name="how-to-use")
+    a#how-to-use(name="how-to-use")
   highlight-message(type="warning")
     p.
       Wait! Before you dive in, make sure you place Vue cal in a container that #[strong has a set height] (not auto or initial)!#[br]
@@ -158,12 +158,14 @@
 
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
-    a(name="examples")
+    a#examples(name="examples")
 
   //- Example.
-  h3.title.mt-3.mb-2 # Basic with no timeline &amp; hidden weekends
+  h3.title.mt-3.mb-2
+    a(href="#ex--basic") # Basic with no timeline &amp; hidden weekends
+    a#ex--basic(name="ex--basic")
   p
-    | Double click cell to go narrower view.#[br]
+    | Double click cell to go to a narrower view and click the title to go to a broader view.#[br]
     | By default the calendar theme is grey to match with most of web pages.#[br]
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
@@ -174,7 +176,9 @@
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Small calendar, no time, hidden view selector &amp; custom arrows
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
+    a#ex--small-cal(name="ex--small-cal")
   p.
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrowPrev] &amp; #[span.code arrowNext]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
@@ -191,7 +195,9 @@
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Calendar themes - Rounded cells
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--calendar-themes") # Calendar themes - Rounded cells
+    a#ex--calendar-themes(name="ex--calendar-themes")
   p.
     You can easily change the calendar color theme or use the rounded-cells theme
     by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
@@ -215,7 +221,9 @@
   highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Internationalization (i18n)
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--internationalization") # Internationalization (i18n)
+    a#ex--internationalization(name="ex--internationalization")
   p.
     Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
     Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
@@ -225,7 +233,9 @@
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="zh-cn"&gt;&lt;/vue-cal&gt;
 
   //- Example.
-  h3.title.mt-3.mb-2 # Timeline
+  h3.title.mt-3.mb-2.pt-4
+    a(href="#ex--timeline") # Timeline
+    a#ex--timeline(name="ex--timeline")
   p.
     Timelines are visible on week view and day view.#[br]
     This examples has a set time range from 08:00 to 22:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
@@ -237,7 +247,9 @@
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Timeline tweaking
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--timeline-tweaking") # Timeline tweaking
+    a#ex--timeline-tweaking(name="ex--timeline-tweaking")
   p.mb-0.
     If you want to have more fancy time cells, you can override them with the
     #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
@@ -269,7 +281,9 @@
     .vuecal__time-cell .hours.line:before {border-color: #42b983;}
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Today's current time
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--today-current-time") # Today's current time
+    a#ex--today-current-time(name="ex--today-current-time")
   p.mb-0.
     When you choose to show the time in vue-cal, the current time of today's date will
     be marked with a line (scroll to the current time to see it).#[br]
@@ -290,7 +304,9 @@
     &lt;/vue-cal&gt;
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Disabled views, calendar events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--disabled-views-and-calendar-events") # Disabled views, calendar events
+    a#ex--disabled-views-and-calendar-events(name="ex--disabled-views-and-calendar-events")
   p.
     Read-only events (by default events are uneditable) with custom HTML content and css class (for event types).#[br]
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.#[br]
@@ -342,7 +358,9 @@
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Month view with events indicators
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--events-indicators-on-month-view") # Month view with events indicators
+    a#ex--events-indicators-on-month-view(name="ex--events-indicators-on-month-view")
   p.mb-0.
     When you define events the month view will display an events count per day.#[br]
     You can customize this as you wish via CSS.
@@ -423,7 +441,9 @@
     }
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Custom vue-cal title
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--custom-title") # Custom vue-cal title
+    a#ex--custom-title(name="ex--custom-title")
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can override the main date title.#[br]
     if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
@@ -467,7 +487,9 @@
     &lt;/vue-cal&gt;
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Timeless Events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--timeless-events") # Timeless Events
+    a#ex--timeless-events(name="ex--timeless-events")
   p.
     The events have associated dates but no time information.#[br]
     Timeless events cannot be resized as they have no time or duration information.#[br]
@@ -509,7 +531,9 @@
       ]
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Editable / deletable events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--editable-deletable-events") # Editable / deletable events
+    a#ex--editable-deletable-events(name="ex--editable-deletable-events")
   p.
     Allow editing title, deleting (by clicking and holding an event), and resizing (by dragging handle).#[br]
     Only week view is enabled here.#[br]
@@ -533,7 +557,9 @@
   highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Overlapping events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--overlapping-events") # Overlapping events
+    a#ex--overlapping-events(name="ex--overlapping-events")
   p.
     Overlapping, editable  &amp; deletable events.#[br]
     #[strong Up to 3 overlapping events starting or running at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
@@ -585,7 +611,9 @@
     })
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Background events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--background-events") # Background events
+    a#ex--background-events(name="ex--background-events")
   p.
     Just add the property #[span.code background: true] to your events.#[br]
     The particularity of background events is that they can fully be overlapped but not overlapping.#[br]
@@ -635,7 +663,9 @@
     .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Splitting days &amp; split events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--splitting-days") # Splitting days &amp; split events
+    a#ex--splitting-days(name="ex--splitting-days")
   p.mb-4
     | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.#[br]
     | disabled views: years, year, month.#[br]
@@ -705,7 +735,9 @@
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Modifying the array of events outside of Vue Cal
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
+    a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
   highlight-message(type="tips").
     It is possible to modify the array of events like adding or removing an event
     after the first load, but be aware that by doing so all the events in Vue Cal
@@ -754,7 +786,9 @@
     })
 
   //- Example.
-  h3.title.mt-5.mb-2.pt-4 # Vue Cal emitted events
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--emitted-events") # Vue Cal emitted events
+    a#ex--emitted-events(name="ex--emitted-events")
   p.mb-0.
     Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
     If you are not familiar with Vue JS events, you should read about it here:
@@ -850,7 +884,7 @@
 
   h2.headline.mt-5.pt-5
     a(href="#api") API
-    a(name="api")
+    a#api(name="api")
   p Here is the list of all the available views.
   sshpre.mt-2(language="js").
     ['years', 'year', 'month', 'week', 'day']
@@ -1123,7 +1157,7 @@
 
   h2.headline.mt-5.pt-5
     a(href="#css-notes") CSS Notes
-    a(name="css-notes")
+    a#css-notes(name="css-notes")
   p You can easily change the calendar design with CSS.
 
   h3.mt-5 # Color &amp; rounded Themes
@@ -1169,7 +1203,7 @@
 
   h2.headline.mt-5.pt-5.mb-2
     a(href="#release-notes") Release Notes
-    a(name="release-notes")
+    a#release-notes(name="release-notes")
 
   div
     | #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
@@ -1511,6 +1545,10 @@ $primary: #42b983;
 
 .todo .v-chip__content {
   padding: 0 3px;
+}
+
+.documentation h3 a {
+  color: inherit !important;
 }
 
 .api-options {list-style-type: none;}
