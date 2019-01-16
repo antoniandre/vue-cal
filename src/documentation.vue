@@ -1,9 +1,11 @@
 <template lang="pug">
 .documentation
-  .text-xs-center.todo(style="margin: 0 auto 7em;max-width: 800px")
+  .text-xs-center.todo(style="margin: 0 auto 7em;max-width: 900px")
     h2.title.mt-5 To do...
     p.mb-2 Here is my ongoing to do list.
-    div(style="transform: scale(0.8);opacity: 0.7;")
+
+    div Earlier
+    div(style="transform: scale(0.85);opacity: 0.8;")
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | default active view
@@ -51,20 +53,20 @@
         | Double tap on touch devices
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
-        strong First NPM Release!
-    .mb-2 Then
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Built-in themes
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Resize events
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Delete events
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Emit DOM events
+        strong 1st NPM Release!
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Built-in themes
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Resize events
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Delete events
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Emit DOM events
+    .mb-2 Current backlog
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Event indicator on month view
@@ -222,6 +224,52 @@
               :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
   highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--custom-title") # Custom vue-cal title
+    a#ex--custom-title(name="ex--custom-title")
+  highlight-message(type="tips").
+    Using Vue.js scoped slots, you can override the main date title.#[br]
+    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  p.mb-2.
+    In the following example, we set a custom title with Emoji.#[br]
+    2 arguments are available from the scope:
+  ul
+    li
+      | #[span.code title], the formatted title. E.g.
+      em.ml-2 "Week 2 (January 2019)"
+    li
+      | #[span.code view], an object containing the active view info. E.g.
+      sshpre(language="js").mt-3.
+        {
+          id: "week",
+          startDate: "2019-01-07T10:38:21.721Z", // Javscript Date object.
+          selectedDate: "2019-01-10T10:38:21.721Z" // Javscript Date object.
+        }
+  p.
+    You can use one or the other to format the title as you wish.
+    As #[span.code title] is already formatted it is not as flexible as manipulating
+    the #[span.code view.startDate] yourself.#[br]
+    The down side if you use the #[span.code view] object is that you have to handle
+    all the calendar views date cases yourself (years, year, month, week, day have different titles).
+
+  v-card.my-2.ma-auto.main-content(style="height: 350px;")
+    vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
+      div(slot="title" slot-scope="{ title, view }")
+        | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
+  sshpre(language="html-vue" label="Vue Template" v-pre).
+    &lt;vue-cal selected-date="2018-11-19"
+              :time="false"
+              :disable-views="['years', 'year', 'month', 'day']"
+              hide-weekends
+              :events="events"&gt;
+      &lt;div slot="title" slot-scope="{ title, view }"&gt;
+        🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}
+        - week {{ view.startDate.getWeek() }} 🎉
+      &lt;/div&gt;
+    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -457,62 +505,12 @@
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :disable-views="['years', 'year']" default-view="month" events-on-month-view hide-weekends :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :disable-views="['years', 'year']"
-              default-view="month"
-              hide-weekends
-              events-on-month-view
-              :events="events"
-              class="vuecal--full-height-delete"&gt;
-    &lt;/vue-cal&gt;
-  highlight-message(type="tips").
-    By default the delete button only appears at the top of the event with a set height (1.4em).
-    If you want a full-height delete button like in this example, you can apply the CSS class #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
-  highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
-
-  //- Example.
-  h3.title.mt-5.mb-2.pt-4
-    a(href="#ex--custom-title") # Custom vue-cal title
-    a#ex--custom-title(name="ex--custom-title")
-  highlight-message(type="tips").
-    Using Vue.js scoped slots, you can override the main date title.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-  p.mb-2.
-    In the following example, we set a custom title with Emoji.#[br]
-    2 arguments are available from the scope:
-  ul
-    li
-      | #[span.code title], the formatted title. E.g.
-      em.ml-2 "Week 2 (January 2019)"
-    li
-      | #[span.code view], an object containing the active view info. E.g.
-      sshpre(language="js").mt-3.
-        {
-          id: "week",
-          startDate: "2019-01-07T10:38:21.721Z", // Javscript Date object.
-          selectedDate: "2019-01-10T10:38:21.721Z" // Javscript Date object.
-        }
-  p.
-    You can use one or the other to format the title as you wish.
-    As #[span.code title] is already formatted it is not as flexible as manipulating
-    the #[span.code view.startDate] yourself.#[br]
-    The down side if you use the #[span.code view] object is that you have to handle
-    all the calendar views date cases yourself (years, year, month, week, day have different titles).
-
-  v-card.my-2.ma-auto.main-content(style="height: 350px;")
-    vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
-      div(slot="title" slot-scope="{ title, view }")
-        | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
-  sshpre(language="html-vue" label="Vue Template" v-pre).
-    &lt;vue-cal selected-date="2018-11-19"
-              :time="false"
-              :disable-views="['years', 'year', 'month', 'day']"
-              hide-weekends
-              :events="events"&gt;
-      &lt;div slot="title" slot-scope="{ title, view }"&gt;
-        🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}
-        - week {{ view.startDate.getWeek() }} 🎉
-      &lt;/div&gt;
+             :disable-views="['years', 'year']"
+             default-view="month"
+             hide-weekends
+             events-on-month-view
+             :events="events"
+             class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -949,7 +947,7 @@
         Allows you to translate the calendar texts in a given language.#[br]
         Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
-        | Currently available languages are English, Croatian, Dutch, French, German, Italian, Portuguese-Brasilian, Russian, Spanish, Swedish &amp; Simplified Chinese.#[br]
+        | Currently available languages are English, Croatian, Dutch, French, Georgian, German, Italian, Portuguese-Brasilian, Russian, Spanish, Swedish &amp; Simplified Chinese.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
         | this is what a language json looks like.
 
@@ -1237,6 +1235,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.21.0] Add Georgian language
   div
     | #[strong Version 1.20.0] Allow displaying events on month view
   div

@@ -10,5 +10,5 @@
   "noEvent": "ღონისძიება არ არის",
   "deleteEvent": "წაშლა",
   "createEvent": "შექმენით ღონისძიება",
-  "dateFormat": "DDDD mmmm d{S}, yyyy"
+  "dateFormat": "DDDD d mmmm yyyy"
 }
