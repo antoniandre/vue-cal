@@ -2,11 +2,10 @@
   .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
     .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
-      div(v-if="content" v-html="content")
-      div(v-else)
-        .vuecal__no-event(v-if="!events.length") {{ texts.noEvent }}
+      .vuecal__cell-date(v-if="content" v-html="content")
+      .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))") {{ texts.noEvent }}
+      .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         .vuecal__event(:class="eventClasses(event)"
-                       v-else
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
                        :style="eventStyles(event)"
                        @mouseenter="onMouseEnter($event, event)"
@@ -26,7 +25,7 @@
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      div(v-if="$parent.view.id === 'month'")
+      div(v-if="view === 'month' && !eventsOnMonthView && events.length")
         slot(name="events-count-month-view" :events="events")
           span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
@@ -83,7 +82,7 @@ export default {
     },
 
     eventStyles (event) {
-      if (!event.startTime) return {}
+      if (!event.startTime || this.view === 'month') return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
@@ -339,6 +338,9 @@ export default {
     },
     timeStep () {
       return parseInt(this.$parent.timeStep)
+    },
+    eventsOnMonthView () {
+      return this.$parent.eventsOnMonthView
     },
     editableEvents () {
       return this.$parent.editableEvents

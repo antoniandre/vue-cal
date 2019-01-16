@@ -74,6 +74,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Highlight current time
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Show events on month view
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -439,6 +442,32 @@
         return events ? events.filter(e => e.class === 'leisure').length : 0
       }
     }
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--events-on-month-view") # Display events on month view
+    a#ex--events-on-month-view(name="ex--events-on-month-view")
+  p.
+    With the option #[span.code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
+    You can hide any event information you don't want to be displayed in this view via CSS.#[br]
+    If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
+  highlight-message.
+    This feature will most likely be modified and improved in future releases. Please keep checking the release notes.
+  v-card.my-2.ma-auto.main-content
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :disable-views="['years', 'year']" default-view="month" events-on-month-view hide-weekends :events="events")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+              :disable-views="['years', 'year']"
+              default-view="month"
+              hide-weekends
+              events-on-month-view
+              :events="events"
+              class="vuecal--full-height-delete"&gt;
+    &lt;/vue-cal&gt;
+  highlight-message(type="tips").
+    By default the delete button only appears at the top of the event with a set height (1.4em).
+    If you want a full-height delete button like in this example, you can apply the CSS class #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
+  highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -909,7 +938,8 @@
     splitDays:          [Array],   default: []
     events:             [Array],   default: []
     editableEvents      [Boolean], default: false
-    noEventOverlaps    [Boolean],  default: false
+    noEventOverlaps     [Boolean], default: false
+    eventsOnMonthView   [Boolean], default: false
 
   ul.pl-0.api-options
     li
@@ -1109,6 +1139,11 @@
       span.code [Boolean], default: false
       p When #[span.code noEventOverlaps] is set to true, all the overlapping events will not overlap but instead split the cell width in 2 or 3.
     li
+      code.mr-2 eventsOnMonthView
+      span.code [Boolean], default: false
+      p.
+        When set to true, the events will also be displayed on month view.
+    li
       code.mr-2 events
       span.code [Array], default: []
       p.
@@ -1202,6 +1237,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.20.0] Allow displaying events on month view
   div
     | #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
   div

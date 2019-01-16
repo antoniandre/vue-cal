@@ -142,6 +142,10 @@ export default {
     noEventOverlaps: {
       type: Boolean,
       default: false
+    },
+    eventsOnMonthView: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
