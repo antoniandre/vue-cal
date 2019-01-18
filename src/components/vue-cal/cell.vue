@@ -256,14 +256,17 @@ export default {
         }, clickHoldAnEvent.timeout)
       }
     },
+
     onMouseEnter (e, event) {
       e.preventDefault()
       this.$parent.emitWithEvent('event-mouse-enter', event)
     },
+
     onMouseLeave (e, event) {
       e.preventDefault()
       this.$parent.emitWithEvent('event-mouse-leave', event)
     },
+
     onContextMenu (e, event) {
       e.preventDefault()
       return false
