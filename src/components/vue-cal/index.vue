@@ -450,6 +450,11 @@ export default {
     this.ready = true
   },
 
+  beforeDestroy () {
+    window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+    window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+  },
+
   computed: {
     texts () {
       return require(`./i18n/${this.locale}.json`)
