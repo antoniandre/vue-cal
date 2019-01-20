@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.22.0__ Add Slovak language
 - __Version 1.21.0__ Add Georgian language
 - __Version 1.20.0__ Allow displaying events on month view
 - __Version 1.19.0__ Emit events on mouse-enter &amp; mouse-leave an event
