@@ -414,12 +414,13 @@ export default {
 
             this.mutableEvents[date].push({
               ...event,
+              id: `${this._uid}_${this.eventIdIncrement++}`,
               startDate: date,
               endDate: date,
               startTime: '00:00',
               startTimeMinutes: 0,
-              endTime: '24:00',
-              endTimeMinutes: 24 * 60,
+              endTime: i === datesDiff ? endTime : '24:00',
+              endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
             })
           }
         }

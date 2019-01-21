@@ -1476,7 +1476,7 @@ export default {
       ...events,
       {
         start: '2018-11-19 20:00',
-        end: '2018-11-20 11:00',
+        end: '2018-11-21 11:00',
         title: 'a big thing',
         class: 'leisure'
       },
