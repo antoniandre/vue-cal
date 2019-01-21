@@ -405,18 +405,9 @@ export default {
           endDate = new Date(y2, parseInt(m2) - 1, d2)
           const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
 
-          debugger
           // Create 1 event per day and link them all.
           for (let i = 1; i <= datesDiff; i++) {
             const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
-            // let [startDate, startTime = ''] = event.start.split(' ')
-            // const [hoursStart, minutesStart] = startTime.split(':')
-            // const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-
-            // let [endDate, endTime = ''] = event.end.split(' ')
-            // const [hoursEnd, minutesEnd] = endTime.split(':')
-            // const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-            // const multipleDays = startDate !== endDate
 
             // Make array reactive for future events creations & deletions.
             if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
@@ -431,9 +422,6 @@ export default {
               endTimeMinutes: 24 * 60,
             })
           }
-
-          console.log(this.mutableEvents)
-
         }
 
         return event
