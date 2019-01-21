@@ -1475,6 +1475,12 @@ export default {
     backgroundEvents: [
       ...events,
       {
+        start: '2018-11-19 20:00',
+        end: '2018-11-20 11:00',
+        title: 'a big thing',
+        class: 'leisure'
+      },
+      {
         start: '2018-11-19 12:00',
         end: '2018-11-19 14:00',
         title: 'LUNCH',
@@ -1513,21 +1519,21 @@ export default {
     timelessEvents: [
       {
         start: '2018-11-21',
-        end: '2018-11-23',
+        end: '2018-11-21',
         title: 'Need to go shopping',
         content: '<i class="v-icon material-icons">shopping_cart</i>',
         class: 'leisure'
       },
       {
         start: '2018-11-21',
-        end: '2018-11-23',
+        end: '2018-11-21',
         title: 'Golf with John',
         content: '<i class="v-icon material-icons">golf_course</i>',
         class: 'sport'
       },
       {
         start: '2018-11-22',
-        end: '2018-11-23',
+        end: '2018-11-22',
         title: 'Dad\'s birthday!',
         content: '<i class="v-icon material-icons">cake</i>',
         class: 'sport'

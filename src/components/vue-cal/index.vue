@@ -358,13 +358,14 @@ export default {
 
       // Group events into dates.
       this.events.map(event => {
-        const [startDate, startTime = ''] = event.start.split(' ')
+        let [startDate, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        const [endDate, endTime = ''] = event.end.split(' ')
+        let [endDate, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+        const multipleDays = startDate !== endDate
 
         // Keep the event ids scoped to this calendar instance.
         // eslint-disable-next-line
@@ -383,9 +384,11 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
+          multipleDays: false,
           classes: {
             [event.class]: true,
-            'vuecal__event--background': event.background
+            'vuecal__event--background': event.background,
+            'vuecal__event--multiple-days': event.multipleDays
           }
         })
 
@@ -393,6 +396,45 @@ export default {
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
         // eslint-disable-next-line
         this.mutableEvents[event.startDate].push(event)
+
+        if (multipleDays) {
+          const oneDayInMs = 24 * 60 * 60 * 1000
+          const [y1, m1, d1] = startDate.split('-')
+          const [y2, m2, d2] = endDate.split('-')
+          startDate = new Date(y1, parseInt(m1) - 1, d1)
+          endDate = new Date(y2, parseInt(m2) - 1, d2)
+          const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
+
+          debugger
+          // Create 1 event per day and link them all.
+          for (let i = 1; i <= datesDiff; i++) {
+            const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
+            // let [startDate, startTime = ''] = event.start.split(' ')
+            // const [hoursStart, minutesStart] = startTime.split(':')
+            // const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+
+            // let [endDate, endTime = ''] = event.end.split(' ')
+            // const [hoursEnd, minutesEnd] = endTime.split(':')
+            // const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+            // const multipleDays = startDate !== endDate
+
+            // Make array reactive for future events creations & deletions.
+            if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
+
+            this.mutableEvents[date].push({
+              ...event,
+              startDate: date,
+              endDate: date,
+              startTime: '00:00',
+              startTimeMinutes: 0,
+              endTime: '24:00',
+              endTimeMinutes: 24 * 60,
+            })
+          }
+
+          console.log(this.mutableEvents)
+
+        }
 
         return event
       })
