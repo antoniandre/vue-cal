@@ -133,12 +133,12 @@
   p Then import the component and use it:
   sshpre(language="js" label="Javascript").
     // In your VueJS component.
-    import Vuecal from 'vue-cal'
+    import VueCal from 'vue-cal'
     import 'vue-cal/dist/vuecal.css'
     ...
 
     export default {
-      components: { Vuecal },
+      components: { VueCal },
       data: () => ({
         ...
       }),
@@ -154,6 +154,13 @@
       &lt;script src="https://unpkg.com/vue-cal"&gt;&lt;/script&gt;
       &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
     &lt;/head&gt;
+  p Then define the component to use in your template:
+  sshpre(language="js" label="Javascript").
+    // In your VueJS component.
+    export default {
+      components: { 'vue-cal': vuecal },
+      ...
+    }
 
   h2.headline.mt-5.pt-5
     a(href="#how-to-use") How to use
@@ -170,9 +177,14 @@
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
     a#examples(name="examples")
+  highlight-message.mt-3(type="success" no-icon)
+    v-layout(align-center)
+      v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
+      | Try it yourself:
+      a.ml-2(href="https://codepen.io/antoniandre/pen/VgYxLg") //codepen.io/antoniandre/pen/VgYxLg
 
   //- Example.
-  h3.title.mt-3.mb-2
+  h3.title.mt-5.mb-2
     a(href="#ex--basic") # Basic with no timeline &amp; hidden weekends
     a#ex--basic(name="ex--basic")
   p
