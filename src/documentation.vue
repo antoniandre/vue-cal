@@ -235,11 +235,11 @@
       vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
-              xsmall
-              hide-view-selector
-              :time="false"
-              default-view="month"
-              :disable-views="['week']"&gt;
+             xsmall
+             hide-view-selector
+             :time="false"
+             default-view="month"
+             :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
   highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
 
@@ -277,15 +277,15 @@
     vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
       div(slot="title" slot-scope="{ title, view }")
         | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
-  sshpre(language="html-vue" label="Vue Template" v-pre).
+  sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time="false"
-              :disable-views="['years', 'year', 'month', 'day']"
-              hide-weekends
-              :events="events"&gt;
+             :time="false"
+             :disable-views="['years', 'year', 'month', 'day']"
+             hide-weekends
+             :events="events"&gt;
       &lt;div slot="title" slot-scope="{ title, view }"&gt;
-        🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}
-        - week {{ view.startDate.getWeek() }} 🎉
+        🎉 {{ '\{\{ view.startDate.getFullYear() \}\}' }} - {{ '\{\{ view.startDate.getMonth() + 1 \}\}' }}
+        - week {{ '\{\{ view.startDate.getWeek() \}\}' }} 🎉
       &lt;/div&gt;
     &lt;/vue-cal&gt;
 
@@ -333,18 +333,18 @@
     if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
 
-  sshpre(language="html-vue" label="Vue Template" v-pre).
+  sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
-              :time-from="5 * 60"
-              :time-step="15"
-              :time-cell-height="18"
-              default-view="day"
-              :disable-views="['years', 'year', 'month']"&gt;
+             :time-from="5 * 60"
+             :time-step="15"
+             :time-cell-height="18"
+             default-view="day"
+             :disable-views="['years', 'year', 'month']"&gt;
       &lt;div class="{ line: true, hours: !minutes }"
-            slot="time-cell"
-            slot-scope="{ hours, minutes }"&gt;
-        &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ hours }}&lt;/strong&gt;
-        &lt;span v-else style="font-size: 11px"&gt;{{ minutes }}&lt;/span&gt;
+           slot="time-cell"
+           slot-scope="{ hours, minutes }"&gt;
+        &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
+        &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
       &lt;/div&gt;
     &lt;/vue-cal&gt;
 
@@ -370,8 +370,8 @@
     vue-cal.vuecal--green-theme(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
-              default-view="day"
-              :disable-views="['years', 'year', 'month']"&gt;
+             default-view="day"
+             :disable-views="['years', 'year', 'month']"&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -386,11 +386,11 @@
     vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="7 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              :events="events"&gt;
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -449,11 +449,11 @@
       vue-cal.vuecal--yellow-theme(:class="'event-indicator--' + indicatorStyle" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              xsmall
-              :time-from="10 * 60"
-              :disable-views="['years', 'year', 'day']"
-              default-view="month"
-              :events="events"&gt;
+             xsmall
+             :time-from="10 * 60"
+             :disable-views="['years', 'year', 'day']"
+             default-view="month"
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="css" label="CSS").
@@ -489,16 +489,16 @@
     vue-cal.vuecal--green-theme(:class="`event-indicator--${indicatorStyle}`" ref="myVueCal" selected-date="2018-11-19" xsmall :time-from="10 * 60" default-view="month" :disable-views="['years', 'year', 'day']" :events="events")
       div(slot-scope="{ events }" slot="events-count-month-view")
         span.vuecal__cell-events-count(v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
-  sshpre(language="html-vue" label="Vue Template" v-pre).
+  sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              xsmall
-              :time-from="10 * 60"
-              :disable-views="['years', 'year', 'day']"
-              default-view="month"
-              :events="events"&gt;
+             xsmall
+             :time-from="10 * 60"
+             :disable-views="['years', 'year', 'day']"
+             default-view="month"
+             :events="events"&gt;
         &lt;div slot-scope="{ events }" slot="events-count-month-view"&gt;
           &lt;span class="vuecal__cell-events-count" v-if="countEventsMonthView(events)"&gt;
-            {{ countEventsMonthView(events) }}
+            {{ '\{\{ countEventsMonthView(events) \}\}' }}
           &lt;/span&gt;
         &lt;/div&gt;
     &lt;/vue-cal&gt;
@@ -545,10 +545,10 @@
     vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time="false" :disable-views="['years', 'year', 'month']" hide-weekends :events="timelessEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time="false"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              :events="events"&gt;
+             :time="false"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -589,14 +589,14 @@
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month', 'day']" hide-view-selector hide-weekends editable-events :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="10 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month', 'day']"
-              hide-view-selector
-              hide-weekends
-              editable-events
-              :events="events"
-              class="vuecal--full-height-delete"&gt;
+             :time-from="10 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month', 'day']"
+             hide-view-selector
+             hide-weekends
+             editable-events
+             :events="events"
+             class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   highlight-message(type="tips").
     By default the delete button only appears at the top of the event with a set height (1.4em).
@@ -615,17 +615,19 @@
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends editable-events :events="overlappingEvents" :no-event-overlaps="!overlapEvents")
-  sshpre(language="html-vue" label="Vue Template" v-pre).
-    &lt;v-btn @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;:no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"&lt;/v-btn&gt;
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;v-btn @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;
+      :no-event-overlaps="{{ '\{\{ overlapEvents ? \'false\' : \'true\' \}\}' }}"
+    &lt;/v-btn&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="10 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              editable-events
-              :no-event-overlaps="!overlapEvents"
-              :events="events"&gt;
+             :time-from="10 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             editable-events
+             :no-event-overlaps="!overlapEvents"
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -671,11 +673,11 @@
     vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="backgroundEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="7 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              :events="events"&gt;
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -723,18 +725,18 @@
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-step="30" :disable-views="['years', 'year', 'month']" :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]" editable-events :events="splitEvents" :min-cell-width="splitsExampleMinCellWidth")
-  sshpre(language="html-vue" label="Vue Template" v-pre).
+  sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-      {{ minCellWidth ? ' fit to container ' : 'min cell width 400px' }}
+      {{ '\{\{ minCellWidth ? \'fit to container\' : \'min cell width 400px\' \}\}' }}
     &lt;/button&gt;
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="8 * 60"
-              :time-step="30"
-              :disable-views="['years', 'year', 'month']"
-              :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-              editable-events
-              :events="events"
-              :min-cell-width="minCellWidth"&gt;
+             :time-from="8 * 60"
+             :time-step="30"
+             :disable-views="['years', 'year', 'month']"
+             :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+             editable-events
+             :events="events"
+             :min-cell-width="minCellWidth"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -803,19 +805,19 @@
     vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="7 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="eventsCopy")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-btn @click="events.push({
-      start: '2018-11-20 12:00',
-      end: '2018-11-20 17:00',
-      title: 'A new event',
-      class: 'blue-event'
+           start: '2018-11-20 12:00',
+           end: '2018-11-20 17:00',
+           title: 'A new event',
+           class: 'blue-event'
     })"&gt;Add an event&lt;/v-btn&gt;
-    &lt;v-btn @click="events.pop()")&gt;Remove last event&lt;/v-btn&gt;
+    &lt;v-btn @click="events.pop()"&gt;Remove last event&lt;/v-btn&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="7 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              :events="events"&gt;
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -908,22 +910,22 @@
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="7 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              editable-events
-              :events="events"
-              @ready="logEvents('ready', $event)"
-              @view-change="logEvents('view-change', $event)"
-              @day-focus="logEvents('day-focus', $event)"
-              @event-focus="logEvents('event-focus', $event)"
-              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
-              @event-mouse-leave="logEvents('event-mouse-leave', $event)"
-              @event-title-change="logEvents('event-title-change', $event)"
-              @event-content-change="logEvents('event-content-change', $event)"
-              @event-duration-change="logEvents('event-duration-change', $event)"
-              @event-delete="logEvents('event-delete', $event)"&gt;
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             editable-events
+             :events="events"
+             @ready="logEvents('ready', $event)"
+             @view-change="logEvents('view-change', $event)"
+             @day-focus="logEvents('day-focus', $event)"
+             @event-focus="logEvents('event-focus', $event)"
+             @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+             @event-mouse-leave="logEvents('event-mouse-leave', $event)"
+             @event-title-change="logEvents('event-title-change', $event)"
+             @event-content-change="logEvents('event-content-change', $event)"
+             @event-duration-change="logEvents('event-duration-change', $event)"
+             @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
 
   h2.headline.mt-5.pt-5
