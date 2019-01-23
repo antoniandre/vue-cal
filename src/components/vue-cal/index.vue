@@ -482,6 +482,7 @@ export default {
   },
 
   beforeDestroy () {
+    const hasTouch = 'ontouchstart' in window
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
   },

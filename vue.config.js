@@ -1,4 +1,4 @@
 module.exports = {
-  baseUrl: process.env.NODE_ENV === 'production' ? '/vue-cal' : '',
+  publicPath: process.env.NODE_ENV === 'production' ? '/vue-cal' : '',
   outputDir: 'docs'
 }

@@ -84,19 +84,25 @@
       | Create an event
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
+      | Multiple-days events
+    v-chip.pr-1(color="amber darken-1" outline small disabled)
+      v-icon.mr-1 timer
+      | Support more simultaneous events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Multiple-days events
+      | Optional tooltip on events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Option to start week on Sunday
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Drag events snap to time
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Optional tooltip on events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Recurring events
@@ -314,6 +320,7 @@
   highlight-message(type="tips").
     if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+
   sshpre(language="html-vue" label="Vue Template" v-pre).
     &lt;vue-cal xsmall
               :time-from="5 * 60"
@@ -328,6 +335,7 @@
         &lt;span v-else style="font-size: 11px"&gt;{{ minutes }}&lt;/span&gt;
       &lt;/div&gt;
     &lt;/vue-cal&gt;
+
   sshpre.mt-4(language="css" label="CSS").
     .vuecal__time-cell .hours.line:before {border-color: #42b983;}
 
