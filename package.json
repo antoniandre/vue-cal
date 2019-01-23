@@ -35,12 +35,12 @@
     "pug": "^2.0.3",
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
-    "simple-syntax-highlighter": "^1.0.3",
+    "simple-syntax-highlighter": "^1.0.4",
     "vue": "^2.5.22",
     "vue-cli-plugin-vuetify": "^0.2.1",
     "vue-scrollto": "^2.13.0",
     "vue-template-compiler": "^2.5.22",
-    "vuetify": "^1.4.2"
+    "vuetify": "^1.4.3"
   },
   "dependencies": {
     "babel-polyfill": "^6.26.0"
