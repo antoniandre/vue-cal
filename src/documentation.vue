@@ -129,9 +129,9 @@
     a#installation(name="installation")
   p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
   h3 Via NPM
-  sshpre(language="shell" label="Shell") npm install vue-cal --save-dev
+  sshpre.mt-2(language="shell" label="Shell") npm install vue-cal --save-dev
   p Then import the component and use it:
-  sshpre(language="js" label="Javascript").
+  sshpre.mt-2(language="js" label="Javascript").
     // In your VueJS component.
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/vuecal.css'
@@ -147,7 +147,7 @@
 
   h3 Via #[span.code &lt;script&gt;] tag
   p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-  sshpre(language="html" label="HTML").
+  sshpre.mt-4(language="html" label="HTML").
     &lt;head&gt;
       ...
       &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
@@ -155,7 +155,7 @@
       &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
     &lt;/head&gt;
   p Then define the component to use in your template:
-  sshpre(language="js" label="Javascript").
+  sshpre.mt-4(language="js" label="Javascript").
     // In your VueJS component.
     export default {
       components: { 'vue-cal': vuecal },
