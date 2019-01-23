@@ -384,7 +384,15 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          multipleDays: multipleDays,
+          multipleDays: multipleDays ? {
+            start: true,
+            startDate,
+            endDate,
+            startTime,
+            startTimeMinutes,
+            endTime: multipleDays ? '24:00' : endTime,
+            endTimeMinutes: multipleDays ? 24 * 60 : endTimeMinutes
+          } : {},
           classes: {
             [event.class]: true,
             'vuecal__event--background': event.background,
@@ -416,12 +424,17 @@ export default {
             this.mutableEvents[date].push({
               ...event,
               id: `${this._uid}_${this.eventIdIncrement++}`,
-              startDate: date,
-              endDate: date,
-              startTime: '00:00',
-              startTimeMinutes: 0,
-              endTime: i === datesDiff ? endTime : '24:00',
-              endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
+              multipleDays: {
+                start: false,
+                middle: i < datesDiff,
+                end: i === datesDiff,
+                startDate: date,
+                endDate: date,
+                startTime: '00:00',
+                startTimeMinutes: 0,
+                endTime: i === datesDiff ? endTime : '24:00',
+                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60
+              },
               classes: {
                 ...event.classes,
                 'event-start': false,

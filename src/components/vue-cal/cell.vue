@@ -126,7 +126,7 @@ export default {
         'vuecal__event--split3': simultaneous >= 3,
         'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
         'vuecal__event--split-left': forceLeft,
-        'vuecal__event--multiple-days': event.multipleDays
+        'vuecal__event--multiple-days': Object.keys(event.multipleDays).length
       }
     },
 
