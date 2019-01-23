@@ -377,18 +377,19 @@ export default {
           endDate,
           startTime,
           startTimeMinutes,
-          endTime,
-          endTimeMinutes,
+          endTime: multipleDays ? '24:00' : endTime,
+          endTimeMinutes: multipleDays ? 24 * 60 : endTimeMinutes,
           height: 0,
           top: 0,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          multipleDays: false,
+          multipleDays: multipleDays,
           classes: {
             [event.class]: true,
             'vuecal__event--background': event.background,
-            'vuecal__event--multiple-days': event.multipleDays
+            'vuecal__event--multiple-days': multipleDays,
+            'event-start': multipleDays
           }
         })
 
@@ -421,6 +422,12 @@ export default {
               startTimeMinutes: 0,
               endTime: i === datesDiff ? endTime : '24:00',
               endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
+              classes: {
+                ...event.classes,
+                'event-start': false,
+                'event-middle': i < datesDiff,
+                'event-end': i === datesDiff
+              }
             })
           }
         }

@@ -74,10 +74,10 @@ export default {
       let minutesFromTop = event.startTimeMinutes - this.timeFrom
       const top = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
-      minutesFromTop = event.endTimeMinutes - this.timeFrom
+      minutesFromTop = Math.min(event.endTimeMinutes, this.timeTo) - this.timeFrom
       const bottom = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
-      event.top = top
+      event.top = Math.max(top, 0)
       event.height = bottom - top
     },
 
@@ -109,6 +109,7 @@ export default {
 
       else if (simultaneous === 2) {
         const otherEvent = this.events.find(e => e.id === Object.keys(event.simultaneous)[0])
+        if (!otherEvent) debugger
 
         if (Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
           forceLeft = true
@@ -124,7 +125,8 @@ export default {
         'vuecal__event--split2': simultaneous === 2,
         'vuecal__event--split3': simultaneous >= 3,
         'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
-        'vuecal__event--split-left': forceLeft
+        'vuecal__event--split-left': forceLeft,
+        'vuecal__event--multiple-days': event.multipleDays
       }
     },
 
