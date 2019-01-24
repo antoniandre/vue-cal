@@ -608,42 +608,40 @@
     a(href="#ex--multiple-days-events") # Multiple days events
     a#ex--multiple-days-events(name="ex--multiple-days-events")
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="10 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="multipleDaysEvents" :no-event-overlaps="!overlapEvents")
-  sshpre(language="html-vue" label="Vue Template" v-pre).
+    vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="multipleDaysEvents")
+  sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-              :time-from="10 * 60"
-              :time-to="23 * 60"
-              :disable-views="['years', 'year', 'month']"
-              hide-weekends
-              editable-events
-              :events="events"&gt;
+             :time-from="8 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
-          start: '2018-11-21 14:00',
-          end: '2018-11-21 22:00',
-          title: 'A big thing',
-          content: '&lt;i class="v-icon material-icons"&gt;sentiment_satisfied_alt&lt;/i&gt;',
+          start: '2018-11-19 08:30',
+          end: '2018-11-20 20:00',
+          title: 'Running Marathon',
+          content: '&lt;i class="v-icon material-icons"&gt;directions_run&lt;/i&gt;',
+          class: 'sport'
+        },
+        {
+          start: '2018-11-20 13:00',
+          end: '2018-11-20 13:30',
+          title: 'Drink water!',
+          content: '&lt;i class="v-icon material-icons"&gt;local_drink&lt;/i&gt;',
           class: 'health'
         },
         {
-          start: '2018-11-21 16:00',
-          end: '2018-11-21 19:00',
-          title: 'Another thing',
-          content: '&lt;i class="v-icon material-icons"&gt;thumb_up&lt;/i&gt;',
-          class: 'blue-event'
-        },
-        {
-          start: '2018-11-20 18:30',
-          end: '2018-11-20 20:30',
-          title: 'Crossfit',
-          content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
-          class: 'sport'
-        },
-        ...
+          start: '2018-11-21 19:00',
+          end: '2018-11-23 11:30',
+          title: 'Trip to India',
+          content: '&lt;i class="v-icon material-icons"&gt;flight&lt;/i&gt;',
+          class: 'leisure'
+        }
       ]
     })
 
@@ -1524,8 +1522,8 @@ export default {
     ],
     multipleDaysEvents: [
       {
-        start: '2018-11-19 08:00',
-        end: '2018-11-20 22:00',
+        start: '2018-11-19 08:30',
+        end: '2018-11-20 20:00',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
         class: 'sport'
@@ -1533,7 +1531,7 @@ export default {
       {
         start: '2018-11-20 13:00',
         end: '2018-11-20 13:30',
-        title: 'Drink lots of water!',
+        title: 'Drink water!',
         content: '<i class="v-icon material-icons">local_drink</i>',
         class: 'health'
       },
@@ -1543,7 +1541,7 @@ export default {
         title: 'Trip to India',
         content: '<i class="v-icon material-icons">flight</i>',
         class: 'leisure'
-      },
+      }
     ],
     splitEvents: [
       ...events,

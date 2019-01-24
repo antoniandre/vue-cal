@@ -378,25 +378,17 @@ export default {
         event = Object.assign({}, event, {
           id,
           startDate,
-          endDate,
           startTime,
           startTimeMinutes,
-          endTime: multipleDays ? '24:00' : endTime,
-          endTimeMinutes: multipleDays ? 24 * 60 : endTimeMinutes,
+          endDate,
+          endTime,
+          endTimeMinutes,
           height: 0,
           top: 0,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          multipleDays: multipleDays ? {
-            start: true,
-            startDate,
-            endDate,
-            startTime,
-            startTimeMinutes,
-            endTime: multipleDays ? '24:00' : endTime,
-            endTimeMinutes: multipleDays ? 24 * 60 : endTimeMinutes
-          } : {},
+          multipleDays: {},
           classes: {
             [event.class]: true,
             'vuecal__event--background': event.background,
@@ -418,6 +410,18 @@ export default {
           endDate = new Date(y2, parseInt(m2) - 1, d2)
           const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
 
+          // Update First day event.
+          event.multipleDays = {
+            start: true,
+            startDate,
+            startTime,
+            startTimeMinutes,
+            endDate: startDate,
+            endTime: '24:00',
+            endTimeMinutes: 24 * 60,
+            daysCount: datesDiff + 1
+          }
+
           // Create 1 event per day and link them all.
           for (let i = 1; i <= datesDiff; i++) {
             const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
@@ -433,11 +437,12 @@ export default {
                 middle: i < datesDiff,
                 end: i === datesDiff,
                 startDate: date,
-                endDate: date,
                 startTime: '00:00',
                 startTimeMinutes: 0,
+                endDate: date,
                 endTime: i === datesDiff ? endTime : '24:00',
-                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60
+                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
+                daysCount: datesDiff + 1
               },
               classes: {
                 ...event.classes,

@@ -21,8 +21,10 @@
           .vuecal__event-time(v-if="event.startTimeMinutes")
             | {{ event.startTimeMinutes | formatTime(timeFormat) }}
             span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
+            small(v-if="event.multipleDays.daysCount") +{{ event.multipleDays.daysCount - 1 }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime"
+          span(v-if="event.multipleDays.daysCount") {{ { simultaneous: event.simultaneous, id: event.id, multipleDays: event.multipleDays } }}
+          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       div(v-if="view === 'month' && !eventsOnMonthView && events.length")
@@ -71,14 +73,17 @@ export default {
 
   methods: {
     updateEventPosition (event) {
-      let minutesFromTop = event.startTimeMinutes - this.timeFrom
+      const src = (event.multipleDays.daysCount && event.multipleDays) || event
+      const { startTimeMinutes, endTimeMinutes } = src
+
+      let minutesFromTop = startTimeMinutes - this.timeFrom
       const top = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
-      minutesFromTop = Math.min(event.endTimeMinutes, this.timeTo) - this.timeFrom
+      minutesFromTop = Math.min(endTimeMinutes, this.timeTo) - this.timeFrom
       const bottom = Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
 
       event.top = Math.max(top, 0)
-      event.height = bottom - top
+      event.height = bottom - event.top
     },
 
     eventStyles (event) {
@@ -160,11 +165,17 @@ export default {
     },
 
     checkOverlappingEvents (event, comparisonArray) {
+      const src = (event.multipleDays.daysCount && event.multipleDays) || event
+      const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
+
       comparisonArray.forEach((event2id, i) => {
         let event2 = this.events.find(item => item.id === event2id)
-        const event1startsFirst = event.startTimeMinutes < event2.startTimeMinutes
-        const event1overlapsEvent2 = !event1startsFirst && event2.endTimeMinutes > event.startTimeMinutes
-        const event2overlapsEvent1 = event1startsFirst && event.endTimeMinutes > event2.startTimeMinutes
+        const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
+        const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2
+
+        const event1startsFirst = startTimeMinE1 < startTimeMinE2
+        const event1overlapsEvent2 = !event1startsFirst && endTimeMinE2 > startTimeMinE1
+        const event2overlapsEvent1 = event1startsFirst && endTimeMinE1 > startTimeMinE2
 
         if (event1overlapsEvent2) {
           event.overlapping[event2.id] = true
@@ -187,8 +198,9 @@ export default {
         }
 
         // If up to 3 events start at the same time.
-        if (event.startTimeMinutes === event2.startTimeMinutes ||
-            (event1overlapsEvent2 || event2overlapsEvent1)) {
+        if (startTimeMinE1 === startTimeMinE2 || (event1overlapsEvent2 || event2overlapsEvent1)) {
+          console.log({ startTimeMinE1, endTimeMinE1, startTimeMinE2, endTimeMinE2 })
+          debugger
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         }
