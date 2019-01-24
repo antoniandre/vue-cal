@@ -181,7 +181,7 @@
     v-layout(align-center)
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
       | Try it yourself:
-      a.ml-2(href="https://codepen.io/antoniandre/pen/VgYxLg") //codepen.io/antoniandre/pen/VgYxLg
+      a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL") //codepen.io/antoniandre/pen/pGJWjL
 
   //- Example.
   h3.title.mt-5.mb-2
