@@ -983,6 +983,7 @@
     locale:             [String],  default: 'en'
     hideViewSelector:   [Boolean], default: false
     hideTitleBar:       [Boolean], default: false
+    hideBody:           [Boolean], default: false
     hideWeekends:       [Boolean], default: false
     disableViews:       [Array],   default: []
     defaultView:        [String],  default: 'week'
@@ -1057,6 +1058,12 @@
         When set to true, the title bar with navigating arrows will disappear.#[br]
         You can still navigate from a view to another with the view selector and clicking
         a cell (narrower view).
+    li
+      code.mr-2 hideBody
+      span.code [Boolean], default: false
+      p.
+        When set to true, the whole calendar body will disappear - cells and timeline.#[br]
+        Also means that all the logic usually triggered from the calendar's body won't run at all.
     li
       code.mr-2 hideWeekends
       span.code [Boolean], default: false
@@ -1302,6 +1309,10 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.24.0] Allow hiding the calendar body
+    highlight-message(type="success").
+      Week days headings now have a today CSS class when equals to today's date.
   div
     | #[strong Version 1.22.0] Add Slovak language
   div
