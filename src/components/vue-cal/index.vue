@@ -18,7 +18,7 @@
           span(v-if="heading.label4") &nbsp;
           span(v-if="heading.label4") {{ heading.label4 }}
 
-    .vuecal__flex.vuecal__body(grow)
+    .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
         .vuecal__bg(grow)
           .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
@@ -82,6 +82,10 @@ export default {
       default: false
     },
     hideTitleBar: {
+      type: Boolean,
+      default: false
+    },
+    hideBody: {
       type: Boolean,
       default: false
     },
@@ -162,6 +166,10 @@ export default {
       default: false
     },
     noEventOverlaps: {
+      type: Boolean,
+      default: false
+    },
+    eventsOnMonthView: {
       type: Boolean,
       default: false
     }
@@ -561,6 +569,12 @@ export default {
     this.ready = true
   },
 
+  beforeDestroy () {
+    const hasTouch = 'ontouchstart' in window
+    window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+    window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+  },
+
   computed: {
     texts () {
       return require(`./i18n/${this.locale}.json`)
@@ -649,12 +663,22 @@ export default {
       switch (this.view.id) {
         case 'month':
         case 'week':
+          let todayFound = false
           headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+            let date = this.view.startDate.addDays(i)
+            // Only for week view.
+            let isToday = this.view.id === 'week' && !todayFound && isDateToday(date) && !todayFound++
+
             return {
               label1: this.locale === 'zh-cn' ? cell.label.substr(0, 2) : cell.label[0],
               label2: this.locale === 'zh-cn' ? cell.label.substr(2) : cell.label.substr(1, 2),
               label3: this.locale === 'zh-cn' ? '' : cell.label.substr(3),
-              ...((this.view.id === 'week' && { label4: this.view.startDate.addDays(i).getDate() }) || {})
+              // Only for week view:
+              ...(this.view.id === 'week' ? { label4: date.getDate() } : {}),
+              ...(this.view.id === 'week' ? { today: isToday } : {}),
+              class: {
+                today: isToday // Doesn't need condition cz if class object is false it doesn't show up.
+              }
             }
           })
           break

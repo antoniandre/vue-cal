@@ -27,13 +27,14 @@
           v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide-weekends
           v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
+          v-list-tile(href="#ex--custom-title" v-scroll-to="'#ex--custom-title'") Custom vue-cal title
           v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
           v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
           v-list-tile(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
           v-list-tile(href="#ex--disabled-views-and-calendar-events" v-scroll-to="'#ex--disabled-views-and-calendar-events'") Disable views &amp; calendar events
           v-list-tile(href="#ex--events-indicators-on-month-view" v-scroll-to="'#ex--events-indicators-on-month-view'") Events indicators on month view
-          v-list-tile(href="#ex--custom-title" v-scroll-to="'#ex--custom-title'") Custom vue-cal title
+          v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless Events
           v-list-tile(href="#ex--editable-deletable-events" v-scroll-to="'#ex--editable-deletable-events'") Editable / deletable events
           v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
