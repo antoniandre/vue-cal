@@ -235,8 +235,7 @@ export default {
     onMouseDown (e, event, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
-      let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
-      let resizeAnEvent = this.domEvents.resizeAnEvent
+      let { clickHoldAnEvent, resizeAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
       if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId === event.id) {
@@ -248,9 +247,8 @@ export default {
 
       clickHoldAnEvent.eventId = null // Reinit click hold on each click.
 
-      // Don't show delete button if dragging event or mousedown was on touch device.
-      // If touchstart, show delete on contextmenu event.
-      if (!resizeAnEvent.start) {
+      // Don't show delete button if dragging event.
+      if (!resizeAnEvent.start && this.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           clickHoldAnEvent.eventId = event.id
         }, clickHoldAnEvent.timeout)
