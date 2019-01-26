@@ -442,7 +442,7 @@ export default {
   },
 
   mounted () {
-    if (this.editableEvents && this.time) {
+    if (this.editableEvents) {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
