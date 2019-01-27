@@ -315,7 +315,7 @@ export default {
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
-      let resizeAnEvent = this.domEvents.resizeAnEvent
+      let { resizeAnEvent } = this.domEvents
       if (resizeAnEvent.eventId === null) return
 
       e.preventDefault()
@@ -324,9 +324,7 @@ export default {
     },
 
     onMouseUp (e) {
-      let focusAnEvent = this.domEvents.focusAnEvent
-      let resizeAnEvent = this.domEvents.resizeAnEvent
-      let clickHoldAnEvent = this.domEvents.clickHoldAnEvent
+      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent } = this.domEvents
 
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
@@ -500,7 +498,7 @@ export default {
   },
 
   mounted () {
-    if (this.editableEvents && this.time) {
+    if (this.editableEvents) {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
