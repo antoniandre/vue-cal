@@ -21,9 +21,8 @@
           .vuecal__event-time(v-if="event.startTimeMinutes")
             | {{ event.startTimeMinutes | formatTime(timeFormat) }}
             span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
-            small(v-if="event.multipleDays.daysCount") +{{ event.multipleDays.daysCount - 1 }}
+            small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
           .vuecal__event-content(v-if="event.content" v-html="event.content")
-          span(v-if="event.multipleDays.daysCount") {{ { simultaneous: event.simultaneous, id: event.id, multipleDays: event.multipleDays } }}
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
@@ -101,6 +100,9 @@ export default {
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
       let forceLeft = false
+      let deletable = this.domEvents.clickHoldAnEvent.eventId &&
+                      (this.domEvents.clickHoldAnEvent.eventId === event.id ||
+                      event.linked.find(e => e.id === this.domEvents.clickHoldAnEvent.eventId))
 
       if (simultaneous >= 3) {
         let split3 = simultaneous - 1
@@ -114,9 +116,8 @@ export default {
 
       else if (simultaneous === 2) {
         const otherEvent = this.events.find(e => e.id === Object.keys(event.simultaneous)[0])
-        if (!otherEvent) debugger
 
-        if (Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
+        if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
           forceLeft = true
         }
       }
@@ -124,7 +125,7 @@ export default {
       return {
         ...event.classes,
         'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
-        'vuecal__event--deletable': this.domEvents.clickHoldAnEvent.eventId === event.id,
+        'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,
@@ -199,8 +200,6 @@ export default {
 
         // If up to 3 events start at the same time.
         if (startTimeMinE1 === startTimeMinE2 || (event1overlapsEvent2 || event2overlapsEvent1)) {
-          console.log({ startTimeMinE1, endTimeMinE1, startTimeMinE2, endTimeMinE2 })
-          debugger
           event.simultaneous[event2.id] = true
           event2.simultaneous[event.id] = true
         }
@@ -218,6 +217,14 @@ export default {
 
     onEventTitleBlur (e, event) {
       event.title = e.target.innerHTML
+
+      if (event.linked.daysCount) {
+        event.linked.forEach(e => {
+          let dayToModify = this.$parent.mutableEvents[e.date]
+          dayToModify.find(e2 => e2.id === e.id).title = event.title
+        })
+      }
+
       this.$parent.emitWithEvent('event-change', event)
       this.$parent.emitWithEvent('event-title-change', event)
     },
@@ -243,6 +250,21 @@ export default {
       event.endTimeMinutes = endTime * 60
       event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
       event.end = event.end.split(' ')[0] + ` ${event.endTime}`
+
+      if (event.multipleDays.daysCount) {
+        event.multipleDays.endTimeMinutes = event.endTimeMinutes
+        event.multipleDays.endTime = event.endTime
+        event.multipleDays.end = event.end
+
+        event.linked.forEach(e => {
+          let dayToModify = this.$parent.mutableEvents[e.date]
+          let eventToModify = dayToModify.find(e2 => e2.id === e.id)
+
+          eventToModify.endTimeMinutes = event.endTimeMinutes
+          eventToModify.endTime = event.endTime
+          eventToModify.end = event.end
+        })
+      }
     },
 
     // On an event.
@@ -307,6 +329,22 @@ export default {
 
       this.events = this.events.filter(e => e.id !== event.id)
 
+      // If deleting a multiple-day event, delete all the events pieces (days).
+      if (event.multipleDays.daysCount) {
+        event.linked.forEach(e => {
+          let dayToModify = this.$parent.mutableEvents[e.date]
+          let eventToDelete = dayToModify.find(e2 => e2.id === e.id)
+          this.$parent.mutableEvents[e.date] = dayToModify.filter(e2 => e2.id !== e.id)
+
+          if (!e.background) {
+            // Remove this event from possible other overlapping events of the same cell.
+            Object.keys(eventToDelete.overlapped).forEach(id => (delete dayToModify.find(item => item.id === id).overlapping[eventToDelete.id]))
+            Object.keys(eventToDelete.overlapping).forEach(id => (delete dayToModify.find(item => item.id === id).overlapped[eventToDelete.id]))
+            Object.keys(eventToDelete.simultaneous).forEach(id => (delete dayToModify.find(item => item.id === id).simultaneous[eventToDelete.id]))
+          }
+        })
+      }
+
       if (!event.background) {
         // Remove this event from possible other overlapping events of the same cell.
         Object.keys(event.overlapped).forEach(id => (delete this.events.find(item => item.id === id).overlapping[event.id]))
@@ -315,6 +353,8 @@ export default {
 
         this.checkCellOverlappingEvents(event.split || 0)
       }
+
+
 
       if (this.splits.length) this.splitEvents[event.split] = this.events.filter(e => e.id !== event.id && e.split === event.split)
     },

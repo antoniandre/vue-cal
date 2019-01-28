@@ -66,25 +66,25 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Emit DOM events
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Event indicator on month view
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom time format
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Highlight current time
     .mb-2 Current backlog
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
-      | Event indicator on month view
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom time format
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Highlight current time
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
       | Show events on month view
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Multiple day events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
-    v-chip.pr-1(color="amber darken-1" outline small disabled)
-      v-icon.mr-1 timer
-      | Multiple-days events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
@@ -97,6 +97,9 @@
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Option to start week on Sunday
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Highlight all day events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
@@ -605,16 +608,32 @@
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
-    a(href="#ex--multiple-days-events") # Multiple days events
-    a#ex--multiple-days-events(name="ex--multiple-days-events")
+    a(href="#ex--multiple-day-events") # Multiple day events
+    a#ex--multiple-day-events(name="ex--multiple-day-events")
+  p.
+    Multiple day events are working like a set of single day events linked together.#[br]
+    Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
+    Updating the duration by dragging or changing the title will also update on all the days.#[br]
+    Try to resize, rename and delete the events.
+  highlight-message(type="tips").
+    3 CSS classes are available to target the event first day, the last day and all the days in between:
+    #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(selected-date="2018-11-19" :time-from="8 * 60" :time-to="23 * 60" :disable-views="['years', 'year', 'month']" hide-weekends :events="multipleDaysEvents")
+    vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
+      selected-date="2018-11-19"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      editable-events
+      :events="multipleDayEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year', 'month']"
              hide-weekends
+             editable-events
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -630,7 +649,7 @@
         },
         {
           start: '2018-11-20 13:00',
-          end: '2018-11-20 13:30',
+          end: '2018-11-20 14:30',
           title: 'Drink water!',
           content: '&lt;i class="v-icon material-icons"&gt;local_drink&lt;/i&gt;',
           class: 'health'
@@ -1308,6 +1327,8 @@
     a#release-notes(name="release-notes")
 
   div
+    | #[strong Version 1.25.0] Support multiple day events
+  div
     | #[strong Version 1.24.0] Allow hiding the calendar body
     highlight-message(type="success").
       Week days headings now have a today CSS class when equals to today's date.
@@ -1520,7 +1541,7 @@ export default {
     eventsCopy2: [
       ...events
     ],
-    multipleDaysEvents: [
+    multipleDayEvents: [
       {
         start: '2018-11-19 08:30',
         end: '2018-11-20 20:00',
@@ -1530,7 +1551,7 @@ export default {
       },
       {
         start: '2018-11-20 13:00',
-        end: '2018-11-20 13:30',
+        end: '2018-11-20 14:30',
         title: 'Drink water!',
         content: '<i class="v-icon material-icons">local_drink</i>',
         class: 'health'
@@ -1721,9 +1742,9 @@ $primary: #42b983;
 .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.5);}
 .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
 
-.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
 
 .vuecal__event.lunch {
@@ -1736,4 +1757,31 @@ $primary: #42b983;
 .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
 .vuecal__time-cell .hours.line:before {border-color: $primary;}
+
+.ex--multiple-day-events .vuecal__event {
+  border-radius: 5px;
+
+  &.sport {
+    background-color: rgba(255, 185, 185, 0.8);
+    border: none;
+    border-left: 3px solid rgba(230, 55, 55, 0.3);
+    color: #c55656;
+  }
+  &.leisure {
+    background-color: rgba(255, 202, 154, 0.8);
+    border: none;
+    border-left: 3px solid rgba(250, 118, 36, 0.3);
+    color: #b57335;
+  }
+  &.health {
+    background-color: rgba(200, 248, 233, 0.8);
+    border: none;
+    border-left: 3px solid rgba(99, 186, 139, 0.4);
+    color: #219671;
+  }
+
+  &.event-start {border-radius: 5px 5px 0 0;}
+  &.event-middle {border-radius: 0;}
+  &.event-end {border-radius: 0 0 5px 5px;}
+}
 </style>

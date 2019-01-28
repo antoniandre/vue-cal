@@ -37,7 +37,7 @@
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless Events
           v-list-tile(href="#ex--editable-deletable-events" v-scroll-to="'#ex--editable-deletable-events'") Editable / deletable events
-          v-list-tile(href="#ex--multiple-days-events" v-scroll-to="'#ex--multiple-days-events'") Multiple days events
+          v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-tile(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days

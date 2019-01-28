@@ -329,8 +329,10 @@ export default {
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
         let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
-        this.emitWithEvent('event-change', event)
-        this.emitWithEvent('event-duration-change', event)
+        if (event) {
+          this.emitWithEvent('event-change', event)
+          this.emitWithEvent('event-duration-change', event)
+        }
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -386,6 +388,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
+          linked: [],// Linked events.
           multipleDays: {},
           classes: {
             [event.class]: true,
@@ -401,6 +404,10 @@ export default {
         this.mutableEvents[event.startDate].push(event)
 
         if (multipleDays) {
+          // Create an array of linked events to attach to each event piece (piece = 1 day),
+          // So that deletion and modification reflects on all the pieces.
+          let eventPieces = []
+
           const oneDayInMs = 24 * 60 * 60 * 1000
           const [y1, m1, d1] = startDate.split('-')
           const [y2, m2, d2] = endDate.split('-')
@@ -420,16 +427,35 @@ export default {
             daysCount: datesDiff + 1
           }
 
-          // Create 1 event per day and link them all.
+          // Generate event pieces ids to link them all together
+          // and update the first event linked events array with all ids of pieces.
           for (let i = 1; i <= datesDiff; i++) {
             const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
+            eventPieces.push({
+              id: `${this._uid}_${this.eventIdIncrement++}`,
+              date
+            })
+          }
+          event.linked = eventPieces
+
+          // Create 1 event per day and link them all.
+          for (let i = 1; i <= datesDiff; i++) {
+            const date = eventPieces[i - 1].date
+            const linked = [
+              { id: event.id, date: event.startDate },
+              ...eventPieces.slice(0).filter(e => e.id !== eventPieces[i - 1].id)
+            ]
 
             // Make array reactive for future events creations & deletions.
             if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
 
             this.mutableEvents[date].push({
               ...event,
-              id: `${this._uid}_${this.eventIdIncrement++}`,
+              id: eventPieces[i - 1].id,
+              overlapped: {},
+              overlapping: {},
+              simultaneous: {},
+              linked,
               multipleDays: {
                 start: false,
                 middle: i < datesDiff,
