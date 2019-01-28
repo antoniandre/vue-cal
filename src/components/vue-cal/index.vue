@@ -372,7 +372,7 @@ export default {
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
-      let resizeAnEvent = this.domEvents.resizeAnEvent
+      let { resizeAnEvent } = this.domEvents
       if (resizeAnEvent.eventId === null) return
 
       e.preventDefault()
@@ -386,8 +386,10 @@ export default {
       // On event resize end, emit event.
       if (resizeAnEvent.eventId) {
         let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
-        this.emitWithEvent('event-change', event)
-        this.emitWithEvent('event-duration-change', event)
+        if (event) {
+          this.emitWithEvent('event-change', event)
+          this.emitWithEvent('event-duration-change', event)
+        }
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -423,13 +425,14 @@ export default {
 
       // Group events into dates.
       this.events.map(event => {
-        const [startDate, startTime = ''] = event.start.split(' ')
+        let [startDate, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        const [endDate, endTime = ''] = event.end.split(' ')
+        let [endDate, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+        const multipleDays = startDate !== endDate
 
         // Keep the event ids scoped to this calendar instance.
         // eslint-disable-next-line
@@ -438,9 +441,9 @@ export default {
         event = Object.assign({}, event, {
           id,
           startDate,
-          endDate,
-          startTime: this.time ? startTime : null,
+          startTime,
           startTimeMinutes,
+          endDate,
           endTime,
           endTimeMinutes,
           height: 0,
@@ -448,9 +451,13 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
+          linked: [],// Linked events.
+          multipleDays: {},
           classes: {
             [event.class]: true,
-            'vuecal__event--background': event.background
+            'vuecal__event--background': event.background,
+            'vuecal__event--multiple-days': multipleDays,
+            'event-start': multipleDays
           }
         })
 
@@ -458,6 +465,81 @@ export default {
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
         // eslint-disable-next-line
         this.mutableEvents[event.startDate].push(event)
+
+        if (multipleDays) {
+          // Create an array of linked events to attach to each event piece (piece = 1 day),
+          // So that deletion and modification reflects on all the pieces.
+          let eventPieces = []
+
+          const oneDayInMs = 24 * 60 * 60 * 1000
+          const [y1, m1, d1] = startDate.split('-')
+          const [y2, m2, d2] = endDate.split('-')
+          startDate = new Date(y1, parseInt(m1) - 1, d1)
+          endDate = new Date(y2, parseInt(m2) - 1, d2)
+          const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
+
+          // Update First day event.
+          event.multipleDays = {
+            start: true,
+            startDate,
+            startTime,
+            startTimeMinutes,
+            endDate: startDate,
+            endTime: '24:00',
+            endTimeMinutes: 24 * 60,
+            daysCount: datesDiff + 1
+          }
+
+          // Generate event pieces ids to link them all together
+          // and update the first event linked events array with all ids of pieces.
+          for (let i = 1; i <= datesDiff; i++) {
+            const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
+            eventPieces.push({
+              id: `${this._uid}_${this.eventIdIncrement++}`,
+              date
+            })
+          }
+          event.linked = eventPieces
+
+          // Create 1 event per day and link them all.
+          for (let i = 1; i <= datesDiff; i++) {
+            const date = eventPieces[i - 1].date
+            const linked = [
+              { id: event.id, date: event.startDate },
+              ...eventPieces.slice(0).filter(e => e.id !== eventPieces[i - 1].id)
+            ]
+
+            // Make array reactive for future events creations & deletions.
+            if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
+
+            this.mutableEvents[date].push({
+              ...event,
+              id: eventPieces[i - 1].id,
+              overlapped: {},
+              overlapping: {},
+              simultaneous: {},
+              linked,
+              multipleDays: {
+                start: false,
+                middle: i < datesDiff,
+                end: i === datesDiff,
+                startDate: date,
+                startTime: '00:00',
+                startTimeMinutes: 0,
+                endDate: date,
+                endTime: i === datesDiff ? endTime : '24:00',
+                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
+                daysCount: datesDiff + 1
+              },
+              classes: {
+                ...event.classes,
+                'event-start': false,
+                'event-middle': i < datesDiff,
+                'event-end': i === datesDiff
+              }
+            })
+          }
+        }
 
         return event
       })
@@ -551,7 +633,7 @@ export default {
   },
 
   mounted () {
-    if (this.editableEvents && this.time) {
+    if (this.editableEvents) {
       const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)

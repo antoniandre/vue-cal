@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.25.0__ Support multiple day events
 - __Version 1.24.0__ Allow hiding the calendar body
 - __Version 1.22.0__ Add Slovak language
 - __Version 1.21.0__ Add Georgian language
