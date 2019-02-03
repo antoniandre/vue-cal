@@ -907,8 +907,18 @@
   h4.mt-2 View-related
   ul
     li #[span.code ready]
-    li #[span.code view-change] - property #[span.code startDate] is a JS native #[span.code Date] object
+    li #[span.code view-change]
     li #[span.code day-focus] - is a JS native #[span.code Date] object
+  highlight-message(no-icon)
+    | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
+    sshpre.mt-2.mb-0(language="js").
+      {
+        view: [String],
+        startDate: [Date], // View start - JS native Date object.
+        endDate: [Date], // View end - JS native Date object.
+        events: [Array], // All the events in the current view.
+        week: [Integer] // Week number. Only returned if view is 'week'.
+      }
 
   h4.mt-2 Events-related
   p.mb-0 In all events, properties #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects:
@@ -1326,6 +1336,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
   div
     | #[strong Version 1.25.0] Support multiple day events
   div
