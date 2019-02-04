@@ -44,10 +44,10 @@
                 :content="cell.content"
                 :splits="splitDays"
                 @mousedown.native="onCellMouseDown($event, cell)"
-                @click.native="selectCell(cell)"
                 @touchstart="onCellTouchStart($event, cell)"
+                @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-
+                slot(slot="no-event" name="no-event") {{ texts.noEvent }}
             //- Only for not splitDays.
             vuecal-cell(:class="cell.class"
               v-else
@@ -63,6 +63,7 @@
               div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
                 slot(:events="events" name="events-count-month-view")
                   span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+              slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
@@ -170,7 +171,7 @@ export default {
       default: false
     },
     eventsOnMonthView: {
-      type: Boolean,
+      type: [Boolean, String],
       default: false
     }
   },
@@ -277,7 +278,9 @@ export default {
     },
 
     switchView (view, date = null) {
+      this.view.events = []
       this.view.id = view
+      let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -288,22 +291,50 @@ export default {
         case 'years':
           // Always fill first cell with a multiple of 25 years, E.g. year 2000, or 2025.
           this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
+          this.view.endDate = new Date(this.view.startDate.getFullYear() + 26, 0, 0)
           break
         case 'year':
           this.view.startDate = new Date(date.getFullYear(), 0, 1)
+          this.view.endDate = new Date(date.getFullYear() + 1, 0, 0)
           break
         case 'month':
           this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
+          this.view.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
+          dateTmp = new Date(this.view.startDate)
+          endTime = this.view.endDate.getTime()
+          while (dateTmp.getTime() <= endTime) {
+            dateTmp = dateTmp.addDays(1)
+            formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
+            dayEvents = this.mutableEvents[formattedDate] || []
+            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+          }
           break
         case 'week':
+          this.view.startDate = date
+          this.view.endDate = date.addDays(7)
+          dateTmp = new Date(date)
+          for (let i = 0; i < 7; i++) {
+            formattedDate = formatDate(dateTmp.addDays(i), 'yyyy-mm-dd', this.texts)
+            dayEvents = this.mutableEvents[formattedDate] || []
+            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+          }
+          break
         case 'day':
           this.view.startDate = date
+          this.view.endDate = date
+          dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
+          if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
           break
       }
 
       if (this.ready) {
-        let params = { view, startDate: this.view.startDate }
-        if (view === 'week') params.week = this.view.startDate.getWeek()
+        const params = {
+          view,
+          startDate: this.view.startDate,
+          endDate: this.view.endDate,
+          events: this.view.events,
+          ...(view === 'week' ? { week: this.view.startDate.getWeek() } : {})
+        }
         this.$emit('view-change', params)
       }
     },
@@ -451,7 +482,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          linked: [],// Linked events.
+          linked: [], // Linked events.
           multipleDays: {},
           classes: {
             [event.class]: true,
@@ -519,6 +550,8 @@ export default {
               overlapping: {},
               simultaneous: {},
               linked,
+              // All the dates in the multipleDays object property are related
+              // to the current event piece (only 1 day) not the whole event.
               multipleDays: {
                 start: false,
                 middle: i < datesDiff,
@@ -579,6 +612,8 @@ export default {
         overlapped: {},
         overlapping: {},
         simultaneous: {},
+        multipleDays: {},
+        linked: [],
         classes: { 'blue-event': true, 'vuecal__event--background': false }
       }
 
@@ -590,30 +625,32 @@ export default {
       this.emitWithEvent('event-change', event)
     },
 
-    // Cleanup event object before exporting it.
-    emitWithEvent (eventName, event) {
+    // Prepare the event to return it with an emitted event.
+    cleanupEvent (event) {
+      event = { ...event }
+
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
-      let evt = { ...event }
-      delete evt.height
-      delete evt.top
-      delete evt.overlapped
-      delete evt.overlapping
-      delete evt.simultaneous
-      delete evt.classes
+      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
+      for (let prop in event) if (discardProps.indexOf(prop) > -1) delete event[prop]
+      if (!event.multipleDays.daysCount) delete event.multipleDays
 
       // Return date objects for easy manipulation.
-      const [date1, time1] = evt.start.split(' ')
+      const [date1, time1] = event.start.split(' ')
       const [y1, m1, d1] = (date1 && date1.split('-')) || [0, 0, 0]
-      let [h1, min1] = (time1 && time1.split(':')) || [0, 0]
-      evt.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
+      const [h1, min1] = (time1 && time1.split(':')) || [0, 0]
+      event.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
 
-      const [date2, time2] = evt.end.split(' ')
+      const [date2, time2] = event.end.split(' ')
       const [y2, m2, d2] = (date2 && date2.split('-')) || [0, 0, 0]
-      let [h2, min2] = (time2 && time2.split(':')) || [0, 0]
-      evt.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
+      const [h2, min2] = (time2 && time2.split(':')) || [0, 0]
+      event.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
 
-      this.$emit(eventName, evt)
+      return event
+    },
+
+    emitWithEvent (eventName, event) {
+      this.$emit(eventName, this.cleanupEvent(event))
     }
   },
 
@@ -633,21 +670,31 @@ export default {
   },
 
   mounted () {
+    const hasTouch = 'ontouchstart' in window
+
     if (this.editableEvents) {
-      const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     }
 
     // Disable context menu on touch devices on the whole vue-cal instance.
-    if ('ontouchstart' in window) {
+    if (hasTouch) {
       this.$refs.vuecal.oncontextmenu = function(e) {
-          e.preventDefault();
-          e.stopPropagation();
-      };
+          e.preventDefault()
+          e.stopPropagation()
+      }
     }
 
     this.$emit('ready')
+    const params = {
+      view: this.view.id,
+      startDate: this.view.startDate,
+      endDate: this.view.endDate,
+      events: this.view.events,
+      ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
+    }
+
+    this.$emit('ready', params)
     this.ready = true
   },
 
@@ -903,10 +950,12 @@ export default {
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--no-event-overlaps': this.noEventOverlaps
+        'vuecal--no-event-overlaps': this.noEventOverlaps,
+        'vuecal--events-on-month-view': this.eventsOnMonthView
       }
     }
   },
+
   watch: {
     events: function (events, oldEvents) {
       this.updateMutableEvents(events)
