@@ -832,7 +832,8 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--no-event-overlaps': this.noEventOverlaps,
-        'vuecal--events-on-month-view': this.eventsOnMonthView
+        'vuecal--events-on-month-view': this.eventsOnMonthView,
+        'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
     }
   },

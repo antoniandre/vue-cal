@@ -669,6 +669,18 @@ export default {
   .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
 }
 
+.vuecal--month-view .vuecal__event-title {
+  font-size: 0.85em;
+}
+
+.vuecal--short-events .vuecal__event-title {
+  text-align: left;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  padding: 0 3px;
+}
+
 .vuecal__event-title,
 .vuecal__event-content {
   hyphens: auto;
