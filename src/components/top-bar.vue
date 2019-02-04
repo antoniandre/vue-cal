@@ -27,7 +27,7 @@
           v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide-weekends
           v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
-          v-list-tile(href="#ex--custom-title" v-scroll-to="'#ex--custom-title'") Custom vue-cal title
+          v-list-tile(href="#ex--custom-title-and-no-event-text" v-scroll-to="'#ex--custom-title-and-no-event-text'") Custom vue-cal title &amp; "no event" text
           v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
           v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking

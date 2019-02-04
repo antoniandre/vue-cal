@@ -3,7 +3,8 @@
     .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       .vuecal__cell-date(v-if="content" v-html="content")
-      .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))") {{ texts.noEvent }}
+      .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+        slot(name="no-event") {{ texts.noEvent }}
       .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         .vuecal__event(:class="eventClasses(event)"
                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
@@ -18,12 +19,12 @@
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
           .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
           .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-          .vuecal__event-time(v-if="event.startTimeMinutes")
+          .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
             | {{ event.startTimeMinutes | formatTime(timeFormat) }}
             span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
             small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
-          .vuecal__event-content(v-if="event.content" v-html="event.content")
-          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle"
+          .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
       div(v-if="view === 'month' && !eventsOnMonthView && events.length")
@@ -354,8 +355,6 @@ export default {
         this.checkCellOverlappingEvents(event.split || 0)
       }
 
-
-
       if (this.splits.length) this.splitEvents[event.split] = this.events.filter(e => e.id !== event.id && e.split === event.split)
     },
 
@@ -558,6 +557,10 @@ export default {
     margin-top: -1px;
     line-height: 12px;
     font-size: 10px;
+  }
+
+  .vuecal--events-on-month-view &-content {
+    width: 100%;
   }
 }
 

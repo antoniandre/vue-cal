@@ -36,11 +36,13 @@
 
             .vuecal__flex(v-if="hasSplits" grow)
               vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                slot(slot="no-event" name="no-event") {{ texts.noEvent }}
             //- Only for not splitDays.
             vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" v-bind="{ scopedSlots: $scopedSlots }" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
               div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
                 slot(:events="events" name="events-count-month-view")
                   span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+              slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
@@ -148,7 +150,7 @@ export default {
       default: false
     },
     eventsOnMonthView: {
-      type: Boolean,
+      type: [Boolean, String],
       default: false
     }
   },
@@ -418,7 +420,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          linked: [],// Linked events.
+          linked: [], // Linked events.
           multipleDays: {},
           classes: {
             [event.class]: true,
@@ -520,8 +522,7 @@ export default {
 
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
-      const discardProps = ['height', 'top', 'overlapped', 'overlapping',
-                            'simultaneous', 'classes', 'split']
+      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
       for (let prop in event) if (discardProps.indexOf(prop) > -1) delete event[prop]
       if (!event.multipleDays.daysCount) delete event.multipleDays
 
@@ -830,7 +831,8 @@ export default {
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--no-event-overlaps': this.noEventOverlaps
+        'vuecal--no-event-overlaps': this.noEventOverlaps,
+        'vuecal--events-on-month-view': this.eventsOnMonthView
       }
     }
   },
