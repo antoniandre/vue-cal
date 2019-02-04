@@ -1121,7 +1121,7 @@
         Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
         | Currently available languages are English, Croatian, Dutch, French, Georgian,
-        | German, Italian, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish &amp; Simplified Chinese.#[br]
+        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish &amp; Simplified Chinese.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
         | this is what a language json looks like.
 
@@ -1416,6 +1416,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.28.0] Add Polish language
   div
     | #[strong Version 1.27.0] Allow overriding 'No event' text
     highlight-message(type="success").
