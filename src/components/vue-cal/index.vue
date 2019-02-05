@@ -13,7 +13,7 @@
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
-        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i")
           span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
           span(v-if="heading.label4") &nbsp;
           span(v-if="heading.label4") {{ heading.label4 }}
@@ -26,7 +26,7 @@
               slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                 span.line {{ cell.label }}
 
-          .vuecal__flex.vuecal__cells(grow :column="hasSplits && view.id === 'week'")
+          .vuecal__flex.vuecal__cells(grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
             //- Only for splitDays.
             .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
               .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
@@ -34,15 +34,23 @@
                 span(v-if="heading.label4") &nbsp;
                 span(v-if="heading.label4") {{ heading.label4 }}
 
-            .vuecal__flex(v-if="hasSplits" grow)
-              vuecal-cell(:class="cell.class" v-for="(cell, i) in viewCells" :key="i" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" :splits="splitDays" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
+              vuecal-cell(
+                :class="cell.class"
+                v-for="(cell, i) in viewCells"
+                :key="i"
+                v-bind="{ scopedSlots: $scopedSlots }"
+                :date="cell.date"
+                :formatted-date="cell.formattedDate"
+                :today="cell.today"
+                :content="cell.content"
+                :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                @click.native="selectCell(cell)"
+                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
+                  slot(:events="events" name="events-count-month-view")
+                    span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
                 slot(slot="no-event" name="no-event") {{ texts.noEvent }}
-            //- Only for not splitDays.
-            vuecal-cell(:class="cell.class" v-else v-for="(cell, i) in viewCells" :key="i" v-bind="{ scopedSlots: $scopedSlots }" :date="cell.date" :formatted-date="cell.formattedDate" :today="cell.today" :content="cell.content" @click.native="selectCell(cell)" @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-              div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
-                slot(:events="events" name="events-count-month-view")
-                  span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-              slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
@@ -816,7 +824,7 @@ export default {
       return cells
     },
     weekdayCellStyles () {
-      return { minWidth: `${this.minCellWidth}px` || null }
+      return { minWidth: this.view.id === 'week' && this.minCellWidth ? `${this.minCellWidth}px` : null }
     },
     cssClasses () {
       return {
@@ -877,6 +885,10 @@ $weekdays-headings-height: 2.8em;
     &[grow] {
       flex: 1 1 auto;
     }
+
+    &[wrap] {
+      flex-wrap: wrap;
+    }
   }
 
   // Header.
@@ -893,6 +905,7 @@ $weekdays-headings-height: 2.8em;
       font-size: 1.3em;
       border-bottom: 0 solid currentColor;
       cursor: pointer;
+      box-sizing: border-box;
       transition: 0.2s;
     }
 
@@ -1021,7 +1034,6 @@ $weekdays-headings-height: 2.8em;
   // Calendar cells.
   //==================================//
   &__cells {
-    flex-wrap: wrap;
     min-height: 100%;
     margin: 0 1px 1px 0;
 

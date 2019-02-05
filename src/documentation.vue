@@ -184,7 +184,8 @@
     v-layout(align-center)
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
       | Try it yourself:
-      a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL") //codepen.io/antoniandre/pen/pGJWjL
+      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
+      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events].
 
   //- Example.
   h3.title.mt-5.mb-2
@@ -330,7 +331,14 @@
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
-    vue-cal.vuecal--green-theme(xsmall :time-from="5 * 60" :time-step="15" :time-cell-height="18" default-view="day" :disable-views="['years', 'year', 'month']")
+    vue-cal.vuecal--green-theme(
+      small
+      :time-from="5 * 60"
+      :time-step="15"
+      :time-cell-height="18"
+      default-view="day"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends)
       div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
@@ -339,12 +347,13 @@
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
 
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal xsmall
+    &lt;vue-cal small
              :time-from="5 * 60"
              :time-step="15"
              :time-cell-height="18"
              default-view="day"
-             :disable-views="['years', 'year', 'month']"&gt;
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends&gt;
       &lt;div class="{ line: true, hours: !minutes }"
            slot="time-cell"
            slot-scope="{ hours, minutes }"&gt;
@@ -844,11 +853,11 @@
   p.mb-4
     | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.#[br]
     | disabled views: years, year, month.#[br]
-    | You can also overflow your content using a min-width on cells, like in this example, or fit to container#[br]
-    | Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
+    | On week view you can also overflow your content using a min-width on cells, like in this example, or fit to container:
     v-btn(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
       v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
+    | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"

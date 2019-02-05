@@ -413,7 +413,7 @@ export default {
       }
     },
     cellStyles () {
-      return { minWidth: `${this.$parent.minCellWidth}px` || null }
+      return { minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null }
     },
     events: {
       get () {
