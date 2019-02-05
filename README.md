@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.28.0__ Add Polish language
 - __Version 1.27.0__ Allow overriding 'No event' text
 - __Version 1.26.0__ Emitted events ready &amp; view-change return events
 - __Version 1.25.0__ Support multiple day events
