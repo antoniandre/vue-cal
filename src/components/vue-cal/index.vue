@@ -45,7 +45,7 @@
                 :today="cell.today"
                 :content="cell.content"
                 :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
-                @touchstart="onCellTouchStart($event, cell)"
+                @touchstart.native="onCellTouchStart($event, cell)"
                 @mousedown.native="onCellMouseDown($event, cell)"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
@@ -361,8 +361,7 @@ export default {
 
     onCellMouseDown (e, cell, touch = false) {
       // Prevent a double mouse down on touch devices.
-      // if ('ontouchstart' in window && !touch) return false
-      console.log('onCellMouseDown', cell)
+      if ('ontouchstart' in window && !touch) return false
 
       let clickHoldACell = this.domEvents.clickHoldACell
 
@@ -380,9 +379,7 @@ export default {
     },
 
     onCellTouchStart (e, cell) {
-      debugger
       // If not mousedown on an event.
-        console.log('onCellTouchStart', cell)
       if (!this.isDOMElementAnEvent(e.target)) {
         console.log('onCellTouchStart', cell)
         this.onCellMouseDown(e, cell, true)
@@ -568,9 +565,9 @@ export default {
     },
 
     getPosition (e) {
-      // 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
       const rect = e.target.getBoundingClientRect()
-      return { x: e.clientX - rect.left, y: e.clientY - rect.top }
+      const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
+      return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
     createAnEvent (cell, e) {
