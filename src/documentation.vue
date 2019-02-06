@@ -413,40 +413,109 @@
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--open-dialog-on-event-click") # Open a dialog box on event click / dblclick
+    a#ex--open-dialog-on-event-click(name="ex--open-dialog-on-event-click")
+  p.mb-2.
+    By passing a function to the option #[span.code on-event-click] or #[span.code on-event-dblclick],
+    you can control what happens when you click or double click an event - on any view where the events are displayed.#[br]
+    The callback function you provide will receive 2 arguments:
+  ul
+    li #[span.code event]: the clicked calendar event's object
+    li #[span.code e]: the associated javascript DOM event
+  highlight-message.mt-3(type="tips") You can set any custom field you want on an event, you will then be able to access it in the dialog box!#[br]
+  v-card.my-2.ma-auto.main-content(style="height: 523px")
+    vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="19 * 60"
+      :disable-views="['years', 'year']"
+      hide-weekends
+      :events="eventsToPop"
+      :on-event-dblclick="onEventDblclick")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="9 * 60"
+             :time-to="19 * 60"
+             :disable-views="['years', 'year']"
+             hide-weekends
+             :events="events"
+             :on-event-dblclick="onEventDblclick"&gt;
+    &lt;/vue-cal&gt;
+    ...
+    &lt;v-dialog v-model="showDialog"&gt;
+      &lt;v-card&gt;
+        &lt;v-card-title&gt;
+          &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
+          &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
+          &lt;v-spacer/&gt;
+          &lt;strong&gt;{{ '\{\{ selectedEvent.startDate \}\}' }}&lt;/strong&gt;
+        &lt;/v-card-title&gt;
+        &lt;v-card-text&gt;
+          &lt;p v-html="selectedEvent.contentFull"/&gt;
+          &lt;strong&gt;Event details:&lt;/strong&gt;
+          &lt;ul&gt;
+            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.startTime \}\}' }}&lt;/li&gt;
+            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.endTime \}\}' }}&lt;/li&gt;
+          &lt;/ul&gt;
+        &lt;/v-card-text&gt;
+      &lt;/v-card&gt;
+    &lt;/v-dialog&gt;
+
   sshpre(language="js" label="Javascript").
     data: () => ({
+      selectedEvent: {},
+      showDialog: false,
       events: [
         {
-          start: '2018-11-19 10:35',
-          end: '2018-11-19 11:30',
-          title: 'Doctor appointment',
-          content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-          class: 'health'
+          start: '2018-11-20 14:00',
+          end: '2018-11-20 18:00',
+          title: 'Need to go shopping',
+          icon: 'shopping_cart', // Custom field.
+          content: 'Double click to see my shopping list',
+          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocadoes&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom field.
+          class: 'leisure'
         },
         {
-          start: '2018-11-19 18:30',
-          end: '2018-11-19 19:15',
-          title: 'Dentist appointment',
-          content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-          class: 'health'
-        },
-        {
-          start: '2018-11-20 18:30',
-          end: '2018-11-20 20:30',
-          title: 'Crossfit',
-          content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
+          start: '2018-11-22 10:00',
+          end: '2018-11-22 15:00',
+          title: 'Golf with John',
+          icon: 'golf_course', // Custom field.
+          content: 'Do I need to tell how many holes?',
+          contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom field.
           class: 'sport'
-        },
-        ...
+        }
       ]
-    })
-  highlight-message Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+    }),
+    methods: {
+      onEventDblclick (event, e) {
+        this.selectedEvent = event
+        this.showDialog = true
+
+        // Prevent navigating to narrower view (default vue-cal behavior).
+        e.stopPropagation()
+      }
+    }
+
 
   sshpre(language="css" label="CSS").
-    /* Different color for different event types. */
-    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-    .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-    .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+    .vuecal__event-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 4px 0 8px;
+    }
+
+    .vuecal__event-time {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .vuecal__event-content {
+      font-style: italic;
+    }
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -1120,6 +1189,8 @@
     editableEvents      [Boolean],         default: false
     noEventOverlaps     [Boolean],         default: false
     eventsOnMonthView   [Boolean, String], default: false
+    onEventClick        [Function],        default: null
+    onEventDblclick     [Function],        default: null
 
   ul.pl-0.api-options
     li
@@ -1332,6 +1403,18 @@
         When set to true, the events will also be displayed on month view.#[br]
         When set to the string '#[span.code short]', only the event's title will be displayed.
     li
+      code.mr-2 onEventClick
+      span.code [Function], default: null
+      p.
+        A callback function to execute when an event is clicked.#[br]
+        this function receives 2 parameters: #[span.code event], the clicked calendar event, and #[span.code e], the associated JavaScript DOM event.
+    li
+      code.mr-2 onEventDblclick
+      span.code [Function], default: null
+      p.
+        A callback function to execute when an event is double clicked.#[br]
+        this function receives 2 parameters: #[span.code event], the double clicked calendar event, and #[span.code e], the associated JavaScript DOM event.
+    li
       code.mr-2 events
       span.code [Array], default: []
       p.
@@ -1426,6 +1509,8 @@
     a#release-notes(name="release-notes")
 
   div
+    | #[strong Version 1.29.0] Accept a callback function on event click / dblclick
+  div
     | #[strong Version 1.28.0] Add Polish language
   div
     | #[strong Version 1.27.0] Allow overriding 'No event' text
@@ -1505,6 +1590,20 @@
       Hovering an event also increases its z-index so you can see the event more easily in case of overlaps.
   div.mt-3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
   div.mt-3 #[strong Version 1.0.0] First public release
+
+  v-dialog(v-model="showDialog")
+    v-card
+      v-card-title.primary.white--text
+        v-icon.mr-3(color="white") {{ selectedEvent.icon }}
+        span.headline.text-uppercase {{ selectedEvent.title }}
+        v-spacer
+        strong {{ selectedEvent.startDate }}
+      v-card-text
+        p(v-html="selectedEvent.contentFull")
+        strong Event details:
+        ul
+          li Event starts at: {{ selectedEvent.startTime }}
+          li Event ends at: {{ selectedEvent.endTime }}
 </template>
 
 <script>
@@ -1589,7 +1688,9 @@ export default {
     indicatorStyle: 'count',
     now: new Date(),
     log: [],
+    showDialog: false,
     events,
+    selectedEvent: {},
     logMouseEvents: false,
     overlappingEvents: [
       ...events,
@@ -1766,6 +1867,26 @@ export default {
         content: '<i class="v-icon material-icons">shopping_cart</i>',
         class: 'leisure'
       }
+    ],
+    eventsToPop: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 18:00',
+        title: 'Need to go shopping',
+        icon: 'shopping_cart',
+        content: 'Double click to see my shopping list',
+        contentFull: 'My shopping list is rather long:<br><ul><li>Avocadoes</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
+        class: 'leisure'
+      },
+      {
+        start: '2018-11-22 10:00',
+        end: '2018-11-22 15:00',
+        title: 'Golf with John',
+        icon: 'golf_course',
+        content: 'Do I need to tell how many holes?',
+        contentFull: 'Okay.<br>It will be a 18 hole golf course.',
+        class: 'sport'
+      }
     ]
   }),
   methods: {
@@ -1778,7 +1899,12 @@ export default {
     clearEventsLog () {
       this.log = []
     },
-    countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0
+    countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0,
+    onEventDblclick (event, e) {
+      this.selectedEvent = event
+      this.showDialog = true
+      e.stopPropagation()
+    }
   },
   computed: {
     currentDateFormatted () {
@@ -1894,5 +2020,24 @@ $primary: #42b983;
   &.event-start {border-radius: 5px 5px 0 0;}
   &.event-middle {border-radius: 0;}
   &.event-end {border-radius: 0 0 5px 5px;}
+}
+
+.ex--open-dialog-on-event-click {
+  .vuecal__event-title {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin: 4px 0 8px;
+  }
+
+  .vuecal__event-time {
+    display: inline-block;
+    margin-bottom: 12px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+  }
+
+  .vuecal__event-content {
+    font-style: italic;
+  }
 }
 </style>

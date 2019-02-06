@@ -160,6 +160,14 @@ export default {
     eventsOnMonthView: {
       type: [Boolean, String],
       default: false
+    },
+    onEventClick: {
+      type: Function,
+      default: () => {}
+    },
+    onEventDblclick: {
+      type: Function,
+      default: () => {}
     }
   },
   data: () => ({

@@ -11,9 +11,11 @@
                        :style="eventStyles(event)"
                        @mouseenter="onMouseEnter($event, event)"
                        @mouseleave="onMouseLeave($event, event)"
-                       @mousedown="onMouseDown($event, event)"
                        @contextmenu="onContextMenu($event, event)"
-                       @touchstart="onTouchStart($event, event)")
+                       @touchstart="onTouchStart($event, event)"
+                       @mousedown="onMouseDown($event, event)"
+                       @click="onClick($event, event)"
+                       @dblclick="onDblClick($event, event)")
           .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
@@ -309,6 +311,14 @@ export default {
 
     onTouchStart (e, event) {
       this.onMouseDown(e, event, true)
+    },
+
+    onClick (e, event) {
+      if (typeof this.$parent.onEventClick === 'function') return this.$parent.onEventClick(event, e)
+    },
+
+    onDblClick (e, event) {
+      if (typeof this.$parent.onEventDblclick === 'function') return this.$parent.onEventDblclick(event, e)
     },
 
     onDragHandleMouseDown (e, event) {
