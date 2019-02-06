@@ -1590,7 +1590,7 @@
   div.mt-3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
   div.mt-3 #[strong Version 1.0.0] First public release
 
-  v-dialog(v-model="showDialog")
+  v-dialog(v-model="showDialog" max-width="600")
     v-card
       v-card-title.primary.white--text
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
