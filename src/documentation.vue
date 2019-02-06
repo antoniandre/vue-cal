@@ -498,7 +498,6 @@
       }
     }
 
-
   sshpre(language="css" label="CSS").
     .vuecal__event-title {
       font-size: 1.2em;
