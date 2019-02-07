@@ -34,6 +34,7 @@
           v-list-tile(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
           v-list-tile(href="#ex--disabled-views-and-calendar-events" v-scroll-to="'#ex--disabled-views-and-calendar-events'") Disable views &amp; calendar events
           v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
+          v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
           v-list-tile(href="#ex--events-indicators-on-month-view" v-scroll-to="'#ex--events-indicators-on-month-view'") Events indicators on month view
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless Events

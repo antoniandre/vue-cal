@@ -253,7 +253,7 @@
     a#ex--custom-title-and-no-event-text(name="ex--custom-title-and-no-event-text")
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can override the main date title.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   p.mb-2.
     In the following example, we set a custom title with Emoji.#[br]
@@ -343,7 +343,7 @@
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message(type="tips").
-    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
 
   sshpre(language="html-vue" label="Vue Template").
@@ -399,14 +399,14 @@
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
-      :time-from="7 * 60"
+      :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
-             :time-from="7 * 60"
+             :time-from="9 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year', 'month']"
              hide-weekends
@@ -499,6 +499,8 @@
     }
 
   sshpre(language="css" label="CSS").
+    .vuecal__event {cursor: pointer;}
+
     .vuecal__event-title {
       font-size: 1.2em;
       font-weight: bold;
@@ -515,6 +517,101 @@
     .vuecal__event-content {
       font-style: italic;
     }
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--custom-event-rendering") # Custom event rendering
+    a#ex--custom-event-rendering(name="ex--custom-event-rendering")
+  p.mb-2 Using Vue.js scoped slots, you can override the events rendering.
+
+  highlight-message.my-2(type="tips").
+    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]].
+
+  highlight-message.my-3(type="info")
+    | By default an event is rendered as follows.#[br]
+    | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
+    sshpre.mt-3.mb-1(language="html-vue").
+      &lt;div class="vuecal__event"&gt;
+          &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
+          &lt;div class=".vuecal__event-delete" /&gt;
+    sshpre.my-2.ml-5(language="html-vue").
+      Now this is the part you can customize:
+
+      &lt;!-- Will be added if a title is set --&gt;
+      &lt;div class="vuecal__event-title" /&gt;
+      &lt;!-- or if title is set and `editable-events` option is set to `true` --&gt;
+      &lt;div class="vuecal__event-title vuecal__event-title--edit" contenteditable /&gt;
+
+      &lt;!-- Will be added if `time` option is set to `true` --&gt;
+      &lt;div class="vuecal__event-time" /&gt;
+
+      &lt;!-- Will be added if a content is set --&gt;
+      &lt;div class="vuecal__event-content" /&gt;
+    sshpre.my-1(language="html-vue").
+          &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
+          &lt;div class="vuecal__event-resize-handle" /&gt;
+      &lt;/div&gt;
+  p.mb-2.
+    Two parameters are passed through the scoped slot:
+  ul
+    li #[span.code event]: The event full object containing dates, time, title, content and custom fields.
+    li #[span.code view]: The current selected view id.
+  p.mt-2.
+    You can set any custom field you want on an event, they will then be accessible in your custom event renderer!#[br]
+
+  v-card.my-2.ma-auto.main-content(style="height: 523px")
+    vue-cal.vuecal--green-theme.ex--custom-event-rendering(
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="19 * 60"
+      hide-weekends
+      :events="eventsToPop")
+      div(slot="event-renderer" slot-scope="{ event, view }")
+        v-icon.mt-2(color="white" x-large) {{ event.icon }}
+        .vuecal__event-title.mb-4(v-html="event.title")
+        small.vuecal__event-time
+          strong.mr-1 Event start:
+          span {{ event.startTime }}
+          br
+          strong.mr-1 Event end:
+          span {{ event.endTime }}
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="9 * 60"
+             :time-to="19 * 60"
+             hide-weekends
+             :events="events"&gt;
+      &lt;div slot="event-renderer" slot-scope="{ event, view }"&gt;
+        &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
+
+        &lt;div class="vuecal__event-title" v-html="event.title" /&gt;
+        &lt;!-- Or if your events are editable: --&gt;
+        &lt;div class="vuecal__event-title vuecal__event-title--edit" contenteditable @blur="event.title = $event.target.innerHTML" v-html="event.title" /&gt;
+
+        &lt;small class="vuecal__event-time"&gt;
+          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.startTime \}\}' }}&lt;/span&gt;&lt;br/&gt;
+          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.endTime \}\}' }}&lt;/span&gt;
+        &lt;/small&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    events: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 18:00',
+        title: 'Need to go shopping',
+        icon: 'shopping_cart', // Custom field.
+        class: 'leisure'
+      },
+      {
+        start: '2018-11-22 10:00',
+        end: '2018-11-22 15:00',
+        title: 'Golf with John',
+        icon: 'golf_course', // Custom field.
+        class: 'sport'
+      }
+    ]
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -582,7 +679,7 @@
   p.mt-5.title Custom events count on Month view.
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, first read about it on
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   p.
     In the following example, we only count the events which have the custom
@@ -1508,6 +1605,8 @@
     a#release-notes(name="release-notes")
 
   div
+    | #[strong Version 1.30.0] Allow custom event rendering
+  div
     | #[strong Version 1.29.0] Accept a callback function on event click / dblclick
   div
     | #[strong Version 1.28.0] Add Polish language
@@ -2022,6 +2121,8 @@ $primary: #42b983;
 }
 
 .ex--open-dialog-on-event-click {
+  .vuecal__event {cursor: pointer;}
+
   .vuecal__event-title {
     font-size: 1.2em;
     font-weight: bold;

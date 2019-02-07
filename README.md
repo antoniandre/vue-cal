@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.30.0__ Allow custom event rendering
 - __Version 1.29.0__ Accept a callback function on event click / dblclick
 - __Version 1.28.0__ Add Polish language
 - __Version 1.27.0__ Allow overriding 'No event' text

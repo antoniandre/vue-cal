@@ -47,9 +47,18 @@
                 :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
-                  slot(:events="events" name="events-count-month-view")
+                div(slot="events-count-month-view" slot-scope="{ events }" :events="events")
+                  slot(name="events-count-month-view" :events="events")
                     span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+                div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                  slot(name="event-renderer" :view="view" :event="event")
+                    .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+                    .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+                    .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
+                      | {{ event.startTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                      span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                      small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
+                    .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
                 slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
@@ -851,6 +860,12 @@ export default {
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
+    }
+  },
+
+  filters: {
+    formatTime (value, format) {
+      return (value && (formatTime(value, format) || ''))
     }
   },
 
