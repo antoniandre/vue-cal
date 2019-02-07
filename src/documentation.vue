@@ -433,7 +433,7 @@
       :disable-views="['years', 'year']"
       hide-weekends
       :events="eventsToPop"
-      :on-event-dblclick="onEventDblclick")
+      :on-event-click="onEventClick")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -441,7 +441,7 @@
              :disable-views="['years', 'year']"
              hide-weekends
              :events="events"
-             :on-event-dblclick="onEventDblclick"&gt;
+             :on-event-click="onEventclick"&gt;
     &lt;/vue-cal&gt;
     ...
     &lt;v-dialog v-model="showDialog"&gt;
@@ -473,7 +473,7 @@
           end: '2018-11-20 18:00',
           title: 'Need to go shopping',
           icon: 'shopping_cart', // Custom field.
-          content: 'Double click to see my shopping list',
+          content: 'Click to see my shopping list',
           contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocadoes&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom field.
           class: 'leisure'
         },
@@ -489,7 +489,7 @@
       ]
     }),
     methods: {
-      onEventDblclick (event, e) {
+      onEventClick (event, e) {
         this.selectedEvent = event
         this.showDialog = true
 
@@ -1972,7 +1972,7 @@ export default {
         end: '2018-11-20 18:00',
         title: 'Need to go shopping',
         icon: 'shopping_cart',
-        content: 'Double click to see my shopping list',
+        content: 'Click to see my shopping list',
         contentFull: 'My shopping list is rather long:<br><ul><li>Avocadoes</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
         class: 'leisure'
       },
@@ -1998,7 +1998,7 @@ export default {
       this.log = []
     },
     countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0,
-    onEventDblclick (event, e) {
+    onEventClick (event, e) {
       this.selectedEvent = event
       this.showDialog = true
       e.stopPropagation()
