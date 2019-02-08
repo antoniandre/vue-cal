@@ -534,7 +534,7 @@
     sshpre.mt-3.mb-1(language="html-vue").
       &lt;div class="vuecal__event"&gt;
           &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
-          &lt;div class=".vuecal__event-delete" /&gt;
+          &lt;div class="vuecal__event-delete" /&gt;
     sshpre.my-2.ml-5(language="html-vue").
       Now this is the part you can customize:
 
