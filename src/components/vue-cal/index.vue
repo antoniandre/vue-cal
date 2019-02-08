@@ -7,16 +7,20 @@
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        slot(name="title" :title="viewTitle" :view="view")
-          span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
+        span(style="position: relative" :class="{ clickable: !!broaderView }")
+          slot(name="title" :title="viewTitle" :view="view" )
+            transition(name="slide-fade")
+              span(:key="view.id" @click="switchToBroaderView()") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
-        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i")
-          span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-          span(v-if="heading.label4") &nbsp;
-          span(v-if="heading.label4") {{ heading.label4 }}
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" style="position: relative")
+          transition(name="slide-fade")
+            span(:key="`${i}-${heading.label4}`")
+              span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+              span(v-if="heading.label4") &nbsp;
+              span(v-if="heading.label4") {{ heading.label4 }}
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
       div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
@@ -881,6 +885,21 @@ export default {
 $time-column-width: 3em;
 $time-column-width-12: 4em; // 12-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
+
+.slide-fade-enter-active {
+  transition: 0.3s ease;
+}
+.slide-fade-leave-active {
+  transition: 0.3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  position: absolute;
+}
+.slide-fade-leave-to {
+  position: absolute;
+}
+.slide-fade-enter, .slide-fade-leave-to {
+  transform: translateX(-20px);
+  opacity: 0;
+}
 
 .vuecal {
   height: 100%;
