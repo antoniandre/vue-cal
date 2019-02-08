@@ -7,10 +7,10 @@
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        span(style="position: relative" :class="{ clickable: !!broaderView }")
-          slot(name="title" :title="viewTitle" :view="view" )
-            transition(name="slide-fade")
-              span(:key="view.id" @click="switchToBroaderView()") {{ viewTitle }}
+        span.flex.text-xs-center(:class="{ clickable: !!broaderView }" style="position: relative")
+          transition(name="slide-fade")
+            span.d-inline-block(:key="view.id" @click="switchToBroaderView()")
+              slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
@@ -886,21 +886,6 @@ $time-column-width: 3em;
 $time-column-width-12: 4em; // 12-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
 
-.slide-fade-enter-active {
-  transition: 0.3s ease;
-}
-.slide-fade-leave-active {
-  transition: 0.3s cubic-bezier(1.0, 0.5, 0.8, 1.0);
-  position: absolute;
-}
-.slide-fade-leave-to {
-  position: absolute;
-}
-.slide-fade-enter, .slide-fade-leave-to {
-  transform: translateX(-20px);
-  opacity: 0;
-}
-
 .vuecal {
   height: 100%;
   overflow: hidden;
@@ -1084,6 +1069,28 @@ $weekdays-headings-height: 2.8em;
       overflow: auto;
     }
   }
+}
+
+// Transitions.
+//==================================//
+.slide-fade-enter-active, .slide-fade-leave-active {
+  // transition: 0.25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+  transition: 0.25s ease-out;
+}
+
+.slide-fade-enter {
+  transform: translateX(15px);
+  opacity: 0;
+}
+
+// .slide-fade-enter-to {
+// }
+
+.slide-fade-leave-active {position: absolute;}
+
+.slide-fade-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
 }
 
 // Themes.
