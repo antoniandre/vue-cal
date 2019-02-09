@@ -1075,7 +1075,6 @@ $weekdays-headings-height: 2.8em;
 // Transitions.
 //==================================//
 .slide-fade-enter-active, .slide-fade-leave-active {
-  // transition: 0.25s cubic-bezier(1.0, 0.5, 0.8, 1.0);
   transition: 0.25s ease-out;
 }
 
@@ -1083,9 +1082,6 @@ $weekdays-headings-height: 2.8em;
   transform: translateX(15px);
   opacity: 0;
 }
-
-// .slide-fade-enter-to {
-// }
 
 .slide-fade-leave-active {position: absolute;height: 100%;}
 .vuecal__title .slide-fade-leave-active {left: 0;right: 0;}
