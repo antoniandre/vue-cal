@@ -9,22 +9,22 @@
             i.angle
         span.flex.text-xs-center(:class="{ clickable: !!broaderView }" style="position: relative")
           transition(name="slide-fade")
-            span.d-inline-block(:key="viewTitle" @click="switchToBroaderView()")
+            span.d-inline-block(:key="transitions ? viewTitle : false" @click="switchToBroaderView()")
               slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
         .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" style="position: relative")
-          transition(name="slide-fade" appear)
-            span(:key="`${i}-${heading.label4}`")
+          transition(name="slide-fade" :appear="transitions")
+            span(:key="transitions ? `${i}-${heading.label4}` : false")
               span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
               span(v-if="heading.label4") &nbsp;
               span(v-if="heading.label4") {{ heading.label4 }}
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow style="position: relative")
       transition(name="slide-fade")
-        div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%" :key="view.id")
+        div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%" :key="transitions ? view.id : false")
           .vuecal__bg(grow)
             .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
@@ -182,6 +182,10 @@ export default {
     onEventDblclick: {
       type: Function,
       default: () => {}
+    },
+    transitions: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({

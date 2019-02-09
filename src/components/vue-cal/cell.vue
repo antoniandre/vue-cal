@@ -1,7 +1,7 @@
 <template lang="pug">
   .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
-    transition-group(name="slide-fade" appear)
-      .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="`${view}-${content}-${i}`")
+    transition-group(name="slide-fade" :appear="transitions")
+      .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i")
         .split-label(v-if="splits.length" v-html="splits[i - 1].label")
         .vuecal__cell-date(v-if="content" v-html="content")
         .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
@@ -407,6 +407,9 @@ export default {
     noEventOverlaps () {
       this.$nextTick(() => this.checkCellOverlappingEvents())
       return this.$parent.noEventOverlaps
+    },
+    transitions () {
+      return this.$parent.transitions
     },
     domEvents: {
       get () {
