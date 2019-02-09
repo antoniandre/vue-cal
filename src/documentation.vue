@@ -82,14 +82,20 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Multiple day events
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Custom events rendering
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Add CSS transitions
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.pr-1(color="amber darken-1" outline small disabled)
+      v-icon.mr-1 timer
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
@@ -109,9 +115,6 @@
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Recurring events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | More control on events rendering
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
@@ -1270,6 +1273,7 @@
     selectedDate:       [String],          default: ''
     small:              [Boolean],         default: false
     xsmall:             [Boolean],         default: false
+    transitions:        [Boolean],         default: true
     clickToNavigate:    [Boolean],         default: false
     dblClickToNavigate: [Boolean],         default: true
     time:               [Boolean],         default: true
@@ -1282,11 +1286,11 @@
     minCellWidth:       [Number],          default: 0 // In pixels.
     splitDays:          [Array],           default: []
     events:             [Array],           default: []
-    editableEvents      [Boolean],         default: false
-    noEventOverlaps     [Boolean],         default: false
-    eventsOnMonthView   [Boolean, String], default: false
-    onEventClick        [Function],        default: null
-    onEventDblclick     [Function],        default: null
+    editableEvents:     [Boolean],         default: false
+    noEventOverlaps:    [Boolean],         default: false
+    eventsOnMonthView:  [Boolean, String], default: false
+    onEventClick:       [Function],        default: null
+    onEventDblclick:    [Function],        default: null
 
   ul.pl-0.api-options
     li
@@ -1396,6 +1400,10 @@
         and the current view title is also reduced.#[br]
         3 media queries are truncating the days of the week bellow 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
+    li
+      code.mr-2 transitions
+      span.code [Boolean], default: true
+      p Enable / disable the CSS transitions between all the views and view states.
     li
       code.mr-2 clickToNavigate
       span.code [Boolean], default: false
@@ -1604,6 +1612,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.31.0] Add CSS transitions option
   div
     | #[strong Version 1.30.0] Allow custom event rendering
   div

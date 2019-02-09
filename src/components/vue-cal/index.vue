@@ -2,28 +2,27 @@
   .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
-        li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
+        li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id, null, true)") {{ v.label }}
       .vuecal__title(v-if="!hideTitleBar")
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        span.flex.text-xs-center(:class="{ clickable: !!broaderView }" style="position: relative")
-          transition(name="slide-fade")
-            span.d-inline-block(:key="transitions ? viewTitle : false" @click="switchToBroaderView()")
-              slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+        transition.flex.text-xs-center(:class="{ clickable: !!broaderView }" :name="`slide-fade--${transitionDirection}`")
+          span.d-inline-block(:key="transitions ? viewTitle : false" @click="switchToBroaderView()")
+            slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
-        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" style="position: relative")
-          transition(name="slide-fade" :appear="transitions")
+        .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i")
+          transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
             span(:key="transitions ? `${i}-${heading.label4}` : false")
               span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
               span(v-if="heading.label4") &nbsp;
               span(v-if="heading.label4") {{ heading.label4 }}
 
-    .vuecal__flex.vuecal__body(v-if="!hideBody" grow style="position: relative")
-      transition(name="slide-fade")
+    .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
+      transition(:name="`slide-fade--${transitionDirection}`")
         div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%" :key="transitions ? view.id : false")
           .vuecal__bg(grow)
             .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
@@ -221,11 +220,14 @@ export default {
         timeout: 500
       }
     },
-    mutableEvents: {} // An indexed array of mutable events updated each time given events array changes.
+    mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+    transitionDirection: 'right'
   }),
 
   methods: {
     previous () {
+      this.transitionDirection = 'left'
+
       switch (this.view.id) {
         case 'years':
           this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() - 25, 0, 1))
@@ -250,6 +252,8 @@ export default {
     },
 
     next () {
+      this.transitionDirection = 'right'
+
       switch (this.view.id) {
         case 'years':
           this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() + 25, 0, 1))
@@ -274,10 +278,14 @@ export default {
     },
 
     switchToBroaderView () {
+      this.transitionDirection = 'left'
+
       if (this.broaderView) this.switchView(this.broaderView)
     },
 
     switchToNarrowerView () {
+      this.transitionDirection = 'right'
+
       let views = Object.keys(this.views)
       views = views.slice(views.indexOf(this.view.id) + 1)
       const view = views.find(v => this.views[v].enabled)
@@ -285,7 +293,12 @@ export default {
       if (view) this.switchView(view)
     },
 
-    switchView (view, date = null) {
+    switchView (view, date = null, fromViewSelector = false) {
+      if (this.transitions && fromViewSelector) {
+        const views = Object.keys(this.views)
+        this.transitionDirection = Object.keys(this.views).indexOf(this.view.id) > Object.keys(this.views).indexOf(view) ? 'left' : 'right'
+      }
+
       this.view.events = []
       this.view.id = view
       let dateTmp, endTime, formattedDate, dayEvents
@@ -419,6 +432,20 @@ export default {
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
+    },
+
+    onEventTitleBlur (e, event) {
+      event.title = e.target.innerHTML
+
+      if (event.linked.daysCount) {
+        event.linked.forEach(e => {
+          let dayToModify = this.mutableEvents[e.date]
+          dayToModify.find(e2 => e2.id === e.id).title = event.title
+        })
+      }
+
+      this.emitWithEvent('event-change', event)
+      this.emitWithEvent('event-title-change', event)
     },
 
     // Object of arrays of events indexed by dates.
@@ -955,12 +982,15 @@ $weekdays-headings-height: 2.8em;
     justify-content: space-between;
     font-size: 1.5em;
     min-height: 2em;
+    position: relative;
 
     .vuecal--xsmall & {font-size: 1.3em;}
   }
 
   &__arrow {
     cursor: pointer;
+    position: relative;
+    z-index: 1;
 
     &--prev {padding-left: 0.6em;}
     &--next {padding-right: 0.6em;}
@@ -1001,6 +1031,7 @@ $weekdays-headings-height: 2.8em;
     justify-content: center;
     text-align: center;
     align-items: center;
+    position: relative;
 
     .vuecal--small & span:nth-child(3) {display: none;}
 
@@ -1016,6 +1047,7 @@ $weekdays-headings-height: 2.8em;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     min-height: 60px;
+    position: relative;
   }
 
   &__bg {
@@ -1078,23 +1110,29 @@ $weekdays-headings-height: 2.8em;
 
 // Transitions.
 //==================================//
-.slide-fade-enter-active, .slide-fade-leave-active {
+.slide-fade--left-enter-active, .slide-fade--left-leave-active,
+.slide-fade--right-enter-active, .slide-fade--right-leave-active {
   transition: 0.25s ease-out;
 }
 
-.slide-fade-enter {
+.slide-fade--left-enter,
+.slide-fade--right-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
+}
+
+.slide-fade--left-leave-to,
+.slide-fade--right-enter {
   transform: translateX(15px);
   opacity: 0;
 }
 
-.slide-fade-leave-active {position: absolute;height: 100%;}
-.vuecal__title .slide-fade-leave-active {left: 0;right: 0;}
-.vuecal__heading .slide-fade-leave-active {display: flex;align-items: center;}
-
-.slide-fade-leave-to {
-  transform: translateX(-15px);
-  opacity: 0;
-}
+.slide-fade--left-leave-active,
+.slide-fade--right-leave-active {position: absolute;height: 100%;}
+.vuecal__title .slide-fade--left-leave-active,
+.vuecal__title .slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
+.vuecal__heading .slide-fade--left-leave-active,
+.vuecal__heading .slide-fade--right-leave-active {display: flex;align-items: center;}
 
 // Themes.
 //==================================//

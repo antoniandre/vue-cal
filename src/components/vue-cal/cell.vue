@@ -1,6 +1,6 @@
 <template lang="pug">
   .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
-    transition-group(name="slide-fade" :appear="transitions")
+    transition-group(:class="splits.length && `vuecal__flex fill-height`" tag="div" :name="`slide-fade--${transitionDirection}`" :appear="transitions" grow)
       .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i")
         .split-label(v-if="splits.length" v-html="splits[i - 1].label")
         .vuecal__cell-date(v-if="content" v-html="content")
@@ -213,20 +213,6 @@ export default {
       })
     },
 
-    onEventTitleBlur (e, event) {
-      event.title = e.target.innerHTML
-
-      if (event.linked.daysCount) {
-        event.linked.forEach(e => {
-          let dayToModify = this.$parent.mutableEvents[e.date]
-          dayToModify.find(e2 => e2.id === e.id).title = event.title
-        })
-      }
-
-      this.$parent.emitWithEvent('event-change', event)
-      this.$parent.emitWithEvent('event-title-change', event)
-    },
-
     onResizeEvent () {
       let { eventId, newHeight } = this.$parent.domEvents.resizeAnEvent
       let event = this.events.filter(e => e.id === eventId)[0]
@@ -410,6 +396,9 @@ export default {
     },
     transitions () {
       return this.$parent.transitions
+    },
+    transitionDirection () {
+      return this.$parent.transitionDirection
     },
     domEvents: {
       get () {
