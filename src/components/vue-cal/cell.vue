@@ -487,21 +487,21 @@ export default {
   align-items: center;
   text-align: center;
   position: relative;
-  .vuecal--month-view &,
-  .vuecal--week-view &,
-  .vuecal--day-view & {
+  .vuecal__cells.month-view &,
+  .vuecal__cells.week-view &,
+  .vuecal__cells.day-view & {
     width: 14.2857%;
   }
 
-  .vuecal--hide-weekends.vuecal--month-view &,
-  .vuecal--hide-weekends.vuecal--week-view &,
-  .vuecal--hide-weekends.vuecal--day-view & {
+  .vuecal--hide-weekends .vuecal__cells.month-view &,
+  .vuecal--hide-weekends .vuecal__cells.week-view &,
+  .vuecal--hide-weekends .vuecal__cells.day-view & {
     width: 20%;
   }
 
-  .vuecal--years-view & {width: 20%;}
-  .vuecal--year-view & {width: 33.33%;}
-  .vuecal--day-view & {flex: 1;}
+  .vuecal__cells.years-view & {width: 20%;}
+  .vuecal__cells.year-view & {width: 33.33%;}
+  .vuecal__cells.day-view & {flex: 1;}
 
   .vuecal--click-to-navigate & {cursor: pointer;}
   .vuecal--view-with-time &,

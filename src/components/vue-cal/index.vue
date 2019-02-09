@@ -9,61 +9,62 @@
             i.angle
         span.flex.text-xs-center(:class="{ clickable: !!broaderView }" style="position: relative")
           transition(name="slide-fade")
-            span.d-inline-block(:key="view.id" @click="switchToBroaderView()")
+            span.d-inline-block(:key="viewTitle" @click="switchToBroaderView()")
               slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
         .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" style="position: relative")
-          transition(name="slide-fade")
+          transition(name="slide-fade" appear)
             span(:key="`${i}-${heading.label4}`")
               span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
               span(v-if="heading.label4") &nbsp;
               span(v-if="heading.label4") {{ heading.label4 }}
 
-    .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
-      div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
-        .vuecal__bg(grow)
-          .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
-              slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
-                span.line {{ cell.label }}
+    .vuecal__flex.vuecal__body(v-if="!hideBody" grow style="position: relative")
+      transition(name="slide-fade")
+        div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%" :key="view.id")
+          .vuecal__bg(grow)
+            .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
+              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+                slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
+                  span.line {{ cell.label }}
 
-          .vuecal__flex.vuecal__cells(grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
-            //- Only for splitDays.
-            .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
-              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
-                span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-                span(v-if="heading.label4") &nbsp;
-                span(v-if="heading.label4") {{ heading.label4 }}
+            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
+              //- Only for splitDays.
+              .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
+                .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
+                  span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+                  span(v-if="heading.label4") &nbsp;
+                  span(v-if="heading.label4") {{ heading.label4 }}
 
-            .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
-              vuecal-cell(
-                :class="cell.class"
-                v-for="(cell, i) in viewCells"
-                :key="i"
-                v-bind="{ scopedSlots: $scopedSlots }"
-                :date="cell.date"
-                :formatted-date="cell.formattedDate"
-                :today="cell.today"
-                :content="cell.content"
-                :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
-                @click.native="selectCell(cell)"
-                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                div(slot="events-count-month-view" slot-scope="{ events }" :events="events")
-                  slot(name="events-count-month-view" :events="events")
-                    span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-                div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
-                  slot(name="event-renderer" :view="view" :event="event")
-                    .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
-                    .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-                    .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
-                      | {{ event.startTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
-                      span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
-                      small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
-                    .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
-                slot(slot="no-event" name="no-event") {{ texts.noEvent }}
+              .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
+                vuecal-cell(
+                  :class="cell.class"
+                  v-for="(cell, i) in viewCells"
+                  :key="i"
+                  v-bind="{ scopedSlots: $scopedSlots }"
+                  :date="cell.date"
+                  :formatted-date="cell.formattedDate"
+                  :today="cell.today"
+                  :content="cell.content"
+                  :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                  @click.native="selectCell(cell)"
+                  @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                  div(slot="events-count-month-view" slot-scope="{ events }" :events="events")
+                    slot(name="events-count-month-view" :events="events")
+                      span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+                  div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                    slot(name="event-renderer" :view="view" :event="event")
+                      .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+                      .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+                      .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                        small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
+                      .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+                  slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
@@ -1086,7 +1087,9 @@ $weekdays-headings-height: 2.8em;
 // .slide-fade-enter-to {
 // }
 
-.slide-fade-leave-active {position: absolute;}
+.slide-fade-leave-active {position: absolute;height: 100%;}
+.vuecal__title .slide-fade-leave-active {left: 0;right: 0;}
+.vuecal__heading .slide-fade-leave-active {display: flex;align-items: center;}
 
 .slide-fade-leave-to {
   transform: translateX(-15px);
