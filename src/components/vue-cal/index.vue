@@ -296,7 +296,7 @@ export default {
     switchView (view, date = null, fromViewSelector = false) {
       if (this.transitions && fromViewSelector) {
         const views = Object.keys(this.views)
-        this.transitionDirection = Object.keys(this.views).indexOf(this.view.id) > Object.keys(this.views).indexOf(view) ? 'left' : 'right'
+        this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
       this.view.events = []
