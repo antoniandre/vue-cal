@@ -9,7 +9,7 @@
 ## Installation
 
 ```
-npm i vue-cal --save-dev
+npm i --S vue-cal
 ```
 
 ## Demo & Documentation

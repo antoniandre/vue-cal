@@ -138,7 +138,7 @@
     a#installation(name="installation")
   p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
   h3 Via NPM
-  sshpre.mt-2(language="shell" label="Shell") npm install vue-cal --save-dev
+  sshpre.mt-2(language="shell" label="Shell") npm i --S vue-cal
   p Then import the component and use it:
   sshpre.mt-2(language="js" label="Javascript").
     // In your VueJS component.
