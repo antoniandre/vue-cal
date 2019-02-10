@@ -103,7 +103,7 @@ export default {
       default: 'week'
     },
     selectedDate: {
-      type: String,
+      type: [String, Date],
       default: ''
     },
     small: {
@@ -603,6 +603,18 @@ export default {
 
     emitWithEvent (eventName, event) {
       this.$emit(eventName, this.cleanupEvent(event))
+    },
+
+    updateSelectedDate (date) {
+      if (date && typeof date === 'string') {
+        let [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
+        date = new Date(y, parseInt(m) - 1, d, h, min)
+      }
+      if (date && (typeof date === 'string' || date instanceof Date)) {
+        if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
+        this.view.selectedDate = date
+        this.switchView(this.view.id)
+      }
     }
   },
 
@@ -610,15 +622,12 @@ export default {
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
-    if (this.selectedDate) {
-      let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
-      this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
-    }
+    this.view.id = this.defaultView
+    if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
       this.view.selectedDate = this.now
+      this.switchView(this.defaultView)
     }
-
-    this.switchView(this.defaultView)
   },
 
   mounted () {
@@ -908,6 +917,9 @@ export default {
   watch: {
     events: function (events, oldEvents) {
       this.updateMutableEvents(events)
+    },
+    selectedDate: function (date) {
+      this.updateSelectedDate(date)
     }
   }
 }
@@ -980,7 +992,8 @@ $weekdays-headings-height: 2.8em;
     align-items: center;
     text-align: center;
     justify-content: space-between;
-    font-size: 1.5em;
+    font-size: 1.4em;
+    line-height: 1.3;
     min-height: 2em;
     position: relative;
 

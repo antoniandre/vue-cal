@@ -88,6 +88,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Add CSS transitions
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | sync 2 vue-cal instances
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -199,7 +202,7 @@
     | By default the calendar theme is grey to match with most of web pages.#[br]
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
-  v-card.my-2.ma-auto.main-content(style="height: 450px;")
+  v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
@@ -1096,6 +1099,58 @@
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--sync-two-calendars") # Sync two vue-cal instances
+    a#ex--sync-two-calendars(name="ex--sync-two-calendars")
+  p.
+    In this example the right calendar is used as a date picker and the selected date is
+    updated on the left calendar via the #[span.code @day-focus] event listener.#[br]
+    To know more about emitted events refer to the
+    #[a(href="#ex--emitted-events") emitted events example].
+
+  v-layout(align-center justify-center)
+    vue-cal.vuecal--blue-theme(
+      small
+      :time="false"
+      hide-view-selector
+      default-view="week"
+      :disable-views="['years', 'year', 'month']"
+      :selected-date="selectedDate"
+      style="max-width: 350px;height: 246px")
+    vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
+      xsmall
+      :time="false"
+      hide-view-selector
+      default-view="month"
+      :disable-views="['years', 'year', 'week', 'day']"
+      @day-focus="selectedDate = $event"
+      style="max-width: 270px;height: 290px;transform: scale(0.85)")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal small
+      :time="false"
+      hide-view-selector
+      default-view="week"
+      :disable-views="['years', 'year', 'month']"
+      :selected-date="selectedDate"
+      class="vuecal--blue-theme"
+      style="max-width: 350px;height: 246px"&gt;
+    &lt;/vue-cal&gt;
+    &lt;vue-cal xsmall
+      :time="false"
+      hide-view-selector
+      default-view="month"
+      :disable-views="['years', 'year', 'week', 'day']"
+      @day-focus="selectedDate = $event"
+      class="vuecal--blue-theme vuecal--rounded-theme"
+      style="max-width: 270px;height: 290px"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      selectedDate: null
+    })
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
     a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
     a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
   highlight-message(type="tips").
@@ -1261,7 +1316,7 @@
   p Here is the list of all the available views.
   sshpre.mt-2(language="js").
     ['years', 'year', 'month', 'week', 'day']
-  p Here is the list of all the parameters available.
+  p Here is the list of all the parameters available and their decription bellow this table.
   sshpre.mt-2(language="js").
     locale:             [String],          default: 'en'
     hideViewSelector:   [Boolean],         default: false
@@ -1270,7 +1325,7 @@
     hideWeekends:       [Boolean],         default: false
     disableViews:       [Array],           default: []
     defaultView:        [String],          default: 'week'
-    selectedDate:       [String],          default: ''
+    selectedDate:       [String, Date],    default: ''
     small:              [Boolean],         default: false
     xsmall:             [Boolean],         default: false
     transitions:        [Boolean],         default: true
@@ -1373,15 +1428,17 @@
         Accepts one of 'years', 'year', 'month', 'week', 'day'.
     li
       code.mr-2 selectedDate
-      span.code [String], default: ''
+      span.code [String, Date], default: ''
       p.
         Set a selected date, for the first time you load the calendar.#[br]
         This day will be highlighted and the first view will naturally show this date.#[br]
-        E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.
+        E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.#[br]#[br]
+        Updating the #[span.code selectedDate] programmatically after the first calendar load,
+        will update the view if needed to show this date.#[br]Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
       highlight-message(type="warning").
-        A correct date format is #[code {{ currentDateFormatted }}] or
+        A correct string date format is #[code {{ currentDateFormatted }}] or
         #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
-        Only these formats will work.
+        Only these formats will work in string. You can also provide a native Javascript Date object.
     li
       code.mr-2 small
       span.code [Boolean], default: false
@@ -1559,9 +1616,6 @@
         | Only these formats will work.#[br]
         strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
 
-      highlight-message(type="info")
-        | Recurring events will be available in a next release.
-
   h2.headline.mt-5.pt-5
     a(href="#css-notes") CSS Notes
     a#css-notes(name="css-notes")
@@ -1613,6 +1667,11 @@
     a#release-notes(name="release-notes")
 
   div
+    | #[strong Version 1.32.0] Allow Syncing 2 vue-cal instances
+    highlight-message(type="success").
+      The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
+      Refer to the #[span.code selectedDate] option in the #[a(href="#api") API] section.
+  div
     | #[strong Version 1.31.0] Add CSS transitions option
   div
     | #[strong Version 1.30.0] Allow custom event rendering
@@ -1655,7 +1714,7 @@
       ul
         li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
         li The emitted events-related events now also return native JS Date objects.
-        li Refer to the emitted events example.
+        li Refer to the #[a(href="#ex--emitted-events") emitted events example].
   div
     | #[strong Version 1.13.0] Add Swedish language
   div
@@ -1799,6 +1858,7 @@ export default {
     showDialog: false,
     events,
     selectedEvent: {},
+    selectedDate: null,
     logMouseEvents: false,
     overlappingEvents: [
       ...events,

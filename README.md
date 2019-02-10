@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.32.0__ Allow Syncing 2 vue-cal instances
 - __Version 1.31.0__ Add CSS transitions option
 - __Version 1.30.0__ Allow custom event rendering
 - __Version 1.29.0__ Accept a callback function on event click / dblclick
