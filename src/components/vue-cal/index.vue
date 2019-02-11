@@ -2,57 +2,70 @@
   .vuecal__flex.vuecal(ref="vuecal" column :class="cssClasses" :lang="locale")
     .vuecal__header
       ul.vuecal__flex.vuecal__menu(v-if="!hideViewSelector")
-        li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id)") {{ v.label }}
+        li(:class="{ active: view.id === id }" v-for="(v, id) in views" v-if="v.enabled" @click="switchView(id, null, true)") {{ v.label }}
       .vuecal__title(v-if="!hideTitleBar")
         .vuecal__arrow.vuecal__arrow--prev(@click="previous")
           slot(name="arrowPrev")
             i.angle
-        slot(name="title" :title="viewTitle" :view="view")
-          span(:class="{ clickable: !!broaderView }" @click="switchToBroaderView()") {{ viewTitle }}
+        transition.flex.text-xs-center(:class="{ clickable: !!broaderView }" :name="`slide-fade--${transitionDirection}`")
+          span.d-inline-block(:key="transitions ? viewTitle : false" @click="switchToBroaderView()")
+            slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         .vuecal__arrow.vuecal__arrow--next(@click="next")
           slot(name="arrowNext")
             i.angle
       .vuecal__flex.vuecal__weekdays-headings(v-if="viewHeadings.length && !(hasSplits && view.id === 'week')")
         .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i")
-          span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-          span(v-if="heading.label4") &nbsp;
-          span(v-if="heading.label4") {{ heading.label4 }}
+          transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
+            span(:key="transitions ? `${i}-${heading.label4}` : false")
+              span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+              span(v-if="heading.label4") &nbsp;
+              span(v-if="heading.label4") {{ heading.label4 }}
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
-      div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%")
-        .vuecal__bg(grow)
-          .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
-            .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
-              slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
-                span.line {{ cell.label }}
+      transition(:name="`slide-fade--${transitionDirection}`")
+        div(:class="{ vuecal__flex: !hasTimeColumn }" style="min-width: 100%" :key="transitions ? view.id : false")
+          .vuecal__bg(grow)
+            .vuecal__time-column(v-if="time && ['week', 'day'].indexOf(view.id) > -1")
+              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+                slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
+                  span.line {{ cell.label }}
 
-          .vuecal__flex.vuecal__cells(grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
-            //- Only for splitDays.
-            .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
-              .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
-                span(v-for="j in 3" :key="j") {{ heading['label' + j] }}
-                span(v-if="heading.label4") &nbsp;
-                span(v-if="heading.label4") {{ heading.label4 }}
+            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
+              //- Only for splitDays.
+              .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
+                .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
+                  span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+                  span(v-if="heading.label4") &nbsp;
+                  span(v-if="heading.label4") {{ heading.label4 }}
 
-            .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
-              vuecal-cell(
-                :class="cell.class"
-                v-for="(cell, i) in viewCells"
-                :key="i"
-                v-bind="{ scopedSlots: $scopedSlots }"
-                :date="cell.date"
-                :formatted-date="cell.formattedDate"
-                :today="cell.today"
-                :content="cell.content"
-                :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
-                @touchstart.native="onCellTouchStart($event, cell)"
-                @mousedown.native="onCellMouseDown($event, cell)"
-                @click.native="selectCell(cell)"
-                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                div(slot-scope="{ events }" :events="events" slot="events-count-month-view")
-                  slot(:events="events" name="events-count-month-view")
-                    span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-                slot(slot="no-event" name="no-event") {{ texts.noEvent }}
+              .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
+                vuecal-cell(
+                  :class="cell.class"
+                  v-for="(cell, i) in viewCells"
+                  :key="i"
+                  v-bind="{ scopedSlots: $scopedSlots }"
+                  :date="cell.date"
+                  :formatted-date="cell.formattedDate"
+                  :today="cell.today"
+                  :content="cell.content"
+                  :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                  @touchstart.native="onCellTouchStart($event, cell)"
+                  @mousedown.native="onCellMouseDown($event, cell)"
+                  @click.native="selectCell(cell)"
+                  @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                  .vuecal__cell-events-count(slot="events-count-month-view" slot-scope="{ events }" :events="events")
+                    slot(name="events-count-month-view" :events="events")
+                      span(v-if="events.length") {{ events.length }}
+                  div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                    slot(name="event-renderer" :view="view" :event="event")
+                      .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+                      .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+                      .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                        small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
+                      .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+                  slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
@@ -92,7 +105,7 @@ export default {
       default: 'week'
     },
     selectedDate: {
-      type: String,
+      type: [String, Date],
       default: ''
     },
     small: {
@@ -162,6 +175,18 @@ export default {
     eventsOnMonthView: {
       type: [Boolean, String],
       default: false
+    },
+    onEventClick: {
+      type: Function,
+      default: () => {}
+    },
+    onEventDblclick: {
+      type: Function,
+      default: () => {}
+    },
+    transitions: {
+      type: Boolean,
+      default: true
     }
   },
   data: () => ({
@@ -202,11 +227,14 @@ export default {
         timeout: 500
       }
     },
-    mutableEvents: {} // An indexed array of mutable events updated each time given events array changes.
+    mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+    transitionDirection: 'right'
   }),
 
   methods: {
     previous () {
+      this.transitionDirection = 'left'
+
       switch (this.view.id) {
         case 'years':
           this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() - 25, 0, 1))
@@ -231,6 +259,8 @@ export default {
     },
 
     next () {
+      this.transitionDirection = 'right'
+
       switch (this.view.id) {
         case 'years':
           this.switchView(this.view.id, new Date(this.view.startDate.getFullYear() + 25, 0, 1))
@@ -255,10 +285,14 @@ export default {
     },
 
     switchToBroaderView () {
+      this.transitionDirection = 'left'
+
       if (this.broaderView) this.switchView(this.broaderView)
     },
 
     switchToNarrowerView () {
+      this.transitionDirection = 'right'
+
       let views = Object.keys(this.views)
       views = views.slice(views.indexOf(this.view.id) + 1)
       const view = views.find(v => this.views[v].enabled)
@@ -266,7 +300,12 @@ export default {
       if (view) this.switchView(view)
     },
 
-    switchView (view, date = null) {
+    switchView (view, date = null, fromViewSelector = false) {
+      if (this.transitions && fromViewSelector) {
+        const views = Object.keys(this.views)
+        this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
+      }
+
       this.view.events = []
       this.view.id = view
       let dateTmp, endTime, formattedDate, dayEvents
@@ -433,6 +472,20 @@ export default {
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
+    },
+
+    onEventTitleBlur (e, event) {
+      event.title = e.target.innerHTML
+
+      if (event.linked.daysCount) {
+        event.linked.forEach(e => {
+          let dayToModify = this.mutableEvents[e.date]
+          dayToModify.find(e2 => e2.id === e.id).title = event.title
+        })
+      }
+
+      this.emitWithEvent('event-change', event)
+      this.emitWithEvent('event-title-change', event)
     },
 
     // Object of arrays of events indexed by dates.
@@ -637,6 +690,18 @@ export default {
 
     emitWithEvent (eventName, event) {
       this.$emit(eventName, this.cleanupEvent(event))
+    },
+
+    updateSelectedDate (date) {
+      if (date && typeof date === 'string') {
+        let [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
+        date = new Date(y, parseInt(m) - 1, d, h, min)
+      }
+      if (date && (typeof date === 'string' || date instanceof Date)) {
+        if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
+        this.view.selectedDate = date
+        this.switchView(this.view.id)
+      }
     }
   },
 
@@ -644,15 +709,12 @@ export default {
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
-    if (this.selectedDate) {
-      let [, y, m, d, h = 0, min = 0] = this.selectedDate.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
-      this.view.selectedDate = new Date(y, parseInt(m) - 1, d, h, min)
-    }
+    this.view.id = this.defaultView
+    if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
       this.view.selectedDate = this.now
+      this.switchView(this.defaultView)
     }
-
-    this.switchView(this.defaultView)
   },
 
   mounted () {
@@ -665,9 +727,9 @@ export default {
 
     // Disable context menu on touch devices on the whole vue-cal instance.
     if (hasTouch) {
-      this.$refs.vuecal.oncontextmenu = function(e) {
-          e.preventDefault()
-          e.stopPropagation()
+      this.$refs.vuecal.oncontextmenu = function (e) {
+        e.preventDefault()
+        e.stopPropagation()
       }
     }
 
@@ -943,9 +1005,18 @@ export default {
     }
   },
 
+  filters: {
+    formatTime (value, format) {
+      return (value && (formatTime(value, format) || ''))
+    }
+  },
+
   watch: {
     events: function (events, oldEvents) {
       this.updateMutableEvents(events)
+    },
+    selectedDate: function (date) {
+      this.updateSelectedDate(date)
     }
   }
 }
@@ -1018,14 +1089,18 @@ $weekdays-headings-height: 2.8em;
     align-items: center;
     text-align: center;
     justify-content: space-between;
-    font-size: 1.5em;
+    font-size: 1.4em;
+    line-height: 1.3;
     min-height: 2em;
+    position: relative;
 
     .vuecal--xsmall & {font-size: 1.3em;}
   }
 
   &__arrow {
     cursor: pointer;
+    position: relative;
+    z-index: 1;
 
     &--prev {padding-left: 0.6em;}
     &--next {padding-right: 0.6em;}
@@ -1066,6 +1141,7 @@ $weekdays-headings-height: 2.8em;
     justify-content: center;
     text-align: center;
     align-items: center;
+    position: relative;
 
     .vuecal--small & span:nth-child(3) {display: none;}
 
@@ -1081,6 +1157,7 @@ $weekdays-headings-height: 2.8em;
     overflow: auto;
     -webkit-overflow-scrolling: touch;
     min-height: 60px;
+    position: relative;
   }
 
   &__bg {
@@ -1141,6 +1218,32 @@ $weekdays-headings-height: 2.8em;
   }
 }
 
+// Transitions.
+//==================================//
+.slide-fade--left-enter-active, .slide-fade--left-leave-active,
+.slide-fade--right-enter-active, .slide-fade--right-leave-active {
+  transition: 0.25s ease-out;
+}
+
+.slide-fade--left-enter,
+.slide-fade--right-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
+}
+
+.slide-fade--left-leave-to,
+.slide-fade--right-enter {
+  transform: translateX(15px);
+  opacity: 0;
+}
+
+.slide-fade--left-leave-active,
+.slide-fade--right-leave-active {position: absolute;height: 100%;}
+.vuecal__title .slide-fade--left-leave-active,
+.vuecal__title .slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
+.vuecal__heading .slide-fade--left-leave-active,
+.vuecal__heading .slide-fade--right-leave-active {display: flex;align-items: center;}
+
 // Themes.
 //==================================//
 .vuecal--green-theme {
@@ -1169,14 +1272,12 @@ $weekdays-headings-height: 2.8em;
   .vuecal__cell, &:not(.vuecal--day-view) .vuecal__cell:before {background: none;border: none;}
   .vuecal__cell.out-of-scope {opacity: 0.4;}
   .vuecal__cell-content {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
+    flex-grow: 0;
     border: 1px solid transparent;
+    border-radius: 30px;
     color: #333;
-    border-radius: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   &.vuecal--day-view .vuecal__cell-content {width: auto;background: none;}
   &.vuecal--year-view .vuecal__cell {width: 33.33%;}

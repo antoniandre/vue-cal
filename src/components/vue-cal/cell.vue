@@ -1,36 +1,29 @@
 <template lang="pug">
-  .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
-    .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)")
+  transition-group.vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`" :appear="transitions")
+    .vuecal__flex.vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i" column)
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       .vuecal__cell-date(v-if="content" v-html="content")
       .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         slot(name="no-event") {{ texts.noEvent }}
       .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         .vuecal__event(:class="eventClasses(event)"
-                       v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
-                       :style="eventStyles(event)"
-                       @mouseenter="onMouseEnter($event, event)"
-                       @mouseleave="onMouseLeave($event, event)"
-                       @mousedown="onMouseDown($event, event)"
-                       @touchstart="onTouchStart($event, event)")
-          //- @contextmenu="onContextMenu($event, event)"
+                      v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
+                      :style="eventStyles(event)"
+                      @mouseenter="onMouseEnter($event, event)"
+                      @mouseleave="onMouseLeave($event, event)"
+                      @mousedown="onMouseDown($event, event)"
+                      @touchstart="onTouchStart($event, event)"
+                      @click="onClick($event, event)"
+                      @dblclick="onDblClick($event, event)")
           .vuecal__event-delete(v-if="editableEvents"
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-          .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
-          .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-          .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
-            | {{ event.startTimeMinutes | formatTime(timeFormat) }}
-            span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat) }}
-            small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
-          .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+          slot(:event="event" :view="view" name="event-renderer")
           .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
-                                       @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
-                                       @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      div(v-if="view === 'month' && !eventsOnMonthView && events.length")
-        slot(name="events-count-month-view" :events="events")
-          span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
+                                      @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
+                                      @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
+      slot(v-if="view === 'month' && !eventsOnMonthView && events.length" name="events-count-month-view" :events="events")
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
 <script>
@@ -216,20 +209,6 @@ export default {
       })
     },
 
-    onEventTitleBlur (e, event) {
-      event.title = e.target.innerHTML
-
-      if (event.linked.daysCount) {
-        event.linked.forEach(e => {
-          let dayToModify = this.$parent.mutableEvents[e.date]
-          dayToModify.find(e2 => e2.id === e.id).title = event.title
-        })
-      }
-
-      this.$parent.emitWithEvent('event-change', event)
-      this.$parent.emitWithEvent('event-title-change', event)
-    },
-
     onResizeEvent () {
       // Using this.domEvents.resizeAnEvent here would end up in an infinite loop.
       let { eventId, newHeight } = this.$parent.domEvents.resizeAnEvent
@@ -312,6 +291,14 @@ export default {
     onTouchStart (e, event) {
       console.log('this works')
       this.onMouseDown(e, event, true)
+    },
+
+    onClick (e, event) {
+      if (typeof this.$parent.onEventClick === 'function') return this.$parent.onEventClick(event, e)
+    },
+
+    onDblClick (e, event) {
+      if (typeof this.$parent.onEventDblclick === 'function') return this.$parent.onEventDblclick(event, e)
     },
 
     onDragHandleMouseDown (e, event) {
@@ -406,6 +393,12 @@ export default {
       this.$nextTick(() => this.checkCellOverlappingEvents())
       return this.$parent.noEventOverlaps
     },
+    transitions () {
+      return this.$parent.transitions
+    },
+    transitionDirection () {
+      return this.$parent.transitionDirection
+    },
     domEvents: {
       get () {
         if (this.$parent.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
@@ -416,7 +409,7 @@ export default {
       }
     },
     cellStyles () {
-      return { minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null }
+      return { minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null, position: 'relative' }
     },
     events: {
       get () {
@@ -488,21 +481,21 @@ export default {
   align-items: center;
   text-align: center;
   position: relative;
-  .vuecal--month-view &,
-  .vuecal--week-view &,
-  .vuecal--day-view & {
+  .vuecal__cells.month-view &,
+  .vuecal__cells.week-view &,
+  .vuecal__cells.day-view & {
     width: 14.2857%;
   }
 
-  .vuecal--hide-weekends.vuecal--month-view &,
-  .vuecal--hide-weekends.vuecal--week-view &,
-  .vuecal--hide-weekends.vuecal--day-view & {
+  .vuecal--hide-weekends .vuecal__cells.month-view &,
+  .vuecal--hide-weekends .vuecal__cells.week-view &,
+  .vuecal--hide-weekends .vuecal__cells.day-view & {
     width: 20%;
   }
 
-  .vuecal--years-view & {width: 20%;}
-  .vuecal--year-view & {width: 33.33%;}
-  .vuecal--day-view & {flex: 1;}
+  .vuecal__cells.years-view & {width: 20%;}
+  .vuecal__cells.year-view & {width: 33.33%;}
+  .vuecal__cells.day-view & {flex: 1;}
 
   .vuecal--click-to-navigate & {cursor: pointer;}
   .vuecal--view-with-time &,
@@ -546,9 +539,7 @@ export default {
     .vuecal--day-view & {background: none;}
   }
 
-  &.out-of-scope {
-    color: #ccc;
-  }
+  &.out-of-scope {color: #ccc;}
 
   &-events-count {
     background: #999;
@@ -559,14 +550,22 @@ export default {
     transform: translateX(-50%);
     width: 12px;
     height: 12px;
-    margin-top: -1px;
+    margin-top: 13px;
     line-height: 12px;
     font-size: 10px;
   }
 
-  .vuecal--events-on-month-view &-content {
+  &-content {
     width: 100%;
+    height: 100%;
+    align-items: center;
+
+    .vuecal--years-view &,
+    .vuecal--year-view &,
+    .vuecal--month-view & {justify-content: center;}
   }
+
+  &-events {width: 100%;}
 }
 
 .vuecal--split-days.vuecal--week-view .vuecal__cell.splitted {
@@ -576,7 +575,8 @@ export default {
 .vuecal__no-event {
   padding-top: 1em;
   color: #aaa;
-  user-select: none;
+  justify-self: flex-start;
+  margin-bottom: auto; // Vertical align top within flex column and align center.
 }
 
 // EVENTS.
@@ -598,8 +598,6 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-
-    // &:hover {height: auto !important;}
   }
 
   &--overlapped {right: 20%;}
@@ -668,7 +666,7 @@ export default {
       width: 1.7em;
       height: 1.8em;
       display: block;
-      background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m256 33c-124 0-224 100-224 224 0 124 100 224 224 224 124 0 224-100 224-224 0-124-100-224-224-224z m108 300c2 1 3 3 3 5 0 2-1 4-3 6l-21 21c-2 2-4 3-6 3-2 0-4-1-5-3l-76-75-75 76c-2 1-4 2-6 2-2 0-4-1-6-2l-21-22c-2-2-2-4-2-6 0-2 0-4 2-5l76-76-76-75c-3-3-3-9 0-12l21-21c2-2 4-3 6-3 2 0 4 1 5 3l76 74 76-74c1-2 3-3 5-3 3 0 5 1 6 3l22 21c3 3 3 9 0 12l-76 75z" transform="scale(0.046875 0.046875)" fill="#fff" opacity="0.9"/></svg>');
+      background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m256 33c-124 0-224 100-224 224 0 124 100 224 224 224 124 0 224-100 224-224 0-124-100-224-224-224z m108 300c2 1 3 3 3 5 0 2-1 4-3 6l-21 21c-2 2-4 3-6 3-2 0-4-1-5-3l-76-75-75 76c-2 1-4 2-6 2-2 0-4-1-6-2l-21-22c-2-2-2-4-2-6 0-2 0-4 2-5l76-76-76-75c-3-3-3-9 0-12l21-21c2-2 4-3 6-3 2 0 4 1 5 3l76 74 76-74c1-2 3-3 5-3 3 0 5 1 6 3l22 21c3 3 3 9 0 12l-76 75z" transform="scale(0.046875 0.046875)" fill="%23fff" opacity="0.9"/></svg>');
     }
   }
   .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
@@ -696,7 +694,7 @@ export default {
   text-align: center;
   transition: 0.3s;
   color: inherit;
-  background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m163 440l-91-91 251-250 90 90z m309-352l-48-48c-12-11-32-11-45 2l-45 45 91 91 45-45c13-13 13-33 2-45z m-408 275l-32 117 117-32z" fill="#000" opacity="0.4"/></svg>');
+  background-image: url('data:image/svg+xml;utf8,<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path d="m163 440l-91-91 251-250 90 90z m309-352l-48-48c-12-11-32-11-45 2l-45 45 91 91 45-45c13-13 13-33 2-45z m-408 275l-32 117 117-32z" fill="%23000" opacity="0.4"/></svg>');
   background-repeat: no-repeat;
   background-position: 120% 0.15em;
   background-size: 0.4em;
