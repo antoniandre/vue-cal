@@ -120,6 +120,7 @@ export default {
         ...event.classes,
         'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
         'vuecal__event--deletable': deletable,
+        'vuecal__event--background': event.background,
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,

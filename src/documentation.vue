@@ -821,7 +821,8 @@
       hide-view-selector
       hide-weekends
       editable-events
-      :events="events")
+      :events="events"
+      :on-event-create="onEventCreate")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -1781,6 +1782,28 @@
         ul
           li Event starts at: {{ selectedEvent.startTime }}
           li Event ends at: {{ selectedEvent.endTime }}
+
+  v-dialog(v-model="showEventCreationDialog" max-width="420")
+    v-card
+      v-card-title.pa-2.primary.white--text
+        v-text-field.ma-0.pa-0(v-model="selectedEvent.title" placeholder="Event Title" hide-details color="white")
+      v-card-text
+        v-textarea.ma-0.pa-0(v-model="selectedEvent.content" placeholder="Event Content" hide-details)
+        v-layout.justify-space-between
+          v-select.flex.shrink(
+            v-model="selectedEvent.cssClass"
+            :items="['leisure', 'sport', 'health']"
+            placeholder="Event CSS Class"
+            @blur="selectedEvent.classes[selectedEvent.cssClass] = true"
+            hide-details
+            style="max-width: 170px")
+          v-switch.flex.shrink(
+            v-model="selectedEvent.background"
+            label="background Event"
+            color="primary")
+        v-layout
+          v-spacer
+          v-btn(small color="primary" @click="showEventCreationDialog = false;selectedEvent = {}") Save
 </template>
 
 <script>
@@ -1866,6 +1889,7 @@ export default {
     now: new Date(),
     log: [],
     showDialog: false,
+    showEventCreationDialog: false,
     events,
     selectedEvent: {},
     selectedDate: null,
@@ -2082,6 +2106,12 @@ export default {
       this.selectedEvent = event
       this.showDialog = true
       e.stopPropagation()
+    },
+    onEventCreate (event) {
+      this.selectedEvent = event
+      this.showEventCreationDialog = true
+
+      return event
     }
   },
   computed: {

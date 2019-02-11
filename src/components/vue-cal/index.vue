@@ -184,6 +184,10 @@ export default {
       type: Function,
       default: () => {}
     },
+    onEventCreate: {
+      type: Function,
+      default: () => {}
+    },
     transitions: {
       type: Boolean,
       default: true
@@ -516,6 +520,7 @@ export default {
           endDate,
           endTime,
           endTimeMinutes,
+          background: event.background,
           height: 0,
           top: 0,
           overlapped: {},
@@ -525,7 +530,6 @@ export default {
           multipleDays: {},
           classes: {
             [event.class]: true,
-            'vuecal__event--background': event.background,
             'vuecal__event--multiple-days': multipleDays,
             'event-start': multipleDays
           }
@@ -634,10 +638,10 @@ export default {
       const minutes = parseInt(startTimeMinutes % 60)
       const endTimeMinutes = startTimeMinutes + 120
 
-      const event = {
+      let event = {
         id: `${this._uid}_${this.eventIdIncrement++}`,
-        title: 'New Event',
-        content: '...',
+        title: '',
+        content: '',
         start: date + (this.time ? `${hours}:${minutes}` : ''),
         startDate: date,
         startTime: (this.time ? `${hours}:${minutes}` : null),
@@ -652,9 +656,12 @@ export default {
         overlapping: {},
         simultaneous: {},
         multipleDays: {},
+        background: false,
         linked: [],
-        classes: { 'blue-event': true, 'vuecal__event--background': false }
+        classes: {}
       }
+
+      if (typeof this.onEventCreate === 'function') this.onEventCreate(event)
 
       // Make array reactive for future events creations & deletions.
       if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
