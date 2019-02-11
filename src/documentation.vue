@@ -1116,7 +1116,7 @@
       default-view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
-      style="max-width: 350px;height: 246px")
+      style="max-width: 360px;height: 260px")
     vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
       xsmall
       :time="false"
@@ -1124,7 +1124,7 @@
       default-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
       @day-focus="selectedDate = $event"
-      style="max-width: 270px;height: 290px;transform: scale(0.85)")
+      style="max-width: 270px;height: 290px;transform: scale(0.9)")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
       :time="false"
@@ -1133,7 +1133,7 @@
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       class="vuecal--blue-theme"
-      style="max-width: 350px;height: 246px"&gt;
+      style="max-width: 360px;height: 260px"&gt;
     &lt;/vue-cal&gt;
     &lt;vue-cal xsmall
       :time="false"
