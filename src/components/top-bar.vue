@@ -30,8 +30,8 @@
           v-list-tile(href="#ex--custom-title-and-no-event-text" v-scroll-to="'#ex--custom-title-and-no-event-text'") Custom vue-cal title &amp; "no event" text
           v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
           v-list-tile(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
+          v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
           v-list-tile(href="#ex--disabled-views-and-calendar-events" v-scroll-to="'#ex--disabled-views-and-calendar-events'") Disable views &amp; calendar events
           v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
           v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering

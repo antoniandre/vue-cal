@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.33.0__ Minor internal structure improvements
 - __Version 1.32.0__ Allow Syncing 2 vue-cal instances
 - __Version 1.31.0__ Add CSS transitions option
 - __Version 1.30.0__ Allow custom event rendering

@@ -1,33 +1,30 @@
 <template lang="pug">
-  .vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles")
-    transition-group(:class="splits.length && `vuecal__flex fill-height`" tag="div" :name="`slide-fade--${transitionDirection}`" :appear="transitions" grow)
-      .vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i")
-        .split-label(v-if="splits.length" v-html="splits[i - 1].label")
-        .vuecal__cell-date(v-if="content" v-html="content")
-        .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
-          slot(name="no-event") {{ texts.noEvent }}
-        .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
-          .vuecal__event(:class="eventClasses(event)"
-                        v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
-                        :style="eventStyles(event)"
-                        @mouseenter="onMouseEnter($event, event)"
-                        @mouseleave="onMouseLeave($event, event)"
-                        @contextmenu="onContextMenu($event, event)"
-                        @touchstart="onTouchStart($event, event)"
-                        @mousedown="onMouseDown($event, event)"
-                        @click="onClick($event, event)"
-                        @dblclick="onDblClick($event, event)")
-            .vuecal__event-delete(v-if="editableEvents"
-                                  @mousedown.stop.prevent="deleteEvent(event)"
-                                  @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-            slot(:event="event" :view="view" name="event-renderer")
-            .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
-                                        @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
-                                        @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-        div(v-if="view === 'month' && !eventsOnMonthView && events.length")
-          slot(name="events-count-month-view" :events="events")
-            span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
-    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`")
+  transition-group.vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`" :appear="transitions")
+    .vuecal__flex.vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i" column)
+      .split-label(v-if="splits.length" v-html="splits[i - 1].label")
+      .vuecal__cell-date(v-if="content" v-html="content")
+      .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+        slot(name="no-event") {{ texts.noEvent }}
+      .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+        .vuecal__event(:class="eventClasses(event)"
+                      v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
+                      :style="eventStyles(event)"
+                      @mouseenter="onMouseEnter($event, event)"
+                      @mouseleave="onMouseLeave($event, event)"
+                      @contextmenu="onContextMenu($event, event)"
+                      @touchstart="onTouchStart($event, event)"
+                      @mousedown="onMouseDown($event, event)"
+                      @click="onClick($event, event)"
+                      @dblclick="onDblClick($event, event)")
+          .vuecal__event-delete(v-if="editableEvents"
+                                @mousedown.stop.prevent="deleteEvent(event)"
+                                @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
+          slot(:event="event" :view="view" name="event-renderer")
+          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
+                                      @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
+                                      @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
+      slot(v-if="view === 'month' && !eventsOnMonthView && events.length" name="events-count-month-view" :events="events")
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
 <script>
@@ -538,9 +535,7 @@ export default {
     .vuecal--day-view & {background: none;}
   }
 
-  &.out-of-scope {
-    color: #ccc;
-  }
+  &.out-of-scope {color: #ccc;}
 
   &-events-count {
     background: #999;
@@ -551,14 +546,22 @@ export default {
     transform: translateX(-50%);
     width: 12px;
     height: 12px;
-    margin-top: -1px;
+    margin-top: 13px;
     line-height: 12px;
     font-size: 10px;
   }
 
-  .vuecal--events-on-month-view &-content {
+  &-content {
     width: 100%;
+    height: 100%;
+    align-items: center;
+
+    .vuecal--years-view &,
+    .vuecal--year-view &,
+    .vuecal--month-view & {justify-content: center;}
   }
+
+  &-events {width: 100%;}
 }
 
 .vuecal--split-days.vuecal--week-view .vuecal__cell.splitted {
@@ -568,7 +571,8 @@ export default {
 .vuecal__no-event {
   padding-top: 1em;
   color: #aaa;
-  user-select: none;
+  justify-self: flex-start;
+  margin-bottom: auto; // Vertical align top within flex column and align center.
 }
 
 // EVENTS.
@@ -590,8 +594,6 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
-
-    // &:hover {height: auto !important;}
   }
 
   &--overlapped {right: 20%;}

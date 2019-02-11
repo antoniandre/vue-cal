@@ -51,9 +51,9 @@
                   :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
                   @click.native="selectCell(cell)"
                   @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                  div(slot="events-count-month-view" slot-scope="{ events }" :events="events")
+                  .vuecal__cell-events-count(slot="events-count-month-view" slot-scope="{ events }" :events="events")
                     slot(name="events-count-month-view" :events="events")
-                      span.vuecal__cell-events-count(v-if="events.length") {{ events.length }}
+                      span(v-if="events.length") {{ events.length }}
                   div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                     slot(name="event-renderer" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
@@ -1175,14 +1175,12 @@ $weekdays-headings-height: 2.8em;
   .vuecal__cell, &:not(.vuecal--day-view) .vuecal__cell:before {background: none;border: none;}
   .vuecal__cell.out-of-scope {opacity: 0.4;}
   .vuecal__cell-content {
-    width: 32px;
-    height: 32px;
+    width: 30px;
+    height: 30px;
+    flex-grow: 0;
     border: 1px solid transparent;
+    border-radius: 30px;
     color: #333;
-    border-radius: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
   }
   &.vuecal--day-view .vuecal__cell-content {width: auto;background: none;}
   &.vuecal--year-view .vuecal__cell {width: 33.33%;}

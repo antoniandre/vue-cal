@@ -239,9 +239,9 @@
     #[a(href="#css-notes") CSS Notes] section.
 
   v-layout.ma-auto(row justify-center wrap)
-    v-card.ma-2.main-content(style="width: 280px;height: 300px")
+    v-card.ma-2.main-content(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
-    v-card.ma-2.main-content(style="width: 280px;height: 300px")
+    v-card.ma-2.main-content(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
@@ -319,13 +319,36 @@
     a#ex--timeline(name="ex--timeline")
   p.
     Timelines are visible on week view and day view.#[br]
-    This examples has a set time range from 08:00 to 22:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
+    This examples has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="22 * 60" :time-step="30" hide-weekends)
+    vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-    &lt;vue-cal :time-from="8 * 60" :time-to="22 * 60" :time-step="30" hide-weekends&gt;&lt;/vue-cal&gt;
+    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends&gt;&lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--today-current-time") # Today's current time
+    a#ex--today-current-time(name="ex--today-current-time")
+  p.mb-0.
+    When you choose to show the time in vue-cal, the current time of today's date will
+    be marked with a line (scroll to the current time to see it).#[br]
+    The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
+    You can easily customize the now-line as you wish via CSS.
+    Changing the line and arrow color is as easy as:#[br]
+  sshpre.mt-4(language="css" label="CSS").
+    .vuecal__now-line {color: #06c;}
+  p.
+    If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none;}].#[br]
+    This feature has no impact on performance.
+  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
+    vue-cal.vuecal--green-theme.ex--today-current-time(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal xsmall
+             default-view="day"
+             :disable-views="['years', 'year', 'month']"&gt;
+    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -370,29 +393,6 @@
 
   sshpre.mt-4(language="css" label="CSS").
     .vuecal__time-cell .hours.line:before {border-color: #42b983;}
-
-  //- Example.
-  h3.title.mt-5.mb-2.pt-4
-    a(href="#ex--today-current-time") # Today's current time
-    a#ex--today-current-time(name="ex--today-current-time")
-  p.mb-0.
-    When you choose to show the time in vue-cal, the current time of today's date will
-    be marked with a line (scroll to the current time to see it).#[br]
-    The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
-    You can easily customize the now-line as you wish via CSS.
-    Changing the line and arrow color is as easy as:#[br]
-  sshpre.mt-4(language="css" label="CSS").
-    .vuecal__now-line {color: #f00;}
-  p.
-    If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none;}].#[br]
-    This feature has no impact on performance.
-  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
-    vue-cal.vuecal--green-theme(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal xsmall
-             default-view="day"
-             :disable-views="['years', 'year', 'month']"&gt;
-    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -634,7 +634,7 @@
       v-radio(label="dot" value="dot" color="primary")
       v-radio(label="cell background" value="cell" color="primary")
   v-layout.ma-auto(row justify-center wrap)
-    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -643,7 +643,7 @@
         default-view="month"
         :disable-views="['years', 'year', 'day']"
         :events="events")
-    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
+    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -690,8 +690,8 @@
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class.
-  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 380px")
-    vue-cal.vuecal--green-theme(
+  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
+    vue-cal.vuecal--green-theme.ex--events-indicators-on-month-view(
       :class="`event-indicator--${indicatorStyle}`"
       selected-date="2018-11-19"
       xsmall
@@ -699,8 +699,7 @@
       default-view="month"
       :disable-views="['years', 'year', 'day']"
       :events="events")
-      div(slot-scope="{ events }" slot="events-count-month-view")
-        span.vuecal__cell-events-count(v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
+      span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              xsmall
@@ -708,11 +707,9 @@
              :disable-views="['years', 'year', 'day']"
              default-view="month"
              :events="events"&gt;
-        &lt;div slot-scope="{ events }" slot="events-count-month-view"&gt;
-          &lt;span class="vuecal__cell-events-count" v-if="countEventsMonthView(events)"&gt;
-            {{ '\{\{ countEventsMonthView(events) \}\}' }}
-          &lt;/span&gt;
-        &lt;/div&gt;
+        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
+          {{ '\{\{ countEventsMonthView(events) \}\}' }}
+        &lt;/span&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
@@ -722,6 +719,10 @@
         return events ? events.filter(e => e.class === 'leisure').length : 0
       }
     }
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell-events-count {background: transparent;}
+    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -1667,6 +1668,12 @@
     a#release-notes(name="release-notes")
 
   div
+    | #[strong Version 1.33.0] Minor internal structure improvements
+    highlight-message(type="success").
+      In order to make the internal structure less verbose, the #[span.code events-count-month-view] slot use has been simplified.#[br]
+      Refer to the #[a(href="#ex--events-indicators-on-month-view") Month view with events indicators] example.
+      A few default CSS rules have also been updated.#[br]
+  div
     | #[strong Version 1.32.0] Allow Syncing 2 vue-cal instances
     highlight-message(type="success").
       The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
@@ -1683,7 +1690,7 @@
     | #[strong Version 1.27.0] Allow overriding 'No event' text
     highlight-message(type="success").
       The #[span.code events-on-month-view] option now also accepts the string '#[span.code short]'.#[br]
-      Ref. #[a(href="#ex--events-on-month-view") # Display events on month view].
+      Refer to the #[a(href="#ex--events-on-month-view") Display events on month view] example.
   div
     | #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
   div
@@ -2123,6 +2130,11 @@ $primary: #42b983;
   .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
 }
 
+// Today-current-time example.
+.ex--today-current-time {
+  .vuecal__now-line {color: #06c;}
+}
+
 // Events on month view example.
 .event-indicator--dash .vuecal__cell-events-count {
   width: 18px;
@@ -2134,6 +2146,11 @@ $primary: #42b983;
   width: 4px;
   height: 4px;
   color: transparent;
+}
+
+.ex--events-indicators-on-month-view {
+  .vuecal__cell-events-count {background: transparent;}
+  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
 }
 
 .event-indicator--cell .vuecal__cell--has-events {background-color: #fffacd;}
