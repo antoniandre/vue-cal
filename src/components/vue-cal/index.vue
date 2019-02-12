@@ -86,7 +86,7 @@
 </template>
 
 <script>
-import { now, isDateToday, getPreviousMonday, getDaysInMonth, formatDate, formatTime } from './date-utils'
+import { now, isDateToday, getPreviousFirstDayOfWeek, getDaysInMonth, formatDate, formatTime } from './date-utils'
 import Cell from './cell'
 
 export default {
@@ -128,6 +128,10 @@ export default {
     selectedDate: {
       type: [String, Date],
       default: ''
+    },
+    startWeekOnSunday: {
+      type: Boolean,
+      default: false
     },
     small: {
       type: Boolean,
@@ -264,7 +268,7 @@ export default {
           this.switchView(this.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfPrevWeek = getPreviousMonday(this.view.startDate).subtractDays(7)
+          const firstDayOfPrevWeek = getPreviousFirstDayOfWeek(this.view.startDate, this.startWeekOnSunday).subtractDays(7)
           this.switchView(this.view.id, firstDayOfPrevWeek)
           break
         case 'day':
@@ -290,7 +294,7 @@ export default {
           this.switchView(this.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfNextWeek = getPreviousMonday(this.view.startDate).addDays(7)
+          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.view.startDate, this.startWeekOnSunday).addDays(7)
           this.switchView(this.view.id, firstDayOfNextWeek)
           break
         case 'day':
@@ -328,7 +332,7 @@ export default {
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
-        if (view === 'week') date = getPreviousMonday(date)
+        if (view === 'week') date = getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
       }
 
       switch (view) {
@@ -354,7 +358,7 @@ export default {
           }
           break
         case 'week':
-          this.view.startDate = date
+          this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
           this.view.endDate = date.addDays(7)
           dateTmp = new Date(date)
           for (let i = 0; i < 7; i++) {
@@ -721,7 +725,17 @@ export default {
       return !!this.splitDays.length && ['week', 'day'].indexOf(this.view.id) > -1
     },
     weekDays () {
-      return this.texts.weekDays.map(day => ({ label: day }))
+      let { weekDays } = this.texts
+      // Do not modify original for next instances.
+      weekDays = weekDays.slice(0)
+
+      if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
+
+      if (this.hideWeekends) {
+        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6): weekDays.slice(0, 5)
+      }
+
+      return weekDays.map(day => ({ label: day }))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
@@ -768,7 +782,7 @@ export default {
         case 'month':
         case 'week':
           let todayFound = false
-          headings = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+          headings = this.weekDays.map((cell, i) => {
             let date = this.view.startDate.addDays(i)
             // Only for week view.
             let isToday = this.view.id === 'week' && !todayFound && isDateToday(date) && !todayFound++
@@ -831,9 +845,9 @@ export default {
           todayFound = false
           let nextMonthDays = 0
 
-          // If the first day of the month is not a Monday, prepend missing days to the days array.
+          // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
           if (days[0].getDay() !== 1) {
-            let d = getPreviousMonday(days[0])
+            let d = getPreviousFirstDayOfWeek(days[0], this.startWeekOnSunday)
             let prevWeek = []
             for (let i = 0; i < 7; i++) {
               prevWeek.push(new Date(d))
@@ -876,7 +890,7 @@ export default {
           todayFound = false
           let firstDayOfWeek = this.view.startDate
 
-          cells = this.weekDays.slice(0, this.hideWeekends ? 5 : 7).map((cell, i) => {
+          cells = this.weekDays.map((cell, i) => {
             const date = firstDayOfWeek.addDays(i)
             const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
             let isToday = !todayFound && isDateToday(date) && !todayFound++

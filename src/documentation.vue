@@ -1354,6 +1354,7 @@
     disableViews:       [Array],           default: []
     defaultView:        [String],          default: 'week'
     selectedDate:       [String, Date],    default: ''
+    startWeekOnSunday:  [Boolean],         default: false
     small:              [Boolean],         default: false
     xsmall:             [Boolean],         default: false
     transitions:        [Boolean],         default: true
@@ -1467,6 +1468,11 @@
         A correct string date format is #[code {{ currentDateFormatted }}] or
         #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
         Only these formats will work in string. You can also provide a native Javascript Date object.
+    li
+      code.mr-2 startWeekOnSunday
+      span.code [Boolean], default: false
+      p.
+        By default weeks start on Monday but with this option you can start the week on Sunday.
     li
       code.mr-2 small
       span.code [Boolean], default: false
@@ -1694,6 +1700,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div
+    | #[strong Version 1.34.0] Allow starting week on Sunday
   div
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
