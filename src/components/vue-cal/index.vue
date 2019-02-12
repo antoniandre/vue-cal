@@ -20,6 +20,26 @@
               span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
               span(v-if="heading.label4") &nbsp;
               span(v-if="heading.label4") {{ heading.label4 }}
+      .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && time && ['week', 'day'].indexOf(view.id) > -1")
+        span(style="width: 3em")
+          span All day
+        .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
+          vuecal-cell(
+            :class="cell.class"
+            v-for="(cell, i) in viewCells"
+            :key="i"
+            :date="cell.date"
+            :formatted-date="cell.formattedDate"
+            :all-day-events="true"
+            :today="cell.today"
+            :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+            @click.native="selectCell(cell)"
+            @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+            div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+              slot(name="event-renderer" :view="view" :event="event")
+                .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
+                .vuecal__event-title(v-else-if="event.title") {{ event.title }}
+            slot(slot="no-event" name="no-event")
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
       transition(:name="`slide-fade--${transitionDirection}`")
@@ -43,7 +63,6 @@
                   :class="cell.class"
                   v-for="(cell, i) in viewCells"
                   :key="i"
-                  v-bind="{ scopedSlots: $scopedSlots }"
                   :date="cell.date"
                   :formatted-date="cell.formattedDate"
                   :today="cell.today"
@@ -101,6 +120,10 @@ export default {
     defaultView: {
       type: String,
       default: 'week'
+    },
+    showAllDayEvents: {
+      type: Boolean,
+      default: false
     },
     selectedDate: {
       type: [String, Date],
@@ -468,7 +491,7 @@ export default {
         // eslint-disable-next-line
         let id = `${this._uid}_${this.eventIdIncrement++}`
 
-        event = Object.assign({}, event, {
+        event = Object.assign({
           id,
           startDate,
           startTime,
@@ -483,13 +506,14 @@ export default {
           simultaneous: {},
           linked: [], // Linked events.
           multipleDays: {},
+          allDay: false,
           classes: {
             [event.class]: true,
             'vuecal__event--background': event.background,
             'vuecal__event--multiple-days': multipleDays,
             'event-start': multipleDays
           }
-        })
+        }, event)
 
         // Make array reactive for future events creations & deletions.
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
@@ -1054,6 +1078,28 @@ $weekdays-headings-height: 2.8em;
     .vuecal--xsmall & span:nth-child(4) {display: none;}
   }
 
+  &__all-day {
+    min-height: 1.7em;
+    margin-bottom: -1px;
+
+    > span {
+      width: $time-column-width;
+      min-width: $time-column-width;
+      color: #999;
+      padding-right: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      border-bottom: 1px solid #ddd;
+
+      span {font-size: 0.85em;}
+    }
+    .vuecal--time-12-hour & > span {
+      width: $time-column-width-12;
+      min-width: $time-column-width-12;
+    }
+  }
+
   // Calendar body.
   //==================================//
   &__body {
@@ -1080,8 +1126,6 @@ $weekdays-headings-height: 2.8em;
   &__time-column {
     width: $time-column-width;
     height: 100%;
-    border-right: 1px solid #eee;
-    margin-right: -1px;
 
     .vuecal--time-12-hour & {
       width: $time-column-width-12;

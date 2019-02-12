@@ -1020,6 +1020,33 @@
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
+    a(href="#ex--all-day-events") # Full day events
+    a#ex--all-day-events(name="ex--all-day-events")
+  v-card.my-2.ma-auto.main-content
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+      selected-date="2018-11-19"
+      :time-from="7 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year']"
+      hide-view-selector
+      hide-weekends
+      editable-events
+      :show-all-day-events="true"
+      :events="allDayEvents")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year']"
+             hide-view-selector
+             hide-weekends
+             editable-events
+             :events="events"
+             class="vuecal--full-height-delete"&gt;
+    &lt;/vue-cal&gt;
+
+  //- Example.
+  h3.title.mt-5.mb-2.pt-4
     a(href="#ex--splitting-days") # Splitting days &amp; split events
     a#ex--splitting-days(name="ex--splitting-days")
   p.mb-4
@@ -1946,6 +1973,29 @@ export default {
         title: 'Trip to India',
         content: '<i class="v-icon material-icons">flight</i>',
         class: 'leisure'
+      }
+    ],
+    allDayEvents: [
+      ...events,
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 18:00',
+        title: 'Need to go shopping',
+        icon: 'shopping_cart',
+        content: 'Click to see my shopping list',
+        contentFull: 'My shopping list is rather long:<br><ul><li>Avocadoes</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
+        class: 'leisure',
+        allDay: true
+      },
+      {
+        start: '2018-11-22 10:00',
+        end: '2018-11-22 15:00',
+        title: 'Golf with John',
+        icon: 'golf_course',
+        content: 'Do I need to tell how many holes?',
+        contentFull: 'Okay.<br>It will be a 18 hole golf course.',
+        class: 'sport',
+        allDay: true
       }
     ],
     splitEvents: [

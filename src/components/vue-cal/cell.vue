@@ -20,10 +20,10 @@
                                 @mousedown.stop.prevent="deleteEvent(event)"
                                 @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
           slot(:event="event" :view="view" name="event-renderer")
-          .vuecal__event-resize-handle(v-if="editableEvents && event.startTime && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
+          .vuecal__event-resize-handle(v-if="editableEvents && time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
                                       @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
                                       @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
-      slot(v-if="view === 'month' && !eventsOnMonthView && events.length" name="events-count-month-view" :events="events")
+      slot(v-if="view === 'month' && !eventsOnMonthView && events.length && !allDayEvents" name="events-count-month-view" :events="events")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
@@ -55,6 +55,10 @@ export default {
     today: {
       type: Boolean,
       default: false
+    },
+    allDayEvents: {
+      type: Boolean,
+      default: false
     }
   },
   data: () => ({
@@ -81,7 +85,7 @@ export default {
     },
 
     eventStyles (event) {
-      if (!event.startTime || this.view === 'month') return {}
+      if (!event.startTime || this.view === 'month' || this.allDayEvents) return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
@@ -127,6 +131,7 @@ export default {
         'vuecal__event--split3': simultaneous >= 3,
         'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
         'vuecal__event--split-left': forceLeft,
+        'vuecal__event--all-day': event.allDay,
         'vuecal__event--multiple-days': Object.keys(event.multipleDays).length
       }
     },
@@ -381,6 +386,9 @@ export default {
     timeStep () {
       return parseInt(this.$parent.timeStep)
     },
+    showAllDayEvents () {
+      return this.$parent.showAllDayEvents
+    },
     eventsOnMonthView () {
       return this.$parent.eventsOnMonthView
     },
@@ -416,7 +424,7 @@ export default {
         this.splitEvents = []
 
         events.forEach(event => {
-          if (event.startTime) this.updateEventPosition(event)
+          if (event.startTime && !(this.showAllDayEvents && this.allDayEvents)) this.updateEventPosition(event)
 
           // Only for splits.
           if (this.splits.length && event.split) {
@@ -433,7 +441,7 @@ export default {
           this.$forceUpdate()// @todo: find a way to avoid this.
         })
 
-        return events
+        return this.showAllDayEvents ? events.filter(e => !!e.allDay === this.allDayEvents) : events
       },
       set (events) {
         this.$parent.mutableEvents[this.formattedDate] = events
@@ -450,7 +458,7 @@ export default {
       return splitsEventIndexes
     },
     timelineVisible () {
-      if (!this.today || !this.time || ['week', 'day'].indexOf(this.view) === -1) return
+      if (!this.today || !this.time || this.allDayEvents || ['week', 'day'].indexOf(this.view) === -1) return
 
       const now = new Date()
       let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
@@ -575,6 +583,8 @@ export default {
   margin-bottom: auto; // Vertical align top within flex column and align center.
 }
 
+.vuecal__all-day .vuecal__no-event {display: none;}
+
 // EVENTS.
 //======================================//
 .vuecal__event {
@@ -590,7 +600,7 @@ export default {
   // Reactivate user selection in events.
   .vuecal__cell & * {user-select: auto;}
 
-  .vuecal--view-with-time & {
+  .vuecal--view-with-time &:not(&--all-day) {
     position: absolute;
     left: 0;
     right: 0;
