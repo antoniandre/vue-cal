@@ -512,7 +512,7 @@ export default {
         // eslint-disable-next-line
         let id = `${this._uid}_${this.eventIdIncrement++}`
 
-        event = Object.assign({}, event, {
+        event = Object.assign({
           id,
           startDate,
           startTime,
@@ -528,12 +528,8 @@ export default {
           simultaneous: {},
           linked: [], // Linked events.
           multipleDays: {},
-          classes: {
-            [event.class]: true,
-            'vuecal__event--multiple-days': multipleDays,
-            'event-start': multipleDays
-          }
-        })
+          classes: event.class.split(' ')
+        }, event)
 
         // Make array reactive for future events creations & deletions.
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
@@ -606,12 +602,6 @@ export default {
                 endTime: i === datesDiff ? endTime : '24:00',
                 endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
                 daysCount: datesDiff + 1
-              },
-              classes: {
-                ...event.classes,
-                'event-start': false,
-                'event-middle': i < datesDiff,
-                'event-end': i === datesDiff
               }
             })
           }
@@ -658,7 +648,7 @@ export default {
         multipleDays: {},
         background: false,
         linked: [],
-        classes: {}
+        classes: []
       }
 
       if (typeof this.onEventCreate === 'function') this.onEventCreate(event)

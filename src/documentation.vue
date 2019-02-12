@@ -1791,16 +1791,12 @@
         v-textarea.ma-0.pa-0(v-model="selectedEvent.content" placeholder="Event Content" hide-details)
         v-layout.justify-space-between
           v-select.flex.shrink(
-            v-model="selectedEvent.cssClass"
-            :items="['leisure', 'sport', 'health']"
+            :items="eventsCssClasses"
             placeholder="Event CSS Class"
-            @blur="selectedEvent.classes[selectedEvent.cssClass] = true"
+            @change="selectedEvent.classes = [$event]"
             hide-details
             style="max-width: 170px")
-          v-switch.flex.shrink(
-            v-model="selectedEvent.background"
-            label="background Event"
-            color="primary")
+          v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
         v-layout
           v-spacer
           v-btn(small color="primary" @click="showEventCreationDialog = false;selectedEvent = {}") Save
@@ -1892,6 +1888,7 @@ export default {
     showEventCreationDialog: false,
     events,
     selectedEvent: {},
+    eventsCssClasses: ['leisure', 'sport', 'health'],
     selectedDate: null,
     logMouseEvents: false,
     overlappingEvents: [
