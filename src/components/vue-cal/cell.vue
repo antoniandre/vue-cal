@@ -28,8 +28,6 @@
 </template>
 
 <script>
-import { formatTime } from './date-utils'
-
 export default {
   props: {
     cssClass: {
@@ -64,10 +62,6 @@ export default {
   data: () => ({
     splitEvents: {}
   }),
-
-  filters: {
-    formatTime: (value, format) => (value && (formatTime(value, format) || ''))
-  },
 
   methods: {
     updateEventPosition (event) {

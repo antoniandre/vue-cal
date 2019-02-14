@@ -1026,7 +1026,6 @@
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2019-02-11"
       :time-from="7 * 60"
-      :time-to="23 * 60"
       :disable-views="['years', 'year']"
       hide-view-selector
       hide-weekends
@@ -1034,9 +1033,8 @@
       :show-all-day-events="true"
       :events="allDayEvents")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
+    &lt;vue-cal selected-date="2019-02-11"
              :time-from="7 * 60"
-             :time-to="23 * 60"
              :disable-views="['years', 'year']"
              hide-view-selector
              hide-weekends

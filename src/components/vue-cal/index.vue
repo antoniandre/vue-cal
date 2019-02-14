@@ -80,8 +80,8 @@
                       .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title") {{ event.title }}
                       .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && eventsOnMonthView === 'short')")
-                        | {{ event.startTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ['12Hour'] ? 'h:mm{am}' : 'HH:mm') }}
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
                         small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
                       .vuecal__event-content(v-if="event.content && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
                   slot(slot="no-event" name="no-event") {{ texts.noEvent }}
@@ -175,7 +175,7 @@ export default {
       type: Boolean,
       default: false
     },
-    'timeFormat': {
+    timeFormat: {
       type: String,
       default: ''
     },
