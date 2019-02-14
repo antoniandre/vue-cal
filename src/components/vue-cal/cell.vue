@@ -588,6 +588,8 @@ export default {
   color: #666;
   background-color: #f8f8f8;
   position: relative;
+  left: 0;
+  right: 0;
   z-index: 1;
   transition: box-shadow 0.3s, left 0.3s, right 0.3s;
   overflow: hidden;// For sliding delete button.
@@ -599,8 +601,6 @@ export default {
 
   .vuecal--view-with-time &:not(&--all-day) {
     position: absolute;
-    left: 0;
-    right: 0;
   }
 
   &--overlapped {right: 20%;}
