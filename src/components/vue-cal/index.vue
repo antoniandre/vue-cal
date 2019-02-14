@@ -474,7 +474,7 @@ export default {
         // eslint-disable-next-line
         let id = `${this._uid}_${this.eventIdIncrement++}`
 
-        event = Object.assign({}, event, {
+        event = Object.assign({
           id,
           startDate,
           startTime,
@@ -495,7 +495,7 @@ export default {
             'vuecal__event--multiple-days': multipleDays,
             'event-start': multipleDays
           }
-        })
+        }, event)
 
         // Make array reactive for future events creations & deletions.
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
@@ -710,7 +710,7 @@ export default {
       if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
 
       if (this.hideWeekends) {
-        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6): weekDays.slice(0, 5)
+        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6) : weekDays.slice(0, 5)
       }
 
       return weekDays.map(day => ({ label: day }))

@@ -174,8 +174,8 @@ export default {
         const event2overlapsEvent1 = event1startsFirst && endTimeMinE1 > startTimeMinE2
 
         if (event1overlapsEvent2) {
-          event.overlapping[event2.id] = true
-          event2.overlapped[event.id] = true
+          this.$set(event.overlapping, event2.id, true)
+          this.$set(event2.overlapped, event.id, true)
         }
 
         else {
@@ -184,8 +184,8 @@ export default {
         }
 
         if (event2overlapsEvent1) {
-          event2.overlapping[event.id] = true
-          event.overlapped[event2.id] = true
+          this.$set(event2.overlapping, event.id, true)
+          this.$set(event.overlapped, event2.id, true)
         }
 
         else {
@@ -195,8 +195,8 @@ export default {
 
         // If up to 3 events start at the same time.
         if (startTimeMinE1 === startTimeMinE2 || (event1overlapsEvent2 || event2overlapsEvent1)) {
-          event.simultaneous[event2.id] = true
-          event2.simultaneous[event.id] = true
+          this.$set(event.simultaneous, event2.id, true)
+          this.$set(event2.simultaneous, event.id, true)
         }
 
         else {
@@ -427,11 +427,8 @@ export default {
           }
         })
 
-        // NextTick() prevents a cyclic redundancy.
-        this.$nextTick(() => {
-          this.checkCellOverlappingEvents()
-          this.$forceUpdate()// @todo: find a way to avoid this.
-        })
+        // NextTick prevents a cyclic redundancy.
+        this.$nextTick(this.checkCellOverlappingEvents)
 
         return events
       },
