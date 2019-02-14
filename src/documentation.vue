@@ -1020,11 +1020,11 @@
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
-    a(href="#ex--all-day-events") # Full day events
+    a(href="#ex--all-day-events") # All day events
     a#ex--all-day-events(name="ex--all-day-events")
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-      selected-date="2018-11-19"
+      selected-date="2019-02-11"
       :time-from="7 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year']"
@@ -1984,27 +1984,83 @@ export default {
       }
     ],
     allDayEvents: [
-      ...events,
       {
-        start: '2018-11-20 14:00',
-        end: '2018-11-20 18:00',
+        start: '2019-02-11 10:35',
+        end: '2019-02-11 11:30',
+        title: 'Doctor appointment',
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'health',
+        split: 1
+      },
+      {
+        start: '2019-02-11 18:30',
+        end: '2019-02-11 19:15',
+        title: 'Dentist appointment',
+        content: '<i class="v-icon material-icons">local_hospital</i>',
+        class: 'health',
+        split: 2
+      },
+      {
+        start: '2019-02-12 18:30',
+        end: '2019-02-12 20:30',
+        title: 'Crossfit',
+        content: '<i class="v-icon material-icons">fitness_center</i>',
+        class: 'sport',
+        split: 1
+      },
+      {
+        start: '2019-02-13 11:00',
+        end: '2019-02-13 13:00',
+        title: 'Brunch with Jane',
+        content: '<i class="v-icon material-icons">local_cafe</i>',
+        class: 'leisure',
+        split: 1
+      },
+      {
+        start: '2019-02-13 19:30',
+        end: '2019-02-13 23:00',
+        title: 'Swimming lesson',
+        content: '<i class="v-icon material-icons">pool</i>',
+        class: 'sport',
+        split: 1
+      },
+      {
+        start: '2019-02-15 12:30',
+        end: '2019-02-15 13:00',
+        title: 'Macca\'s with Mark',
+        content: '<i class="v-icon material-icons">fastfood</i>',
+        class: 'leisure',
+        split: 2
+      },
+      {
+        start: '2019-02-15 21:00',
+        end: '2019-02-15 23:30',
+        title: 'Movie time',
+        content: '<i class="v-icon material-icons">local_play</i>',
+        class: 'leisure',
+        split: 1
+      },
+        {
+        start: '2019-02-12',
+        end: '2019-02-12',
+        title: 'Golf with John',
+        class: 'sport',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
         title: 'Need to go shopping',
-        icon: 'shopping_cart',
-        content: 'Click to see my shopping list',
-        contentFull: 'My shopping list is rather long:<br><ul><li>Avocadoes</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
         class: 'leisure',
         allDay: true
       },
       {
-        start: '2018-11-22 10:00',
-        end: '2018-11-22 15:00',
-        title: 'Golf with John',
-        icon: 'golf_course',
-        content: 'Do I need to tell how many holes?',
-        contentFull: 'Okay.<br>It will be a 18 hole golf course.',
-        class: 'sport',
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Valentine\'s day',
+        class: 'love',
         allDay: true
-      }
+      },
     ],
     splitEvents: [
       ...events,
@@ -2225,6 +2281,7 @@ $primary: #42b983;
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
+.vuecal__event.love {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
 .vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
 
 .vuecal__event.lunch {

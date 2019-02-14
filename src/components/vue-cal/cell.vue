@@ -321,7 +321,8 @@ export default {
 
       this.$parent.emitWithEvent('event-delete', event)
 
-      this.events = this.events.filter(e => e.id !== event.id)
+      // Filtering from $parent.mutableEvents since current cell might only contain all day events or vice-versa.
+      this.events = this.$parent.mutableEvents[this.formattedDate].filter(e => e.id !== event.id)
 
       // If deleting a multiple-day event, delete all the events pieces (days).
       if (event.multipleDays.daysCount) {
@@ -599,8 +600,11 @@ export default {
   // Reactivate user selection in events.
   .vuecal__cell & * {user-select: auto;}
 
-  .vuecal--view-with-time &:not(&--all-day) {
-    position: absolute;
+  .vuecal--view-with-time &:not(&--all-day) {position: absolute;}
+
+  .vuecal--view-with-time &--all-day {
+    left: 0 !important;
+    right: 0 !important;
   }
 
   &--overlapped {right: 20%;}
