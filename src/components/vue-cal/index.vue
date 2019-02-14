@@ -734,7 +734,7 @@ export default {
       if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
 
       if (this.hideWeekends) {
-        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6): weekDays.slice(0, 5)
+        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6) : weekDays.slice(0, 5)
       }
 
       return weekDays.map(day => ({ label: day }))
