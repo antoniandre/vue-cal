@@ -1022,23 +1022,30 @@
   h3.title.mt-5.mb-2.pt-4
     a(href="#ex--all-day-events") # All day events
     a#ex--all-day-events(name="ex--all-day-events")
+  p.
+    When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an #[span.code allDay]
+    attribute set to #[span.code true] will be displayed in a fixed top bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+    All day events will only show up if the options #[span.code showAllDayEvents] &amp; #[span.code time] are set to #[span.code true].#[br]
+    #[span.code time] is important since without time information every event is an all-day event there is no point in separating them then.#[br]
+
+  highlight-message Multiple-day events feature will be improved in a future version to display across multiple cells in the all day bar.
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
-      hide-view-selector
       hide-weekends
       editable-events
-      :show-all-day-events="true"
+      show-all-day-events
       :events="allDayEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2019-02-11"
              :time-from="7 * 60"
              :disable-views="['years', 'year']"
-             hide-view-selector
              hide-weekends
              editable-events
+             show-all-day-events
              :events="events"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
@@ -1624,6 +1631,7 @@
             class: 'String', // Optional.
             background: [Boolean] // Optional. (Event type not CSS property)
             split: [Number] // Optional.
+            allDay: [Boolean] // Optional.
           }
         ul
           li If no #[span.code title] is provided, no title will be displayed.
@@ -1641,6 +1649,9 @@
           li.
             When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
             starting from 1, corresponding to the split you want the event to appear in.
+          li.
+            When the #[span.code showAllDayEvents] and #[span.code time] options are set to true,
+            all the events with an attribute #[span.code allDay] set to true will show up in a fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
         | Correct date formats are #[code {{ currentDateFormatted }}] or
@@ -1698,8 +1709,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div
-    | #[strong Version 1.34.0] Allow starting week on Sunday
+  div #[strong Version 1.35.0] Allow displaying all-day events in fixed top bar
+  div #[strong Version 1.34.0] Allow starting week on Sunday
   div
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
@@ -1711,43 +1722,29 @@
     highlight-message(type="success").
       The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
       Refer to the #[span.code selectedDate] option in the #[a(href="#api") API] section.
-  div
-    | #[strong Version 1.31.0] Add CSS transitions option
-  div
-    | #[strong Version 1.30.0] Allow custom event rendering
-  div
-    | #[strong Version 1.29.0] Accept a callback function on event click / dblclick
-  div
-    | #[strong Version 1.28.0] Add Polish language
+  div #[strong Version 1.31.0] Add CSS transitions option
+  div #[strong Version 1.30.0] Allow custom event rendering
+  div #[strong Version 1.29.0] Accept a callback function on event click / dblclick
+  div #[strong Version 1.28.0] Add Polish language
   div
     | #[strong Version 1.27.0] Allow overriding 'No event' text
     highlight-message(type="success").
       The #[span.code events-on-month-view] option now also accepts the string '#[span.code short]'.#[br]
       Refer to the #[a(href="#ex--events-on-month-view") Display events on month view] example.
-  div
-    | #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
-  div
-    | #[strong Version 1.25.0] Support multiple day events
+  div #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
+  div #[strong Version 1.25.0] Support multiple day events
   div
     | #[strong Version 1.24.0] Allow hiding the calendar body
     highlight-message(type="success").
       Week days headings now have a today CSS class when equals to today's date.
-  div
-    | #[strong Version 1.22.0] Add Slovak language
-  div
-    | #[strong Version 1.21.0] Add Georgian language
-  div
-    | #[strong Version 1.20.0] Allow displaying events on month view
-  div
-    | #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
-  div
-    | #[strong Version 1.18.0] Allow overriding indicators in month view
-  div
-    | #[strong Version 1.17.0] Allow overriding time cells &amp; title
-  div
-    | #[strong Version 1.16.0] Highlight Today's current time
-  div
-    | #[strong Version 1.15.0] Add German language
+  div #[strong Version 1.22.0] Add Slovak language
+  div #[strong Version 1.21.0] Add Georgian language
+  div #[strong Version 1.20.0] Allow displaying events on month view
+  div #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
+  div #[strong Version 1.18.0] Allow overriding indicators in month view
+  div #[strong Version 1.17.0] Allow overriding time cells &amp; title
+  div #[strong Version 1.16.0] Highlight Today's current time
+  div #[strong Version 1.15.0] Add German language
   div
     | #[strong Version 1.14.0] Add custom time format &amp; emit event on #[span.code day-focus]
     highlight-message(type="success")
@@ -1755,10 +1752,8 @@
         li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
         li The emitted events-related events now also return native JS Date objects.
         li Refer to the #[a(href="#ex--emitted-events") emitted events example].
-  div
-    | #[strong Version 1.13.0] Add Swedish language
-  div
-    | #[strong Version 1.12.0] Add Croatian language
+  div #[strong Version 1.13.0] Add Swedish language
+  div #[strong Version 1.12.0] Add Croatian language
   div
     | #[strong Version 1.11.0] Add events indicators in month view
     highlight-message(type="tips").
@@ -1766,18 +1761,12 @@
       #[span.code .vuecal__cell-events-count]. Refer to the updated theme example in the #[a(href="#css-notes") CSS Notes].
     highlight-message(type="success").
       The default #[span.code time-step] option value is now 60 minutes (previously 30).
-  div
-    | #[strong Version 1.10.0] Allow no event overlaps
-  div
-    | #[strong Version 1.9.0] Add Dutch language
-  div
-    | #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
-  div
-    | #[strong Version 1.7.0] Vue Cal emits events
-  div
-    | #[strong Version 1.6.0] Allow event deletion on touch devices
-  div
-    | #[strong Version 1.5.0] Add Russian language
+  div #[strong Version 1.10.0] Allow no event overlaps
+  div #[strong Version 1.9.0] Add Dutch language
+  div #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
+  div #[strong Version 1.7.0] Vue Cal emits events
+  div #[strong Version 1.6.0] Allow event deletion on touch devices
+  div #[strong Version 1.5.0] Add Russian language
   div
     | #[strong Version 1.4.0] Allow editing events title
     highlight-message(type="success")
@@ -1787,8 +1776,7 @@
         li.
           The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
           Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
-  div
-    | #[strong Version 1.3.0] Add Simplified Chinese language &amp; bug fixes
+  div #[strong Version 1.3.0] Add Simplified Chinese language &amp; bug fixes
   div
     | #[strong Version 1.2.0] Allow event deletion
     highlight-message(type="success").

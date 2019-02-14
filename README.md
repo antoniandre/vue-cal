@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.35.0__ Allow displaying all-day events in fixed top bar
 - __Version 1.34.0__ Allow starting week on Sunday
 - __Version 1.33.0__ Minor internal structure improvements
 - __Version 1.32.0__ Allow Syncing 2 vue-cal instances
