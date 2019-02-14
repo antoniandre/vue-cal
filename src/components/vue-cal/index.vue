@@ -54,9 +54,11 @@
               //- Only for splitDays.
               .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
                 .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
-                  span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-                  span(v-if="heading.label4") &nbsp;
-                  span(v-if="heading.label4") {{ heading.label4 }}
+                  transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
+                    span(:key="transitions ? `${i}-${heading.label4}` : false")
+                      span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+                      span(v-if="heading.label4") &nbsp;
+                      span(v-if="heading.label4") {{ heading.label4 }}
 
               .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
                 vuecal-cell(
