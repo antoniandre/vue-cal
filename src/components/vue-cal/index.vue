@@ -1200,6 +1200,11 @@ $weekdays-headings-height: 2.8em;
   opacity: 0;
 }
 
+// Prevent the above translateX from causing a horizontal scroll bar
+.vuecal__body {
+  overflow-x: hidden;
+}
+
 .slide-fade--left-leave-active,
 .slide-fade--right-leave-active {position: absolute;height: 100%;}
 .vuecal__title .slide-fade--left-leave-active,
