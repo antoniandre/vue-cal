@@ -1120,6 +1120,7 @@ $weekdays-headings-height: 2.8em;
   //==================================//
   &__body {
     overflow: auto;
+    overflow-x: hidden; // Prevent horizontal scroll bar while transitioning.
     -webkit-overflow-scrolling: touch;
     min-height: 60px;
     position: relative;
@@ -1198,11 +1199,6 @@ $weekdays-headings-height: 2.8em;
 .slide-fade--right-enter {
   transform: translateX(15px);
   opacity: 0;
-}
-
-// Prevent the above translateX from causing a horizontal scroll bar
-.vuecal__body {
-  overflow-x: hidden;
 }
 
 .slide-fade--left-leave-active,
