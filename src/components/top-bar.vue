@@ -43,6 +43,7 @@
           v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-tile(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
+          v-list-tile(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
           v-list-tile(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-tile(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
           v-list-tile(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events

@@ -8,6 +8,7 @@
   "day": "Tag",
   "today": "Heute",
   "noEvent": "Keine Events",
+  "allDay": "",
   "deleteEvent": "Löschen",
   "createEvent": "Event erstellen",
   "dateFormat": "DDDD d mmmm yyyy"

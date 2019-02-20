@@ -8,6 +8,7 @@
   "day": "Deň",
   "today": "Dnes",
   "noEvent": "Bez udalosti",
+  "allDay": "",
   "deleteEvent": "Odstrániť",
   "createEvent": "Vytvoriť udalosť",
   "dateFormat": "DDDD d. mmmm yyyy"
