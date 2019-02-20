@@ -22,7 +22,7 @@
               span(v-if="heading.label4") {{ heading.label4 }}
       .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && time && ['week', 'day'].indexOf(view.id) > -1")
         span(style="width: 3em")
-          span All day
+          span {{ texts.allDay }}
         .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
           vuecal-cell(
             :class="cell.class"

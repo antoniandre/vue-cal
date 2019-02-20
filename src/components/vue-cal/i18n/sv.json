@@ -8,6 +8,7 @@
   "day": "Dag",
   "today": "Idag",
   "noEvent": "Ingen händelse",
+  "allDay": "",
   "deleteEvent": "Ta bort",
   "createEvent": "Skapa händelse",
   "dateFormat": "DDDD den d mmmm yyyy"

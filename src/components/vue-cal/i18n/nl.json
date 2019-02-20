@@ -8,6 +8,7 @@
   "day": "Dag",
   "today": "Vandaag",
   "noEvent": "Geen afspraken",
+  "allDay": "",
   "deleteEvent": "Verwijderen",
   "createEvent": "Nieuwe afspraak aanmaken",
   "dateFormat": "DDDD d mmmm yyyy"
