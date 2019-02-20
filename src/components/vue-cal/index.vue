@@ -505,6 +505,8 @@ export default {
           endDate,
           endTime,
           endTimeMinutes,
+          title: '',
+          content: '',
           height: 0,
           top: 0,
           overlapped: {},
@@ -955,8 +957,12 @@ export default {
   },
 
   watch: {
-    events: function (events, oldEvents) {
-      this.updateMutableEvents(events)
+    events: {
+      handler: function (events, oldEvents) {
+        console.log('heeeere from watch')
+        this.updateMutableEvents(events)
+      },
+      deep: true
     },
     selectedDate: function (date) {
       this.updateSelectedDate(date)
