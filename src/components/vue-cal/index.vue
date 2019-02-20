@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { now, isDateToday, getPreviousFirstDayOfWeek, getDaysInMonth, formatDate, formatTime } from './date-utils'
+import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
 import Cell from './cell'
 
 export default {
@@ -330,6 +330,7 @@ export default {
 
       this.view.events = []
       this.view.id = view
+      this.view.startDateOutOfScope = null // For month view, if filling cells before 1st of month.
       let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
@@ -355,8 +356,20 @@ export default {
           while (dateTmp.getTime() <= endTime) {
             dateTmp = dateTmp.addDays(1)
             formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+
+            // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
+            let startDate = new Date(this.view.startDate)
+            if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
+              startDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
+              this.view.startDateOutOfScope = startDate // Reused in viewCells computed array.
+            }
+
+            // Save the events of each day of month + out of scope ones into view object.
+            for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
+              const formattedDate = startDate.addDays(i)
+              dayEvents = this.mutableEvents[startDate.addDays(i)] || []
+              if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            }
           }
           break
         case 'week':
@@ -842,30 +855,14 @@ export default {
         case 'month':
           const month = this.view.startDate.getMonth()
           const year = this.view.startDate.getFullYear()
-          let days = getDaysInMonth(month, year)
-          const firstOfMonthDayOfWeek = days[0].getDay()
           let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
           selectedDateAtMidnight.setHours(0, 0, 0, 0)
           todayFound = false
-          let nextMonthDays = 0
-
-          // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
-          if (days[0].getDay() !== 1) {
-            let d = getPreviousFirstDayOfWeek(days[0], this.startWeekOnSunday)
-            let prevWeek = []
-            for (let i = 0; i < 7; i++) {
-              prevWeek.push(new Date(d))
-              d.setDate(d.getDate() + 1)
-
-              if (d.getDay() === firstOfMonthDayOfWeek) break
-            }
-
-            days.unshift(...prevWeek)
-          }
+          let startDate = new Date(this.view.startDateOutOfScope || this.view.startDate)
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
-            const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
+            const cellDate = startDate.addDays(i)
             // To increase performance skip checking isToday if today already found.
             const isToday = !todayFound && cellDate && cellDate.getDate() === this.now.getDate() &&
                             cellDate.getMonth() === this.now.getMonth() &&
