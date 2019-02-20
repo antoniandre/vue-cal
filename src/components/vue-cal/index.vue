@@ -959,7 +959,6 @@ export default {
   watch: {
     events: {
       handler: function (events, oldEvents) {
-        console.log('heeeere from watch')
         this.updateMutableEvents(events)
       },
       deep: true
