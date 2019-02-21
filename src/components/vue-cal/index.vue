@@ -331,6 +331,7 @@ export default {
       this.view.events = []
       this.view.id = view
       this.view.startDateOutOfScope = null // For month view, if filling cells before 1st of month.
+      this.view.endDateOutOfScope = null // For month view, if filling cells after current month.
       let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
@@ -361,8 +362,11 @@ export default {
             let startDate = new Date(this.view.startDate)
             if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
               startDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
-              this.view.startDateOutOfScope = startDate // Reused in viewCells computed array.
             }
+
+            // Used in viewCells computed array & returned in emitted events.
+            this.view.startDateOutOfScope = startDate
+            this.view.endDateOutOfScope = startDate.addDays(41)
 
             // Save the events of each day of month + out of scope ones into view object.
             for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
@@ -395,6 +399,7 @@ export default {
           view,
           startDate: this.view.startDate,
           endDate: this.view.endDate,
+          ...(view === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
           events: this.view.events,
           ...(view === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
@@ -403,7 +408,7 @@ export default {
     },
 
     findAncestor (el, Class) {
-      while ((el = el.parentElement) && !el.classList.contains(Class));
+      while ((el = el.parentElement) && !el.classList.contains(Class))
       return el
     },
 
@@ -686,6 +691,7 @@ export default {
       view: this.view.id,
       startDate: this.view.startDate,
       endDate: this.view.endDate,
+      ...(view === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
       events: this.view.events,
       ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
     }
@@ -858,7 +864,7 @@ export default {
           let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
           selectedDateAtMidnight.setHours(0, 0, 0, 0)
           todayFound = false
-          let startDate = new Date(this.view.startDateOutOfScope || this.view.startDate)
+          let startDate = new Date(this.view.startDateOutOfScope)
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
