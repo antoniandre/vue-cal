@@ -1260,8 +1260,8 @@
         view: [String],
         startDate: [Date], // View start - JS native Date object.
         endDate: [Date], // View end - JS native Date object.
-        startDateOutOfScope: [Date], // On month view only, this is the first cell date - JS native Date object.
-        endDateOutOfScope: [Date], // On month view only, this is the last cell date - JS native Date object.
+        firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+        lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
