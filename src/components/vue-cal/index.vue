@@ -1,19 +1,11 @@
 <template lang="pug">
   .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
     vuecal-header(
-      :views="views"
-      :view="view"
-      :time="time"
+      :vuecal-props="$props"
+      :view-props="{ views, view, viewHeadings, viewCells, hasSplits }"
       :texts="texts"
       :months="months"
-      :week-days="weekDays"
-      :hide-view-selector="hideViewSelector"
-      :hide-title-bar="hideTitleBar"
-      :show-all-day-events="showAllDayEvents"
-      :transitions="transitions"
-      :view-headings="viewHeadings"
-      :view-cells="viewCells"
-      :has-splits="hasSplits")
+      :week-days="weekDays")
       div(slot="arrowPrev")
         slot(name="arrowPrev")
           i.angle
