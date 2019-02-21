@@ -21,9 +21,6 @@
         slot(name="arrowNext")
           i.angle
       div(slot="title")
-        //- transition(:class="{ clickable: !!broaderView }" :name="`slide-fade--${transitionDirection}`")
-          span.d-inline-block(:key="transitions ? viewTitle : false" @click="switchToBroaderView")
-            slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
         slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
@@ -31,7 +28,7 @@
         .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
           .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
             span(style="width: 3em")
-              span All day
+              span {{ texts.allDay }}
             .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
               vuecal-cell(
                 :class="cell.class"
@@ -94,7 +91,7 @@
 </template>
 
 <script>
-import { now, isDateToday, getPreviousFirstDayOfWeek, getDaysInMonth, formatDate, formatTime } from './date-utils'
+import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
 import Header from './header'
 import Cell from './cell'
 import './styles.scss'
@@ -262,12 +259,6 @@ export default {
   }),
 
   methods: {
-    // switchToBroaderView () {
-    //   this.transitionDirection = 'left'
-
-    //   if (this.broaderView) this.switchView(this.broaderView)
-    // },
-
     switchToNarrowerView () {
       this.transitionDirection = 'right'
 
@@ -286,6 +277,8 @@ export default {
 
       this.view.events = []
       this.view.id = view
+      this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
+      this.view.lastCellDate = null // For month view, if filling cells after current month.
       let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
@@ -311,8 +304,23 @@ export default {
           while (dateTmp.getTime() <= endTime) {
             dateTmp = dateTmp.addDays(1)
             formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+
+            // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
+            let startDate = new Date(this.view.startDate)
+            if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
+              startDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
+            }
+
+            // Used in viewCells computed array & returned in emitted events.
+            this.view.firstCellDate = startDate
+            this.view.lastCellDate = startDate.addDays(41)
+
+            // Save the events of each day of month + out of scope ones into view object.
+            for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
+              formattedDate = formatDate(startDate.addDays(i), 'yyyy-mm-dd', this.texts)
+              dayEvents = this.mutableEvents[formattedDate] || []
+              if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            }
           }
           break
         case 'week':
@@ -338,15 +346,16 @@ export default {
           view,
           startDate: this.view.startDate,
           endDate: this.view.endDate,
+          ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
           events: this.view.events,
-          ...(view === 'week' ? { week: this.view.startDate.getWeek() } : {})
+          ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
       }
     },
 
     findAncestor (el, Class) {
-      while ((el = el.parentElement) && !el.classList.contains(Class));
+      while ((el = el.parentElement) && !el.classList.contains(Class)) {}
       return el
     },
 
@@ -461,6 +470,8 @@ export default {
           endDate,
           endTime,
           endTimeMinutes,
+          title: '',
+          content: '',
           height: 0,
           top: 0,
           overlapped: {},
@@ -627,6 +638,7 @@ export default {
       view: this.view.id,
       startDate: this.view.startDate,
       endDate: this.view.endDate,
+      ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
       events: this.view.events,
       ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
     }
@@ -654,13 +666,6 @@ export default {
         day: { label: this.texts.day, enabled: this.disableViews.indexOf('day') === -1 }
       }
     },
-    // broaderView () {
-    //   let views = Object.keys(this.views)
-    //   views = views.slice(0, views.indexOf(this.view.id))
-    //   views.reverse()
-
-    //   return views.find(v => this.views[v].enabled)
-    // },
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
     },
@@ -795,31 +800,14 @@ export default {
           break
         case 'month':
           const month = this.view.startDate.getMonth()
-          const year = this.view.startDate.getFullYear()
-          let days = getDaysInMonth(month, year)
-          const firstOfMonthDayOfWeek = days[0].getDay()
           let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
           selectedDateAtMidnight.setHours(0, 0, 0, 0)
           todayFound = false
-          let nextMonthDays = 0
-
-          // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
-          if (days[0].getDay() !== 1) {
-            let d = getPreviousFirstDayOfWeek(days[0], this.startWeekOnSunday)
-            let prevWeek = []
-            for (let i = 0; i < 7; i++) {
-              prevWeek.push(new Date(d))
-              d.setDate(d.getDate() + 1)
-
-              if (d.getDay() === firstOfMonthDayOfWeek) break
-            }
-
-            days.unshift(...prevWeek)
-          }
+          let startDate = new Date(this.view.firstCellDate)
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
-            const cellDate = days[i] || new Date(year, month + 1, ++nextMonthDays)
+            const cellDate = startDate.addDays(i)
             // To increase performance skip checking isToday if today already found.
             const isToday = !todayFound && cellDate && cellDate.getDate() === this.now.getDate() &&
                             cellDate.getMonth() === this.now.getMonth() &&
@@ -911,8 +899,11 @@ export default {
   },
 
   watch: {
-    events: function (events, oldEvents) {
-      this.updateMutableEvents(events)
+    events: {
+      handler: function (events, oldEvents) {
+        this.updateMutableEvents(events)
+      },
+      deep: true
     },
     selectedDate: function (date) {
       this.updateSelectedDate(date)

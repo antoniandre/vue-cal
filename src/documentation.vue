@@ -1255,14 +1255,19 @@
     li #[span.code day-focus] - is a JS native #[span.code Date] object
   highlight-message(no-icon)
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
-    sshpre.mt-2.mb-0(language="js").
+    sshpre.mt-2(language="js").
       {
         view: [String],
         startDate: [Date], // View start - JS native Date object.
         endDate: [Date], // View end - JS native Date object.
+        firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+        lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
+    strong.
+      Note that on a month view, the events from the out of scope days
+      (cells before and after the current month) are also returned in the array.
 
   h4.mt-2 Events-related
   p.mb-0 In all events, properties #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects:
@@ -1308,7 +1313,7 @@
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
+      :disable-views="['years', 'year']"
       hide-weekends
       editable-events
       :events="eventsCopy2"
@@ -1327,7 +1332,7 @@
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
              :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
+             :disable-views="['years', 'year']"
              hide-weekends
              editable-events
              :events="events"
@@ -1600,7 +1605,8 @@
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
       p.
-        When set to true, the events will also be displayed on month view.#[br]
+        When set to true, the events will also be displayed on month view
+        (including events from visible out of scope days).#[br]
         When set to the string '#[span.code short]', only the event's title will be displayed.
     li
       code.mr-2 onEventClick
@@ -1709,6 +1715,18 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 1.37.0] Add text 'All day' in all i18n files
+    highlight-message(type="error" no-icon).
+      Dear contributors &amp; users, if you know a (short length) translation for 'All day' (for #[a(href="#ex--all-day-events") all day events])
+      for the following languages: #[strong de, es, hr, ka, nl, pl, pt-br, ru, sk, sv, zh-cn],
+      please contribute that file (in i18n/ folder) or paste the text in the
+      #[a(href="https://github.com/antoniandre/vue-cal/issues/40") issue #40]!
+  div #[strong Version 1.36.0] Add out of scope events in month view
+    highlight-message(type="success").
+      On a month view, the events from the out of scope days
+      (cells before and after the current month) are now also be displayed when using
+      the #[span.code eventsOnMonthView] option, and returned in the array of events in
+      the #[span.code ready] &amp; #[span.code view-change] emited events.
   div #[strong Version 1.35.0] Allow displaying all-day events in fixed top bar
   div #[strong Version 1.34.0] Allow starting week on Sunday
   div
@@ -1808,6 +1826,14 @@ import 'simple-syntax-highlighter/dist/sshpre.css'
 import highlightMessage from '@/components/highlight-message'
 
 const events = [
+  {
+    start: '2018-10-30 10:30',
+    end: '2018-10-30 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="v-icon material-icons">local_hospital</i>',
+    class: 'health',
+    split: 1
+  },
   {
     start: '2018-11-16 10:30',
     end: '2018-11-16 11:30',
@@ -2026,7 +2052,7 @@ export default {
         class: 'leisure',
         split: 1
       },
-        {
+      {
         start: '2019-02-12',
         end: '2019-02-12',
         title: 'Golf with John',
@@ -2046,7 +2072,7 @@ export default {
         title: 'Valentine\'s day',
         class: 'love',
         allDay: true
-      },
+      }
     ],
     splitEvents: [
       ...events,

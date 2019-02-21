@@ -85,7 +85,7 @@ export default {
     viewCells: {
       type: Array,
       default: () => []
-    },
+    }
   },
 
   methods: {
@@ -145,7 +145,7 @@ export default {
       this.transitionDirection = 'left'
 
       if (this.broaderView) this.$parent.switchView(this.broaderView)
-    },
+    }
   },
 
   computed: {
@@ -163,7 +163,7 @@ export default {
       views.reverse()
 
       return views.find(v => this.views[v].enabled)
-    },
+    }
   }
 }
 </script>
