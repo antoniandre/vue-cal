@@ -1260,6 +1260,8 @@
         view: [String],
         startDate: [Date], // View start - JS native Date object.
         endDate: [Date], // View end - JS native Date object.
+        startDateOutOfScope: [Date], // On month view only, this is the first cell date - JS native Date object.
+        endDateOutOfScope: [Date], // On month view only, this is the last cell date - JS native Date object.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
@@ -1311,7 +1313,7 @@
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
+      :disable-views="['years', 'year']"
       hide-weekends
       editable-events
       :events="eventsCopy2"
@@ -1330,7 +1332,7 @@
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
              :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
+             :disable-views="['years', 'year']"
              hide-weekends
              editable-events
              :events="events"
@@ -2050,7 +2052,7 @@ export default {
         class: 'leisure',
         split: 1
       },
-        {
+      {
         start: '2019-02-12',
         end: '2019-02-12',
         title: 'Golf with John',
@@ -2070,7 +2072,7 @@ export default {
         title: 'Valentine\'s day',
         class: 'love',
         allDay: true
-      },
+      }
     ],
     splitEvents: [
       ...events,

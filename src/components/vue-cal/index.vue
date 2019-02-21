@@ -370,8 +370,8 @@ export default {
 
             // Save the events of each day of month + out of scope ones into view object.
             for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
-              const formattedDate = startDate.addDays(i)
-              dayEvents = this.mutableEvents[startDate.addDays(i)] || []
+              formattedDate = formatDate(startDate.addDays(i), 'yyyy-mm-dd', this.texts)
+              dayEvents = this.mutableEvents[formattedDate] || []
               if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
             }
           }
@@ -399,16 +399,16 @@ export default {
           view,
           startDate: this.view.startDate,
           endDate: this.view.endDate,
-          ...(view === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
+          ...(this.view.id === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
           events: this.view.events,
-          ...(view === 'week' ? { week: this.view.startDate.getWeek() } : {})
+          ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
       }
     },
 
     findAncestor (el, Class) {
-      while ((el = el.parentElement) && !el.classList.contains(Class))
+      while ((el = el.parentElement) && !el.classList.contains(Class)) {}
       return el
     },
 
@@ -691,7 +691,7 @@ export default {
       view: this.view.id,
       startDate: this.view.startDate,
       endDate: this.view.endDate,
-      ...(view === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
+      ...(this.view.id === 'month' ? { startDateOutOfScope: this.view.startDateOutOfScope, endDateOutOfScope: this.view.endDateOutOfScope } : {}),
       events: this.view.events,
       ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
     }
@@ -860,7 +860,6 @@ export default {
           break
         case 'month':
           const month = this.view.startDate.getMonth()
-          const year = this.view.startDate.getFullYear()
           let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
           selectedDateAtMidnight.setHours(0, 0, 0, 0)
           todayFound = false
