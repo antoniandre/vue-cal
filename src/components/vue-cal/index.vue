@@ -1,9 +1,8 @@
 <template lang="pug">
   .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
-    | {{transitionDirection}}
     vuecal-header(
       :vuecal-props="$props"
-      :view-props="{ views, view, viewHeadings, viewCells, hasSplits }"
+      :view-props="{ views, view, hasSplits }"
       :texts="texts"
       :months="months"
       :week-days="weekDays")
@@ -48,13 +47,14 @@
 
               .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
                 //- Only for splitDays.
-                .vuecal__flex.vuecal__weekdays-headings(v-if="hasSplits && view.id === 'week'")
-                  .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewHeadings" :key="i" :style="weekdayCellStyles")
-                    transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
-                      span(:key="transitions ? `${i}-${heading.label4}` : false")
-                        span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-                        span(v-if="heading.label4") &nbsp;
-                        span(v-if="heading.label4") {{ heading.label4 }}
+                weekdays-headings(
+                  v-if="hasSplits && view.id === 'week'"
+                  :transitions="{ active: transitions, direction: transitionDirection }"
+                  :view="view"
+                  :min-cell-width="minCellWidth"
+                  :locale="locale"
+                  :week-days="weekDays"
+                )
 
                 .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
                   vuecal-cell(
@@ -87,12 +87,13 @@
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
 import './mixins'
 import Header from './header'
+import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
 import './styles.scss'
 
 export default {
   name: 'vue-cal',
-  components: { 'vuecal-cell': Cell, 'vuecal-header': Header },
+  components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
   props: {
     locale: {
       type: String,
@@ -248,7 +249,8 @@ export default {
         timeout: 500
       }
     },
-    mutableEvents: {} // An indexed array of mutable events updated each time given events array changes.
+    mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+    transitionDirection: 'right'
   }),
 
   methods: {
@@ -731,34 +733,6 @@ export default {
 
       return title
     },
-    viewHeadings () {
-      let headings = []
-
-      switch (this.view.id) {
-        case 'month':
-        case 'week':
-          let todayFound = false
-          headings = this.weekDays.map((cell, i) => {
-            let date = this.view.startDate.addDays(i)
-            // Only for week view.
-            let isToday = this.view.id === 'week' && !todayFound && isDateToday(date) && !todayFound++
-
-            return {
-              label1: this.locale === 'zh-cn' ? cell.label.substr(0, 2) : cell.label[0],
-              label2: this.locale === 'zh-cn' ? cell.label.substr(2) : cell.label.substr(1, 2),
-              label3: this.locale === 'zh-cn' ? '' : cell.label.substr(3),
-              // Only for week view:
-              ...(this.view.id === 'week' ? { label4: date.getDate() } : {}),
-              ...(this.view.id === 'week' ? { today: isToday } : {}),
-              class: {
-                today: isToday // Doesn't need condition cz if class object is false it doesn't show up.
-              }
-            }
-          })
-          break
-      }
-      return headings
-    },
     viewCells () {
       let cells = []
       let fromYear = null
@@ -861,9 +835,6 @@ export default {
           break
       }
       return cells
-    },
-    weekdayCellStyles () {
-      return { minWidth: this.view.id === 'week' && this.minCellWidth ? `${this.minCellWidth}px` : null }
     },
     cssClasses () {
       return {

@@ -6,23 +6,17 @@
     .vuecal__arrow.vuecal__arrow--prev(@click="previous")
       slot(name="arrowPrev")
     transition(:name="`slide-fade--${transitionDirection}`")
-      div(:class="{ clickable: !!broaderView }" :key="vuecalProps.transitions ? `${viewProps.view.startDate}` : false" @click="switchToBroaderView" style="display: inline-block")
+      div(:class="{ clickable: !!broaderView }" :key="vuecalProps.transitions ? `${viewProps.view.id}${viewProps.view.startDate}` : false" @click="switchToBroaderView" style="display: inline-block")
         slot(name="title")
     .vuecal__arrow.vuecal__arrow--next(@click="next")
       slot(name="arrowNext")
-  |{{transitionDirection}}
   weekdays-headings(
-    v-if="viewProps.viewHeadings.length && !(viewProps.hasSplits && viewProps.view.id === 'week')"
-    :headings="viewProps.viewHeadings"
-    :transitions="vuecalProps.transitions"
+    v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
+    :view="viewProps.view"
+    :locale="vuecalProps.locale"
+    :week-days="weekDays"
+    :transitions="{ active: vuecalProps.transitions, direction: transitionDirection }"
   )
-  //- .vuecal__flex.vuecal__weekdays-headings(v-if="viewProps.viewHeadings.length && !(viewProps.hasSplits && viewProps.view.id === 'week')")
-    .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewProps.viewHeadings" :key="i")
-      transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecalProps.transitions")
-        span(:key="vuecalProps.transitions ? `${i}-${heading.label4}` : false")
-          span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-          span(v-if="heading.label4") &nbsp;
-          span(v-if="heading.label4") {{ heading.label4 }}
 </template>
 
 <script>
@@ -40,14 +34,6 @@ export default {
       type: Object,
       default: () => {}
     },
-    texts: {
-      type: Object,
-      default: () => {}
-    },
-    months: {
-      type: Array,
-      default: () => []
-    },
     weekDays: {
       type: Array,
       default: () => []
@@ -57,7 +43,6 @@ export default {
   methods: {
     previous () {
       this.transitionDirection = 'left'
-      console.log('here 1')
 
       switch (this.viewProps.view.id) {
         case 'years':
@@ -84,7 +69,6 @@ export default {
 
     next () {
       this.transitionDirection = 'right'
-      console.log('here 2')
 
       switch (this.viewProps.view.id) {
         case 'years':
@@ -117,6 +101,14 @@ export default {
   },
 
   computed: {
+    transitionDirection: {
+      get () {
+        return this.$parent.transitionDirection
+      },
+      set (direction) {
+        this.$parent.transitionDirection = direction
+      }
+    },
     broaderView () {
       let views = Object.keys(this.viewProps.views)
       views = views.slice(0, views.indexOf(this.viewProps.view.id))
@@ -129,10 +121,6 @@ export default {
 </script>
 
 <style lang="scss">
-$time-column-width: 3em;
-$time-column-width-12: 4em; // 12-hour clock shows am/pm.
-$weekdays-headings-height: 2.8em;
-
 .vuecal {
   &__menu {
     padding: 0;
@@ -188,40 +176,15 @@ $weekdays-headings-height: 2.8em;
 
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
+}
 
-  &__weekdays-headings {
-    border-bottom: 1px solid #ddd;
-    margin-bottom: -1px;
+// Media queries.
+//==================================//
+@media screen and(max-width: 450px) {
+  .vuecal__menu li {padding-left: 0.3em;padding-right: 0.3em;}
+}
 
-    .vuecal--view-with-time & {
-      padding-left: $time-column-width;
-    }
-
-    .vuecal--view-with-time.vuecal--time-12-hour & {
-      font-size: 0.9em;
-      padding-left: $time-column-width-12;
-    }
-
-    .vuecal--split-days.vuecal--view-with-time & {
-      padding-left: 0;
-    }
-  }
-
-  &__heading {
-    width: 100%;
-    height: $weekdays-headings-height;
-    font-weight: 400;
-    justify-content: center;
-    text-align: center;
-    align-items: center;
-    position: relative;
-
-    .vuecal--small & span:nth-child(3) {display: none;}
-
-    .vuecal--xsmall & {flex-direction: column;padding-left: 0;padding-right: 0;}
-    .vuecal--xsmall & span:nth-child(2),
-    .vuecal--xsmall & span:nth-child(3),
-    .vuecal--xsmall & span:nth-child(4) {display: none;}
-  }
+@media screen and(max-width: 350px) {
+  .vuecal__menu li {font-size: 1.1em;}
 }
 </style>
