@@ -75,22 +75,31 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Highlight current time
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Show events on month view
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | sync 2 vue-cal instances
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Add CSS transitions
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Multiple day events
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Show events on month view
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Multiple day events
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Custom events rendering
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
-      | Add CSS transitions
+      | Custom callback on event click
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
-      | sync 2 vue-cal instances
+      | Option to start week on Sunday
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | All day events in top bar
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -102,13 +111,10 @@
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
+      | Improve multiple day events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Optional tooltip on events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Option to start week on Sunday
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Highlight all day events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
@@ -1410,6 +1416,7 @@
             "day": "Day",
             "today": "Today",
             "noEvent": "No Event",
+            "allDay": "All day",
             "deleteEvent": "Delete",
             "createEvent": "Create an event",
             "dateFormat": "DDDD d mmmm yyyy"
