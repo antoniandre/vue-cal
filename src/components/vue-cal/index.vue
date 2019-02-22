@@ -1,5 +1,6 @@
 <template lang="pug">
   .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
+    | {{transitionDirection}}
     vuecal-header(
       :vuecal-props="$props"
       :view-props="{ views, view, viewHeadings, viewCells, hasSplits }"
@@ -84,6 +85,7 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
+import './mixins'
 import Header from './header'
 import Cell from './cell'
 import './styles.scss'
@@ -246,8 +248,7 @@ export default {
         timeout: 500
       }
     },
-    mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
-    transitionDirection: 'right'
+    mutableEvents: {} // An indexed array of mutable events updated each time given events array changes.
   }),
 
   methods: {

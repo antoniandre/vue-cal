@@ -397,9 +397,6 @@ export default {
     transitions () {
       return this.$parent.transitions
     },
-    transitionDirection () {
-      return this.$parent.transitionDirection
-    },
     domEvents: {
       get () {
         if (this.$parent.domEvents.resizeAnEvent.eventId) this.onResizeEvent()

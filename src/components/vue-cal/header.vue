@@ -10,7 +10,13 @@
         slot(name="title")
     .vuecal__arrow.vuecal__arrow--next(@click="next")
       slot(name="arrowNext")
-  .vuecal__flex.vuecal__weekdays-headings(v-if="viewProps.viewHeadings.length && !(viewProps.hasSplits && viewProps.view.id === 'week')")
+  |{{transitionDirection}}
+  weekdays-headings(
+    v-if="viewProps.viewHeadings.length && !(viewProps.hasSplits && viewProps.view.id === 'week')"
+    :headings="viewProps.viewHeadings"
+    :transitions="vuecalProps.transitions"
+  )
+  //- .vuecal__flex.vuecal__weekdays-headings(v-if="viewProps.viewHeadings.length && !(viewProps.hasSplits && viewProps.view.id === 'week')")
     .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in viewProps.viewHeadings" :key="i")
       transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecalProps.transitions")
         span(:key="vuecalProps.transitions ? `${i}-${heading.label4}` : false")
@@ -21,8 +27,10 @@
 
 <script>
 import { getPreviousFirstDayOfWeek } from './date-utils'
+import WeekdaysHeadings from './weekdays-headings'
 
 export default {
+  components: { WeekdaysHeadings },
   props: {
     vuecalProps: {
       type: Object,
@@ -49,6 +57,7 @@ export default {
   methods: {
     previous () {
       this.transitionDirection = 'left'
+      console.log('here 1')
 
       switch (this.viewProps.view.id) {
         case 'years':
@@ -75,6 +84,7 @@ export default {
 
     next () {
       this.transitionDirection = 'right'
+      console.log('here 2')
 
       switch (this.viewProps.view.id) {
         case 'years':
@@ -107,14 +117,6 @@ export default {
   },
 
   computed: {
-    transitionDirection: {
-      get () {
-        return this.$parent.transitionDirection
-      },
-      set (direction) {
-        this.$parent.transitionDirection = direction
-      }
-    },
     broaderView () {
       let views = Object.keys(this.viewProps.views)
       views = views.slice(0, views.indexOf(this.viewProps.view.id))
