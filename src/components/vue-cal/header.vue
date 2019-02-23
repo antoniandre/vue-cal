@@ -1,12 +1,20 @@
 <template lang="pug">
 .vuecal__header
   ul.vuecal__flex.vuecal__menu(v-if="!vuecalProps.hideViewSelector")
-    li(:class="{ active: viewProps.view.id === id }" v-for="(v, id) in viewProps.views" v-if="v.enabled" @click="$parent.switchView(id, null, true)") {{ v.label }}
+    li(
+      :class="{ active: viewProps.view.id === id }"
+      v-for="(v, id) in viewProps.views"
+      v-if="v.enabled"
+      @click="$parent.switchView(id, null, true)") {{ v.label }}
   .vuecal__title(v-if="!vuecalProps.hideTitleBar")
     .vuecal__arrow.vuecal__arrow--prev(@click="previous")
       slot(name="arrowPrev")
     transition(:name="`slide-fade--${transitionDirection}`")
-      div(:class="{ clickable: !!broaderView }" :key="vuecalProps.transitions ? `${viewProps.view.id}${viewProps.view.startDate}` : false" @click="switchToBroaderView" style="display: inline-block")
+      div(
+        :class="{ clickable: !!broaderView }"
+        :key="vuecalProps.transitions ? `${viewProps.view.id}${viewProps.view.startDate}` : false"
+        @click="switchToBroaderView"
+        style="display: inline-block")
         slot(name="title")
     .vuecal__arrow.vuecal__arrow--next(@click="next")
       slot(name="arrowNext")
