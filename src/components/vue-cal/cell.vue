@@ -3,7 +3,7 @@
     .vuecal__flex.vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i" column)
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       .vuecal__cell-date(v-if="content" v-html="content")
-      .vuecal__no-event(v-if="!events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+      .vuecal__no-event(v-if="!events.length && ['week', 'day'].indexOf(view) > -1")
         slot(name="no-event") {{ texts.noEvent }}
       .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         .vuecal__event(:class="eventClasses(event)"
@@ -78,7 +78,7 @@ export default {
     },
 
     eventStyles (event) {
-      if (!this.time || !event.startTime || this.view === 'month' || this.allDayEvents) return {}
+      if (!event.startTime || this.view === 'month' || this.allDayEvents) return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
@@ -441,7 +441,9 @@ export default {
         // NextTick prevents a cyclic redundancy.
         if (this.time) this.$nextTick(this.checkCellOverlappingEvents)
 
-        return this.showAllDayEvents ? events.filter(e => !!e.allDay === this.allDayEvents) : events
+        return (this.showAllDayEvents && this.view !== 'month'
+          ? events.filter(e => !!e.allDay === this.allDayEvents)
+          : events)
       },
       set (events) {
         this.$parent.mutableEvents[this.formattedDate] = events
@@ -561,8 +563,6 @@ export default {
 
   &-content {
     width: 100%;
-    height: 100%;
-    align-items: center;
 
     .vuecal--years-view &,
     .vuecal--year-view &,
@@ -604,9 +604,18 @@ export default {
 
   .vuecal--view-with-time &:not(&--all-day) {position: absolute;}
 
-  .vuecal--view-with-time &--all-day {
-    left: 0 !important;
-    right: 0 !important;
+  .vuecal--view-with-time .vuecal__bg &--all-day {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .vuecal--view-with-time .vuecal__all-day &--all-day {
+    position: relative;
+    left: 0;
+    right: 0;
   }
 
   &--overlapped {right: 20%;}

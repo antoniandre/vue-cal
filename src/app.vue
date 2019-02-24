@@ -2,17 +2,6 @@
   v-app.white(:class="{ ready: ready }" v-scroll="onScroll")
     v-container
       top-bar(:offset-top="offsetTop")
-
-      //- .text-xs-center
-        .logo
-          img(alt="Vue logo" src="./assets/logo.png" width="50")
-          v-icon.calendar event
-          v-icon.time access_time
-
-        p
-          .headline Vue Cal#[br]
-          | A Vue JS full calendar, no dependency, no BS. :metal:
-
       documentation
 
     v-footer.mt-5.pa-2.pb-4(color="white")

@@ -75,22 +75,31 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Highlight current time
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Show events on month view
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | sync 2 vue-cal instances
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Add CSS transitions
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Multiple day events
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Show events on month view
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Multiple day events
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Custom events rendering
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
-      | Add CSS transitions
+      | Custom callback on event click
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
-      | sync 2 vue-cal instances
+      | Option to start week on Sunday
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | All day events in top bar
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -102,13 +111,10 @@
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
+      | Improve multiple day events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Optional tooltip on events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Option to start week on Sunday
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Highlight all day events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
@@ -1023,33 +1029,92 @@
   h3.title.mt-5.mb-2.pt-4
     a(href="#ex--all-day-events") # All day events
     a#ex--all-day-events(name="ex--all-day-events")
-  p.
-    When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an #[span.code allDay]
-    attribute set to #[span.code true] will be displayed in a fixed top bar on the #[span.code week] &amp; #[span.code day] views.#[br]
-    All day events will only show up if the options #[span.code showAllDayEvents] &amp; #[span.code time] are set to #[span.code true].#[br]
-    #[span.code time] is important since without time information every event is an all-day event there is no point in separating them then.#[br]
 
-  highlight-message Multiple-day events feature will be improved in a future version to display across multiple cells in the all day bar.
+  ul
+    li.mb-2.
+      When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
+      #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
+      bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+      The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
+      #[span.code time] are set to #[span.code true].#[br]
+      #[span.code time] is important since without time information every event is an all-day
+      event there is no point in separating them then.
+    li.mb-2.
+      When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
+      (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
+      background event.
+    li.mb-2.
+      On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
+      since both should display the all day events.
+    li.mb-2.
+      #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
+      #[span.code 'short'], to display only the event title.
+
+  highlight-message.
+    Multiple-day events feature will be improved in a future version to display across
+    multiple cells in the all day bar.
+
+  v-btn(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
+    span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
+  v-btn(small color="primary" @click="shortEventsOnMonthView = !shortEventsOnMonthView")
+    span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
       hide-weekends
-      editable-events
-      show-all-day-events
+      :show-all-day-events="['short', true, false][showAllDayEvents]"
+      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
       :events="allDayEvents")
   sshpre(language="html-vue" label="Vue Template").
+    &lt;v-btn @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
+      :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
+    &lt;/v-btn&gt;
+    &lt;v-btn @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
+      :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
+    &lt;/v-btn&gt;
+
     &lt;vue-cal selected-date="2019-02-11"
              :time-from="7 * 60"
              :disable-views="['years', 'year']"
              hide-weekends
-             editable-events
-             show-all-day-events
-             :events="events"
-             class="vuecal--full-height-delete"&gt;
+             :show-all-day-events="['short', true, false][showAllDayEvents]"
+             :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
+             :events="events"&gt;
     &lt;/vue-cal&gt;
+  sshpre(language="js" label="Javascript").
+    showAllDayEvents: 0,
+    shortEventsOnMonthView: false,
+    events: [
+      {
+        start: '2019-02-12',
+        end: '2019-02-12',
+        title: 'Day off!',
+        content: '&lt;i class="v-icon material-icons"&gt;beach_access&lt;/i&gt;',
+        class: 'beach',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Valentine\'s day',
+        content: '&lt;i class="v-icon material-icons"&gt;favorite_outline&lt;/i&gt;',
+        class: 'love',
+        allDay: true
+      },
+      ...
+    ]
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell-content {align-self: flex-start;}
+    .vuecal__cell-date {text-align: right;padding: 4px;}
+
+    .vuecal--week-view .vuecal__bg .vuecal__event--all-day.love,
+    .vuecal--day-view .vuecal__bg .vuecal__event--all-day.love {right: 50%;}
+    .vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
+    .vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
@@ -1261,6 +1326,8 @@
         view: [String],
         startDate: [Date], // View start - JS native Date object.
         endDate: [Date], // View end - JS native Date object.
+        firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+        lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
@@ -1313,7 +1380,7 @@
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
+      :disable-views="['years', 'year']"
       hide-weekends
       editable-events
       :events="eventsCopy2"
@@ -1333,7 +1400,7 @@
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
              :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
+             :disable-views="['years', 'year']"
              hide-weekends
              editable-events
              :events="events"
@@ -1385,6 +1452,7 @@
     editableEvents:     [Boolean],         default: false
     noEventOverlaps:    [Boolean],         default: false
     eventsOnMonthView:  [Boolean, String], default: false
+    showAllDayEvents:   [Boolean, String], default: false
     onEventClick:       [Function],        default: null
     onEventDblclick:    [Function],        default: null
 
@@ -1412,6 +1480,7 @@
             "day": "Day",
             "today": "Today",
             "noEvent": "No Event",
+            "allDay": "All day",
             "deleteEvent": "Delete",
             "createEvent": "Create an event",
             "dateFormat": "DDDD d mmmm yyyy"
@@ -1611,6 +1680,28 @@
         (including events from visible out of scope days).#[br]
         When set to the string '#[span.code short]', only the event's title will be displayed.
     li
+      code.mr-2 showAllDayEvents
+      span.code [Boolean, String], default: false
+      ul
+        li.mb-2.
+          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
+          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
+          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
+          #[span.code time] are set to #[span.code true].#[br]
+          #[span.code time] is important since without time information every event is an all-day
+          event there is no point in separating them then.
+        li.mb-2.
+          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
+          background event.
+        li.mb-2.
+          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
+          since both should display the all day events.
+        li.mb-2.
+          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
+          #[span.code 'short'], to display only the event title.
+    li
       code.mr-2 onEventClick
       span.code [Function], default: null
       p.
@@ -1717,12 +1808,14 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  highlight-message(type="error" no-icon).
+    Dear contributors &amp; users, if you know a (short length) translation for 'All day' (for #[a(href="#ex--all-day-events") all day events])
+    for the following languages: #[strong hr, ka, pl, pt-br, ru, sk, sv, zh-cn],
+    please contribute that file (in i18n/ folder) or paste the text in the
+    #[a(href="https://github.com/antoniandre/vue-cal/issues/40") issue #40]!
+
+  div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
-    highlight-message(type="error" no-icon).
-      Dear contributors &amp; users, if you know a (short length) translation for 'All day' (for #[a(href="#ex--all-day-events") all day events])
-      for the following languages: #[strong de, es, hr, ka, nl, pl, pt-br, ru, sk, sv, zh-cn],
-      please contribute that file (in i18n/ folder) or paste the text in the
-      #[a(href="https://github.com/antoniandre/vue-cal/issues/40") issue #40]!
   div #[strong Version 1.36.0] Add out of scope events in month view
     highlight-message(type="success").
       On a month view, the events from the out of scope days
@@ -1820,7 +1913,7 @@
           li Event starts at: {{ selectedEvent.startTime }}
           li Event ends at: {{ selectedEvent.endTime }}
 
-  v-dialog(v-model="showEventCreationDialog" max-width="420")
+  v-dialog(v-model="showEventCreationDialog" :persistent="true" max-width="420")
     v-card
       v-card-title.pa-2.primary.white--text
         v-text-field.ma-0.pa-0(v-model="selectedEvent.title" placeholder="Event Title" hide-details color="white")
@@ -1836,6 +1929,7 @@
           v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
         v-layout
           v-spacer
+          v-btn(small @click="showEventCreationDialog = false;selectedEvent = {}") Cancel
           v-btn(small color="primary" @click="showEventCreationDialog = false;selectedEvent = {}") Save
 </template>
 
@@ -1931,6 +2025,8 @@ export default {
     log: [],
     showDialog: false,
     showEventCreationDialog: false,
+    showAllDayEvents: 0,
+    shortEventsOnMonthView: false,
     events,
     selectedEvent: {},
     eventsCssClasses: ['leisure', 'sport', 'health'],
@@ -2019,6 +2115,30 @@ export default {
     ],
     allDayEvents: [
       {
+        start: '2019-02-12',
+        end: '2019-02-12',
+        title: 'Day off!',
+        content: '<i class="v-icon material-icons">beach_access</i>',
+        class: 'beach',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Valentine\'s day',
+        content: '<i class="v-icon material-icons">favorite_outline</i>',
+        class: 'love',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Need to go shopping',
+        content: '<i class="v-icon material-icons">shopping_cart</i>',
+        class: 'leisure',
+        allDay: true
+      },
+      {
         start: '2019-02-11 10:35',
         end: '2019-02-11 11:30',
         title: 'Doctor appointment',
@@ -2073,28 +2193,7 @@ export default {
         content: '<i class="v-icon material-icons">local_play</i>',
         class: 'leisure',
         split: 1
-      },
-        {
-        start: '2019-02-12',
-        end: '2019-02-12',
-        title: 'Golf with John',
-        class: 'sport',
-        allDay: true
-      },
-      {
-        start: '2019-02-14',
-        end: '2019-02-14',
-        title: 'Need to go shopping',
-        class: 'leisure',
-        allDay: true
-      },
-      {
-        start: '2019-02-14',
-        end: '2019-02-14',
-        title: 'Valentine\'s day',
-        class: 'love',
-        allDay: true
-      },
+      }
     ],
     splitEvents: [
       ...events,
@@ -2323,6 +2422,7 @@ $primary: #42b983;
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
 .vuecal__event.love {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
 .vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
+.vuecal__event.beach {background-color: rgba(255, 200, 90, 0.75);border: 1px solid #ffc356;}
 
 .vuecal__event.lunch {
   background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
@@ -2381,5 +2481,21 @@ $primary: #42b983;
   .vuecal__event-content {
     font-style: italic;
   }
+}
+
+.ex--all-day-events {
+  .vuecal__cell-content {
+    align-self: flex-start;
+  }
+
+  .vuecal__cell-date {
+    text-align: right;
+    padding: 4px;
+  }
+
+  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.love,
+  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.love {right: 50%;}
+  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
+  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 }
 </style>
