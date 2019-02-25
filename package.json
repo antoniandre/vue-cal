@@ -40,9 +40,9 @@
     "vue-cli-plugin-vuetify": "^0.2.1",
     "vue-scrollto": "^2.13.0",
     "vue-template-compiler": "^2.6.6",
-    "vuetify": "^1.5.1"
+    "vuetify": "^1.5.1",
+    "babel-polyfill": "^6.26.0"
   },
   "dependencies": {
-    "babel-polyfill": "^6.26.0"
   }
 }
