@@ -594,22 +594,6 @@ export default {
   // Reactivate user selection in events.
   .vuecal__cell & * {user-select: auto;}
 
-  .vuecal--view-with-time &:not(&--all-day) {position: absolute;}
-
-  .vuecal--view-with-time .vuecal__bg &--all-day {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    z-index: 0;
-    opacity: 0.6;
-  }
-
-  .vuecal--view-with-time .vuecal__all-day &--all-day {
-    position: relative;
-    left: 0;
-    right: 0;
-  }
-
   &--overlapped {right: 20%;}
   &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
   &--overlapped.vuecal__event--split2 {right: 25%;}
@@ -628,6 +612,23 @@ export default {
   .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
   .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
   .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
+
+  .vuecal--view-with-time &:not(&--all-day) {position: absolute;}
+
+  .vuecal--view-with-time .vuecal__bg &--all-day {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    z-index: 0;
+    opacity: 0.6;
+  }
+
+  .vuecal--month-view &,
+  .vuecal--view-with-time .vuecal__all-day &--all-day {
+    position: relative;
+    left: 0;
+    right: 0;
+  }
 
   &--background {z-index: 0;}
   &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
