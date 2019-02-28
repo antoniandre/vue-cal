@@ -1462,7 +1462,7 @@
         Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
         | Currently available languages are English, Croatian, Dutch, French, Georgian,
-        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish &amp; Simplified Chinese.#[br]
+        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish, Simplified Chinese &amp; Vietnamese.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
         | this is what a language json looks like.
 
@@ -1805,6 +1805,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
   div #[strong Version 1.36.0] Add out of scope events in month view
