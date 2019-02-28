@@ -8,7 +8,7 @@
   "day": "日",
   "today": "今日",
   "noEvent": "暂无活动",
-  "allDay": "",
+  "allDay": "整天",
   "deleteEvent": "删除",
   "createEvent": "新建活动",
   "dateFormat": "yyyy mmmm d DDDD"
