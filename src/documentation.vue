@@ -1805,12 +1805,6 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  highlight-message(type="error" no-icon).
-    Dear contributors &amp; users, if you know a (short length) translation for 'All day' (for #[a(href="#ex--all-day-events") all day events])
-    for the following languages: #[strong hr, ka, pl, pt-br, ru, sk, sv, zh-cn],
-    please contribute that file (in i18n/ folder) or paste the text in the
-    #[a(href="https://github.com/antoniandre/vue-cal/issues/40") issue #40]!
-
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
   div #[strong Version 1.36.0] Add out of scope events in month view
