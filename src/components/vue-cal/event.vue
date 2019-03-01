@@ -1,6 +1,5 @@
 <template lang="pug">
 .vuecal__event(:class="eventClasses(event)"
-  v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
   :style="eventStyles(event)"
   @mouseenter="onMouseEnter($event, event)"
   @mouseleave="onMouseLeave($event, event)"
@@ -9,37 +8,41 @@
   @mousedown="onMouseDown($event, event)"
   @click="onClick($event, event)"
   @dblclick="onDblClick($event, event)")
-  .vuecal__event-delete(v-if="editableEvents"
+  .vuecal__event-delete(v-if="vuecal.editableEvents"
     @mousedown.stop.prevent="deleteEvent(event)"
     @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
-  slot(:event="event" :view="view" name="event-renderer")
-  .vuecal__event-resize-handle(v-if="editableEvents && time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && view !== 'month'"
-    @mousedown="editableEvents && time && onDragHandleMouseDown($event, event)"
-    @touchstart="editableEvents && time && onDragHandleMouseDown($event, event)")
+  slot(:event="event" :view="vuecal.view.id" name="event-renderer")
+  .vuecal__event-resize-handle(v-if="vuecal.editableEvents && vuecal.time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && vuecal.view.id !== 'month'"
+    @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
+    @touchstart="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)")
 </template>
 
 <script>
-import { deleteAnEvent, onResizeEvent, updateEndTimeOnResize, updateEventPosition, checkCellOverlappingEvents } from './event-utils'
+import { deleteAnEvent, onResizeEvent } from './event-utils'
 
 export default {
   props: {
-    cssClass: {
-      type: String,
-      default: ''
-    },
-    date: {
-      type: Date,
-      required: true
-    },
     formattedDate: {
       type: String,
       default: ''
     },
-    content: {
-      type: [String, Number],
-      default: ''
+    vuecal: {
+      type: Object,
+      default: () => ({})
     },
-    splits: {
+    texts: {
+      type: Object,
+      default: () => ({})
+    },
+    event: {
+      type: Object,
+      default: () => ({})
+    },
+    cellEvents: {
+      type: Array,
+      default: () => []
+    },
+    splitEvents: {
       type: Array,
       default: () => []
     },
@@ -50,15 +53,14 @@ export default {
     allDayEvents: {
       type: Boolean,
       default: false
-    }
+    },
   },
   data: () => ({
-    splitEvents: {}
   }),
 
   methods: {
     eventStyles (event) {
-      if (!event.startTime || this.view === 'month' || this.allDayEvents) return {}
+      if (!event.startTime || this.vuecal.view.id === 'month' || this.allDayEvents) return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
@@ -79,7 +81,7 @@ export default {
       if (simultaneous >= 3) {
         let split3 = simultaneous - 1
         Object.keys(event.simultaneous).forEach(eventId => {
-          if (split3 && Object.keys(this.events.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
+          if (split3 && Object.keys(this.cellEvents.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
             split3--
           }
         })
@@ -87,7 +89,7 @@ export default {
       }
 
       else if (simultaneous === 2) {
-        const otherEvent = this.events.find(e => e.id === Object.keys(event.simultaneous)[0])
+        const otherEvent = this.cellEvents.find(e => e.id === Object.keys(event.simultaneous)[0])
 
         if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
           forceLeft = true
@@ -126,7 +128,7 @@ export default {
       clickHoldAnEvent.eventId = null // Reinit click hold on each click.
 
       // Don't show delete button if dragging event.
-      if (!resizeAnEvent.start && this.editableEvents) {
+      if (!resizeAnEvent.start && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           clickHoldAnEvent.eventId = event.id
         }, clickHoldAnEvent.timeout)
@@ -135,12 +137,12 @@ export default {
 
     onMouseEnter (e, event) {
       e.preventDefault()
-      this.$parent.emitWithEvent('event-mouse-enter', event)
+      this.vuecal.emitWithEvent('event-mouse-enter', event)
     },
 
     onMouseLeave (e, event) {
       e.preventDefault()
-      this.$parent.emitWithEvent('event-mouse-leave', event)
+      this.vuecal.emitWithEvent('event-mouse-leave', event)
     },
 
     onContextMenu (e, event) {
@@ -153,11 +155,11 @@ export default {
     },
 
     onClick (e, event) {
-      if (typeof this.$parent.onEventClick === 'function') return this.$parent.onEventClick(event, e)
+      if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(event, e)
     },
 
     onDblClick (e, event) {
-      if (typeof this.$parent.onEventDblclick === 'function') return this.$parent.onEventDblclick(event, e)
+      if (typeof this.vuecal.onEventDblclick === 'function') return this.vuecal.onEventDblclick(event, e)
     },
 
     onDragHandleMouseDown (e, event) {
@@ -175,11 +177,11 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      this.events = deleteAnEvent({
+      this.cellEvents = deleteAnEvent({
         event,
-        cellEvents: this.$parent.mutableEvents[this.formattedDate],
-        cellSplits: this.splitEvents,
-        vuecal: this.$parent
+        cellEvents: this.cellEvents,
+        splitEvents: this.splitEvents,
+        vuecal: this.vuecal
       })
     },
 
@@ -188,66 +190,29 @@ export default {
     },
 
     focusEvent (event) {
-      this.$parent.emitWithEvent('event-focus', event)
+      this.vuecal.emitWithEvent('event-focus', event)
       this.domEvents.focusAnEvent.eventId = event.id
     }
   },
 
   computed: {
-    texts () {
-      return this.$parent.texts
-    },
-    view () {
-      return this.$parent.view.id
-    },
     time () {
-      return this.$parent.time
-    },
-    timeFormat () {
-      return this.$parent.timeFormat || (this.$parent['12Hour'] ? 'h:mm{am}' : 'HH:mm')
-    },
-    timeFrom () {
-      return parseInt(this.$parent.timeFrom)
-    },
-    timeTo () {
-      return parseInt(this.$parent.timeTo)
-    },
-    timeStep () {
-      return parseInt(this.$parent.timeStep)
-    },
-    showAllDayEvents () {
-      return this.$parent.showAllDayEvents
-    },
-    eventsOnMonthView () {
-      return this.$parent.eventsOnMonthView
-    },
-    editableEvents () {
-      return this.$parent.editableEvents
-    },
-    noEventOverlaps () {
-      this.$nextTick(() => this.checkCellOverlappingEvents())
-      return this.$parent.noEventOverlaps
-    },
-    transitions () {
-      return this.$parent.transitions
-    },
-    transitionDirection () {
-      return this.$parent.transitionDirection
+      return this.vuecal.time
     },
     domEvents: {
       get () {
-        // if (this.$parent.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
-        if (this.$parent.domEvents.resizeAnEvent.eventId) {
+        // if (this.vuecal.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
+        if (this.vuecal.domEvents.resizeAnEvent.eventId) {
           onResizeEvent({
-            vuecal: this.$parent,
-            cellEvents: this.$parent.mutableEvents[this.formattedDate],
-            cellSplits: this.splitEvents
+            vuecal: this.vuecal,
+            cellEvents: this.cellEvents,
+            splitEvents: this.splitEvents
           })
         }
-        return this.$parent.domEvents
+        return this.vuecal.domEvents
       },
       set (object) {
-        this.$parent.domEvents = object
+        this.vuecal.domEvents = object
       }
     }
   }
@@ -255,8 +220,6 @@ export default {
 </script>
 
 <style lang="scss">
-// EVENTS.
-//======================================//
 .vuecal__event {
   color: #666;
   background-color: #f8f8f8;
@@ -267,7 +230,7 @@ export default {
   transition: box-shadow 0.3s, left 0.3s, right 0.3s;
   overflow: hidden;// For sliding delete button.
 
-  &:hover {z-index: 2;}
+  .vuecal:not(.vuecal--dragging-event) &:hover {z-index: 2;}
 
   // Reactivate user selection in events.
   .vuecal__cell & * {user-select: auto;}

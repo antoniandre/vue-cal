@@ -30,7 +30,7 @@
                 :formatted-date="cell.formattedDate"
                 :all-day-events="true"
                 :today="cell.today"
-                :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                :splits="hasSplits && splitDays || []"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
@@ -66,7 +66,7 @@
                     :formatted-date="cell.formattedDate"
                     :today="cell.today"
                     :content="cell.content"
-                    :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                    :splits="hasSplits && splitDays || []"
                     @click.native="selectCell(cell)"
                     @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
                     .vuecal__cell-events-count(slot="events-count-month-view" slot-scope="{ events }" :events="events")
@@ -846,11 +846,12 @@ export default {
         'vuecal--time-12-hour': this['12Hour'],
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
-        'vuecal--split-days': this.splitDays.length,
+        'vuecal--split-days': this.hasSplits,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--no-event-overlaps': this.noEventOverlaps,
+        'vuecal--dragging-event': this.domEvents.resizeAnEvent.start,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
