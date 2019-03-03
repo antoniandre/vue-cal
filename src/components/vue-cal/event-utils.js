@@ -3,11 +3,12 @@ import Vue from 'vue'
 export const deleteAnEvent = function ({ event, vuecal }) {
   vuecal.emitWithEvent('event-delete', event)
 
+  let eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
   // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
-  let cellEvents = vuecal.mutableEvents[event.startDate]
+  let cellEvents = vuecal.mutableEvents[eventDate]
   // Delete the event.
-  vuecal.mutableEvents[event.startDate] = cellEvents.filter(e => e.id !== event.id)
-  cellEvents = vuecal.mutableEvents[event.startDate]
+  vuecal.mutableEvents[eventDate] = cellEvents.filter(e => e.id !== event.id)
+  cellEvents = vuecal.mutableEvents[eventDate]
 
   // If deleting a multiple-day event, delete all the events pieces (days).
   if (event.multipleDays.daysCount) {
@@ -18,9 +19,7 @@ export const deleteAnEvent = function ({ event, vuecal }) {
 
       if (!e.background) {
         // Remove this event from possible other overlapping events of the same cell.
-        Object.keys(eventToDelete.overlapped).forEach(id => (delete dayToModify.find(item => item.id === id).overlapping[eventToDelete.id]))
-        Object.keys(eventToDelete.overlapping).forEach(id => (delete dayToModify.find(item => item.id === id).overlapped[eventToDelete.id]))
-        Object.keys(eventToDelete.simultaneous).forEach(id => (delete dayToModify.find(item => item.id === id).simultaneous[eventToDelete.id]))
+        deleteLinkedEvents(eventToDelete, dayToModify)
       }
     })
   }
@@ -28,11 +27,13 @@ export const deleteAnEvent = function ({ event, vuecal }) {
   // Remove this event from possible other overlapping events of the same cell, then
   // after mutableEvents has changed, rerender will start & checkCellOverlappingEvents()
   // will be run again.
-  if (!event.background) {
-    Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.id === id).overlapping[event.id]))
-    Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.id === id).overlapped[event.id]))
-    Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.id === id).simultaneous[event.id]))
-  }
+  if (!event.background) deleteLinkedEvents(event, cellEvents)
+}
+
+const deleteLinkedEvents = function (event, cellEvents) {
+  Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.id === id).overlapping[event.id]))
+  Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.id === id).overlapped[event.id]))
+  Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.id === id).simultaneous[event.id]))
 }
 
 export const onResizeEvent = function ({ vuecal, cellEvents }) {

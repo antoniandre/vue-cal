@@ -500,14 +500,15 @@ export default {
           startDate = new Date(y1, parseInt(m1) - 1, d1)
           endDate = new Date(y2, parseInt(m2) - 1, d2)
           const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
+          const startDateFormatted = formatDate(startDate, 'yyyy-mm-dd', this.texts)
 
           // Update First day event.
           event.multipleDays = {
             start: true,
-            startDate,
+            startDate: startDateFormatted,
             startTime,
             startTimeMinutes,
-            endDate: startDate,
+            endDate: startDateFormatted,
             endTime: '24:00',
             endTimeMinutes: 24 * 60,
             daysCount: datesDiff + 1

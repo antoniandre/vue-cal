@@ -1,5 +1,6 @@
 <template lang="pug">
-.vuecal__event(:class="eventClasses(event)"
+.vuecal__event(
+  :class="eventClasses(event)"
   :style="eventStyles(event)"
   @mouseenter="onMouseEnter($event, event)"
   @mouseleave="onMouseLeave($event, event)"
@@ -8,11 +9,13 @@
   @mousedown="onMouseDown($event, event)"
   @click="onClick($event, event)"
   @dblclick="onDblClick($event, event)")
-  .vuecal__event-delete(v-if="vuecal.editableEvents"
+  .vuecal__event-delete(
+    v-if="vuecal.editableEvents"
     @mousedown.stop.prevent="deleteEvent(event)"
     @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
   slot(:event="event" :view="vuecal.view.id" name="event-renderer")
-  .vuecal__event-resize-handle(v-if="vuecal.editableEvents && vuecal.time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && vuecal.view.id !== 'month'"
+  .vuecal__event-resize-handle(
+    v-if="vuecal.editableEvents && vuecal.time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && vuecal.view.id !== 'month'"
     @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
     @touchstart="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)")
 </template>
