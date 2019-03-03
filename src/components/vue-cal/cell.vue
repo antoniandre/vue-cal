@@ -1,18 +1,26 @@
 <template lang="pug">
-  transition-group.vuecal__cell(:class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }" :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`" :appear="transitions")
-    .vuecal__flex.vuecal__cell-content(:class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`" v-for="i in (splits.length || 1)" :key="transitions ? `${view}-${content}-${i}` : i" column)
+  transition-group.vuecal__cell(
+    :class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }"
+    :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`"
+    :appear="transitions")
+    .vuecal__flex.vuecal__cell-content(
+      :class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`"
+      v-for="i in (splits.length || 1)"
+      :key="transitions ? `${view}-${content}-${i}` : i"
+      column)
       .split-label(v-if="splits.length" v-html="splits[i - 1].label")
       .vuecal__cell-date(v-if="content" v-html="content")
       .vuecal__no-event(v-if="!events.length && ['week', 'day'].indexOf(view) > -1")
         slot(name="no-event") {{ texts.noEvent }}
-      .vuecal__cell-events(v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+      .vuecal__cell-events(
+        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents({ split: 0, cellEvents: splits.length ? splitEvents[i] : events, vuecal: $parent })")
         event(
           :vuecal="$parent"
           :texts="texts"
           :event="event"
           :all-day-events="allDayEvents"
           :cell-events="splits.length ? splitEvents[i] : events"
-          :split-events="splitEvents[i] || []"
+          :split="splits.length ? i : 0"
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j")
           slot(name="event-renderer" slot="event-renderer" :event="event" :view="view")
       slot(v-if="view === 'month' && !eventsOnMonthView && events.length && !allDayEvents" name="events-count-month-view" :events="events")
@@ -20,7 +28,7 @@
 </template>
 
 <script>
-import { onResizeEvent, updateEventPosition, checkCellOverlappingEvents } from './event-utils'
+import { updateEventPosition, checkCellOverlappingEvents } from './event-utils'
 import Event from './event'
 
 export default {
@@ -55,9 +63,9 @@ export default {
       default: false
     }
   },
-  data: () => ({
-    splitEvents: {}
-  }),
+  methods: {
+    checkCellOverlappingEvents
+  },
 
   computed: {
     texts () {
@@ -93,53 +101,17 @@ export default {
     transitionDirection () {
       return this.$parent.transitionDirection
     },
-    domEvents: {
-      get () {
-        // if (this.$parent.domEvents.resizeAnEvent.eventId) this()
-        if (this.$parent.domEvents.resizeAnEvent.eventId) {
-        ({
-            vuecal: this.$parent,
-            cellEvents: this.$parent.mutableEvents[this.formattedDate],
-            cellSplits: this.splitEvents
-          })
-        }
-        return this.$parent.domEvents
-      },
-      set (object) {
-        this.$parent.domEvents = object
-      }
-    },
     cellStyles () {
       return { minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null, position: 'relative' }
     },
     events: {
       get () {
         const events = this.$parent.mutableEvents[this.formattedDate] || []
-        // eslint-disable-next-line
-        this.splitEvents = []
 
         events.forEach(event => {
           if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents)) {
             updateEventPosition({ event, vuecal: this.$parent })
           }
-
-          // Only for splits.
-          if (this.splits.length && event.split) {
-            // eslint-disable-next-line
-            if (!this.splitEvents[event.split]) this.$set(this.splitEvents, event.split, [])
-            // eslint-disable-next-line
-            this.splitEvents[event.split].push(event)
-          }
-        })
-
-        // NextTick prevents a cyclic redundancy.
-        if (this.$parent.time) this.$nextTick(() => {
-          checkCellOverlappingEvents({
-            split: 0,
-            cellEvents: this.$parent.mutableEvents[this.formattedDate],
-            splitEvents: this.splitEvents,
-            vuecal: this.$parent
-          })
         })
 
         return (this.showAllDayEvents && this.view !== 'month'
@@ -150,12 +122,13 @@ export default {
         this.$parent.mutableEvents[this.formattedDate] = events
       }
     },
-    cellSplitEvents () {
+    splitEvents () {
       let splitsEventIndexes = {}
-
       this.events.forEach((e, i) => {
-        if (!splitsEventIndexes[e.split || 0]) splitsEventIndexes[e.split || 0] = {}
-        splitsEventIndexes[e.split || 0][e.id] = i
+        if (e.split) {
+          if (!splitsEventIndexes[e.split]) splitsEventIndexes[e.split] = []
+          splitsEventIndexes[e.split].push(e)
+        }
       })
 
       return splitsEventIndexes

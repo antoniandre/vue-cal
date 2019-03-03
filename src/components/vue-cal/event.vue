@@ -42,13 +42,9 @@ export default {
       type: Array,
       default: () => []
     },
-    splitEvents: {
-      type: Array,
-      default: () => []
-    },
-    today: {
-      type: Boolean,
-      default: false
+    split: {
+      type: Number,
+      default: 0
     },
     allDayEvents: {
       type: Boolean,
@@ -177,10 +173,8 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      this.cellEvents = deleteAnEvent({
+      deleteAnEvent({
         event,
-        cellEvents: this.cellEvents,
-        splitEvents: this.splitEvents,
         vuecal: this.vuecal
       })
     },
@@ -205,8 +199,7 @@ export default {
         if (this.vuecal.domEvents.resizeAnEvent.eventId) {
           onResizeEvent({
             vuecal: this.vuecal,
-            cellEvents: this.cellEvents,
-            splitEvents: this.splitEvents
+            cellEvents: this.cellEvents
           })
         }
         return this.vuecal.domEvents
