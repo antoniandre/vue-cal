@@ -117,7 +117,6 @@ $weekdays-headings-height: 2.8em;
   // Calendar cells.
   //==================================//
   &__cells {
-    min-height: 100%;
     margin: 0 1px 1px 0;
 
     .vuecal--split-days.vuecal--week-view & {
