@@ -88,7 +88,6 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
-import './mixins'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
