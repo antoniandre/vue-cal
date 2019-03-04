@@ -52,10 +52,8 @@ export default {
     allDayEvents: {
       type: Boolean,
       default: false
-    },
+    }
   },
-  data: () => ({
-  }),
 
   methods: {
     eventStyles (event) {
