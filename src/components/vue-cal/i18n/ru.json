@@ -8,7 +8,7 @@
   "day": "День",
   "today": "Сегодня",
   "noEvent": "Нет событий",
-  "allDay": "",
+  "allDay": "Весь день",
   "deleteEvent": "Удалить",
   "createEvent": "Создать событие",
   "dateFormat": "DDDD d mmmm yyyy"

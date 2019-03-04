@@ -54,6 +54,7 @@ $weekdays-headings-height: 2.8em;
       align-items: center;
       justify-content: flex-end;
       border-bottom: 1px solid #ddd;
+      hyphens: auto;
 
       span {
         font-size: 0.85em;
@@ -116,7 +117,6 @@ $weekdays-headings-height: 2.8em;
   // Calendar cells.
   //==================================//
   &__cells {
-    min-height: 100%;
     margin: 0 1px 1px 0;
 
     .vuecal--split-days.vuecal--week-view & {

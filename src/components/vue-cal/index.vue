@@ -30,7 +30,7 @@
                 :formatted-date="cell.formattedDate"
                 :all-day-events="true"
                 :today="cell.today"
-                :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                :splits="hasSplits && splitDays || []"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
@@ -65,7 +65,7 @@
                     :formatted-date="cell.formattedDate"
                     :today="cell.today"
                     :content="cell.content"
-                    :splits="['week', 'day'].indexOf(view.id) > -1 && splitDays || []"
+                    :splits="hasSplits && splitDays || []"
                     @touchstart.native="onCellTouchStart($event, cell)"
                     @mousedown.native="onCellMouseDown($event, cell)"
                     @click.native="selectCell(cell)"
@@ -88,6 +88,7 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
+import './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -531,14 +532,15 @@ export default {
           startDate = new Date(y1, parseInt(m1) - 1, d1)
           endDate = new Date(y2, parseInt(m2) - 1, d2)
           const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
+          const startDateFormatted = formatDate(startDate, 'yyyy-mm-dd', this.texts)
 
           // Update First day event.
           event.multipleDays = {
             start: true,
-            startDate,
+            startDate: startDateFormatted,
             startTime,
             startTimeMinutes,
-            endDate: startDate,
+            endDate: startDateFormatted,
             endTime: '24:00',
             endTimeMinutes: 24 * 60,
             daysCount: datesDiff + 1
@@ -931,11 +933,12 @@ export default {
         'vuecal--time-12-hour': this['12Hour'],
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
-        'vuecal--split-days': this.splitDays.length,
+        'vuecal--split-days': this.hasSplits,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--no-event-overlaps': this.noEventOverlaps,
+        'vuecal--dragging-event': this.domEvents.resizeAnEvent.start,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
