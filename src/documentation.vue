@@ -195,10 +195,11 @@
   highlight-message.mt-3(type="success" no-icon)
     v-layout(align-center)
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
-      | Try it yourself:
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view].
+      div
+        | Try it yourself:
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view].
 
   //- Example.
   h3.title.mt-5.mb-2
