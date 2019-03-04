@@ -195,10 +195,11 @@
   highlight-message.mt-3(type="success" no-icon)
     v-layout(align-center)
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
-      | Try it yourself:
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-      | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view].
+      div
+        | Try it yourself:
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view].
 
   //- Example.
   h3.title.mt-5.mb-2
@@ -1462,7 +1463,7 @@
         Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
         | Currently available languages are English, Croatian, Dutch, French, Georgian,
-        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish &amp; Simplified Chinese.#[br]
+        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish, Simplified Chinese &amp; Vietnamese.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
         | this is what a language json looks like.
 
@@ -1805,12 +1806,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  highlight-message(type="error" no-icon).
-    Dear contributors &amp; users, if you know a (short length) translation for 'All day' (for #[a(href="#ex--all-day-events") all day events])
-    for the following languages: #[strong hr, ka, pl, pt-br, ru, sk, sv, zh-cn],
-    please contribute that file (in i18n/ folder) or paste the text in the
-    #[a(href="https://github.com/antoniandre/vue-cal/issues/40") issue #40]!
-
+  div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
   div #[strong Version 1.36.0] Add out of scope events in month view

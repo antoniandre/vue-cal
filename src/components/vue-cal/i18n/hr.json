@@ -8,7 +8,7 @@
   "day": "Dan",
   "today": "Današnji dan",
   "noEvent": "Nema događaja",
-  "allDay": "",
+  "allDay": "Cijeli dan",
   "deleteEvent": "Obriši",
   "createEvent": "Kreiraj događaj",
   "dateFormat": "DDDD d mmmm yyyy"

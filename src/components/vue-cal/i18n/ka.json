@@ -8,7 +8,7 @@
   "day": "დღე",
   "today": "დღეს",
   "noEvent": "ღონისძიება არ არის",
-  "allDay": "",
+  "allDay": "მთელი დღე",
   "deleteEvent": "წაშლა",
   "createEvent": "შექმენით ღონისძიება",
   "dateFormat": "DDDD d mmmm yyyy"
