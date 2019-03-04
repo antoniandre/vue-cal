@@ -264,7 +264,7 @@ $lighter-text: #ccc;
       transition: 0.2s 0s ease-in-out all, 0s 0.3s top;
       transform: translateY(1em);
       opacity: 0;
-      top: 5em;
+      top: -5em;
     }
   }
 }
