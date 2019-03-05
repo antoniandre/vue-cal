@@ -94,7 +94,7 @@ export default {
       }
 
       return {
-        ...event.classes,
+        [event.classes.join(' ')]: true,
         'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
         'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,

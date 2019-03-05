@@ -476,12 +476,7 @@ export default {
           linked: [], // Linked events.
           multipleDays: {},
           allDay: false,
-          classes: {
-            [event.class]: true,
-            'vuecal__event--background': event.background,
-            'vuecal__event--multiple-days': multipleDays,
-            'event-start': multipleDays
-          }
+          classes: event.class.split(' ')
         }, event)
 
         // Make array reactive for future events creations & deletions.
@@ -556,12 +551,6 @@ export default {
                 endTime: i === datesDiff ? endTime : '24:00',
                 endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
                 daysCount: datesDiff + 1
-              },
-              classes: {
-                ...event.classes,
-                'event-start': false,
-                'event-middle': i < datesDiff,
-                'event-end': i === datesDiff
               }
             })
           }
