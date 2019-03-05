@@ -93,6 +93,7 @@ import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
 import './styles.scss'
+import { deleteAnEvent } from './event-utils';
 
 export default {
   name: 'vue-cal',
@@ -637,7 +638,9 @@ export default {
         classes: []
       }
 
-      if (typeof this.onEventCreate === 'function') this.onEventCreate(event)
+      if (typeof this.onEventCreate === 'function') {
+        this.onEventCreate(event, () => deleteAnEvent({ event, vuecal: this }))
+      }
 
       // Make array reactive for future events creations & deletions.
       if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])

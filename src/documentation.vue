@@ -1926,8 +1926,8 @@
           v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
         v-layout
           v-spacer
-          v-btn(small @click="showEventCreationDialog = false;selectedEvent = {}") Cancel
-          v-btn(small color="primary" @click="showEventCreationDialog = false;selectedEvent = {}") Save
+          v-btn(small @click="cancelEventCreation()") Cancel
+          v-btn(small color="primary" @click="closeCreationDialog()") Save
 </template>
 
 <script>
@@ -2306,7 +2306,8 @@ export default {
         contentFull: 'Okay.<br>It will be a 18 hole golf course.',
         class: 'sport'
       }
-    ]
+    ],
+    deleteEventFunction: null
   }),
   methods: {
     logEvents (emittedEventName, params) {
@@ -2324,9 +2325,18 @@ export default {
       this.showDialog = true
       e.stopPropagation()
     },
-    onEventCreate (event) {
+    cancelEventCreation () {
+      this.closeCreationDialog()
+      this.deleteEventFunction()
+    },
+    closeCreationDialog () {
+      this.showEventCreationDialog = false
+      this.selectedEvent = {}
+    },
+    onEventCreate (event, deleteEventFunction) {
       this.selectedEvent = event
       this.showEventCreationDialog = true
+      this.deleteEventFunction = deleteEventFunction
 
       return event
     }
