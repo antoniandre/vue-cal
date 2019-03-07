@@ -47,7 +47,7 @@ $primary: #42b983;
 
 a {
   text-decoration: none;
-  color: $primary !important;
+  color: $primary;
 
   &[name] {
     position: relative;
