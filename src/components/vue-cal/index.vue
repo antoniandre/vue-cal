@@ -270,16 +270,16 @@ export default {
         dblTapACell: {
           taps: 0,
           timeout: 500
+        },
+        clickHoldACell: {
+          cellId: null,
+          timeout: 1200,
+          timeoutId: null
+        },
+        dblTapACell: {
+          taps: 0,
+          timeout: 500
         }
-      },
-      clickHoldACell: {
-        cellId: null,
-        timeout: 1200,
-        timeoutId: null
-      },
-      dblTapACell: {
-        taps: 0,
-        timeout: 500
       },
       mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
       transitionDirection: 'right'
