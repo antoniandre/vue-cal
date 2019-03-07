@@ -467,7 +467,7 @@
              :disable-views="['years', 'year']"
              hide-weekends
              :events="events"
-             :on-event-click="onEventclick"&gt;
+             :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
     ...
     &lt;v-dialog v-model="showDialog"&gt;
