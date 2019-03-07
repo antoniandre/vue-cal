@@ -272,8 +272,10 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
-        .then(response => (this.texts = response.default))
+      // @todo: find a way to externalize locales.
+      // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
+      //   .then(response => (this.texts = response.default))
+      this.texts = require(`./i18n/${locale}.json`)
     },
 
     switchToNarrowerView () {
@@ -497,7 +499,7 @@ export default {
           linked: [], // Linked events.
           multipleDays: {},
           allDay: false,
-          classes: event.class.split(' ')
+          classes: (event.class || '').split(' ')
         }, event)
 
         // Make array reactive for future events creations & deletions.

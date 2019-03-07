@@ -1817,7 +1817,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 1.40.0] Externalize all locales from main library
+  //- div #[strong Version 1.40.0] Externalize all locales from main library
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
