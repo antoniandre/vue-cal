@@ -96,6 +96,7 @@ export default {
       return {
         [event.classes.join(' ')]: true,
         'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
+        'vuecal__event--background': event.background,
         'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
@@ -104,7 +105,11 @@ export default {
         'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
         'vuecal__event--split-left': forceLeft,
         'vuecal__event--all-day': event.allDay,
-        'vuecal__event--multiple-days': Object.keys(event.multipleDays).length
+        // Multiple days events.
+        'vuecal__event--multiple-days': Object.keys(event.multipleDays).length,
+        'event-start': Object.keys(event.multipleDays).length && event.multipleDays.start,
+        'event-middle': Object.keys(event.multipleDays).length && event.multipleDays.middle,
+        'event-end': Object.keys(event.multipleDays).length && event.multipleDays.end
       }
     },
 
