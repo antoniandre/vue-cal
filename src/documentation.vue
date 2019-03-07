@@ -313,13 +313,25 @@
   h3.title.mt-5.mb-2.pt-4
     a(href="#ex--internationalization") # Internationalization (i18n)
     a#ex--internationalization(name="ex--internationalization")
-  p.
-    Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
-    Refer to the #[span.code locale] option in the #[a(href="#api") API] section.
+  v-layout(row align-center wrap)
+    span.mr-2 Let you translate the calendar texts into your own language (#[span.code locale]).
+    v-spacer
+    v-layout.shrink(row align-center)
+      v-icon.mr-2(color="primary") translate
+      span.mr-2 Current language:
+      v-select.pa-0.ma-0.shrink(
+        :items="localesList"
+        item-value="code"
+        item-text="label"
+        v-model="locale"
+        hide-details single-line
+        style="width: 190px")
+  p Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.
   v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-    vue-cal.vuecal--green-theme(:time="false" small default-view="year" locale="zh-cn")
+    vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal hide-view-selector :time="false" small default-view="year" locale="zh-cn"&gt;&lt;/vue-cal&gt;
+    &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
+    &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
 
   //- Example.
   h3.title.mt-3.mb-2.pt-4
@@ -1462,8 +1474,7 @@
         Allows you to translate the calendar texts in a given language.#[br]
         Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
-        | Currently available languages are English, Croatian, Dutch, French, Georgian,
-        | German, Italian, Polish, Portuguese-Brasilian, Russian, Slovak, Spanish, Swedish, Simplified Chinese &amp; Vietnamese.#[br]
+        | Currently available languages are {{ localesList.map(l => l.label).join(', ') }}.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
         | this is what a language json looks like.
 
@@ -1806,6 +1817,10 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 1.40.0] Externalize all languages from main library
+    highlight-message(type="success").
+      This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
+      Now, only the language you need will be loaded on demand (as a separate request).
   div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
@@ -1991,6 +2006,24 @@ const events = [
 export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
+    localesList: [
+      { code: 'zh-cn', label: 'Chinese (Simplified)' },
+      { code: 'hr', label: 'Croatian' },
+      { code: 'nl', label: 'Dutch' },
+      { code: 'en', label: 'English' },
+      { code: 'fr', label: 'French' },
+      { code: 'ka', label: 'Georgian' },
+      { code: 'de', label: 'German' },
+      { code: 'it', label: 'Italian' },
+      { code: 'pl', label: 'Polish' },
+      { code: 'pt-br', label: 'Portuguese Brasilian' },
+      { code: 'ru', label: 'Russian' },
+      { code: 'sk', label: 'Slovak' },
+      { code: 'es', label: 'Spanish' },
+      { code: 'sv', label: 'Swedish' },
+      { code: 'vi', label: 'Vietnamese' }
+    ],
+    locale: 'zh-cn',
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
     overlapEvents: true,
