@@ -1817,10 +1817,10 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 1.40.0] Externalize all languages from main library
+  div #[strong Version 1.40.0] Externalize all locales from main library
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
-      Now, only the language you need will be loaded on demand (as a separate request).
+      Now, only the locale you need will be loaded on demand (as a separate request).
   div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
