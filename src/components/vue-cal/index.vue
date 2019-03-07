@@ -81,14 +81,13 @@
                         .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && event.allDay && showAllDayEvents && showAllDayEvents === 'short') && !(view === 'month' && eventsOnMonthView === 'short')")
                           | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
                           span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                          small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ texts.day[0].toLowerCase() }}
+                          small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                         .vuecal__event-content(v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents && showAllDayEvents === 'short') && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
                     slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
-import './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -224,33 +223,54 @@ export default {
       default: true
     }
   },
-  data: () => ({
-    ready: false,
-    now,
-    view: {
-      id: '',
-      title: '',
-      startDate: null,
-      selectedDate: null
-    },
-    eventIdIncrement: 1,
-    domEvents: {
-      resizeAnEvent: {
-        eventId: null, // Only one at a time.
-        start: null,
-        originalHeight: 0,
-        newHeight: 0
+  data: function () {
+    return {
+      texts: this.locale === 'en' ? require('./i18n/en.json') : {
+        weekDays: Array(7).fill(''),
+        months: Array(12).fill(''),
+        years: '',
+        year: '',
+        month: '',
+        week: '',
+        day: '',
+        today: '',
+        noEvent: '',
+        allDay: '',
+        deleteEvent: '',
+        createEvent: '',
+        dateFormat: 'DDDD mmmm d, yyyy'
       },
-      dragAnEvent: {
-        eventId: null // Only one at a time.
+      ready: false,
+      now,
+      view: {
+        id: '',
+        title: '',
+        startDate: null,
+        selectedDate: null
       },
-      focusAnEvent: {
-        eventId: null // Only one at a time.
-      },
-      clickHoldAnEvent: {
-        eventId: null, // Only one at a time.
-        timeout: 1200,
-        timeoutId: null
+      eventIdIncrement: 1,
+      domEvents: {
+        resizeAnEvent: {
+          eventId: null, // Only one at a time.
+          start: null,
+          originalHeight: 0,
+          newHeight: 0
+        },
+        dragAnEvent: {
+          eventId: null // Only one at a time.
+        },
+        focusAnEvent: {
+          eventId: null // Only one at a time.
+        },
+        clickHoldAnEvent: {
+          eventId: null, // Only one at a time.
+          timeout: 1200,
+          timeoutId: null
+        },
+        dblTapACell: {
+          taps: 0,
+          timeout: 500
+        }
       },
       clickHoldACell: {
         cellId: null,
@@ -260,13 +280,20 @@ export default {
       dblTapACell: {
         taps: 0,
         timeout: 500
-      }
-    },
-    mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
-    transitionDirection: 'right'
-  }),
+      },
+      mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+      transitionDirection: 'right'
+    }
+  },
 
   methods: {
+    loadLocale (locale) {
+      // @todo: find a way to externalize locales.
+      // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
+      //   .then(response => (this.texts = response.default))
+      this.texts = require(`./i18n/${locale}.json`)
+    },
+
     switchToNarrowerView () {
       this.transitionDirection = 'right'
 
@@ -514,7 +541,7 @@ export default {
           linked: [], // Linked events.
           multipleDays: {},
           allDay: false,
-          classes: event.class.split(' ')
+          classes: (event.class || '').split(' ')
         }, event)
 
         // Make array reactive for future events creations & deletions.
@@ -692,6 +719,8 @@ export default {
   },
 
   created () {
+    if (this.locale !== 'en') this.loadLocale(this.locale)
+
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
@@ -740,9 +769,6 @@ export default {
   },
 
   computed: {
-    texts () {
-      return require(`./i18n/${this.locale}.json`)
-    },
     views () {
       return {
         years: { label: this.texts.years, enabled: this.disableViews.indexOf('years') === -1 },
@@ -960,6 +986,9 @@ export default {
         this.updateMutableEvents(events)
       },
       deep: true
+    },
+    locale (locale) {
+      this.loadLocale(locale)
     },
     selectedDate (date) {
       this.updateSelectedDate(date)
