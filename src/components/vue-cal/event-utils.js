@@ -19,7 +19,7 @@ export const deleteAnEvent = function ({ event, vuecal }) {
 
       if (!e.background) {
         // Remove this event from possible other overlapping events of the same cell.
-        deleteLinkedEvents(eventToDelete, dayToModify)
+        deleteLinkedOverlappingEvents(eventToDelete, dayToModify)
       }
     })
   }
@@ -27,10 +27,10 @@ export const deleteAnEvent = function ({ event, vuecal }) {
   // Remove this event from possible other overlapping events of the same cell, then
   // after mutableEvents has changed, rerender will start & checkCellOverlappingEvents()
   // will be run again.
-  if (!event.background) deleteLinkedEvents(event, cellEvents)
+  if (!event.background) deleteLinkedOverlappingEvents(event, cellEvents)
 }
 
-const deleteLinkedEvents = function (event, cellEvents) {
+export const deleteLinkedOverlappingEvents = function (event, cellEvents) {
   Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.id === id).overlapping[event.id]))
   Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.id === id).overlapped[event.id]))
   Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.id === id).simultaneous[event.id]))
@@ -44,7 +44,7 @@ export const onResizeEvent = function ({ vuecal, cellEvents }) {
     event.height = Math.max(newHeight, 10)
     updateEndTimeOnResize({ event, vuecal })
 
-    if (!event.background) checkCellOverlappingEvents({ split: event.split || 0, cellEvents, vuecal })
+    if (!event.background) checkCellOverlappingEvents({ cellEvents, vuecal })
   }
 }
 

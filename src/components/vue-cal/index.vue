@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
+  .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
     vuecal-header(
       :vuecal-props="$props"
       :view-props="{ views, view, hasSplits }"
@@ -535,6 +535,7 @@ export default {
           content: '',
           height: 0,
           top: 0,
+          background: false,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
@@ -661,6 +662,7 @@ export default {
         simultaneous: {},
         multipleDays: {},
         background: false,
+        allDay: false,
         linked: [],
         classes: []
       }

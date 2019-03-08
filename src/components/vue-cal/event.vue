@@ -4,7 +4,6 @@
   :style="eventStyles(event)"
   @mouseenter="onMouseEnter($event, event)"
   @mouseleave="onMouseLeave($event, event)"
-  @contextmenu="onContextMenu($event, event)"
   @touchstart="onTouchStart($event, event)"
   @mousedown="onMouseDown($event, event)"
   @click="onClick($event, event)"
@@ -21,7 +20,7 @@
 </template>
 
 <script>
-import { deleteAnEvent, onResizeEvent } from './event-utils'
+import { deleteAnEvent, onResizeEvent, deleteLinkedOverlappingEvents, checkCellOverlappingEvents } from './event-utils'
 
 export default {
   props: {
@@ -147,11 +146,6 @@ export default {
       this.vuecal.emitWithEvent('event-mouse-leave', event)
     },
 
-    onContextMenu (e, event) {
-      e.preventDefault()
-      return false
-    },
-
     onTouchStart (e, event) {
       this.onMouseDown(e, event, true)
     },
@@ -179,10 +173,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent({
-        event,
-        vuecal: this.vuecal
-      })
+      deleteAnEvent({ event, vuecal: this.vuecal })
     },
 
     touchDeleteEvent (event) {
@@ -203,16 +194,25 @@ export default {
       get () {
         // if (this.vuecal.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
         if (this.vuecal.domEvents.resizeAnEvent.eventId) {
-          onResizeEvent({
-            vuecal: this.vuecal,
-            cellEvents: this.cellEvents
-          })
+          onResizeEvent({ vuecal: this.vuecal, cellEvents: this.cellEvents })
         }
         return this.vuecal.domEvents
       },
       set (object) {
         this.vuecal.domEvents = object
       }
+    }
+  },
+
+  watch: {
+    'event.background' (val) {
+      // When the event background property changes, remove all the involved overlapping events
+      // and trigger cell overlapping check again.
+      deleteLinkedOverlappingEvents(this.event, this.cellEvents)
+      this.event.overlapping = {}
+      this.event.overlapped = {}
+      this.event.simultaneous = {}
+      checkCellOverlappingEvents({ cellEvents: this.cellEvents, vuecal: this.vuecal })
     }
   }
 }
