@@ -265,10 +265,14 @@
   h3.title.mt-5.mb-2.pt-4
     a(href="#ex--custom-title-and-no-event-text") # Custom vue-cal title &amp; "no event" text
     a#ex--custom-title-and-no-event-text(name="ex--custom-title-and-no-event-text")
-  highlight-message(type="tips").
-    Using Vue.js scoped slots, you can override the main date title.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  highlight-message(type="tips")
+    ul
+      li.
+        Using Vue.js scoped slots, you can override the main date title.#[br]
+        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
   p.mb-2.
     In the following example, we set a custom title with Emoji.#[br]
     2 arguments are available from the scope:
@@ -391,9 +395,14 @@
       div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
-  highlight-message(type="tips").
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  highlight-message(type="tips")
+    ul
+      li.
+        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
+
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
@@ -550,9 +559,13 @@
     a#ex--custom-event-rendering(name="ex--custom-event-rendering")
   p.mb-2 Using Vue.js scoped slots, you can override the events rendering.
 
-  highlight-message.my-2(type="tips").
-    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]].
+  highlight-message.my-2(type="tips")
+    ul
+      li.
+        If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]].
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
 
   highlight-message.my-3(type="info")
     | By default an event is rendered as follows.#[br]
@@ -703,10 +716,15 @@
     .vuecal__cell-events-count {display: none;}
 
   p.mt-5.title Custom events count on Month view.
-  highlight-message(type="tips").
-    Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+  highlight-message(type="tips")
+    ul
+      li.
+        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
+        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
+
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class.
