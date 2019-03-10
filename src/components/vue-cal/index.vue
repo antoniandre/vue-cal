@@ -418,8 +418,8 @@ export default {
     onMouseUp (e) {
       let { focusAnEvent, resizeAnEvent, clickHoldAnEvent } = this.domEvents
 
-      // On event resize end, emit event.
-      if (resizeAnEvent.eventId) {
+      // On event resize end, emit event if duration has changed.
+      if (resizeAnEvent.eventId && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
         let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
         if (event) {
           this.emitWithEvent('event-change', event)
@@ -448,6 +448,9 @@ export default {
     },
 
     onEventTitleBlur (e, event) {
+      // If no change cancel action.
+      if (event.title === e.target.innerHTML) return
+
       event.title = e.target.innerHTML
 
       if (event.linked.daysCount) {
