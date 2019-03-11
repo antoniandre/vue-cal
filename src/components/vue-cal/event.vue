@@ -66,13 +66,14 @@ export default {
     },
 
     eventClasses (event) {
+      let { clickHoldAnEvent, focusAnEvent } = this.domEvents
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
       let forceLeft = false
-      let deletable = this.domEvents.clickHoldAnEvent.eventId &&
-                      (this.domEvents.clickHoldAnEvent.eventId === event.id ||
-                      event.linked.find(e => e.id === this.domEvents.clickHoldAnEvent.eventId))
+      let deletable = clickHoldAnEvent.eventId &&
+                      (clickHoldAnEvent.eventId === event.id ||
+                      event.linked.find(e => e.id === clickHoldAnEvent.eventId))
 
       if (simultaneous >= 3) {
         let split3 = simultaneous - 1
@@ -94,7 +95,7 @@ export default {
 
       return {
         [event.classes.join(' ')]: true,
-        'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
+        'vuecal__event--focus': focusAnEvent.eventId === event.id,
         'vuecal__event--background': event.background,
         'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,
@@ -173,7 +174,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent({ event, vuecal: this.vuecal })
+      deleteAnEvent(event, this.vuecal)
     },
 
     touchDeleteEvent (event) {
@@ -192,9 +193,8 @@ export default {
     },
     domEvents: {
       get () {
-        // if (this.vuecal.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
         if (this.vuecal.domEvents.resizeAnEvent.eventId) {
-          onResizeEvent({ vuecal: this.vuecal, cellEvents: this.cellEvents })
+          onResizeEvent(this.cellEvents, this.vuecal)
         }
         return this.vuecal.domEvents
       },
@@ -212,7 +212,7 @@ export default {
       this.event.overlapping = {}
       this.event.overlapped = {}
       this.event.simultaneous = {}
-      checkCellOverlappingEvents({ cellEvents: this.cellEvents, vuecal: this.vuecal })
+      checkCellOverlappingEvents(this.cellEvents, this.vuecal)
     }
   }
 }

@@ -88,11 +88,11 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
+import { deleteAnEvent, createAnEvent, eventDefaults } from './event-utils';
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
 import './styles.scss'
-import { deleteAnEvent } from './event-utils';
 
 export default {
   name: 'vue-cal',
@@ -527,6 +527,10 @@ export default {
         let id = `${this._uid}_${this.eventIdIncrement++}`
 
         event = Object.assign({
+          ...eventDefaults,
+          overlapped: {},
+          overlapping: {},
+          simultaneous: {},
           id,
           startDate,
           startTime,
@@ -534,17 +538,6 @@ export default {
           endDate,
           endTime,
           endTimeMinutes,
-          title: '',
-          content: '',
-          height: 0,
-          top: 0,
-          background: false,
-          overlapped: {},
-          overlapping: {},
-          simultaneous: {},
-          linked: [], // Linked events.
-          multipleDays: {},
-          allDay: false,
           classes: (event.class || '').split(' ')
         }, event)
 
@@ -636,50 +629,9 @@ export default {
     },
 
     createAnEvent (cell, e) {
-      const d = cell.date.getDate()
-      const m = cell.date.getMonth() + 1
-      const y = cell.date.getFullYear()
-      const date = `${y}-${m < 10 ? '0' + m : m}-${d < 10 ? '0' + d : d}`
       const mouseY = this.getPosition(e).y
       const startTimeMinutes = mouseY * 60 / parseInt(this.timeCellHeight) + this.timeFrom
-      const hours = parseInt(startTimeMinutes / 60)
-      const minutes = parseInt(startTimeMinutes % 60)
-      const endTimeMinutes = startTimeMinutes + 120
-
-      let event = {
-        id: `${this._uid}_${this.eventIdIncrement++}`,
-        title: '',
-        content: '',
-        start: date + (this.time ? `${hours}:${minutes}` : ''),
-        startDate: date,
-        startTime: (this.time ? `${hours}:${minutes}` : null),
-        startTimeMinutes,
-        end: date + (this.time ? `${hours + 2}:${minutes}` : ''),
-        endDate: date,
-        endTime: (this.time ? `${hours + 2}:${minutes}` : null),
-        endTimeMinutes,
-        height: 0,
-        top: 0,
-        overlapped: {},
-        overlapping: {},
-        simultaneous: {},
-        multipleDays: {},
-        background: false,
-        allDay: false,
-        linked: [],
-        classes: []
-      }
-
-      if (typeof this.onEventCreate === 'function') {
-        this.onEventCreate(event, () => deleteAnEvent({ event, vuecal: this }))
-      }
-
-      // Make array reactive for future events creations & deletions.
-      if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
-
-      this.mutableEvents[event.startDate].push(event)
-      this.emitWithEvent('event-create', event)
-      this.emitWithEvent('event-change', event)
+      createAnEvent(cell.formattedDate, startTimeMinutes, this)
     },
 
     // Prepare the event to return it with an emitted event.
