@@ -16,7 +16,6 @@
         v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events, $parent)")
         event(
           :vuecal="$parent"
-          :texts="texts"
           :event="event"
           :all-day-events="allDayEvents"
           :cell-events="splits.length ? splitEvents[i] : events"
