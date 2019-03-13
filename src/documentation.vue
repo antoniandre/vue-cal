@@ -364,9 +364,9 @@
   sshpre.mt-4(language="css" label="CSS").
     .vuecal__now-line {color: #06c;}
   p.
-    If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none;}].#[br]
+    If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
-  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
+  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--today-current-time(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
@@ -383,7 +383,7 @@
     #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
-  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px")
+  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme(
       small
       :time-from="5 * 60"
@@ -402,7 +402,6 @@
         #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
       li
         strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
@@ -728,7 +727,7 @@
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class.
-  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
+  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--events-indicators-on-month-view(
       :class="`event-indicator--${indicatorStyle}`"
       selected-date="2018-11-19"
@@ -801,7 +800,7 @@
     The events have associated dates but no time information.#[br]
     Timeless events cannot be resized as they have no time or duration information.#[br]
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
-  v-card.my-2.ma-auto.main-content(style="height: 350px;")
+  v-card.my-2.ma-auto.main-content(style="height: 350px")
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time="false"

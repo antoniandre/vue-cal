@@ -5,7 +5,10 @@
       :view-props="{ views, view, hasSplits }"
       :texts="texts"
       :months="months"
-      :week-days="weekDays")
+      :small="small"
+      :xsmall="xsmall"
+      :week-days="weekDays"
+      :week-days-short="weekDaysShort")
       div(slot="arrowPrev")
         slot(name="arrowPrev")
           i.angle
@@ -35,9 +38,15 @@
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
-                    .vuecal__event-title.vuecal__event-title--edit(contenteditable v-if="editableEvents && event.title" @blur="onEventTitleBlur($event, event)" v-html="event.title")
-                    .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-                    .vuecal__event-content(v-if="event.content && showAllDayEvents !== 'short' && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+                    .vuecal__event-title.vuecal__event-title--edit(
+                      v-if="editableEvents && event.title"
+                      contenteditable
+                      @blur="onEventTitleBlur($event, event)"
+                      v-html="event.title")
+                    .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                    .vuecal__event-content(
+                      v-if="event.content && showAllDayEvents !== 'short' && !isShortMonthView"
+                      v-html="event.content")
                 slot(slot="no-event" name="no-event")
           .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
             .vuecal__flex(row grow)
@@ -54,7 +63,10 @@
                   :view="view"
                   :min-cell-width="minCellWidth"
                   :locale="locale"
+                  :small="small"
+                  :xsmall="xsmall"
                   :week-days="weekDays"
+                  :week-days-short="weekDaysShort"
                 )
 
                 .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
@@ -74,13 +86,19 @@
                         span(v-if="events.length") {{ events.length }}
                     div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                       slot(name="event-renderer" :view="view" :event="event")
-                        .vuecal__event-title.vuecal__event-title--edit(v-if="editableEvents && event.title" contenteditable @blur="onEventTitleBlur($event, event)" v-html="event.title")
-                        .vuecal__event-title(v-else-if="event.title") {{ event.title }}
-                        .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && event.allDay && showAllDayEvents && showAllDayEvents === 'short') && !(view === 'month' && eventsOnMonthView === 'short')")
+                        .vuecal__event-title.vuecal__event-title--edit(
+                          v-if="editableEvents && event.title"
+                          contenteditable
+                          @blur="onEventTitleBlur($event, event)"
+                          v-html="event.title")
+                        .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                        .vuecal__event-time(v-if="event.startTimeMinutes && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                           | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
                           span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
                           small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
-                        .vuecal__event-content(v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents && showAllDayEvents === 'short') && !(view === 'month' && eventsOnMonthView === 'short')" v-html="event.content")
+                        .vuecal__event-content(
+                          v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
+                          v-html="event.content")
                     slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
@@ -680,6 +698,9 @@ export default {
     hasTimeColumn () {
       return this.time && ['week', 'day'].indexOf(this.view.id) > -1
     },
+    isShortMonthView () {
+      return this.view.id === 'month' && this.eventsOnMonthView === 'short'
+    },
     // For week & day views.
     timeCells () {
       let timeCells = []
@@ -710,6 +731,22 @@ export default {
       }
 
       return weekDays.map(day => ({ label: day }))
+    },
+    weekDaysShort () {
+      let { weekDaysShort = null } = this.texts
+
+      if (weekDaysShort) {
+        // Do not modify original for next instances.
+        weekDaysShort = weekDaysShort.slice(0)
+
+        if (this.startWeekOnSunday) weekDaysShort.unshift(weekDaysShort.pop())
+
+        if (this.hideWeekends) {
+          weekDaysShort = this.startWeekOnSunday ? weekDaysShort.slice(1, 6) : weekDaysShort.slice(0, 5)
+        }
+      }
+
+      return weekDaysShort && weekDaysShort.map(day => ({ label: day }))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))

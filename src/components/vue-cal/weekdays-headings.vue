@@ -3,7 +3,12 @@
   .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in headings" :key="i" :style="weekdayCellStyles")
     transition(:name="`slide-fade--${transitions.direction}`" :appear="transitions.active")
       span(:key="transitions.active ? `${i}-${heading.label4}` : false")
-        span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+        //- span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
+        //- span(v-if="heading.label4") &nbsp;
+        //- span(v-if="heading.label4") {{ heading.label4 }}
+        span.full {{ heading.full }}
+        span.small {{ heading.small }}
+        span.xsmall {{ heading.xsmall }}
         span(v-if="heading.label4") &nbsp;
         span(v-if="heading.label4") {{ heading.label4 }}
 </template>
@@ -29,6 +34,18 @@ export default {
       type: Array,
       default: () => []
     },
+    weekDaysShort: {
+      type: [Array, null],
+      default: () => []
+    },
+    small: {
+      type: Boolean,
+      default: false
+    },
+    xsmall: {
+      type: Boolean,
+      default: false
+    },
     locale: {
       type: String,
       default: 'en'
@@ -48,10 +65,10 @@ export default {
             let isToday = this.view.id === 'week' && !todayFound && isDateToday(date) && !todayFound++
 
             return {
-              // Chinese language has a particular format.
-              label1: this.locale === 'zh-cn' ? cell.label.substr(0, 2) : cell.label[0],
-              label2: this.locale === 'zh-cn' ? cell.label.substr(2) : cell.label.substr(1, 2),
-              label3: this.locale === 'zh-cn' ? '' : cell.label.substr(3),
+              full: cell.label,
+              small: this.weekDaysShort ? this.weekDaysShort[i].label : cell.label.substr(0, 3),
+              xsmall: this.weekDaysShort ? this.weekDaysShort[i].label : cell.label.substr(0, 1),
+
               // Only for week view:
               ...(this.view.id === 'week' ? { label4: date.getDate() } : {}),
               ...(this.view.id === 'week' ? { today: isToday } : {}),
@@ -103,12 +120,27 @@ $weekdays-headings-height: 2.8em;
     text-align: center;
     align-items: center;
     position: relative;
+    overflow: hidden;
 
-    .vuecal--small & span:nth-child(3) {display: none;}
-    .vuecal--xsmall & {flex-direction: column;padding-left: 0;padding-right: 0;}
-    .vuecal--xsmall & span:nth-child(2),
-    .vuecal--xsmall & span:nth-child(3),
-    .vuecal--xsmall & span:nth-child(4) {display: none;}
+    .vuecal--month-view &, .vuecal--week-view &, .vuecal--day-view & {width: 14.2857%;}
+    .vuecal--hide-weekends.vuecal--month-view &,
+    .vuecal--hide-weekends.vuecal--week-view &,
+    .vuecal--hide-weekends.vuecal--day-view & {width: 20%;}
+    .vuecal--years-view & {width: 20%;}
+    .vuecal--year-view & {width: 33.33%;}
+
+    & > span {flex-shrink: 0;display: flex;}
+
+    // Full.
+    .small, .xsmall {display: none;}
+
+    // Small.
+    .vuecal--small & .small {display: block;}
+    .vuecal--small & .full, .vuecal--small & .xsmall {display: none;}
+
+    // XSmall.
+    .vuecal--xsmall & .xsmall {display: block;}
+    .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
   }
 }
 
@@ -116,57 +148,92 @@ $weekdays-headings-height: 2.8em;
 //==================================//
 @media screen and(max-width: 550px) {
   .vuecal__heading {
-    padding-left: 1.5em;
-    padding-right: 1.5em;
     line-height: 1.2;
 
-    .vuecal--week-view & span:nth-child(3) {display: none;}
-    .vuecal--view-with-time.vuecal--week-view.vuecal--overflow-x & span:nth-child(3) {display: inline-block;}
+    // .vuecal:not(.vuecal--xsmall):not(.vuecal--overflow-x) & .small {display: block;}
+    // .vuecal:not(.vuecal--overflow-x) & .full,
+    // .vuecal:not(.vuecal--xsmall) .xsmall {display: none;}
 
-    // Chinese language.
-    .vuecal--month-view.vuecal--zh-cn & {padding: 0;}
-    .vuecal--week-view.vuecal--zh-cn & span span:nth-child(1) {display: none;}
+    // .vuecal--xsmall & .xsmall {display: block;}
+    // .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
+
+    // Overflowing x.
+    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .full {display: block;}
+    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .small,
+    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .xsmall {display: none;}
+    // .vuecal--week-view & span:nth-child(3) {display: none;}
+    // .vuecal--view-with-time.vuecal--week-view.vuecal--overflow-x & span:nth-child(3) {display: inline-block;}
+
+    // Full.
+    .small {display: block;}
+    .full, .xsmall {display: none;}
+    .vuecal--overflow-x & .full {display: block;}
+    .vuecal--overflow-x & .small, .vuecal--overflow-x & .xsmall {display: none;}
+
+    // Small.
+    .vuecal--small & .small {display: block;}
+    .vuecal--small & .full, .vuecal--small & .xsmall {display: none;}
+    .vuecal--small.vuecal--overflow-x & .small {display: block;}
+    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall {display: none;}
+
+    // XSmall.
+    .vuecal--xsmall & .xsmall {display: block;}
+    .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
+    .vuecal--xsmall.vuecal--overflow-x & .xsmall {display: block;}
+    .vuecal--xsmall.vuecal--overflow-x & .full, .vuecal--xsmall.vuecal--overflow-x & .small {display: none;}
   }
 }
 
 @media screen and(max-width: 450px) {
   .vuecal__heading {
-    padding-left: 1.4em;
-    padding-right: 1.4em;
+    // .xsmall {display: block;}
+    // .full {display: none !important;}
+    // .small {display: none !important;}
+    // .vuecal:not(.vuecal--xsmall):not(.vuecal--overflow-x) & .small {display: block;}
+    // .vuecal:not(.vuecal--overflow-x) & .full,
+    // .vuecal:not(.vuecal--xsmall) .xsmall {display: none;}
 
-    span:nth-child(3) {display: none;}
+    // Full.
+    .xsmall {display: block;}
+    .full, .small {display: none;}
+
+    // Small.
+    .vuecal--small & .xsmall {display: block;}
+    .vuecal--small & .full, .vuecal--small & .small {display: none;}
+    .vuecal--small.vuecal--overflow-x & .small {display: block;}
+    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall {display: none;}
+
+    // XSmall.
+    .vuecal--xsmall & .xsmall {display: block;}
+    .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
+    .vuecal--xsmall.vuecal--overflow-x & .xsmall {display: block;}
+    .vuecal--xsmall.vuecal--overflow-x & .full, .vuecal--xsmall.vuecal--overflow-x & .small {display: none;}
   }
 }
 
 @media screen and(max-width: 350px) {
   .vuecal__heading {
     flex-wrap: wrap;
-    padding-left: 0.2em;
-    padding-right: 0.2em;
 
-    .vuecal--week-view:not(.vuecal--overflow-x) & {
-      flex-direction: column;
-      padding-left: 0;
-      padding-right: 0;
-    }
+    .vuecal--week-view:not(.vuecal--overflow-x) & {flex-direction: column;}
 
-    .vuecal--week-view & span:nth-child(2),
-    .vuecal--small & span:nth-child(2) {display: none;}
+    // .vuecal--week-view & span:nth-child(2),
+    // .vuecal--small & span:nth-child(2) {display: none;}
 
-    span:nth-child(3) {display: none;}
+    // span:nth-child(3) {display: none;}
 
-    .vuecal--week-view & span:nth-child(4),
-    .vuecal--small & span:nth-child(4) {display: none;}
+    // .vuecal--week-view & span:nth-child(4),
+    // .vuecal--small & span:nth-child(4) {display: none;}
 
-    .vuecal--week-view.vuecal--overflow-x & span:nth-child(2),
-    .vuecal--week-view.vuecal--overflow-x & span:nth-child(3),
-    .vuecal--week-view.vuecal--overflow-x & span:nth-child(4) {display: inline-block;}
+    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(2),
+    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(3),
+    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(4) {display: inline-block;}
 
-    // Chinese language.
-    .vuecal--month-view.vuecal--zh-cn & span:nth-child(1),
-    .vuecal--week-view.vuecal--zh-cn & span:nth-child(1) {display: none;}
-    .vuecal--month-view.vuecal--zh-cn & span:nth-child(2),
-    .vuecal--week-view.vuecal--zh-cn & span:nth-child(2) {display: block;}
+    // // Chinese language.
+    // .vuecal--month-view.vuecal--zh-cn & span:nth-child(1),
+    // .vuecal--week-view.vuecal--zh-cn & span:nth-child(1) {display: none;}
+    // .vuecal--month-view.vuecal--zh-cn & span:nth-child(2),
+    // .vuecal--week-view.vuecal--zh-cn & span:nth-child(2) {display: block;}
   }
 }
 </style>

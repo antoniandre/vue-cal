@@ -22,7 +22,10 @@
     v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
     :view="viewProps.view"
     :locale="vuecalProps.locale"
+    :small="small"
+    :xsmall="xsmall"
     :week-days="weekDays"
+    :week-days-short="weekDaysShort"
     :transitions="{ active: vuecalProps.transitions, direction: transitionDirection }"
   )
 </template>
@@ -45,6 +48,18 @@ export default {
     weekDays: {
       type: Array,
       default: () => []
+    },
+    weekDaysShort: {
+      type: [Array, null],
+      default: () => []
+    },
+    small: {
+      type: Boolean,
+      default: false
+    },
+    xsmall: {
+      type: Boolean,
+      default: false
     }
   },
 

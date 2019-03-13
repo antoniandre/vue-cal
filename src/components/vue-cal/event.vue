@@ -15,7 +15,7 @@
     @touchstart.stop.prevent="touchDeleteEvent(event)") {{ texts.deleteEvent }}
   slot(:event="event" :view="vuecal.view.id" name="event-renderer")
   .vuecal__event-resize-handle(
-    v-if="vuecal.editableEvents && vuecal.time && event.startTime && !allDayEvents && !event.multipleDays.start && !event.multipleDays.middle && vuecal.view.id !== 'month'"
+    v-if="resizable"
     @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
     @touchstart="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)")
 </template>
@@ -199,9 +199,12 @@ export default {
     time () {
       return this.vuecal.time
     },
+    resizable () {
+      return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDayEvents &&
+        !this.event.multipleDays.start && !this.event.multipleDays.middle && this.vuecal.view.id !== 'month')
+    },
     domEvents: {
       get () {
-        // if (this.vuecal.domEvents.resizeAnEvent.eventId) this.onResizeEvent()
         if (this.vuecal.domEvents.resizeAnEvent.eventId) {
           onResizeEvent({
             vuecal: this.vuecal,
