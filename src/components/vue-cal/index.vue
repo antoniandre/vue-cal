@@ -3,20 +3,14 @@
     vuecal-header(
       :vuecal-props="$props"
       :view-props="{ views, view, hasSplits }"
-      :texts="texts"
       :months="months"
-      :small="small"
-      :xsmall="xsmall"
       :week-days="weekDays"
       :week-days-short="weekDaysShort")
-      div(slot="arrowPrev")
-        slot(name="arrowPrev")
-          i.angle
-      div(slot="arrowNext")
-        slot(name="arrowNext")
-          i.angle
-      div(slot="title")
-        slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+      slot(slot="arrowPrev" name="arrowPrev")
+        i.angle
+      slot(slot="arrowNext" name="arrowNext")
+        i.angle
+      slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
     .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
       transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -62,9 +56,6 @@
                   :transitions="{ active: transitions, direction: transitionDirection }"
                   :view="view"
                   :min-cell-width="minCellWidth"
-                  :locale="locale"
-                  :small="small"
-                  :xsmall="xsmall"
                   :week-days="weekDays"
                   :week-days-short="weekDaysShort"
                 )

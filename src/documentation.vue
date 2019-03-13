@@ -298,7 +298,7 @@
   v-card.my-2.ma-auto.main-content(style="height: 350px;")
     vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
       div(slot="title" slot-scope="{ title, view }")
-        | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }} - week {{ view.startDate.getWeek() }} 🎉
+        | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}&nbsp;—&nbsp;w{{ view.startDate.getWeek() }} 🎉
       div(slot="no-event") Nothing here 👌
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -308,7 +308,7 @@
              :events="events"&gt;
       &lt;div slot="title" slot-scope="{ title, view }"&gt;
         🎉 {{ '\{\{ view.startDate.getFullYear() \}\}' }} - {{ '\{\{ view.startDate.getMonth() + 1 \}\}' }}
-        - week {{ '\{\{ view.startDate.getWeek() \}\}' }} 🎉
+        — w{{ '\{\{ view.startDate.getWeek() \}\}' }} 🎉
       &lt;/div&gt;
       &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt;
     &lt;/vue-cal&gt;
@@ -1519,7 +1519,7 @@
           #[span.code yyyy] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
       highlight-message(type="tips").
-        Note that 3 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
+        Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
         You can read more about it in the # Responsiveness &amp; Media Queries section in the #[a(href="#css-notes") CSS Notes].
     li
       code.mr-2 hideViewSelector
@@ -1584,9 +1584,9 @@
       code.mr-2 small
       span.code [Boolean], default: false
       p.
-        When set to true, the days of the week headings will be truncated to 3 letters.#[br]
+        When set to #[span.code true], the days of the week headings will be truncated to 3 letters.#[br]
         Does not apply to the title of the day view.#[br]
-        3 media queries are truncating the days of the week bellow 450px,
+        2 media queries are truncating the days of the week bellow 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
     li
       code.mr-2 xsmall
@@ -1596,7 +1596,7 @@
         Does not apply to the title of the day view.#[br]
         In Addition, the whole calendar gets applied a smaller font size of 0.9em,
         and the current view title is also reduced.#[br]
-        3 media queries are truncating the days of the week bellow 450px,
+        2 media queries are truncating the days of the week bellow 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
     li
       code.mr-2 transitions
@@ -1817,8 +1817,8 @@
   p.
     This calendar is fully responsive.#[br]
     To help you in making the calendar always look perfect,
-    3 media queries (to keep it simple) are in place for small screens.#[br]
-    The media queries operate downward from 550px, 450px &amp; 350px, and they mostly truncate the text
+    2 media queries (to keep it simple) are in place for small screens.#[br]
+    The media queries operate downward from 550px &amp; 450px, to truncate the text
     of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
 
     If this is not enough for your particular use, you can add your own in your CSS.#[br]

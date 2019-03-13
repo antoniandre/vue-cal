@@ -2,9 +2,9 @@
 .vuecal__header
   ul.vuecal__flex.vuecal__menu(v-if="!vuecalProps.hideViewSelector")
     li(
+      v-if="v.enabled"
       :class="{ active: viewProps.view.id === id }"
       v-for="(v, id) in viewProps.views"
-      v-if="v.enabled"
       @click="$parent.switchView(id, null, true)") {{ v.label }}
   .vuecal__title(v-if="!vuecalProps.hideTitleBar")
     .vuecal__arrow.vuecal__arrow--prev(@click="previous")
@@ -21,9 +21,6 @@
   weekdays-headings(
     v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
     :view="viewProps.view"
-    :locale="vuecalProps.locale"
-    :small="small"
-    :xsmall="xsmall"
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
     :transitions="{ active: vuecalProps.transitions, direction: transitionDirection }"
@@ -52,14 +49,6 @@ export default {
     weekDaysShort: {
       type: [Array, null],
       default: () => []
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    xsmall: {
-      type: Boolean,
-      default: false
     }
   },
 

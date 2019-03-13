@@ -1,16 +1,17 @@
 <template lang="pug">
 .vuecal__flex.vuecal__weekdays-headings
-  .vuecal__flex.vuecal__heading(:class="heading.class" v-for="(heading, i) in headings" :key="i" :style="weekdayCellStyles")
+  .vuecal__flex.vuecal__heading(
+    :class="{ today: heading.today }"
+    v-for="(heading, i) in headings"
+    :key="i"
+    :style="weekdayCellStyles")
     transition(:name="`slide-fade--${transitions.direction}`" :appear="transitions.active")
-      span(:key="transitions.active ? `${i}-${heading.label4}` : false")
-        //- span(v-for="j in 3" :key="j") {{ heading['label' + j]}}
-        //- span(v-if="heading.label4") &nbsp;
-        //- span(v-if="heading.label4") {{ heading.label4 }}
+      span(:key="transitions.active ? `${i}-${heading.date}` : false")
+        //- For small/xsmall option. 3 media queries also truncate weekdays.
         span.full {{ heading.full }}
         span.small {{ heading.small }}
         span.xsmall {{ heading.xsmall }}
-        span(v-if="heading.label4") &nbsp;
-        span(v-if="heading.label4") {{ heading.label4 }}
+        span(v-if="heading.date") &nbsp;{{ heading.date }}
 </template>
 
 <script>
@@ -34,21 +35,10 @@ export default {
       type: Array,
       default: () => []
     },
+    // Will override default truncation of weekDays if this is defined in i18n file.
     weekDaysShort: {
       type: [Array, null],
       default: () => []
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    xsmall: {
-      type: Boolean,
-      default: false
-    },
-    locale: {
-      type: String,
-      default: 'en'
     }
   },
   computed: {
@@ -60,21 +50,20 @@ export default {
         case 'week':
           let todayFound = false
           headings = this.weekDays.map((cell, i) => {
-            let date = this.view.startDate.addDays(i)
-            // Only for week view.
-            let isToday = this.view.id === 'week' && !todayFound && isDateToday(date) && !todayFound++
+            const date = this.view.startDate.addDays(i)
 
             return {
               full: cell.label,
+              // If defined in i18n file, weekDaysShort overrides default truncation of
+              // week days when does not fit on screen or with small/xsmall options.
               small: this.weekDaysShort ? this.weekDaysShort[i].label : cell.label.substr(0, 3),
               xsmall: this.weekDaysShort ? this.weekDaysShort[i].label : cell.label.substr(0, 1),
 
-              // Only for week view:
-              ...(this.view.id === 'week' ? { label4: date.getDate() } : {}),
-              ...(this.view.id === 'week' ? { today: isToday } : {}),
-              class: {
-                today: isToday // Doesn't need condition cz if class object is false it doesn't show up.
-              }
+              // Only for week view.
+              ...(this.view.id === 'week' ? {
+                date: date.getDate(),
+                today: !todayFound && isDateToday(date) && !todayFound++
+              } : {})
             }
           })
           break
@@ -131,15 +120,9 @@ $weekdays-headings-height: 2.8em;
 
     & > span {flex-shrink: 0;display: flex;}
 
-    // Full.
-    .small, .xsmall {display: none;}
-
-    // Small.
-    .vuecal--small & .small {display: block;}
-    .vuecal--small & .full, .vuecal--small & .xsmall {display: none;}
-
-    // XSmall.
-    .vuecal--xsmall & .xsmall {display: block;}
+    .vuecal--small & .small, .vuecal--xsmall & .xsmall {display: block;}
+    .small, .xsmall,
+    .vuecal--small & .full, .vuecal--small & .xsmall,
     .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
   }
 }
@@ -150,90 +133,35 @@ $weekdays-headings-height: 2.8em;
   .vuecal__heading {
     line-height: 1.2;
 
-    // .vuecal:not(.vuecal--xsmall):not(.vuecal--overflow-x) & .small {display: block;}
-    // .vuecal:not(.vuecal--overflow-x) & .full,
-    // .vuecal:not(.vuecal--xsmall) .xsmall {display: none;}
-
-    // .vuecal--xsmall & .xsmall {display: block;}
-    // .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
-
-    // Overflowing x.
-    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .full {display: block;}
-    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .small,
-    // .vuecal--overflow-x:not(.vuecal--small):not(.vuecal--xsmall) & .xsmall {display: none;}
-    // .vuecal--week-view & span:nth-child(3) {display: none;}
-    // .vuecal--view-with-time.vuecal--week-view.vuecal--overflow-x & span:nth-child(3) {display: inline-block;}
-
-    // Full.
-    .small {display: block;}
-    .full, .xsmall {display: none;}
-    .vuecal--overflow-x & .full {display: block;}
-    .vuecal--overflow-x & .small, .vuecal--overflow-x & .xsmall {display: none;}
-
-    // Small.
-    .vuecal--small & .small {display: block;}
-    .vuecal--small & .full, .vuecal--small & .xsmall {display: none;}
-    .vuecal--small.vuecal--overflow-x & .small {display: block;}
-    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall {display: none;}
-
-    // XSmall.
+    .small,
+    .vuecal--small & .small,
     .vuecal--xsmall & .xsmall {display: block;}
+    .full, .xsmall,
+    .vuecal--small & .full, .vuecal--small & .xsmall,
     .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
+
+    .vuecal--overflow-x & .full,
+    .vuecal--small.vuecal--overflow-x & .small,
     .vuecal--xsmall.vuecal--overflow-x & .xsmall {display: block;}
+    .vuecal--overflow-x & .small, .vuecal--overflow-x & .xsmall,
+    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall,
     .vuecal--xsmall.vuecal--overflow-x & .full, .vuecal--xsmall.vuecal--overflow-x & .small {display: none;}
   }
 }
 
 @media screen and(max-width: 450px) {
   .vuecal__heading {
-    // .xsmall {display: block;}
-    // .full {display: none !important;}
-    // .small {display: none !important;}
-    // .vuecal:not(.vuecal--xsmall):not(.vuecal--overflow-x) & .small {display: block;}
-    // .vuecal:not(.vuecal--overflow-x) & .full,
-    // .vuecal:not(.vuecal--xsmall) .xsmall {display: none;}
-
-    // Full.
-    .xsmall {display: block;}
-    .full, .small {display: none;}
-
-    // Small.
-    .vuecal--small & .xsmall {display: block;}
-    .vuecal--small & .full, .vuecal--small & .small {display: none;}
-    .vuecal--small.vuecal--overflow-x & .small {display: block;}
-    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall {display: none;}
-
-    // XSmall.
+    .xsmall,
+    .vuecal--small & .xsmall,
     .vuecal--xsmall & .xsmall {display: block;}
+    .full, .small,
+    .vuecal--small & .full, .vuecal--small & .small,
     .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
+
+    .vuecal--small.vuecal--overflow-x & .small,
     .vuecal--xsmall.vuecal--overflow-x & .xsmall {display: block;}
+    .vuecal--small.vuecal--overflow-x & .full, .vuecal--small.vuecal--overflow-x & .xsmall,
     .vuecal--xsmall.vuecal--overflow-x & .full, .vuecal--xsmall.vuecal--overflow-x & .small {display: none;}
-  }
-}
-
-@media screen and(max-width: 350px) {
-  .vuecal__heading {
-    flex-wrap: wrap;
-
-    .vuecal--week-view:not(.vuecal--overflow-x) & {flex-direction: column;}
-
-    // .vuecal--week-view & span:nth-child(2),
-    // .vuecal--small & span:nth-child(2) {display: none;}
-
-    // span:nth-child(3) {display: none;}
-
-    // .vuecal--week-view & span:nth-child(4),
-    // .vuecal--small & span:nth-child(4) {display: none;}
-
-    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(2),
-    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(3),
-    // .vuecal--week-view.vuecal--overflow-x & span:nth-child(4) {display: inline-block;}
-
-    // // Chinese language.
-    // .vuecal--month-view.vuecal--zh-cn & span:nth-child(1),
-    // .vuecal--week-view.vuecal--zh-cn & span:nth-child(1) {display: none;}
-    // .vuecal--month-view.vuecal--zh-cn & span:nth-child(2),
-    // .vuecal--week-view.vuecal--zh-cn & span:nth-child(2) {display: block;}
   }
 }
 </style>
