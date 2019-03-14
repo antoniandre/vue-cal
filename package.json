@@ -37,10 +37,10 @@
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
     "simple-syntax-highlighter": "^1.0.6",
-    "vue": "^2.6.7",
+    "vue": "^2.6.9",
     "vue-cli-plugin-vuetify": "^0.2.1",
     "vue-scrollto": "^2.13.0",
-    "vue-template-compiler": "^2.6.7",
+    "vue-template-compiler": "^2.6.9",
     "vuetify": "^1.5.1"
   },
   "dependencies": {}
