@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "1.40.3",
+  "version": "1.40.4",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "repository": "https://github.com/antoniandre/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
@@ -37,11 +37,11 @@
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
     "simple-syntax-highlighter": "^1.0.6",
-    "vue": "^2.6.8",
+    "vue": "^2.6.9",
     "vue-cli-plugin-vuetify": "^0.2.1",
-    "vue-scrollto": "^2.14.0",
-    "vue-template-compiler": "^2.6.8",
-    "vuetify": "^1.5.5"
+    "vue-scrollto": "^2.13.0",
+    "vue-template-compiler": "^2.6.9",
+    "vuetify": "^1.5.1"
   },
   "dependencies": {}
 }

@@ -142,6 +142,7 @@
   h2.headline.mt-5
     a(href="#installation") Installation
     a#installation(name="installation")
+  highlight-message(type="warning") Vue.js 2.5.18 or later is required.
   p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
   h3 Via NPM
   sshpre.mt-2(language="shell" label="Shell") npm i --S vue-cal

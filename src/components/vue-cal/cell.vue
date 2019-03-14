@@ -21,7 +21,8 @@
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0"
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j")
-          slot(name="event-renderer" slot="event-renderer" :event="event" :view="view")
+          div(slot="event-renderer" slot-scope="{ event, view }")
+            slot(name="event-renderer" :view="view" :event="event")
       slot(v-if="view === 'month' && !eventsOnMonthView && events.length && !allDayEvents" name="events-count-month-view" :events="events")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
 </template>
