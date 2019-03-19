@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.41.0__ Add Romanian language
 - __Version 1.39.0__ Add Vietnamese language
 - __Version 1.38.0__ showAllDayEvents now also accepts string 'short'
 - __Version 1.36.0__ Add out of scope events in month view
