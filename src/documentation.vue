@@ -1839,6 +1839,7 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.42.0] Add Norwegian language
   div #[strong Version 1.41.0] Add Romanian language
   div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
@@ -2034,6 +2035,7 @@ export default {
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
       { code: 'it', label: 'Italian' },
+      { code: 'no', label: 'Norwegian' },
       { code: 'pl', label: 'Polish' },
       { code: 'pt-br', label: 'Portuguese Brasilian' },
       { code: 'ro', label: 'Romanian' },
