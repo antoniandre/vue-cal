@@ -1839,6 +1839,7 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.43.0] Add Catalan language
   div #[strong Version 1.42.0] Add Norwegian language
   div #[strong Version 1.41.0] Add Romanian language
   div #[strong Version 1.39.0] Add Vietnamese language
@@ -2027,6 +2028,7 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'nl', label: 'Dutch' },
