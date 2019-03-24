@@ -1,7 +1,7 @@
 {
   "weekDays": ["Mandag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"],
   "months": ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
-  "years": "År",
+  "years": "Velg år",
   "year": "År",
   "month": "Måned",
   "week": "Uke",
