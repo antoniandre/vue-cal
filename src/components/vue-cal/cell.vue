@@ -13,7 +13,7 @@
       .vuecal__no-event(v-if="!events.length && ['week', 'day'].indexOf(view) > -1")
         slot(name="no-event") {{ texts.noEvent }}
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents({ split: 0, cellEvents: splits.length ? splitEvents[i] : events, vuecal: $parent })")
+        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
         event(
           :vuecal="$parent"
           :event="event"
@@ -110,7 +110,7 @@ export default {
 
         events.forEach(event => {
           if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents)) {
-            updateEventPosition({ event, vuecal: this.$parent })
+            updateEventPosition(event, this.$parent)
           }
         })
 

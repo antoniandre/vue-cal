@@ -175,10 +175,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent({
-        event,
-        vuecal: this.vuecal
-      })
+      deleteAnEvent(event, this.vuecal)
     },
 
     touchDeleteEvent (event) {
@@ -198,12 +195,7 @@ export default {
     },
     domEvents: {
       get () {
-        if (this.vuecal.domEvents.resizeAnEvent.eventId) {
-          onResizeEvent({
-            vuecal: this.vuecal,
-            cellEvents: this.cellEvents
-          })
-        }
+        if (this.vuecal.domEvents.resizeAnEvent.eventId) onResizeEvent(this.cellEvents, this.vuecal)
         return this.vuecal.domEvents
       },
       set (object) {
