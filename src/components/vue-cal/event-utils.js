@@ -7,15 +7,15 @@ export const deleteAnEvent = function ({ event, vuecal }) {
   // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
   let cellEvents = vuecal.mutableEvents[eventDate]
   // Delete the event.
-  vuecal.mutableEvents[eventDate] = cellEvents.filter(e => e.id !== event.id)
+  vuecal.mutableEvents[eventDate] = cellEvents.filter(e => e.eid !== event.eid)
   cellEvents = vuecal.mutableEvents[eventDate]
 
   // If deleting a multiple-day event, delete all the events pieces (days).
   if (event.multipleDays.daysCount) {
     event.linked.forEach(e => {
       let dayToModify = vuecal.mutableEvents[e.date]
-      let eventToDelete = dayToModify.find(e2 => e2.id === e.id)
-      vuecal.mutableEvents[e.date] = dayToModify.filter(e2 => e2.id !== e.id)
+      let eventToDelete = dayToModify.find(e2 => e2.eid === e.eid)
+      vuecal.mutableEvents[e.date] = dayToModify.filter(e2 => e2.eid !== e.eid)
 
       if (!e.background) {
         // Remove this event from possible other overlapping events of the same cell.
@@ -31,14 +31,14 @@ export const deleteAnEvent = function ({ event, vuecal }) {
 }
 
 const deleteLinkedEvents = function (event, cellEvents) {
-  Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.id === id).overlapping[event.id]))
-  Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.id === id).overlapped[event.id]))
-  Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.id === id).simultaneous[event.id]))
+  Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapping[event.eid]))
+  Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapped[event.eid]))
+  Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.eid === id).simultaneous[event.eid]))
 }
 
 export const onResizeEvent = function ({ vuecal, cellEvents }) {
   let { eventId, newHeight } = vuecal.domEvents.resizeAnEvent
-  let event = cellEvents.filter(e => e.id === eventId)[0]
+  let event = cellEvents.filter(e => e.eid === eventId)[0]
 
   if (event) {
     event.height = Math.max(newHeight, 10)
@@ -65,7 +65,7 @@ export const updateEndTimeOnResize = function ({ event, vuecal }) {
 
     event.linked.forEach(e => {
       let dayToModify = vuecal.mutableEvents[e.date]
-      let eventToModify = dayToModify.find(e2 => e2.id === e.id)
+      let eventToModify = dayToModify.find(e2 => e2.eid === e.eid)
 
       eventToModify.endTimeMinutes = event.endTimeMinutes
       eventToModify.endTime = event.endTime
@@ -83,7 +83,7 @@ export const checkCellOverlappingEvents = function ({ cellEvents, vuecal }) {
     if (foregroundEventsList.length) {
       // Do the mapping outside of the next loop if not split cell.
       // If split need the whole event object to compare splits.
-      const foregroundEventsIdList = foregroundEventsList.map(item => item.id)
+      const foregroundEventsIdList = foregroundEventsList.map(item => item.eid)
       let comparisonArray = {}
 
       cellEvents.forEach(event => {
@@ -91,14 +91,14 @@ export const checkCellOverlappingEvents = function ({ cellEvents, vuecal }) {
           let comparisonArrayKeys = Object.keys(comparisonArray)
 
           // Unique comparison of events.
-          comparisonArray[event.id] = cellEvents.length
+          comparisonArray[event.eid] = cellEvents.length
             ? foregroundEventsList.filter(item => (
-              item.id !== event.id && comparisonArrayKeys.indexOf(item.id) === -1)
-            ).map(item => item.id)
-            : foregroundEventsIdList.filter(id => (id !== event.id && comparisonArrayKeys.indexOf(id) === -1))
+              item.eid !== event.eid && comparisonArrayKeys.indexOf(item.eid) === -1)
+            ).map(item => item.eid)
+            : foregroundEventsIdList.filter(id => (id !== event.eid && comparisonArrayKeys.indexOf(id) === -1))
 
-          if (comparisonArray[event.id].length) {
-            checkOverlappingEvents({ event, comparisonArray: comparisonArray[event.id], cellEvents })
+          if (comparisonArray[event.eid].length) {
+            checkOverlappingEvents({ event, comparisonArray: comparisonArray[event.eid], cellEvents })
           }
         }
       })
@@ -113,7 +113,7 @@ export const checkOverlappingEvents = function ({ event, comparisonArray, cellEv
   const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
 
   comparisonArray.forEach((event2id, i) => {
-    let event2 = cellEvents.find(item => item.id === event2id)
+    let event2 = cellEvents.find(item => item.eid === event2id)
     const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
     const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2
 
@@ -122,34 +122,34 @@ export const checkOverlappingEvents = function ({ event, comparisonArray, cellEv
     const event2overlapsEvent1 = event1startsFirst && endTimeMinE1 > startTimeMinE2
 
     if (event1overlapsEvent2) {
-      Vue.set(event.overlapping, event2.id, true)
-      Vue.set(event2.overlapped, event.id, true)
+      Vue.set(event.overlapping, event2.eid, true)
+      Vue.set(event2.overlapped, event.eid, true)
     }
 
     else {
-      delete event.overlapping[event2.id]
-      delete event2.overlapped[event.id]
+      delete event.overlapping[event2.eid]
+      delete event2.overlapped[event.eid]
     }
 
     if (event2overlapsEvent1) {
-      Vue.set(event2.overlapping, event.id, true)
-      Vue.set(event.overlapped, event2.id, true)
+      Vue.set(event2.overlapping, event.eid, true)
+      Vue.set(event.overlapped, event2.eid, true)
     }
 
     else {
-      delete event2.overlapping[event.id]
-      delete event.overlapped[event2.id]
+      delete event2.overlapping[event.eid]
+      delete event.overlapped[event2.eid]
     }
 
     // If up to 3 events start at the same time.
     if (startTimeMinE1 === startTimeMinE2 || (event1overlapsEvent2 || event2overlapsEvent1)) {
-      Vue.set(event.simultaneous, event2.id, true)
-      Vue.set(event2.simultaneous, event.id, true)
+      Vue.set(event.simultaneous, event2.eid, true)
+      Vue.set(event2.simultaneous, event.eid, true)
     }
 
     else {
-      delete event.simultaneous[event2.id]
-      delete event2.simultaneous[event.id]
+      delete event.simultaneous[event2.eid]
+      delete event2.simultaneous[event.eid]
     }
   })
 }

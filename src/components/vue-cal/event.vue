@@ -58,7 +58,7 @@ export default {
 
       return {
         top: `${event.top}px`,
-        height: `${resizeAnEvent.newHeight && resizeAnEvent.eventId === event.id ? resizeAnEvent.newHeight : event.height}px`
+        height: `${resizeAnEvent.newHeight && resizeAnEvent.eventId === event.eid ? resizeAnEvent.newHeight : event.height}px`
       }
     },
 
@@ -68,13 +68,13 @@ export default {
       let simultaneous = Object.keys(event.simultaneous).length + 1
       let forceLeft = false
       let deletable = this.domEvents.clickHoldAnEvent.eventId &&
-                      (this.domEvents.clickHoldAnEvent.eventId === event.id ||
-                      event.linked.find(e => e.id === this.domEvents.clickHoldAnEvent.eventId))
+                      (this.domEvents.clickHoldAnEvent.eventId === event.eid ||
+                      event.linked.find(e => e.eid === this.domEvents.clickHoldAnEvent.eventId))
 
       if (simultaneous >= 3) {
         let split3 = simultaneous - 1
         Object.keys(event.simultaneous).forEach(eventId => {
-          if (split3 && Object.keys(this.cellEvents.find(e => e.id === eventId).simultaneous).length + 1 < 3) {
+          if (split3 && Object.keys(this.cellEvents.find(e => e.eid === eventId).simultaneous).length + 1 < 3) {
             split3--
           }
         })
@@ -82,7 +82,7 @@ export default {
       }
 
       else if (simultaneous === 2) {
-        const otherEvent = this.cellEvents.find(e => e.id === Object.keys(event.simultaneous)[0])
+        const otherEvent = this.cellEvents.find(e => e.eid === Object.keys(event.simultaneous)[0])
 
         if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
           forceLeft = true
@@ -91,7 +91,7 @@ export default {
 
       return {
         [event.classes.join(' ')]: true,
-        'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.id,
+        'vuecal__event--focus': this.domEvents.focusAnEvent.eventId === event.eid,
         'vuecal__event--background': event.background,
         'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,
@@ -116,7 +116,7 @@ export default {
       let { clickHoldAnEvent, resizeAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
-      if (this.domEvents.focusAnEvent.eventId === event.id && clickHoldAnEvent.eventId === event.id) {
+      if (this.domEvents.focusAnEvent.eventId === event.eid && clickHoldAnEvent.eventId === event.eid) {
         return true
       }
 
@@ -128,7 +128,7 @@ export default {
       // Don't show delete button if dragging event.
       if (!resizeAnEvent.start && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
-          clickHoldAnEvent.eventId = event.id
+          clickHoldAnEvent.eventId = event.eid
         }, clickHoldAnEvent.timeout)
       }
     },
@@ -166,7 +166,7 @@ export default {
         start,
         originalHeight: event.height,
         newHeight: event.height,
-        eventId: event.id,
+        eventId: event.eid,
         eventStartDate: event.startDate
       })
     },
@@ -187,7 +187,7 @@ export default {
 
     focusEvent (event) {
       this.vuecal.emitWithEvent('event-focus', event)
-      this.domEvents.focusAnEvent.eventId = event.id
+      this.domEvents.focusAnEvent.eventId = event.eid
     }
   },
 
