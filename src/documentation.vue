@@ -87,16 +87,17 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Multiple day events
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom events rendering
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom callback on event click
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Option to start week on Sunday
+
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom events rendering
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom callback on event click
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Option to start week on Sunday
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | All day events in top bar
@@ -111,19 +112,22 @@
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
+      | Optional tooltip on events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Improve multiple day events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Optional tooltip on events
+      | Externalize locales
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Recurring events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Drag events snap to time
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Recurring events
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
