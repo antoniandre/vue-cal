@@ -38,10 +38,18 @@ const deleteLinkedEvents = (event, cellEvents) => {
 
 export const onResizeEvent = (cellEvents, vuecal) => {
   let { eventId, newHeight } = vuecal.domEvents.resizeAnEvent
-  let event = cellEvents.filter(e => e.eid === eventId)[0]
+  let event = cellEvents.find(e => e.eid === eventId)
 
   if (event) {
-    event.height = Math.max(newHeight, 10)
+    const minEventHeight = Math.max(newHeight, 10)
+
+    // While dragging event, prevent event to span beyond vuecal.timeTo.
+    let maxEventHeight = (vuecal.timeTo - event.startTimeMinutes) * vuecal.timeCellHeight / vuecal.timeStep
+    event.height = Math.min(minEventHeight, maxEventHeight)
+
+    // Allow dragging until midnight but block height at vuecal.timeTo.
+    maxEventHeight = (24 * 60 - event.startTimeMinutes) * vuecal.timeCellHeight / vuecal.timeStep
+    event.maxHeight = Math.min(minEventHeight, maxEventHeight)
     updateEndTimeOnResize(event, vuecal)
 
     if (!event.background) checkCellOverlappingEvents(cellEvents)
@@ -49,7 +57,9 @@ export const onResizeEvent = (cellEvents, vuecal) => {
 }
 
 const updateEndTimeOnResize = (event, vuecal) => {
-  const bottom = event.top + event.height
+  // event.maxHeight is the maximum height the event can take, up to midnight.
+  // But event.height is limited to vuecal.timeTo to prevent event overflowing the view.
+  const bottom = event.top + event.maxHeight
   const endTime = (bottom / vuecal.timeCellHeight * vuecal.timeStep + vuecal.timeFrom) / 60
   const hours = parseInt(endTime)
   const minutes = parseInt((endTime - hours) * 60)
@@ -64,7 +74,7 @@ const updateEndTimeOnResize = (event, vuecal) => {
     event.multipleDays.end = event.end
 
     event.linked.forEach(e => {
-      let dayToModify = vuecal.mutableEvents[e.date]
+      const dayToModify = vuecal.mutableEvents[e.date]
       let eventToModify = dayToModify.find(e2 => e2.eid === e.eid)
 
       eventToModify.endTimeMinutes = event.endTimeMinutes
@@ -158,9 +168,11 @@ export const updateEventPosition = (event, vuecal) => {
   const src = (event.multipleDays.daysCount && event.multipleDays) || event
   const { startTimeMinutes, endTimeMinutes } = src
 
+  // Top of event.
   let minutesFromTop = startTimeMinutes - vuecal.timeFrom
   const top = Math.round(minutesFromTop * vuecal.timeCellHeight / vuecal.timeStep)
 
+  // Bottom of event.
   minutesFromTop = Math.min(endTimeMinutes, vuecal.timeTo) - vuecal.timeFrom
   const bottom = Math.round(minutesFromTop * vuecal.timeCellHeight / vuecal.timeStep)
 

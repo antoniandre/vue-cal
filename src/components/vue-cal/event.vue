@@ -21,7 +21,7 @@
 </template>
 
 <script>
-import { deleteAnEvent, onResizeEvent } from './event-utils'
+import { deleteAnEvent } from './event-utils'
 
 export default {
   props: {
@@ -195,7 +195,6 @@ export default {
     },
     domEvents: {
       get () {
-        if (this.vuecal.domEvents.resizeAnEvent.eventId) onResizeEvent(this.cellEvents, this.vuecal)
         return this.vuecal.domEvents
       },
       set (object) {

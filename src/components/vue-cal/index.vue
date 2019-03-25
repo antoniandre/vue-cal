@@ -95,6 +95,7 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
+import { onResizeEvent } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -254,6 +255,7 @@ export default {
       domEvents: {
         resizeAnEvent: {
           eventId: null, // Only one at a time.
+          eventStartDate: null,
           start: null,
           originalHeight: 0,
           newHeight: 0
@@ -422,6 +424,8 @@ export default {
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
+
+      onResizeEvent(this.mutableEvents[resizeAnEvent.eventStartDate], this)
     },
 
     onMouseUp (e) {
