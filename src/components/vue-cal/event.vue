@@ -167,7 +167,7 @@ export default {
         originalHeight: event.height,
         newHeight: event.height,
         eventId: event.eid,
-        eventStartDate: event.startDate
+        eventStartDate: event.multipleDays.startDate || event.startDate
       })
     },
 
