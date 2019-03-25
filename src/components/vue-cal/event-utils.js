@@ -105,9 +105,9 @@ export const checkCellOverlappingEvents = cellEvents => {
           // Unique comparison of events.
           comparisonArray[event.eid] = cellEvents.length
             ? foregroundEventsList.filter(item => (
-              item.eid !== event.eid && comparisonArrayKeys.indexOf(item.eid) === -1)
+              item.eid !== event.eid && !comparisonArrayKeys.includes(item.eid))
             ).map(item => item.eid)
-            : foregroundEventsIdList.filter(id => (id !== event.eid && comparisonArrayKeys.indexOf(id) === -1))
+            : foregroundEventsIdList.filter(id => (id !== event.eid && !comparisonArrayKeys.includes(id)))
 
           if (comparisonArray[event.eid].length) {
             checkOverlappingEvents(event, comparisonArray[event.eid], cellEvents)
@@ -124,7 +124,7 @@ export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
   const src = (event.multipleDays.daysCount && event.multipleDays) || event
   const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
 
-  comparisonArray.forEach((event2id, i) => {
+  comparisonArray.forEach(event2id => {
     let event2 = cellEvents.find(item => item.eid === event2id)
     const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
     const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2
