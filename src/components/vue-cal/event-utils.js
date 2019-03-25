@@ -29,7 +29,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
 
   let event = {
     ...eventDefaults,
-    id: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
+    eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start: formattedDate + (vuecal.time ? `${hours}:${minutes}` : ''),
     startDate: formattedDate,
     startTime: (vuecal.time ? `${hours}:${minutes}` : null),
