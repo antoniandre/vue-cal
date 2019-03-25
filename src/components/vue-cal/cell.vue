@@ -124,7 +124,7 @@ export default {
     },
     splitEvents () {
       let splitsEventIndexes = {}
-      this.events.forEach((e, i) => {
+      this.events.forEach(e => {
         if (e.split) {
           if (!splitsEventIndexes[e.split]) splitsEventIndexes[e.split] = []
           splitsEventIndexes[e.split].push(e)
@@ -137,16 +137,15 @@ export default {
       if (!this.today || !this.time || this.allDayEvents || ['week', 'day'].indexOf(this.view) === -1) return
 
       const now = new Date()
-      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
-      return startTimeMinutes <= this.timeTo
+      return (now.getHours() * 60 + now.getMinutes()) <= this.timeTo
     },
     todaysTimePosition () {
       // Make sure to skip the Maths if not relevant.
       if (!this.today || !this.time) return
 
       const now = new Date()
-      let startTimeMinutes = now.getHours() * 60 + now.getMinutes()
-      let minutesFromTop = startTimeMinutes - this.timeFrom
+      const startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      const minutesFromTop = startTimeMinutes - this.timeFrom
       return Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
     }
   }

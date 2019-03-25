@@ -37,13 +37,13 @@ const deleteLinkedEvents = (event, cellEvents) => {
 }
 
 export const onResizeEvent = (cellEvents, vuecal) => {
-  let { eventId, newHeight } = vuecal.domEvents.resizeAnEvent
-  let event = cellEvents.find(e => e.eid === eventId)
+  let { eid, newHeight } = vuecal.domEvents.resizeAnEvent
+  let event = cellEvents.find(e => e.eid === eid)
 
   if (event) {
     const minEventHeight = Math.max(newHeight, 10)
     const eventStart = !isNaN(event.multipleDays.startTimeMinutes)
-                     ? Math.max(event.multipleDays.startTimeMinutes, vuecal.timeFrom) : event.startTimeMinutes
+      ? Math.max(event.multipleDays.startTimeMinutes, vuecal.timeFrom) : event.startTimeMinutes
 
     // While dragging event, prevent event to span beyond vuecal.timeTo.
     let maxEventHeight = (vuecal.timeTo - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
