@@ -1,0 +1,15 @@
+{
+  "weekDays": ["Mandag", "Tisdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"],
+  "months": ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"],
+  "years": "Velg år",
+  "year": "År",
+  "month": "Måned",
+  "week": "Uke",
+  "day": "Dag",
+  "today": "Idag",
+  "noEvent": "Ingen hendelse",
+  "allDay": "Hele dagen",
+  "deleteEvent": "Ta bort",
+  "createEvent": "Ny hendelse",
+  "dateFormat": "DDDD den d mmmm yyyy"
+}

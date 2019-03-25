@@ -87,16 +87,17 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Multiple day events
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom events rendering
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom callback on event click
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Option to start week on Sunday
+
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom events rendering
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom callback on event click
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Option to start week on Sunday
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | All day events in top bar
@@ -111,19 +112,22 @@
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
+      | Optional tooltip on events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Improve multiple day events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Optional tooltip on events
+      | Externalize locales
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Recurring events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Drag events snap to time
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Recurring events
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
@@ -1843,6 +1847,9 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.43.0] Add Catalan language
+  div #[strong Version 1.42.0] Add Norwegian language
+  div #[strong Version 1.41.0] Add Romanian language
   div #[strong Version 1.39.0] Add Vietnamese language
   div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
@@ -2048,6 +2055,7 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'nl', label: 'Dutch' },
@@ -2056,8 +2064,10 @@ export default {
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
       { code: 'it', label: 'Italian' },
+      { code: 'no', label: 'Norwegian' },
       { code: 'pl', label: 'Polish' },
       { code: 'pt-br', label: 'Portuguese Brasilian' },
+      { code: 'ro', label: 'Romanian' },
       { code: 'ru', label: 'Russian' },
       { code: 'sk', label: 'Slovak' },
       { code: 'es', label: 'Spanish' },

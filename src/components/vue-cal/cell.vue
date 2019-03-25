@@ -13,7 +13,7 @@
       .vuecal__no-event(v-if="!events.length && ['week', 'day'].indexOf(view) > -1")
         slot(name="no-event") {{ texts.noEvent }}
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events, $parent)")
+        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
         event(
           :vuecal="$parent"
           :event="event"

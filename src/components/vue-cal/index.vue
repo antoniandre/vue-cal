@@ -97,7 +97,7 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
-import { deleteAnEvent, createAnEvent, eventDefaults } from './event-utils';
+import { createAnEvent, eventDefaults, onResizeEvent } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -261,6 +261,7 @@ export default {
       domEvents: {
         resizeAnEvent: {
           eventId: null, // Only one at a time.
+          eventStartDate: null,
           start: null,
           originalHeight: 0,
           newHeight: 0
@@ -458,6 +459,8 @@ export default {
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
+
+      onResizeEvent(this.mutableEvents[resizeAnEvent.eventStartDate], this)
     },
 
     onMouseUp (e) {
@@ -465,7 +468,7 @@ export default {
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent.eventId && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
-        let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.id === resizeAnEvent.eventId)
+        let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.eid === resizeAnEvent.eventId)
         if (event) {
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
@@ -507,7 +510,7 @@ export default {
       if (event.linked.daysCount) {
         event.linked.forEach(e => {
           let dayToModify = this.mutableEvents[e.date]
-          dayToModify.find(e2 => e2.id === e.id).title = event.title
+          dayToModify.find(e2 => e2.eid === e.eid).title = event.title
         })
       }
 
@@ -533,14 +536,14 @@ export default {
 
         // Keep the event ids scoped to this calendar instance.
         // eslint-disable-next-line
-        let id = `${this._uid}_${this.eventIdIncrement++}`
+        let eid = `${this._uid}_${this.eventIdIncrement++}`
 
         event = Object.assign({
           ...eventDefaults,
+          eid,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          id,
           startDate,
           startTime,
           startTimeMinutes,
@@ -585,7 +588,7 @@ export default {
           for (let i = 1; i <= datesDiff; i++) {
             const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
             eventPieces.push({
-              id: `${this._uid}_${this.eventIdIncrement++}`,
+              eid: `${this._uid}_${this.eventIdIncrement++}`,
               date
             })
           }
@@ -595,8 +598,8 @@ export default {
           for (let i = 1; i <= datesDiff; i++) {
             const date = eventPieces[i - 1].date
             const linked = [
-              { id: event.id, date: event.startDate },
-              ...eventPieces.slice(0).filter(e => e.id !== eventPieces[i - 1].id)
+              { eid: event.eid, date: event.startDate },
+              ...eventPieces.slice(0).filter(e => e.eid !== eventPieces[i - 1].eid)
             ]
 
             // Make array reactive for future events creations & deletions.
@@ -604,7 +607,7 @@ export default {
 
             this.mutableEvents[date].push({
               ...event,
-              id: eventPieces[i - 1].id,
+              eid: eventPieces[i - 1].eid,
               overlapped: {},
               overlapping: {},
               simultaneous: {},
