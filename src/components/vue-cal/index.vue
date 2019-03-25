@@ -260,20 +260,21 @@ export default {
       eventIdIncrement: 1,
       domEvents: {
         resizeAnEvent: {
-          eventId: null, // Only one at a time.
-          eventStartDate: null,
+          eid: null, // Only one at a time.
+          startDate: null,
           start: null,
           originalHeight: 0,
-          newHeight: 0
+          newHeight: 0,
+          split: null
         },
         dragAnEvent: {
-          eventId: null // Only one at a time.
+          eid: null // Only one at a time.
         },
         focusAnEvent: {
-          eventId: null // Only one at a time.
+          eid: null // Only one at a time.
         },
         clickHoldAnEvent: {
-          eventId: null, // Only one at a time.
+          eid: null, // Only one at a time.
           timeout: 1200,
           timeoutId: null
         },
@@ -454,21 +455,25 @@ export default {
     // handlers in the single parent for performance.
     onMouseMove (e) {
       let { resizeAnEvent } = this.domEvents
-      if (resizeAnEvent.eventId === null) return
+      if (resizeAnEvent.eid === null) return
 
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
 
-      onResizeEvent(this.mutableEvents[resizeAnEvent.eventStartDate], this)
+      let cellEvents = this.mutableEvents[resizeAnEvent.startDate]
+      if (this.hasSplits && this.splitDays) {
+        cellEvents = cellEvents.filter(e => e.split === resizeAnEvent.split)
+      }
+      onResizeEvent(cellEvents, this)
     },
 
     onMouseUp (e) {
       let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
-      if (resizeAnEvent.eventId && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
-        let event = this.mutableEvents[resizeAnEvent.eventStartDate].find(item => item.eid === resizeAnEvent.eventId)
+      if (resizeAnEvent.eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
+        let event = this.mutableEvents[resizeAnEvent.startDate].find(item => item.eid === resizeAnEvent.eid)
         if (event) {
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
@@ -476,14 +481,14 @@ export default {
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
-      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eventId) {
-        focusAnEvent.eventId = null // Cancel event focus.
-        clickHoldAnEvent.eventId = null // Hide delete button.
+      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eid) {
+        focusAnEvent.eid = null // Cancel event focus.
+        clickHoldAnEvent.eid = null // Hide delete button.
       }
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout happens in onMouseDown() in cell component.
-      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eventId) {
+      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eid) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
       }
@@ -495,7 +500,7 @@ export default {
       }
 
       // Any mouse up must cancel event resizing.
-      resizeAnEvent.eventId = null
+      resizeAnEvent.eid = null
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null

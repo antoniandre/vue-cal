@@ -57,7 +57,7 @@ export default {
 
       return {
         top: `${event.top}px`,
-        height: `${resizeAnEvent.newHeight && resizeAnEvent.eventId === event.eid ? resizeAnEvent.newHeight : event.height}px`
+        height: `${resizeAnEvent.newHeight && resizeAnEvent.eid === event.eid ? resizeAnEvent.newHeight : event.height}px`
       }
     },
 
@@ -67,14 +67,14 @@ export default {
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
       let forceLeft = false
-      let deletable = clickHoldAnEvent.eventId &&
-                      (clickHoldAnEvent.eventId === event.eid ||
-                      event.linked.find(e => e.eid === clickHoldAnEvent.eventId))
+      let deletable = clickHoldAnEvent.eid &&
+                      (clickHoldAnEvent.eid === event.eid ||
+                      event.linked.find(e => e.eid === clickHoldAnEvent.eid))
 
       if (simultaneous >= 3) {
         let split3 = simultaneous - 1
-        Object.keys(event.simultaneous).forEach(eventId => {
-          if (split3 && Object.keys(this.cellEvents.find(e => e.eid === eventId).simultaneous).length + 1 < 3) {
+        Object.keys(event.simultaneous).forEach(eid => {
+          if (split3 && Object.keys(this.cellEvents.find(e => e.eid === eid).simultaneous).length + 1 < 3) {
             split3--
           }
         })
@@ -91,7 +91,7 @@ export default {
 
       return {
         [event.classes.join(' ')]: true,
-        'vuecal__event--focus': focusAnEvent.eventId === event.eid,
+        'vuecal__event--focus': focusAnEvent.eid === event.eid,
         'vuecal__event--background': event.background,
         'vuecal__event--deletable': deletable,
         'vuecal__event--overlapped': overlapped,
@@ -113,22 +113,22 @@ export default {
     onMouseDown (e, event, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
-      let { clickHoldAnEvent, resizeAnEvent } = this.domEvents
+      let { clickHoldAnEvent, resizeAnEvent, focusAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
-      if (this.domEvents.focusAnEvent.eventId === event.eid && clickHoldAnEvent.eventId === event.eid) {
+      if (focusAnEvent.eid === event.eid && clickHoldAnEvent.eid === event.eid) {
         return true
       }
 
       // Focus the clicked event.
       this.focusEvent(event)
 
-      clickHoldAnEvent.eventId = null // Reinit click hold on each click.
+      clickHoldAnEvent.eid = null // Reinit click hold on each click.
 
       // Don't show delete button if dragging event.
       if (!resizeAnEvent.start && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
-          clickHoldAnEvent.eventId = event.eid
+          clickHoldAnEvent.eid = event.eid
         }, clickHoldAnEvent.timeout)
       }
     },
@@ -161,8 +161,9 @@ export default {
         start,
         originalHeight: event.height,
         newHeight: event.height,
-        eventId: event.eid,
-        eventStartDate: event.multipleDays.startDate || event.startDate
+        eid: event.eid,
+        split: event.split || null,
+        startDate: event.multipleDays.startDate || event.startDate
       })
     },
 
@@ -179,7 +180,7 @@ export default {
 
     focusEvent (event) {
       this.vuecal.emitWithEvent('event-focus', event)
-      this.domEvents.focusAnEvent.eventId = event.eid
+      this.domEvents.focusAnEvent.eid = event.eid
     }
   },
 
