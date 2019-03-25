@@ -42,13 +42,15 @@ export const onResizeEvent = (cellEvents, vuecal) => {
 
   if (event) {
     const minEventHeight = Math.max(newHeight, 10)
+    const eventStart = !isNaN(event.multipleDays.startTimeMinutes)
+                     ? Math.max(event.multipleDays.startTimeMinutes, vuecal.timeFrom) : event.startTimeMinutes
 
     // While dragging event, prevent event to span beyond vuecal.timeTo.
-    let maxEventHeight = (vuecal.timeTo - event.startTimeMinutes) * vuecal.timeCellHeight / vuecal.timeStep
+    let maxEventHeight = (vuecal.timeTo - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
     event.height = Math.min(minEventHeight, maxEventHeight)
 
     // Allow dragging until midnight but block height at vuecal.timeTo.
-    maxEventHeight = (24 * 60 - event.startTimeMinutes) * vuecal.timeCellHeight / vuecal.timeStep
+    maxEventHeight = (24 * 60 - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
     event.maxHeight = Math.min(minEventHeight, maxEventHeight)
     updateEndTimeOnResize(event, vuecal)
 
