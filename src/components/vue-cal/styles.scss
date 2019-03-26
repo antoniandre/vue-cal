@@ -38,6 +38,7 @@ $weekdays-headings-height: 2.8em;
   //==================================//
   &__body {
     position: relative;
+    overflow: auto;
   }
 
   &__all-day {
