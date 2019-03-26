@@ -1,6 +1,6 @@
 {
   "weekDays": ["Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota", "Nedelja"],
-  "months": ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Jilij", "Avgust", "September", "Oktober", "November", "December"],
+  "months": ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"],
   "years": "Leta",
   "year": "Leto",
   "month": "Mesec",
