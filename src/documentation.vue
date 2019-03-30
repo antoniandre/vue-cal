@@ -1793,10 +1793,14 @@
             all the events with an attribute #[span.code allDay] set to true will show up in a fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
-        | Correct date formats are #[code {{ currentDateFormatted }}] or
-        | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
-        | Only these formats will work.#[br]
-        strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
+        ul
+          li
+            strong The events are internally identified by the key #[span.code `eid`]. This is a reserved keyword.
+          li.mt-2
+            | Correct date formats are #[code {{ currentDateFormatted }}] or
+            | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
+            | Only these formats will work.#[br]
+            strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
 
   h2.headline.mt-5.pt-5
     a(href="#css-notes") CSS Notes
