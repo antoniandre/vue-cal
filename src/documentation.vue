@@ -128,6 +128,9 @@
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Drag events snap to time
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Prevent evt intersect. on drag/resize
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
@@ -1353,7 +1356,11 @@
   ul
     li #[span.code ready]
     li #[span.code view-change]
+    li #[span.code day-click] - is a JS native #[span.code Date] object
     li #[span.code day-focus] - is a JS native #[span.code Date] object
+  highlight-message(no-icon).
+    #[span.code day-click] is fired every time you click a day, whereas
+    #[span.code day-focus] is fired only when the selected day changes.
   highlight-message(no-icon)
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
     sshpre.mt-2(language="js").
@@ -1421,6 +1428,7 @@
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
       @day-focus="logEvents('day-focus', $event)"
+      @day-click="logEvents('day-click', $event)"
       @event-focus="logEvents('event-focus', $event)"
       @event-mouse-enter="logEvents('event-mouse-enter', $event)"
       @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1843,12 +1851,13 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.45.0] Add #[span.code day-click] emitted event
   div #[strong Version 1.44.0] Add Slovenian &amp; Hungarian languages
   div #[strong Version 1.43.0] Add Catalan language
   div #[strong Version 1.42.0] Add Norwegian language
   div #[strong Version 1.41.0] Add Romanian language
   div #[strong Version 1.39.0] Add Vietnamese language
-  div #[strong Version 1.38.0] showAllDayEvents now also accepts string 'short'
+  div #[strong Version 1.38.0] #[span.code showAllDayEvents] now also accepts string 'short'
   div #[strong Version 1.37.0] Add text 'All day' in all i18n files
   div #[strong Version 1.36.0] Add out of scope events in month view
     highlight-message(type="success").
