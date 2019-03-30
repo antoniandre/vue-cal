@@ -95,7 +95,7 @@ export default {
           this.$parent.switchView(this.viewProps.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.startWeekOnSunday).addDays(7)
+          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.vuecalProps.startWeekOnSunday).addDays(7)
           this.$parent.switchView(this.viewProps.view.id, firstDayOfNextWeek)
           break
         case 'day':
