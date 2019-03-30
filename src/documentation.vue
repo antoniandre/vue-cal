@@ -1427,8 +1427,8 @@
       :events="eventsCopy2"
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
-      @day-focus="logEvents('day-focus', $event)"
       @day-click="logEvents('day-click', $event)"
+      @day-focus="logEvents('day-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
       @event-mouse-enter="logEvents('event-mouse-enter', $event)"
       @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1447,6 +1447,7 @@
              :events="events"
              @ready="logEvents('ready', $event)"
              @view-change="logEvents('view-change', $event)"
+             @day-click="logEvents('day-click', $event)"
              @day-focus="logEvents('day-focus', $event)"
              @event-focus="logEvents('event-focus', $event)"
              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
@@ -2390,7 +2391,7 @@ export default {
 $primary: #42b983;
 
 .scrollable {
-  height: 200px;
+  height: 250px;
   overflow-y: scroll;
   padding-right: 1.8em;
 }
