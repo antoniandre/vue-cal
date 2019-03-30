@@ -1,0 +1,15 @@
+{
+  "weekDays": ["Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"],
+  "months": ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"],
+  "years": "Évek",
+  "year": "Év",
+  "month": "Hónap",
+  "week": "Hét",
+  "day": "Nap",
+  "today": "Mai nap",
+  "noEvent": "Nincs esemény",
+  "allDay": "All day",
+  "deleteEvent": "Esemény törlese",
+  "createEvent": "Esemény létrehozása",
+  "dateFormat": "DDDD d mmmm yyyy"
+}

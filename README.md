@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.44.0__ Add Slovenian &amp; Hungarian languages
 - __Version 1.43.0__ Add Catalan language
 - __Version 1.42.0__ Add Norwegian language
 - __Version 1.41.0__ Add Romanian language
