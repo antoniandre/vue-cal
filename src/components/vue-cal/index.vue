@@ -30,6 +30,8 @@
                 :splits="hasSplits && splitDays || []"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                div(slot="cell-content")
+                  slot(name="cell-content" :cell="cell" :view="view" :switchToNarrowerView="switchToNarrowerView")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
@@ -57,8 +59,7 @@
                   :view="view"
                   :min-cell-width="minCellWidth"
                   :week-days="weekDays"
-                  :week-days-short="weekDaysShort"
-                )
+                  :week-days-short="weekDaysShort")
 
                 .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
                   vuecal-cell(
@@ -72,9 +73,12 @@
                     :splits="hasSplits && splitDays || []"
                     @click.native="selectCell(cell)"
                     @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                    .vuecal__cell-events-count(slot="events-count-month-view" slot-scope="{ events }" :events="events")
-                      slot(name="events-count-month-view" :events="events")
-                        span(v-if="events.length") {{ events.length }}
+                    div(slot="cell-content" slot-scope="{ events }")
+                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="switchToNarrowerView" :events="events")
+                        .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
+                        .vuecal__cell-events-count(v-if="view.id === 'month' && !eventsOnMonthView && events.length") {{ events.length }}
+                        .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
+                          slot(name="no-event") {{ texts.noEvent }}
                     div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                       slot(name="event-renderer" :view="view" :event="event")
                         .vuecal__event-title.vuecal__event-title--edit(
@@ -284,7 +288,6 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      // @todo: find a way to externalize locales.
       // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
       //   .then(response => (this.texts = response.default))
       this.texts = require(`./i18n/${locale}.json`)

@@ -8,10 +8,7 @@
       v-for="i in (splits.length || 1)"
       :key="transitions ? `${view}-${content}-${i}` : i"
       column)
-      .split-label(v-if="splits.length" v-html="splits[i - 1].label")
-      .vuecal__cell-date(v-if="content" v-html="content")
-      .vuecal__no-event(v-if="!events.length && ['week', 'day'].indexOf(view) > -1")
-        slot(name="no-event") {{ texts.noEvent }}
+      slot(name="cell-content" :events="events")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
         event(
@@ -23,7 +20,6 @@
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j")
           div(slot="event-renderer" slot-scope="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
-      slot(v-if="view === 'month' && !eventsOnMonthView && events.length && !allDayEvents" name="events-count-month-view" :events="events")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
@@ -186,6 +182,10 @@ export default {
     display: flex;
   }
 
+  .vuecal__cell-content {
+    position: relative;
+  }
+
   .vuecal__cell-split {
     display: flex;
     flex-grow: 1;
@@ -195,13 +195,14 @@ export default {
   }
 
   &:before {
+    content: '';
     position: absolute;
+    z-index: 0;
     top: 0;
     left: 0;
     right: -1px;
     bottom: -1px;
     border: 1px solid #ddd;
-    content: '';
   }
 
   &.today,

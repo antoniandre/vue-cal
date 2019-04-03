@@ -271,7 +271,7 @@
 
   //- Example.
   h3.title.mt-5.mb-2.pt-4
-    a(href="#ex--custom-title-and-no-event-text") # Custom vue-cal title &amp; "no event" text
+    a(href="#ex--custom-title-and-no-event-text") # Advanced vue-cal customization - when CSS won't do it
     a#ex--custom-title-and-no-event-text(name="ex--custom-title-and-no-event-text")
   highlight-message(type="tips")
     ul
@@ -303,10 +303,21 @@
     The down side if you use the #[span.code view] object is that you have to handle
     all the calendar views date cases yourself (years, year, month, week, day have different titles).
 
-  v-card.my-2.ma-auto.main-content(style="height: 350px;")
-    vue-cal.vuecal--green-theme(:time="false" :disable-views="['years', 'year', 'month', 'day']")
+  v-card.my-2.ma-auto.main-content(style="height: 400px")
+    vue-cal.vuecal--green-theme.ex--custom-title-and-no-event-text(
+      :time="false"
+      :disable-views="['years', 'year']"
+      :dbl-click-to-navigate="false"
+      :events="events")
       div(slot="title" slot-scope="{ title, view }")
-        | 🎉 {{ view.startDate.getFullYear() }}-{{ view.startDate.getMonth() + 1 }}&nbsp;—&nbsp;w{{ view.startDate.getWeek() }} 🎉
+        | 🎉&nbsp;{{ view.startDate.getFullYear() }}-{{ (view.startDate.getMonth() + 1) < 10 ? '0' : '' }}{{ view.startDate.getMonth() + 1 }}
+        span(v-if="view.id === 'week'") &nbsp;—&nbsp;w{{ view.startDate.getWeek() }}
+        span(v-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
+        | &nbsp;🎉
+      div(v-if="['month', 'week'].includes(view.id)" slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
+        span.vuecal__cell-date.clickable(:class="view.id" @click="goNarrower") {{ cell.date.getDate() }}
+        .vuecal__cell-events-count(v-if="view.id === 'month' && events.length") {{ events.length }}
+        .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
       div(slot="no-event") Nothing here 👌
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -2425,6 +2436,28 @@ $primary: #42b983;
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(255, 236, 202, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
+}
+
+// Custom vue-cal title & "no event" text example.
+.ex--custom-title-and-no-event-text {
+  .vuecal__cell-events-count {margin-top: -2px;}
+
+  .vuecal__cell .clickable {
+    display: block;
+  }
+
+  .vuecal__cell .clickable.week {
+    position: absolute;
+    top: 0;
+    right: 0;
+    color: $primary;
+    font-size: 1.2em;
+    padding: 4px;
+    text-decoration: underline;
+    display: inline-block;
+  }
+
+  .vuecal__no-event {padding-top: 3em;}
 }
 
 // Today-current-time example.
