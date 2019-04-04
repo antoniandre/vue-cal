@@ -73,8 +73,9 @@
                     :splits="hasSplits && splitDays || []"
                     @click.native="selectCell(cell)"
                     @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                    div(slot="cell-content" slot-scope="{ events }")
+                    div(slot="cell-content" slot-scope="{ events, split }")
                       slot(name="cell-content" :cell="cell" :view="view" :goNarrower="switchToNarrowerView" :events="events")
+                        .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                         .vuecal__cell-events-count(v-if="view.id === 'month' && !eventsOnMonthView && events.length")
                           slot(name="events-count-month-view") {{ events.length }}

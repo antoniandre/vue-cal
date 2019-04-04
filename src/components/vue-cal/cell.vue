@@ -8,7 +8,7 @@
       v-for="i in (splits.length || 1)"
       :key="transitions ? `${view}-${content}-${i}` : i"
       column)
-      slot(name="cell-content" :events="events")
+      slot(name="cell-content" :events="events" :split="splits[i - 1]")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
         event(

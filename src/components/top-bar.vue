@@ -47,6 +47,7 @@
             | EVENTS
           v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless events
           v-list-tile(href="#ex--events-with-time" v-scroll-to="'#ex--events-with-time'") Events with time information
+          v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
           v-list-tile(href="#ex--events-indicators-on-month-view" v-scroll-to="'#ex--events-indicators-on-month-view'") Events indicators on month view
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-tile(href="#ex--editable-deletable-events" v-scroll-to="'#ex--editable-deletable-events'") Editable / deletable events
@@ -67,9 +68,8 @@
             v-icon(small).mr-2 tune
             | ADVANCED VUE CAL CUSTOMIZATION
           v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
-          v-list-tile(href="#ex--custom-title-and-no-event-text" v-scroll-to="'#ex--custom-title-and-no-event-text'") Custom vue-cal title &amp; "no event" text
+          v-list-tile(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
           v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
-          v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
 </template>
 
 <script>

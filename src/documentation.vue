@@ -1292,40 +1292,141 @@
 
   //- Example.
   h4.title
-    a(href="#ex--custom-title-and-no-event-text") # Advanced vue-cal customization
-    a#ex--custom-title-and-no-event-text(name="ex--custom-title-and-no-event-text")
+    a(href="#ex--custom-events-count-on-month-view") # Custom events count on month view
+    a#ex--custom-events-count-on-month-view(name="ex--custom-events-count-on-month-view")
+
   highlight-message(type="tips")
     ul
       li.
-        Using Vue.js scoped slots, you can override the main date title.#[br]
+        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
         if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
         #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
       li
         strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-  p.mb-2.
-    In the following example, we set a custom title with Emoji.#[br]
-    2 arguments are available from the scope:
+
+  p.
+    In the following example, we only count the events which have the custom
+    #[span.code leisure] CSS class.
+
+  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
+    vue-cal.vuecal--green-theme.ex--custom-events-count-on-month-view(
+      :class="`event-indicator--${indicatorStyle}`"
+      selected-date="2018-11-19"
+      xsmall
+      :time-from="10 * 60"
+      :time-step="2 * 60"
+      default-view="month"
+      :disable-views="['years', 'year', 'day']"
+      :events="events")
+      //- before:
+      //- span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)")
+        | {{ countEventsMonthView(events) }}
+      //- now: (need splitDays)
+      div(slot="cell-content" slot-scope="{ cell, view, events }")
+        span.vuecal__cell-date(v-if="view.id === 'month'") {{ cell.date.getDate() }}
+        .vuecal__cell-events-count(v-if="view.id === 'month' && countEventsMonthView(events)") {{ countEventsMonthView(events) }}
+
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             xsmall
+             :time-from="10 * 60"
+             :time-step="2 * 60"
+             :disable-views="['years', 'year', 'day']"
+             default-view="month"
+             :events="events"&gt;
+        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
+          {{ '\{\{ countEventsMonthView(events) \}\}' }}
+        &lt;/span&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    // In your Vue component.
+    methods: {
+      countEventsMonthView: events => {
+        return events ? events.filter(e => e.class === 'leisure').length : 0
+      }
+    }
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell-events-count {background: transparent;}
+    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
+
+  //- Example.
+  h4.title
+    a(href="#ex--custom-title-and-cells") # Custom title &amp; cells
+    a#ex--custom-title-and-cells(name="ex--custom-title-and-cells")
+  highlight-message(type="tips")
+    ul
+      li.
+        Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
+        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
+
+  h5.mt-4.subheading
+    v-icon(size="22") keyboard_arrow_right
+    | Custom title
+  p.ml-2.mb-2.
+    2 arguments are available through the scoped slot: #[span.code slot-scope="{ title, view }"]
   ul
     li
-      | #[span.code title], the formatted title. E.g.
+      | #[span.code title], the formatted title (different on all the views). E.g.
       em.ml-2 "Week 2 (January 2019)"
     li
-      | #[span.code view], an object containing the active view info. E.g.
-      sshpre(language="js").mt-3.
+      | #[span.code view], an object containing the active view info.
+      sshpre(language="js").mt-2.mb-3.
         {
-          id: "week",
-          startDate: "2019-01-07T10:38:21.721Z", // Javscript Date object.
-          selectedDate: "2019-01-10T10:38:21.721Z" // Javscript Date object.
+          id: {String}, // Current view, one of: years, year, month, week, day.
+          startDate: {Date}, // Javscript Date object.
+          selectedDate: {Date} // Javscript Date object.
         }
   p.
-    You can use one or the other to format the title as you wish.
-    As #[span.code title] is already formatted it is not as flexible as manipulating
-    the #[span.code view.startDate] yourself.#[br]
-    The down side if you use the #[span.code view] object is that you have to handle
-    all the calendar views date cases yourself (years, year, month, week, day have different titles).
+    You can use one or the other to format the title as you wish.#[br]
+    Using the pre-formatted #[span.code title] will be easy but not very flexible.#[br]
+    If you render the date yourself from #[span.code view.startDate], don't forget
+    the different formats for all the views: years, year, month, week, day.
+
+  h5.mt-4.subheading
+    v-icon(size="22") keyboard_arrow_right
+    | Custom cells
+  p.ml-2.mb-2.
+    5 arguments are available through the scoped slot:#[br]
+    #[span.code slot-scope="{ cell, view, split, events, goNarrower }"]
+  ul
+    li #[span.code cell], object containing the cell date.
+    li #[span.code view], object containing the active view info.
+      sshpre(language="js").mt-2.mb-2.
+        {
+          id: {String}, // Current view, one of: years, year, month, week, day.
+          startDate: {Date}, // Javscript Date object.
+          selectedDate: {Date} // Javscript Date object.
+        }
+    li #[span.code split], when splitting days, object containing the current split info.
+    li #[span.code events], array containing all the events of the current cell or split.
+    li #[span.code goNarrower], function to navigate to narrower view if possible.
+  highlight-message.my-3(type="info")
+    | By default a cell is rendered as follows.#[br]
+    | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
+    sshpre.mt-3.mb-1(language="html-vue").
+      &lt;div class="vuecal__flex vuecal__cell-content"&gt;
+    sshpre.my-2.ml-5(language="html-vue").
+      Now this is the part you can customize:
+
+      &lt;!-- Will be added if splitting days and split labels are set --&gt;
+      &lt;div class="split-label" /&gt;
+      &lt;!-- Will be added on years, year &amp; month view --&gt;
+      &lt;div class="vuecal__cell-date" /&gt;
+      &lt;!-- Will be added on month view --&gt;
+      &lt;div class="vuecal__cell-events-count" /&gt;
+      &lt;!-- Will be added on week and day view if no event --&gt;
+      &lt;div class="vuecal__no-event" /&gt;
+    sshpre.my-1(language="html-vue").
+          &lt;div class="vuecal__cell-events" /&gt;
+      &lt;/div&gt;
 
   v-card.my-2.ma-auto.main-content(style="height: 400px")
-    vue-cal.vuecal--green-theme.ex--custom-title-and-no-event-text(
+    vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :disable-views="['years', 'year']"
       :dbl-click-to-navigate="false"
@@ -1354,65 +1455,6 @@
       &lt;/div&gt;
       &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt;
     &lt;/vue-cal&gt;
-
-  //- Example.
-  h4.title
-    a(href="#ex--custom-events-count-on-month-view") # Custom events count on month view
-    a#ex--custom-events-count-on-month-view(name="ex--custom-events-count-on-month-view")
-
-  highlight-message(type="tips")
-    ul
-      li.
-        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
-  p.
-    In the following example, we only count the events which have the custom
-    #[span.code leisure] CSS class.
-
-  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--custom-events-count-on-month-view(
-      :class="`event-indicator--${indicatorStyle}`"
-      selected-date="2018-11-19"
-      xsmall
-      :time-from="10 * 60"
-      default-view="month"
-      :disable-views="['years', 'year', 'day']"
-      :events="events")
-      //- before:
-      //- span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)")
-        | {{ countEventsMonthView(events) }}
-      //- now: (need splitDays)
-      div(slot="cell-content" slot-scope="{ cell, view, events }")
-        span.vuecal__cell-date(v-if="view.id === 'month'") {{ cell.date.getDate() }}
-        .vuecal__cell-events-count(v-if="view.id === 'month' && countEventsMonthView(events)") {{ countEventsMonthView(events) }}
-
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             xsmall
-             :time-from="10 * 60"
-             :disable-views="['years', 'year', 'day']"
-             default-view="month"
-             :events="events"&gt;
-        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
-          {{ '\{\{ countEventsMonthView(events) \}\}' }}
-        &lt;/span&gt;
-    &lt;/vue-cal&gt;
-
-  sshpre(language="js" label="Javascript").
-    // In your Vue component.
-    methods: {
-      countEventsMonthView: events => {
-        return events ? events.filter(e => e.class === 'leisure').length : 0
-      }
-    }
-
-  sshpre(language="css" label="CSS").
-    .vuecal__cell-events-count {background: transparent;}
-    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
 
   //- Example.
   h4.title
@@ -1458,7 +1500,8 @@
     li #[span.code event]: The event full object containing dates, time, title, content and custom fields.
     li #[span.code view]: The current selected view id.
   p.mt-2.
-    You can set any custom field you want on an event, they will then be accessible in your custom event renderer!#[br]
+    You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
+    Note that #[span.code eid] is a reserved keyword.
 
   v-card.my-2.ma-auto.main-content(style="height: 523px")
     vue-cal.vuecal--green-theme.ex--custom-event-rendering(
@@ -2509,7 +2552,7 @@ $primary: #42b983;
 }
 
 // Custom vue-cal title & "no event" text example.
-.ex--custom-title-and-no-event-text {
+.ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}
 
   .vuecal__cell .clickable {

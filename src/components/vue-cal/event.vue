@@ -53,7 +53,7 @@ export default {
 
   methods: {
     eventStyles (event) {
-      if (!event.startTime || this.vuecal.view.id === 'month' || this.allDayEvents) return {}
+      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDayEvents) return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
