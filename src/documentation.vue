@@ -589,53 +589,6 @@
     .vuecal__cell--has-events {background-color: #fffacd;}
     .vuecal__cell-events-count {display: none;}
 
-  p.mt-5.title Custom events count on Month view
-  highlight-message(type="tips")
-    ul
-      li.
-        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
-  p.
-    In the following example, we only count the events which have the custom
-    #[span.code leisure] CSS class.
-  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--events-indicators-on-month-view(
-      :class="`event-indicator--${indicatorStyle}`"
-      selected-date="2018-11-19"
-      xsmall
-      :time-from="10 * 60"
-      default-view="month"
-      :disable-views="['years', 'year', 'day']"
-      :events="events")
-      span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)") {{ countEventsMonthView(events) }}
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             xsmall
-             :time-from="10 * 60"
-             :disable-views="['years', 'year', 'day']"
-             default-view="month"
-             :events="events"&gt;
-        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
-          {{ '\{\{ countEventsMonthView(events) \}\}' }}
-        &lt;/span&gt;
-    &lt;/vue-cal&gt;
-
-  sshpre(language="js" label="Javascript").
-    // In your Vue component.
-    methods: {
-      countEventsMonthView: events => {
-        return events ? events.filter(e => e.class === 'leisure').length : 0
-      }
-    }
-
-  sshpre(language="css" label="CSS").
-    .vuecal__cell-events-count {background: transparent;}
-    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
-
   //- Example.
   h4.title
     a(href="#ex--events-on-month-view") # Display events on month view
@@ -1382,11 +1335,13 @@
         span(v-if="view.id === 'week'") &nbsp;—&nbsp;w{{ view.startDate.getWeek() }}
         span(v-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
         | &nbsp;🎉
-      div(v-if="['month', 'week'].includes(view.id)" slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
-        span.vuecal__cell-date.clickable(:class="view.id" @click="goNarrower") {{ cell.date.getDate() }}
+      div(slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
+        span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.date.getDate() }}
         .vuecal__cell-events-count(v-if="view.id === 'month' && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
-      div(slot="no-event") Nothing here 👌
+      //- Or this:
+      //- div(slot="no-event") Nothing here 👌
+
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time="false"
@@ -1399,6 +1354,65 @@
       &lt;/div&gt;
       &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt;
     &lt;/vue-cal&gt;
+
+  //- Example.
+  h4.title
+    a(href="#ex--custom-events-count-on-month-view") # Custom events count on month view
+    a#ex--custom-events-count-on-month-view(name="ex--custom-events-count-on-month-view")
+
+  highlight-message(type="tips")
+    ul
+      li.
+        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
+        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
+      li
+        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
+
+  p.
+    In the following example, we only count the events which have the custom
+    #[span.code leisure] CSS class.
+
+  v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
+    vue-cal.vuecal--green-theme.ex--custom-events-count-on-month-view(
+      :class="`event-indicator--${indicatorStyle}`"
+      selected-date="2018-11-19"
+      xsmall
+      :time-from="10 * 60"
+      default-view="month"
+      :disable-views="['years', 'year', 'day']"
+      :events="events")
+      //- before:
+      //- span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)")
+        | {{ countEventsMonthView(events) }}
+      //- now: (need splitDays)
+      div(slot="cell-content" slot-scope="{ cell, view, events }")
+        span.vuecal__cell-date(v-if="view.id === 'month'") {{ cell.date.getDate() }}
+        .vuecal__cell-events-count(v-if="view.id === 'month' && countEventsMonthView(events)") {{ countEventsMonthView(events) }}
+
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             xsmall
+             :time-from="10 * 60"
+             :disable-views="['years', 'year', 'day']"
+             default-view="month"
+             :events="events"&gt;
+        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
+          {{ '\{\{ countEventsMonthView(events) \}\}' }}
+        &lt;/span&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    // In your Vue component.
+    methods: {
+      countEventsMonthView: events => {
+        return events ? events.filter(e => e.class === 'leisure').length : 0
+      }
+    }
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell-events-count {background: transparent;}
+    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
 
   //- Example.
   h4.title
@@ -2535,7 +2549,6 @@ $primary: #42b983;
 }
 
 .ex--events-indicators-on-month-view {
-  .vuecal__cell-events-count {background: transparent;}
   .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
 }
 
