@@ -230,7 +230,7 @@ export default {
     transform: translateX(-50%);
     width: 12px;
     height: 12px;
-    margin-top: 13px;
+    margin-top: -1px;
     line-height: 12px;
     font-size: 10px;
   }
