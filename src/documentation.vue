@@ -1424,6 +1424,7 @@
     v-icon(size="22") keyboard_arrow_right
     | Custom cells
   p.ml-2.mb-2.
+    In this example, only the cell number is clickable on month view.#[br]
     5 arguments are available through the scoped slot:#[br]
     #[span.code slot-scope="{ cell, view, split, events, goNarrower }"]
   ul
@@ -1479,8 +1480,6 @@
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="view.id === 'month' && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
-      //- Or this:
-      //- div(slot="no-event") Nothing here 👌
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -2618,20 +2617,20 @@ $primary: #42b983;
 .ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}
 
-  .vuecal__cell .clickable {
-    display: block;
-  }
+  .vuecal__cell .clickable {display: block;}
 
-  .vuecal__cell .clickable.week {
+  .vuecal__cell .clickable.month {
     position: absolute;
     top: 0;
     right: 0;
     color: $primary;
     font-size: 1.2em;
-    padding: 4px;
+    padding: 0 4px;
     text-decoration: underline;
     display: inline-block;
   }
+
+  .vuecal__cell .vuecal__cell-content {height: 100%;}
 
   .vuecal__no-event {padding-top: 3em;}
 }
