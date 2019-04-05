@@ -1470,6 +1470,7 @@
     vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :dbl-click-to-navigate="false"
+      default-view="month"
       :events="events")
       div(slot="title" slot-scope="{ title, view }")
         | 🎉&nbsp;{{ view.startDate.getFullYear() }}-{{ (view.startDate.getMonth() + 1) < 10 ? '0' : '' }}{{ view.startDate.getMonth() + 1 }}
@@ -1482,10 +1483,9 @@
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time="false"
-             :disable-views="['years', 'year']"
-             hide-weekends
+    &lt;vue-cal :time="false"
+             :dbl-click-to-navigate="false"
+             default-view="month"
              :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
