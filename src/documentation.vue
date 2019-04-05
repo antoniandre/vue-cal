@@ -101,6 +101,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | All day events in top bar
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Custom cell rendering
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -233,16 +236,16 @@
     a(href="#ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
     a#ex--small-cal(name="ex--small-cal")
   p.
-    Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrowPrev] &amp; #[span.code arrowNext]).#[br]
+    Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
-      v-icon(slot="arrowPrev") arrow_back
-      v-icon(slot="arrowNext") arrow_forward
+      v-icon(slot="arrow-prev") arrow_back
+      v-icon(slot="arrow-next") arrow_forward
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal hide-view-selector :time="false" default-view="month" xsmall&gt;
-      &lt;i slot="arrowPrev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
-      &lt;i slot="arrowNext" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
+      &lt;i slot="arrow-prev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
+      &lt;i slot="arrow-next" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
     &lt;/vue-cal&gt;
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -432,7 +435,7 @@
   ul
     li #[span.code event]: the clicked calendar event's object
     li #[span.code e]: the associated javascript DOM event
-  highlight-message.mt-3(type="tips") You can set any custom field you want on an event, you will then be able to access it in the dialog box!#[br]
+  highlight-message.mt-3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   v-card.my-2.ma-auto.main-content(style="height: 523px")
     vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
       selected-date="2018-11-19"
@@ -480,18 +483,18 @@
           start: '2018-11-20 14:00',
           end: '2018-11-20 18:00',
           title: 'Need to go shopping',
-          icon: 'shopping_cart', // Custom field.
+          icon: 'shopping_cart', // Custom attribute.
           content: 'Click to see my shopping list',
-          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocadoes&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom field.
+          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocadoes&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
           class: 'leisure'
         },
         {
           start: '2018-11-22 10:00',
           end: '2018-11-22 15:00',
           title: 'Golf with John',
-          icon: 'golf_course', // Custom field.
+          icon: 'golf_course', // Custom attribute.
           content: 'Do I need to tell how many holes?',
-          contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom field.
+          contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom attribute.
           class: 'sport'
         }
       ]
@@ -600,14 +603,15 @@
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
       default-view="month"
       hide-weekends
       events-on-month-view="short"
-      :events="events")
+      :events="events"
+      style="height: 600px")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -616,9 +620,18 @@
              hide-weekends
              events-on-month-view="short"
              :events="events"
-             class="vuecal--full-height-delete"&gt;
+             style="height: 600px"&gt;
     &lt;/vue-cal&gt;
   sshpre(language="css" label="CSS").
+    .vuecal--month-view .vuecal__cell {height: 80px;}
+
+    .vuecal--month-view .vuecal__cell-content {
+      justify-content: flex-start;
+      height: 100%;
+      align-items: flex-end;
+    }
+
+    .vuecal--month-view .vuecal__cell-date {padding: 4px;}
     .vuecal--month-view .vuecal__no-event {display: none;}
 
   //- Example.
@@ -1240,7 +1253,19 @@
     a(href="#ex--timeline-tweaking")
       v-icon.mr-2 tune
       | Advanced Vue Cal customization
-      small.ml-2 #[em - when CSS won't do it]
+      small.ml-2 #[em="- when CSS won't do it"]
+
+  highlight-message.mt-4
+    | Here is the list of available slots:
+    ul
+      li #[span.code arrow-prev]
+      li #[span.code arrow-next]
+      li #[span.code title]
+      li #[span.code time-cell]
+      li #[span.code cell-content]
+      li #[span.code no-event]
+      li #[span.code events-count-month-view]
+      li #[span.code event-renderer]
 
   //- Example.
   h4.title
@@ -1263,7 +1288,7 @@
       div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
-  highlight-message(type="tips")
+  highlight-message.mt-4(type="tips")
     ul
       li.
         if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
@@ -1318,13 +1343,8 @@
       default-view="month"
       :disable-views="['years', 'year', 'day']"
       :events="events")
-      //- before:
-      //- span(slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)")
+      span(slot="events-count-month-view" slot-scope="{ events }" v-if="countEventsMonthView(events)")
         | {{ countEventsMonthView(events) }}
-      //- now: (need splitDays)
-      div(slot="cell-content" slot-scope="{ cell, view, events }")
-        span.vuecal__cell-date(v-if="view.id === 'month'") {{ cell.date.getDate() }}
-        .vuecal__cell-events-count(v-if="view.id === 'month' && countEventsMonthView(events)") {{ countEventsMonthView(events) }}
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -1334,10 +1354,23 @@
              :disable-views="['years', 'year', 'day']"
              default-view="month"
              :events="events"&gt;
-        &lt;span slot-scope="{ events }" slot="events-count-month-view" v-if="countEventsMonthView(events)"&gt;
+        &lt;span slot="events-count-month-view" slot-scope="{ events }" v-if="countEventsMonthView(events)"&gt;
           {{ '\{\{ countEventsMonthView(events) \}\}' }}
         &lt;/span&gt;
     &lt;/vue-cal&gt;
+
+  p.
+    Alternatively, you could also use the #[span.code cell-content] slot
+    instead of the #[span.code events-count-month-view] slot to perform the same task:#[br]
+    (Refer to the next example to know more:
+    #[a(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells])
+  sshpre.mt-2(language="html-vue" label="Vue Template").
+    &lt;span slot="cell-content" slot-scope="{ cell, view, events }"&gt;
+      &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
+      &lt;span class="vuecal__cell-events-count" v-if="view.id === 'month' &amp;&amp; countEventsMonthView(events)"&gt;
+        {{ '\{\{ countEventsMonthView(events) \}\}' }}
+      &lt;/span&gt;
+    &lt;/span&gt;
 
   sshpre(language="js" label="Javascript").
     // In your Vue component.
@@ -1364,7 +1397,7 @@
       li
         strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
 
-  h5.mt-4.subheading
+  h5.mt-4.subheading.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom title
   p.ml-2.mb-2.
@@ -1387,7 +1420,7 @@
     If you render the date yourself from #[span.code view.startDate], don't forget
     the different formats for all the views: years, year, month, week, day.
 
-  h5.mt-4.subheading
+  h5.mt-4.subheading.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom cells
   p.ml-2.mb-2.
@@ -1395,6 +1428,13 @@
     #[span.code slot-scope="{ cell, view, split, events, goNarrower }"]
   ul
     li #[span.code cell], object containing the cell date.
+      sshpre(language="js").mt-2.mb-2.
+        {
+          content: {String}, // Pre-formatted cell content if any.
+          date: {Date},
+          formattedDate: {String}, // E.g. "2019-04-05".
+          today: {Boolean}
+        }
     li #[span.code view], object containing the active view info.
       sshpre(language="js").mt-2.mb-2.
         {
@@ -1428,16 +1468,15 @@
   v-card.my-2.ma-auto.main-content(style="height: 400px")
     vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
-      :disable-views="['years', 'year']"
       :dbl-click-to-navigate="false"
       :events="events")
       div(slot="title" slot-scope="{ title, view }")
         | 🎉&nbsp;{{ view.startDate.getFullYear() }}-{{ (view.startDate.getMonth() + 1) < 10 ? '0' : '' }}{{ view.startDate.getMonth() + 1 }}
         span(v-if="view.id === 'week'") &nbsp;—&nbsp;w{{ view.startDate.getWeek() }}
-        span(v-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
+        span(v-else-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
         | &nbsp;🎉
       div(slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
-        span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.date.getDate() }}
+        span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="view.id === 'month' && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
       //- Or this:
@@ -1446,14 +1485,31 @@
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time="false"
-             :disable-views="['years', 'year', 'month', 'day']"
+             :disable-views="['years', 'year']"
              hide-weekends
              :events="events"&gt;
+
+      &lt;!-- Custom title --&gt;
       &lt;div slot="title" slot-scope="{ title, view }"&gt;
-        🎉 {{ '\{\{ view.startDate.getFullYear() \}\}' }} - {{ '\{\{ view.startDate.getMonth() + 1 \}\}' }}
-        — w{{ '\{\{ view.startDate.getWeek() \}\}' }} 🎉
+        🎉 {{ '\{\{ view.startDate.getFullYear() \}\}' }}-{{ '\{\{ (view.startDate.getMonth() + 1) < 10 ? \'0\' : \'\' \}\}' }}{{ '\{\{ view.startDate.getMonth() + 1 \}\}' }}
+        &lt;!-- Print week number on week view --&gt;
+        &lt;span v-if="view.id === 'week'"&gt;— w{{ '\{\{ view.startDate.getWeek() \}\}' }}&lt;/span&gt;
+        &lt;!-- Print current day on day view --&gt;
+        &lt;span v-else-if="view.id === 'day'"&gt;-{{ '\{\{ view.startDate.getDate() < 10 ? \'0\' : \'\' \}\}' }}{{ '\{\{ view.startDate.getDate() \}\}' }}&lt;/span&gt;
+        🎉
       &lt;/div&gt;
-      &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt;
+
+      &lt;!-- Custom cells --&gt;
+      &lt;div slot="cell-content" slot-scope="{ cell, view, goNarrower, events }"&gt;
+        &lt;span class="vuecal__cell-date" :class="view.id" v-if="view.id === 'day'" @click="goNarrower"&gt;
+          {{ '\{\{ cell.date.getDate() \}\}' }}
+        &lt;/span&gt;
+        &lt;span class="vuecal__cell-events-count" v-if="view.id === 'month' &amp;&amp; events.length"&gt;{{ '\{\{ events.length \}\}' }}&lt;/span&gt;
+        &lt;span class="vuecal__no-event" v-if="['week', 'day'].includes(view.id) &amp;&amp; !events.length"&gt;Nothing here 👌&lt;/span&gt;
+      &lt;/div&gt;
+
+      &lt;!-- Alternatively to custom cells if you just want custom no-event text: --&gt;
+      &lt;!-- &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt; --&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -1497,7 +1553,7 @@
   p.mb-2.
     Two parameters are passed through the scoped slot:
   ul
-    li #[span.code event]: The event full object containing dates, time, title, content and custom fields.
+    li #[span.code event]: The event full object containing dates, time, title, content and custom attributes.
     li #[span.code view]: The current selected view id.
   p.mt-2.
     You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
@@ -1544,14 +1600,14 @@
         start: '2018-11-20 14:00',
         end: '2018-11-20 18:00',
         title: 'Need to go shopping',
-        icon: 'shopping_cart', // Custom field.
+        icon: 'shopping_cart', // Custom attribute.
         class: 'leisure'
       },
       {
         start: '2018-11-22 10:00',
         end: '2018-11-22 15:00',
         title: 'Golf with John',
-        icon: 'golf_course', // Custom field.
+        icon: 'golf_course', // Custom attribute.
         class: 'sport'
       }
     ]
@@ -1955,6 +2011,11 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.46.0] Allow cell customization
+    highlight-message(type="success").
+      For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
+      are renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
+
   div #[strong Version 1.45.0] Add #[span.code day-click] emitted event
   div #[strong Version 1.44.0] Add Slovenian &amp; Hungarian languages
   div #[strong Version 1.43.0] Add Catalan language
@@ -2551,6 +2612,8 @@ $primary: #42b983;
   .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
 }
 
+// Examples.
+// =====================================================
 // Custom vue-cal title & "no event" text example.
 .ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}
@@ -2593,6 +2656,23 @@ $primary: #42b983;
 
 .ex--events-indicators-on-month-view {
   .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+}
+
+.ex--custom-events-count-on-month-view {
+  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+  .vuecal__cell-events-count {background: transparent;}
+}
+
+.ex--events-on-month-view.vuecal--month-view {
+  .vuecal__cell {height: 80px;}
+
+  .vuecal__cell-content {
+    justify-content: flex-start;
+    height: 100%;
+    align-items: flex-end;
+  }
+
+  .vuecal__cell-date {padding: 3px 4px;}
 }
 
 .event-indicator--cell .vuecal__cell--has-events {background-color: #fffacd;}

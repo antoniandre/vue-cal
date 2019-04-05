@@ -26,6 +26,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.46.0__ Allow cell customization
 - __Version 1.45.0__ Add day-click emitted event
 - __Version 1.44.0__ Add Slovenian &amp; Hungarian languages
 - __Version 1.43.0__ Add Catalan language

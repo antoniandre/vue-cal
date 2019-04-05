@@ -6,9 +6,9 @@
       :months="months"
       :week-days="weekDays"
       :week-days-short="weekDaysShort")
-      slot(slot="arrowPrev" name="arrowPrev")
+      slot(slot="arrow-prev" name="arrow-prev")
         i.angle
-      slot(slot="arrowNext" name="arrowNext")
+      slot(slot="arrow-next" name="arrow-next")
         i.angle
       slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
@@ -78,7 +78,7 @@
                         .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                         .vuecal__cell-events-count(v-if="view.id === 'month' && !eventsOnMonthView && events.length")
-                          slot(name="events-count-month-view") {{ events.length }}
+                          slot(name="events-count-month-view" :events="events") {{ events.length }}
                         .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                           slot(name="no-event") {{ texts.noEvent }}
                     div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
