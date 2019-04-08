@@ -8,7 +8,7 @@
       @click="$parent.switchView(id, null, true)") {{ v.label }}
   .vuecal__title(v-if="!vuecalProps.hideTitleBar")
     .vuecal__arrow.vuecal__arrow--prev(@click="previous")
-      slot(name="arrowPrev")
+      slot(name="arrow-prev")
     transition(:name="`slide-fade--${transitionDirection}`")
       div(
         :class="{ clickable: !!broaderView }"
@@ -17,7 +17,7 @@
         style="display: inline-block")
         slot(name="title")
     .vuecal__arrow.vuecal__arrow--next(@click="next")
-      slot(name="arrowNext")
+      slot(name="arrow-next")
   weekdays-headings(
     v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
     :view="viewProps.view"
@@ -95,7 +95,7 @@ export default {
           this.$parent.switchView(this.viewProps.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.startWeekOnSunday).addDays(7)
+          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.vuecalProps.startWeekOnSunday).addDays(7)
           this.$parent.switchView(this.viewProps.view.id, firstDayOfNextWeek)
           break
         case 'day':

@@ -24,29 +24,52 @@
           v-icon.mr-2 apps
           span Examples
         v-list(dense allow-overflow).no-wrap
-          v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide-weekends
+          v-list-tile.heading(href="#ex--basic" v-scroll-to="'#ex--basic'")
+            v-icon(small).mr-2 done
+            | BASIC
+          v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
           v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
-          v-list-tile(href="#ex--custom-title-and-no-event-text" v-scroll-to="'#ex--custom-title-and-no-event-text'") Custom vue-cal title &amp; "no event" text
+
+          v-list-tile.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
+            v-icon(small).mr-2 translate
+            | INTERNATIONALIZATION (I18N)
           v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
+
+          v-list-tile.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
+            v-icon(small).mr-2 access_time
+            | TIMELINE
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-tile(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
-          v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
-          v-list-tile(href="#ex--disabled-views-and-calendar-events" v-scroll-to="'#ex--disabled-views-and-calendar-events'") Disable views &amp; calendar events
+          v-list-tile(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
+
+          v-list-tile.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
+            v-icon(small).mr-2 event
+            | EVENTS
+          v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless events
+          v-list-tile(href="#ex--events-with-time" v-scroll-to="'#ex--events-with-time'") Events with time information
           v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
-          v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
           v-list-tile(href="#ex--events-indicators-on-month-view" v-scroll-to="'#ex--events-indicators-on-month-view'") Events indicators on month view
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-          v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless Events
           v-list-tile(href="#ex--editable-deletable-events" v-scroll-to="'#ex--editable-deletable-events'") Editable / deletable events
           v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-tile(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
           v-list-tile(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
+
+          v-list-tile.heading(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'")
+            v-icon(small).mr-2 swap_horiz
+            | COMMUNICATING WITH VUE CAL
           v-list-tile(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-tile(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
           v-list-tile(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
+
+          v-list-tile.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
+            v-icon(small).mr-2 tune
+            | ADVANCED VUE CAL CUSTOMIZATION
+          v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
+          v-list-tile(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
+          v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
 </template>
 
 <script>
@@ -199,11 +222,13 @@ $lighter-text: #ccc;
     background-color: rgba(255, 255, 255, 0.7);
   }
 
-  .top-bar__items .v-menu__content .v-list__tile {
+  .v-menu__content .v-list__tile {
     height: 30px;
     font-size: 1em;
-    color: inherit !important;
   }
+
+  .v-menu__content .v-list__tile {padding-left: 32px;}
+  .v-menu__content .heading .v-list__tile {padding-left: 8px;margin-top: 8px;color: #888;}
 
   .v-menu__content {
     max-height: 90vh;

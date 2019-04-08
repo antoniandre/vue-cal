@@ -147,7 +147,7 @@ $weekdays-headings-height: 2.8em;
 }
 
 .slide-fade--left-leave-active,
-.slide-fade--right-leave-active {position: absolute;height: 100%;}
+.slide-fade--right-leave-active {position: absolute !important;height: 100%;}
 .vuecal__title .slide-fade--left-leave-active,
 .vuecal__title .slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
 .vuecal__heading .slide-fade--left-leave-active,
