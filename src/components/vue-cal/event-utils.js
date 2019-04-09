@@ -22,7 +22,7 @@ export const eventDefaults = {
   classes: []
 }
 
-export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
+export const createAnEvent = (formattedDate, split, startTimeMinutes, vuecal) => {
   startTimeMinutes = parseInt(startTimeMinutes)
   const hours = parseInt(startTimeMinutes / 60)
   const minutes = parseInt(startTimeMinutes % 60)
@@ -44,7 +44,8 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
     end: formattedDate + (vuecal.time ? ` ${hours + 2}:${minutes}` : ''),
     endDate: formattedDate,
     endTime: (vuecal.time ? ` ${hours + 2}:${minutes}` : null),
-    endTimeMinutes
+    endTimeMinutes,
+    ...(split ? { split } : null)
   }
 
   if (typeof vuecal.onEventCreate === 'function') {

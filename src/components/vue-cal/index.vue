@@ -70,11 +70,7 @@
                     :formatted-date="cell.formattedDate"
                     :today="cell.today"
                     :content="cell.content"
-                    :splits="hasSplits && splitDays || []"
-                    @touchstart.native="onCellTouchStart($event, cell)"
-                    @mousedown.native="onCellMouseDown($event, cell)"
-                    @click.native="selectCell(cell)"
-                    @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                    :splits="hasSplits && splitDays || []")
                     div(slot="cell-content" slot-scope="{ events, split }")
                       slot(name="cell-content" :cell="cell" :view="view" :goNarrower="switchToNarrowerView" :events="events")
                         .split-label(v-if="split" v-html="split.label")
@@ -290,6 +286,7 @@ export default {
         },
         clickHoldACell: {
           cellId: null,
+          split: null,
           timeout: 1200,
           timeoutId: null
         },
@@ -412,49 +409,6 @@ export default {
 
     isDOMElementAnEvent (el) {
       return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
-    },
-
-    selectCell (cell) {
-      this.$emit('day-click', cell.date)
-      if (this.view.selectedDate.toString() !== cell.date.toString()) {
-        this.view.selectedDate = cell.date
-        this.$emit('day-focus', cell.date)
-      }
-
-      // Switch to narrower view.
-      if (this.clickToNavigate) this.switchToNarrowerView()
-
-      // Handle double click manually for touch devices.
-      else if (this.dblClickToNavigate && 'ontouchstart' in window) {
-        this.domEvents.dblTapACell.taps++
-
-        setTimeout(() => (this.domEvents.dblTapACell.taps = 0), this.domEvents.dblTapACell.timeout)
-
-        if (this.domEvents.dblTapACell.taps >= 2) {
-          this.domEvents.dblTapACell.taps = 0
-          this.switchToNarrowerView()
-        }
-      }
-    },
-
-    onCellMouseDown (e, cell, touch = false) {
-      // Prevent a double mouse down on touch devices.
-      if ('ontouchstart' in window && !touch) return false
-
-      let clickHoldACell = this.domEvents.clickHoldACell
-
-      // If not mousedown on an event, click & hold to create an event.
-      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].indexOf(this.view.id) > -1) {
-        clickHoldACell.cellId = `${this._uid}_${cell.formattedDate}`
-        clickHoldACell.timeoutId = setTimeout(() => {
-          if (clickHoldACell.cellId) this.createAnEvent(cell, e)
-        }, clickHoldACell.timeout)
-      }
-    },
-
-    onCellTouchStart (e, cell) {
-      // If not mousedown on an event.
-      if (!this.isDOMElementAnEvent(e.target)) this.onCellMouseDown(e, cell, true)
     },
 
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
@@ -651,10 +605,10 @@ export default {
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
-    createAnEvent (cell, e) {
+    createAnEvent (cell, split = null, e) {
       const mouseY = this.getPosition(e).y
       const startTimeMinutes = mouseY * 60 / parseInt(this.timeCellHeight) + this.timeFrom
-      createAnEvent(cell.formattedDate, startTimeMinutes, this)
+      createAnEvent(cell.formattedDate, split, startTimeMinutes, this)
     },
 
     // Prepare the event to return it with an emitted event.
