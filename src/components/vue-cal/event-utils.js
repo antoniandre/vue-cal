@@ -23,6 +23,7 @@ export const eventDefaults = {
 }
 
 export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
+  startTimeMinutes = parseInt(startTimeMinutes)
   const hours = parseInt(startTimeMinutes / 60)
   const minutes = parseInt(startTimeMinutes % 60)
   const endTimeMinutes = startTimeMinutes + 120
@@ -30,13 +31,13 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
   let event = {
     ...eventDefaults,
     eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
-    start: formattedDate + (vuecal.time ? `${hours}:${minutes}` : ''),
+    start: formattedDate + (vuecal.time ? ` ${hours}:${minutes}` : ''),
     startDate: formattedDate,
-    startTime: (vuecal.time ? `${hours}:${minutes}` : null),
+    startTime: (vuecal.time ? ` ${hours}:${minutes}` : null),
     startTimeMinutes,
-    end: formattedDate + (vuecal.time ? `${hours + 2}:${minutes}` : ''),
+    end: formattedDate + (vuecal.time ? ` ${hours + 2}:${minutes}` : ''),
     endDate: formattedDate,
-    endTime: (vuecal.time ? `${hours + 2}:${minutes}` : null),
+    endTime: (vuecal.time ? ` ${hours + 2}:${minutes}` : null),
     endTimeMinutes
   }
 
@@ -55,7 +56,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
-  let eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
+  const eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
   // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
   let cellEvents = vuecal.mutableEvents[eventDate]
   // Delete the event.
@@ -65,8 +66,8 @@ export const deleteAnEvent = (event, vuecal) => {
   // If deleting a multiple-day event, delete all the events pieces (days).
   if (event.multipleDays.daysCount) {
     event.linked.forEach(e => {
-      let dayToModify = vuecal.mutableEvents[e.date]
-      let eventToDelete = dayToModify.find(e2 => e2.eid === e.eid)
+      const dayToModify = vuecal.mutableEvents[e.date]
+      const eventToDelete = dayToModify.find(e2 => e2.eid === e.eid)
       vuecal.mutableEvents[e.date] = dayToModify.filter(e2 => e2.eid !== e.eid)
 
       if (!e.background) {
@@ -175,8 +176,10 @@ export const checkCellOverlappingEvents = cellEvents => {
 export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
   const src = (event.multipleDays.daysCount && event.multipleDays) || event
   const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
+  console.log(event.eid, comparisonArray, cellEvents, 'here la')
 
   comparisonArray.forEach(event2id => {
+    if (eventId2 === event.eid) debugger
     let event2 = cellEvents.find(item => item.eid === event2id)
     const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
     const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2

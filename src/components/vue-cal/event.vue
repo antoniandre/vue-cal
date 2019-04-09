@@ -13,6 +13,7 @@
     @mousedown.stop.prevent="deleteEvent(event)"
     @touchstart.stop.prevent="touchDeleteEvent(event)") {{ vuecal.texts.deleteEvent }}
   slot(:event="event" :view="vuecal.view.id" name="event-renderer")
+  | {{event}}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
@@ -62,7 +63,7 @@ export default {
     },
 
     eventClasses (event) {
-      let { clickHoldAnEvent, focusAnEvent } = this.domEvents
+      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
