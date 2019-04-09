@@ -10,7 +10,7 @@
       column)
       slot(name="cell-content" :events="events" :split="splits[i - 1]")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
+        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
         event(
           :vuecal="$parent"
           :event="event"
@@ -59,8 +59,16 @@ export default {
       default: false
     }
   },
+
   methods: {
     checkCellOverlappingEvents
+  },
+
+  created () {
+    if (this.splits.length) {
+      this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+    }
+    else checkCellOverlappingEvents(this.events)
   },
 
   computed: {

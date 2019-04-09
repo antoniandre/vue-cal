@@ -30,6 +30,12 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
 
   let event = {
     ...eventDefaults,
+    // Nested objects need to be reinitialized or they will be shared across all instances.
+    overlapped: {},
+    overlapping: {},
+    simultaneous: {},
+    multipleDays: {},
+
     eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start: formattedDate + (vuecal.time ? ` ${hours}:${minutes}` : ''),
     startDate: formattedDate,
@@ -51,6 +57,9 @@ export const createAnEvent = (formattedDate, startTimeMinutes, vuecal) => {
   vuecal.mutableEvents[event.startDate].push(event)
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
+
+  // After creating a new event, check if it overlaps any other.
+  checkCellOverlappingEvents(vuecal.mutableEvents[event.startDate])
 }
 
 export const deleteAnEvent = (event, vuecal) => {
@@ -83,7 +92,7 @@ export const deleteAnEvent = (event, vuecal) => {
   if (!event.background) deleteLinkedEvents(event, cellEvents)
 }
 
-const deleteLinkedEvents = (event, cellEvents) => {
+export const deleteLinkedEvents = (event, cellEvents) => {
   Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapping[event.eid]))
   Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapped[event.eid]))
   Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.eid === id).simultaneous[event.eid]))
@@ -176,10 +185,8 @@ export const checkCellOverlappingEvents = cellEvents => {
 export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
   const src = (event.multipleDays.daysCount && event.multipleDays) || event
   const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
-  console.log(event.eid, comparisonArray, cellEvents, 'here la')
 
   comparisonArray.forEach(event2id => {
-    if (eventId2 === event.eid) debugger
     let event2 = cellEvents.find(item => item.eid === event2id)
     const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
     const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2

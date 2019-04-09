@@ -13,7 +13,6 @@
     @mousedown.stop.prevent="deleteEvent(event)"
     @touchstart.stop.prevent="touchDeleteEvent(event)") {{ vuecal.texts.deleteEvent }}
   slot(:event="event" :view="vuecal.view.id" name="event-renderer")
-  | {{event}}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
@@ -21,7 +20,7 @@
 </template>
 
 <script>
-import { deleteAnEvent } from './event-utils'
+import { deleteAnEvent, deleteLinkedEvents, checkCellOverlappingEvents } from './event-utils'
 
 export default {
   props: {
@@ -203,12 +202,15 @@ export default {
   watch: {
     'event.background' (val) {
       // When the event background property changes, remove all the involved overlapping events
-      // and trigger cell overlapping check again.
-      deleteLinkedOverlappingEvents(this.event, this.cellEvents)
-      this.event.overlapping = {}
-      this.event.overlapped = {}
-      this.event.simultaneous = {}
-      checkCellOverlappingEvents(this.cellEvents, this.vuecal)
+      // if setting to background or check cell overlapping again otherwise.
+      if (val) {
+        deleteLinkedEvents(this.event, this.cellEvents)
+        this.event.overlapping = {}
+        this.event.overlapped = {}
+        this.event.simultaneous = {}
+      }
+
+      else checkCellOverlappingEvents(this.cellEvents, this.vuecal)
     }
   }
 }
