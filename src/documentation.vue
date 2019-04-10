@@ -1482,7 +1482,7 @@
         span(v-if="view.id === 'week'") &nbsp;—&nbsp;w{{ view.startDate.getWeek() }}
         span(v-else-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
         | &nbsp;🎉
-      div(slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
+      div(slot="cell-content" slot-scope="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
@@ -1504,7 +1504,7 @@
       &lt;/div&gt;
 
       &lt;!-- Custom cells --&gt;
-      &lt;div slot="cell-content" slot-scope="{ cell, view, goNarrower, events }"&gt;
+      &lt;div slot="cell-content" slot-scope="{ cell, view, events, goNarrower }"&gt;
         &lt;span class="vuecal__cell-date" :class="view.id" v-if="view.id === 'day'" @click="goNarrower"&gt;
           {{ '\{\{ cell.date.getDate() \}\}' }}
         &lt;/span&gt;

@@ -30,8 +30,6 @@
                 :splits="hasSplits && splitDays || []"
                 @click.native="selectCell(cell)"
                 @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                div(slot="cell-content")
-                  slot(name="cell-content" :cell="cell" :view="view" :switchToNarrowerView="switchToNarrowerView")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
@@ -74,7 +72,7 @@
                     @click.native="selectCell(cell)"
                     @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
                     div(slot="cell-content" slot-scope="{ events, split }")
-                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="switchToNarrowerView" :events="events")
+                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="() => {selectCell(cell, true)}" :events="events")
                         .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                         .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
@@ -404,7 +402,7 @@ export default {
       return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell (cell) {
+    selectCell (cell, force = false) {
       this.$emit('day-click', cell.date)
       if (this.view.selectedDate.toString() !== cell.date.toString()) {
         this.view.selectedDate = cell.date
@@ -412,7 +410,7 @@ export default {
       }
 
       // Switch to narrower view.
-      if (this.clickToNavigate) this.switchToNarrowerView()
+      if (this.clickToNavigate || force) this.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
       else if (this.dblClickToNavigate && 'ontouchstart' in window) {
