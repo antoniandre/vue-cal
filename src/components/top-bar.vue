@@ -68,6 +68,7 @@
             v-icon(small).mr-2 tune
             | ADVANCED VUE CAL CUSTOMIZATION
           v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
+          v-list-tile(href="#ex--custom-events-count" v-scroll-to="'#ex--custom-events-count'") Custom events count
           v-list-tile(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
           v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
 </template>

@@ -1269,7 +1269,7 @@
       li #[span.code time-cell]
       li #[span.code cell-content]
       li #[span.code no-event]
-      li #[span.code events-count-month-view]
+      li #[span.code events-count]
       li #[span.code event-renderer]
 
   //- Example.
@@ -1322,8 +1322,8 @@
 
   //- Example.
   h4.title
-    a(href="#ex--custom-events-count-on-month-view") # Custom events count on month view
-    a#ex--custom-events-count-on-month-view(name="ex--custom-events-count-on-month-view")
+    a(href="#ex--custom-events-count") # Custom events count
+    a#ex--custom-events-count(name="ex--custom-events-count")
 
   highlight-message(type="tips")
     ul
@@ -1339,48 +1339,50 @@
     #[span.code leisure] CSS class.
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--custom-events-count-on-month-view(
+    vue-cal.vuecal--green-theme.ex--custom-events-count(
       :class="`event-indicator--${indicatorStyle}`"
       selected-date="2018-11-19"
       xsmall
       :time-from="10 * 60"
       :time-step="2 * 60"
       default-view="month"
-      :disable-views="['years', 'year', 'day']"
+      :disable-views="['day']"
+      events-count-on-year-view
       :events="events")
-      span(slot="events-count-month-view" slot-scope="{ events }" v-if="countEventsMonthView(events)")
-        | {{ countEventsMonthView(events) }}
+      span(slot="events-count" slot-scope="{ events, view }" v-if="customEventsCount(events)")
+        | {{ customEventsCount(events) }}
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              xsmall
              :time-from="10 * 60"
              :time-step="2 * 60"
-             :disable-views="['years', 'year', 'day']"
+             :disable-views="['day']"
              default-view="month"
+             events-count-on-year-view
              :events="events"&gt;
-        &lt;span slot="events-count-month-view" slot-scope="{ events }" v-if="countEventsMonthView(events)"&gt;
-          {{ '\{\{ countEventsMonthView(events) \}\}' }}
+        &lt;span slot="events-count" slot-scope="{ events, view }" v-if="customEventsCount(events)"&gt;
+          {{ '\{\{ customEventsCount(events) \}\}' }}
         &lt;/span&gt;
     &lt;/vue-cal&gt;
 
   p.
     Alternatively, you could also use the #[span.code cell-content] slot
-    instead of the #[span.code events-count-month-view] slot to perform the same task:#[br]
+    instead of the #[span.code events-count] slot to perform the same task:#[br]
     (Refer to the next example to know more:
     #[a(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells])
   sshpre.mt-2(language="html-vue" label="Vue Template").
     &lt;span slot="cell-content" slot-scope="{ cell, view, events }"&gt;
       &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
-      &lt;span class="vuecal__cell-events-count" v-if="view.id === 'month' &amp;&amp; countEventsMonthView(events)"&gt;
-        {{ '\{\{ countEventsMonthView(events) \}\}' }}
+      &lt;span class="vuecal__cell-events-count" v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
+        {{ '\{\{ customEventsCount(events) \}\}' }}
       &lt;/span&gt;
     &lt;/span&gt;
 
   sshpre(language="js" label="Javascript").
     // In your Vue component.
     methods: {
-      countEventsMonthView: events => {
+      customEventsCount: events => {
         return events ? events.filter(e => e.class === 'leisure').length : 0
       }
     }
@@ -2027,10 +2029,14 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.47.0] Add events count on #[span.code years] &amp; #[span.code year] views
+    highlight-message(type="success").
+      As it can now be used on #[span.code years] &amp; #[span.code year] views, the former
+      #[span.code events-count-month-view] slot is now renamed to #[span.code events-count].
   div #[strong Version 1.46.0] Allow cell customization
     highlight-message(type="success").
       For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
-      are renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
+      are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
 
   div #[strong Version 1.45.0] Add #[span.code day-click] emitted event
   div #[strong Version 1.44.0] Add Slovenian &amp; Hungarian languages
@@ -2051,7 +2057,7 @@
   div
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
-      In order to make the internal structure less verbose, the #[span.code events-count-month-view] slot use has been simplified.#[br]
+      In order to make the internal structure less verbose, the #[span.code events-count] slot use has been simplified.#[br]
       Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
       A few default CSS rules have also been updated.#[br]
   div
@@ -2547,7 +2553,7 @@ export default {
     clearEventsLog () {
       this.log = []
     },
-    countEventsMonthView: events => events ? events.filter(e => e.class === 'leisure').length : 0,
+    customEventsCount: events => events ? events.filter(e => e.class === 'leisure').length : 0,
     onEventClick (event, e) {
       this.selectedEvent = event
       this.showDialog = true
@@ -2674,7 +2680,7 @@ $primary: #42b983;
   .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
 }
 
-.ex--custom-events-count-on-month-view {
+.ex--custom-events-count {
   .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
   .vuecal__cell-events-count {background: transparent;}
 }

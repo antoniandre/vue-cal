@@ -121,7 +121,7 @@ export default {
         else events = this.$parent.mutableEvents[this.formattedDate] || []
 
         events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents) && !this.view === 'year') {
+          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents) && !['years', 'year'].includes(this.view)) {
             updateEventPosition(event, this.$parent)
           }
         })

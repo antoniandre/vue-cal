@@ -76,7 +76,7 @@
                         .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                         .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
-                          slot(name="events-count-month-view" :events="events") {{ events.length }}
+                          slot(name="events-count" :view="view" :events="events") {{ events.length }}
                         .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                           slot(name="no-event") {{ texts.noEvent }}
                     div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
