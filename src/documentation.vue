@@ -1,7 +1,7 @@
 <template lang="pug">
 .documentation
   .text-xs-center.todo(style="margin: 0 auto 7em;max-width: 900px")
-    h2.title.mt-5 To do...
+    h2.title.mt-5.mb-2.todo To do...
     p.mb-2 Here is my ongoing to do list.
 
     div Earlier
@@ -104,6 +104,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Custom cell rendering
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Events count on year(s) views
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Create an event
@@ -134,6 +137,9 @@
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Prevent evt intersect. on drag/resize
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Horizontal timeline
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-5(align-center shrink)
@@ -2589,7 +2595,7 @@ $primary: #42b983;
 
 
 .documentation {
-  h2 {
+  h2:not(.todo) {
     font-size: 27px !important;
     border-bottom: 1px solid #eee;
     margin-bottom: 30px;
