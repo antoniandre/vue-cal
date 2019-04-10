@@ -1479,7 +1479,7 @@
         | &nbsp;🎉
       div(slot="cell-content" slot-scope="{ cell, view, goNarrower, events }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
-        .vuecal__cell-events-count(v-if="view.id === 'month' && events.length") {{ events.length }}
+        .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
   sshpre(language="html-vue" label="Vue Template").

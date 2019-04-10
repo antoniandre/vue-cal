@@ -219,6 +219,10 @@ export default {
       type: [Boolean, String],
       default: false
     },
+    eventsCountOnYearView: {
+      type: Boolean,
+      default: false
+    },
     onEventClick: {
       type: Function,
       default: () => {}
@@ -255,6 +259,7 @@ export default {
         id: '',
         title: '',
         startDate: null,
+        endDate: null,
         selectedDate: null
       },
       eventIdIncrement: 1,

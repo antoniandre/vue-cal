@@ -10,7 +10,7 @@
       column)
       slot(name="cell-content" :events="events" :split="splits[i - 1]")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
+        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
         event(
           :vuecal="$parent"
           :event="event"
@@ -102,10 +102,26 @@ export default {
     },
     events: {
       get () {
-        const events = this.$parent.mutableEvents[this.formattedDate] || []
+        let events = []
+
+        // Events count on years/year view.
+        if (['years', 'year'].includes(this.view) && (this.eventsCountOnYearView || 1)) {
+          const cellStart = this.date.getTime()
+          const cellEnd = (this.view === 'years'
+            ? new Date(this.date.getFullYear() + 1, 0)
+            : new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0)).getTime()
+          events = this.$parent.events.filter(e => {
+            const eventStart = new Date(e.start)
+            const eventEnd = new Date(e.end)
+            return eventStart >= cellStart && eventEnd <= cellEnd
+          })
+        }
+
+        // All the other views.
+        else events = this.$parent.mutableEvents[this.formattedDate] || []
 
         events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents)) {
+          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents) && !this.view === 'year') {
             updateEventPosition(event, this.$parent)
           }
         })
