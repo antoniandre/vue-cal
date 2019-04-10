@@ -48,7 +48,7 @@
           v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless events
           v-list-tile(href="#ex--events-with-time" v-scroll-to="'#ex--events-with-time'") Events with time information
           v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
-          v-list-tile(href="#ex--events-indicators-on-month-view" v-scroll-to="'#ex--events-indicators-on-month-view'") Events indicators on month view
+          v-list-tile(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-tile(href="#ex--editable-deletable-events" v-scroll-to="'#ex--editable-deletable-events'") Editable / deletable events
           v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events

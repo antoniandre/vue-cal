@@ -531,12 +531,14 @@
 
   //- Example.
   h4.title
-    a(href="#ex--events-indicators-on-month-view") # Month view with events indicators
-    a#ex--events-indicators-on-month-view(name="ex--events-indicators-on-month-view")
+    a(href="#ex--events-indicators") # Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views
+    a#ex--events-indicators(name="ex--events-indicators")
   p.mb-0.
-    When you define events the month view will display an events count per day.#[br]
-    You can customize this as you wish via CSS.
-  p.layout.align-center
+    When you define events the #[span.code month] view will display an events count per day.#[br]
+    You can use the option #[span.code eventsCountOnYearView] to show the events count on
+    #[span.code years] &amp; #[span.code year] views as well.#[br]
+    You can customize the events count as you wish via CSS.
+  p.mt-3.layout.align-center
     span.mr-2 Choose an indicator style:
     v-radio-group.ma-0.pt-0.d-inline-block(v-model="indicatorStyle" hide-details row)
       v-radio(label="count (default)" value="count" color="primary")
@@ -551,7 +553,8 @@
         xsmall
         :time-from="10 * 60"
         default-view="month"
-        :disable-views="['years', 'year', 'day']"
+        :disable-views="['day']"
+        events-count-on-year-view
         :events="events")
     v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--yellow-theme(
@@ -559,14 +562,16 @@
         selected-date="2018-11-19"
         xsmall
         :time-from="10 * 60"
-        :disable-views="['years', 'year', 'day']"
+        :disable-views="['day']"
+        events-count-on-year-view
         default-view="month"
         :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              xsmall
              :time-from="10 * 60"
-             :disable-views="['years', 'year', 'day']"
+             :disable-views="['day']"
+             events-count-on-year-view
              default-view="month"
              :events="events"&gt;
     &lt;/vue-cal&gt;
@@ -1620,36 +1625,37 @@
     ['years', 'year', 'month', 'week', 'day']
   p Here is the list of all the parameters available and their decription bellow this table.
   sshpre.mt-2(language="js").
-    locale:             [String],          default: 'en'
-    hideViewSelector:   [Boolean],         default: false
-    hideTitleBar:       [Boolean],         default: false
-    hideBody:           [Boolean],         default: false
-    hideWeekends:       [Boolean],         default: false
-    disableViews:       [Array],           default: []
-    defaultView:        [String],          default: 'week'
-    selectedDate:       [String, Date],    default: ''
-    startWeekOnSunday:  [Boolean],         default: false
-    small:              [Boolean],         default: false
-    xsmall:             [Boolean],         default: false
-    transitions:        [Boolean],         default: true
-    clickToNavigate:    [Boolean],         default: false
-    dblClickToNavigate: [Boolean],         default: true
-    time:               [Boolean],         default: true
-    timeFrom:           [Number],          default: 0 // In minutes.
-    timeTo:             [Number],          default: 24 * 60 // In minutes.
-    timeStep:           [Number],          default: 30 // In minutes.
-    timeCellHeight:     [Number],          default: 40 // In pixels.
-    12Hour:             [Boolean],         default: false
-    timeFormat:         [String],          default: ''
-    minCellWidth:       [Number],          default: 0 // In pixels.
-    splitDays:          [Array],           default: []
-    events:             [Array],           default: []
-    editableEvents:     [Boolean],         default: false
-    noEventOverlaps:    [Boolean],         default: false
-    eventsOnMonthView:  [Boolean, String], default: false
-    showAllDayEvents:   [Boolean, String], default: false
-    onEventClick:       [Function],        default: null
-    onEventDblclick:    [Function],        default: null
+    locale:                 [String],          default: 'en'
+    hideViewSelector:       [Boolean],         default: false
+    hideTitleBar:           [Boolean],         default: false
+    hideBody:               [Boolean],         default: false
+    hideWeekends:           [Boolean],         default: false
+    disableViews:           [Array],           default: []
+    defaultView:            [String],          default: 'week'
+    selectedDate:           [String, Date],    default: ''
+    startWeekOnSunday:      [Boolean],         default: false
+    small:                  [Boolean],         default: false
+    xsmall:                 [Boolean],         default: false
+    transitions:            [Boolean],         default: true
+    clickToNavigate:        [Boolean],         default: false
+    dblClickToNavigate:     [Boolean],         default: true
+    time:                   [Boolean],         default: true
+    timeFrom:               [Number],          default: 0 // In minutes.
+    timeTo:                 [Number],          default: 24 * 60 // In minutes.
+    timeStep:               [Number],          default: 30 // In minutes.
+    timeCellHeight:         [Number],          default: 40 // In pixels.
+    12Hour:                 [Boolean],         default: false
+    timeFormat:             [String],          default: ''
+    minCellWidth:           [Number],          default: 0 // In pixels.
+    splitDays:              [Array],           default: []
+    events:                 [Array],           default: []
+    editableEvents:         [Boolean],         default: false
+    noEventOverlaps:        [Boolean],         default: false
+    eventsOnMonthView:      [Boolean, String], default: false
+    eventsCountOnYearView:  [Boolean],         default: false
+    showAllDayEvents:       [Boolean, String], default: false
+    onEventClick:           [Function],        default: null
+    onEventDblclick:        [Function],        default: null
 
   ul.pl-0.api-options
     li
@@ -1865,7 +1871,9 @@
     li
       code.mr-2 noEventOverlaps
       span.code [Boolean], default: false
-      p When #[span.code noEventOverlaps] is set to true, all the overlapping events will not overlap but instead split the cell width in 2 or 3.
+      p.
+        When #[span.code noEventOverlaps] is set to true, all the overlapping events will not
+        overlap but instead split the cell width in 2 or 3.
     li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
@@ -1873,6 +1881,12 @@
         When set to true, the events will also be displayed on month view
         (including events from visible out of scope days).#[br]
         When set to the string '#[span.code short]', only the event's title will be displayed.
+    li
+      code.mr-2 eventsCountOnYearView
+      span.code [Boolean], default: false
+      p.
+        When set to true, the events count will also be displayed on #[span.code years]
+        &amp; #[span.code year] views.
     li
       code.mr-2 showAllDayEvents
       span.code [Boolean, String], default: false
@@ -1900,13 +1914,15 @@
       span.code [Function], default: null
       p.
         A callback function to execute when an event is clicked.#[br]
-        this function receives 2 parameters: #[span.code event], the clicked calendar event, and #[span.code e], the associated JavaScript DOM event.
+        this function receives 2 parameters: #[span.code event], the clicked calendar event,
+        and #[span.code e], the associated JavaScript DOM event.
     li
       code.mr-2 onEventDblclick
       span.code [Function], default: null
       p.
         A callback function to execute when an event is double clicked.#[br]
-        this function receives 2 parameters: #[span.code event], the double clicked calendar event, and #[span.code e], the associated JavaScript DOM event.
+        this function receives 2 parameters: #[span.code event], the double clicked calendar event,
+        and #[span.code e], the associated JavaScript DOM event.
     li
       code.mr-2 events
       span.code [Array], default: []
@@ -1944,7 +1960,8 @@
             starting from 1, corresponding to the split you want the event to appear in.
           li.
             When the #[span.code showAllDayEvents] and #[span.code time] options are set to true,
-            all the events with an attribute #[span.code allDay] set to true will show up in a fixed bar (week &amp; day views).
+            all the events with an attribute #[span.code allDay] set to true will show up in a
+            fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
         ul
@@ -2035,7 +2052,7 @@
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
       In order to make the internal structure less verbose, the #[span.code events-count-month-view] slot use has been simplified.#[br]
-      Refer to the #[a(href="#ex--events-indicators-on-month-view") Month view with events indicators] example.
+      Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
       A few default CSS rules have also been updated.#[br]
   div
     | #[strong Version 1.32.0] Allow Syncing 2 vue-cal instances
@@ -2653,7 +2670,7 @@ $primary: #42b983;
   color: transparent;
 }
 
-.ex--events-indicators-on-month-view {
+.ex--events-indicators {
   .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
 }
 
