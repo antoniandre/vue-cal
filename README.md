@@ -26,14 +26,15 @@ ___
 
 ## Release Notes
 
+- __Version 1.47.0__ Add events count on `years` &amp; `year` views
 - __Version 1.46.0__ Allow cell customization
-- __Version 1.45.0__ Add day-click emitted event
+- __Version 1.45.0__ Add `day-click` emitted event
 - __Version 1.44.0__ Add Slovenian &amp; Hungarian languages
 - __Version 1.43.0__ Add Catalan language
 - __Version 1.42.0__ Add Norwegian language
 - __Version 1.41.0__ Add Romanian language
 - __Version 1.39.0__ Add Vietnamese language
-- __Version 1.38.0__ showAllDayEvents now also accepts string 'short'
+- __Version 1.38.0__ `showAllDayEvents` now also accepts string `short`
 - __Version 1.36.0__ Add out of scope events in month view
 - __Version 1.35.0__ Allow displaying all-day events in fixed top bar
 - __Version 1.34.0__ Allow starting week on Sunday

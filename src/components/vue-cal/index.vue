@@ -27,11 +27,7 @@
                 :formatted-date="cell.formattedDate"
                 :all-day-events="true"
                 :today="cell.today"
-                :splits="hasSplits && splitDays || []"
-                @click.native="selectCell(cell)"
-                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                div(slot="cell-content")
-                  slot(name="cell-content" :cell="cell" :view="view" :switchToNarrowerView="switchToNarrowerView")
+                :splits="hasSplits && splitDays || []")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
@@ -71,12 +67,12 @@
                     :today="cell.today"
                     :content="cell.content"
                     :splits="hasSplits && splitDays || []")
-                    div(slot="cell-content" slot-scope="{ events, split }")
-                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="switchToNarrowerView" :events="events")
+                    div(slot="cell-content" slot-scope="{ events, split, selectCell }")
+                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
                         .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
-                        .vuecal__cell-events-count(v-if="view.id === 'month' && !eventsOnMonthView && events.length")
-                          slot(name="events-count-month-view" :events="events") {{ events.length }}
+                        .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
+                          slot(name="events-count" :view="view" :events="events") {{ events.length }}
                         .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                           slot(name="no-event") {{ texts.noEvent }}
                     div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
@@ -217,6 +213,10 @@ export default {
       type: [Boolean, String],
       default: false
     },
+    eventsCountOnYearView: {
+      type: Boolean,
+      default: false
+    },
     onEventClick: {
       type: Function,
       default: () => {}
@@ -257,6 +257,7 @@ export default {
         id: '',
         title: '',
         startDate: null,
+        endDate: null,
         selectedDate: null
       },
       eventIdIncrement: 1,

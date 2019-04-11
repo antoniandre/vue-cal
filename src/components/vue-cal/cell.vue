@@ -11,11 +11,11 @@
       column
       @touchstart="onCellTouchStart($event, splits.length ? i : null)"
       @mousedown="onCellMouseDown($event, splits.length ? i : null)"
-      @click="selectCell"
+      @click="selectCell()"
       @dblclick="$parent.dblClickToNavigate && $parent.switchToNarrowerView()")
-      slot(name="cell-content" :events="events" :split="splits[i - 1]")
+      slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].indexOf(view) > -1 || (view === 'month' && eventsOnMonthView))")
+        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
         event(
           :vuecal="$parent"
           :event="event"
@@ -72,7 +72,7 @@ export default {
       return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell () {
+    selectCell (force = false) {
       this.$emit('day-click', this.date)
       if (this.$parent.view.selectedDate.toString() !== this.date.toString()) {
         this.$parent.view.selectedDate = this.date
@@ -80,7 +80,7 @@ export default {
       }
 
       // Switch to narrower view.
-      if (this.clickToNavigate) this.$parent.switchToNarrowerView()
+      if (this.clickToNavigate || force) this.$parent.switchToNarrowerView()
 
       // Handle double click manually for touch devices.
       else if (this.dblClickToNavigate && 'ontouchstart' in window) {
@@ -180,10 +180,26 @@ export default {
     },
     events: {
       get () {
-        const events = this.$parent.mutableEvents[this.formattedDate] || []
+        let events = []
+
+        // Events count on years/year view.
+        if (['years', 'year'].includes(this.view) && (this.eventsCountOnYearView || 1)) {
+          const cellStart = this.date.getTime()
+          const cellEnd = (this.view === 'years'
+            ? new Date(this.date.getFullYear() + 1, 0)
+            : new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0)).getTime()
+          events = this.$parent.events.filter(e => {
+            const eventStart = new Date(e.start)
+            const eventEnd = new Date(e.end)
+            return eventStart >= cellStart && eventEnd <= cellEnd
+          })
+        }
+
+        // All the other views.
+        else events = this.$parent.mutableEvents[this.formattedDate] || []
 
         events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents)) {
+          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents) && !['years', 'year'].includes(this.view)) {
             updateEventPosition(event, this.$parent)
           }
         })
