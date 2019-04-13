@@ -2035,6 +2035,8 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  //- div #[strong Version 1.49.0] Add Hebrew language
+  div #[strong Version 1.48.0] Add Bulgarian language
   div #[strong Version 1.47.0] Add events count on #[span.code years] &amp; #[span.code year] views
     highlight-message(type="success").
       As it can now be used on #[span.code years] &amp; #[span.code year] views, the former
@@ -2235,6 +2237,7 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
@@ -2243,6 +2246,7 @@ export default {
       { code: 'fr', label: 'French' },
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
+      // { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
       { code: 'no', label: 'Norwegian' },

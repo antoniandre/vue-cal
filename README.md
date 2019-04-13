@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.48.0__ Add Bulgarian language
 - __Version 1.47.0__ Add events count on `years` &amp; `year` views
 - __Version 1.46.0__ Allow cell customization
 - __Version 1.45.0__ Add `day-click` emitted event
