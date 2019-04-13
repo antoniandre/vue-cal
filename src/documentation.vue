@@ -2246,7 +2246,7 @@ export default {
       { code: 'fr', label: 'French' },
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
-      // { code: 'he', label: 'Hebrew' },
+      { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
       { code: 'no', label: 'Norwegian' },
