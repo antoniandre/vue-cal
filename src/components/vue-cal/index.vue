@@ -608,7 +608,7 @@ export default {
 
     createAnEvent (cell, split = null, e) {
       const mouseY = this.getPosition(e).y
-      const startTimeMinutes = mouseY * 60 / parseInt(this.timeCellHeight) + this.timeFrom
+      const startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
       createAnEvent(cell.formattedDate, split, startTimeMinutes, this)
     },
 
