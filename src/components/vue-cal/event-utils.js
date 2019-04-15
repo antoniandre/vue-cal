@@ -27,6 +27,9 @@ export const createAnEvent = (formattedDate, split, startTimeMinutes, vuecal) =>
   const hours = parseInt(startTimeMinutes / 60)
   const minutes = parseInt(startTimeMinutes % 60)
   const endTimeMinutes = startTimeMinutes + 120
+  const formattedHours = (hours < 10 ? '0' : '') + hours
+  const formattedEndHours = (hours + 2 < 10 ? '0' : '') + (hours + 2)
+  const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
 
   let event = {
     ...eventDefaults,
@@ -37,13 +40,13 @@ export const createAnEvent = (formattedDate, split, startTimeMinutes, vuecal) =>
     multipleDays: {},
 
     eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
-    start: formattedDate + (vuecal.time ? ` ${hours}:${minutes}` : ''),
+    start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
     startDate: formattedDate,
-    startTime: (vuecal.time ? ` ${hours}:${minutes}` : null),
+    startTime: (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : null),
     startTimeMinutes,
-    end: formattedDate + (vuecal.time ? ` ${hours + 2}:${minutes}` : ''),
+    end: formattedDate + (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : ''),
     endDate: formattedDate,
-    endTime: (vuecal.time ? ` ${hours + 2}:${minutes}` : null),
+    endTime: (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : null),
     endTimeMinutes,
     ...(split ? { split } : null)
   }
@@ -59,8 +62,9 @@ export const createAnEvent = (formattedDate, split, startTimeMinutes, vuecal) =>
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
-  // After creating a new event, check if it overlaps any other.
-  checkCellOverlappingEvents(vuecal.mutableEvents[event.startDate])
+  // After creating a new event, check if it overlaps any other in current cell OR split.
+  const cellEvents = vuecal.mutableEvents[event.startDate]
+  checkCellOverlappingEvents(split ? cellEvents.filter(e => e.split === split) : cellEvents)
 }
 
 export const deleteAnEvent = (event, vuecal) => {
