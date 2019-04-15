@@ -650,20 +650,17 @@
     a(href="#ex--edit-delete-create-events") # Edit, delete &amp; create events
     a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
   p.
-    The option #[span.code editable-events] Allows editing event title, deleting (by clicking and holding an event), resizing
-    (by dragging handle) and creating new event (by clicking and holding a cell).#[br]
+    The option #[span.code editable-events] Allows editing event title, deleting
+    (by clicking and holding an event), resizing (by dragging handle) and creating
+    new event (by clicking and holding a cell).#[br]#[br]
+    Event creation is only possible on a day cell, so not on years &amp; year views.#[br]
+    #[em Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation] example.]
+    #[br]#[br]
     Vue Cal emits events on calendar event change, read more about it in the
-    #[strong # Vue Cal emitted events] example.
-
-  p
-    | You can also trigger an event creation programmatically and provide custom event attributes like so:
-    v-btn(small color="primary" @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60, { content: 'yay! 🎉' })") Create an event on Tuesday at 12pm
-    sshpre(language="html-vue").
-      &lt;v-btn @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60, { content: 'yay! 🎉' })"&gt;Create an event on Tuesday at 12pm&lt;/v-btn&gt;
+    #[a(href="#ex--emitted-events") emitted events] example.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-      ref="vuecal"
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -671,8 +668,7 @@
       hide-view-selector
       hide-weekends
       editable-events
-      :events="events"
-      :on-event-create="onEventCreate")
+      :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -682,7 +678,6 @@
              hide-weekends
              editable-events
              :events="events"
-             :on-event-create="onEventCreate"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   highlight-message(type="tips").
@@ -691,14 +686,100 @@
     #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
   highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
-  h5.mt-5.subheading.font-weight-bold More details about event creation
+  //- Example.
+  h4.title
+    a(href="#ex--more-advanced-event-creation") # More advanced event creation
+    a#ex--more-advanced-event-creation(name="ex--more-advanced-event-creation")
+  p.
+    There are 2 ways to create an event, programmatically or by clicking and holding a cell.
+  ol.pl-3
+    li.mt-3
+      h5.subheading.font-weight-bold Programmatically
+      v-layout(row align-center)
+        | See this button?
+        v-btn.d-inline-block(small color="primary" @click="customEventCreation") button
+        sshpre.ma-0.pa-1(language="html-vue").
+          &lt;v-btn @click="customEventCreation"&gt;button&lt;/v-btn&gt;
+      p It will let you choose a date to create an event and set the event content attribute:
+      sshpre.mt-3(language="js" label="Javascript").
+        // In methods.
+        customEventCreation (event) {
+            const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
+            // Check if date format is correct.
+            if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+              this.$refs.vuecal.createEvent(
+                date, // Formatted date.
+                12 * 60, // Event start time in minutes.
+                // Event props.
+                { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
+              )
+            } else alert('Wrong date format.')
+        }
+      v-layout(row align-top wrap)
+        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+            ref="vuecal"
+            small
+            selected-date="2018-11-19"
+            :time-from="12 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year']"
+            hide-view-selector
+            hide-title-bar
+            hide-weekends
+            editable-events
+            :events="events")
+        sshpre.my-2.caption(language="html-vue").
+          &lt;vue-cal ref="vuecal"
+                   small
+                   selected-date="2018-11-19"
+                   :time-from="10 * 60"
+                   :time-to="16 * 60"
+                   :disable-views="['years', 'year']"
+                   hide-view-selector
+                   hide-title-bar
+                   hide-weekends
+                   editable-events
+                   :events="events"&gt;
+          &lt;/vue-cal&gt;
+
+    li.mt-5
+      h5.subheading.font-weight-bold By clicking and holding a cell
+      p In this example, a dialog box opens and lets you choose the event attributes.
+      v-layout(row wrap)
+        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+            selected-date="2018-11-19"
+            small
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year']"
+            hide-view-selector
+            hide-title-bar
+            hide-weekends
+            editable-events
+            :events="events"
+            :on-event-create="onEventCreate")
+        sshpre.my-2.caption(language="html-vue").
+          &lt;vue-cal selected-date="2018-11-19"
+                   small
+                   :time-from="10 * 60"
+                   :time-to="16 * 60"
+                   :disable-views="['years', 'year']"
+                   hide-view-selector
+                   hide-weekends
+                   hide-title-bar
+                   editable-events
+                   :events="events"
+                   :on-event-create="onEventCreate"&gt;
+          &lt;/vue-cal&gt;
+
   p.mt-3.
-    Event creation is only possible on a day cell, so not on #[span.code years] &amp; #[span.code year] views.#[br]
     By default, event will be created with these attributes:
   sshpre.mt-0(language="js" label="Javascript").
     {
-        start: {String}, // Starting from your cursor position in the day of the cell you clicked.
-        end: {String}, // Event start + 2 hours
+        start: {String}, // (Formatted date) starting from your cursor position in the day cell you clicked.
+        end: {String}, // (Formatted date) Event start + 2 hours
         title: '',
         content: '',
         split /* if any */: {Integer} // The current day split you clicked.
@@ -2700,6 +2781,12 @@ export default {
       this.deleteEventFunction = deleteEventFunction
 
       return event
+    },
+    customEventCreation (event) {
+        const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
+        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
+        } else alert('Wrong date format.')
     }
   },
   computed: {
