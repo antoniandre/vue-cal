@@ -5,12 +5,17 @@
     :appear="transitions")
     .vuecal__flex.vuecal__cell-content(
       :class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`"
+      :data-split="splits.length && i"
       v-for="i in (splits.length || 1)"
       :key="transitions ? `${view}-${content}-${i}` : i"
-      column)
-      slot(name="cell-content" :events="events" :split="splits[i - 1]")
+      column
+      @touchstart="onCellTouchStart($event, splits.length ? i : null)"
+      @mousedown="onCellMouseDown($event, splits.length ? i : null)"
+      @click="selectCell()"
+      @dblclick="$parent.dblClickToNavigate && $parent.switchToNarrowerView()")
+      slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView)) && checkCellOverlappingEvents(splits.length ? splitEvents[i] : events)")
+        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
         event(
           :vuecal="$parent"
           :event="event"
@@ -59,11 +64,75 @@ export default {
       default: false
     }
   },
+
   methods: {
-    checkCellOverlappingEvents
+    checkCellOverlappingEvents,
+
+    isDOMElementAnEvent (el) {
+      return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
+    },
+
+    selectCell (force = false) {
+      this.$emit('day-click', this.date)
+      if (this.$parent.view.selectedDate.toString() !== this.date.toString()) {
+        this.$parent.view.selectedDate = this.date
+        this.$parent.$emit('day-focus', this.date)
+      }
+
+      // Switch to narrower view.
+      if (this.clickToNavigate || force) this.$parent.switchToNarrowerView()
+
+      // Handle double click manually for touch devices.
+      else if (this.dblClickToNavigate && 'ontouchstart' in window) {
+        this.domEvents.dblTapACell.taps++
+
+        setTimeout(() => (this.domEvents.dblTapACell.taps = 0), this.domEvents.dblTapACell.timeout)
+
+        if (this.domEvents.dblTapACell.taps >= 2) {
+          this.domEvents.dblTapACell.taps = 0
+          this.$parent.switchToNarrowerView()
+        }
+      }
+    },
+
+    onCellMouseDown (e, split = null, touch = false) {
+      // Prevent a double mouse down on touch devices.
+      if ('ontouchstart' in window && !touch) return false
+
+      let { clickHoldACell } = this.domEvents
+
+      // If not mousedown on an event, click & hold to create an event.
+      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].indexOf(this.view) > -1) {
+        clickHoldACell.cellId = `${this.$parent._uid}_${this.formattedDate}`
+        clickHoldACell.split = split
+        clickHoldACell.timeoutId = setTimeout(() => {
+          if (clickHoldACell.cellId) this.$parent.createAnEvent({ formattedDate: this.formattedDate }, clickHoldACell.split, e)
+        }, clickHoldACell.timeout)
+      }
+    },
+
+    onCellTouchStart (e, split = null) {
+      // If not mousedown on an event.
+      if (!this.isDOMElementAnEvent(e.target)) this.onCellMouseDown(e, split, true)
+    }
+  },
+
+  created () {
+    if (this.splits.length) {
+      this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+    }
+    else checkCellOverlappingEvents(this.events)
   },
 
   computed: {
+    domEvents: {
+      get () {
+        return this.$parent.domEvents
+      },
+      set (object) {
+        this.$parent.domEvents = object
+      }
+    },
     texts () {
       return this.$parent.texts
     },
@@ -84,6 +153,15 @@ export default {
     },
     timeStep () {
       return parseInt(this.$parent.timeStep)
+    },
+    editableEvents () {
+      return this.$parent.editableEvents
+    },
+    clickToNavigate () {
+      return this.$parent.clickToNavigate
+    },
+    dblClickToNavigate () {
+      return this.$parent.dblClickToNavigate
     },
     showAllDayEvents () {
       return this.$parent.showAllDayEvents
@@ -200,6 +278,7 @@ export default {
 
   .vuecal__cell-content {
     position: relative;
+    height: 100%;
   }
 
   .vuecal__cell-split {

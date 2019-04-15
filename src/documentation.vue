@@ -662,7 +662,8 @@
       hide-view-selector
       hide-weekends
       editable-events
-      :events="events")
+      :events="events"
+      :on-event-create="onEventCreate")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -1185,6 +1186,7 @@
     li #[span.code event-focus]
     li #[span.code event-mouse-enter]
     li #[span.code event-mouse-leave]
+    li #[span.code event-create]
     li #[span.code event-delete]
     li #[span.code event-change]
     li #[span.code event-title-change]
@@ -1237,6 +1239,7 @@
       @event-title-change="logEvents('event-title-change', $event)"
       @event-content-change="logEvents('event-content-change', $event)"
       @event-duration-change="logEvents('event-duration-change', $event)"
+      @event-create="logEvents('event-create', $event)"
       @event-delete="logEvents('event-delete', $event)")
 
   sshpre(language="html-vue" label="Vue Template").
@@ -1257,6 +1260,7 @@
              @event-title-change="logEvents('event-title-change', $event)"
              @event-content-change="logEvents('event-content-change', $event)"
              @event-duration-change="logEvents('event-duration-change', $event)"
+             @event-create="logEvents('event-create', $event)"
              @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
 
@@ -2150,6 +2154,25 @@
         ul
           li Event starts at: {{ selectedEvent.startTime }}
           li Event ends at: {{ selectedEvent.endTime }}
+
+  v-dialog(v-model="showEventCreationDialog" :persistent="true" max-width="420")
+    v-card
+      v-card-title.pa-2.primary.white--text
+        v-text-field.ma-0.pa-0(v-model="selectedEvent.title" placeholder="Event Title" hide-details color="white")
+      v-card-text
+        v-textarea.ma-0.pa-0(v-model="selectedEvent.content" placeholder="Event Content" hide-details)
+        v-layout.justify-space-between
+          v-select.flex.shrink(
+            :items="eventsCssClasses"
+            placeholder="Event CSS Class"
+            @change="selectedEvent.classes = [$event]"
+            hide-details
+            style="max-width: 170px")
+          v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
+        v-layout
+          v-spacer
+          v-btn(small @click="cancelEventCreation()") Cancel
+          v-btn(small color="primary" @click="closeCreationDialog()") Save
 </template>
 
 <script>
@@ -2268,10 +2291,12 @@ export default {
     now: new Date(),
     log: [],
     showDialog: false,
+    showEventCreationDialog: false,
     showAllDayEvents: 0,
     shortEventsOnMonthView: false,
     events,
     selectedEvent: {},
+    eventsCssClasses: ['leisure', 'sport', 'health'],
     selectedDate: null,
     logMouseEvents: false,
     overlappingEvents: [
@@ -2551,7 +2576,8 @@ export default {
         contentFull: 'Okay.<br>It will be a 18 hole golf course.',
         class: 'sport'
       }
-    ]
+    ],
+    deleteEventFunction: null
   }),
   methods: {
     logEvents (emittedEventName, params) {
@@ -2568,6 +2594,21 @@ export default {
       this.selectedEvent = event
       this.showDialog = true
       e.stopPropagation()
+    },
+    cancelEventCreation () {
+      this.closeCreationDialog()
+      this.deleteEventFunction()
+    },
+    closeCreationDialog () {
+      this.showEventCreationDialog = false
+      this.selectedEvent = {}
+    },
+    onEventCreate (event, deleteEventFunction) {
+      this.selectedEvent = event
+      this.showEventCreationDialog = true
+      this.deleteEventFunction = deleteEventFunction
+
+      return event
     }
   },
   computed: {

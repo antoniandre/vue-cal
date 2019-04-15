@@ -1,5 +1,5 @@
 <template lang="pug">
-  .vuecal__flex.vuecal(column :class="cssClasses" :lang="locale")
+  .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
     vuecal-header(
       :vuecal-props="$props"
       :view-props="{ views, view, hasSplits }"
@@ -27,9 +27,7 @@
                 :formatted-date="cell.formattedDate"
                 :all-day-events="true"
                 :today="cell.today"
-                :splits="hasSplits && splitDays || []"
-                @click.native="selectCell(cell)"
-                @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
+                :splits="hasSplits && splitDays || []")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
@@ -68,11 +66,9 @@
                     :formatted-date="cell.formattedDate"
                     :today="cell.today"
                     :content="cell.content"
-                    :splits="hasSplits && splitDays || []"
-                    @click.native="selectCell(cell)"
-                    @dblclick.native="dblClickToNavigate && switchToNarrowerView()")
-                    div(slot="cell-content" slot-scope="{ events, split }")
-                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="() => {selectCell(cell, true)}" :events="events")
+                    :splits="hasSplits && splitDays || []")
+                    div(slot="cell-content" slot-scope="{ events, split, selectCell }")
+                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
                         .split-label(v-if="split" v-html="split.label")
                         .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                         .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
@@ -99,7 +95,7 @@
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
-import { onResizeEvent } from './event-utils'
+import { createAnEvent, eventDefaults, onResizeEvent } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -229,6 +225,10 @@ export default {
       type: Function,
       default: () => {}
     },
+    onEventCreate: {
+      type: Function,
+      default: () => {}
+    },
     transitions: {
       type: Boolean,
       default: true
@@ -278,6 +278,16 @@ export default {
         },
         clickHoldAnEvent: {
           eid: null, // Only one at a time.
+          timeout: 1200,
+          timeoutId: null
+        },
+        dblTapACell: {
+          taps: 0,
+          timeout: 500
+        },
+        clickHoldACell: {
+          cellId: null,
+          split: null,
           timeout: 1200,
           timeoutId: null
         },
@@ -402,29 +412,6 @@ export default {
       return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell (cell, force = false) {
-      this.$emit('day-click', cell.date)
-      if (this.view.selectedDate.toString() !== cell.date.toString()) {
-        this.view.selectedDate = cell.date
-        this.$emit('day-focus', cell.date)
-      }
-
-      // Switch to narrower view.
-      if (this.clickToNavigate || force) this.switchToNarrowerView()
-
-      // Handle double click manually for touch devices.
-      else if (this.dblClickToNavigate && 'ontouchstart' in window) {
-        this.domEvents.dblTapACell.taps++
-
-        setTimeout(() => (this.domEvents.dblTapACell.taps = 0), this.domEvents.dblTapACell.timeout)
-
-        if (this.domEvents.dblTapACell.taps >= 2) {
-          this.domEvents.dblTapACell.taps = 0
-          this.switchToNarrowerView()
-        }
-      }
-    },
-
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
@@ -443,7 +430,7 @@ export default {
     },
 
     onMouseUp (e) {
-      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent } = this.domEvents
+      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent.eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
@@ -465,6 +452,12 @@ export default {
       if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eid) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
+      }
+
+      // Prevent creating an event if click and hold was not long enough.
+      if (clickHoldACell.timeoutId) {
+        clearTimeout(clickHoldACell.timeoutId)
+        clickHoldACell.timeoutId = null
       }
 
       // Any mouse up must cancel event resizing.
@@ -512,23 +505,17 @@ export default {
         let eid = `${this._uid}_${this.eventIdIncrement++}`
 
         event = Object.assign({
+          ...eventDefaults,
           eid,
+          overlapped: {},
+          overlapping: {},
+          simultaneous: {},
           startDate,
           startTime,
           startTimeMinutes,
           endDate,
           endTime,
           endTimeMinutes,
-          title: '',
-          content: '',
-          height: 0,
-          top: 0,
-          overlapped: {},
-          overlapping: {},
-          simultaneous: {},
-          linked: [], // Linked events.
-          multipleDays: {},
-          allDay: false,
           classes: (event.class || '').split(' ')
         }, event)
 
@@ -613,6 +600,18 @@ export default {
       })
     },
 
+    getPosition (e) {
+      const rect = e.target.getBoundingClientRect()
+      const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
+      return { x: clientX - rect.left, y: clientY - rect.top }
+    },
+
+    createAnEvent (cell, split = null, e) {
+      const mouseY = this.getPosition(e).y
+      const startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
+      createAnEvent(cell.formattedDate, split, startTimeMinutes, this)
+    },
+
     // Prepare the event to return it with an emitted event.
     cleanupEvent (event) {
       event = { ...event }
@@ -669,12 +668,22 @@ export default {
   },
 
   mounted () {
+    const hasTouch = 'ontouchstart' in window
+
     if (this.editableEvents) {
-      const hasTouch = 'ontouchstart' in window
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     }
 
+    // Disable context menu on touch devices on the whole vue-cal instance.
+    if (hasTouch) {
+      this.$refs.vuecal.oncontextmenu = function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+      }
+    }
+
+    this.$emit('ready')
     const params = {
       view: this.view.id,
       startDate: this.view.startDate,

@@ -4,7 +4,6 @@
   :style="eventStyles(event)"
   @mouseenter="onMouseEnter($event, event)"
   @mouseleave="onMouseLeave($event, event)"
-  @contextmenu="onContextMenu($event, event)"
   @touchstart="onTouchStart($event, event)"
   @mousedown="onMouseDown($event, event)"
   @click="onClick($event, event)"
@@ -21,7 +20,7 @@
 </template>
 
 <script>
-import { deleteAnEvent } from './event-utils'
+import { deleteAnEvent, deleteLinkedEvents, checkCellOverlappingEvents } from './event-utils'
 
 export default {
   props: {
@@ -63,7 +62,7 @@ export default {
     },
 
     eventClasses (event) {
-      let { clickHoldAnEvent, focusAnEvent } = this.domEvents
+      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
       const overlapping = Object.keys(event.overlapping).length
       const overlapped = Object.keys(event.overlapped).length
       let simultaneous = Object.keys(event.simultaneous).length + 1
@@ -144,11 +143,6 @@ export default {
       this.vuecal.emitWithEvent('event-mouse-leave', event)
     },
 
-    onContextMenu (e, event) {
-      e.preventDefault()
-      return false
-    },
-
     onTouchStart (e, event) {
       this.onMouseDown(e, event, true)
     },
@@ -202,6 +196,21 @@ export default {
       set (object) {
         this.vuecal.domEvents = object
       }
+    }
+  },
+
+  watch: {
+    'event.background' (val) {
+      // When the event background property changes, remove all the involved overlapping events
+      // if setting to background or check cell overlapping again otherwise.
+      if (val) {
+        deleteLinkedEvents(this.event, this.cellEvents)
+        this.event.overlapping = {}
+        this.event.overlapped = {}
+        this.event.simultaneous = {}
+      }
+
+      else checkCellOverlappingEvents(this.cellEvents, this.vuecal)
     }
   }
 }

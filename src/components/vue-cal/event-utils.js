@@ -1,9 +1,76 @@
 import Vue from 'vue'
 
+export const eventDefaults = {
+  eid: null,
+  startDate: '',
+  startTime: '',
+  startTimeMinutes: 0,
+  endDate: '',
+  endTime: '',
+  endTimeMinutes: 0,
+  title: '',
+  content: '',
+  background: false,
+  allDay: false,
+  overlapped: {},
+  overlapping: {},
+  simultaneous: {},
+  linked: [], // Linked events.
+  multipleDays: {},
+  height: 0,
+  top: 0,
+  classes: []
+}
+
+export const createAnEvent = (formattedDate, split, startTimeMinutes, vuecal) => {
+  startTimeMinutes = parseInt(startTimeMinutes)
+  const hours = parseInt(startTimeMinutes / 60)
+  const minutes = parseInt(startTimeMinutes % 60)
+  const endTimeMinutes = startTimeMinutes + 120
+  const formattedHours = (hours < 10 ? '0' : '') + hours
+  const formattedEndHours = (hours + 2 < 10 ? '0' : '') + (hours + 2)
+  const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
+
+  let event = {
+    ...eventDefaults,
+    // Nested objects need to be reinitialized or they will be shared across all instances.
+    overlapped: {},
+    overlapping: {},
+    simultaneous: {},
+    multipleDays: {},
+
+    eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
+    start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
+    startDate: formattedDate,
+    startTime: (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : null),
+    startTimeMinutes,
+    end: formattedDate + (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : ''),
+    endDate: formattedDate,
+    endTime: (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : null),
+    endTimeMinutes,
+    ...(split ? { split } : null)
+  }
+
+  if (typeof vuecal.onEventCreate === 'function') {
+    vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
+  }
+
+  // Make array reactive for future events creations & deletions.
+  if (!(event.startDate in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDate, [])
+
+  vuecal.mutableEvents[event.startDate].push(event)
+  vuecal.emitWithEvent('event-create', event)
+  vuecal.emitWithEvent('event-change', event)
+
+  // After creating a new event, check if it overlaps any other in current cell OR split.
+  const cellEvents = vuecal.mutableEvents[event.startDate]
+  checkCellOverlappingEvents(split ? cellEvents.filter(e => e.split === split) : cellEvents)
+}
+
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
-  let eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
+  const eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
   // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
   let cellEvents = vuecal.mutableEvents[eventDate]
   // Delete the event.
@@ -13,8 +80,8 @@ export const deleteAnEvent = (event, vuecal) => {
   // If deleting a multiple-day event, delete all the events pieces (days).
   if (event.multipleDays.daysCount) {
     event.linked.forEach(e => {
-      let dayToModify = vuecal.mutableEvents[e.date]
-      let eventToDelete = dayToModify.find(e2 => e2.eid === e.eid)
+      const dayToModify = vuecal.mutableEvents[e.date]
+      const eventToDelete = dayToModify.find(e2 => e2.eid === e.eid)
       vuecal.mutableEvents[e.date] = dayToModify.filter(e2 => e2.eid !== e.eid)
 
       if (!e.background) {
@@ -30,7 +97,7 @@ export const deleteAnEvent = (event, vuecal) => {
   if (!event.background) deleteLinkedEvents(event, cellEvents)
 }
 
-const deleteLinkedEvents = (event, cellEvents) => {
+export const deleteLinkedEvents = (event, cellEvents) => {
   Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapping[event.eid]))
   Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item.eid === id).overlapped[event.eid]))
   Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item.eid === id).simultaneous[event.eid]))
