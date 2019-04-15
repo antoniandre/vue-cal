@@ -602,7 +602,8 @@ export default {
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
-    createEvent (formattedDate, e = null, split = null) {
+    // Allow call from cell click & hold or external call via $refs.
+    createEvent (formattedDate, e = null, eventOptions = {}) {
       let startTimeMinutes = 0
       if (typeof e === 'number') startTimeMinutes = e
       else if (typeof e === 'object') {
@@ -610,7 +611,7 @@ export default {
         startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
       }
 
-      return createAnEvent(formattedDate, startTimeMinutes, split, this)
+      return createAnEvent(formattedDate, startTimeMinutes, eventOptions, this)
     },
 
     // Prepare the event to return it with an emitted event.

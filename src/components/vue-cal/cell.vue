@@ -106,7 +106,9 @@ export default {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
-          if (clickHoldACell.cellId) this.$parent.createEvent(this.formattedDate, e, clickHoldACell.split)
+          if (clickHoldACell.cellId) {
+            this.$parent.createEvent(this.formattedDate, e, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+          }
         }, clickHoldACell.timeout)
       }
     },

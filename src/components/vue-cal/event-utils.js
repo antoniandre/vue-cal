@@ -22,7 +22,9 @@ export const eventDefaults = {
   classes: []
 }
 
-export const createAnEvent = (formattedDate, startTimeMinutes, split, vuecal) => {
+// Create an event on formattedDate at the given startTimeMinutes, and allow overriding
+// event attributes through the eventOptions object.
+export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vuecal) => {
   startTimeMinutes = parseInt(startTimeMinutes)
   const hours = parseInt(startTimeMinutes / 60)
   const minutes = parseInt(startTimeMinutes % 60)
@@ -48,7 +50,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, split, vuecal) =>
     endDate: formattedDate,
     endTime: (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : null),
     endTimeMinutes,
-    ...(split ? { split } : null)
+    ...eventOptions
   }
 
   if (typeof vuecal.onEventCreate === 'function') {
@@ -64,7 +66,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, split, vuecal) =>
 
   // After creating a new event, check if it overlaps any other in current cell OR split.
   const cellEvents = vuecal.mutableEvents[event.startDate]
-  checkCellOverlappingEvents(split ? cellEvents.filter(e => e.split === split) : cellEvents)
+  checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
 
   return event
 }
