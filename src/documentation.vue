@@ -654,7 +654,12 @@
     (by dragging handle) and creating new event (by clicking and holding a cell).#[br]
     Vue Cal emits events on calendar event change, read more about it in the
     #[strong # Vue Cal emitted events] example.
-  //- v-btn(small color="primary" @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60)") Create an event tuesday at 12pm
+
+  p
+    | You can also trigger an event creation programmatically and provide custom event attributes like so:
+    v-btn(small color="primary" @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60, { content: 'yay! 🎉' })") Create an event on Tuesday at 12pm
+    sshpre(language="html-vue").
+      &lt;v-btn @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60, { content: 'yay! 🎉' })"&gt;Create an event on Tuesday at 12pm&lt;/v-btn&gt;
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
