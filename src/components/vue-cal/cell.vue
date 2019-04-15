@@ -17,6 +17,7 @@
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
         event(
+          v-if="event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom"
           :vuecal="$parent"
           :event="event"
           :all-day-events="allDayEvents"
