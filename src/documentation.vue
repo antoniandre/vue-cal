@@ -650,15 +650,19 @@
     a(href="#ex--edit-delete-create-events") # Edit, delete &amp; create events
     a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
   p.
-    Allow editing title, deleting (by clicking and holding an event), and resizing (by dragging handle).#[br]
-    Only week view is enabled here.#[br]
-    Vue Cal emits events on calendar event change, read more about it in the #[strong # Vue Cal emitted events] example.
+    The option #[span.code editable-events] Allows editing event title, deleting (by clicking and holding an event), resizing
+    (by dragging handle) and creating new event (by clicking and holding a cell).#[br]
+    Vue Cal emits events on calendar event change, read more about it in the
+    #[strong # Vue Cal emitted events] example.
+  //- v-btn(small color="primary" @click="$refs.vuecal.createEvent('2018-11-20', 12 * 60)") Create an event tuesday at 12pm
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+      ref="vuecal"
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month', 'day']"
+      :disable-views="['years', 'year']"
       hide-view-selector
       hide-weekends
       editable-events
@@ -668,7 +672,7 @@
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
              :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month', 'day']"
+             :disable-views="['years', 'year']"
              hide-view-selector
              hide-weekends
              editable-events
@@ -676,8 +680,45 @@
              :on-event-create="onEventCreate"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
+  highlight-message(type="tips").
+    By default the delete button only appears at the top of the event with a set height (1.4em).
+    If you want a full-height delete button like in this example, you can apply the CSS class
+    #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
+  highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
-  p Here is the markup for the event creation dialog box (Using Vuetify).
+  h5.mt-5.subheading.font-weight-bold More details about event creation
+  p.mt-3.
+    Event creation is only possible on a day cell, so not on #[span.code years] &amp; #[span.code year] views.#[br]
+    By default, event will be created with these attributes:
+  sshpre.mt-0(language="js" label="Javascript").
+    {
+        start: {String}, // Starting from your cursor position in the day of the cell you clicked.
+        end: {String}, // Event start + 2 hours
+        title: '',
+        content: '',
+        split /* if any */: {Integer} // The current day split you clicked.
+    }
+
+  p.
+    If you want to customize those attributes you can modify the event directly through
+    the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
+  sshpre.mt-4(language="js" label="Javascript").
+    // :on-event-create="onEventCreate", in template.
+
+    /**
+     * @param event {Object} The newly created event that you can override.
+     * @param deleteEventFunction {Function} Allows you to delete this event programmatically.
+     * @return {Object} The event to be passed back to Vue Cal.
+     */
+    onEventCreate (event, deleteEventFunction) {
+        // You can modify event here and return it.
+        return event
+      }
+
+  p.
+    Alternatively, like in this example, you can give the user the freedom to set a title,
+    content, CSS class &amp; background property - and anything else - in a dialog box.#[br]
+    Here is the markup for the event creation dialog box of this example (Using Vuetify).
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
       &lt;v-card&gt;
@@ -723,11 +764,6 @@
         this.selectedEvent = {}
       }
     }
-
-  highlight-message(type="tips").
-    By default the delete button only appears at the top of the event with a set height (1.4em).
-    If you want a full-height delete button like in this example, you can apply the CSS class #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
-  highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
   //- Example.
   h4.title
@@ -2688,7 +2724,6 @@ $primary: #42b983;
   height: 650px;
 }
 
-
 .documentation {
   h2:not(.todo) {
     font-size: 27px !important;
@@ -2714,7 +2749,6 @@ $primary: #42b983;
   h3 + h4 {margin-top: 20px;}
 
   h4 a {color: inherit !important;}
-
 
   .todo .v-chip__content {
     padding: 0 3px;
