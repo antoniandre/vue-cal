@@ -107,9 +107,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Events count on year(s) views
-    v-chip.pr-1(color="amber darken-1" outline small disabled)
-      v-icon.mr-1 timer
-      | Create an event
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Create new event
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
@@ -647,8 +647,8 @@
 
   //- Example.
   h4.title
-    a(href="#ex--editable-deletable-events") # Editable / deletable events
-    a#ex--editable-deletable-events(name="ex--editable-deletable-events")
+    a(href="#ex--edit-delete-create-events") # Edit, delete &amp; create events
+    a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
   p.
     Allow editing title, deleting (by clicking and holding an event), and resizing (by dragging handle).#[br]
     Only week view is enabled here.#[br]
@@ -673,8 +673,57 @@
              hide-weekends
              editable-events
              :events="events"
+             :on-event-create="onEventCreate"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
+
+  p Here is the markup for the event creation dialog box (Using Vuetify).
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
+      &lt;v-card&gt;
+        &lt;v-card-title&gt;
+          &lt;v-text-field v-model="selectedEvent.title" placeholder="Event Title"/&gt;
+        &lt;/v-card-title&gt;
+        &lt;v-card-text&gt;
+          &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content"/&gt;
+          &lt;v-layout&gt;
+            &lt;v-select
+              :items="eventsCssClasses"
+              placeholder="Event CSS Class"
+              @change="selectedEvent.classes = [$event]"/&gt;
+            &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
+          &lt;/v-layout&gt;
+          &lt;v-layout&gt;
+            &lt;v-btn @click="cancelEventCreation()"&gt;Cancel&lt;/v-btn&gt;
+            &lt;v-btn @click="closeCreationDialog()"&gt;Save&lt;/v-btn&gt;
+          &lt;/v-layout&gt;
+        &lt;/v-card-text&gt;
+      &lt;/v-card&gt;
+
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      selectedEvent: null,
+      showEventCreationDialog: false,
+      eventsCssClasses: ['leisure', 'sport', 'health']
+    }),
+    methods: {
+      onEventCreate (event, deleteEventFunction) {
+        this.selectedEvent = event
+        this.showEventCreationDialog = true
+        this.deleteEventFunction = deleteEventFunction
+
+        return event
+      },
+      cancelEventCreation () {
+        this.closeCreationDialog()
+        this.deleteEventFunction()
+      },
+      closeCreationDialog () {
+        this.showEventCreationDialog = false
+        this.selectedEvent = {}
+      }
+    }
+
   highlight-message(type="tips").
     By default the delete button only appears at the top of the event with a set height (1.4em).
     If you want a full-height delete button like in this example, you can apply the CSS class #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
@@ -2039,7 +2088,8 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
-  //- div #[strong Version 1.49.0] Add Hebrew language
+  div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
+  div #[strong Version 1.49.0] Add Hebrew language
   div #[strong Version 1.48.0] Add Bulgarian language
   div #[strong Version 1.47.0] Add events count on #[span.code years] &amp; #[span.code year] views
     highlight-message(type="success").

@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.50.0__ Create a new event on cell click &amp; hold
 - __Version 1.49.0__ Add Hebrew language
 - __Version 1.48.0__ Add Bulgarian language
 - __Version 1.47.0__ Add events count on `years` &amp; `year` views
