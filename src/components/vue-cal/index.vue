@@ -606,10 +606,15 @@ export default {
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
-    createAnEvent (cell, split = null, e) {
-      const mouseY = this.getPosition(e).y
-      const startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
-      createAnEvent(cell.formattedDate, split, startTimeMinutes, this)
+    createEvent (formattedDate, e = null, split = null) {
+      let startTimeMinutes = 0
+      if (typeof e === 'number') startTimeMinutes = e
+      else if (typeof e === 'object') {
+        const mouseY = this.getPosition(e).y
+        startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
+      }
+
+      return createAnEvent(formattedDate, startTimeMinutes, split, this)
     },
 
     // Prepare the event to return it with an emitted event.
