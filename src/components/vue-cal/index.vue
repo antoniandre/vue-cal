@@ -685,7 +685,6 @@ export default {
       }
     }
 
-    this.$emit('ready')
     const params = {
       view: this.view.id,
       startDate: this.view.startDate,
