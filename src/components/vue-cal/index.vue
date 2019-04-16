@@ -932,7 +932,7 @@ export default {
 
   filters: {
     formatTime (value, format) {
-      return (value && (formatTime(value, format) || ''))
+      return formatTime(value, format) || ''
     }
   },
 
