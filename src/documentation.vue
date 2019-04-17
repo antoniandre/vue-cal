@@ -2211,6 +2211,7 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.51.0] Add Bosnian &amp; Serbian languages
   div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
   div #[strong Version 1.49.0] Add Hebrew language
   div #[strong Version 1.48.0] Add Bulgarian language
@@ -2433,6 +2434,7 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
@@ -2450,6 +2452,7 @@ export default {
       { code: 'pt-br', label: 'Portuguese Brasilian' },
       { code: 'ro', label: 'Romanian' },
       { code: 'ru', label: 'Russian' },
+      { code: 'sr', label: 'Serbian' },
       { code: 'sk', label: 'Slovak' },
       { code: 'sl', label: 'Slovenian' },
       { code: 'es', label: 'Spanish' },

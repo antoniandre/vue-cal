@@ -11,5 +11,5 @@
   "allDay": "Celi dan",
   "deleteEvent": "Obriši",
   "createEvent": "Kreiraj događaj",
-  "dateFormat": "dd.mm.yyyy."
+  "dateFormat": "DDDD d mmmm yyyy"
 }

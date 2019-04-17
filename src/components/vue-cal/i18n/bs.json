@@ -10,6 +10,6 @@
   "noEvent": "Nema događaja",
   "allDay": "Cijeli dan",
   "deleteEvent": "Obriši",
-  "createEvent": "kreiraj događaj",
-  "dateFormat": "dd.mm.yyyy."
+  "createEvent": "Kreiraj događaj",
+  "dateFormat": "DDDD d mmmm yyyy"
 }
