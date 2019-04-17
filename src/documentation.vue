@@ -722,7 +722,7 @@
             ref="vuecal"
             small
             selected-date="2018-11-19"
-            :time-from="12 * 60"
+            :time-from="10 * 60"
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
             hide-view-selector
@@ -1345,6 +1345,7 @@
         endDate: [Date], // View end - JS native Date object.
         firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+        outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
         events: [Array], // All the events in the current view.
         week: [Integer] // Week number. Only returned if view is 'week'.
       }
@@ -2211,6 +2212,10 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
+    highlight-message(type="success").
+      In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
+      now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array.
   div #[strong Version 1.51.0] Add Bosnian &amp; Serbian languages
   div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
   div #[strong Version 1.49.0] Add Hebrew language

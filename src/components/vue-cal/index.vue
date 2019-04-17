@@ -335,7 +335,7 @@ export default {
         case 'years':
           // Always fill first cell with a multiple of 25 years, E.g. year 2000, or 2025.
           this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
-          this.view.endDate = new Date(this.view.startDate.getFullYear() + 26, 0, 0)
+          this.view.endDate = new Date(this.view.startDate.getFullYear() + 25, 0, 0)
           break
         case 'year':
           this.view.startDate = new Date(date.getFullYear(), 0, 1)
@@ -346,26 +346,41 @@ export default {
           this.view.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0)
           dateTmp = new Date(this.view.startDate)
           endTime = this.view.endDate.getTime()
+
+          // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
+          let startDate = new Date(this.view.startDate)
+          if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
+            startDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
+          }
+
+          // Used in viewCells computed array & returned in emitted events.
+          this.view.firstCellDate = startDate
+          this.view.lastCellDate = startDate.addDays(41)
+
+          // Save out of scope events into the view object separated from the array of in-scope events.
+          let currentMonth = this.view.startDate.getMonth()
+          let cellDate = null
+          this.view.outOfScopeEvents = []
+          for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
+            cellDate = startDate.addDays(i)
+
+            if (currentMonth !== cellDate.getMonth()) {
+              formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
+              dayEvents = this.mutableEvents[formattedDate] || []
+
+              if (dayEvents.length) {
+                this.view.outOfScopeEvents.push(...dayEvents.map(e => this.cleanupEvent(e)))
+              }
+            }
+          }
+
           while (dateTmp.getTime() <= endTime) {
             dateTmp = dateTmp.addDays(1)
             formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
 
-            // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
-            let startDate = new Date(this.view.startDate)
-            if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
-              startDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
-            }
-
-            // Used in viewCells computed array & returned in emitted events.
-            this.view.firstCellDate = startDate
-            this.view.lastCellDate = startDate.addDays(41)
-
-            // Save the events of each day of month + out of scope ones into view object.
-            for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
-              formattedDate = formatDate(startDate.addDays(i), 'yyyy-mm-dd', this.texts)
-              dayEvents = this.mutableEvents[formattedDate] || []
-              if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
-            }
+            // Save the events of each day of month into view object.
+            dayEvents = this.mutableEvents[formattedDate] || []
+            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
           }
           break
         case 'week':
@@ -391,7 +406,11 @@ export default {
           view,
           startDate: this.view.startDate,
           endDate: this.view.endDate,
-          ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
+          ...(this.view.id === 'month' ? {
+            firstCellDate: this.view.firstCellDate,
+            lastCellDate: this.view.lastCellDate,
+            outOfScopeEvents: this.view.outOfScopeEvents
+          } : {}),
           events: this.view.events,
           ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
