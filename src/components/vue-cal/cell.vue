@@ -74,7 +74,7 @@ export default {
     },
 
     selectCell (force = false) {
-      this.$emit('day-click', this.date)
+      this.$parent.$emit('day-click', this.date)
       if (this.$parent.view.selectedDate.toString() !== this.date.toString()) {
         this.$parent.view.selectedDate = this.date
         this.$parent.$emit('day-focus', this.date)
