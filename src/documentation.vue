@@ -2792,10 +2792,11 @@ export default {
       return event
     },
     customEventCreation (event) {
-        const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
-        if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-          this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
-        } else alert('Wrong date format.')
+      const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
+      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+        this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
+      }
+      else alert('Wrong date format.')
     }
   },
   computed: {
