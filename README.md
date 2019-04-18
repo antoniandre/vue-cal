@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.53.0__ Add click/dblclick ability on weekdays headings on week view
 - __Version 1.52.0__ Separate `outOfScopeEvents` &amp; `events` in month view
 - __Version 1.51.0__ Add Bosnian &amp; Serbian languages
 - __Version 1.50.0__ Create a new event on cell click &amp; hold

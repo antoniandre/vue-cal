@@ -1,35 +1,38 @@
 <template lang="pug">
 .vuecal__flex.vuecal__weekdays-headings
   .vuecal__flex.vuecal__heading(
-    :class="{ today: heading.today }"
+    :class="{ today: heading.today, clickable: cellHeadingsClickable }"
     v-for="(heading, i) in headings"
     :key="i"
-    :style="weekdayCellStyles")
-    transition(:name="`slide-fade--${transitions.direction}`" :appear="transitions.active")
-      span(:key="transitions.active ? `${i}-${heading.date}` : false")
+    :style="weekdayCellStyles"
+    @click="view.id === 'week' && selectCell(heading.date)"
+    @dblclick="view.id === 'week' && vuecal.dblClickToNavigate && switchToNarrowerView()")
+    transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
+      span(:key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
         //- For small/xsmall option. 3 media queries also truncate weekdays.
         span.full {{ heading.full }}
         span.small {{ heading.small }}
         span.xsmall {{ heading.xsmall }}
-        span(v-if="heading.date") &nbsp;{{ heading.date }}
+        span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
 </template>
 
 <script>
 import { isDateToday } from './date-utils'
+import { selectCell } from './cell-utils'
 
 export default {
   props: {
+    vuecal: {
+      type: Object,
+      default: () => ({})
+    },
     view: {
       type: Object,
       default: () => ({})
     },
-    minCellWidth: {
-      type: Number,
-      default: 0
-    },
-    transitions: {
-      type: Object,
-      default: () => ({ active: true, direction: 'right' })
+    transitionDirection: {
+      type: String,
+      default: 'right'
     },
     weekDays: {
       type: Array,
@@ -39,6 +42,16 @@ export default {
     weekDaysShort: {
       type: [Array, null],
       default: () => []
+    },
+    switchToNarrowerView: {
+      type: Function,
+      default: () => {}
+    }
+  },
+
+  methods: {
+    selectCell (date) {
+      selectCell(null, date, this.vuecal)
     }
   },
   computed: {
@@ -61,7 +74,8 @@ export default {
 
               // Only for week view.
               ...(this.view.id === 'week' ? {
-                date: date.getDate(),
+                dayOfMonth: date.getDate(),
+                date,
                 today: !todayFound && isDateToday(date) && !todayFound++
               } : {})
             }
@@ -71,7 +85,10 @@ export default {
       return headings
     },
     weekdayCellStyles () {
-      return { minWidth: this.minCellWidth ? `${this.minCellWidth}px` : null }
+      return { minWidth: this.vuecal.minCellWidth ? `${this.vuecal.minCellWidth}px` : null }
+    },
+    cellHeadingsClickable () {
+      return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblClickToNavigate)
     }
   }
 }

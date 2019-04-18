@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { selectCell } from './cell-utils'
 import { updateEventPosition, checkCellOverlappingEvents } from './event-utils'
 import Event from './event'
 
@@ -73,27 +74,8 @@ export default {
       return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell (force = false) {
-      this.$parent.$emit('day-click', this.date)
-      if (this.$parent.view.selectedDate.toString() !== this.date.toString()) {
-        this.$parent.view.selectedDate = this.date
-        this.$parent.$emit('day-focus', this.date)
-      }
-
-      // Switch to narrower view.
-      if (this.clickToNavigate || force) this.$parent.switchToNarrowerView()
-
-      // Handle double click manually for touch devices.
-      else if (this.dblClickToNavigate && 'ontouchstart' in window) {
-        this.domEvents.dblTapACell.taps++
-
-        setTimeout(() => (this.domEvents.dblTapACell.taps = 0), this.domEvents.dblTapACell.timeout)
-
-        if (this.domEvents.dblTapACell.taps >= 2) {
-          this.domEvents.dblTapACell.taps = 0
-          this.$parent.switchToNarrowerView()
-        }
-      }
+    selectCell () {
+      selectCell(false, this.date, this.$parent)
     },
 
     onCellMouseDown (e, split = null, touch = false) {

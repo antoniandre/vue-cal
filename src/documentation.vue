@@ -2212,10 +2212,11 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.53.0] Add click/dblclick ability on weekdays headings on week view
   div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
     highlight-message(type="success").
       In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
-      now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array.
+      now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array
   div #[strong Version 1.51.0] Add Bosnian &amp; Serbian languages
   div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
   div #[strong Version 1.49.0] Add Hebrew language

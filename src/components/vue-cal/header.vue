@@ -1,18 +1,18 @@
 <template lang="pug">
 .vuecal__header
-  ul.vuecal__flex.vuecal__menu(v-if="!vuecalProps.hideViewSelector")
+  ul.vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector")
     li(
       v-if="v.enabled"
       :class="{ active: viewProps.view.id === id }"
       v-for="(v, id) in viewProps.views"
       @click="$parent.switchView(id, null, true)") {{ v.label }}
-  .vuecal__title(v-if="!vuecalProps.hideTitleBar")
+  .vuecal__title(v-if="!options.hideTitleBar")
     .vuecal__arrow.vuecal__arrow--prev(@click="previous")
       slot(name="arrow-prev")
     transition(:name="`slide-fade--${transitionDirection}`")
       div(
         :class="{ clickable: !!broaderView }"
-        :key="vuecalProps.transitions ? `${viewProps.view.id}${viewProps.view.startDate}` : false"
+        :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate}` : false"
         @click="switchToBroaderView"
         style="display: inline-block")
         slot(name="title")
@@ -20,10 +20,12 @@
       slot(name="arrow-next")
   weekdays-headings(
     v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
+    :vuecal="$parent"
     :view="viewProps.view"
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
-    :transitions="{ active: vuecalProps.transitions, direction: transitionDirection }"
+    :transition-direction="transitionDirection"
+    :switch-to-narrower-view="switchToNarrowerView"
   )
 </template>
 
@@ -34,13 +36,14 @@ import WeekdaysHeadings from './weekdays-headings'
 export default {
   components: { WeekdaysHeadings },
   props: {
-    vuecalProps: {
+    // Vuecal main component options (props).
+    options: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     viewProps: {
       type: Object,
-      default: () => {}
+      default: () => ({})
     },
     weekDays: {
       type: Array,
@@ -49,6 +52,10 @@ export default {
     weekDaysShort: {
       type: [Array, null],
       default: () => []
+    },
+    switchToNarrowerView: {
+      type: Function,
+      default: () => {}
     }
   },
 
@@ -69,7 +76,7 @@ export default {
           this.$parent.switchView(this.viewProps.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfPrevWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.vuecalProps.startWeekOnSunday).subtractDays(7)
+          const firstDayOfPrevWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.options.startWeekOnSunday).subtractDays(7)
           this.$parent.switchView(this.viewProps.view.id, firstDayOfPrevWeek)
           break
         case 'day':
@@ -95,7 +102,7 @@ export default {
           this.$parent.switchView(this.viewProps.view.id, firstDayOfMonth)
           break
         case 'week':
-          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.vuecalProps.startWeekOnSunday).addDays(7)
+          const firstDayOfNextWeek = getPreviousFirstDayOfWeek(this.viewProps.view.startDate, this.options.startWeekOnSunday).addDays(7)
           this.$parent.switchView(this.viewProps.view.id, firstDayOfNextWeek)
           break
         case 'day':

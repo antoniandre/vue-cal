@@ -1,11 +1,12 @@
 <template lang="pug">
   .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
     vuecal-header(
-      :vuecal-props="$props"
+      :options="$props"
       :view-props="{ views, view, hasSplits }"
       :months="months"
       :week-days="weekDays"
-      :week-days-short="weekDaysShort")
+      :week-days-short="weekDaysShort"
+      :switch-to-narrower-view="switchToNarrowerView")
       slot(slot="arrow-prev" name="arrow-prev")
         i.angle
       slot(slot="arrow-next" name="arrow-next")
@@ -51,11 +52,13 @@
                 //- Only for splitDays.
                 weekdays-headings(
                   v-if="hasSplits && view.id === 'week'"
-                  :transitions="{ active: transitions, direction: transitionDirection }"
+                  :vuecal="this"
+                  :transition-direction="transitionDirection"
                   :view="view"
                   :min-cell-width="minCellWidth"
                   :week-days="weekDays"
-                  :week-days-short="weekDaysShort")
+                  :week-days-short="weekDaysShort"
+                  :switch-to-narrower-view="switchToNarrowerView")
 
                 .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
                   vuecal-cell(
