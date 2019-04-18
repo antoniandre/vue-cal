@@ -210,7 +210,7 @@ export default {
         this.event.simultaneous = {}
       }
 
-      else checkCellOverlappingEvents(this.cellEvents, this.vuecal)
+      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.vuecal)
     }
   }
 }

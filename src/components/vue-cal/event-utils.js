@@ -66,7 +66,9 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
 
   // After creating a new event, check if it overlaps any other in current cell OR split.
   const cellEvents = vuecal.mutableEvents[event.startDate]
-  checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
+  if (vuecal.time) {
+    checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
+  }
 
   return event
 }

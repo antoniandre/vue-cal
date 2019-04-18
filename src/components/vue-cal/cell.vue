@@ -121,10 +121,12 @@ export default {
   },
 
   created () {
-    if (this.splits.length) {
-      this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+    if (this.time) {
+      if (this.splits.length) {
+        this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+      }
+      else checkCellOverlappingEvents(this.events)
     }
-    else checkCellOverlappingEvents(this.events)
   },
 
   computed: {
