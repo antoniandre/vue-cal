@@ -17,13 +17,13 @@
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
         event(
-          v-if="event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom"
+          v-if="!time || (event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom)"
+          v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
           :vuecal="$parent"
           :event="event"
           :all-day-events="allDayEvents"
           :cell-events="splits.length ? splitEvents[i] : events"
-          :split="splits.length ? i : 0"
-          v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j")
+          :split="splits.length ? i : 0")
           div(slot="event-renderer" slot-scope="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
