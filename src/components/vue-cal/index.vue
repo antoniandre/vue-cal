@@ -97,7 +97,7 @@
 </template>
 
 <script>
-import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime } from './date-utils'
+import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
 import { createAnEvent, eventDefaults, onResizeEvent } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -665,11 +665,9 @@ export default {
     },
 
     updateSelectedDate (date) {
-      if (date && typeof date === 'string') {
-        let [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
-        date = new Date(y, parseInt(m) - 1, d, h, min)
-      }
-      if (date && (typeof date === 'string' || date instanceof Date)) {
+      if (date && typeof date === 'string') date = stringToDate(date)
+
+      if (date && date instanceof Date) {
         if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
         this.view.selectedDate = date
         this.switchView(this.view.id)

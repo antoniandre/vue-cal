@@ -1,6 +1,6 @@
 <template lang="pug">
   transition-group.vuecal__cell(
-    :class="{ [cssClass]: true, splitted: splits.length, 'vuecal__cell--has-events': events.length }"
+    :class="{ [cssClass]: true, 'vuecal__cell--has-splits': splits.length, 'vuecal__cell--has-events': events.length }"
     :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`"
     :appear="transitions")
     .vuecal__flex.vuecal__cell-content(
@@ -258,17 +258,17 @@ export default {
   .vuecal--week-view.vuecal--no-time &,
   .vuecal--day-view.vuecal--no-time & {display: block;}
 
-  &.splitted {
+  &--has-splits {
     flex-direction: row;
     display: flex;
   }
 
-  .vuecal__cell-content {
+  &-content {
     position: relative;
     height: 100%;
   }
 
-  .vuecal__cell-split {
+  &-split {
     display: flex;
     flex-grow: 1;
     flex-direction: column;
@@ -328,7 +328,7 @@ export default {
   &-events {width: 100%;}
 }
 
-.vuecal--split-days.vuecal--week-view .vuecal__cell.splitted {
+.vuecal--split-days.vuecal--week-view .vuecal__cell--has-splits {
   overflow: hidden;
 }
 

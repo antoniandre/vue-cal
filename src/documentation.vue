@@ -2212,6 +2212,10 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.54.0]
+    highlight-message(type="success").
+      The CSS class #[span.code splitted] (appearing on the #[span.code vuecal__cell] element
+      when the cell is split) is renamed to #[span.code vuecal__cell--has-splits].
   div #[strong Version 1.53.0] Add click/dblclick ability on weekdays headings on week view
   div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
     highlight-message(type="success").
