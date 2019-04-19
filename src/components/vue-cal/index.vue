@@ -21,13 +21,12 @@
               span {{ texts.allDay }}
             .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
               vuecal-cell(
-                :class="cell.class"
                 v-for="(cell, i) in viewCells"
                 :key="i"
-                :date="cell.date"
-                :formatted-date="cell.formattedDate"
-                :all-day-events="true"
-                :today="cell.today"
+                :data="cell"
+                :all-day="true"
+                :min-timestamp="minTimestamp"
+                :max-timestamp="maxTimestamp"
                 :splits="hasSplits && splitDays || []")
                 div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
                   slot(name="event-renderer" :view="view" :event="event")
@@ -62,13 +61,11 @@
 
                 .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
                   vuecal-cell(
-                    :class="cell.class"
                     v-for="(cell, i) in viewCells"
                     :key="i"
-                    :date="cell.date"
-                    :formatted-date="cell.formattedDate"
-                    :today="cell.today"
-                    :content="cell.content"
+                    :data="cell"
+                    :min-timestamp="minTimestamp"
+                    :max-timestamp="maxTimestamp"
                     :splits="hasSplits && splitDays || []")
                     div(slot="cell-content" slot-scope="{ events, split, selectCell }")
                       slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
@@ -141,6 +138,14 @@ export default {
       default: false
     },
     selectedDate: {
+      type: [String, Date],
+      default: ''
+    },
+    minDate: {
+      type: [String, Date],
+      default: ''
+    },
+    maxDate: {
       type: [String, Date],
       default: ''
     },
@@ -758,6 +763,18 @@ export default {
     hasSplits () {
       return !!this.splitDays.length && ['week', 'day'].indexOf(this.view.id) > -1
     },
+    minTimestamp () {
+      let date = null
+      if (this.minDate && typeof this.minDate === 'string') date = stringToDate(this.minDate)
+      else if (this.minDate && this.minDate instanceof Date) date = this.minDate
+      return date ? date.getTime() : 0
+    },
+    maxTimestamp () {
+      let date = null
+      if (this.maxDate && typeof this.maxDate === 'string') date = stringToDate(this.maxDate)
+      else if (this.maxDate && this.minDate instanceof Date) date = this.maxDate
+      return date ? date.getTime() : 0
+    },
     weekDays () {
       let { weekDays } = this.texts
       // Do not modify original for next instances.
@@ -834,26 +851,32 @@ export default {
         case 'years':
           fromYear = this.view.startDate.getFullYear()
           cells = Array.apply(null, Array(25)).map((cell, i) => {
+            const startDate = new Date(fromYear + i, 0, 1)
+            const endDate = new Date(fromYear + i + 1, 0, 1)
+            endDate.setSeconds(-1)
+
             return {
+              startDate,
+              endDate,
               content: fromYear + i,
-              date: new Date(fromYear + i, 0, 1),
-              class: {
-                current: fromYear + i === this.now.getFullYear(),
-                selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
-              }
+              current: fromYear + i === this.now.getFullYear(),
+              selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
             }
           })
           break
         case 'year':
           fromYear = this.view.startDate.getFullYear()
           cells = Array.apply(null, Array(12)).map((cell, i) => {
+            const startDate = new Date(fromYear, i, 1)
+            const endDate = new Date(fromYear, i + 1, 1)
+            endDate.setSeconds(-1)
+
             return {
+              startDate,
+              endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
-              date: new Date(fromYear, i, 1),
-              class: {
-                current: i === this.now.getMonth() && fromYear === this.now.getFullYear(),
-                selected: i === this.view.selectedDate.getMonth() && fromYear === this.view.selectedDate.getFullYear()
-              }
+              current: i === this.now.getMonth() && fromYear === this.now.getFullYear(),
+              selected: i === this.view.selectedDate.getMonth() && fromYear === this.view.selectedDate.getFullYear()
             }
           })
           break
@@ -862,33 +885,33 @@ export default {
           let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
           selectedDateAtMidnight.setHours(0, 0, 0, 0)
           todayFound = false
-          let startDate = new Date(this.view.firstCellDate)
+          const firstCellDate = new Date(this.view.firstCellDate)
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
-            const cellDate = startDate.addDays(i)
+            const startDate = firstCellDate.addDays(i)
+            const endDate = new Date(startDate)
+            endDate.setHours(23, 59, 59)
             // To increase performance skip checking isToday if today already found.
-            const isToday = !todayFound && cellDate && cellDate.getDate() === this.now.getDate() &&
-                            cellDate.getMonth() === this.now.getMonth() &&
-                            cellDate.getFullYear() === this.now.getFullYear() &&
+            const isToday = !todayFound && startDate && startDate.getDate() === this.now.getDate() &&
+                            startDate.getMonth() === this.now.getMonth() &&
+                            startDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
-            const formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
+            const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
 
             return {
-              content: cellDate.getDate(),
-              date: cellDate,
+              startDate,
               formattedDate,
+              endDate,
+              content: startDate.getDate(),
               today: isToday,
-              class: {
-                today: isToday,
-                'out-of-scope': cellDate.getMonth() !== month,
-                selected: this.view.selectedDate && cellDate.getTime() === selectedDateAtMidnight.getTime()
-              }
+              outOfScope: startDate.getMonth() !== month,
+              selected: this.view.selectedDate && startDate.getTime() === selectedDateAtMidnight.getTime()
             }
           })
 
           if (this.hideWeekends) {
-            cells = cells.filter(cell => cell.date.getDay() > 0 && cell.date.getDay() < 6)
+            cells = cells.filter(cell => cell.startDate.getDay() > 0 && cell.startDate.getDay() < 6)
           }
           break
         case 'week':
@@ -896,33 +919,34 @@ export default {
           let firstDayOfWeek = this.view.startDate
 
           cells = this.weekDays.map((cell, i) => {
-            const date = firstDayOfWeek.addDays(i)
-            const formattedDate = formatDate(date, 'yyyy-mm-dd', this.texts)
-            let isToday = !todayFound && isDateToday(date) && !todayFound++
+            const startDate = firstDayOfWeek.addDays(i)
+            const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
+            const endDate = new Date(startDate)
+            endDate.setHours(23, 59, 59)
+            let isToday = !todayFound && isDateToday(startDate) && !todayFound++
 
             return {
-              date,
+              startDate,
               formattedDate,
+              endDate,
               today: isToday,
-              class: {
-                today: isToday,
-                selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
-              }
+              selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
             }
           })
           break
         case 'day':
-          const formattedDate = formatDate(this.view.startDate, 'yyyy-mm-dd', this.texts)
-          const isToday = isDateToday(this.view.startDate)
+          const startDate = this.view.startDate
+          const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
+          const endDate = new Date(this.view.startDate)
+          endDate.setHours(23, 59, 59)
+          const isToday = isDateToday(startDate)
 
           cells = [{
-            date: this.view.startDate,
+            startDate,
             formattedDate,
+            endDate,
             today: isToday,
-            class: {
-              today: isToday,
-              selected: this.view.selectedDate && this.view.startDate.getTime() === this.view.selectedDate.getTime()
-            }
+            selected: this.view.selectedDate && startDate.getTime() === this.view.selectedDate.getTime()
           }]
           break
       }

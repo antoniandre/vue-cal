@@ -1,27 +1,29 @@
 <template lang="pug">
   transition-group.vuecal__cell(
-    :class="{ [cssClass]: true, 'vuecal__cell--has-splits': splits.length, 'vuecal__cell--has-events': events.length }"
-    :style="cellStyles" tag="div" :name="`slide-fade--${transitionDirection}`"
-    :appear="transitions")
+    :class="cssClasses"
+    :name="`slide-fade--${transitionDirection}`"
+    tag="div"
+    :appear="transitions"
+    :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
       :class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`"
       :data-split="splits.length && i"
       v-for="i in (splits.length || 1)"
-      :key="transitions ? `${view}-${content}-${i}` : i"
+      :key="transitions ? `${view}-${data.content}-${i}` : i"
       column
-      @touchstart="onCellTouchStart($event, splits.length ? i : null)"
-      @mousedown="onCellMouseDown($event, splits.length ? i : null)"
-      @click="selectCell()"
-      @dblclick="$parent.dblClickToNavigate && $parent.switchToNarrowerView()")
+      @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i : null)"
+      @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i : null)"
+      @click="!isDisabled && selectCell()"
+      @dblclick="!isDisabled && $parent.dblClickToNavigate && $parent.switchToNarrowerView()")
       slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
         event(
-          v-if="!time || (event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom)"
+          v-if="view === 'month' || !time || allDay || (event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom)"
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
           :vuecal="$parent"
           :event="event"
-          :all-day-events="allDayEvents"
+          :all-day="allDay"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
           div(slot="event-renderer" slot-scope="{ event, view }")
@@ -37,31 +39,23 @@ import Event from './event'
 export default {
   components: { Event },
   props: {
-    cssClass: {
-      type: String,
-      default: ''
-    },
-    date: {
-      type: Date,
+    data: {
+      type: Object,
       required: true
-    },
-    formattedDate: {
-      type: String,
-      default: ''
-    },
-    content: {
-      type: [String, Number],
-      default: ''
     },
     splits: {
       type: Array,
       default: () => []
     },
-    today: {
-      type: Boolean,
-      default: false
+    minTimestamp: {
+      type: Number,
+      default: 0
     },
-    allDayEvents: {
+    maxTimestamp: {
+      type: Number,
+      default: 0
+    },
+    allDay: {
       type: Boolean,
       default: false
     }
@@ -75,7 +69,7 @@ export default {
     },
 
     selectCell () {
-      selectCell(false, this.date, this.$parent)
+      selectCell(false, this.data.startDate, this.$parent)
     },
 
     onCellMouseDown (e, split = null, touch = false) {
@@ -86,11 +80,11 @@ export default {
 
       // If not mousedown on an event, click & hold to create an event.
       if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].indexOf(this.view) > -1) {
-        clickHoldACell.cellId = `${this.$parent._uid}_${this.formattedDate}`
+        clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId) {
-            this.$parent.createEvent(this.formattedDate, e, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+            this.$parent.createEvent(this.data.formattedDate, e, clickHoldACell.split ? { split: clickHoldACell.split } : {})
           }
         }, clickHoldACell.timeout)
       }
@@ -112,6 +106,28 @@ export default {
   },
 
   computed: {
+    isBeforeMinDate () {
+      return this.minTimestamp > this.data.endDate.getTime()
+    },
+    isAfterMaxDate () {
+      return this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()
+    },
+    isDisabled () {
+      return this.isBeforeMinDate || this.isAfterMaxDate
+    },
+    cssClasses () {
+      return {
+        'vuecal__cell--has-splits': this.splits.length,
+        'vuecal__cell--has-events': this.events.length,
+        current: this.data.current,
+        today: this.data.today,
+        'out-of-scope': this.data.outOfScope,
+        disabled: this.isDisabled,
+        'before-min': this.isDisabled && this.isBeforeMinDate,
+        'after-max': this.isDisabled && this.isAfterMaxDate,
+        selected: !this.isDisabled && this.data.selected
+      }
+    },
     domEvents: {
       get () {
         return this.$parent.domEvents
@@ -163,7 +179,9 @@ export default {
       return this.$parent.transitionDirection
     },
     cellStyles () {
-      return { minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null, position: 'relative' }
+      return {
+        minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
+      }
     },
     events: {
       get () {
@@ -171,10 +189,10 @@ export default {
 
         // Events count on years/year view.
         if (['years', 'year'].includes(this.view) && (this.eventsCountOnYearView || 1)) {
-          const cellStart = this.date.getTime()
+          const cellStart = this.data.startDate.getTime()
           const cellEnd = (this.view === 'years'
-            ? new Date(this.date.getFullYear() + 1, 0)
-            : new Date(this.date.getFullYear(), this.date.getMonth() + 1, 0)).getTime()
+            ? new Date(this.data.startDate.getFullYear() + 1, 0)
+            : new Date(this.data.startDate.getFullYear(), this.data.startDate.getMonth() + 1, 0)).getTime()
           events = this.$parent.events.filter(e => {
             const eventStart = new Date(e.start)
             const eventEnd = new Date(e.end)
@@ -183,20 +201,20 @@ export default {
         }
 
         // All the other views.
-        else events = this.$parent.mutableEvents[this.formattedDate] || []
+        else events = this.$parent.mutableEvents[this.data.formattedDate] || []
 
         events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDayEvents) && !['years', 'year'].includes(this.view)) {
+          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDay) && !['years', 'year'].includes(this.view)) {
             updateEventPosition(event, this.$parent)
           }
         })
 
         return (this.showAllDayEvents && this.view !== 'month'
-          ? events.filter(e => !!e.allDay === this.allDayEvents)
+          ? events.filter(e => !!e.allDay === this.allDay)
           : events)
       },
       set (events) {
-        this.$parent.mutableEvents[this.formattedDate] = events
+        this.$parent.mutableEvents[this.data.formattedDate] = events
       }
     },
     splitEvents () {
@@ -211,14 +229,14 @@ export default {
       return splitsEventIndexes
     },
     timelineVisible () {
-      if (!this.today || !this.time || this.allDayEvents || ['week', 'day'].indexOf(this.view) === -1) return
+      if (!this.data.today || !this.time || this.allDay || ['week', 'day'].indexOf(this.view) === -1) return
 
       const now = new Date()
       return (now.getHours() * 60 + now.getMinutes()) <= this.timeTo
     },
     todaysTimePosition () {
       // Make sure to skip the Maths if not relevant.
-      if (!this.today || !this.time) return
+      if (!this.data.today || !this.time) return
 
       const now = new Date()
       const startTimeMinutes = now.getHours() * 60 + now.getMinutes()
@@ -231,12 +249,13 @@ export default {
 
 <style lang="scss">
 .vuecal__cell {
+  position: relative;
   width: 100%;
   display: flex;
   justify-content: center;
   align-items: center;
   text-align: center;
-  position: relative;
+
   .vuecal__cells.month-view &,
   .vuecal__cells.week-view &,
   .vuecal__cells.day-view & {
@@ -302,6 +321,7 @@ export default {
   }
 
   &.out-of-scope {color: #ccc;}
+  &.disabled {color: #ccc;cursor: not-allowed;}
 
   &-events-count {
     background: #999;

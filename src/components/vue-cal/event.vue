@@ -44,7 +44,7 @@ export default {
       type: Number,
       default: 0
     },
-    allDayEvents: {
+    allDay: {
       type: Boolean,
       default: false
     }
@@ -52,7 +52,7 @@ export default {
 
   methods: {
     eventStyles (event) {
-      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDayEvents) return {}
+      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       return {
@@ -186,7 +186,7 @@ export default {
 
   computed: {
     resizable () {
-      return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDayEvents &&
+      return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDay &&
         !this.event.multipleDays.start && !this.event.multipleDays.middle && this.vuecal.view.id !== 'month')
     },
     domEvents: {

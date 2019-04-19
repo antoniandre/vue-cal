@@ -110,6 +110,9 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Create new event
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | min &amp; max dates
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
@@ -245,7 +248,7 @@
   p.
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
-  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px;")
+  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
       v-icon(slot="arrow-prev") arrow_back
       v-icon(slot="arrow-next") arrow_forward
@@ -254,6 +257,67 @@
       &lt;i slot="arrow-prev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
       &lt;i slot="arrow-next" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
     &lt;/vue-cal&gt;
+
+  highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
+    a(href="#ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
+    a#ex--min-max-dates(name="ex--min-max-dates")
+  p.
+    With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
+    time range of selectable cells. All the cells before and after are still visible but
+    will be disabled and not selectable.#[br]
+    You can still navigate through them with arrows.#[br]
+    In this example, the minimum date is set to exactly a month behind and the maximum date to
+    exactly a month ahead.#[br]
+  highlight-message(type="tips")
+    strong.ml-2 Notes:
+    ul
+      li the min and max options accept a formatted string or plain Javascript Date object.
+      li.
+        2 different CSS class are available on out of range cells: #[span.code .before-min]
+        &amp; #[span.code .after-max].
+  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
+    vue-cal.vuecal--green-theme.ex--min-max-dates(
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      default-view="month"
+      :min-date="minDate"
+      :max-date="maxDate")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      default-view="month"
+      :min-date="minDate"
+      :max-date="maxDate"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    computed: {
+      minDate () {
+        let now = new Date()
+        let date = new Date(now)
+        date.setMonth(now.getMonth() - 1)
+        return date
+      },
+      maxDate () {
+        let now = new Date()
+        let date = new Date(now)
+        date.setMonth(now.getMonth() + 1)
+        return date
+      }
+    }
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell.disabled {text-decoration: line-through;}
+    .vuecal__cell.disabled.before-min {color: #b6d6c7;}
+    .vuecal__cell.disabled.after-max {color: #008b8b;}
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
@@ -270,9 +334,21 @@
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+        xsmall
+        hide-view-selector
+        12-hour
+        :time="false"
+        default-view="month"
+        :disable-views="['week']")
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--green-theme(xsmall hide-view-selector 12-hour :time="false" default-view="month" :disable-views="['week']")
+      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+        xsmall
+        hide-view-selector
+        12-hour
+        :time="false"
+        default-view="month"
+        :disable-views="['week']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
              xsmall
@@ -346,7 +422,11 @@
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(xsmall :time-cell-height="26" default-view="day" :disable-views="['years', 'year', 'month']")
+    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
+      xsmall
+      :time-cell-height="26"
+      default-view="day"
+      :disable-views="['years', 'year', 'month']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
              default-view="day"
@@ -1818,6 +1898,8 @@
     disableViews:           [Array],           default: []
     defaultView:            [String],          default: 'week'
     selectedDate:           [String, Date],    default: ''
+    minDate:                [String, Date],    default: ''
+    maxDate:                [String, Date],    default: ''
     startWeekOnSunday:      [Boolean],         default: false
     small:                  [Boolean],         default: false
     xsmall:                 [Boolean],         default: false
@@ -1925,6 +2007,7 @@
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
       p.
+        Accepts a formatted string or plain JS Date object.#[br]
         Set a selected date, for the first time you load the calendar.#[br]
         This day will be highlighted and the first view will naturally show this date.#[br]
         E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.#[br]#[br]
@@ -1934,6 +2017,20 @@
         A correct string date format is #[code {{ currentDateFormatted }}] or
         #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
         Only these formats will work in string. You can also provide a native Javascript Date object.
+    li
+      code.mr-2 minDate
+      span.code [String, Date], default: ''
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a minimum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
+    li
+      code.mr-2 maxDate
+      span.code [String, Date], default: ''
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a maximum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
     li
       code.mr-2 startWeekOnSunday
       span.code [Boolean], default: false
@@ -2208,14 +2305,19 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  //- div #[strong Version 1.40.0] Externalize all locales from main library
+  //- div #[strong Version 1.55.0] Externalize all locales from main library
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
-  div #[strong Version 1.54.0]
-    highlight-message(type="success").
-      The CSS class #[span.code splitted] (appearing on the #[span.code vuecal__cell] element
-      when the cell is split) is renamed to #[span.code vuecal__cell--has-splits].
+  div #[strong Version 1.54.0] Add min &amp; max dates for cell selection
+    highlight-message(type="success")
+      ul
+        li.
+          The CSS class #[span.code .splitted] (appearing on the #[span.code .vuecal__cell] element
+          when the cell is split) is renamed to #[span.code .vuecal__cell--has-splits].
+        li.
+          The #[span.code selectedDate] option, like min &amp; max dates, now also accept a
+          plain JS Date Object.
   div #[strong Version 1.53.0] Add click/dblclick ability on weekdays headings on week view
   div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
     highlight-message(type="success").
@@ -2812,6 +2914,18 @@ export default {
       const h = this.now.getHours()
       const min = this.now.getMinutes()
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
+    },
+    minDate () {
+      let now = new Date()
+      let date = new Date(now)
+      date.setMonth(now.getMonth() - 1)
+      return date
+    },
+    maxDate () {
+      let now = new Date()
+      let date = new Date(now)
+      date.setMonth(now.getMonth() + 1)
+      return date
     }
   }
 }
@@ -2878,6 +2992,11 @@ $primary: #42b983;
 
 // Examples.
 // =====================================================
+.ex--min-max-dates {
+  .disabled {text-decoration: line-through;}
+  .before-min {color: #b6d6c7;}
+  .after-max {color: #008b8b;}
+}
 // Custom vue-cal title & "no event" text example.
 .ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}

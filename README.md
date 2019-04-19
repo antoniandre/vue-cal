@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.54.0__ Add min &amp; max dates for cell selection
 - __Version 1.53.0__ Add click/dblclick ability on weekdays headings on week view
 - __Version 1.52.0__ Separate `outOfScopeEvents` &amp; `events` in month view
 - __Version 1.51.0__ Add Bosnian &amp; Serbian languages
