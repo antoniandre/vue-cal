@@ -277,7 +277,7 @@ export default {
   .vuecal--week-view.vuecal--no-time &,
   .vuecal--day-view.vuecal--no-time & {display: block;}
 
-  &--has-splits {
+  &.vuecal__cell--has-splits {
     flex-direction: row;
     display: flex;
   }
