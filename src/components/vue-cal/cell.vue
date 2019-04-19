@@ -68,8 +68,8 @@ export default {
       return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell () {
-      selectCell(false, this.data.startDate, this.$parent)
+    selectCell (force = false) {
+      selectCell(force, this.data.startDate, this.$parent)
     },
 
     onCellMouseDown (e, split = null, touch = false) {
