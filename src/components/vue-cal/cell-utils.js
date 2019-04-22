@@ -1,9 +1,9 @@
 export const selectCell = (force = false, date, vuecal) => {
-  vuecal.$emit('day-click', date)
+  vuecal.$emit('cell-click', date)
 
   if (vuecal.view.selectedDate.toString() !== date.toString()) {
     vuecal.view.selectedDate = date
-    vuecal.$emit('day-focus', date)
+    vuecal.$emit('cell-focus', date)
   }
 
   // Switch to narrower view.
