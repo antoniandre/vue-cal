@@ -335,6 +335,7 @@ export default {
     margin-top: -1px;
     line-height: 12px;
     font-size: 10px;
+    box-sizing: border-box;
   }
 
   &-content {
