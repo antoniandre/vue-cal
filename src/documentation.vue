@@ -1605,7 +1605,6 @@
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--custom-events-count(
-      :class="`event-indicator--${indicatorStyle}`"
       selected-date="2018-11-19"
       xsmall
       :time-from="10 * 60"
