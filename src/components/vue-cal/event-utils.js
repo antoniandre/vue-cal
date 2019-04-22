@@ -126,8 +126,6 @@ export const onResizeEvent = (cellEvents, vuecal) => {
     maxEventHeight = (24 * 60 - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
     event.maxHeight = Math.min(minEventHeight, maxEventHeight)
     updateEndTimeOnResize(event, vuecal)
-
-    if (!event.background) checkCellOverlappingEvents(cellEvents)
   }
 }
 

@@ -269,8 +269,8 @@
     time range of selectable cells. All the cells before and after are still visible but
     will be disabled and not selectable.#[br]
     You can still navigate through them with arrows.#[br]
-    In this example, the minimum date is set to exactly a month behind and the maximum date to
-    exactly a month ahead.#[br]
+    In this example, the minimum date is set to 15 days behind and the maximum date to
+    15 days ahead.#[br]
   highlight-message(type="tips")
     strong.ml-2 Notes:
     ul
@@ -303,13 +303,13 @@
       minDate () {
         let now = new Date()
         let date = new Date(now)
-        date.setMonth(now.getMonth() - 1)
+        date.setDate(now.getDate() - 15)
         return date
       },
       maxDate () {
         let now = new Date()
         let date = new Date(now)
-        date.setMonth(now.getMonth() + 1)
+        date.setDate(now.getDate() + 15)
         return date
       }
     }
@@ -676,7 +676,9 @@
     /* Dot indicator */
     .vuecal__cell-events-count {
       width: 4px;
+      min-width: 0;
       height: 4px;
+      padding: 0;
       color: transparent;
     }
 
@@ -794,7 +796,7 @@
                 // Event props.
                 { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
               )
-            } else alert('Wrong date format.')
+            } else if (date) alert('Wrong date format.')
         }
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
@@ -1295,7 +1297,7 @@
     a#ex--sync-two-calendars(name="ex--sync-two-calendars")
   p.
     In this example the right calendar is used as a date picker and the selected date is
-    updated on the left calendar via the #[span.code @day-focus] event listener.#[br]
+    updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
     To know more about emitted events refer to the
     #[a(href="#ex--emitted-events") emitted events example].
 
@@ -1314,7 +1316,7 @@
       hide-view-selector
       default-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
-      @day-focus="selectedDate = $event"
+      @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
@@ -1331,7 +1333,7 @@
       hide-view-selector
       default-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
-      @day-focus="selectedDate = $event"
+      @cell-focus="selectedDate = $event"
       class="vuecal--blue-theme vuecal--rounded-theme"
       style="max-width: 270px;height: 290px"&gt;
     &lt;/vue-cal&gt;
@@ -1411,11 +1413,11 @@
   ul
     li #[span.code ready]
     li #[span.code view-change]
-    li #[span.code day-click] - is a JS native #[span.code Date] object
-    li #[span.code day-focus] - is a JS native #[span.code Date] object
+    li #[span.code cell-click] - is a JS native #[span.code Date] object
+    li #[span.code cell-focus] - is a JS native #[span.code Date] object
   highlight-message(no-icon).
-    #[span.code day-click] is fired every time you click a day, whereas
-    #[span.code day-focus] is fired only when the selected day changes.
+    #[span.code cell-click] is fired every time you click a day, whereas
+    #[span.code cell-focus] is fired only when the selected day changes.
   highlight-message(no-icon)
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
     sshpre.mt-2(language="js").
@@ -1484,8 +1486,8 @@
       :events="eventsCopy2"
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
-      @day-click="logEvents('day-click', $event)"
-      @day-focus="logEvents('day-focus', $event)"
+      @cell-click="logEvents('cell-click', $event)"
+      @cell-focus="logEvents('cell-focus', $event)"
       @event-focus="logEvents('event-focus', $event)"
       @event-mouse-enter="logEvents('event-mouse-enter', $event)"
       @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1505,8 +1507,8 @@
              :events="events"
              @ready="logEvents('ready', $event)"
              @view-change="logEvents('view-change', $event)"
-             @day-click="logEvents('day-click', $event)"
-             @day-focus="logEvents('day-focus', $event)"
+             @cell-click="logEvents('cell-click', $event)"
+             @cell-focus="logEvents('cell-focus', $event)"
              @event-focus="logEvents('event-focus', $event)"
              @event-mouse-enter="logEvents('event-mouse-enter', $event)"
              @event-mouse-leave="logEvents('event-mouse-leave', $event)"
@@ -1652,7 +1654,14 @@
 
   sshpre(language="css" label="CSS").
     .vuecal__cell-events-count {background: transparent;}
-    .vuecal__cell-events-count span {background: #42b983;height: 100%;border-radius: 12px;display: block;}
+    .vuecal__cell-events-count span {
+      background: #42b983;
+      height: 100%;
+      min-width: 12px;
+      padding: 0 3px;
+      border-radius: 12px;
+      display: block;
+    }
 
   //- Example.
   h4.title
@@ -1681,8 +1690,9 @@
       sshpre(language="js").mt-2.mb-3.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // Javscript Date object.
-          selectedDate: {Date} // Javscript Date object.
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          selectedDate: {Date} // JavaScript Date object.
         }
   p.
     You can use one or the other to format the title as you wish.#[br]
@@ -1702,16 +1712,18 @@
       sshpre(language="js").mt-2.mb-2.
         {
           content: {String}, // Pre-formatted cell content if any.
-          date: {Date},
-          formattedDate: {String}, // E.g. "2019-04-05".
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          formattedDate: {String}, // formatted start date. E.g. "2019-04-05".
           today: {Boolean}
         }
     li #[span.code view], object containing the active view info.
       sshpre(language="js").mt-2.mb-2.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // Javscript Date object.
-          selectedDate: {Date} // Javscript Date object.
+          startDate: {Date}, // JavaScript Date object.
+          endDate: {Date}, // JavaScript Date object.
+          selectedDate: {Date} // JavaScript Date object.
         }
     li #[span.code split], when splitting days, object containing the current split info.
     li #[span.code events], array containing all the events of the current cell or split.
@@ -1923,6 +1935,7 @@
     showAllDayEvents:       [Boolean, String], default: false
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
+    onEventCreate:          [Function],        default: null
 
   ul.pl-0.api-options
     li
@@ -2206,6 +2219,13 @@
         this function receives 2 parameters: #[span.code event], the double clicked calendar event,
         and #[span.code e], the associated JavaScript DOM event.
     li
+      code.mr-2 onEventCreate
+      span.code [Function], default: null
+      p.
+        A callback function to execute when an event is created.#[br]
+        this function receives 2 parameters: #[span.code event], the created event,
+        and #[span.code deleteEvent], a function to delete the created event.
+    li
       code.mr-2 events
       span.code [Array], default: []
       p.
@@ -2309,6 +2329,15 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
+    highlight-message(type="success")
+      ul
+        li.
+          The #[span.code day-click] &amp; #[span.code day-focus] emitted events are renamed to
+          #[span.code cell-click] &amp; #[span.code cell-focus] as they are also triggered on
+          #[span.code years] &amp; #[span.code year] views.
+        li Adaptive width on events-count (for count numbers on more than 1 digit)
+        li On month view, removed redundant css classes from events (classes related to event overlaps)
   div #[strong Version 1.54.0] Add min &amp; max dates for cell selection
     highlight-message(type="success")
       ul
@@ -2336,7 +2365,7 @@
       For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
       are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
 
-  div #[strong Version 1.45.0] Add #[span.code day-click] emitted event
+  div #[strong Version 1.45.0] Add #[span.code cell-click] emitted event
   div #[strong Version 1.44.0] Add Slovenian &amp; Hungarian languages
   div #[strong Version 1.43.0] Add Catalan language
   div #[strong Version 1.42.0] Add Norwegian language
@@ -2355,7 +2384,8 @@
   div
     | #[strong Version 1.33.0] Minor internal structure improvements
     highlight-message(type="success").
-      In order to make the internal structure less verbose, the #[span.code events-count] slot use has been simplified.#[br]
+      In order to make the internal structure less verbose, the #[span.code events-count] slot
+      use has been simplified.#[br]
       Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
       A few default CSS rules have also been updated.#[br]
   div
@@ -2387,7 +2417,7 @@
   div #[strong Version 1.16.0] Highlight Today's current time
   div #[strong Version 1.15.0] Add German language
   div
-    | #[strong Version 1.14.0] Add custom time format &amp; emit event on #[span.code day-focus]
+    | #[strong Version 1.14.0] Add custom time format &amp; emit event on #[span.code cell-focus]
     highlight-message(type="success")
       ul
         li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
@@ -2536,6 +2566,14 @@ const events = [
     start: '2018-11-23 21:00',
     end: '2018-11-23 23:30',
     title: 'Movie time',
+    content: '<i class="v-icon material-icons">local_play</i>',
+    class: 'leisure',
+    split: 1
+  },
+  {
+    start: '2018-11-30 21:00',
+    end: '2018-11-30 23:30',
+    title: 'Another movie tonight',
     content: '<i class="v-icon material-icons">local_play</i>',
     class: 'leisure',
     split: 1
@@ -2903,7 +2941,7 @@ export default {
       if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
         this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
       }
-      else alert('Wrong date format.')
+      else if (date) alert('Wrong date format.')
     }
   },
   computed: {
@@ -2918,13 +2956,13 @@ export default {
     minDate () {
       let now = new Date()
       let date = new Date(now)
-      date.setMonth(now.getMonth() - 1)
+      date.setDate(now.getDate() - 15)
       return date
     },
     maxDate () {
       let now = new Date()
       let date = new Date(now)
-      date.setMonth(now.getMonth() + 1)
+      date.setDate(now.getDate() + 15)
       return date
     }
   }
@@ -3033,16 +3071,30 @@ $primary: #42b983;
 
 .event-indicator--dot .vuecal__cell-events-count {
   width: 4px;
+  min-width: 0;
   height: 4px;
+  padding: 0;
   color: transparent;
 }
 
 .ex--events-indicators {
-  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+  .vuecal__cell-events-count span {
+    background: $primary;
+    height: 100%;
+    border-radius: 12px;
+    display: block;
+  }
 }
 
 .ex--custom-events-count {
-  .vuecal__cell-events-count span {background: $primary;height: 100%;border-radius: 12px;display: block;}
+  .vuecal__cell-events-count span {
+    background: $primary;
+    height: 100%;
+    min-width: 12px;
+    padding: 0 3px;
+    border-radius: 12px;
+    display: block;
+  }
   .vuecal__cell-events-count {background: transparent;}
 }
 

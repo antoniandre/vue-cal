@@ -62,7 +62,14 @@ export default {
   },
 
   methods: {
-    checkCellOverlappingEvents,
+    checkCellOverlappingEvents () {
+      if (this.time) {
+        if (this.splits.length) {
+          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+        }
+        else checkCellOverlappingEvents(this.events)
+      }
+    },
 
     isDOMElementAnEvent (el) {
       return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
@@ -96,15 +103,6 @@ export default {
     }
   },
 
-  created () {
-    if (this.time) {
-      if (this.splits.length) {
-        this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
-      }
-      else checkCellOverlappingEvents(this.events)
-    }
-  },
-
   computed: {
     isBeforeMinDate () {
       return this.minTimestamp > this.data.endDate.getTime()
@@ -125,7 +123,7 @@ export default {
         disabled: this.isDisabled,
         'before-min': this.isDisabled && this.isBeforeMinDate,
         'after-max': this.isDisabled && this.isAfterMaxDate,
-        selected: !this.isDisabled && this.data.selected
+        selected: this.$parent.selectedDateFormatted === this.data.formattedDate
       }
     },
     domEvents: {
@@ -207,6 +205,8 @@ export default {
             updateEventPosition(event, this.$parent)
           }
         })
+
+        this.$nextTick(this.checkCellOverlappingEvents)
 
         return (this.showAllDayEvents && this.view !== 'month'
           ? events.filter(e => !!e.allDay === this.allDay)
@@ -329,7 +329,8 @@ export default {
     border-radius: 12px;
     left: 50%;
     transform: translateX(-50%);
-    width: 12px;
+    min-width: 12px;
+    padding: 0 3px;
     height: 12px;
     margin-top: -1px;
     line-height: 12px;

@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.55.0__ Set view and cells end dates to 23:59:59
 - __Version 1.54.0__ Add min &amp; max dates for cell selection
 - __Version 1.53.0__ Add click/dblclick ability on weekdays headings on week view
 - __Version 1.52.0__ Separate `outOfScopeEvents` &amp; `events` in month view
@@ -53,7 +54,7 @@ ___
 - __Version 1.48.0__ Add Bulgarian language
 - __Version 1.47.0__ Add events count on `years` &amp; `year` views
 - __Version 1.46.0__ Allow cell customization
-- __Version 1.45.0__ Add `day-click` emitted event
+- __Version 1.45.0__ Add `cell-click` emitted event
 - __Version 1.44.0__ Add Slovenian &amp; Hungarian languages
 - __Version 1.43.0__ Add Catalan language
 - __Version 1.42.0__ Add Norwegian language

@@ -735,6 +735,9 @@ export default {
   },
 
   computed: {
+    selectedDateFormatted () {
+      return formatDate(this.view.selectedDate, 'yyyy-mm-dd', this.texts)
+    },
     views () {
       return {
         years: { label: this.texts.years, enabled: this.disableViews.indexOf('years') === -1 },
@@ -862,10 +865,10 @@ export default {
 
             return {
               startDate,
+              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
               endDate,
               content: fromYear + i,
-              current: fromYear + i === this.now.getFullYear(),
-              selected: this.view.selectedDate && (fromYear + i) === this.view.selectedDate.getFullYear()
+              current: fromYear + i === this.now.getFullYear()
             }
           })
           break
@@ -878,10 +881,10 @@ export default {
 
             return {
               startDate,
+              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
-              current: i === this.now.getMonth() && fromYear === this.now.getFullYear(),
-              selected: i === this.view.selectedDate.getMonth() && fromYear === this.view.selectedDate.getFullYear()
+              current: i === this.now.getMonth() && fromYear === this.now.getFullYear()
             }
           })
           break
@@ -902,16 +905,14 @@ export default {
                             startDate.getMonth() === this.now.getMonth() &&
                             startDate.getFullYear() === this.now.getFullYear() &&
                             !todayFound++
-            const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
 
             return {
               startDate,
-              formattedDate,
+              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
               endDate,
               content: startDate.getDate(),
               today: isToday,
-              outOfScope: startDate.getMonth() !== month,
-              selected: this.view.selectedDate && startDate.getTime() === selectedDateAtMidnight.getTime()
+              outOfScope: startDate.getMonth() !== month
             }
           })
 
@@ -925,33 +926,27 @@ export default {
 
           cells = this.weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)
-            const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
-            let isToday = !todayFound && isDateToday(startDate) && !todayFound++
 
             return {
               startDate,
-              formattedDate,
+              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
               endDate,
-              today: isToday,
-              selected: this.view.selectedDate && firstDayOfWeek.addDays(i).getTime() === this.view.selectedDate.getTime()
+              today: !todayFound && isDateToday(startDate) && !todayFound++
             }
           })
           break
         case 'day':
           const startDate = this.view.startDate
-          const formattedDate = formatDate(startDate, 'yyyy-mm-dd', this.texts)
           const endDate = new Date(this.view.startDate)
           endDate.setHours(23, 59, 59) // End at 23:59:59.
-          const isToday = isDateToday(startDate)
 
           cells = [{
             startDate,
-            formattedDate,
+            formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
             endDate,
-            today: isToday,
-            selected: this.view.selectedDate && startDate.getTime() === this.view.selectedDate.getTime()
+            today: isDateToday(startDate)
           }]
           break
       }
