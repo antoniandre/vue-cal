@@ -63,29 +63,33 @@ export default {
 
     eventClasses (event) {
       const { clickHoldAnEvent, focusAnEvent } = this.domEvents
-      const overlapping = Object.keys(event.overlapping).length
-      const overlapped = Object.keys(event.overlapped).length
-      let simultaneous = Object.keys(event.simultaneous).length + 1
+      let overlapping, overlapped, simultaneous
       let forceLeft = false
       let deletable = clickHoldAnEvent.eid &&
                       (clickHoldAnEvent.eid === event.eid ||
                       event.linked.find(e => e.eid === clickHoldAnEvent.eid))
 
-      if (simultaneous >= 3) {
-        let split3 = simultaneous - 1
-        Object.keys(event.simultaneous).forEach(eid => {
-          if (split3 && Object.keys(this.cellEvents.find(e => e.eid === eid).simultaneous).length + 1 < 3) {
-            split3--
+      if (this.vuecal.view.id !== 'month') {
+        overlapping = Object.keys(event.overlapping).length
+        overlapped = Object.keys(event.overlapped).length
+        simultaneous = Object.keys(event.simultaneous).length + 1
+
+        if (simultaneous >= 3) {
+          let split3 = simultaneous - 1
+          Object.keys(event.simultaneous).forEach(eid => {
+            if (split3 && Object.keys(this.cellEvents.find(e => e.eid === eid).simultaneous).length + 1 < 3) {
+              split3--
+            }
+          })
+          if (!split3) simultaneous = 2
+        }
+
+        else if (simultaneous === 2) {
+          const otherEvent = this.cellEvents.find(e => e.eid === Object.keys(event.simultaneous)[0])
+
+          if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
+            forceLeft = true
           }
-        })
-        if (!split3) simultaneous = 2
-      }
-
-      else if (simultaneous === 2) {
-        const otherEvent = this.cellEvents.find(e => e.eid === Object.keys(event.simultaneous)[0])
-
-        if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
-          forceLeft = true
         }
       }
 
