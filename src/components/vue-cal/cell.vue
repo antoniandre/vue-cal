@@ -79,7 +79,7 @@ export default {
       let { clickHoldACell } = this.domEvents
 
       // If not mousedown on an event, click & hold to create an event.
-      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].indexOf(this.view) > -1) {
+      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
@@ -190,12 +190,10 @@ export default {
         // Events count on years/year view.
         if (['years', 'year'].includes(this.view) && (this.eventsCountOnYearView || 1)) {
           const cellStart = this.data.startDate.getTime()
-          const cellEnd = (this.view === 'years'
-            ? new Date(this.data.startDate.getFullYear() + 1, 0)
-            : new Date(this.data.startDate.getFullYear(), this.data.startDate.getMonth() + 1, 0)).getTime()
+          const cellEnd = this.data.endDate.getTime()
           events = this.$parent.events.filter(e => {
-            const eventStart = new Date(e.start)
-            const eventEnd = new Date(e.end)
+            const eventStart = new Date(e.start).getTime()
+            const eventEnd = new Date(e.end).getTime()
             return eventStart >= cellStart && eventEnd <= cellEnd
           })
         }
@@ -204,7 +202,8 @@ export default {
         else events = this.$parent.mutableEvents[this.data.formattedDate] || []
 
         events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDay) && !['years', 'year'].includes(this.view)) {
+          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDay) &&
+              !['years', 'year', 'month'].includes(this.view)) {
             updateEventPosition(event, this.$parent)
           }
         })
