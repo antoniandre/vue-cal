@@ -161,7 +161,7 @@ const updateEndTimeOnResize = (event, vuecal) => {
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = cellEvents => {
   if (cellEvents) {
-    const foregroundEventsList = cellEvents.filter(item => !item.background)
+    const foregroundEventsList = cellEvents.filter(item => !item.background && !item.allDay)
 
     if (foregroundEventsList.length) {
       // Do the mapping outside of the next loop if not split cell.
@@ -170,7 +170,7 @@ export const checkCellOverlappingEvents = cellEvents => {
       let comparisonArray = {}
 
       cellEvents.forEach(event => {
-        if (!event.background) {
+        if (!event.background && !event.allDay) {
           let comparisonArrayKeys = Object.keys(comparisonArray)
 
           // Unique comparison of events.
