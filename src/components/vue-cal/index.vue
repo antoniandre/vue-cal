@@ -2,7 +2,7 @@
 .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
   vuecal-header(
     :options="$props"
-    :view-props="{ views, view, hasSplits }"
+    :view-props="{ views, view, weekDaysInHeader }"
     :months="months"
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
@@ -19,7 +19,7 @@
         .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
           span(style="width: 3em")
             span {{ texts.allDay }}
-          .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
+          .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
@@ -47,10 +47,10 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
-            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!hasSplits || view.id !== 'week'" :column="hasSplits")
-              //- Only for splitDays.
+            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+              //- Only for minCellWidth on week view.
               weekdays-headings(
-                v-if="hasSplits && view.id === 'week'"
+                v-if="minCellWidth && view.id === 'week'"
                 :vuecal="this"
                 :transition-direction="transitionDirection"
                 :view="view"
@@ -59,7 +59,7 @@
                 :week-days-short="weekDaysShort"
                 :switch-to-narrower-view="switchToNarrowerView")
 
-              .vuecal__flex(grow :wrap="!hasSplits || view.id !== 'week'")
+              .vuecal__flex(grow :wrap="!minCellWidth || view.id !== 'week'")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
@@ -811,6 +811,9 @@ export default {
       }
 
       return weekDaysShort && weekDaysShort.map(day => ({ label: day }))
+    },
+    weekDaysInHeader () {
+      return (['month', 'week'].includes(this.view.id) && !this.minCellWidth)
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))

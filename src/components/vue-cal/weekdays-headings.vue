@@ -113,7 +113,7 @@ $weekdays-headings-height: 2.8em;
       padding-left: $time-column-width-12;
     }
 
-    .vuecal--split-days.vuecal--view-with-time & {
+    .vuecal--overflow-x.vuecal--view-with-time & {
       padding-left: 0;
     }
   }

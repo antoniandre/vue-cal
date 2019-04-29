@@ -19,7 +19,7 @@
     .vuecal__arrow.vuecal__arrow--next(@click="next")
       slot(name="arrow-next")
   weekdays-headings(
-    v-if="['month', 'week'].indexOf(viewProps.view.id) > -1 && !(viewProps.hasSplits && viewProps.view.id === 'week')"
+    v-if="viewProps.weekDaysInHeader"
     :vuecal="$parent"
     :view="viewProps.view"
     :week-days="weekDays"

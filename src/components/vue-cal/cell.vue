@@ -349,7 +349,7 @@ export default {
   &-events {width: 100%;}
 }
 
-.vuecal--split-days.vuecal--week-view .vuecal__cell--has-splits {
+.vuecal--overflow-x.vuecal--week-view .vuecal__cell, .vuecal__cell-split {
   overflow: hidden;
 }
 
