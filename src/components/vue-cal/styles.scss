@@ -149,8 +149,8 @@ $weekdays-headings-height: 2.8em;
 
 .slide-fade--left-leave-active,
 .slide-fade--right-leave-active {position: absolute !important;height: 100%;}
-.vuecal__title .slide-fade--left-leave-active,
-.vuecal__title .slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
+.vuecal__title-bar .slide-fade--left-leave-active,
+.vuecal__title-bar .slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
 .vuecal__heading .slide-fade--left-leave-active,
 .vuecal__heading .slide-fade--right-leave-active {display: flex;align-items: center;}
 
@@ -160,7 +160,7 @@ $weekdays-headings-height: 2.8em;
   .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;color: #fff;}
   .vuecal__menu li {border-bottom-color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-  .vuecal__title {background-color: #e4f5ef;}
+  .vuecal__title-bar {background-color: #e4f5ef;}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
@@ -170,7 +170,7 @@ $weekdays-headings-height: 2.8em;
   .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(66, 163, 185, 0.8);color: #fff;}
   .vuecal__menu li {border-bottom-color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-  .vuecal__title {background-color: rgba(0, 165, 188, 0.3);}
+  .vuecal__title-bar {background-color: rgba(0, 165, 188, 0.3);}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}

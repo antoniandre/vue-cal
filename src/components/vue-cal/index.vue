@@ -11,6 +11,8 @@
       i.angle
     slot(slot="arrow-next" name="arrow-next")
       i.angle
+    slot(slot="today-btn" name="today-button")
+      span.default {{ texts.today }}
     slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
@@ -132,6 +134,10 @@ export default {
     defaultView: {
       type: String,
       default: 'week'
+    },
+    todayButton: {
+      type: [Boolean, String],
+      default: false
     },
     showAllDayEvents: {
       type: [Boolean, String],
@@ -679,6 +685,8 @@ export default {
 
       if (date && date instanceof Date) {
         if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
+        // Select the day at midnight in order to allow fetching events on whole day.
+        date.setHours(0, 0, 0)
         this.view.selectedDate = date
         this.switchView(this.view.id)
       }

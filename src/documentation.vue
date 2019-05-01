@@ -433,6 +433,71 @@
              :disable-views="['years', 'year', 'month']"&gt;
     &lt;/vue-cal&gt;
 
+  //- Example.
+  h4.title
+    a(href="#ex--adding-a-today-button") # Adding a Today button
+    a#ex--adding-a-today-button(name="ex--adding-a-today-button")
+  p.
+    By default the selected date is today. But if you get lost in time travel, you can add
+    a Today button to select Today's date with the option #[span.code today-button].#[br]
+    Like navigation arrows, there is also a slot to customize as you want.#[br]
+    Bellow are the default Today button on the left and a custom one with icon and tooltip on the right.
+  p.ex--adding-a-today-button
+    | If you are not satisfied with the position of this button, you can also place it
+    | outside of Vue Cal like so:
+    v-btn.today-button(small color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+  v-layout(justify-center)
+    v-card.my-2.mr-3.main-content(style="max-width: 280px;height: 250px")
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+        ref="vuecal2"
+        xsmall
+        hide-weekends
+        :disable-views="['years']"
+        :time="false"
+        today-button
+        default-view="month"
+        :selected-date="selectedDate")
+    v-card.my-2.main-content(style="max-width: 280px;height: 250px")
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+        ref="vuecal2"
+        xsmall
+        hide-weekends
+        :disable-views="['years']"
+        :time="false"
+        today-button
+        default-view="month"
+        :selected-date="selectedDate")
+        div(slot="today-button")
+          v-tooltip(bottom)
+            v-btn.ma-0(small fab slot="activator" depressed)
+              v-icon(color="primary" size="20") my_location
+            span Go to Today's date
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal ref="vuecal"
+             xsmall
+             hide-weekends
+             :disable-views="['years']"
+             :time="false"
+             today-button
+             default-view="month"
+             :selected-date="selectedDate"&gt;
+      &lt;!-- Optional slot for the custom button. --&gt;
+      &lt;div slot="today-button"&gt;
+        &lt;v-tooltip&gt;
+          &lt;v-btn slot="activator"&gt;
+            &lt;v-icon&gt;my_location&lt;/v-icon&gt;
+          &lt;/v-btn&gt;
+          &lt;span&gt;Go to Today's date&lt;/span&gt;
+        &lt;/v-tooltip&gt;
+      &lt;/div&gt;
+    &lt;/vue-cal&gt;
+
+    &lt;v-btn @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/v-btn&gt;
+  p
+    | You might want to change view as well when going to Today's date, here is an example how:
+    a.mx-1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
+    v-icon(small color="green lighten-2") fab fa-codepen
+
   h3.title
     a(href="#ex--timeless-events")
       v-icon.mr-2 event
@@ -2328,6 +2393,8 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.56.0] Add an option to display a Today button
+    highlight-message(type="success") Theme changes.
   div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
     highlight-message(type="success")
       ul
@@ -3113,6 +3180,17 @@ $primary: #42b983;
 .event-indicator--cell .vuecal__cell-events-count {display: none;}
 
 .vuecal--month-view .vuecal__no-event {display: none;}
+
+// Today button example.
+.ex--adding-a-today-button {
+  .today-button {
+    // font-size: 0.7em;
+    min-width: 0;
+    height: auto;
+    padding: 1px 8px;
+  }
+  .v-btn--floating.v-btn--small {width: 26px;height: 26px;background-color: transparent !important;}
+}
 
 // Split days example.
 .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}
