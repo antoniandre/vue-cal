@@ -813,7 +813,7 @@ export default {
       return weekDaysShort && weekDaysShort.map(day => ({ label: day }))
     },
     weekDaysInHeader () {
-      return (['month', 'week'].includes(this.view.id) && !this.minCellWidth)
+      return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))

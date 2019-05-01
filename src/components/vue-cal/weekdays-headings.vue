@@ -85,7 +85,7 @@ export default {
       return headings
     },
     weekdayCellStyles () {
-      return { minWidth: this.vuecal.minCellWidth ? `${this.vuecal.minCellWidth}px` : null }
+      return { minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null }
     },
     cellHeadingsClickable () {
       return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblClickToNavigate)
