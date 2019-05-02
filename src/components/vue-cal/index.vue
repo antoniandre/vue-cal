@@ -277,7 +277,7 @@ export default {
       eventIdIncrement: 1,
       domEvents: {
         resizeAnEvent: {
-          eid: null, // Only one at a time.
+          _eid: null, // Only one at a time.
           startDate: null,
           start: null,
           originalHeight: 0,
@@ -285,13 +285,13 @@ export default {
           split: null
         },
         dragAnEvent: {
-          eid: null // Only one at a time.
+          _eid: null // Only one at a time.
         },
         focusAnEvent: {
-          eid: null // Only one at a time.
+          _eid: null // Only one at a time.
         },
         clickHoldAnEvent: {
-          eid: null, // Only one at a time.
+          _eid: null, // Only one at a time.
           timeout: 1200, // Hold for 1.2s to delete an event.
           timeoutId: null
         },
@@ -450,7 +450,7 @@ export default {
     // handlers in the single parent for performance.
     onMouseMove (e) {
       let { resizeAnEvent } = this.domEvents
-      if (resizeAnEvent.eid === null) return
+      if (resizeAnEvent._eid === null) return
 
       e.preventDefault()
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
@@ -467,8 +467,8 @@ export default {
       let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
-      if (resizeAnEvent.eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
-        let event = this.mutableEvents[resizeAnEvent.startDate].find(item => item.eid === resizeAnEvent.eid)
+      if (resizeAnEvent._eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
+        let event = this.mutableEvents[resizeAnEvent.startDate].find(item => item._eid === resizeAnEvent._eid)
         if (event) {
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
@@ -476,14 +476,14 @@ export default {
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
-      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent.eid) {
-        focusAnEvent.eid = null // Cancel event focus.
-        clickHoldAnEvent.eid = null // Hide delete button.
+      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent._eid) {
+        focusAnEvent._eid = null // Cancel event focus.
+        clickHoldAnEvent._eid = null // Hide delete button.
       }
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout happens in onMouseDown() in cell component.
-      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent.eid) {
+      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent._eid) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
       }
@@ -495,7 +495,7 @@ export default {
       }
 
       // Any mouse up must cancel event resizing.
-      resizeAnEvent.eid = null
+      resizeAnEvent._eid = null
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
@@ -510,7 +510,7 @@ export default {
       if (event.linked.daysCount) {
         event.linked.forEach(e => {
           let dayToModify = this.mutableEvents[e.date]
-          dayToModify.find(e2 => e2.eid === e.eid).title = event.title
+          dayToModify.find(e2 => e2._eid === e._eid).title = event.title
         })
       }
 
@@ -536,11 +536,11 @@ export default {
 
         // Keep the event ids scoped to this calendar instance.
         // eslint-disable-next-line
-        let eid = `${this._uid}_${this.eventIdIncrement++}`
+        let _eid = `${this._uid}_${this.eventIdIncrement++}`
 
         event = Object.assign({
           ...eventDefaults,
-          eid,
+          _eid,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
@@ -588,7 +588,7 @@ export default {
           for (let i = 1; i <= datesDiff; i++) {
             const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
             eventPieces.push({
-              eid: `${this._uid}_${this.eventIdIncrement++}`,
+              _eid: `${this._uid}_${this.eventIdIncrement++}`,
               date
             })
           }
@@ -598,8 +598,8 @@ export default {
           for (let i = 1; i <= datesDiff; i++) {
             const date = eventPieces[i - 1].date
             const linked = [
-              { eid: event.eid, date: event.startDate },
-              ...eventPieces.slice(0).filter(e => e.eid !== eventPieces[i - 1].eid)
+              { _eid: event._eid, date: event.startDate },
+              ...eventPieces.slice(0).filter(e => e._eid !== eventPieces[i - 1]._eid)
             ]
 
             // Make array reactive for future events creations & deletions.
@@ -607,7 +607,7 @@ export default {
 
             this.mutableEvents[date].push({
               ...event,
-              eid: eventPieces[i - 1].eid,
+              _eid: eventPieces[i - 1]._eid,
               overlapped: {},
               overlapping: {},
               simultaneous: {},

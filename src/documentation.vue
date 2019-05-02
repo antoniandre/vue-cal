@@ -1904,7 +1904,7 @@
     li #[span.code view]: The current selected view id.
   p.mt-2.
     You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
-    Note that #[span.code eid] is a reserved keyword.
+    Note that #[span.code _eid] is a reserved keyword.
 
   v-card.my-2.ma-auto.main-content(style="height: 523px")
     vue-cal.vuecal--green-theme.ex--custom-event-rendering(
@@ -2339,7 +2339,7 @@
       highlight-message(type="warning")
         ul
           li
-            strong The events are internally identified by the key #[span.code `eid`]. This is a reserved keyword.
+            strong The events are internally identified by the key #[span.code `_eid`]. This is a reserved keyword.
           li.mt-2
             | Correct date formats are #[code {{ currentDateFormatted }}] or
             | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
