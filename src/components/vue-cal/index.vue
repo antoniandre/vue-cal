@@ -25,6 +25,7 @@
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
+              :options="$props"
               :data="cell"
               :all-day="true"
               :min-timestamp="minTimestamp"
@@ -65,6 +66,7 @@
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
+                  :options="$props"
                   :data="cell"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
@@ -544,6 +546,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
+          multipleDays: {},
           startDate,
           startTime,
           startTimeMinutes,

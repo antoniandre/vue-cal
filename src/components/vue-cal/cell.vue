@@ -3,23 +3,22 @@
     :class="cssClasses"
     :name="`slide-fade--${transitionDirection}`"
     tag="div"
-    :appear="transitions"
+    :appear="options.transitions"
     :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
       :class="splits.length && `vuecal__cell-split ${splits[i - 1].class}`"
       :data-split="splits.length && i"
       v-for="i in (splits.length || 1)"
-      :key="transitions ? `${view}-${data.content}-${i}` : i"
+      :key="options.transitions ? `${view}-${data.content}-${i}` : i"
       column
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i : null)"
       @click="!isDisabled && selectCell()"
-      @dblclick="!isDisabled && $parent.dblClickToNavigate && $parent.switchToNarrowerView()")
+      @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
       slot(name="cell-content" :events="events" :selectCell="() => {selectCell(true)}" :split="splits[i - 1]")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && eventsOnMonthView))")
+        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
-          v-if="view === 'month' || !time || allDay || (event.startTimeMinutes < timeTo && event.endTimeMinutes > timeFrom)"
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
           :vuecal="$parent"
           :event="event"
@@ -28,7 +27,7 @@
           :split="splits.length ? i : 0")
           div(slot="event-renderer" slot-scope="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
-    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="transitions ? `${view}-now-line` : 'now-line'")
+    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
 </template>
 
 <script>
@@ -39,6 +38,11 @@ import Event from './event'
 export default {
   components: { Event },
   props: {
+    // Vuecal main component options (props).
+    options: {
+      type: Object,
+      default: () => ({})
+    },
     data: {
       type: Object,
       required: true
@@ -63,7 +67,7 @@ export default {
 
   methods: {
     checkCellOverlappingEvents () {
-      if (this.time) {
+      if (this.options.time) {
         if (this.splits.length) {
           this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
         }
@@ -86,7 +90,7 @@ export default {
       let { clickHoldACell } = this.domEvents
 
       // If not mousedown on an event, click & hold to create an event.
-      if (this.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].includes(this.view)) {
+      if (this.options.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
@@ -140,39 +144,6 @@ export default {
     view () {
       return this.$parent.view.id
     },
-    time () {
-      return this.$parent.time
-    },
-    timeCellHeight () {
-      return parseInt(this.$parent.timeCellHeight)
-    },
-    timeFrom () {
-      return parseInt(this.$parent.timeFrom)
-    },
-    timeTo () {
-      return parseInt(this.$parent.timeTo)
-    },
-    timeStep () {
-      return parseInt(this.$parent.timeStep)
-    },
-    editableEvents () {
-      return this.$parent.editableEvents
-    },
-    clickToNavigate () {
-      return this.$parent.clickToNavigate
-    },
-    dblClickToNavigate () {
-      return this.$parent.dblClickToNavigate
-    },
-    showAllDayEvents () {
-      return this.$parent.showAllDayEvents
-    },
-    eventsOnMonthView () {
-      return this.$parent.eventsOnMonthView
-    },
-    transitions () {
-      return this.$parent.transitions
-    },
     transitionDirection () {
       return this.$parent.transitionDirection
     },
@@ -186,7 +157,7 @@ export default {
         let events = []
 
         // Events count on years/year view.
-        if (['years', 'year'].includes(this.view) && (this.eventsCountOnYearView || 1)) {
+        if (['years', 'year'].includes(this.view) && (this.options.eventsCountOnYearView || 1)) {
           const cellStart = this.data.startDate.getTime()
           const cellEnd = this.data.endDate.getTime()
           events = this.$parent.events.filter(e => {
@@ -197,20 +168,29 @@ export default {
         }
 
         // All the other views.
-        else events = this.$parent.mutableEvents[this.data.formattedDate] || []
+        else {
+          events = this.$parent.mutableEvents[this.data.formattedDate] || []
 
-        events.forEach(event => {
-          if (this.$parent.time && event.startTime && !(this.showAllDayEvents && this.allDay) &&
-              !['years', 'year', 'month'].includes(this.view)) {
-            updateEventPosition(event, this.$parent)
+          // Position events with time in the timeline when there is a timeline and not in allDay slot.
+          if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
+            events.forEach(event => {
+              // all-day events are positionned via css: top-0 & bottom-0.
+              // So they behave as background events if not in allDay slot.
+              // @todo: Do we want this or not?
+              if (event.startTime && !event.allDay) updateEventPosition(event, this.$parent)
+            })
           }
-        })
 
-        this.$nextTick(this.checkCellOverlappingEvents)
+          this.$nextTick(this.checkCellOverlappingEvents)
 
-        return (this.showAllDayEvents && this.view !== 'month'
-          ? events.filter(e => !!e.allDay === this.allDay)
-          : events)
+          if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
+
+          if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
+            events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
+          }
+        }
+
+        return events
       },
       set (events) {
         this.$parent.mutableEvents[this.data.formattedDate] = events
@@ -228,19 +208,19 @@ export default {
       return splitsEventIndexes
     },
     timelineVisible () {
-      if (!this.data.today || !this.time || this.allDay || ['week', 'day'].indexOf(this.view) === -1) return
+      if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
 
       const now = new Date()
-      return (now.getHours() * 60 + now.getMinutes()) <= this.timeTo
+      return (now.getHours() * 60 + now.getMinutes()) <= this.options.timeTo
     },
     todaysTimePosition () {
-      // Make sure to skip the Maths if not relevant.
-      if (!this.data.today || !this.time) return
+      // Skip the Maths if not relevant.
+      if (!this.data.today || !this.options.time) return
 
       const now = new Date()
       const startTimeMinutes = now.getHours() * 60 + now.getMinutes()
-      const minutesFromTop = startTimeMinutes - this.timeFrom
-      return Math.round(minutesFromTop * this.timeCellHeight / this.timeStep)
+      const minutesFromTop = startTimeMinutes - this.options.timeFrom
+      return Math.round(minutesFromTop * this.options.timeCellHeight / this.options.timeStep)
     }
   }
 }
