@@ -2401,12 +2401,13 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
-  div #[strong Version 1.56.0] Add an option to display a Today button
+  div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
       The class #[span.code .vuecal__title] is now only wrapping the title, inside the #[span.code .vuecal__title-bar].#[br]
     highlight-message(type="tips").
       If you have a custom theme, you will need to update it as per the theme example in the #[a(href="#css-notes") CSS Notes].
+  div #[strong Version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
   div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
     highlight-message(type="success")
       ul

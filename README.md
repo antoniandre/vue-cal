@@ -44,6 +44,8 @@ ___
 
 ## Release Notes
 
+- __Version 1.57.0__ Add an option to display a Today button
+- __Version 1.56.0__ Allow `minCellWidth` independently of `splitDays`
 - __Version 1.55.0__ Set view and cells end dates to 23:59:59
 - __Version 1.54.0__ Add min &amp; max dates for cell selection
 - __Version 1.53.0__ Add click/dblclick ability on weekdays headings on week view
