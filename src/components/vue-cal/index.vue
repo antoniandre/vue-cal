@@ -136,7 +136,7 @@ export default {
       default: 'week'
     },
     todayButton: {
-      type: [Boolean, String],
+      type: Boolean,
       default: false
     },
     showAllDayEvents: {
@@ -659,7 +659,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
-      for (let prop in event) if (discardProps.indexOf(prop) > -1) delete event[prop]
+      for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
       if (!event.multipleDays.daysCount) delete event.multipleDays
 
       // Return date objects for easy manipulation.
@@ -748,15 +748,15 @@ export default {
     },
     views () {
       return {
-        years: { label: this.texts.years, enabled: this.disableViews.indexOf('years') === -1 },
-        year: { label: this.texts.year, enabled: this.disableViews.indexOf('year') === -1 },
-        month: { label: this.texts.month, enabled: this.disableViews.indexOf('month') === -1 },
-        week: { label: this.texts.week, enabled: this.disableViews.indexOf('week') === -1 },
-        day: { label: this.texts.day, enabled: this.disableViews.indexOf('day') === -1 }
+        years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },
+        year: { label: this.texts.year, enabled: !this.disableViews.includes('year') },
+        month: { label: this.texts.month, enabled: !this.disableViews.includes('month') },
+        week: { label: this.texts.week, enabled: !this.disableViews.includes('week') },
+        day: { label: this.texts.day, enabled: !this.disableViews.includes('day') }
       }
     },
     hasTimeColumn () {
-      return this.time && ['week', 'day'].indexOf(this.view.id) > -1
+      return this.time && ['week', 'day'].includes(this.view.id)
     },
     isShortMonthView () {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
@@ -777,7 +777,7 @@ export default {
     },
     // Whether the current view has days splits.
     hasSplits () {
-      return !!this.splitDays.length && ['week', 'day'].indexOf(this.view.id) > -1
+      return !!this.splitDays.length && ['week', 'day'].includes(this.view.id)
     },
     minTimestamp () {
       let date = null
