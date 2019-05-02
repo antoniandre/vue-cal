@@ -113,12 +113,18 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | min &amp; max dates
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Today button
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Support more simultaneous events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Drag events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Optional week number
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Optional tooltip on events
