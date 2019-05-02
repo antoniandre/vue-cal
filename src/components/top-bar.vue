@@ -39,7 +39,7 @@
 
           v-list-tile.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
             v-icon(small).mr-2 access_time
-            | TIMELINE
+            | TIMELINE &amp; TODAY
           v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
           v-list-tile(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
           v-list-tile(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
