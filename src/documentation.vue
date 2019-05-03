@@ -1029,7 +1029,6 @@
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
       hide-weekends
       editable-events
       :events="multipleDayEvents")
@@ -2776,7 +2775,7 @@ export default {
     ],
     multipleDayEvents: [
       {
-        start: '2018-11-19 08:30',
+        start: '2018-10-19 08:30',
         end: '2018-11-20 20:00',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
