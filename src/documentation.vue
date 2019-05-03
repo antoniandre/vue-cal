@@ -465,7 +465,7 @@
         :time="false"
         today-button
         default-view="month"
-        :selected-date="selectedDate")
+        :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     v-card.my-2.main-content(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
@@ -475,7 +475,7 @@
         :time="false"
         today-button
         default-view="month"
-        :selected-date="selectedDate")
+        :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
         div(slot="today-button")
           v-tooltip(bottom)
             v-btn.ma-0(small fab slot="activator" depressed)
@@ -503,6 +503,11 @@
     &lt;/vue-cal&gt;
 
     &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      // Default to next new year eve.
+      selectedDate: new Date(new Date().getFullYear(), 11, 31)
+    })
 
   h3.title
     a(href="#ex--timeless-events")
