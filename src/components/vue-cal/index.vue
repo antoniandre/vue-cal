@@ -416,7 +416,7 @@ export default {
         case 'day':
           this.view.startDate = date
           this.view.endDate = new Date(date)
-          this.view.endDate.setSeconds(-1) // End at 23:59:59.
+          this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
           dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
           if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
           break
