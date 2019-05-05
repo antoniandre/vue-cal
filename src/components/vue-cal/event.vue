@@ -1,7 +1,7 @@
 <template lang="pug">
 .vuecal__event(
-  :class="eventClasses(event)"
-  :style="eventStyles(event)"
+  :class="eventClasses"
+  :style="eventStyles"
   @mouseenter="onMouseEnter($event, event)"
   @mouseleave="onMouseLeave($event, event)"
   @touchstart="onTouchStart($event, event)"
@@ -24,7 +24,7 @@ import { deleteAnEvent, deleteLinkedEvents, checkCellOverlappingEvents } from '.
 
 export default {
   props: {
-    formattedDate: {
+    cellFormattedDate: {
       type: String,
       default: ''
     },
@@ -51,68 +51,6 @@ export default {
   },
 
   methods: {
-    eventStyles (event) {
-      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
-      const resizeAnEvent = this.domEvents.resizeAnEvent
-
-      return {
-        top: `${event.top}px`,
-        height: `${resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid ? resizeAnEvent.newHeight : event.height}px`
-      }
-    },
-
-    eventClasses (event) {
-      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
-      let overlapping, overlapped, simultaneous
-      let forceLeft = false
-      let deletable = clickHoldAnEvent._eid &&
-                      (clickHoldAnEvent._eid === event._eid ||
-                      event.linked.find(e => e._eid === clickHoldAnEvent._eid))
-
-      if (this.vuecal.view.id !== 'month') {
-        overlapping = Object.keys(event.overlapping).length
-        overlapped = Object.keys(event.overlapped).length
-        simultaneous = Object.keys(event.simultaneous).length + 1
-
-        if (simultaneous >= 3) {
-          let split3 = simultaneous - 1
-          Object.keys(event.simultaneous).forEach(_eid => {
-            if (split3 && Object.keys(this.cellEvents.find(e => e._eid === _eid).simultaneous).length + 1 < 3) {
-              split3--
-            }
-          })
-          if (!split3) simultaneous = 2
-        }
-
-        else if (simultaneous === 2) {
-          const otherEvent = this.cellEvents.find(e => e._eid === Object.keys(event.simultaneous)[0])
-
-          if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
-            forceLeft = true
-          }
-        }
-      }
-
-      return {
-        [event.classes.join(' ')]: true,
-        'vuecal__event--focus': focusAnEvent._eid === event._eid,
-        'vuecal__event--background': event.background,
-        'vuecal__event--deletable': deletable,
-        'vuecal__event--overlapped': overlapped,
-        'vuecal__event--overlapping': overlapping,
-        'vuecal__event--split2': simultaneous === 2,
-        'vuecal__event--split3': simultaneous >= 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
-        'vuecal__event--split-left': forceLeft,
-        'vuecal__event--all-day': event.allDay,
-        // Multiple days events.
-        'vuecal__event--multiple-days': Object.keys(event.multipleDays).length,
-        'event-start': Object.keys(event.multipleDays).length && event.multipleDays.start,
-        'event-middle': Object.keys(event.multipleDays).length && event.multipleDays.middle,
-        'event-end': Object.keys(event.multipleDays).length && event.multipleDays.end
-      }
-    },
-
     // On an event.
     onMouseDown (e, event, touch = false) {
       // Prevent a double mouse down on touch devices.
@@ -167,7 +105,7 @@ export default {
         newHeight: event.height,
         _eid: event._eid,
         split: event.split || null,
-        startDate: event.multipleDays.startDate || event.startDate
+        startDate: event.startDate
       })
     },
 
@@ -189,9 +127,79 @@ export default {
   },
 
   computed: {
+    eventStyles () {
+      const event = this.event
+      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
+      const resizeAnEvent = this.domEvents.resizeAnEvent
+
+      const eventOrSegment = this.segment || event
+
+      return {
+        top: `${eventOrSegment.top}px`,
+        height: `${resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid ? resizeAnEvent.newHeight : eventOrSegment.height}px`
+      }
+    },
+
+    eventClasses () {
+      const event = this.event
+      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
+      let overlapping, overlapped, simultaneous
+      let forceLeft = false
+      let deletable = clickHoldAnEvent._eid &&
+                      (clickHoldAnEvent._eid === event._eid ||
+                      event.linked.find(e => e._eid === clickHoldAnEvent._eid))
+
+      const segment = this.segment || event
+      if (this.vuecal.view.id !== 'month') {
+        overlapping = Object.keys(segment.overlapping).length
+        overlapped = Object.keys(segment.overlapped).length
+        simultaneous = Object.keys(segment.simultaneous).length + 1
+
+        if (simultaneous >= 3) {
+          let split3 = simultaneous - 1
+          Object.keys(segment.simultaneous).forEach(_eid => {
+            if (split3 && Object.keys(this.cellEvents.find(e => e._eid === _eid).simultaneous).length + 1 < 3) {
+              split3--
+            }
+          })
+          if (!split3) simultaneous = 2
+        }
+
+        else if (simultaneous === 2) {
+          const otherEvent = this.cellEvents.find(e => e._eid === Object.keys(segment.simultaneous)[0])
+
+          if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
+            forceLeft = true
+          }
+        }
+      }
+
+      return {
+        [event.classes.join(' ')]: true,
+        'vuecal__event--focus': focusAnEvent._eid === event._eid,
+        'vuecal__event--background': event.background,
+        'vuecal__event--deletable': deletable,
+        'vuecal__event--overlapped': overlapped,
+        'vuecal__event--overlapping': overlapping,
+        'vuecal__event--split2': simultaneous === 2,
+        'vuecal__event--split3': simultaneous >= 3,
+        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
+        'vuecal__event--split-left': forceLeft,
+        'vuecal__event--all-day': event.allDay,
+        // Multiple days events.
+        // 'vuecal__event--multiple-days': Object.keys(event.multipleDays).length,
+        'event-start': this.segment && segment.isFirstDay,
+        'event-middle': this.segment && !segment.isFirstDay && !segment.isLastDay,
+        'event-end': this.segment && segment.isLastDay
+      }
+    },
+    // When multiple-day events, a segment is a portion of event spanning on 1 day.
+    segment () {
+      return (this.event.multipleDays && this.event.multipleDays[this.cellFormattedDate]) || null
+    },
     resizable () {
       return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDay &&
-        !this.event.multipleDays.start && !this.event.multipleDays.middle && this.vuecal.view.id !== 'month')
+        /* !this.event.multipleDays.start && !this.event.multipleDays.middle && */ this.vuecal.view.id !== 'month')
     },
     domEvents: {
       get () {

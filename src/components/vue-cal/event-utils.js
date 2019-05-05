@@ -16,7 +16,7 @@ export const eventDefaults = {
   overlapping: {},
   simultaneous: {},
   linked: [], // Linked events.
-  multipleDays: {},
+  multipleDays: null,
   height: 0,
   top: 0,
   classes: []
@@ -39,7 +39,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     overlapped: {},
     overlapping: {},
     simultaneous: {},
-    multipleDays: {},
+    multipleDays: null,
 
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
@@ -141,7 +141,7 @@ const updateEndTimeOnResize = (event, vuecal) => {
   event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
   event.end = event.end.split(' ')[0] + ` ${event.endTime}`
 
-  if (event.multipleDays.daysCount) {
+  /* if (event.multipleDays.daysCount) {
     event.multipleDays.endTimeMinutes = event.endTimeMinutes
     event.multipleDays.endTime = event.endTime
     event.multipleDays.end = event.end
@@ -154,7 +154,7 @@ const updateEndTimeOnResize = (event, vuecal) => {
       eventToModify.endTime = event.endTime
       eventToModify.end = event.end
     })
-  }
+  } */
 }
 
 // Will recalculate all the overlaps of the current cell OR split.
@@ -192,12 +192,12 @@ export const checkCellOverlappingEvents = cellEvents => {
 }
 
 export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
-  const src = (event.multipleDays.daysCount && event.multipleDays) || event
+  const src = event.multipleDays || event
   const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
 
   comparisonArray.forEach(event2id => {
     let event2 = cellEvents.find(item => item._eid === event2id)
-    const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
+    const src2 = event2.multipleDays || event2
     const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2
 
     const event1startsFirst = startTimeMinE1 < startTimeMinE2
@@ -238,8 +238,7 @@ export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
 }
 
 export const updateEventPosition = (event, vuecal) => {
-  const src = (event.multipleDays.daysCount && event.multipleDays) || event
-  const { startTimeMinutes, endTimeMinutes } = src
+  const { startTimeMinutes, endTimeMinutes } = event
 
   // Top of event.
   let minutesFromTop = startTimeMinutes - vuecal.timeFrom
@@ -251,4 +250,10 @@ export const updateEventPosition = (event, vuecal) => {
 
   event.top = Math.max(top, 0)
   event.height = bottom - event.top
+}
+
+export const eventInRange = (event, start, end) => {
+  const startTimestamp = new Date(event.start).getTime()
+  const endTimestamp = new Date(event.end).getTime()
+  return startTimestamp < end.getTime() && endTimestamp > start.getTime()
 }

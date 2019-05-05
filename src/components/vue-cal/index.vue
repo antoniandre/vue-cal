@@ -1,107 +1,105 @@
 <template lang="pug">
-div
-  p {{ viewEvents }}
-  .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
-    vuecal-header(
-      :options="$props"
-      :view-props="{ views, view, weekDaysInHeader }"
-      :months="months"
-      :week-days="weekDays"
-      :week-days-short="weekDaysShort"
-      :switch-to-narrower-view="switchToNarrowerView")
-      slot(slot="arrow-prev" name="arrow-prev")
-        i.angle
-      slot(slot="arrow-next" name="arrow-next")
-        i.angle
-      slot(slot="today-btn" name="today-button")
-        span.default {{ texts.today }}
-      slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+.vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
+  vuecal-header(
+    :options="$props"
+    :view-props="{ views, view, weekDaysInHeader }"
+    :months="months"
+    :week-days="weekDays"
+    :week-days-short="weekDaysShort"
+    :switch-to-narrower-view="switchToNarrowerView")
+    slot(slot="arrow-prev" name="arrow-prev")
+      i.angle
+    slot(slot="arrow-next" name="arrow-next")
+      i.angle
+    slot(slot="today-btn" name="today-button")
+      span.default {{ texts.today }}
+    slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
-    .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
-      transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
-        .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
-          .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
-            span(style="width: 3em")
-              span {{ texts.allDay }}
+  .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
+    transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
+      .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
+        .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
+          span(style="width: 3em")
+            span {{ texts.allDay }}
+          .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+            vuecal-cell(
+              v-for="(cell, i) in viewCells"
+              :key="i"
+              :options="$props"
+              :data="cell"
+              :all-day="true"
+              :min-timestamp="minTimestamp"
+              :max-timestamp="maxTimestamp"
+              :splits="hasSplits && splitDays || []")
+              div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                slot(name="event-renderer" :view="view" :event="event")
+                  .vuecal__event-title.vuecal__event-title--edit(
+                    v-if="editableEvents && event.title"
+                    contenteditable
+                    @blur="onEventTitleBlur($event, event)"
+                    v-html="event.title")
+                  .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                  .vuecal__event-content(
+                    v-if="event.content && showAllDayEvents !== 'short' && !isShortMonthView"
+                    v-html="event.content")
+              slot(slot="no-event" name="no-event")
+        .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
+          .vuecal__flex(row grow)
+            .vuecal__time-column(v-if="hasTimeColumn")
+              .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
+                slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
+                  span.line {{ cell.label }}
+
             .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
-              vuecal-cell(
-                v-for="(cell, i) in viewCells"
-                :key="i"
-                :options="$props"
-                :data="cell"
-                :all-day="true"
-                :min-timestamp="minTimestamp"
-                :max-timestamp="maxTimestamp"
-                :splits="hasSplits && splitDays || []")
-                div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
-                  slot(name="event-renderer" :view="view" :event="event")
-                    .vuecal__event-title.vuecal__event-title--edit(
-                      v-if="editableEvents && event.title"
-                      contenteditable
-                      @blur="onEventTitleBlur($event, event)"
-                      v-html="event.title")
-                    .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-                    .vuecal__event-content(
-                      v-if="event.content && showAllDayEvents !== 'short' && !isShortMonthView"
-                      v-html="event.content")
-                slot(slot="no-event" name="no-event")
-          .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
-            .vuecal__flex(row grow)
-              .vuecal__time-column(v-if="hasTimeColumn")
-                .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
-                  slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
-                    span.line {{ cell.label }}
+              //- Only for minCellWidth on week view.
+              weekdays-headings(
+                v-if="minCellWidth && view.id === 'week'"
+                :vuecal="this"
+                :transition-direction="transitionDirection"
+                :view="view"
+                :min-cell-width="minCellWidth"
+                :week-days="weekDays"
+                :week-days-short="weekDaysShort"
+                :switch-to-narrower-view="switchToNarrowerView")
 
-              .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
-                //- Only for minCellWidth on week view.
-                weekdays-headings(
-                  v-if="minCellWidth && view.id === 'week'"
-                  :vuecal="this"
-                  :transition-direction="transitionDirection"
-                  :view="view"
-                  :min-cell-width="minCellWidth"
-                  :week-days="weekDays"
-                  :week-days-short="weekDaysShort"
-                  :switch-to-narrower-view="switchToNarrowerView")
-
-                .vuecal__flex(grow :wrap="!minCellWidth || view.id !== 'week'")
-                  vuecal-cell(
-                    v-for="(cell, i) in viewCells"
-                    :key="i"
-                    :options="$props"
-                    :data="cell"
-                    :min-timestamp="minTimestamp"
-                    :max-timestamp="maxTimestamp"
-                    :splits="hasSplits && splitDays || []")
-                    div(slot="cell-content" slot-scope="{ events, split, selectCell }")
-                      slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
-                        .split-label(v-if="split" v-html="split.label")
-                        .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
-                        .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
-                          slot(name="events-count" :view="view" :events="events") {{ events.length }}
-                        .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
-                          slot(name="no-event") {{ texts.noEvent }}
-                    div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
-                      slot(name="event-renderer" :view="view" :event="event")
-                        .vuecal__event-title.vuecal__event-title--edit(
-                          v-if="editableEvents && event.title"
-                          contenteditable
-                          @blur="onEventTitleBlur($event, event)"
-                          v-html="event.title")
-                        .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-                        .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
-                          | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                          span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                          small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
-                        .vuecal__event-content(
-                          v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
-                          v-html="event.content")
-                    slot(slot="no-event" name="no-event") {{ texts.noEvent }}
+              .vuecal__flex(grow :wrap="!minCellWidth || view.id !== 'week'")
+                vuecal-cell(
+                  v-for="(cell, i) in viewCells"
+                  :key="i"
+                  :options="$props"
+                  :data="cell"
+                  :min-timestamp="minTimestamp"
+                  :max-timestamp="maxTimestamp"
+                  :splits="hasSplits && splitDays || []")
+                  div(slot="cell-content" slot-scope="{ events, split, selectCell }")
+                    slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
+                      .split-label(v-if="split" v-html="split.label")
+                      .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
+                      .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
+                        slot(name="events-count" :view="view" :events="events") {{ events.length }}
+                      .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
+                        slot(name="no-event") {{ texts.noEvent }}
+                  div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                    slot(name="event-renderer" :view="view" :event="event")
+                      .vuecal__event-title.vuecal__event-title--edit(
+                        v-if="editableEvents && event.title"
+                        contenteditable
+                        @blur="onEventTitleBlur($event, event)"
+                        v-html="event.title")
+                      .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                      .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
+                        small.days-to-end(v-if="event.multipleDays") &nbsp;+{{ 'some' }}{{ (texts.day[0] || '').toLowerCase() }}
+                      .vuecal__event-content(
+                        v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
+                        v-html="event.content")
+                  slot(slot="no-event" name="no-event") {{ texts.noEvent }}
 </template>
 
 <script>
 import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
-import { createAnEvent, eventDefaults, onResizeEvent } from './event-utils'
+import { createAnEvent, eventDefaults, onResizeEvent, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -355,11 +353,19 @@ export default {
           this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
           this.view.endDate = new Date(this.view.startDate.getFullYear() + 25, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
+          if (this.eventsCountOnYearView) {
+            this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
+            console.log(this.view.events)
+          }
           break
         case 'year':
           this.view.startDate = new Date(date.getFullYear(), 0, 1)
           this.view.endDate = new Date(date.getFullYear() + 1, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
+          if (this.eventsCountOnYearView) {
+            this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
+            console.log(this.view.events)
+          }
           break
         case 'month':
           this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
@@ -390,7 +396,8 @@ export default {
               dayEvents = this.mutableEvents[formattedDate] || []
 
               if (dayEvents.length) {
-                this.view.outOfScopeEvents.push(...dayEvents.map(e => this.cleanupEvent(e)))
+                // this.view.outOfScopeEvents.push(...dayEvents.map(e => this.cleanupEvent(e)))
+                this.view.outOfScopeEvents.push(...dayEvents)
               }
             }
           }
@@ -401,7 +408,8 @@ export default {
 
             // Save the events of each day of month into view object.
             dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            // if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            if (dayEvents.length) this.view.events.push(...dayEvents)
           }
           break
         case 'week':
@@ -412,7 +420,8 @@ export default {
           for (let i = 0; i < 7; i++) {
             formattedDate = formatDate(dateTmp.addDays(i), 'yyyy-mm-dd', this.texts)
             dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            // if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            if (dayEvents.length) this.view.events.push(...dayEvents)
           }
           break
         case 'day':
@@ -420,8 +429,18 @@ export default {
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
           dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
-          if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
+          // if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
+          if (dayEvents.length) this.view.events = dayEvents
           break
+      }
+
+      // If multiple-day events.
+      if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
+        console.log(this.view.events, 'before adding')
+        this.view.events.push(...this.mutableEvents['multiple-day'].filter(
+          e => eventInRange(e, this.view.startDate, this.view.endDate)
+        ))
+        console.log(this.view.events)
       }
 
       if (this.ready) {
@@ -528,7 +547,7 @@ export default {
       this.mutableEvents = {}
 
       // Group events into dates.
-      this.events.map(event => {
+      this.events.forEach(event => {
         let [startDate, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
@@ -536,6 +555,9 @@ export default {
         let [endDate, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+
+        const startTimestamp = new Date(event.start).getTime()
+        const endTimestamp = new Date(event.end).getTime()
         const multipleDays = startDate !== endDate
 
         // Keep the event ids scoped to this calendar instance.
@@ -548,7 +570,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          multipleDays: {},
+          multipleDays: multipleDays ? {} : null,
           startDate,
           startTime,
           startTimeMinutes,
@@ -560,8 +582,9 @@ export default {
 
         // Make array reactive for future events creations & deletions.
         if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+        if (multipleDays && !('multiple-day' in this.mutableEvents)) this.$set(this.mutableEvents, 'multiple-day', [])
         // eslint-disable-next-line
-        this.mutableEvents[event.startDate].push(event)
+        this.mutableEvents[multipleDays ? 'multiple-day' : event.startDate].push(event)
 
         /* if (multipleDays) {
           // Create an array of linked events to attach to each event piece (piece = 1 day),
@@ -634,8 +657,6 @@ export default {
             })
           }
         } */
-
-        return event
       })
     },
 
@@ -665,7 +686,7 @@ export default {
       // can place whatever they want inside an event and see it returned.
       const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
-      if (!event.multipleDays.daysCount) delete event.multipleDays
+      if (!event.multipleDays) delete event.multipleDays
 
       // Return date objects for easy manipulation.
       const [date1, time1] = event.start.split(' ')
@@ -968,7 +989,7 @@ export default {
       }
       return cells
     },
-    viewEvents () {
+    /* viewEvents () {
       let events = []
       this.events.forEach(event => {
         const startTimestamp = new Date(event.start).getTime()
@@ -978,7 +999,7 @@ export default {
         }
       })
       return events
-    },
+    }, */
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,

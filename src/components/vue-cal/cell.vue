@@ -21,6 +21,7 @@
         event(
           v-for="(event, j) in (splits.length ? splitEvents[i] : events)" :key="j"
           :vuecal="$parent"
+          :cell-formatted-date="data.formattedDate"
           :event="event"
           :all-day="allDay"
           :cell-events="splits.length ? splitEvents[i] : events"
@@ -32,7 +33,7 @@
 
 <script>
 import { selectCell } from './cell-utils'
-import { updateEventPosition, checkCellOverlappingEvents } from './event-utils'
+import { updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
 import Event from './event'
 
 export default {
@@ -155,21 +156,113 @@ export default {
     events: {
       get () {
         let events = []
+        const cellStart = this.data.startDate
+        const cellEnd = this.data.endDate
 
         // Events count on years/year view.
-        if (['years', 'year'].includes(this.view) && (this.options.eventsCountOnYearView || 1)) {
-          const cellStart = this.data.startDate.getTime()
-          const cellEnd = this.data.endDate.getTime()
-          events = this.$parent.events.filter(e => {
-            const eventStart = new Date(e.start).getTime()
-            const eventEnd = new Date(e.end).getTime()
-            return eventStart >= cellStart && eventEnd <= cellEnd
-          })
+        if (['years', 'year'].includes(this.view) && this.options.eventsCountOnYearView) {
+          events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
         }
 
-        // All the other views.
         else {
           events = this.$parent.mutableEvents[this.data.formattedDate] || []
+
+          // If multiple-day events.
+          if (this.$parent.mutableEvents['multiple-day']) {
+            // events.push(...this.$parent.mutableEvents['multiple-day'].filter(e => eventInRange(e, cellStart, cellEnd)))
+            this.$parent.mutableEvents['multiple-day'].forEach(e => {
+              if (eventInRange(e, cellStart, cellEnd)) {
+                const isFirstDay = this.data.formattedDate === e.startDate
+                const isLastDay = this.data.formattedDate === e.endDate
+                const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
+                const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
+
+                e.multipleDays[this.data.formattedDate] = {
+                  startTimeMinutes,
+                  endTimeMinutes,
+                  overlapping: {},
+                  overlapped: {},
+                  simultaneous: {},
+                  isFirstDay,
+                  isLastDay,
+                  height: 0,
+                  top: 0
+                }
+                events.push(e)
+                console.log(events, 'here')
+              }
+            })
+
+            /* // Create an array of linked events to attach to each event piece (piece = 1 day),
+            // So that deletion and modification reflects on all the pieces.
+            let eventPieces = []
+
+            const oneDayInMs = 24 * 60 * 60 * 1000
+            const [y1, m1, d1] = startDate.split('-')
+            const [y2, m2, d2] = endDate.split('-')
+            startDate = new Date(y1, parseInt(m1) - 1, d1)
+            endDate = new Date(y2, parseInt(m2) - 1, d2)
+            const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
+            const startDateFormatted = formatDate(startDate, 'yyyy-mm-dd', this.texts)
+
+            // Update first day event.
+            event.multipleDays = {
+              start: true,
+              startDate: startDateFormatted,
+              startTime,
+              startTimeMinutes,
+              endDate: startDateFormatted,
+              endTime: '24:00',
+              endTimeMinutes: 24 * 60,
+              daysCount: datesDiff + 1
+            }
+
+            // Generate event pieces ids to link them all together
+            // and update the first event linked events array with all ids of pieces.
+            for (let i = 1; i <= datesDiff; i++) {
+              const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
+              eventPieces.push({
+                _eid: `${this._uid}_${this.eventIdIncrement++}`,
+                date
+              })
+            }
+            event.linked = eventPieces
+
+            // Create 1 event per day and link them all.
+            for (let i = 1; i <= datesDiff; i++) {
+              const date = eventPieces[i - 1].date
+              const linked = [
+                { _eid: event._eid, date: event.startDate },
+                ...eventPieces.slice(0).filter(e => e._eid !== eventPieces[i - 1]._eid)
+              ]
+
+              // Make array reactive for future events creations & deletions.
+              if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
+
+              this.mutableEvents[date].push({
+                ...event,
+                _eid: eventPieces[i - 1]._eid,
+                overlapped: {},
+                overlapping: {},
+                simultaneous: {},
+                linked,
+                // All the dates in the multipleDays object property are related
+                // to the current event piece (only 1 day) not the whole event.
+                multipleDays: {
+                  start: false,
+                  middle: i < datesDiff,
+                  end: i === datesDiff,
+                  startDate: date,
+                  startTime: '00:00',
+                  startTimeMinutes: 0,
+                  endDate: date,
+                  endTime: i === datesDiff ? endTime : '24:00',
+                  endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
+                  daysCount: datesDiff + 1
+                }
+              })
+            } */
+          }
 
           // Position events with time in the timeline when there is a timeline and not in allDay slot.
           if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
@@ -177,22 +270,25 @@ export default {
               // all-day events are positionned via css: top-0 & bottom-0.
               // So they behave as background events if not in allDay slot.
               // @todo: Do we want this or not?
-              if (event.startTime && !event.allDay) updateEventPosition(event, this.$parent)
+              const eventToUpdate = (event.multipleDays && event.multipleDays[this.data.formattedDate]) || event
+              if (event.startTime && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
             })
           }
 
-          this.$nextTick(this.checkCellOverlappingEvents)
+          // this.$nextTick(this.checkCellOverlappingEvents)
 
           if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
           if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
             events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
           }
+
         }
 
         return events
       },
       set (events) {
+        debugger
         this.$parent.mutableEvents[this.data.formattedDate] = events
       }
     },
