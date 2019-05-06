@@ -72,7 +72,7 @@
                   :max-timestamp="maxTimestamp"
                   :splits="hasSplits && splitDays || []")
                   div(slot="cell-content" slot-scope="{ events, split, selectCell }")
-                    slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
+                    slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                       .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
@@ -90,7 +90,7 @@
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                         | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                        small.days-to-end(v-if="event.multipleDays") &nbsp;+{{ 'some' }}{{ (texts.day[0] || '').toLowerCase() }}
+                        small.days-to-end(v-if="event.segments") &nbsp;+{{ 'some' }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -479,11 +479,13 @@ export default {
       const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
       resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
 
-      let cellEvents = this.mutableEvents[resizeAnEvent.startDate]
-      if (this.hasSplits && this.splitDays) {
-        cellEvents = cellEvents.filter(e => e.split === resizeAnEvent.split)
-      }
-      onResizeEvent(cellEvents, this)
+      const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
+
+      // @todo: handle splits?
+      // if (this.hasSplits && this.splitDays) {
+      //   event = event.find(e => e.split === resizeAnEvent.split)
+      // }
+      onResizeEvent(event, resizeAnEvent.startDate, this)
     },
 
     onMouseUp (e) {
@@ -491,7 +493,7 @@ export default {
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
-        let event = this.mutableEvents[resizeAnEvent.startDate].find(item => item._eid === resizeAnEvent._eid)
+        const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         if (event) {
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
@@ -530,13 +532,6 @@ export default {
 
       event.title = e.target.innerHTML
 
-      if (event.linked.daysCount) {
-        event.linked.forEach(e => {
-          let dayToModify = this.mutableEvents[e.date]
-          dayToModify.find(e2 => e2._eid === e._eid).title = event.title
-        })
-      }
-
       this.emitWithEvent('event-change', event)
       this.emitWithEvent('event-title-change', event)
     },
@@ -570,7 +565,7 @@ export default {
           overlapped: {},
           overlapping: {},
           simultaneous: {},
-          multipleDays: multipleDays ? {} : null,
+          segments: multipleDays ? {} : null,
           startDate,
           startTime,
           startTimeMinutes,
@@ -585,78 +580,6 @@ export default {
         if (multipleDays && !('multiple-day' in this.mutableEvents)) this.$set(this.mutableEvents, 'multiple-day', [])
         // eslint-disable-next-line
         this.mutableEvents[multipleDays ? 'multiple-day' : event.startDate].push(event)
-
-        /* if (multipleDays) {
-          // Create an array of linked events to attach to each event piece (piece = 1 day),
-          // So that deletion and modification reflects on all the pieces.
-          let eventPieces = []
-
-          const oneDayInMs = 24 * 60 * 60 * 1000
-          const [y1, m1, d1] = startDate.split('-')
-          const [y2, m2, d2] = endDate.split('-')
-          startDate = new Date(y1, parseInt(m1) - 1, d1)
-          endDate = new Date(y2, parseInt(m2) - 1, d2)
-          const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
-          const startDateFormatted = formatDate(startDate, 'yyyy-mm-dd', this.texts)
-
-          // Update First day event.
-          event.multipleDays = {
-            start: true,
-            startDate: startDateFormatted,
-            startTime,
-            startTimeMinutes,
-            endDate: startDateFormatted,
-            endTime: '24:00',
-            endTimeMinutes: 24 * 60,
-            daysCount: datesDiff + 1
-          }
-
-          // Generate event pieces ids to link them all together
-          // and update the first event linked events array with all ids of pieces.
-          for (let i = 1; i <= datesDiff; i++) {
-            const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
-            eventPieces.push({
-              _eid: `${this._uid}_${this.eventIdIncrement++}`,
-              date
-            })
-          }
-          event.linked = eventPieces
-
-          // Create 1 event per day and link them all.
-          for (let i = 1; i <= datesDiff; i++) {
-            const date = eventPieces[i - 1].date
-            const linked = [
-              { _eid: event._eid, date: event.startDate },
-              ...eventPieces.slice(0).filter(e => e._eid !== eventPieces[i - 1]._eid)
-            ]
-
-            // Make array reactive for future events creations & deletions.
-            if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
-
-            this.mutableEvents[date].push({
-              ...event,
-              _eid: eventPieces[i - 1]._eid,
-              overlapped: {},
-              overlapping: {},
-              simultaneous: {},
-              linked,
-              // All the dates in the multipleDays object property are related
-              // to the current event piece (only 1 day) not the whole event.
-              multipleDays: {
-                start: false,
-                middle: i < datesDiff,
-                end: i === datesDiff,
-                startDate: date,
-                startTime: '00:00',
-                startTimeMinutes: 0,
-                endDate: date,
-                endTime: i === datesDiff ? endTime : '24:00',
-                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
-                daysCount: datesDiff + 1
-              }
-            })
-          }
-        } */
       })
     },
 
@@ -686,7 +609,7 @@ export default {
       // can place whatever they want inside an event and see it returned.
       const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
-      if (!event.multipleDays) delete event.multipleDays
+      if (!event.segments) delete event.segments
 
       // Return date objects for easy manipulation.
       const [date1, time1] = event.start.split(' ')

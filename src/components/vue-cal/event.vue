@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import { deleteAnEvent, deleteLinkedEvents, checkCellOverlappingEvents } from './event-utils'
+import { deleteAnEvent, deleteOverlaps, checkCellOverlappingEvents } from './event-utils'
 
 export default {
   props: {
@@ -105,7 +105,8 @@ export default {
         newHeight: event.height,
         _eid: event._eid,
         split: event.split || null,
-        startDate: event.startDate
+        startDate: (this.segment || event).startDate,
+        segment: !!this.segment
       })
     },
 
@@ -133,10 +134,13 @@ export default {
       const resizeAnEvent = this.domEvents.resizeAnEvent
 
       const eventOrSegment = this.segment || event
+      const resizing = (resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid
+        && !(resizeAnEvent.segment && resizeAnEvent.startDate !== this.cellFormattedDate))
 
+      console.log('lala', resizeAnEvent.newHeight, resizeAnEvent._eid === event._eid, resizeAnEvent.startDate, this.segment, eventOrSegment.height)
       return {
         top: `${eventOrSegment.top}px`,
-        height: `${resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid ? resizeAnEvent.newHeight : eventOrSegment.height}px`
+        height: `${resizing ? resizeAnEvent.newHeight : eventOrSegment.height}px`
       }
     },
 
@@ -145,9 +149,10 @@ export default {
       const { clickHoldAnEvent, focusAnEvent } = this.domEvents
       let overlapping, overlapped, simultaneous
       let forceLeft = false
-      let deletable = clickHoldAnEvent._eid &&
-                      (clickHoldAnEvent._eid === event._eid ||
-                      event.linked.find(e => e._eid === clickHoldAnEvent._eid))
+      // let deletable = clickHoldAnEvent._eid &&
+      //                 (clickHoldAnEvent._eid === event._eid ||
+      //                 event.linked.find(e => e._eid === clickHoldAnEvent._eid))
+      let deletable = clickHoldAnEvent._eid === event._eid
 
       const segment = this.segment || event
       if (this.vuecal.view.id !== 'month') {
@@ -187,7 +192,7 @@ export default {
         'vuecal__event--split-left': forceLeft,
         'vuecal__event--all-day': event.allDay,
         // Multiple days events.
-        // 'vuecal__event--multiple-days': Object.keys(event.multipleDays).length,
+        'vuecal__event--multiple-days': !!this.segment,
         'event-start': this.segment && segment.isFirstDay,
         'event-middle': this.segment && !segment.isFirstDay && !segment.isLastDay,
         'event-end': this.segment && segment.isLastDay
@@ -195,11 +200,11 @@ export default {
     },
     // When multiple-day events, a segment is a portion of event spanning on 1 day.
     segment () {
-      return (this.event.multipleDays && this.event.multipleDays[this.cellFormattedDate]) || null
+      return (this.event.segments && this.event.segments[this.cellFormattedDate]) || null
     },
     resizable () {
       return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDay &&
-        /* !this.event.multipleDays.start && !this.event.multipleDays.middle && */ this.vuecal.view.id !== 'month')
+        (!this.segment || (this.segment && this.segment.isLastDay)) && this.vuecal.view.id !== 'month')
     },
     domEvents: {
       get () {
@@ -216,10 +221,13 @@ export default {
       // When the event background property changes, remove all the involved overlapping events
       // if setting to background or check cell overlapping again otherwise.
       if (val) {
-        deleteLinkedEvents(this.event, this.cellEvents)
-        this.event.overlapping = {}
-        this.event.overlapped = {}
-        this.event.simultaneous = {}
+        // @todo: function to delete the overlaps in event-utils.
+        deleteOverlaps(this.event)
+        // this.event.overlapping = {}
+        // this.event.overlapped = {}
+        // this.event.simultaneous = {}
+
+        // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
       }
 
       else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.vuecal)
