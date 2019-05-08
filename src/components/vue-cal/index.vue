@@ -510,7 +510,7 @@ export default {
     },
 
     onMouseUp (e) {
-      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
@@ -523,20 +523,14 @@ export default {
 
       // If not mouse up on an event, unfocus any event except if just dragged.
       if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent._eid) {
-        const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
-        focusAnEvent._eid = null // Cancel event focus.
-        event.focused = false
-        clickHoldAnEvent._eid = null // Hide delete button.
-        event.deleting = false
+        this.unfocusEvent()
       }
 
       // Prevent showing delete button if click and hold was not long enough.
-      // Click & hold timeout happens in onMouseDown() in cell component.
+      // Click & hold timeout is initiated in onMouseDown() in event component.
       if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent._eid) {
-        // const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
-        // event.deleting = false
       }
 
       // Prevent creating an event if click and hold was not long enough.
@@ -550,6 +544,38 @@ export default {
       resizeAnEvent.start = null
       resizeAnEvent.originalHeight = null
       resizeAnEvent.newHeight = null
+    },
+
+    onKeyUp (e) {
+      // Escape key.
+      if (e.keyCode === 27) {
+        this.cancelDelete()
+      }
+    },
+
+    unfocusEvent (e) {
+      let { focusAnEvent, clickHoldAnEvent } = this.domEvents
+      const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
+      focusAnEvent._eid = null // Cancel event focus.
+      clickHoldAnEvent._eid = null // Hide delete button.
+
+      if (event) {
+        event.focused = false
+        event.deleting = false
+      }
+    },
+
+    // Cancel an event deletion.
+    cancelDelete (e) {
+      let { clickHoldAnEvent } = this.domEvents
+      if (clickHoldAnEvent._eid) {
+        clearTimeout(clickHoldAnEvent.timeoutId)
+        clickHoldAnEvent.timeoutId = null
+
+        const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
+        if (event) event.deleting = false
+        clickHoldAnEvent._eid = null
+      }
     },
 
     onEventTitleBlur (e, event) {
@@ -695,6 +721,7 @@ export default {
     if (this.editableEvents) {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+      window.addEventListener('keyup', this.onKeyUp)
     }
 
     // Disable context menu on touch devices on the whole vue-cal instance.
@@ -722,6 +749,7 @@ export default {
     const hasTouch = 'ontouchstart' in window
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+    window.removeEventListener('keyup', this.onKeyUp)
   },
 
   computed: {

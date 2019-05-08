@@ -2420,7 +2420,8 @@
         li Refactored multiple day events &amp; save segments inside events
         li Refactored event object save segments inside events
         li Add a resizing class on events being resized
-        li Add deletable, resizable, editable attributes on events
+        li Add deletable, resizable attributes on events to override global
+        li Cancel event deletion with escape key
         li Focus a multiple day event highlights all the segments
         li Calculate event segments within current view only
         li Improve rendering performances on event resizing
@@ -2798,7 +2799,8 @@ export default {
         end: '2018-11-20 20:00',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
-        class: 'sport'
+        class: 'sport',
+        deletable: false
       },
       {
         start: '2018-11-20 13:00',

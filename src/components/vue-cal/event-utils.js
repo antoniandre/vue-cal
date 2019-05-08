@@ -18,9 +18,9 @@ export const eventDefaults = {
   segments: null,
   height: 0,
   top: 0,
-  deletable: false,
+  deletable: true,
   deleting: false,
-  resizable: false,
+  resizable: true,
   resizing: false,
   focused: false,
   classes: []
