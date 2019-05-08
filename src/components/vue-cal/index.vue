@@ -281,10 +281,10 @@ export default {
         resizeAnEvent: {
           _eid: null, // Only one at a time.
           startDate: null,
-          start: null,
-          originalHeight: 0,
-          newHeight: 0,
-          split: null
+          split: null,
+          segment: null,
+          originalEndTimeMinutes: 0,
+          endTimeMinutes: 0
         },
         dragAnEvent: {
           _eid: null // Only one at a time.
@@ -499,8 +499,14 @@ export default {
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
       let segment = event.segments && event.segments[resizeAnEvent.startDate]
-      if (segment) segment.endTimeMinutes = this.minutesAtCursor(e)
-      else event.endTimeMinutes = this.minutesAtCursor(e)
+      resizeAnEvent.endTimeMinutes = this.minutesAtCursor(e)
+
+      if (segment) {
+        segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
+      }
+      else {
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes
+      }
 
       // @todo: handle splits?
       // if (this.hasSplits && this.splitDays) {
@@ -513,12 +519,19 @@ export default {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
-      if (resizeAnEvent._eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
+      if (resizeAnEvent._eid) {
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
-        if (event) {
+        if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
         }
+        if (event) event.resizing = false
+        resizeAnEvent._eid = null
+        resizeAnEvent.startDate = null
+        resizeAnEvent.split = null
+        resizeAnEvent.segment = null
+        resizeAnEvent.originalEndTimeMinutes = null
+        resizeAnEvent.endTimeMinutes = null
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -538,12 +551,6 @@ export default {
         clearTimeout(clickHoldACell.timeoutId)
         clickHoldACell.timeoutId = null
       }
-
-      // Any mouse up must cancel event resizing.
-      resizeAnEvent._eid = null
-      resizeAnEvent.start = null
-      resizeAnEvent.originalHeight = null
-      resizeAnEvent.newHeight = null
     },
 
     onKeyUp (e) {
@@ -553,7 +560,7 @@ export default {
       }
     },
 
-    unfocusEvent (e) {
+    unfocusEvent () {
       let { focusAnEvent, clickHoldAnEvent } = this.domEvents
       const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
       focusAnEvent._eid = null // Cancel event focus.
@@ -566,15 +573,14 @@ export default {
     },
 
     // Cancel an event deletion.
-    cancelDelete (e) {
+    cancelDelete () {
       let { clickHoldAnEvent } = this.domEvents
       if (clickHoldAnEvent._eid) {
-        clearTimeout(clickHoldAnEvent.timeoutId)
-        clickHoldAnEvent.timeoutId = null
-
         const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
         if (event) event.deleting = false
+
         clickHoldAnEvent._eid = null
+        clickHoldAnEvent.timeoutId = null
       }
     },
 
@@ -974,17 +980,6 @@ export default {
       }
       return cells
     },
-    /* viewEvents () {
-      let events = []
-      this.events.forEach(event => {
-        const startTimestamp = new Date(event.start).getTime()
-        const endTimestamp = new Date(event.end).getTime()
-        if (startTimestamp < this.view.endDate.getTime() && endTimestamp > this.view.startDate.getTime()) {
-          events.push(event)
-        }
-      })
-      return events
-    }, */
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,
@@ -999,7 +994,7 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--no-event-overlaps': this.noEventOverlaps,
-        'vuecal--dragging-event': this.domEvents.resizeAnEvent.start,
+        'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }

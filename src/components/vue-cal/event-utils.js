@@ -94,33 +94,33 @@ export const deleteAnEvent = (event, vuecal) => {
 }
 
 export const onResizeEvent = (event, date, vuecal) => {
-  let { _eid, newHeight } = vuecal.domEvents.resizeAnEvent
+  // let { _eid, endTimeMinutes } = vuecal.domEvents.resizeAnEvent
   let segment = event.segments && event.segments[date] || null
   // debugger
 
   if (segment || event) {
-    // let heightDelta = newHeight
+    // let heightDelta = endTimeMinutes
     // if (segment) {
     //   console.log('we have', segment, heightDelta)
     //   segment.height += heightDelta
     // }
     // else event.height += heightDelta
-    // console.log('we have', segment, event, newHeight)
-    // const minEventHeight = Math.max(newHeight, 10)
+    // console.log('we have', segment, event, endTimeMinutes)
+    // const minEventHeight = Math.max(endTimeMinutes, 10)
     // const eventStart = Math.max((segment || event).startTimeMinutes, vuecal.timeFrom)
 
     // // While dragging event, prevent event to span beyond vuecal.timeTo.
     // let maxEventHeight = (vuecal.timeTo - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    // newHeight = Math.min(minEventHeight, maxEventHeight)
+    // endTimeMinutes = Math.min(minEventHeight, maxEventHeight)
     // // debugger
-    // if (segment) segment.height = newHeight
-    // else event.height = newHeight
+    // if (segment) segment.height = endTimeMinutes
+    // else event.height = endTimeMinutes
 
     // // Allow dragging until midnight but block height at vuecal.timeTo.
     // maxEventHeight = (24 * 60 - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    // newHeight = Math.min(minEventHeight, maxEventHeight)
-    // if (segment) segment.height = newHeight
-    // else event.height = newHeight
+    // endTimeMinutes = Math.min(minEventHeight, maxEventHeight)
+    // if (segment) segment.height = endTimeMinutes
+    // else event.height = endTimeMinutes
 
     // // updateEndTimeOnResize(event, date, vuecal)
   }

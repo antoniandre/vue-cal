@@ -63,12 +63,12 @@ export default {
       }
 
       // Focus the clicked event.
-      this.focusEvent(this.event)
+      this.focusEvent()
 
       clickHoldAnEvent._eid = null // Reinit click hold on each click.
 
       // Show event delete button - only if not dragging.
-      if (!resizeAnEvent.start && this.vuecal.editableEvents) {
+      if (!resizeAnEvent._eid && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           clickHoldAnEvent._eid = this.event._eid
           this.event.deleting = true
@@ -99,17 +99,16 @@ export default {
       if (typeof this.vuecal.onEventDblclick === 'function') return this.vuecal.onEventDblclick(this.event, e)
     },
 
-    onDragHandleMouseDown (e) {
-      const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
+    onDragHandleMouseDown () {
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
-        start,
-        originalHeight: this.event.height,
-        newHeight: this.event.height,
         _eid: this.event._eid,
-        split: this.event.split || null,
         startDate: (this.segment || this.event).startDate,
-        segment: !!this.segment
+        split: this.event.split || null,
+        segment: !!this.segment,
+        originalEndTimeMinutes: this.event.endTimeMinutes
       })
+
+      this.event.resizing = true
     },
 
     deleteEvent (touch = false) {
@@ -127,27 +126,23 @@ export default {
       this.event.deleting = false
     },
 
-    focusEvent (event) {
-      let { clickHoldAnEvent, focusAnEvent } = this.domEvents
+    focusEvent () {
+      let { focusAnEvent } = this.domEvents
 
-      this.vuecal.emitWithEvent('event-focus', event)
+      this.vuecal.emitWithEvent('event-focus', this.event)
 
       // Unfocus previous event if any.
       const onFocus = this.domEvents.focusAnEvent._eid
-      if (onFocus && onFocus !== event._eid) {
+      if (onFocus && onFocus !== this.event._eid) {
         let event = this.vuecal.view.events.find(e => e._eid === this.domEvents.focusAnEvent._eid)
         if (event) event.focused = false
       }
 
       // Cancel delete on previous event if any.
-      const deleting = this.domEvents.clickHoldAnEvent._eid
-      if (deleting && deleting !== event._eid) {
-        let event = this.vuecal.view.events.find(e => e._eid === this.domEvents.clickHoldAnEvent._eid)
-        if (event) event.deleting = false
-      }
+      this.vuecal.cancelDelete()
 
-      this.domEvents.focusAnEvent._eid = event._eid
-      event.focused = true
+      this.domEvents.focusAnEvent._eid = this.event._eid
+      this.event.focused = true
     }
   },
 
