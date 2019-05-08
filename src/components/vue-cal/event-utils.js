@@ -2,10 +2,12 @@ import Vue from 'vue'
 
 export const eventDefaults = {
   _eid: null,
-  startDate: '',
+  startDate: '', // Date object.
+  startDateF: '', // Formatted date.
   startTime: '',
   startTimeMinutes: 0,
-  endDate: '',
+  endDate: '', // Date object.
+  endDateF: '', // Formatted date.
   endTime: '',
   endTimeMinutes: 0,
   title: '',
@@ -47,11 +49,11 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
 
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
-    startDate: formattedDate,
+    startDateF: formattedDate,
     startTime: (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : null),
     startTimeMinutes,
     end: formattedDate + (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : ''),
-    endDate: formattedDate,
+    endDateF: formattedDate,
     endTime: (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : null),
     endTimeMinutes,
     ...eventOptions
@@ -62,14 +64,14 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
   }
 
   // Make array reactive for future events creations & deletions.
-  if (!(event.startDate in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDate, [])
+  if (!(event.startDateF in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDateF, [])
 
-  vuecal.mutableEvents[event.startDate].push(event)
+  vuecal.mutableEvents[event.startDateF].push(event)
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
   // After creating a new event, check if it overlaps any other in current cell OR split.
-  const cellEvents = vuecal.mutableEvents[event.startDate]
+  const cellEvents = vuecal.mutableEvents[event.startDateF]
   if (vuecal.time) {
     checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
   }
@@ -80,7 +82,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
-  const eventDate = (event.segments && event.segments.startDate) || event.startDate
+  const eventDate = (event.segments && event.segments.startDateF) || event.startDateF
   // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
   let cellEvents = vuecal.mutableEvents[eventDate]
   // Delete the event.
@@ -160,7 +162,7 @@ let eventOverlaps = {
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = cellEvents => {
   cellEvents.forEach(e => {
-    if (!eventOverlaps[e._eid]) eventOverlaps[e.startDate][e._eid] = []
+    if (!eventOverlaps[e._eid]) eventOverlaps[e.startDateF][e._eid] = []
   })
 }
 

@@ -2419,6 +2419,7 @@
         li Added function to get minutes at cursor
         li Refactored multiple day events &amp; save segments inside events
         li Refactored event object save segments inside events
+        li Add a javascript Date object in events
         li Add a resizing class on events being resized
         li Add deletable, resizable attributes on events to override global
         li Cancel event deletion with escape key
@@ -2799,8 +2800,7 @@ export default {
         end: '2018-11-20 20:00',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
-        class: 'sport',
-        deletable: false
+        class: 'sport'
       },
       {
         start: '2018-11-20 13:00',

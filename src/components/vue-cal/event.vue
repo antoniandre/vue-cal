@@ -102,7 +102,7 @@ export default {
     onDragHandleMouseDown () {
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
         _eid: this.event._eid,
-        startDate: (this.segment || this.event).startDate,
+        startDateF: (this.segment || this.event).startDateF,
         split: this.event.split || null,
         segment: !!this.segment,
         originalEndTimeMinutes: this.event.endTimeMinutes
@@ -202,9 +202,9 @@ export default {
         'vuecal__event--all-day': event.allDay,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
-        'event-start': this.segment && segment.isFirstDay,
+        'event-start': this.segment && segment.isFirstDay && !segment.isLastDay,
         'event-middle': this.segment && !segment.isFirstDay && !segment.isLastDay,
-        'event-end': this.segment && segment.isLastDay
+        'event-end': this.segment && segment.isLastDay && !segment.isFirstDay
       }
     },
     // When multiple-day events, a segment is a portion of event spanning on 1 day.

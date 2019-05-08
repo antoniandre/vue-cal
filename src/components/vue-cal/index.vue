@@ -280,7 +280,7 @@ export default {
       domEvents: {
         resizeAnEvent: {
           _eid: null, // Only one at a time.
-          startDate: null,
+          startDateF: null,
           split: null,
           segment: null,
           originalEndTimeMinutes: 0,
@@ -430,21 +430,27 @@ export default {
       if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
         endTime = this.view.endDate.getTime()
         const dayMilliseconds = 24 * 3600 * 1000
-        let startTimestamp = this.view.startDate.getTime()
-        let endTimestamp = this.view.endDate.getTime()
+        const startTimestamp = this.view.startDate.getTime()
+        const endTimestamp = this.view.endDate.getTime()
 
         this.view.events.push(...this.mutableEvents['multiple-day'].filter(
           e => eventInRange(e, this.view.startDate, this.view.endDate)
         ).map(e => {
-          for (let timestamp = startTimestamp; timestamp <= endTime; timestamp += dayMilliseconds) {
-            const isFirstDay = timestamp === startTimestamp
-            const isLastDay = (timestamp + dayMilliseconds) >= endTimestamp
+          // Create as many segments as days in event, but only within current view days.
+          let start = Math.max(startTimestamp, new Date(e.startDateF).getTime())
+          let end = Math.min(endTimestamp, new Date(e.endDateF).getTime())
+
+          for (let timestamp = start; timestamp <= end; timestamp += dayMilliseconds) {
+            formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
+            console.log('looping segments', formattedDate, e.startDate)
+            const isFirstDay = formattedDate === e.startDateF
+            const isLastDay = formattedDate === e.endDateF
             const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
             const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
-            formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
 
             this.$set(e.segments, formattedDate, {
-              startDate: formattedDate,
+              startDate: new Date(timestamp),
+              startDateF: formattedDate,
               startTimeMinutes,
               endTimeMinutes,
               startTime: isFirstDay ? e.startTime : '00:00',
@@ -498,7 +504,7 @@ export default {
 
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-      let segment = event.segments && event.segments[resizeAnEvent.startDate]
+      let segment = event.segments && event.segments[resizeAnEvent.startDateF]
       resizeAnEvent.endTimeMinutes = this.minutesAtCursor(e)
 
       if (segment) {
@@ -512,7 +518,7 @@ export default {
       // if (this.hasSplits && this.splitDays) {
       //   event = event.find(e => e.split === resizeAnEvent.split)
       // }
-      // onResizeEvent(event, resizeAnEvent.startDate, this)
+      // onResizeEvent(event, resizeAnEvent.startDateF, this)
     },
 
     onMouseUp (e) {
@@ -527,7 +533,7 @@ export default {
         }
         if (event) event.resizing = false
         resizeAnEvent._eid = null
-        resizeAnEvent.startDate = null
+        resizeAnEvent.startDateF = null
         resizeAnEvent.split = null
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
@@ -601,17 +607,17 @@ export default {
 
       // Group events into dates.
       this.events.forEach(event => {
-        let [startDate, startTime = ''] = event.start.split(' ')
+        let [startDateF, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        let [endDate, endTime = ''] = event.end.split(' ')
+        let [endDateF, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
         const startTimestamp = new Date(event.start).getTime()
         const endTimestamp = new Date(event.end).getTime()
-        const multipleDays = startDate !== endDate
+        const multipleDays = startDateF !== endDateF
 
         // Keep the event ids scoped to this calendar instance.
         // eslint-disable-next-line
@@ -624,20 +630,22 @@ export default {
           overlapping: {},
           simultaneous: {},
           segments: multipleDays ? {} : null,
-          startDate,
+          startDate: new Date(event.start),
+          startDateF,
           startTime,
           startTimeMinutes,
-          endDate,
+          endDate: new Date(event.end),
+          endDateF,
           endTime,
           endTimeMinutes,
           classes: (event.class || '').split(' ')
         }, event)
 
         // Make array reactive for future events creations & deletions.
-        if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
+        if (!(event.startDateF in this.mutableEvents)) this.$set(this.mutableEvents, event.startDateF, [])
         if (multipleDays && !('multiple-day' in this.mutableEvents)) this.$set(this.mutableEvents, 'multiple-day', [])
         // eslint-disable-next-line
-        this.mutableEvents[multipleDays ? 'multiple-day' : event.startDate].push(event)
+        this.mutableEvents[multipleDays ? 'multiple-day' : event.startDateF].push(event)
       })
     },
 
