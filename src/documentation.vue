@@ -343,7 +343,7 @@
       //- vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
         hide-view-selector
-        12-hour
+        twelve-hour
         :time="false"
         default-view="month"
         :disable-views="['week']")
@@ -351,7 +351,7 @@
       //- vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
-        12-hour
+        twelve-hour
         :time="false"
         default-view="month"
         :disable-views="['week']")
@@ -2001,7 +2001,7 @@
     timeTo:                 [Number],          default: 24 * 60 // In minutes.
     timeStep:               [Number],          default: 30 // In minutes.
     timeCellHeight:         [Number],          default: 40 // In pixels.
-    12Hour:                 [Boolean],         default: false
+    twelveHour:             [Boolean],         default: false
     timeFormat:             [String],          default: ''
     minCellWidth:           [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
@@ -2197,11 +2197,11 @@
         If #[span.code time] is enabled, set the time cell height in pixels.#[br]
         this is very important as it is used to calculate the events position in the day.
     li
-      code.mr-2 12Hour
+      code.mr-2 twelveHour
       span.code [Boolean], default: false
       p.
         If #[span.code time] is enabled, the default time format is 24hour.#[br]
-        With #[span.code 12Hour] set to true (use #[span.code 12-hour] in template),
+        With #[span.code twelveHour] set to true (use #[span.code twelve-hour] in template),
         the time format will show 12 hours suffixed with am/pm.
     li
       code.mr-2 timeFormat
@@ -2426,6 +2426,10 @@
         li Improve rendering performances on event resizing
         li Improve resizing events logic
         li Week view date range takes hideWeekends in consideration
+        li.
+          Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
+          #[span.code twelve-hour] and the corresponding css class to
+          #[span.code .vuecal--twelve-hour].
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]

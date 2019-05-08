@@ -96,7 +96,7 @@ export default {
 
 <style lang="scss">
 $time-column-width: 3em;
-$time-column-width-12: 4em; // 12-hour clock shows am/pm.
+$time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
 
 .vuecal {
@@ -108,7 +108,7 @@ $weekdays-headings-height: 2.8em;
       padding-left: $time-column-width;
     }
 
-    .vuecal--view-with-time.vuecal--time-12-hour & {
+    .vuecal--view-with-time.vuecal--twelve-hour & {
       font-size: 0.9em;
       padding-left: $time-column-width-12;
     }

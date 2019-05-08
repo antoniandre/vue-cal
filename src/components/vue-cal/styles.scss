@@ -1,5 +1,5 @@
 $time-column-width: 3em;
-$time-column-width-12: 4em; // 12-hour clock shows am/pm.
+$time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
 
 .vuecal {
@@ -63,7 +63,7 @@ $weekdays-headings-height: 2.8em;
         line-height: 1.1;
       }
     }
-    .vuecal--time-12-hour & > span {
+    .vuecal--twelve-hour & > span {
       width: $time-column-width-12;
       min-width: $time-column-width-12;
     }
@@ -90,7 +90,7 @@ $weekdays-headings-height: 2.8em;
     height: 100%;
     flex-shrink: 0;
 
-    .vuecal--time-12-hour & {
+    .vuecal--twelve-hour & {
       width: $time-column-width-12;
       font-size: 0.9em;
     }

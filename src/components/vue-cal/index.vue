@@ -50,7 +50,7 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
-            .vuecal__flex.vuecal__cells(ref="cells" :class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
               //- Only for minCellWidth on week view.
               weekdays-headings(
                 v-if="minCellWidth && view.id === 'week'"
@@ -88,8 +88,8 @@
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
-                        | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
                         small.days-to-end(v-if="event.segments") &nbsp;+{{ 'some' }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
@@ -197,7 +197,7 @@ export default {
       type: Number,
       default: 40 // In pixels.
     },
-    '12Hour': {
+    twelveHour: {
       type: Boolean,
       default: false
     },
@@ -746,11 +746,12 @@ export default {
     // For week & day views.
     timeCells () {
       let timeCells = []
+      console.log('here', this.$props)
       for (let i = this.timeFrom, max = this.timeTo; i < max; i += this.timeStep) {
         timeCells.push({
           hours: Math.floor(i / 60),
           minutes: i % 60,
-          label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
+          label: formatTime(i, this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
       }
@@ -962,7 +963,7 @@ export default {
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
-        'vuecal--time-12-hour': this['12Hour'],
+        'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
