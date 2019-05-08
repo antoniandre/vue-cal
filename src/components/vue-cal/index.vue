@@ -50,7 +50,7 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
-            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+            .vuecal__flex.vuecal__cells(ref="cells" :class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
               //- Only for minCellWidth on week view.
               weekdays-headings(
                 v-if="minCellWidth && view.id === 'week'"
@@ -355,7 +355,6 @@ export default {
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           if (this.eventsCountOnYearView) {
             this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
-            console.log(this.view.events)
           }
           break
         case 'year':
@@ -364,7 +363,6 @@ export default {
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           if (this.eventsCountOnYearView) {
             this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
-            console.log(this.view.events)
           }
           break
         case 'month':
@@ -394,11 +392,7 @@ export default {
             if (currentMonth !== cellDate.getMonth()) {
               formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
               dayEvents = this.mutableEvents[formattedDate] || []
-
-              if (dayEvents.length) {
-                // this.view.outOfScopeEvents.push(...dayEvents.map(e => this.cleanupEvent(e)))
-                this.view.outOfScopeEvents.push(...dayEvents)
-              }
+              if (dayEvents.length) this.view.outOfScopeEvents.push(...dayEvents)
             }
           }
 
@@ -406,21 +400,20 @@ export default {
             dateTmp = dateTmp.addDays(1)
             formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
 
-            // Save the events of each day of month into view object.
+            // Save the events of each day of the month into view object.
             dayEvents = this.mutableEvents[formattedDate] || []
-            // if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
             if (dayEvents.length) this.view.events.push(...dayEvents)
           }
           break
         case 'week':
+          const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
-          this.view.endDate = date.addDays(7)
+          this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           dateTmp = new Date(date)
-          for (let i = 0; i < 7; i++) {
+          for (let i = 0; i < weekDaysCount; i++) {
             formattedDate = formatDate(dateTmp.addDays(i), 'yyyy-mm-dd', this.texts)
             dayEvents = this.mutableEvents[formattedDate] || []
-            // if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
             if (dayEvents.length) this.view.events.push(...dayEvents)
           }
           break
@@ -429,17 +422,45 @@ export default {
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
           dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
-          // if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
           if (dayEvents.length) this.view.events = dayEvents
           break
       }
 
       // If multiple-day events.
       if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
-        console.log(this.view.events, 'before adding')
+        endTime = this.view.endDate.getTime()
+        const dayMilliseconds = 24 * 3600 * 1000
+        let startTimestamp = this.view.startDate.getTime()
+        let endTimestamp = this.view.endDate.getTime()
+
         this.view.events.push(...this.mutableEvents['multiple-day'].filter(
           e => eventInRange(e, this.view.startDate, this.view.endDate)
-        ))
+        ).map(e => {
+          for (let timestamp = startTimestamp; timestamp <= endTime; timestamp += dayMilliseconds) {
+            const isFirstDay = timestamp === startTimestamp
+            const isLastDay = (timestamp + dayMilliseconds) >= endTimestamp
+            const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
+            const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
+            formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
+
+            this.$set(e.segments, formattedDate, {
+              startDate: formattedDate,
+              startTimeMinutes,
+              endTimeMinutes,
+              startTime: isFirstDay ? e.startTime : '00:00',
+              endTime: isLastDay ? e.endTime : '24:00',
+              overlapping: {},
+              overlapped: {},
+              simultaneous: {},
+              isFirstDay,
+              isLastDay,
+              height: 0,
+              top: 0
+            })
+          }
+          return e
+        }))
+
         console.log(this.view.events)
       }
 
@@ -476,16 +497,16 @@ export default {
       if (resizeAnEvent._eid === null) return
 
       e.preventDefault()
-      const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
-
-      const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
+      let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+      let segment = event.segments && event.segments[resizeAnEvent.startDate]
+      if (segment) segment.endTimeMinutes = this.minutesAtCursor(e)
+      else event.endTimeMinutes = this.minutesAtCursor(e)
 
       // @todo: handle splits?
       // if (this.hasSplits && this.splitDays) {
       //   event = event.find(e => e.split === resizeAnEvent.split)
       // }
-      onResizeEvent(event, resizeAnEvent.startDate, this)
+      // onResizeEvent(event, resizeAnEvent.startDate, this)
     },
 
     onMouseUp (e) {
@@ -502,15 +523,20 @@ export default {
 
       // If not mouse up on an event, unfocus any event except if just dragged.
       if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent._eid) {
+        const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
         focusAnEvent._eid = null // Cancel event focus.
+        event.focused = false
         clickHoldAnEvent._eid = null // Hide delete button.
+        event.deleting = false
       }
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout happens in onMouseDown() in cell component.
       if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent._eid) {
+        // const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
+        // event.deleting = false
       }
 
       // Prevent creating an event if click and hold was not long enough.
@@ -584,13 +610,15 @@ export default {
     },
 
     getPosition (e) {
-      const rect = e.target.getBoundingClientRect()
+      // const rect = e.target.getBoundingClientRect()
+      const rect = this.$refs.cells.getBoundingClientRect()
+      console.log('get position of cursor', {...e.target})
+
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
-    // Allow call from cell click & hold or external call via $refs.
-    createEvent (formattedDate, e = null, eventOptions = {}) {
+    minutesAtCursor (e) {
       let startTimeMinutes = 0
       if (typeof e === 'number') startTimeMinutes = e
       else if (typeof e === 'object') {
@@ -598,7 +626,12 @@ export default {
         startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
       }
 
-      return createAnEvent(formattedDate, startTimeMinutes, eventOptions, this)
+      return startTimeMinutes
+    },
+
+    // Allow call from cell click & hold or external call via $refs.
+    createEvent (formattedDate, e = null, eventOptions = {}) {
+      return createAnEvent(formattedDate, this.minutesAtCursor(e), eventOptions, this)
     },
 
     // Prepare the event to return it with an emitted event.

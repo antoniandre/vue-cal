@@ -67,10 +67,11 @@ export default {
 
       clickHoldAnEvent._eid = null // Reinit click hold on each click.
 
-      // Don't show delete button if dragging event.
+      // Show event delete button - only if not dragging.
       if (!resizeAnEvent.start && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           clickHoldAnEvent._eid = event._eid
+          event.deletable = true
         }, clickHoldAnEvent.timeout)
       }
     },
@@ -90,6 +91,7 @@ export default {
     },
 
     onClick (e, event) {
+      // @todo: if (event.deleting) remove event.
       if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(event, e)
     },
 
@@ -124,37 +126,27 @@ export default {
     focusEvent (event) {
       this.vuecal.emitWithEvent('event-focus', event)
       this.domEvents.focusAnEvent._eid = event._eid
+      event.focused = true
     }
   },
 
   computed: {
+    // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
-      const event = this.event
-      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
-      const resizeAnEvent = this.domEvents.resizeAnEvent
-
-      const eventOrSegment = this.segment || event
-      const resizing = (resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid
-        && !(resizeAnEvent.segment && resizeAnEvent.startDate !== this.cellFormattedDate))
-
-      console.log('lala', resizeAnEvent.newHeight, resizeAnEvent._eid === event._eid, resizeAnEvent.startDate, this.segment, eventOrSegment.height)
+      if (!this.vuecal.time || !this.event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
       return {
-        top: `${eventOrSegment.top}px`,
-        height: `${resizing ? resizeAnEvent.newHeight : eventOrSegment.height}px`
+        top: `${(this.segment || this.event).top}px`,
+        height: `${(this.segment || this.event).height}px`
       }
     },
 
+    // @todo: Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventClasses () {
       const event = this.event
-      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
       let overlapping, overlapped, simultaneous
       let forceLeft = false
-      // let deletable = clickHoldAnEvent._eid &&
-      //                 (clickHoldAnEvent._eid === event._eid ||
-      //                 event.linked.find(e => e._eid === clickHoldAnEvent._eid))
-      let deletable = clickHoldAnEvent._eid === event._eid
-
       const segment = this.segment || event
+
       if (this.vuecal.view.id !== 'month') {
         overlapping = Object.keys(segment.overlapping).length
         overlapped = Object.keys(segment.overlapped).length
@@ -181,9 +173,9 @@ export default {
 
       return {
         [event.classes.join(' ')]: true,
-        'vuecal__event--focus': focusAnEvent._eid === event._eid,
+        'vuecal__event--focus': event.focused,
         'vuecal__event--background': event.background,
-        'vuecal__event--deletable': deletable,
+        'vuecal__event--deletable': event.deletable,
         'vuecal__event--overlapped': overlapped,
         'vuecal__event--overlapping': overlapping,
         'vuecal__event--split2': simultaneous === 2,

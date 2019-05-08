@@ -2412,6 +2412,20 @@
     highlight-message(type="success").
       This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
       Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 2.0.0]
+    highlight-message(type="success")
+      ul
+        li New scoped slots syntax, requires Vue@2.6.0+
+        li Added function to get minutes at cursor
+        li Refactored multiple day events &amp; save segments inside events
+        li Refactored event object save segments inside events
+        li Add a resizing class on events being resized
+        li Add deletable, resizable, editable attributes on events
+        li Focus a multiple day event highlights all the segments
+        li Calculate event segments within current view only
+        li Improve rendering performances on event resizing
+        li Improve resizing events logic
+        li Week view date range takes hideWeekends in consideration
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]

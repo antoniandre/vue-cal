@@ -166,31 +166,7 @@ export default {
         }
 
         else {
-          events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd)).map(e => {
-            if (e.startDate !== e.endDate) {
-              const isFirstDay = this.data.formattedDate === e.startDate
-              const isLastDay = this.data.formattedDate === e.endDate
-              const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
-              const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
-
-              e.segments[this.data.formattedDate] = {
-                startDate: this.data.formattedDate,
-                startTimeMinutes,
-                endTimeMinutes,
-                startTime: isFirstDay ? e.startTime : '00:00',
-                endTime: isLastDay ? e.endTime : '24:00',
-                overlapping: {},
-                overlapped: {},
-                simultaneous: {},
-                isFirstDay,
-                isLastDay,
-                height: 0,
-                top: 0
-              }
-              console.log(events, 'here')
-            }
-            return e
-          })
+          events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
 
           // Position events with time in the timeline when there is a timeline and not in allDay slot.
           if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
@@ -210,7 +186,6 @@ export default {
           if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
             events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
           }
-
         }
 
         return events
