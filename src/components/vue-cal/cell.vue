@@ -53,12 +53,12 @@ export default {
       default: () => []
     },
     minTimestamp: {
-      type: Number,
-      default: 0
+      type: [Number, null],
+      default: null
     },
     maxTimestamp: {
-      type: Number,
-      default: 0
+      type: [Number, null],
+      default: null
     },
     allDay: {
       type: Boolean,
@@ -110,7 +110,7 @@ export default {
 
   computed: {
     isBeforeMinDate () {
-      return this.minTimestamp > this.data.endDate.getTime()
+      return this.minTimestamp !== null && this.minTimestamp > this.data.endDate.getTime()
     },
     isAfterMaxDate () {
       return this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()

@@ -808,13 +808,13 @@ export default {
       let date = null
       if (this.minDate && typeof this.minDate === 'string') date = stringToDate(this.minDate)
       else if (this.minDate && this.minDate instanceof Date) date = this.minDate
-      return date ? date.getTime() : 0
+      return date ? date.getTime() : null
     },
     maxTimestamp () {
       let date = null
       if (this.maxDate && typeof this.maxDate === 'string') date = stringToDate(this.maxDate)
       else if (this.maxDate && this.minDate instanceof Date) date = this.maxDate
-      return date ? date.getTime() : 0
+      return date ? date.getTime() : null
     },
     weekDays () {
       let { weekDays } = this.texts

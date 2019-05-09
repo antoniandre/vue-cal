@@ -2432,6 +2432,7 @@
           Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
           #[span.code twelve-hour] and the corresponding css class to
           #[span.code .vuecal--twelve-hour].
+        li Fix bug: allow date selection before Epoch time!
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
@@ -2796,7 +2797,7 @@ export default {
     ],
     multipleDayEvents: [
       {
-        start: '2018-10-19 08:30',
+        start: '1018-10-19 08:30',
         end: '2018-11-20 20:00',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
