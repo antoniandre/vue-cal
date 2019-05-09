@@ -10,8 +10,8 @@
   @dblclick="onDblClick")
   .vuecal__event-delete(
     v-if="vuecal.editableEvents && event.deletable"
-    @mousedown.stop.prevent="deleteEvent"
-    @touchstart.stop.prevent="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
+    @mousedown.stop="deleteEvent"
+    @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(:event="event" :view="vuecal.view.id" name="event-renderer")
   .vuecal__event-resize-handle(
     v-if="resizable"

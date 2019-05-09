@@ -505,20 +505,17 @@ export default {
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
       let segment = event.segments && event.segments[resizeAnEvent.startDateF]
-      resizeAnEvent.endTimeMinutes = this.minutesAtCursor(e)
 
-      if (segment) {
-        segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      }
-      else {
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      }
+      // Don't allow time above 24 hours.
+      resizeAnEvent.endTimeMinutes = Math.min(this.minutesAtCursor(e), 24 * 60)
+
+      if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes
 
       // @todo: handle splits?
       // if (this.hasSplits && this.splitDays) {
       //   event = event.find(e => e.split === resizeAnEvent.split)
       // }
-      // onResizeEvent(event, resizeAnEvent.startDateF, this)
     },
 
     onMouseUp (e) {
@@ -650,10 +647,7 @@ export default {
     },
 
     getPosition (e) {
-      // const rect = e.target.getBoundingClientRect()
       const rect = this.$refs.cells.getBoundingClientRect()
-      console.log('get position of cursor', {...e.target})
-
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
     },

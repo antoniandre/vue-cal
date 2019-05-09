@@ -151,9 +151,28 @@
       | Horizontal timeline
 
   h2.headline.mt-5.mb-3.title Github project
-  v-layout.mb-5(align-center shrink)
+  v-layout.mb-3(align-center shrink)
     v-icon.pr-4.lightgrey--text(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
+
+  v-layout.mb-5(justify-center style="max-width: 690px;margin: auto")
+    v-icon.flame(size="100").mr-3 whatshot
+    highlight-message(type="tips" no-icon)
+      .title.mt-2.mb-3 #[span.code vue-cal@2.0.0] is coming out soon!
+      .body-2.
+        The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
+        creation on simple click, or overriding the editable-event option per event)
+        and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
+        #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
+      .mt-2
+        v-icon.mr-2(size="20") info_outline
+        span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
+      .mt-2.layout.flex.align-center
+        v-icon.mr-2(size="20") favorite_border
+        span Thank you to all the supporters!
+        v-spacer
+        v-icon.mr-1(size="17") attach_money
+        a(href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC" target="_blank") Support the project
 
   highlight-message(type="info")
     strong Important Notes#[br]
@@ -3123,6 +3142,13 @@ $primary: #42b983;
 
   .todo .v-chip__content {
     padding: 0 3px;
+  }
+
+  .flame {
+    max-width: 90px;
+    opacity: 0.6;
+    color: rgb(254, 247, 176);
+    text-shadow: 1px 0 0 #fd0, -1px 0 0 #fd0, 0 1px 0 #fd0, 0 -1px 0 #fd0;
   }
 
   .api-options {list-style-type: none;}
