@@ -647,6 +647,7 @@ export default {
     },
 
     getPosition (e) {
+      // @todo: Cache bounding box and update it on resize.
       const rect = this.$refs.cells.getBoundingClientRect()
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
