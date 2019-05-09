@@ -274,7 +274,8 @@ export default {
         title: '',
         startDate: null,
         endDate: null,
-        selectedDate: null
+        selectedDate: null,
+        events: []
       },
       eventIdIncrement: 1,
       domEvents: {
@@ -436,13 +437,12 @@ export default {
         this.view.events.push(...this.mutableEvents['multiple-day'].filter(
           e => eventInRange(e, this.view.startDate, this.view.endDate)
         ).map(e => {
-          // Create as many segments as days in event, but only within current view days.
-          let start = Math.max(startTimestamp, new Date(e.startDateF).getTime())
-          let end = Math.min(endTimestamp, new Date(e.endDateF).getTime())
+          // Create 1 segment per day in the event, but only within the current view.
+          const start = Math.max(startTimestamp, new Date(e.startDateF).getTime())
+          const end = Math.min(endTimestamp, new Date(e.endDateF).getTime())
 
           for (let timestamp = start; timestamp <= end; timestamp += dayMilliseconds) {
             formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
-            console.log('looping segments', formattedDate, e.startDate)
             const isFirstDay = formattedDate === e.startDateF
             const isLastDay = formattedDate === e.endDateF
             const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0

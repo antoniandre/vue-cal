@@ -156,7 +156,7 @@ export default {
       }
     },
 
-    // @todo: Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
+    // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventClasses () {
       const event = this.event
       let overlapping, overlapped, simultaneous

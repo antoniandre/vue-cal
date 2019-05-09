@@ -87,7 +87,7 @@ export const deleteAnEvent = (event, vuecal) => {
 
   // Delete the event globally.
   vuecal.mutableEvents[index] = vuecal.mutableEvents[index].filter(e => e._eid !== event._eid)
-  // @todo: does not work - Delete the event in the current view.
+  // Delete the event in the current view.
   vuecal.view.events = vuecal.view.events.filter(e => e._eid !== event._eid)
 
   // @todo: delete from overlapping events array.

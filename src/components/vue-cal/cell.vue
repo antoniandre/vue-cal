@@ -39,7 +39,7 @@ import Event from './event'
 export default {
   components: { Event },
   props: {
-    // Vuecal main component options (props).
+    // Vue-cal main component options (props).
     options: {
       type: Object,
       default: () => ({})
@@ -156,16 +156,12 @@ export default {
     events: {
       get () {
         console.log('getting events...', this.data.formattedDate)
+        const { startDate: cellStart, endDate: cellEnd } = this.data
         let events = []
-        const cellStart = this.data.startDate
-        const cellEnd = this.data.endDate
 
-        // Events count on years/year view.
-        if (['years', 'year'].includes(this.view) && this.options.eventsCountOnYearView) {
-          events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
-        }
-
-        else {
+        // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
+        if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
+          // Means that when $parent.view.events changes all the cells will be refreshed.
           events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
 
           // Position events with time in the timeline when there is a timeline and not in allDay slot.
@@ -190,10 +186,10 @@ export default {
 
         return events
       },
-      set (events) {
-        debugger
-        this.$parent.mutableEvents[this.data.formattedDate] = events
-      }
+      // set (events) {
+      //   debugger
+      //   this.$parent.mutableEvents[this.data.formattedDate] = events
+      // }
     },
     splitEvents () {
       let splitsEventIndexes = {}
