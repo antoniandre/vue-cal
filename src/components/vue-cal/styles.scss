@@ -14,6 +14,8 @@ $weekdays-headings-height: 2.8em;
   //==================================//
   .clickable {cursor: pointer;}
 
+  &--dragging-event {cursor: ns-resize;}
+
   &--xsmall {font-size: 0.9em;}
 
   &__flex {
