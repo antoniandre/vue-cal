@@ -162,12 +162,17 @@
       .body-2.
         The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
         creation on simple click, or overriding the editable-event option per event)
-        and a fresh codebase to start developing the Drag &amp; Drop feature!#[br]
+        and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
         #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
-      .mt-2 Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
-      .mt-2.flex.align-end
+      .mt-2
+        v-icon.mr-2(size="20") info_outline
+        span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
+      .mt-2.layout.flex.align-center
         v-icon.mr-2(size="20") favorite_border
         span Thank you to all the supporters!
+        v-spacer
+        v-icon.mr-1(size="17") attach_money
+        a(href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC" target="_blank") Support the project
 
   highlight-message(type="info")
     strong Important Notes#[br]
