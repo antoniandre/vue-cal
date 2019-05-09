@@ -83,16 +83,14 @@ export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
   const eventDate = (event.segments && event.segments.startDateF) || event.startDateF
-  // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
-  let cellEvents = vuecal.mutableEvents[eventDate]
-  // Delete the event.
-  vuecal.mutableEvents[eventDate] = cellEvents.filter(e => e._eid !== event._eid)
-  cellEvents = vuecal.mutableEvents[eventDate]
+  const index = event.segments ? 'multiple-day' : eventDate
 
-  // If deleting a multiple-day event, delete all the events pieces (days).
-  if (event.segments) {
-    // Do sth here?
-  }
+  // Delete the event globally.
+  vuecal.mutableEvents[index] = vuecal.mutableEvents[index].filter(e => e._eid !== event._eid)
+  // @todo: does not work - Delete the event in the current view.
+  vuecal.view.events = vuecal.view.events.filter(e => e._eid !== event._eid)
+
+  // @todo: delete from overlapping events array.
 }
 
 // EVENT OVERLAPS.
