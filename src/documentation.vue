@@ -232,7 +232,7 @@
     sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
-    //- vue-cal(small :time="false" hide-view-selector style="height: 250px")
+    vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
@@ -261,7 +261,7 @@
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    //- vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
+    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -274,7 +274,7 @@
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
-    //- vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
+    vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
       v-icon(slot="arrow-prev") arrow_back
       v-icon(slot="arrow-next") arrow_forward
   sshpre(language="html-vue" label="Vue Template").
@@ -304,7 +304,7 @@
         2 different CSS class are available on out of range cells: #[span.code .before-min]
         &amp; #[span.code .after-max].
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
-    //- vue-cal.vuecal--green-theme.ex--min-max-dates(
+    vue-cal.vuecal--green-theme.ex--min-max-dates(
       xsmall
       hide-view-selector
       click-to-navigate
@@ -359,7 +359,7 @@
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      //- vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
         hide-view-selector
         twelve-hour
@@ -367,7 +367,7 @@
         default-view="month"
         :disable-views="['week']")
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      //- vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
         twelve-hour
@@ -425,7 +425,7 @@
     Timelines are visible on week view and day view.#[br]
     This examples has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    //- vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
+    vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
     &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends&gt;&lt;/vue-cal&gt;
@@ -447,7 +447,7 @@
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
+    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
       xsmall
       :time-cell-height="26"
       default-view="day"
@@ -476,7 +476,7 @@
     v-icon(small color="green lighten-2") fab fa-codepen
   v-layout(justify-center)
     v-card.my-2.mr-3.main-content(style="max-width: 280px;height: 250px")
-      //- vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -486,7 +486,7 @@
         default-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     v-card.my-2.main-content(style="max-width: 280px;height: 250px")
-      //- vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -542,7 +542,7 @@
     Timeless events cannot be resized as they have no time or duration information.#[br]
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content(style="height: 350px")
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time="false"
       :disable-views="['years', 'year', 'month']"
