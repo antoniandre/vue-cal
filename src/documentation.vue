@@ -2452,6 +2452,18 @@
           #[span.code twelve-hour] and the corresponding css class to
           #[span.code .vuecal--twelve-hour].
         li Fix bug: allow date selection before Epoch time!
+      //- TODO:
+        add accessibility
+        vue slots in version 2.6.0
+        multiple-day events segments are stored in the same event and flushed on view change
+        cancel event delete with escape key
+        do all the @todo
+        use view events as much as possible instead of mutableEvents
+        cleanup mutableEvents
+        at any time return view events not mutable events to user
+        cleanup all the event date props
+        add recurring events
+        add event formatted start/end time in emitted event
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]

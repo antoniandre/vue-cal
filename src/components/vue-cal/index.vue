@@ -429,7 +429,6 @@ export default {
 
       // If multiple-day events.
       if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
-        endTime = this.view.endDate.getTime()
         const dayMilliseconds = 24 * 3600 * 1000
         const startTimestamp = this.view.startDate.getTime()
         const endTimestamp = this.view.endDate.getTime()
@@ -438,12 +437,12 @@ export default {
           e => eventInRange(e, this.view.startDate, this.view.endDate)
         ).map(e => {
           // Create 1 segment per day in the event, but only within the current view.
-          const start = Math.max(startTimestamp, new Date(e.startDateF).getTime())
-          const end = Math.min(endTimestamp, new Date(e.endDateF).getTime())
+          const start = Math.max(startTimestamp, e.startDate.getTime())
+          const end = Math.min(endTimestamp, e.endDate.getTime())
 
           for (let timestamp = start; timestamp <= end; timestamp += dayMilliseconds) {
             formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
-            const isFirstDay = formattedDate === e.startDateF
+            const isFirstDay = timestamp === start
             const isLastDay = formattedDate === e.endDateF
             const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
             const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
@@ -453,8 +452,6 @@ export default {
               startDateF: formattedDate,
               startTimeMinutes,
               endTimeMinutes,
-              startTime: isFirstDay ? e.startTime : '00:00',
-              endTime: isLastDay ? e.endTime : '24:00',
               overlapping: {},
               overlapped: {},
               simultaneous: {},
@@ -608,7 +605,7 @@ export default {
         const [hoursStart, minutesStart] = startTime.split(':')
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
 
-        let [endDateF, endTime = ''] = event.end.split(' ')
+        let [endDateF] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
 
@@ -629,11 +626,9 @@ export default {
           segments: multipleDays ? {} : null,
           startDate: new Date(event.start),
           startDateF,
-          startTime,
           startTimeMinutes,
           endDate: new Date(event.end),
           endDateF,
-          endTime,
           endTimeMinutes,
           classes: (event.class || '').split(' ')
         }, event)

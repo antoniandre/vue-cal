@@ -149,7 +149,7 @@ export default {
   computed: {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
-      if (!this.vuecal.time || !this.event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
+      if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
       return {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`
@@ -212,7 +212,7 @@ export default {
       return (this.event.segments && this.event.segments[this.cellFormattedDate]) || null
     },
     resizable () {
-      return (this.vuecal.editableEvents && this.event.resizable && this.vuecal.time && this.event.startTime && !this.allDay &&
+      return (this.vuecal.editableEvents && this.event.resizable && this.vuecal.time && this.event.endTimeMinutes && !this.allDay &&
         (!this.segment || (this.segment && this.segment.isLastDay)) && this.vuecal.view.id !== 'month')
     },
     domEvents: {
