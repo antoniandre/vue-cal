@@ -95,61 +95,6 @@ export const deleteAnEvent = (event, vuecal) => {
   }
 }
 
-export const onResizeEvent = (event, date, vuecal) => {
-  // let { _eid, endTimeMinutes } = vuecal.domEvents.resizeAnEvent
-  let segment = event.segments && event.segments[date] || null
-  // debugger
-
-  if (segment || event) {
-    // let heightDelta = endTimeMinutes
-    // if (segment) {
-    //   console.log('we have', segment, heightDelta)
-    //   segment.height += heightDelta
-    // }
-    // else event.height += heightDelta
-    // console.log('we have', segment, event, endTimeMinutes)
-    // const minEventHeight = Math.max(endTimeMinutes, 10)
-    // const eventStart = Math.max((segment || event).startTimeMinutes, vuecal.timeFrom)
-
-    // // While dragging event, prevent event to span beyond vuecal.timeTo.
-    // let maxEventHeight = (vuecal.timeTo - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    // endTimeMinutes = Math.min(minEventHeight, maxEventHeight)
-    // // debugger
-    // if (segment) segment.height = endTimeMinutes
-    // else event.height = endTimeMinutes
-
-    // // Allow dragging until midnight but block height at vuecal.timeTo.
-    // maxEventHeight = (24 * 60 - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    // endTimeMinutes = Math.min(minEventHeight, maxEventHeight)
-    // if (segment) segment.height = endTimeMinutes
-    // else event.height = endTimeMinutes
-
-    // // updateEndTimeOnResize(event, date, vuecal)
-  }
-}
-
-const updateEndTimeOnResize = (event, date, vuecal) => {
-  // Segments are divisions of events when spanning on multiple days.
-  let segment = event.segments && event.segments[date] || null
-  let segmentOrEvent = segment || event
-
-  // event.maxHeight is the maximum height the event can take, up to midnight.
-  // But event.height is limited to vuecal.timeTo to prevent event overflowing the view.
-  const bottom = segmentOrEvent.top + segmentOrEvent.maxHeight
-  const endTime = (bottom / vuecal.timeCellHeight * vuecal.timeStep + vuecal.timeFrom) / 60
-  const hours = parseInt(endTime)
-  const minutes = parseInt((endTime - hours) * 60)
-
-  if (segment) {
-    segment.endTimeMinutes = endTime * 60
-    segment.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
-  }
-
-  event.endTimeMinutes = endTime * 60
-  event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
-  event.end = event.end.split(' ')[0] + ` ${segmentOrEvent.endTime}`
-}
-
 // EVENT OVERLAPS.
 //===================================================================
 // @todo.
