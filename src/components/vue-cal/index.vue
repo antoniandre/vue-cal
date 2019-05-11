@@ -430,28 +430,31 @@ export default {
       // If multiple-day events.
       if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
         const dayMilliseconds = 24 * 3600 * 1000
-        const startTimestamp = this.view.startDate.getTime()
-        const endTimestamp = this.view.endDate.getTime()
+        const viewStart = this.view.startDate.getTime()
+        const viewEnd = this.view.endDate.getTime()
 
         this.view.events.push(...this.mutableEvents['multiple-day'].filter(
           e => eventInRange(e, this.view.startDate, this.view.endDate)
         ).map(e => {
-          // Create 1 segment per day in the event, but only within the current view.
-          const start = Math.max(startTimestamp, e.startDate.getTime())
-          const end = Math.min(endTimestamp, e.endDate.getTime())
+          const eventStart = e.startDate.getTime()
+          const eventEnd = e.endDate.getTime()
 
-          for (let timestamp = start; timestamp <= end; timestamp += dayMilliseconds) {
-            formattedDate = formatDate(new Date(timestamp), 'yyyy-mm-dd', this.texts)
-            const isFirstDay = timestamp === start
-            const isLastDay = formattedDate === e.endDateF
-            const startTimeMinutes = isFirstDay ? e.startTimeMinutes : 0
-            const endTimeMinutes = isLastDay ? e.endTimeMinutes : (24 * 60)
+          // Create 1 segment per day in the event, but only within the current view.
+          let timestamp = Math.max(viewStart, eventStart)
+          const end = Math.min(viewEnd, eventEnd)
+
+          while (timestamp <= end) {
+            const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
+            const isFirstDay = timestamp === eventStart
+            const isLastDay = eventEnd < viewEnd && nextMidnight > end
+            const startDate = isFirstDay ? e.startDate : new Date(timestamp)
+            formattedDate = isFirstDay ? e.startDateF : formatDate(startDate, 'yyyy-mm-dd', this.texts)
 
             this.$set(e.segments, formattedDate, {
-              startDate: new Date(timestamp),
+              startDate,
               startDateF: formattedDate,
-              startTimeMinutes,
-              endTimeMinutes,
+              startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
+              endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
               overlapping: {},
               overlapped: {},
               simultaneous: {},
@@ -460,11 +463,11 @@ export default {
               height: 0,
               top: 0
             })
+
+            timestamp = nextMidnight
           }
           return e
         }))
-
-        console.log(this.view.events)
       }
 
       if (this.ready) {
