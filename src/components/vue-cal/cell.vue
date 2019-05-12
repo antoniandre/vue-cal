@@ -128,8 +128,24 @@ export default {
         disabled: this.isDisabled,
         'before-min': this.isDisabled && this.isBeforeMinDate,
         'after-max': this.isDisabled && this.isAfterMaxDate,
-        selected: this.$parent.view.selectedDate.getTime() === this.data.startDate.getTime()
+        selected: this.selected
       }
+    },
+    selected () {
+      let selected = false
+      const { selectedDate } = this.$parent.view
+
+      if (this.view === 'years') {
+        selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
+      }
+      else if (this.view === 'year') {
+        selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear()
+          && selectedDate.getMonth() === this.data.startDate.getMonth())
+      }
+      else {
+        selected = selectedDate.getTime() === this.data.startDate.getTime()
+      }
+      return selected
     },
     domEvents: {
       get () {
