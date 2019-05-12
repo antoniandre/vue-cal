@@ -3,13 +3,13 @@ import { formatDate } from './date-utils'
 
 export const eventDefaults = {
   _eid: null,
-  start: '', // Externally given formatted date.
+  start: '', // Externally given formatted date & time.
   startDate: '', // Date object.
-  startDateF: '', // Formatted date.
+  startDateF: '', // Formatted date no time.
   startTimeMinutes: 0,
-  end: '', // Externally given formatted date.
+  end: '', // Externally given formatted date & time.
   endDate: '', // Date object.
-  endDateF: '', // Formatted date.
+  endDateF: '', // Formatted date no time.
   endTimeMinutes: 0,
   title: '',
   content: '',
@@ -39,6 +39,9 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
   const formattedHours = (hours < 10 ? '0' : '') + hours
   const formattedEndHours = (hours + 2 < 10 ? '0' : '') + (hours + 2)
   const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
+  const formattedDateEnd = '2018-11-23'
+  const start = formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
+  const end = formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
 
   let event = {
     ...eventDefaults,
@@ -49,11 +52,13 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     segments: null,
 
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
-    start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
+    start,
+    startDate: new Date(start),
     startDateF: formattedDate,
     startTimeMinutes,
-    end: formattedDate + (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : ''),
-    endDateF: formattedDate,
+    end,
+    endDate: new Date(end),
+    endDateF: formattedDateEnd,
     endTimeMinutes,
     ...eventOptions
   }
@@ -62,15 +67,24 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
   }
 
-  // Add event to the mutableEvents array.
-  // Make array reactive for future events creations & deletions.
-  if (!(event.startDateF in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDateF, [])
-  vuecal.mutableEvents[event.startDateF].push(event)
 
-  // Add the new event to the current view.
   // The event may have been edited on the fly to become a multiple-day event.
-  if (event.startDateF !== event.endDateF) vuecal.addMultipleDayEventsToView()
-  else vuecal.view.events.push(event)
+  if (event.startDateF !== event.endDateF) {
+    if (!('multiple-day' in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, 'multiple-day', [])
+    vuecal.mutableEvents['multiple-day'].push(event)
+
+    // Add the new event to the current view.
+    vuecal.addMultipleDayEventsToView(event)
+  }
+  else {
+    // Add event to the mutableEvents array.
+    // Make array reactive for future events creations & deletions.
+    if (!(event.startDateF in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDateF, [])
+    vuecal.mutableEvents[event.startDateF].push(event)
+
+    // Add the new event to the current view.
+    vuecal.view.events.push(event)
+  }
 
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
@@ -90,6 +104,8 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
   const eventStart = e.startDate.getTime()
   const eventEnd = e.endDate.getTime()
 
+  Vue.set(e, 'segments', {})
+
   // Create 1 segment per day in the event, but only within the current view.
   let timestamp = Math.max(viewStartDate.getTime(), eventStart)
   const end = Math.min(viewEndDate.getTime(), eventEnd)
@@ -99,9 +115,9 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
     const isFirstDay = timestamp === eventStart
     const isLastDay = end === eventEnd && nextMidnight > end
     const startDate = isFirstDay ? e.startDate : new Date(timestamp)
-    const formattedDate = isFirstDay ? e.startDateF : formatDate(startDate, 'yyyy-mm-dd')
+    const formattedDate = isFirstDay ? e.startDateF : formatDate(startDate)
 
-    Vue.set(e.segments, formattedDate, {
+    e.segments[formattedDate] = {
       startDate,
       startDateF: formattedDate,
       startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
@@ -113,7 +129,7 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
       isLastDay,
       height: 0,
       top: 0
-    })
+    }
 
     timestamp = nextMidnight
   }
