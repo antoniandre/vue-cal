@@ -2463,6 +2463,7 @@
         add recurring events
         add event formatted start/end time in emitted event
         allow resizing horizontally (add segments)
+  div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
@@ -2749,6 +2750,7 @@ export default {
       { code: 'sl', label: 'Slovenian' },
       { code: 'es', label: 'Spanish' },
       { code: 'sv', label: 'Swedish' },
+      { code: 'uk', label: 'Ukrainian' },
       { code: 'vi', label: 'Vietnamese' }
     ],
     locale: 'zh-cn',
