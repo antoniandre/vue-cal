@@ -575,35 +575,27 @@ export default {
 
       // Group events into dates.
       this.events.forEach(event => {
-        let [startDateF, startTime = ''] = event.start.split(' ')
+        const [startDateF, startTime = ''] = event.start.split(' ')
         const [hoursStart, minutesStart] = startTime.split(':')
-        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-
-        let [endDateF, endTime = ''] = event.end.split(' ')
+        const [endDateF, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
-        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-
-        const startTimestamp = new Date(event.start).getTime()
-        const endTimestamp = new Date(event.end).getTime()
         const multipleDays = startDateF !== endDateF
-
-        // Keep the event ids scoped to this calendar instance.
-        // eslint-disable-next-line
-        let _eid = `${this._uid}_${this.eventIdIncrement++}`
 
         event = Object.assign({
           ...eventDefaults,
-          _eid,
+          // Keep the event ids scoped to this calendar instance.
+          // eslint-disable-next-line
+          _eid: `${this._uid}_${this.eventIdIncrement++}`,
           overlapped: {},
           overlapping: {},
           simultaneous: {},
           segments: multipleDays ? {} : null,
           startDate: new Date(event.start),
           startDateF,
-          startTimeMinutes,
+          startTimeMinutes: parseInt(hoursStart) * 60 + parseInt(minutesStart),
           endDate: new Date(event.end),
           endDateF,
-          endTimeMinutes,
+          endTimeMinutes: parseInt(hoursEnd) * 60 + parseInt(minutesEnd),
           classes: (event.class || '').split(' ')
         }, event)
 
@@ -752,7 +744,6 @@ export default {
     // For week & day views.
     timeCells () {
       let timeCells = []
-      console.log('here', this.$props)
       for (let i = this.timeFrom, max = this.timeTo; i < max; i += this.timeStep) {
         timeCells.push({
           hours: Math.floor(i / 60),

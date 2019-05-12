@@ -590,7 +590,7 @@
     Read-only events (by default events are uneditable) with custom HTML content and css class (for event types).#[br]
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="23 * 60"
@@ -619,7 +619,7 @@
     li #[span.code e]: the associated javascript DOM event
   highlight-message.mt-3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   v-card.my-2.ma-auto.main-content(style="height: 523px")
-    //- vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
+    vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -644,7 +644,7 @@
           &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
           &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
           &lt;v-spacer/&gt;
-          &lt;strong&gt;{{ '\{\{ selectedEvent.startDate \}\}' }}&lt;/strong&gt;
+          &lt;strong&gt;{{ '\{\{ selectedEvent.startDateF \}\}' }}&lt;/strong&gt;
         &lt;/v-card-title&gt;
         &lt;v-card-text&gt;
           &lt;p v-html="selectedEvent.contentFull"/&gt;
@@ -730,7 +730,7 @@
       v-radio(label="cell background" value="cell" color="primary")
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
-      //- vue-cal.vuecal--green-theme(
+      vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
         xsmall
@@ -740,7 +740,7 @@
         events-count-on-year-view
         :events="events")
     v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
-      //- vue-cal.vuecal--yellow-theme(
+      vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
         xsmall
@@ -793,7 +793,7 @@
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
@@ -839,7 +839,7 @@
     | #[a(href="#ex--emitted-events") emitted events] example.
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -896,7 +896,7 @@
         }
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             small
             selected-date="2018-11-19"
@@ -927,7 +927,7 @@
       p In this example, a dialog box opens and lets you choose the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             selected-date="2018-11-19"
             small
             :time-from="10 * 60"
@@ -1246,7 +1246,7 @@
     span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.ex--all-day-events(
+    vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
@@ -1315,7 +1315,7 @@
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
     | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
@@ -1399,7 +1399,7 @@
     #[a(href="#ex--emitted-events") emitted events example].
 
   v-layout(align-center justify-center)
-    //- vue-cal.vuecal--blue-theme(
+    vue-cal.vuecal--blue-theme(
       small
       :time="false"
       hide-view-selector
@@ -1407,7 +1407,7 @@
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       style="max-width: 360px;height: 260px")
-    //- vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
+    vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
       xsmall
       :time="false"
       hide-view-selector
@@ -1459,7 +1459,7 @@
   pre {{ eventsCopy.map(e => e.title) }}
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -2456,7 +2456,6 @@
         add accessibility
         vue slots in version 2.6.0
         multiple-day events segments are stored in the same event and flushed on view change
-        cancel event delete with escape key
         do all the @todo
         use view events as much as possible instead of mutableEvents
         cleanup mutableEvents
@@ -2464,6 +2463,7 @@
         cleanup all the event date props
         add recurring events
         add event formatted start/end time in emitted event
+        add event indicator on out of scope days month view
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
@@ -2606,7 +2606,7 @@
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
         span.headline.text-uppercase {{ selectedEvent.title }}
         v-spacer
-        strong {{ selectedEvent.startDate }}
+        strong {{ selectedEvent.startDateF }}
       v-card-text
         p(v-html="selectedEvent.contentFull")
         strong Event details:
@@ -3172,7 +3172,7 @@ $primary: #42b983;
 .vuecal--yellow-theme {
   .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);color: #fff;}
   .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
-  .vuecal__title {background-color: rgba(255, 236, 202, 0.5);}
+  .vuecal__title-bar {background-color: rgba(255, 236, 202, 0.5);}
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(255, 236, 202, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
