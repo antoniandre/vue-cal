@@ -1,5 +1,5 @@
 let texts = {}
-export const setTexts = t => {texts = t}
+export const setTexts = t => { texts = t }
 
 export const now = new Date()
 // Cache today's date for better isDateToday() performances. Formatted without leading 0.

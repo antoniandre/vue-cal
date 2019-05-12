@@ -132,16 +132,16 @@ export default {
       this.vuecal.emitWithEvent('event-focus', this.event)
 
       // Unfocus previous event if any.
-      const onFocus = this.domEvents.focusAnEvent._eid
+      const onFocus = focusAnEvent._eid
       if (onFocus && onFocus !== this.event._eid) {
-        let event = this.vuecal.view.events.find(e => e._eid === this.domEvents.focusAnEvent._eid)
+        let event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
         if (event) event.focused = false
       }
 
       // Cancel delete on previous event if any.
       this.vuecal.cancelDelete()
 
-      this.domEvents.focusAnEvent._eid = this.event._eid
+      focusAnEvent._eid = this.event._eid
       this.event.focused = true
     }
   },

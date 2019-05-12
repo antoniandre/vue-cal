@@ -139,8 +139,8 @@ export default {
         selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
       }
       else if (this.view === 'year') {
-        selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear()
-          && selectedDate.getMonth() === this.data.startDate.getMonth())
+        selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
+          selectedDate.getMonth() === this.data.startDate.getMonth())
       }
       else {
         selected = selectedDate.getTime() === this.data.startDate.getTime()
@@ -169,43 +169,36 @@ export default {
         minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
       }
     },
-    events: {
-      get () {
-        console.log('getting events...', this.data.formattedDate)
-        const { startDate: cellStart, endDate: cellEnd } = this.data
-        let events = []
+    events () {
+      const { startDate: cellStart, endDate: cellEnd } = this.data
+      let events = []
 
-        // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
-        if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
-          // Means that when $parent.view.events changes all the cells will be refreshed.
-          events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
+      // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
+      if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
+        // Means that when $parent.view.events changes all the cells will be refreshed.
+        events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
 
-          // Position events with time in the timeline when there is a timeline and not in allDay slot.
-          if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
-            events.forEach(event => {
-              // all-day events are positionned via css: top-0 & bottom-0.
-              // So they behave as background events if not in allDay slot.
-              // @todo: Do we want this or not?
-              const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
-              if (event.startTimeMinutes && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
-            })
-          }
-
-          // this.$nextTick(this.checkCellOverlappingEvents)
-
-          if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
-
-          if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
-            events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
-          }
+        // Position events with time in the timeline when there is a timeline and not in allDay slot.
+        if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
+          events.forEach(event => {
+            // all-day events are positionned via css: top-0 & bottom-0.
+            // So they behave as background events if not in allDay slot.
+            // @todo: Do we want this or not?
+            const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
+            if (event.startTimeMinutes && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
+          })
         }
 
-        return events
-      },
-      // set (events) {
-      //   debugger
-      //   this.$parent.mutableEvents[this.data.formattedDate] = events
-      // }
+        // this.$nextTick(this.checkCellOverlappingEvents)
+
+        if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
+
+        if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
+          events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
+        }
+      }
+
+      return events
     },
     splitEvents () {
       let splitsEventIndexes = {}

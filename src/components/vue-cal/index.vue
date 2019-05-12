@@ -99,7 +99,7 @@
 
 <script>
 import { setTexts, now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
-import { eventDefaults, createAnEvent, createEventSegments, onResizeEvent, eventInRange } from './event-utils'
+import { eventDefaults, createAnEvent, createEventSegments, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -309,7 +309,7 @@ export default {
           timeoutId: null
         }
       },
-      mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+      mutableEvents: [], // An array of mutable events updated each time given events array changes.
       transitionDirection: 'right'
     }
   },
@@ -342,7 +342,6 @@ export default {
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
       this.view.lastCellDate = null // For month view, if filling cells after current month.
-      let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -355,24 +354,16 @@ export default {
           this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
           this.view.endDate = new Date(this.view.startDate.getFullYear() + 25, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          if (this.eventsCountOnYearView) {
-            this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
-          }
           break
         case 'year':
           this.view.startDate = new Date(date.getFullYear(), 0, 1)
           this.view.endDate = new Date(date.getFullYear() + 1, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          if (this.eventsCountOnYearView) {
-            this.view.events = this.events.filter(e => eventInRange(e, this.view.startDate, this.view.endDate))
-          }
           break
         case 'month':
           this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
           this.view.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          dateTmp = new Date(this.view.startDate)
-          endTime = this.view.endDate.getTime()
 
           // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
           let startDate = new Date(this.view.startDate)
@@ -390,21 +381,12 @@ export default {
           this.view.outOfScopeEvents = []
           for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
             cellDate = startDate.addDays(i)
+            const cellEnd = new Date(new Date(cellDate).setHours(23, 59, 59))
 
             if (currentMonth !== cellDate.getMonth()) {
-              formattedDate = formatDate(cellDate)
-              dayEvents = this.mutableEvents[formattedDate] || []
+              const dayEvents = this.mutableEvents.filter(e => eventInRange(e, cellDate, cellEnd))
               if (dayEvents.length) this.view.outOfScopeEvents.push(...dayEvents)
             }
-          }
-
-          while (dateTmp.getTime() <= endTime) {
-            dateTmp = dateTmp.addDays(1)
-            formattedDate = formatDate(dateTmp)
-
-            // Save the events of each day of the month into view object.
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents)
           }
           break
         case 'week':
@@ -412,23 +394,15 @@ export default {
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
           this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          dateTmp = new Date(date)
-          for (let i = 0; i < weekDaysCount; i++) {
-            formattedDate = formatDate(dateTmp.addDays(i))
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents)
-          }
           break
         case 'day':
           this.view.startDate = date
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
-          dayEvents = this.mutableEvents[formatDate(date)] || []
-          if (dayEvents.length) this.view.events = dayEvents
           break
       }
 
-      this.addMultipleDayEventsToView()
+      this.addEventsToView()
 
       if (this.ready) {
         const params = {
@@ -447,14 +421,26 @@ export default {
       }
     },
 
-    addMultipleDayEventsToView (events = []) {
-      // If multiple-day events.
-      events = events.length ? events : this.mutableEvents['multiple-day']
+    addEventsToView (events = []) {
+      const { id, startDate, endDate } = this.view
+      if (!events.length) this.view.events = []
+      events = events.length ? events : this.mutableEvents
 
-      if (['month', 'week', 'day'].includes(this.view.id) && events) {
-        this.view.events.push(...events.filter(
-          e => eventInRange(e, this.view.startDate, this.view.endDate)
-        ).map(e => createEventSegments(e, this.view.startDate, this.view.endDate)))
+      if (['month', 'week', 'day'].includes(id) && events) {
+        this.view.events.push(
+          ...events
+            .filter(e => eventInRange(e, startDate, endDate))
+            .map(e => (
+              // If multiple-day events.
+              e.startDateF === e.endDateF ? e : createEventSegments(e, startDate, endDate)
+            ))
+        )
+
+        if (id === 'month') this.view.events.push(...this.view.outOfScopeEvents)
+      }
+
+      else if (['years', 'year'].includes(id) && events && this.eventsCountOnYearView) {
+        this.view.events.push(...events.filter(e => eventInRange(e, startDate, endDate)))
       }
     },
 
@@ -570,8 +556,7 @@ export default {
 
     // Object of arrays of events indexed by dates.
     updateMutableEvents () {
-      // eslint-disable-next-line
-      this.mutableEvents = {}
+      this.mutableEvents = []
 
       // Group events into dates.
       this.events.forEach(event => {
@@ -584,7 +569,6 @@ export default {
         event = Object.assign({
           ...eventDefaults,
           // Keep the event ids scoped to this calendar instance.
-          // eslint-disable-next-line
           _eid: `${this._uid}_${this.eventIdIncrement++}`,
           overlapped: {},
           overlapping: {},
@@ -599,16 +583,12 @@ export default {
           classes: (event.class || '').split(' ')
         }, event)
 
-        // Make array reactive for future events creations & deletions.
-        if (!(event.startDateF in this.mutableEvents)) this.$set(this.mutableEvents, event.startDateF, [])
-        if (multipleDays && !('multiple-day' in this.mutableEvents)) this.$set(this.mutableEvents, 'multiple-day', [])
-        // eslint-disable-next-line
-        this.mutableEvents[multipleDays ? 'multiple-day' : event.startDateF].push(event)
+        this.mutableEvents.push(event)
       })
     },
 
     getPosition (e) {
-      // @todo: Cache bounding box and update it on resize.
+      // @todo: Cache bounding box & update it on resize.
       const rect = this.$refs.cells.getBoundingClientRect()
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
@@ -974,6 +954,7 @@ export default {
     events: {
       handler (events, oldEvents) {
         this.updateMutableEvents(events)
+        this.addEventsToView()
       },
       deep: true
     },

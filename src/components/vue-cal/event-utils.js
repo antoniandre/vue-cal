@@ -37,9 +37,7 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
   const minutes = parseInt(startTimeMinutes % 60)
   const endTimeMinutes = startTimeMinutes + 120
   const formattedHours = (hours < 10 ? '0' : '') + hours
-  const formattedEndHours = (hours + 2 < 10 ? '0' : '') + (hours + 2)
   const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
-  const formattedDateEnd = '2018-11-23'
   const start = formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
   const end = formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
 
@@ -49,7 +47,6 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     overlapped: {},
     overlapping: {},
     simultaneous: {},
-    segments: null,
 
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start,
@@ -58,8 +55,9 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     startTimeMinutes,
     end,
     endDate: new Date(end),
-    endDateF: formattedDateEnd,
+    endDateF: formattedDate,
     endTimeMinutes,
+    segments: null,
     ...eventOptions
   }
 
@@ -67,30 +65,19 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
   }
 
+  // Add event to the mutableEvents array.
+  vuecal.mutableEvents.push(event)
 
-  // The event may have been edited on the fly to become a multiple-day event.
-  if (event.startDateF !== event.endDateF) {
-    if (!('multiple-day' in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, 'multiple-day', [])
-    vuecal.mutableEvents['multiple-day'].push(event)
-
-    // Add the new event to the current view.
-    vuecal.addMultipleDayEventsToView(event)
-  }
-  else {
-    // Add event to the mutableEvents array.
-    // Make array reactive for future events creations & deletions.
-    if (!(event.startDateF in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDateF, [])
-    vuecal.mutableEvents[event.startDateF].push(event)
-
-    // Add the new event to the current view.
-    vuecal.view.events.push(event)
-  }
+  // Add the new event to the current view.
+  // The event may have been edited on the fly to become a multiple-day event,
+  // the method addEventsToView makes sure the segments are created.
+  vuecal.addEventsToView(event)
 
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
   // After creating a new event, check if it overlaps any other in current cell OR split.
-  const cellEvents = vuecal.mutableEvents[event.startDateF]
+  // const cellEvents = vuecal.mutableEvents[event.startDateF]
   if (vuecal.time) {
     // @todo check overlaps on event creation.
     // checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
@@ -140,19 +127,16 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
-  const eventDate = (event.segments && event.segments.startDateF) || event.startDateF
-  const index = event.segments ? 'multiple-day' : eventDate
-
   // Delete the event globally.
-  vuecal.mutableEvents[index] = vuecal.mutableEvents[index].filter(e => e._eid !== event._eid)
-  // Delete the event in the current view.
+  vuecal.mutableEvents = vuecal.mutableEvents.filter(e => e._eid !== event._eid)
+  // Delete the event from the current view.
   vuecal.view.events = vuecal.view.events.filter(e => e._eid !== event._eid)
 
   // @todo: delete from overlapping events array.
 }
 
 // EVENT OVERLAPS.
-//===================================================================
+// ===================================================================
 // @todo.
 // Only for the current view, recreated on view change.
 let eventOverlaps = {
@@ -167,7 +151,7 @@ export const checkCellOverlappingEvents = cellEvents => {
   })
 }
 
-export const checkCellOverlappingEvents_old = cellEvents => {
+/* export const checkCellOverlappingEvents_old = cellEvents => {
   if (cellEvents) {
     const foregroundEventsList = cellEvents.filter(e => !e.background && !e.allDay)
 
@@ -197,7 +181,7 @@ export const checkCellOverlappingEvents_old = cellEvents => {
   }
 
   return cellEvents
-}
+} */
 
 export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
   const src = event.segments || event

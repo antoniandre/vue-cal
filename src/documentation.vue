@@ -2455,7 +2455,6 @@
       //- TODO:
         add accessibility
         vue slots in version 2.6.0
-        multiple-day events segments are stored in the same event and flushed on view change
         do all the @todo
         use view events as much as possible instead of mutableEvents
         cleanup mutableEvents
@@ -2463,7 +2462,7 @@
         cleanup all the event date props
         add recurring events
         add event formatted start/end time in emitted event
-        add event indicator on out of scope days month view
+        allow resizing horizontally (add segments)
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
       The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
