@@ -128,7 +128,7 @@ export default {
         disabled: this.isDisabled,
         'before-min': this.isDisabled && this.isBeforeMinDate,
         'after-max': this.isDisabled && this.isAfterMaxDate,
-        selected: this.$parent.selectedDateFormatted === this.data.formattedDate
+        selected: this.$parent.view.selectedDate.getTime() === this.data.startDate.getTime()
       }
     },
     domEvents: {

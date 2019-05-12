@@ -97,7 +97,8 @@ export default {
     },
 
     goToToday () {
-      this.$parent.updateSelectedDate(new Date())
+      const lastMidnight = (new Date()).setHours(0, 0, 0)
+      this.$parent.updateSelectedDate(new Date(lastMidnight))
     },
 
     switchToBroaderView () {

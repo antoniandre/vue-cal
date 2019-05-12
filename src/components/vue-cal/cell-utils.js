@@ -1,7 +1,7 @@
 export const selectCell = (force = false, date, vuecal) => {
   vuecal.$emit('cell-click', date)
 
-  if (vuecal.view.selectedDate.toString() !== date.toString()) {
+  if (vuecal.view.selectedDate.getTime() !== date.getTime()) {
     vuecal.view.selectedDate = date
     vuecal.$emit('cell-focus', date)
   }

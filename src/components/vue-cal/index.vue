@@ -98,8 +98,8 @@
 </template>
 
 <script>
-import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
-import { createAnEvent, eventDefaults, onResizeEvent, eventInRange } from './event-utils'
+import { setTexts, now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
+import { eventDefaults, createAnEvent, createEventSegments, onResizeEvent, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -234,16 +234,16 @@ export default {
       default: false
     },
     onEventClick: {
-      type: Function,
-      default: () => {}
+      type: [Function, null],
+      default: null
     },
     onEventDblclick: {
-      type: Function,
-      default: () => {}
+      type: [Function, null],
+      default: null
     },
     onEventCreate: {
-      type: Function,
-      default: () => {}
+      type: [Function, null],
+      default: null
     },
     transitions: {
       type: Boolean,
@@ -319,6 +319,7 @@ export default {
       // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
       //   .then(response => (this.texts = response.default))
       this.texts = require(`./i18n/${locale}.json`)
+      setTexts(this.texts)
     },
 
     switchToNarrowerView () {
@@ -391,7 +392,7 @@ export default {
             cellDate = startDate.addDays(i)
 
             if (currentMonth !== cellDate.getMonth()) {
-              formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
+              formattedDate = formatDate(cellDate)
               dayEvents = this.mutableEvents[formattedDate] || []
               if (dayEvents.length) this.view.outOfScopeEvents.push(...dayEvents)
             }
@@ -399,7 +400,7 @@ export default {
 
           while (dateTmp.getTime() <= endTime) {
             dateTmp = dateTmp.addDays(1)
-            formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
+            formattedDate = formatDate(dateTmp)
 
             // Save the events of each day of the month into view object.
             dayEvents = this.mutableEvents[formattedDate] || []
@@ -413,7 +414,7 @@ export default {
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           dateTmp = new Date(date)
           for (let i = 0; i < weekDaysCount; i++) {
-            formattedDate = formatDate(dateTmp.addDays(i), 'yyyy-mm-dd', this.texts)
+            formattedDate = formatDate(dateTmp.addDays(i))
             dayEvents = this.mutableEvents[formattedDate] || []
             if (dayEvents.length) this.view.events.push(...dayEvents)
           }
@@ -422,53 +423,12 @@ export default {
           this.view.startDate = date
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
-          dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
+          dayEvents = this.mutableEvents[formatDate(date)] || []
           if (dayEvents.length) this.view.events = dayEvents
           break
       }
 
-      // If multiple-day events.
-      if (['month', 'week', 'day'].includes(this.view.id) && this.mutableEvents['multiple-day']) {
-        const dayMilliseconds = 24 * 3600 * 1000
-        const viewStart = this.view.startDate.getTime()
-        const viewEnd = this.view.endDate.getTime()
-
-        this.view.events.push(...this.mutableEvents['multiple-day'].filter(
-          e => eventInRange(e, this.view.startDate, this.view.endDate)
-        ).map(e => {
-          const eventStart = e.startDate.getTime()
-          const eventEnd = e.endDate.getTime()
-
-          // Create 1 segment per day in the event, but only within the current view.
-          let timestamp = Math.max(viewStart, eventStart)
-          const end = Math.min(viewEnd, eventEnd)
-
-          while (timestamp <= end) {
-            const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
-            const isFirstDay = timestamp === eventStart
-            const isLastDay = eventEnd < viewEnd && nextMidnight > end
-            const startDate = isFirstDay ? e.startDate : new Date(timestamp)
-            formattedDate = isFirstDay ? e.startDateF : formatDate(startDate, 'yyyy-mm-dd', this.texts)
-
-            this.$set(e.segments, formattedDate, {
-              startDate,
-              startDateF: formattedDate,
-              startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
-              endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
-              overlapping: {},
-              overlapped: {},
-              simultaneous: {},
-              isFirstDay,
-              isLastDay,
-              height: 0,
-              top: 0
-            })
-
-            timestamp = nextMidnight
-          }
-          return e
-        }))
-      }
+      this.addMultipleDayEventsToView()
 
       if (this.ready) {
         const params = {
@@ -484,6 +444,17 @@ export default {
           ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
+      }
+    },
+
+    addMultipleDayEventsToView (events = []) {
+      // If multiple-day events.
+      events = events.length ? events : this.mutableEvents['multiple-day']
+
+      if (['month', 'week', 'day'].includes(this.view.id) && events) {
+        this.view.events.push(...events.filter(
+          e => eventInRange(e, this.view.startDate, this.view.endDate)
+        ).map(e => createEventSegments(e, this.view.startDate, this.view.endDate)))
       }
     },
 
@@ -699,10 +670,12 @@ export default {
       if (date && typeof date === 'string') date = stringToDate(date)
 
       if (date && date instanceof Date) {
-        if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
+        let { selectedDate } = this.view
+        if (selectedDate) this.transitionDirection = selectedDate.getTime() > date.getTime() ? 'left' : 'right'
         // Select the day at midnight in order to allow fetching events on whole day.
         date.setHours(0, 0, 0)
-        this.view.selectedDate = date
+
+        if (!selectedDate || selectedDate.getTime() !== date.getTime()) this.view.selectedDate = date
         this.switchView(this.view.id)
       }
     }
@@ -710,6 +683,7 @@ export default {
 
   created () {
     if (this.locale !== 'en') this.loadLocale(this.locale)
+    else setTexts(this.texts)
 
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
@@ -760,9 +734,6 @@ export default {
   },
 
   computed: {
-    selectedDateFormatted () {
-      return formatDate(this.view.selectedDate, 'yyyy-mm-dd', this.texts)
-    },
     views () {
       return {
         years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },
@@ -894,7 +865,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: formatDate(startDate),
               endDate,
               content: fromYear + i,
               current: fromYear + i === this.now.getFullYear()
@@ -910,7 +881,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: formatDate(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
               current: i === this.now.getMonth() && fromYear === this.now.getFullYear()
@@ -937,7 +908,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: formatDate(startDate),
               endDate,
               content: startDate.getDate(),
               today: isToday,
@@ -960,7 +931,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: formatDate(startDate),
               endDate,
               today: !todayFound && isDateToday(startDate) && !todayFound++
             }
@@ -973,7 +944,7 @@ export default {
 
           cells = [{
             startDate,
-            formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+            formattedDate: formatDate(startDate),
             endDate,
             today: isDateToday(startDate)
           }]

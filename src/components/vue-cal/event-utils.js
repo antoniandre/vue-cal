@@ -1,4 +1,5 @@
 import Vue from 'vue'
+import { formatDate } from './date-utils'
 
 export const eventDefaults = {
   _eid: null,
@@ -61,10 +62,16 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
     vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
   }
 
+  // Add event to the mutableEvents array.
   // Make array reactive for future events creations & deletions.
   if (!(event.startDateF in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDateF, [])
-
   vuecal.mutableEvents[event.startDateF].push(event)
+
+  // Add the new event to the current view.
+  // The event may have been edited on the fly to become a multiple-day event.
+  if (event.startDateF !== event.endDateF) vuecal.addMultipleDayEventsToView()
+  else vuecal.view.events.push(event)
+
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
@@ -76,6 +83,42 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
   }
 
   return event
+}
+
+const dayMilliseconds = 24 * 3600 * 1000
+export const createEventSegments = (e, viewStartDate, viewEndDate) => {
+  const eventStart = e.startDate.getTime()
+  const eventEnd = e.endDate.getTime()
+
+  // Create 1 segment per day in the event, but only within the current view.
+  let timestamp = Math.max(viewStartDate.getTime(), eventStart)
+  const end = Math.min(viewEndDate.getTime(), eventEnd)
+
+  while (timestamp <= end) {
+    const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
+    const isFirstDay = timestamp === eventStart
+    const isLastDay = end === eventEnd && nextMidnight > end
+    const startDate = isFirstDay ? e.startDate : new Date(timestamp)
+    const formattedDate = isFirstDay ? e.startDateF : formatDate(startDate, 'yyyy-mm-dd')
+
+    Vue.set(e.segments, formattedDate, {
+      startDate,
+      startDateF: formattedDate,
+      startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
+      endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
+      overlapping: {},
+      overlapped: {},
+      simultaneous: {},
+      isFirstDay,
+      isLastDay,
+      height: 0,
+      top: 0
+    })
+
+    timestamp = nextMidnight
+  }
+
+  return e
 }
 
 export const deleteAnEvent = (event, vuecal) => {
