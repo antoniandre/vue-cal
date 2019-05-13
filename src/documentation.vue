@@ -1850,7 +1850,7 @@
       &lt;/div&gt;
 
   v-card.my-2.ma-auto.main-content(style="height: 400px")
-    //- vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
+    vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :dbl-click-to-navigate="false"
       default-view="month"
@@ -1942,7 +1942,7 @@
     Note that #[span.code _eid] is a reserved keyword.
 
   v-card.my-2.ma-auto.main-content(style="height: 523px")
-    //- vue-cal.vuecal--green-theme.ex--custom-event-rendering(
+    vue-cal.vuecal--green-theme.ex--custom-event-rendering(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -1953,10 +1953,10 @@
         .vuecal__event-title.mb-4(v-html="event.title")
         small.vuecal__event-time
           strong.mr-1 Event start:
-          span {{ event.startTime }}
+          span {{ event.start.substr(11) }}
           br
           strong.mr-1 Event end:
-          span {{ event.endTime }}
+          span {{ event.end.substr(11) }}
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -1971,8 +1971,8 @@
         &lt;div class="vuecal__event-title vuecal__event-title--edit" contenteditable @blur="event.title = $event.target.innerHTML" v-html="event.title" /&gt;
 
         &lt;small class="vuecal__event-time"&gt;
-          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.startTime \}\}' }}&lt;/span&gt;&lt;br/&gt;
-          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.endTime \}\}' }}&lt;/span&gt;
+          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.substr(11) \}\}' }}&lt;/span&gt;&lt;br/&gt;
+          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.substr(11) \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
     &lt;/vue-cal&gt;
 

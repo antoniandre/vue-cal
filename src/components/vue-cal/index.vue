@@ -3,7 +3,6 @@
   vuecal-header(
     :options="$props"
     :view-props="{ views, view, weekDaysInHeader }"
-    :months="months"
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
     :switch-to-narrower-view="switchToNarrowerView")
