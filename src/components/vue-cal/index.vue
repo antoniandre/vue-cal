@@ -50,7 +50,7 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
-            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
               //- Only for minCellWidth on week view.
               weekdays-headings(
                 v-if="minCellWidth && view.id === 'week'"
@@ -62,7 +62,7 @@
                 :week-days-short="weekDaysShort"
                 :switch-to-narrower-view="switchToNarrowerView")
 
-              .vuecal__flex(grow :wrap="!minCellWidth || view.id !== 'week'")
+              .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
@@ -616,7 +616,7 @@ export default {
 
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
-      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
+      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split', 'segments']
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
       if (!event.segments) delete event.segments
 

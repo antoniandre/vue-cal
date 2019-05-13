@@ -96,29 +96,32 @@
       v-chip.pr-1(color="green" outline small disabled)
         v-icon.mr-1 check
         | Option to start week on Sunday
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | All day events in top bar
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Custom cell rendering
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Events count on year(s) views
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Create new event
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | min &amp; max dates
+      v-chip.pr-1(color="green" outline small disabled)
+        v-icon.mr-1 check
+        | Today button
 
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | All day events in top bar
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Custom cell rendering
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Events count on year(s) views
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Create new event
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | min &amp; max dates
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
-      | Today button
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
-      | Support more simultaneous events
+      | Externalize locales
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
+      | Recurring events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Drag events
@@ -130,13 +133,10 @@
       | Optional tooltip on events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
+      | Support more simultaneous events
+    v-chip.pr-1(color="deep-orange" outline small disabled)
+      v-icon.mr-1 access_time
       | Improve multiple day events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Externalize locales
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Recurring events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
@@ -581,6 +581,10 @@
           class: 'sport'
         }
       ]
+  sshpre(language="css" label="CSS").
+    /* Different color for different event types. */
+    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+    .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
   //- Example.
   h4.title
@@ -650,8 +654,9 @@
           &lt;p v-html="selectedEvent.contentFull"/&gt;
           &lt;strong&gt;Event details:&lt;/strong&gt;
           &lt;ul&gt;
-            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.startTime \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.endTime \}\}' }}&lt;/li&gt;
+            &lt;!-- You can also manipulate the Date objects `startDate` &amp; `endDate`. --&gt;
+            &lt;li&gt;Event starts at: {{ '\{\{ (selectedEvent.start || \'\').substr(11) \}\}' }}&lt;/li&gt;
+            &lt;li&gt;Event ends at: {{ '\{\{ (selectedEvent.end || \'\').substr(11) \}\}' }}&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/v-card-text&gt;
       &lt;/v-card&gt;
@@ -1573,7 +1578,7 @@
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-4.mb-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1644,7 +1649,7 @@
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       small
       :time-from="5 * 60"
       :time-step="15"
@@ -1701,7 +1706,7 @@
     #[span.code leisure] CSS class.
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme.ex--custom-events-count(
+    vue-cal.vuecal--green-theme.ex--custom-events-count(
       selected-date="2018-11-19"
       xsmall
       :time-from="10 * 60"
@@ -2436,8 +2441,17 @@
       ul
         li New scoped slots syntax, requires Vue@2.6.0+
         li Added function to get minutes at cursor
-        li Refactored multiple day events &amp; save segments inside events
-        li Refactored event object save segments inside events
+        li
+          | Internal events structure has changed:
+          ul
+            li Refactored multiple day events &amp; save segments inside events
+            li Refactored event object save segments inside events
+            li.
+              #[span.code startDate]/#[span.code endDate] are now Date Objects.#[br]
+              If you want formatted strings, use #[span.code start]/#[span.code end] instead
+            li.
+              #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
+              use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
         li Add a javascript Date object in events
         li Add a resizing class on events being resized
         li Add deletable, resizable attributes on events to override global
@@ -2611,8 +2625,8 @@
         p(v-html="selectedEvent.contentFull")
         strong Event details:
         ul
-          li Event starts at: {{ selectedEvent.startTime }}
-          li Event ends at: {{ selectedEvent.endTime }}
+          li Event starts at: -{{ (selectedEvent.start || '').substr(11) }}
+          li Event ends at: -{{ (selectedEvent.end || '').substr(11) }}
 
   v-dialog(v-model="showEventCreationDialog" :persistent="true" max-width="420")
     v-card
