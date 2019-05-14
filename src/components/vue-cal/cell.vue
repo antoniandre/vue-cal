@@ -26,7 +26,7 @@
           :all-day="allDay"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
-          div(slot="event-renderer" slot-scope="{ event, view }")
+          template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
 </template>
@@ -307,17 +307,17 @@ export default {
   &.disabled {color: #ccc;cursor: not-allowed;}
 
   &-events-count {
-    background: #999;
-    color: #fff;
     position: absolute;
-    border-radius: 12px;
     left: 50%;
+    top: 65%;
     transform: translateX(-50%);
     min-width: 12px;
-    padding: 0 3px;
     height: 12px;
-    margin-top: -1px;
     line-height: 12px;
+    padding: 0 3px;
+    background: #999;
+    color: #fff;
+    border-radius: 12px;
     font-size: 10px;
     box-sizing: border-box;
   }

@@ -6,13 +6,14 @@
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
     :switch-to-narrower-view="switchToNarrowerView")
-    slot(slot="arrow-prev" name="arrow-prev")
+    template(v-slot:arrow-prev name="arrow-prev")
       i.angle
-    slot(slot="arrow-next" name="arrow-next")
+    template(v-slot:arrow-next name="arrow-next")
       i.angle
-    slot(slot="today-btn" name="today-button")
+    template(v-slot:today-btn name="today-button")
       span.default {{ texts.today }}
-    slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    template(v-slot:title)
+      slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -30,7 +31,7 @@
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
               :splits="hasSplits && splitDays || []")
-              div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+              template(v-slot:event-renderer="{ event, view }")
                 slot(name="event-renderer" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
                     v-if="editableEvents && event.title"
@@ -70,7 +71,7 @@
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
                   :splits="hasSplits && splitDays || []")
-                  div(slot="cell-content" slot-scope="{ events, split, selectCell }")
+                  template(v-slot:cell-content="{ events, split, selectCell }")
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
@@ -78,7 +79,7 @@
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
                       .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                         slot(name="no-event") {{ texts.noEvent }}
-                  div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                  template(v-slot:event-renderer="{ event, view }")
                     slot(name="event-renderer" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
                         v-if="editableEvents && event.title"
@@ -93,7 +94,7 @@
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
-                  slot(slot="no-event" name="no-event") {{ texts.noEvent }}
+                  slot(v-slot:no-event) {{ texts.noEvent }}
 </template>
 
 <script>

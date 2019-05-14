@@ -275,8 +275,10 @@
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
-      v-icon(slot="arrow-prev") arrow_back
-      v-icon(slot="arrow-next") arrow_forward
+      template(v-slot:arrow-prev)
+        v-icon arrow_back
+      template(v-slot:arrow-next)
+        v-icon arrow_forward
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal hide-view-selector :time="false" default-view="month" xsmall&gt;
       &lt;i slot="arrow-prev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
@@ -1329,6 +1331,7 @@
       editable-events
       :events="splitEvents"
       :min-cell-width="splitsExampleMinCellWidth")
+      template(v-slot:no-event) there is no event dude
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'fit to container\' : \'min cell width 400px\' \}\}' }}
@@ -1660,14 +1663,9 @@
       div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
-  highlight-message.mt-4(type="tips")
-    ul
-      li.
-        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
+  highlight-message.mt-4(type="tips").
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
              :time-from="5 * 60"
@@ -1692,15 +1690,10 @@
     a(href="#ex--custom-events-count") # Custom events count
     a#ex--custom-events-count(name="ex--custom-events-count")
 
-  highlight-message(type="tips")
-    ul
-      li.
-        Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
+  highlight-message(type="tips").
+    Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class.
@@ -1768,15 +1761,10 @@
   h4.title
     a(href="#ex--custom-title-and-cells") # Custom title &amp; cells
     a#ex--custom-title-and-cells(name="ex--custom-title-and-cells")
-  highlight-message(type="tips")
-    ul
-      li.
-        Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
-        if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
+  highlight-message(type="tips").
+    Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
+    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   h5.mt-4.subheading.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom title
@@ -1855,12 +1843,12 @@
       :dbl-click-to-navigate="false"
       default-view="month"
       :events="events")
-      div(slot="title" slot-scope="{ title, view }")
+      template(v-slot:title="{ title, view }")
         | 🎉&nbsp;{{ view.startDate.getFullYear() }}-{{ (view.startDate.getMonth() + 1) < 10 ? '0' : '' }}{{ view.startDate.getMonth() + 1 }}
         span(v-if="view.id === 'week'") &nbsp;—&nbsp;w{{ view.startDate.getWeek() }}
         span(v-else-if="view.id === 'day'") -{{ view.startDate.getDate() < 10 ? '0' : '' }}{{ view.startDate.getDate() }}
         | &nbsp;🎉
-      div(slot="cell-content" slot-scope="{ cell, view, events, goNarrower }")
+      template(v-slot:cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
@@ -1872,26 +1860,26 @@
              :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
-      &lt;div slot="title" slot-scope="{ title, view }"&gt;
+      &lt;template v-slot:title="{ title, view }"&gt;
         🎉 {{ '\{\{ view.startDate.getFullYear() \}\}' }}-{{ '\{\{ (view.startDate.getMonth() + 1) < 10 ? \'0\' : \'\' \}\}' }}{{ '\{\{ view.startDate.getMonth() + 1 \}\}' }}
         &lt;!-- Print week number on week view --&gt;
         &lt;span v-if="view.id === 'week'"&gt;— w{{ '\{\{ view.startDate.getWeek() \}\}' }}&lt;/span&gt;
         &lt;!-- Print current day on day view --&gt;
         &lt;span v-else-if="view.id === 'day'"&gt;-{{ '\{\{ view.startDate.getDate() < 10 ? \'0\' : \'\' \}\}' }}{{ '\{\{ view.startDate.getDate() \}\}' }}&lt;/span&gt;
         🎉
-      &lt;/div&gt;
+      &lt;/template&gt;
 
       &lt;!-- Custom cells --&gt;
-      &lt;div slot="cell-content" slot-scope="{ cell, view, events, goNarrower }"&gt;
+      &lt;template v-slot:cell-content="{ cell, view, events, goNarrower }"&gt;
         &lt;span class="vuecal__cell-date" :class="view.id" v-if="view.id === 'day'" @click="goNarrower"&gt;
           {{ '\{\{ cell.date.getDate() \}\}' }}
         &lt;/span&gt;
         &lt;span class="vuecal__cell-events-count" v-if="view.id === 'month' &amp;&amp; events.length"&gt;{{ '\{\{ events.length \}\}' }}&lt;/span&gt;
         &lt;span class="vuecal__no-event" v-if="['week', 'day'].includes(view.id) &amp;&amp; !events.length"&gt;Nothing here 👌&lt;/span&gt;
-      &lt;/div&gt;
+      &lt;/template&gt;
 
       &lt;!-- Alternatively to custom cells if you just want custom no-event text: --&gt;
-      &lt;!-- &lt;div slot="no-event"&gt;Nothing here 👌&lt;/div&gt; --&gt;
+      &lt;!-- &lt;template v-slot:no-event&gt;Nothing here 👌&lt;/template&gt; --&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -1900,14 +1888,9 @@
     a#ex--custom-event-rendering(name="ex--custom-event-rendering")
   p.mb-2 Using Vue.js scoped slots, you can override the events rendering.
 
-  highlight-message.my-2(type="tips")
-    ul
-      li.
-        If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-        #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]].
-      li
-        strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
-
+  highlight-message.my-2(type="tips").
+    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]].
   highlight-message.my-3(type="info")
     | By default an event is rendered as follows.#[br]
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
@@ -1948,7 +1931,7 @@
       :time-to="19 * 60"
       hide-weekends
       :events="eventsToPop")
-      div(slot="event-renderer" slot-scope="{ event, view }")
+      template(v-slot:event-renderer="{ event, view }")
         v-icon.mt-2(color="white" x-large) {{ event.icon }}
         .vuecal__event-title.mb-4(v-html="event.title")
         small.vuecal__event-time
@@ -1963,17 +1946,21 @@
              :time-to="19 * 60"
              hide-weekends
              :events="events"&gt;
-      &lt;div slot="event-renderer" slot-scope="{ event, view }"&gt;
+      &lt;template v-slot:event-renderer="{ event, view }"&gt;
         &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
 
         &lt;div class="vuecal__event-title" v-html="event.title" /&gt;
         &lt;!-- Or if your events are editable: --&gt;
-        &lt;div class="vuecal__event-title vuecal__event-title--edit" contenteditable @blur="event.title = $event.target.innerHTML" v-html="event.title" /&gt;
+        &lt;div class="vuecal__event-title vuecal__event-title--edit"
+             contenteditable
+             @blur="event.title = $event.target.innerHTML"
+             v-html="event.title" /&gt;
 
         &lt;small class="vuecal__event-time"&gt;
           &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.substr(11) \}\}' }}&lt;/span&gt;&lt;br/&gt;
           &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.substr(11) \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
