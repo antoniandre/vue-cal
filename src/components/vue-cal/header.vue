@@ -132,6 +132,7 @@ export default {
 .vuecal {
   &__menu {
     padding: 0;
+    margin: 0;
     list-style-type: none;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.02);
