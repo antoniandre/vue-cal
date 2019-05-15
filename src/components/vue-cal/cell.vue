@@ -175,8 +175,21 @@ export default {
 
       // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
       if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
-        // Means that when $parent.view.events changes all the cells will be refreshed.
-        events = this.$parent.view.events.filter(e => eventInRange(e, cellStart, cellEnd))
+        // Means that when $parent.view.events changes all the cells will be looking up new value. :/
+        // Also clone array to prevent modifying original.
+        events = this.$parent.view.events.slice(0)
+
+        if (this.view === 'month') {
+          events.push(...this.$parent.view.outOfScopeEvents)
+        }
+
+        events = events.filter(e => eventInRange(e, cellStart, cellEnd))
+
+        if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
+
+        if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
+          events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
+        }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
         if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
@@ -190,12 +203,6 @@ export default {
         }
 
         // this.$nextTick(this.checkCellOverlappingEvents)
-
-        if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
-
-        if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
-          events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
-        }
       }
 
       return events

@@ -1577,7 +1577,7 @@
         v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
     div.scrollable
-      div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
+      div.mt-2.pt-2(v-for="(l, i) in logs" :key="i" :style="i && 'border-top: 1px solid #ddd'")
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-4.mb-2.ma-auto.main-content
@@ -1588,7 +1588,7 @@
       :disable-views="['years', 'year']"
       hide-weekends
       editable-events
-      :events="eventsCopy2"
+      :events="multipleDayEvents"
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
       @cell-click="logEvents('cell-click', $event)"
@@ -2419,10 +2419,6 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  //- div #[strong Version 1.55.0] Externalize all locales from main library
-    highlight-message(type="success").
-      This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
-      Now, only the locale you need will be loaded on demand (as a separate request).
   div #[strong Version 2.0.0]
     highlight-message(type="success")
       ul
@@ -2431,6 +2427,10 @@
         li
           | Internal events structure has changed:
           ul
+            li.
+              Externalize all locales from main library#[br]
+              Now, only the locale you need will be loaded on demand (as a separate request).#[br]
+              This will ensure Vue Cal keeps its file size as light as possible.
             li Refactored multiple day events &amp; save segments inside events
             li Refactored event object save segments inside events
             li.
@@ -2447,22 +2447,24 @@
         li Calculate event segments within current view only
         li Improve rendering performances on event resizing
         li Improve resizing events logic
-        li Week view date range takes hideWeekends in consideration
+        li Week view date range takes #[span.code hideWeekends] in consideration
         li.
           Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
           #[span.code twelve-hour] and the corresponding css class to
           #[span.code .vuecal--twelve-hour].
         li Fix bug: allow date selection before Epoch time!
+        li.
+          On month view, out of scope events returned by emitted events don't include
+          events that are already in the events array of the current month.
+          (may happen with multiple-day events)
       //- TODO:
         add accessibility
-        vue slots in version 2.6.0
         do all the @todo
         use view events as much as possible instead of mutableEvents
         cleanup mutableEvents
         at any time return view events not mutable events to user
         cleanup all the event date props
         add recurring events
-        add event formatted start/end time in emitted event
         allow resizing horizontally (add segments)
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
@@ -2760,7 +2762,7 @@ export default {
     overlapEvents: true,
     indicatorStyle: 'count',
     now: new Date(),
-    log: [],
+    logs: [],
     showDialog: false,
     showEventCreationDialog: false,
     showAllDayEvents: 0,
@@ -3055,10 +3057,10 @@ export default {
       if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].indexOf(emittedEventName) !== -1) {
         return
       }
-      this.log.unshift({ name: emittedEventName, args: JSON.stringify(params) })
+      this.logs.unshift({ name: emittedEventName, args: JSON.stringify(params) })
     },
     clearEventsLog () {
-      this.log = []
+      this.logs = []
     },
     customEventsCount: events => events ? events.filter(e => e.class === 'leisure').length : 0,
     onEventClick (event, e) {

@@ -374,20 +374,6 @@ export default {
           // Used in viewCells computed array & returned in emitted events.
           this.view.firstCellDate = startDate
           this.view.lastCellDate = startDate.addDays(41)
-
-          // Save out of scope events into the view object separated from the array of in-scope events.
-          let currentMonth = this.view.startDate.getMonth()
-          let cellDate = null
-          this.view.outOfScopeEvents = []
-          for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
-            cellDate = startDate.addDays(i)
-            const cellEnd = new Date(new Date(cellDate).setHours(23, 59, 59))
-
-            if (currentMonth !== cellDate.getMonth()) {
-              const dayEvents = this.mutableEvents.filter(e => eventInRange(e, cellDate, cellEnd))
-              if (dayEvents.length) this.view.outOfScopeEvents.push(...dayEvents)
-            }
-          }
           break
         case 'week':
           const weekDaysCount = this.hideWeekends ? 5 : 7
@@ -412,9 +398,9 @@ export default {
           ...(this.view.id === 'month' ? {
             firstCellDate: this.view.firstCellDate,
             lastCellDate: this.view.lastCellDate,
-            outOfScopeEvents: this.view.outOfScopeEvents
+            outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
-          events: this.view.events,
+          events: this.view.events.map(this.cleanupEvent),
           ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
@@ -422,7 +408,7 @@ export default {
     },
 
     addEventsToView (events = []) {
-      const { id, startDate, endDate } = this.view
+      const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       if (!events.length) this.view.events = []
       events = events.length ? events : this.mutableEvents
 
@@ -436,7 +422,17 @@ export default {
             ))
         )
 
-        if (id === 'month') this.view.events.push(...this.view.outOfScopeEvents)
+        if (id === 'month') {
+          // Save out of scope events into the view object separated from the array of in-scope events.
+          this.view.outOfScopeEvents = []
+          events.forEach(e => {
+            if (eventInRange(e, firstCellDate, startDate) || eventInRange(e, endDate, lastCellDate)) {
+              // Only add to the view events array if not already there (multiple-day events case).
+              if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.outOfScopeEvents.push(e)
+              // if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.events.push(e)
+            }
+          })
+        }
       }
 
       else if (['years', 'year'].includes(id) && events && this.eventsCountOnYearView) {
@@ -616,20 +612,11 @@ export default {
 
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
-      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split', 'segments']
+      const discardProps = [
+        'height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes',
+        'split', 'segments', 'deletable','deleting', 'resizable', 'resizing', 'focused'
+      ]
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
-      if (!event.segments) delete event.segments
-
-      // Return date objects for easy manipulation.
-      const [date1, time1] = event.start.split(' ')
-      const [y1, m1, d1] = (date1 && date1.split('-')) || [0, 0, 0]
-      const [h1, min1] = (time1 && time1.split(':')) || [0, 0]
-      event.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
-
-      const [date2, time2] = event.end.split(' ')
-      const [y2, m2, d2] = (date2 && date2.split('-')) || [0, 0, 0]
-      const [h2, min2] = (time2 && time2.split(':')) || [0, 0]
-      event.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
 
       return event
     },
