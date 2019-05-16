@@ -221,6 +221,10 @@ export default {
       type: Boolean,
       default: false
     },
+    resizeX: {
+      type: Boolean,
+      default: false
+    },
     noEventOverlaps: {
       type: Boolean,
       default: false
@@ -458,13 +462,20 @@ export default {
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
       let segment = event.segments && event.segments[resizeAnEvent.start]
+      const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
       // Don't allow time above 24 hours.
-      resizeAnEvent.endTimeMinutes = Math.min(this.minutesAtCursor(e), 24 * 60)
+      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 24 * 60)
 
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
 
+      if (this.resizeX && this.view.id === 'week') {
+        let cellsWidth = this.$refs.cells.offsetWidth
+        let cellWidth = cellsWidth / (this.hideWeekends ? 5 : 7)
+        Math.floor(cursorCoords.x / cellWidth)
+        console.log(Math.floor(cursorCoords.x / cellWidth))
+      }
       // @todo: handle splits?
       // if (this.hasSplits && this.splitDays) {
       //   event = event.find(e => e.split === resizeAnEvent.split)
@@ -476,11 +487,20 @@ export default {
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
-        const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
+        let event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
+          let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
+          mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
+          mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+          mutableEvent.endDate = new Date(event.end)
+          event.endTimeMinutes = mutableEvent.endTimeMinutes
+          event.end = mutableEvent.end
+          event.endDate = mutableEvent.endDate
+
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
         }
+
         if (event) event.resizing = false
         resizeAnEvent._eid = null
         resizeAnEvent.start = null
@@ -553,16 +573,44 @@ export default {
     // Object of arrays of events indexed by dates.
     updateMutableEvents () {
       this.mutableEvents = []
+      console.log('creating events')
 
       // Group events into dates.
       this.events.forEach(event => {
-        const [startDateF, startTime = ''] = event.start.split(' ')
-        const [hoursStart, minutesStart] = startTime.split(':')
-        const [endDateF, endTime = ''] = event.end.split(' ')
-        const [hoursEnd, minutesEnd] = endTime.split(':')
+        if (event.endDate) debugger
+        // Event Start, accept formatted string or Date object.
+        let start, startDate, startDateF, startTime, hoursStart, minutesStart
+        if (event.start) {
+          !([startDateF, startTime = ''] = event.start.split(' '))
+          !([hoursStart, minutesStart] = startTime.split(':'))
+          startDate = new Date(event.start)
+        }
+        else if (event.startDate && event.startDate instanceof Date) {
+          startDateF = formatDate(event.startDate)
+          hoursStart = event.startDate.getHours()
+          minutesStart = event.startDate.getMinutes()
+          startDate = event.startDate
+        }
+        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+        start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
+
+        // Event End, accept formatted string or Date object.
+        let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
+        if (event.end) {
+          !([endDateF, endTime = ''] = event.end.split(' '))
+          !([hoursEnd, minutesEnd] = endTime.split(':'))
+          endDate = new Date(event.end)
+        }
+        else if (event.endDate && event.endDate instanceof Date) {
+          endDateF = formatDate(event.endDate)
+          hoursEnd = event.endDate.getHours()
+          minutesEnd = event.endDate.getMinutes()
+          endDate = event.endDate
+        }
+        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+        end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
+
         const multipleDays = startDateF !== endDateF
-        const startDate = new Date(event.start)
-        const endDate = new Date(event.end)
 
         event = Object.assign({
           ...eventDefaults,
@@ -572,10 +620,12 @@ export default {
           overlapping: {},
           simultaneous: {},
           segments: multipleDays ? {} : null,
+          start,
           startDate,
-          startTimeMinutes: parseInt(hoursStart) * 60 + parseInt(minutesStart),
+          startTimeMinutes,
+          end,
           endDate,
-          endTimeMinutes: parseInt(hoursEnd) * 60 + parseInt(minutesEnd),
+          endTimeMinutes,
           daysCount: multipleDays ? countDays(startDate, endDate) : 1,
           classes: (event.class || '').split(' ')
         }, event)
@@ -593,18 +643,20 @@ export default {
 
     minutesAtCursor (e) {
       let startTimeMinutes = 0
+      let cursorCoords = {}
+
       if (typeof e === 'number') startTimeMinutes = e
       else if (typeof e === 'object') {
-        const mouseY = this.getPosition(e).y
-        startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
+        cursorCoords = this.getPosition(e)
+        startTimeMinutes = cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
       }
 
-      return startTimeMinutes
+      return { startTimeMinutes, cursorCoords }
     },
 
     // Allow call from cell click & hold or external call via $refs.
     createEvent (formattedDate, e = null, eventOptions = {}) {
-      return createAnEvent(formattedDate, this.minutesAtCursor(e), eventOptions, this)
+      return createAnEvent(formattedDate, this.minutesAtCursor(e).startTimeMinutes, eventOptions, this)
     },
 
     // Prepare the event to return it with an emitted event.

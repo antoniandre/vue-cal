@@ -50,6 +50,7 @@ const nth = d => {
   }
 }
 
+// Time in minutes.
 export const formatTime = (time, format = 'HH:mm') => {
   const H = Math.floor(time / 60)
   const h = H % 12 ? H % 12 : 12

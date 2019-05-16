@@ -2440,6 +2440,7 @@
               #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
               use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
         li Add a javascript Date object in events
+        li Allow javascript Date object in event dates definition
         li Add a resizing class on events being resized
         li Add deletable, resizable attributes on events to override global
         li Cancel event deletion with escape key
@@ -2466,7 +2467,6 @@
         add recurring events
         allow resizing horizontally (add segments)
         do an example with event creation on simple click
-        allow defining event start end with Date objects
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
