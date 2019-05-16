@@ -90,7 +90,7 @@
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                         | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
-                        small.days-to-end(v-if="event.segments") &nbsp;+{{ 'some' }}{{ (texts.day[0] || '').toLowerCase() }}
+                        small.days-to-end(v-if="event.segments") &nbsp;+{{ event.daysCount }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -98,7 +98,7 @@
 </template>
 
 <script>
-import { setTexts, now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
+import { setTexts, now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -281,7 +281,7 @@ export default {
       domEvents: {
         resizeAnEvent: {
           _eid: null, // Only one at a time.
-          startDateF: null,
+          start: null,
           split: null,
           segment: null,
           originalEndTimeMinutes: 0,
@@ -416,10 +416,10 @@ export default {
         this.view.events.push(
           ...events
             .filter(e => eventInRange(e, startDate, endDate))
-            .map(e => (
+            .map(e => {
               // If multiple-day events.
-              e.startDateF === e.endDateF ? e : createEventSegments(e, startDate, endDate)
-            ))
+              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, startDate, endDate)
+            })
         )
 
         if (id === 'month') {
@@ -457,7 +457,7 @@ export default {
 
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-      let segment = event.segments && event.segments[resizeAnEvent.startDateF]
+      let segment = event.segments && event.segments[resizeAnEvent.start]
 
       // Don't allow time above 24 hours.
       resizeAnEvent.endTimeMinutes = Math.min(this.minutesAtCursor(e), 24 * 60)
@@ -483,7 +483,7 @@ export default {
         }
         if (event) event.resizing = false
         resizeAnEvent._eid = null
-        resizeAnEvent.startDateF = null
+        resizeAnEvent.start = null
         resizeAnEvent.split = null
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
@@ -561,6 +561,8 @@ export default {
         const [endDateF, endTime = ''] = event.end.split(' ')
         const [hoursEnd, minutesEnd] = endTime.split(':')
         const multipleDays = startDateF !== endDateF
+        const startDate = new Date(event.start)
+        const endDate = new Date(event.end)
 
         event = Object.assign({
           ...eventDefaults,
@@ -570,12 +572,11 @@ export default {
           overlapping: {},
           simultaneous: {},
           segments: multipleDays ? {} : null,
-          startDate: new Date(event.start),
-          startDateF,
+          startDate,
           startTimeMinutes: parseInt(hoursStart) * 60 + parseInt(minutesStart),
-          endDate: new Date(event.end),
-          endDateF,
+          endDate,
           endTimeMinutes: parseInt(hoursEnd) * 60 + parseInt(minutesEnd),
+          daysCount: multipleDays ? countDays(startDate, endDate) : 1,
           classes: (event.class || '').split(' ')
         }, event)
 
@@ -637,7 +638,9 @@ export default {
         if (!selectedDate || selectedDate.getTime() !== date.getTime()) this.view.selectedDate = date
         this.switchView(this.view.id)
       }
-    }
+    },
+
+    countDays
   },
 
   created () {

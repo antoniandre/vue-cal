@@ -102,7 +102,7 @@ export default {
     onDragHandleMouseDown () {
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
         _eid: this.event._eid,
-        startDateF: (this.segment || this.event).startDateF,
+        start: (this.segment || this.event).start,
         split: this.event.split || null,
         segment: !!this.segment,
         originalEndTimeMinutes: this.event.endTimeMinutes

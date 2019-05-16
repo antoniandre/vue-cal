@@ -98,3 +98,9 @@ export const stringToDate = string => {
   const [, y, m, d, h = 0, min = 0] = string.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
   return new Date(y, parseInt(m) - 1, d, h, min)
 }
+
+export const countDays = (startDate, endDate) => {
+  let start = (new Date(startDate)).setHours(0, 0, 0)
+  let end = (new Date(endDate)).setHours(0, 0, 0)
+  return Math.floor((end - start) / (24 * 3600 * 1000))
+}

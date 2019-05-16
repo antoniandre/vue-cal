@@ -650,7 +650,7 @@
           &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
           &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
           &lt;v-spacer/&gt;
-          &lt;strong&gt;{{ '\{\{ selectedEvent.startDateF \}\}' }}&lt;/strong&gt;
+          &lt;strong&gt;{{ '\{\{ (selectedEvent.start || \'\').substr(0, 10) \}\}' }}&lt;/strong&gt;
         &lt;/v-card-title&gt;
         &lt;v-card-text&gt;
           &lt;p v-html="selectedEvent.contentFull"/&gt;
@@ -2463,9 +2463,10 @@
         use view events as much as possible instead of mutableEvents
         cleanup mutableEvents
         at any time return view events not mutable events to user
-        cleanup all the event date props
         add recurring events
         allow resizing horizontally (add segments)
+        do an example with event creation on simple click
+        allow defining event start end with Date objects
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
@@ -2609,7 +2610,7 @@
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
         span.headline.text-uppercase {{ selectedEvent.title }}
         v-spacer
-        strong {{ selectedEvent.startDateF }}
+        strong {{ (selectedEvent.start || '').substr(0, 10) }}
       v-card-text
         p(v-html="selectedEvent.contentFull")
         strong Event details:
