@@ -289,7 +289,8 @@ export default {
           split: null,
           segment: null,
           originalEndTimeMinutes: 0,
-          endTimeMinutes: 0
+          endTimeMinutes: 0,
+          startCell: null
         },
         dragAnEvent: {
           _eid: null // Only one at a time.
@@ -473,8 +474,40 @@ export default {
       if (this.resizeX && this.view.id === 'week') {
         let cellsWidth = this.$refs.cells.offsetWidth
         let cellWidth = cellsWidth / (this.hideWeekends ? 5 : 7)
-        Math.floor(cursorCoords.x / cellWidth)
-        console.log(Math.floor(cursorCoords.x / cellWidth))
+        let currentCell = Math.floor(cursorCoords.x / cellWidth)
+        if (!resizeAnEvent.startCell) resizeAnEvent.startCell = currentCell
+        let startCell = resizeAnEvent.startCell || currentCell
+        let delta = currentCell - startCell
+        if (delta) {
+          let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+          mutableEvent.endDate = mutableEvent.endDate.addDays(delta)
+          mutableEvent.end = formatDate(mutableEvent.endDate) + ' ' + formatTime(event.endTimeMinutes)
+          event.endDate = mutableEvent.endDate
+          event.end = mutableEvent.end
+
+          // this.$set(event, 'segments', {})
+          // Adding segments.
+          // for (let i = 1; i <= delta; i++) {
+          //   const startDate = event.endDate.addDays(i)
+          //   const formattedDate = formatDate(startDate)
+
+          //   event.segments[formattedDate] = {
+          //     startDate,
+          //     start: formattedDate,
+          //     startTimeMinutes: 0,
+          //     endTimeMinutes: i === delta ? e.endTimeMinutes : (24 * 60),
+          //     overlapping: {},
+          //     overlapped: {},
+          //     simultaneous: {},
+          //     isFirstDay: false,
+          //     isLastDay: i === delta,
+          //     height: 0,
+          //     top: 0
+          //   }
+          // }
+          // console.log(event)
+          // Removing segments.
+        }
       }
       // @todo: handle splits?
       // if (this.hasSplits && this.splitDays) {
@@ -508,6 +541,7 @@ export default {
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
         resizeAnEvent.endTimeMinutes = null
+        resizeAnEvent.startCell = null
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -573,11 +607,9 @@ export default {
     // Object of arrays of events indexed by dates.
     updateMutableEvents () {
       this.mutableEvents = []
-      console.log('creating events')
 
       // Group events into dates.
       this.events.forEach(event => {
-        if (event.endDate) debugger
         // Event Start, accept formatted string or Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {

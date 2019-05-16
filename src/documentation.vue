@@ -1058,6 +1058,7 @@
       hide-weekends
       events-count-on-year-view
       editable-events
+      :resize-x="true"
       :events="multipleDayEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
