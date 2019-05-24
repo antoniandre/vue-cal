@@ -183,12 +183,13 @@ export default {
           events.push(...this.$parent.view.outOfScopeEvents)
         }
 
+        // Only keep events in view.
         events = events.filter(e => eventInRange(e, cellStart, cellEnd))
 
         if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
         if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
-          events = events.filter(e => e.allDay || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
+          events = events.filter(e => e.allDay || e.daysCount > 1 || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
         }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
@@ -198,7 +199,7 @@ export default {
             // So they behave as background events if not in allDay slot.
             // @todo: Do we want this or not?
             const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
-            if (event.startTimeMinutes && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
+            if ((event.startTimeMinutes || event.endTimeMinutes) && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
           })
         }
 

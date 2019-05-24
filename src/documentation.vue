@@ -2424,6 +2424,7 @@
     highlight-message(type="success")
       ul
         li New scoped slots syntax, requires Vue@2.6.0+
+        li Added ability to resize horizontally
         li Added function to get minutes at cursor
         li
           | Internal events structure has changed:
@@ -2466,8 +2467,10 @@
         cleanup mutableEvents
         at any time return view events not mutable events to user
         add recurring events
-        allow resizing horizontally (add segments)
         do an example with event creation on simple click
+        check resizing multiple day events starting before 1999-11-01
+        multiple day events ending at 24:00 don't show resizer 23:59 ok
+        while resizing multiple days, prevent endTime < startTime
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
@@ -2834,15 +2837,15 @@ export default {
     ],
     multipleDayEvents: [
       {
-        start: '1018-10-19 08:30',
-        end: '2018-11-20 20:00',
+        start: '1999-10-31 22:00',
+        end: '2018-11-20 23:59',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
         class: 'sport'
       },
       {
-        start: '2018-11-20 13:00',
-        end: '2018-11-20 14:30',
+        start: '2018-11-20 00:00',
+        end: '2018-11-21 24:00',
         title: 'Drink water!',
         content: '<i class="v-icon material-icons">local_drink</i>',
         class: 'health'

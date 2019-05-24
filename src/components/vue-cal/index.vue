@@ -90,7 +90,7 @@
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                         | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
-                        small.days-to-end(v-if="event.segments") &nbsp;+{{ event.daysCount }}{{ (texts.day[0] || '').toLowerCase() }}
+                        small.days-to-end(v-if="event.daysCount > 1") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -471,42 +471,26 @@ export default {
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
 
+      // Resize events horizontally (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
         let cellsWidth = this.$refs.cells.offsetWidth
         let cellWidth = cellsWidth / (this.hideWeekends ? 5 : 7)
         let currentCell = Math.floor(cursorCoords.x / cellWidth)
         if (!resizeAnEvent.startCell) resizeAnEvent.startCell = currentCell
-        let startCell = resizeAnEvent.startCell || currentCell
-        let delta = currentCell - startCell
-        if (delta) {
+        const startCell = resizeAnEvent.startCell || currentCell
+        const daysDelta = currentCell - startCell
+
+        if (1) {
           let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-          mutableEvent.endDate = mutableEvent.endDate.addDays(delta)
+          // Don't allow resizing event toward the past (= endDate before startDate).
+          const eventDaysCount = Math.max(mutableEvent.daysCount + daysDelta, 1)
+          mutableEvent.endDate = mutableEvent.startDate.addDays(eventDaysCount - 1)
           mutableEvent.end = formatDate(mutableEvent.endDate) + ' ' + formatTime(event.endTimeMinutes)
+
+          // Modify the event in the current view.
           event.endDate = mutableEvent.endDate
           event.end = mutableEvent.end
-
-          // this.$set(event, 'segments', {})
-          // Adding segments.
-          // for (let i = 1; i <= delta; i++) {
-          //   const startDate = event.endDate.addDays(i)
-          //   const formattedDate = formatDate(startDate)
-
-          //   event.segments[formattedDate] = {
-          //     startDate,
-          //     start: formattedDate,
-          //     startTimeMinutes: 0,
-          //     endTimeMinutes: i === delta ? e.endTimeMinutes : (24 * 60),
-          //     overlapping: {},
-          //     overlapped: {},
-          //     simultaneous: {},
-          //     isFirstDay: false,
-          //     isLastDay: i === delta,
-          //     height: 0,
-          //     top: 0
-          //   }
-          // }
-          // console.log(event)
-          // Removing segments.
+          createEventSegments(mutableEvent, this.view.startDate, this.view.endDate)
         }
       }
       // @todo: handle splits?
@@ -529,6 +513,7 @@ export default {
           event.endTimeMinutes = mutableEvent.endTimeMinutes
           event.end = mutableEvent.end
           event.endDate = mutableEvent.endDate
+          event.daysCount = countDays(event.startDate, event.endDate)
 
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)

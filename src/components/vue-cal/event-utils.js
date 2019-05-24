@@ -91,7 +91,8 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
 
 export const createEventSegments = (e, viewStartDate, viewEndDate) => {
   const eventStart = e.startDate.getTime()
-  const eventEnd = e.endDate.getTime()
+  let eventEnd = e.endDate.getTime()
+  if (!e.endDate.getHours() && !e.endDate.getMinutes()) eventEnd -= 1000
 
   Vue.set(e, 'segments', {})
 
@@ -102,7 +103,11 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
   while (timestamp <= end) {
     const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
     const isFirstDay = timestamp === eventStart
-    const isLastDay = end === eventEnd && nextMidnight > end
+
+    // const isLastDay = end === eventEnd && nextMidnight > end
+    // @todo: testing this:
+    const isLastDay = end === eventEnd && nextMidnight >= end
+
     const startDate = isFirstDay ? e.startDate : new Date(timestamp)
     const formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDate(startDate)
 

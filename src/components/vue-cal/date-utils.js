@@ -103,5 +103,5 @@ export const stringToDate = string => {
 export const countDays = (startDate, endDate) => {
   let start = (new Date(startDate)).setHours(0, 0, 0)
   let end = (new Date(endDate)).setHours(0, 0, 0)
-  return Math.floor((end - start) / (24 * 3600 * 1000))
+  return Math.floor((end - start) / (24 * 3600 * 1000)) + 1
 }
