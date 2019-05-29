@@ -471,7 +471,7 @@ export default {
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
 
-      // Resize events horizontally (add/remove segments).
+      // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
         let cellsWidth = this.$refs.cells.offsetWidth
         let cellWidth = cellsWidth / (this.hideWeekends ? 5 : 7)
@@ -482,9 +482,17 @@ export default {
 
         if (1) {
           let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+
           // Don't allow resizing event toward the past (= endDate before startDate).
           const eventDaysCount = Math.max(mutableEvent.daysCount + daysDelta, 1)
+
+          // While resizing to a single day event, Make sure the end time is at least equal to start time + 5min.
+          if (eventDaysCount === 1) event.endTimeMinutes = Math.max(event.endTimeMinutes, event.startTimeMinutes + 5)
+
           mutableEvent.endDate = mutableEvent.startDate.addDays(eventDaysCount - 1)
+          // if (!mutableEvent.endDate.getHours() && !mutableEvent.endDate.getMinutes()) {
+          //   mutableEvent.endDate = new Date(mutableEvent.endDate.getTime() - 1000)
+          // }
           mutableEvent.end = formatDate(mutableEvent.endDate) + ' ' + formatTime(event.endTimeMinutes)
 
           // Modify the event in the current view.
