@@ -44,7 +44,8 @@ ___
 
 ## Release Notes
 
-- __Version 1.58.0__ Add Ukrainian language.
+- __Version 1.59.0__ Add Czech language
+- __Version 1.58.0__ Add Ukrainian language
 - __Version 1.57.0__ Add an option to display a Today button
 - __Version 1.56.0__ Allow `minCellWidth` independently of `splitDays`
 - __Version 1.55.0__ Set view and cells end dates to 23:59:59

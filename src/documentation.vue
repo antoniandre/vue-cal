@@ -2471,6 +2471,11 @@
         check resizing multiple day events starting before 1999-11-01
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
+  //- div #[strong Version 1.60.0] Externalize all locales from main library
+    highlight-message(type="success").
+      This will ensure Vue Cal does not increase its file size as more translations are contributed.#[br]
+      Now, only the locale you need will be loaded on demand (as a separate request).
+  div #[strong Version 1.59.0] Add Czech language
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
@@ -2738,6 +2743,7 @@ export default {
       { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
+      { code: 'cs', label: 'Czech' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'nl', label: 'Dutch' },
