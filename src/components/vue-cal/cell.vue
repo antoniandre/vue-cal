@@ -70,9 +70,9 @@ export default {
     checkCellOverlappingEvents () {
       if (this.options.time) {
         if (this.splits.length) {
-          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i]))
+          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i], this.data.formattedDate))
         }
-        else checkCellOverlappingEvents(this.events)
+        else checkCellOverlappingEvents(this.events, this.data.formattedDate)
       }
     },
 
@@ -203,7 +203,7 @@ export default {
           })
         }
 
-        // this.$nextTick(this.checkCellOverlappingEvents)
+        this.$nextTick(this.checkCellOverlappingEvents)
       }
 
       return events

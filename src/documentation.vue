@@ -1108,7 +1108,7 @@
   v-btn.ma-0(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -2472,6 +2472,7 @@
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
         option for sticky split labels
+        document about overriding global deletable, resizable
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").
@@ -2846,7 +2847,7 @@ export default {
       },
       {
         start: '2018-11-20 00:00',
-        end: '2018-11-21 24:00',
+        end: '2018-11-21 23:59',
         title: 'Drink water!',
         content: '<i class="v-icon material-icons">local_drink</i>',
         class: 'health'
