@@ -2471,6 +2471,7 @@
         check resizing multiple day events starting before 1999-11-01
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
+        option for sticky split labels
   div #[strong Version 1.58.0] Add Ukrainian language
   div #[strong Version 1.57.0] Add an option to display a Today button
     highlight-message(type="success").

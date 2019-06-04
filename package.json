@@ -24,6 +24,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
+    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n && mv ./dist/vuecal.umd.min.i18n ./dist/i18n",
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {

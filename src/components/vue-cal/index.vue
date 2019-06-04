@@ -321,9 +321,8 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
-      //   .then(response => (this.texts = response.default))
-      this.texts = require(`./i18n/${locale}.json`)
+      import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
+        .then(response => (this.texts = response.default))
       setTexts(this.texts)
     },
 
