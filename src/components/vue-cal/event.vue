@@ -13,6 +13,7 @@
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  p {{ overlaps.length }}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -43,6 +44,10 @@ export default {
     split: {
       type: Number,
       default: 0
+    },
+    overlaps: {
+      type: Array,
+      default: () => []
     },
     allDay: {
       type: Boolean,
@@ -239,7 +244,7 @@ export default {
         // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
       }
 
-      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.vuecal)
+      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.cellFormattedDate, [])
     }
   }
 }

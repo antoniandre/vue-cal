@@ -24,6 +24,7 @@
           :cell-formatted-date="data.formattedDate"
           :event="event"
           :all-day="allDay"
+          :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []) : (cellOverlaps[event._eid] || [])"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
           template(v-slot:event-renderer="{ event, view }")
@@ -66,14 +67,26 @@ export default {
     }
   },
 
+  data: () => ({
+    cellOverlaps: {},
+    splitsOverlaps: {}
+  }),
+
   methods: {
     checkCellOverlappingEvents () {
       if (this.options.time) {
         if (this.splits.length) {
-          this.splits.forEach((s, i) => checkCellOverlappingEvents(this.splitEvents[i], this.data.formattedDate))
+          this.splits.forEach((s, i) => {
+            if ((this.splitEvents[i] || []).length > 1) {
+              this.splitsOverlaps[i] = checkCellOverlappingEvents(this.splitEvents[i], this.splitsOverlaps[i])
+            }
+          })
         }
-        else checkCellOverlappingEvents(this.events, this.data.formattedDate)
+        else if (this.events.length > 1) {
+          this.cellOverlaps = checkCellOverlappingEvents(this.events, this.cellOverlaps)
+        }
       }
+      console.log(this.cellOverlaps)
     },
 
     isDOMElementAnEvent (el) {

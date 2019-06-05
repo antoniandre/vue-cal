@@ -691,7 +691,7 @@ export default {
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
         'height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes',
-        'split', 'segments', 'deletable','deleting', 'resizable', 'resizing', 'focused'
+        'split', 'segments', 'deletable', 'deleting', 'resizable', 'resizing', 'focused'
       ]
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
 
