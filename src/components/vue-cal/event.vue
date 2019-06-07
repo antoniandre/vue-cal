@@ -157,7 +157,9 @@ export default {
       if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
       return {
         top: `${(this.segment || this.event).top}px`,
-        height: `${(this.segment || this.event).height}px`
+        height: `${(this.segment || this.event).height}px`,
+        width: `${100 / (this.overlaps.length + 1)}%`,
+        left: `${100 / (this.overlaps.length + 1)}%`
       }
     },
 

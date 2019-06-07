@@ -470,6 +470,21 @@ export default {
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
 
+      // @todo: Find a way to make this more performant while dragging.
+      // ------------------------------------------------------------------
+      let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
+      mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
+      mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+      mutableEvent.endDate = new Date(event.end)
+      event.endTimeMinutes = mutableEvent.endTimeMinutes
+      event.end = mutableEvent.end
+      event.endDate = mutableEvent.endDate
+      event.daysCount = countDays(event.startDate, event.endDate)
+      // ------------------------------------------------------------------
+
+      this.emitWithEvent('event-change', event)
+      this.emitWithEvent('event-duration-change', event)
+
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
         let cellsWidth = this.$refs.cells.offsetWidth
