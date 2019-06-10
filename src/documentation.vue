@@ -2471,6 +2471,7 @@
         check resizing multiple day events starting before 1999-11-01
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
+  div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
         option for sticky split labels
         document about overriding global deletable, resizable
@@ -2743,6 +2744,7 @@ export default {
       { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'hr', label: 'Croatian' },
+      { code: 'da', label: 'Danish' },
       { code: 'nl', label: 'Dutch' },
       { code: 'en', label: 'English' },
       { code: 'fr', label: 'French' },
