@@ -13,6 +13,7 @@
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  p {{ overlaps.length }}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -43,6 +44,10 @@ export default {
     split: {
       type: Number,
       default: 0
+    },
+    overlaps: {
+      type: Array,
+      default: () => []
     },
     allDay: {
       type: Boolean,
@@ -152,7 +157,9 @@ export default {
       if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
       return {
         top: `${(this.segment || this.event).top}px`,
-        height: `${(this.segment || this.event).height}px`
+        height: `${(this.segment || this.event).height}px`,
+        width: `${100 / (this.overlaps.length + 1)}%`,
+        left: `${100 / (this.overlaps.length + 1)}%`
       }
     },
 
@@ -239,7 +246,7 @@ export default {
         // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
       }
 
-      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.vuecal)
+      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.cellFormattedDate, [])
     }
   }
 }

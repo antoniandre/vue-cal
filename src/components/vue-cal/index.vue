@@ -321,9 +321,8 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
-      //   .then(response => (this.texts = response.default))
-      this.texts = require(`./i18n/${locale}.json`)
+      import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
+        .then(response => (this.texts = response.default))
       setTexts(this.texts)
     },
 
@@ -470,6 +469,21 @@ export default {
 
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
+
+      // @todo: Find a way to make this more performant while dragging.
+      // ------------------------------------------------------------------
+      let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
+      mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
+      mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+      mutableEvent.endDate = new Date(event.end)
+      event.endTimeMinutes = mutableEvent.endTimeMinutes
+      event.end = mutableEvent.end
+      event.endDate = mutableEvent.endDate
+      event.daysCount = countDays(event.startDate, event.endDate)
+      // ------------------------------------------------------------------
+
+      this.emitWithEvent('event-change', event)
+      this.emitWithEvent('event-duration-change', event)
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
@@ -692,7 +706,7 @@ export default {
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
         'height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes',
-        'split', 'segments', 'deletable','deleting', 'resizable', 'resizing', 'focused'
+        'split', 'segments', 'deletable', 'deleting', 'resizable', 'resizing', 'focused'
       ]
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
 
