@@ -11,5 +11,5 @@
   "allDay": "Hele dagen",
   "deleteEvent": "Slet",
   "createEvent": "Opret et event",
-  "dateFormat": "DD MMM, YYYY"
+  "dateFormat": "DDDD d mmmm yyyy"
 }
