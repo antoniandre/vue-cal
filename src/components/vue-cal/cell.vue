@@ -25,6 +25,7 @@
           :event="event"
           :all-day="allDay"
           :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []) : (cellOverlaps[event._eid] || [])"
+          :event-position="eventsOrder.indexOf(event._eid)"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
           template(v-slot:event-renderer="{ event, view }")
@@ -231,6 +232,12 @@ export default {
       })
 
       return splitsEventIndexes
+    },
+    // Returns an array of events ids in chronological order.
+    eventsOrder () {
+      let events = (this.splits.length ? this.splitEvents[i] : this.events).slice(0)
+      events.sort((a, b) => a.start - b.start)
+      return events.map(e => e._eid)
     },
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return

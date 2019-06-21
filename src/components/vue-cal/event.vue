@@ -49,6 +49,10 @@ export default {
       type: Array,
       default: () => []
     },
+    eventPosition: {
+      type: Number,
+      default: 0
+    },
     allDay: {
       type: Boolean,
       default: false
@@ -159,7 +163,7 @@ export default {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
         width: `${100 / (this.overlaps.length + 1)}%`,
-        left: `${100 / (this.overlaps.length + 1)}%`
+        left: `${100 / this.eventPosition}%`
       }
     },
 
