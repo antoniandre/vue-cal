@@ -2473,6 +2473,7 @@
         while resizing multiple days, prevent endTime < startTime
         option for sticky split labels
         document about overriding global deletable, resizable
+  div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
   div #[strong Version 1.58.0] Add Ukrainian language
@@ -2743,6 +2744,7 @@ export default {
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
+      { code: 'zh-hk', label: 'Chinese (Traditional)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'da', label: 'Danish' },
       { code: 'nl', label: 'Dutch' },
