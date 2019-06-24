@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.61.0__ Add Traditional Chinese language
 - __Version 1.60.0__ Add Danish language
 - __Version 1.59.0__ Add Czech language
 - __Version 1.58.0__ Add Ukrainian language

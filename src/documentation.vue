@@ -2427,6 +2427,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
   div #[strong Version 1.58.0] Add Ukrainian language
@@ -2698,6 +2699,7 @@ export default {
       { code: 'ca', label: 'Catalan' },
       { code: 'cs', label: 'Czech' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
+      { code: 'zh-hk', label: 'Chinese (Traditional)' },
       { code: 'hr', label: 'Croatian' },
       { code: 'da', label: 'Danish' },
       { code: 'nl', label: 'Dutch' },
