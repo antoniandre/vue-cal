@@ -12,8 +12,7 @@
     v-if="vuecal.editableEvents && event.deletable"
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
-  //- slot(name="event-renderer" :event="event" :view="vuecal.view.id")
-  p {{ overlaps.length }}-{{eventPosition}}-{{overlapsStreak}}
+  slot(name="event-renderer" :event="event" :view="vuecal.view.id")
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -128,7 +127,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent(this.event, this.vuecal)
+      deleteAnEvent(this.event, this.vuecal, this.$parent.$parent)
     },
 
     touchDeleteEvent (event) {
@@ -163,11 +162,14 @@ export default {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
       if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
+      // const width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
       return {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
         width: `${100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)}%`,
         left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition}%`
+        // width: `${width}%`,
+        // left: `${width * this.eventPosition}%`
       }
     },
 
@@ -290,25 +292,6 @@ export default {
     position: relative;
     left: 0;
   }
-
-  // &--overlapped {right: 20%;}
-  // &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  // &--overlapped.vuecal__event--split2 {right: 25%;}
-  // &--overlapping.vuecal__event--split2 {left: 25%;}
-  // &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
-  // &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
-  // &--overlapped.vuecal__event--split3 {right: 40%;}
-  // &--overlapping.vuecal__event--split3 {left: 40%;}
-  // &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
-
-  // .vuecal--no-event-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
-  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
-  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
-  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
-  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
-  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
-  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
 
   &--background {z-index: 0;}
   &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
