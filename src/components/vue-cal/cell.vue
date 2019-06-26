@@ -25,8 +25,8 @@
           :event="event"
           :all-day="allDay"
           :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []).overlaps : (cellOverlaps[event._eid] || []).overlaps"
-          :event-position2="splits.length ? (splitsOverlaps[i][event._eid] || []).position : (cellOverlaps[event._eid] || []).position"
-          :event-position="eventsOrder.indexOf(event._eid)"
+          :event-position="splits.length ? (splitsOverlaps[i][event._eid] || []).position : (cellOverlaps[event._eid] || []).position"
+          :overlaps-streak="overlapsStreak"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
           template(v-slot:event-renderer="{ event, view }")
@@ -71,7 +71,8 @@ export default {
 
   data: () => ({
     cellOverlaps: {},
-    splitsOverlaps: {}
+    splitsOverlaps: {},
+    overlapsStreak: 1 // Largest amount of simultaneous events in cell.
   }),
 
   methods: {
@@ -85,7 +86,7 @@ export default {
           })
         }
         else if (this.events.length > 1) {
-          this.cellOverlaps = checkCellOverlappingEvents(this.events, this.cellOverlaps)
+          [this.cellOverlaps, this.overlapsStreak] = checkCellOverlappingEvents(this.events, this.cellOverlaps)
         }
       }
       // console.log(this.cellOverlaps)
@@ -238,11 +239,11 @@ export default {
       return splitsEventIndexes
     },
     // Returns an array of events ids in chronological order.
-    eventsOrder () {
-      let events = (this.splits.length ? this.splitEvents[i] : this.events).slice(0)
-      events.sort((a, b) => a.start - b.start)
-      return events.map(e => e._eid)
-    },
+    // eventsOrder () {
+    //   let events = (this.splits.length ? this.splitEvents[i] : this.events).slice(0)
+    //   events.sort((a, b) => a.start - b.start)
+    //   return events.map(e => e._eid)
+    // },
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
 

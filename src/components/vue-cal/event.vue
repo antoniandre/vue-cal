@@ -13,7 +13,7 @@
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   //- slot(name="event-renderer" :event="event" :view="vuecal.view.id")
-  p {{ overlaps.length }}-{{eventPosition2}}
+  p {{ overlaps.length }}-{{eventPosition}}-{{overlapsStreak}}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -49,7 +49,11 @@ export default {
       type: Array,
       default: () => []
     },
-    eventPosition2: {
+    eventPosition: {
+      type: Number,
+      default: 0
+    },
+    overlapsStreak: {
       type: Number,
       default: 0
     },
@@ -162,8 +166,8 @@ export default {
       return {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
-        width: `${100 / (this.overlaps.length + 1)}%`,
-        left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition2}%`
+        width: `${100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)}%`,
+        left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition}%`
       }
     },
 
@@ -262,9 +266,9 @@ export default {
   background-color: #f8f8f8;
   position: relative;
   left: 0;
-  right: 0;
+  width: 100%;
   z-index: 1;
-  transition: box-shadow 0.3s, left 0.3s, right 0.3s;
+  transition: box-shadow 0.3s, left 0.3s, width 0.3s;
   overflow: hidden;// For sliding delete button.
 
   .vuecal:not(.vuecal--dragging-event) &:hover {z-index: 2;}
@@ -285,27 +289,26 @@ export default {
   .vuecal--view-with-time .vuecal__all-day &--all-day {
     position: relative;
     left: 0;
-    right: 0;
   }
 
-  &--overlapped {right: 20%;}
-  &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &--overlapped.vuecal__event--split2 {right: 25%;}
-  &--overlapping.vuecal__event--split2 {left: 25%;}
-  &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
-  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
-  &--overlapped.vuecal__event--split3 {right: 40%;}
-  &--overlapping.vuecal__event--split3 {left: 40%;}
-  &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
+  // &--overlapped {right: 20%;}
+  // &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  // &--overlapped.vuecal__event--split2 {right: 25%;}
+  // &--overlapping.vuecal__event--split2 {left: 25%;}
+  // &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
+  // &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
+  // &--overlapped.vuecal__event--split3 {right: 40%;}
+  // &--overlapping.vuecal__event--split3 {left: 40%;}
+  // &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
 
-  .vuecal--no-event-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
+  // .vuecal--no-event-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
+  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
+  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
+  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
+  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
+  // .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
+  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
+  // .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
 
   &--background {z-index: 0;}
   &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}

@@ -150,7 +150,7 @@ let comparisonArray = []
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
-  // if (!cellEvents.length || cellEvents[0].start.indexOf('2018-11-21') < 0) return []
+  if (!cellEvents.length || cellEvents[0].start.indexOf('2018-11-21') < 0) return [[], 1]
   comparisonArray = cellEvents.slice(0)
 
   // @todo: filter !e.background && !e.allDay directly on cellEvents.
@@ -187,20 +187,45 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
     }
   })
 
+  // Overlaps streak is the longest horizontal set of simultaneous events.
+  // This is determining the width of events in a streak.
+  // e.g. 3 overlapping events [1, 2, 3]; 1 overlaps 2 & 3; 2 & 3 don't overlap;
+  //      => streak = 2; each width = 50% not 33%.
   let longestStreak = 0
   for (const id in cellOverlaps) {
     const item = cellOverlaps[id]
+
+    // Calculate the position of event in current streak (determines CSS left property).
     const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
     overlapsRow.push({ id, start: item.start })
     overlapsRow.sort((a, b) => a.start < b.start ? -1 : 1)
     item.position = overlapsRow.findIndex(e => e.id === id)
 
     // const overlapsCount = cellOverlaps[id].overlaps.length
-    // longestStreak = Math.max(overlapsCount, longestStreak)
+    // longestStreak = Math.max(overlapsCount, longestStreak) + 1
+    longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
   }
-  console.log(cellOverlaps, longestStreak + 1)
+  console.log(cellOverlaps, longestStreak)
 
-  return cellOverlaps
+  return  [cellOverlaps, longestStreak]
+}
+
+export const getOverlapsStreak = (id, event, cellOverlaps = {}) => {
+  let streak = event.overlaps.length + 1
+  let removeFromStreak = []
+  event.overlaps.forEach(id2 => {
+    if (!removeFromStreak.includes(id2)) {
+      let overlapsWithoutSelf = event.overlaps.filter(id3 => id3 !== id2)
+      // if (!cellOverlaps[id2].includes()) streak--
+      overlapsWithoutSelf.forEach(id4 => {
+        if (!cellOverlaps[id4].overlaps.includes(id2)) removeFromStreak.push(id4)
+      })
+    }
+  })
+
+  removeFromStreak = [...new Set(removeFromStreak)]
+  streak -= removeFromStreak.length
+  return streak
 }
 
 /* export const checkCellOverlappingEvents_old = cellEvents => {
