@@ -155,23 +155,25 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
 
   // @todo: filter !e.background && !e.allDay directly on cellEvents.
   // @todo: try recalculating while dragging (try force update).
-  // @todo: implement case when dragging event accross multiple cells.
+  // @todo: implement case when dragging event across multiple cells.
   cellEvents.forEach(e => {
     // Never compare the current event in the next loops. the array is refined as we loop.
     comparisonArray.shift()
 
+    if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
+    cellOverlaps[e._eid].position = 0
+
     if (!e.background && !e.allDay) {
       comparisonArray.forEach(e2 => {
-        if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], position: 0 })
-        if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], position: 0 })
+        if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
         // Add to the overlaps array if overlapping.
         if (eventInRange(e2, e.startDate, e.endDate, e)) {
           cellOverlaps[e._eid].overlaps.push(e2._eid)
-          cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)]// Dedupe, most performant way.
+          cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
           cellOverlaps[e2._eid].overlaps.push(e._eid)
-          cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)]// Dedupe, most performant way.
+          cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)] // Dedupe, most performant way.
           cellOverlaps[e2._eid].position++
         }
         // Remove from the overlaps array if not overlapping.
@@ -186,10 +188,16 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
   })
 
   let longestStreak = 0
-  // for (const id in cellOverlaps) {
-  //   const overlapsCount = cellOverlaps[id].overlaps.length
-  //   longestStreak = Math.max(overlapsCount, longestStreak)
-  // }
+  for (const id in cellOverlaps) {
+    const item = cellOverlaps[id]
+    const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
+    overlapsRow.push({ id, start: item.start })
+    overlapsRow.sort((a, b) => a.start < b.start ? -1 : 1)
+    item.position = overlapsRow.findIndex(e => e.id === id)
+
+    // const overlapsCount = cellOverlaps[id].overlaps.length
+    // longestStreak = Math.max(overlapsCount, longestStreak)
+  }
   console.log(cellOverlaps, longestStreak + 1)
 
   return cellOverlaps
