@@ -409,7 +409,7 @@
         style="width: 190px")
   p Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.
   v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-    vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
+    //- vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
@@ -1051,7 +1051,7 @@
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
+    //- vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
@@ -1172,7 +1172,7 @@
     Note that you can still select a background event to put it on top of others and see it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
+    //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"

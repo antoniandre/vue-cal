@@ -13,7 +13,7 @@
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event-renderer" :event="event" :view="vuecal.view.id")
-  p {{ overlaps.length }}
+  p {{ overlaps.length }}-{{eventPosition2}}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -49,7 +49,7 @@ export default {
       type: Array,
       default: () => []
     },
-    eventPosition: {
+    eventPosition2: {
       type: Number,
       default: 0
     },
@@ -163,7 +163,7 @@ export default {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
         width: `${100 / (this.overlaps.length + 1)}%`,
-        left: `${100 / this.eventPosition}%`
+        left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition2}%`
       }
     },
 

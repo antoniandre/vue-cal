@@ -24,7 +24,8 @@
           :cell-formatted-date="data.formattedDate"
           :event="event"
           :all-day="allDay"
-          :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []) : (cellOverlaps[event._eid] || [])"
+          :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []).overlaps : (cellOverlaps[event._eid] || []).overlaps"
+          :event-position2="splits.length ? (splitsOverlaps[i][event._eid] || []).position : (cellOverlaps[event._eid] || []).position"
           :event-position="eventsOrder.indexOf(event._eid)"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
@@ -87,7 +88,7 @@ export default {
           this.cellOverlaps = checkCellOverlappingEvents(this.events, this.cellOverlaps)
         }
       }
-      console.log(this.cellOverlaps)
+      // console.log(this.cellOverlaps)
     },
 
     isDOMElementAnEvent (el) {
@@ -215,6 +216,9 @@ export default {
             const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
             if ((event.startTimeMinutes || event.endTimeMinutes) && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
           })
+
+          // Sort events in chronological order.
+          events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
         this.$nextTick(this.checkCellOverlappingEvents)

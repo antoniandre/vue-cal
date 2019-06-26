@@ -150,6 +150,7 @@ let comparisonArray = []
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
+  // if (!cellEvents.length || cellEvents[0].start.indexOf('2018-11-21') < 0) return []
   comparisonArray = cellEvents.slice(0)
 
   // @todo: filter !e.background && !e.allDay directly on cellEvents.
@@ -161,27 +162,37 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
 
     if (!e.background && !e.allDay) {
       comparisonArray.forEach(e2 => {
+        if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], position: 0 })
+        if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], position: 0 })
+
         // Add to the overlaps array if overlapping.
         if (eventInRange(e2, e.startDate, e.endDate, e)) {
-          if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, [])
-          cellOverlaps[e._eid].push(e2._eid)
-          cellOverlaps[e._eid] = [...new Set(cellOverlaps[e._eid])]// Dedupe, most performant way.
-          if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, [])
-          cellOverlaps[e2._eid].push(e._eid)
-          cellOverlaps[e2._eid] = [...new Set(cellOverlaps[e2._eid])]// Dedupe, most performant way.
+          cellOverlaps[e._eid].overlaps.push(e2._eid)
+          cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)]// Dedupe, most performant way.
+
+          cellOverlaps[e2._eid].overlaps.push(e._eid)
+          cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)]// Dedupe, most performant way.
+          cellOverlaps[e2._eid].position++
         }
         // Remove from the overlaps array if not overlapping.
         else {
           let pos1, pos2
-          if ((pos1 = (cellOverlaps[e._eid] || []).indexOf(e2._eid)) > -1) cellOverlaps[e._eid].splice(pos1, 1)
-          if ((pos2 = (cellOverlaps[e2._eid] || []).indexOf(e._eid)) > -1) cellOverlaps[e2._eid].splice(pos2, 1)
+          if ((pos1 = (cellOverlaps[e._eid] || { overlaps: [] }).overlaps.indexOf(e2._eid)) > -1) cellOverlaps[e._eid].overlaps.splice(pos1, 1)
+          if ((pos2 = (cellOverlaps[e2._eid] || { overlaps: [] }).overlaps.indexOf(e._eid)) > -1) cellOverlaps[e2._eid].overlaps.splice(pos2, 1)
+          cellOverlaps[e2._eid].position--
         }
       })
     }
   })
 
+  let longestStreak = 0
+  // for (const id in cellOverlaps) {
+  //   const overlapsCount = cellOverlaps[id].overlaps.length
+  //   longestStreak = Math.max(overlapsCount, longestStreak)
+  // }
+  console.log(cellOverlaps, longestStreak + 1)
+
   return cellOverlaps
-  // console.log(cellOverlaps)
 }
 
 /* export const checkCellOverlappingEvents_old = cellEvents => {
@@ -214,7 +225,7 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
   }
 
   return cellEvents
-} */
+}
 
 export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
   const src = event.segments || event
@@ -260,7 +271,7 @@ export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
       delete event2.simultaneous[event._eid]
     }
   })
-}
+} */
 
 export const updateEventPosition = (event, vuecal) => {
   const { startTimeMinutes, endTimeMinutes } = event
