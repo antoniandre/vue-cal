@@ -942,10 +942,8 @@ export default {
           break
         case 'month':
           const month = this.view.startDate.getMonth()
-          let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
-          selectedDateAtMidnight.setHours(0, 0, 0, 0)
-          todayFound = false
           const firstCellDate = new Date(this.view.firstCellDate)
+          todayFound = false
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
