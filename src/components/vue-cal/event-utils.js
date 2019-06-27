@@ -153,6 +153,7 @@ let comparisonArray = []
 export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
   // if (!cellEvents.length || cellEvents[0].start.indexOf('2018-11-21') < 0) return [[], 1]
   comparisonArray = cellEvents.slice(0)
+  console.log('checkCellOverlappingEvents', cellEvents, cellOverlaps)
 
   // @todo: filter !e.background && !e.allDay directly on cellEvents.
   // @todo: try recalculating while dragging (try force update).
@@ -205,6 +206,7 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
     longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
   }
 
+  console.log('cell overlaps', {...cellOverlaps})
   return  [cellOverlaps, longestStreak]
 }
 

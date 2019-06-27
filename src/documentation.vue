@@ -1314,7 +1314,7 @@
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
     | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"

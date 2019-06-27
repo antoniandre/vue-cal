@@ -12,7 +12,8 @@
     v-if="vuecal.editableEvents && event.deletable"
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
-  slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  //- slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  p {{overlaps}}-{{eventPosition}}-{{overlapsStreak}}
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"

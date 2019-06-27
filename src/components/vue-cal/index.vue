@@ -33,7 +33,7 @@
               :all-day="true"
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
-              :splits="hasSplits && splitDays || []")
+              :cell-splits="hasSplits && splitDays || []")
               template(v-slot:event-renderer="{ event, view }")
                 slot(name="event-renderer" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
@@ -73,7 +73,7 @@
                   :data="cell"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
-                  :splits="hasSplits && splitDays || []")
+                  :cell-splits="hasSplits && splitDays || []")
                   template(v-slot:cell-content="{ events, split, selectCell }")
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split" v-html="split.label")
