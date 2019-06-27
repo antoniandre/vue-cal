@@ -6,12 +6,15 @@
     :week-days="weekDays"
     :week-days-short="weekDaysShort"
     :switch-to-narrower-view="switchToNarrowerView")
-    template(v-slot:arrow-prev name="arrow-prev")
-      i.angle
-    template(v-slot:arrow-next name="arrow-next")
-      i.angle
-    template(v-slot:today-btn name="today-button")
-      span.default {{ texts.today }}
+    template(v-slot:arrow-prev)
+      slot(name="arrow-prev")
+        i.angle
+    template(v-slot:arrow-next)
+      slot(name="arrow-next")
+        i.angle
+    template(v-slot:today-button)
+      slot(name="today-button")
+        span.default {{ texts.today }}
     template(v-slot:title)
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
@@ -222,10 +225,6 @@ export default {
       default: false
     },
     resizeX: {
-      type: Boolean,
-      default: false
-    },
-    noEventOverlaps: {
       type: Boolean,
       default: false
     },
@@ -481,9 +480,6 @@ export default {
       event.endDate = mutableEvent.endDate
       event.daysCount = countDays(event.startDate, event.endDate)
       // ------------------------------------------------------------------
-
-      this.emitWithEvent('event-change', event)
-      this.emitWithEvent('event-duration-change', event)
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
@@ -1015,7 +1011,6 @@ export default {
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--no-event-overlaps': this.noEventOverlaps,
         'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'

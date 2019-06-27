@@ -83,14 +83,14 @@ export default {
           this.splits.forEach((s, i) => {
             if ((this.splitEvents[i] || []).length > 1) {
               [this.splitsOverlaps[i], this.splitsOverlapsStreak[i]] = checkCellOverlappingEvents(
-                this.splitEvents[i].filter(e => !e.background), this.splitsOverlaps[i]
+                this.splitEvents[i].filter(e => !e.background && !e.allDay), this.splitsOverlaps[i]
               )
             }
           })
         }
         else if (this.events.length > 1) {
           [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
-            this.events.filter(e => !e.background), this.cellOverlaps
+            this.events.filter(e => !e.background && !e.allDay), this.cellOverlaps
           )
         }
       }

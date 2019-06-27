@@ -17,7 +17,7 @@
           @click="switchToBroaderView")
           slot(name="title")
     .vuecal__today-btn(v-if="options.todayButton" @click="goToToday")
-      slot(name="today-btn")
+      slot(name="today-button")
     .vuecal__arrow.vuecal__arrow--next(@click="next")
       slot(name="arrow-next")
   weekdays-headings(
