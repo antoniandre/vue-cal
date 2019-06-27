@@ -232,7 +232,7 @@
     sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
-    //- vue-cal(small :time="false" hide-view-selector style="height: 250px")
+    vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
@@ -261,7 +261,7 @@
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    //- vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
+    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -274,15 +274,15 @@
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
-    //- vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
+    vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
       template(v-slot:arrow-prev)
         v-icon arrow_back
       template(v-slot:arrow-next)
         v-icon arrow_forward
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal hide-view-selector :time="false" default-view="month" xsmall&gt;
-      &lt;i slot="arrow-prev" aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
-      &lt;i slot="arrow-next" aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
+      &lt;i v-slot:arrow-prev aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
+      &lt;i v-slot:arrow-next aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
     &lt;/vue-cal&gt;
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -306,7 +306,7 @@
         2 different CSS class are available on out of range cells: #[span.code .before-min]
         &amp; #[span.code .after-max].
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
-    //- vue-cal.vuecal--green-theme.ex--min-max-dates(
+    vue-cal.vuecal--green-theme.ex--min-max-dates(
       xsmall
       hide-view-selector
       click-to-navigate
@@ -361,7 +361,7 @@
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      //- vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
         hide-view-selector
         twelve-hour
@@ -369,7 +369,7 @@
         default-view="month"
         :disable-views="['week']")
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      //- vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
         twelve-hour
@@ -409,7 +409,7 @@
         style="width: 190px")
   p Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.
   v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
+    vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
@@ -427,7 +427,7 @@
     Timelines are visible on week view and day view.#[br]
     This examples has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    //- vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
+    vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
     &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends&gt;&lt;/vue-cal&gt;
@@ -449,7 +449,7 @@
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
+    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
       xsmall
       :time-cell-height="26"
       default-view="day"
@@ -478,7 +478,7 @@
     v-icon(small color="green lighten-2") fab fa-codepen
   v-layout(justify-center)
     v-card.my-2.mr-3.main-content(style="max-width: 280px;height: 250px")
-      //- vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -488,7 +488,7 @@
         default-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     v-card.my-2.main-content(style="max-width: 280px;height: 250px")
-      //- vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -497,7 +497,7 @@
         today-button
         default-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
-        div(slot="today-button")
+        template(v-slot:today-button)
           v-tooltip(bottom)
             v-btn.ma-0(small fab slot="activator" depressed)
               v-icon(color="primary" size="20") my_location
@@ -512,7 +512,7 @@
              default-view="month"
              :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
-      &lt;div slot="today-button"&gt;
+      &lt;template v-slot:today-button&gt;
         &lt;!-- Using Vuetify --&gt;
         &lt;v-tooltip&gt;
           &lt;v-btn slot="activator"&gt;
@@ -520,7 +520,7 @@
           &lt;/v-btn&gt;
           &lt;span&gt;Go to Today's date&lt;/span&gt;
         &lt;/v-tooltip&gt;
-      &lt;/div&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
     &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
@@ -544,7 +544,7 @@
     Timeless events cannot be resized as they have no time or duration information.#[br]
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content(style="height: 350px")
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time="false"
       :disable-views="['years', 'year', 'month']"
@@ -596,7 +596,7 @@
     Read-only events (by default events are uneditable) with custom HTML content and css class (for event types).#[br]
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="23 * 60"
@@ -625,7 +625,7 @@
     li #[span.code e]: the associated javascript DOM event
   highlight-message.mt-3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   v-card.my-2.ma-auto.main-content(style="height: 523px")
-    //- vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
+    vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -737,7 +737,7 @@
       v-radio(label="cell background" value="cell" color="primary")
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
-      //- vue-cal.vuecal--green-theme(
+      vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
         xsmall
@@ -747,7 +747,7 @@
         events-count-on-year-view
         :events="events")
     v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
-      //- vue-cal.vuecal--yellow-theme(
+      vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
         xsmall
@@ -800,7 +800,7 @@
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
@@ -846,7 +846,7 @@
     | #[a(href="#ex--emitted-events") emitted events] example.
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -903,7 +903,7 @@
         }
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             small
             selected-date="2018-11-19"
@@ -934,7 +934,7 @@
       p In this example, a dialog box opens and lets you choose the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             selected-date="2018-11-19"
             small
             :time-from="10 * 60"
@@ -1051,7 +1051,7 @@
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
@@ -1103,9 +1103,7 @@
     a#ex--overlapping-events(name="ex--overlapping-events")
   p.
     Overlapping, editable  &amp; deletable events.#[br]
-    #[strong Up to 3 overlapping events starting or running at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
-    You can also use the option #[span.code no-event-overlaps] to show #[strong up to 3 events side by side] (splitting the cell width) instead of overlapping.
-  v-btn.ma-0(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
+    Try to resize &amp; delete events to see the overlapping redrawn.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1115,26 +1113,19 @@
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       editable-events
-      :events="overlappingEvents"
-      :no-event-overlaps="!overlapEvents")
+      :events="overlappingEvents")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;button @click="overlapEvents = !overlapEvents;$forceUpdate()"&gt;
-      :no-event-overlaps="{{ '\{\{ overlapEvents ? \'false\' : \'true\' \}\}' }}"
-    &lt;/button&gt;
-
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year', 'month']"
              hide-weekends
              editable-events
-             :no-event-overlaps="!overlapEvents"
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
-      overlapEvents: true,
       events: [
         {
           start: '2018-11-21 14:00',
@@ -1172,7 +1163,7 @@
     Note that you can still select a background event to put it on top of others and see it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1236,7 +1227,7 @@
     li.mb-2.
       When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
       (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
-      background event.
+      #[strong background event].
     li.mb-2.
       On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
       since both should display the all day events.
@@ -1254,7 +1245,7 @@
     span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.ex--all-day-events(
+    vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
@@ -1394,7 +1385,6 @@
   h3.title
     a(href="#ex--sync-two-calendars")
       v-icon.mr-2(medium) swap_horiz
-      //- v-icon.mr-2 wifi
       | Communicating with Vue Cal
 
   //- Example.
@@ -1408,7 +1398,7 @@
     #[a(href="#ex--emitted-events") emitted events example].
 
   v-layout(align-center justify-center)
-    //- vue-cal.vuecal--blue-theme(
+    vue-cal.vuecal--blue-theme(
       small
       :time="false"
       hide-view-selector
@@ -1416,7 +1406,7 @@
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       style="max-width: 360px;height: 260px")
-    //- vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
+    vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
       xsmall
       :time="false"
       hide-view-selector
@@ -1468,7 +1458,7 @@
   pre {{ eventsCopy.map(e => e.title) }}
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1552,7 +1542,7 @@
     li #[span.code event-change]
     li #[span.code event-title-change]
     li #[span.code event-content-change]
-    li #[span.code event-duration-change]
+    li #[span.code event-duration-change] &nbsp;#[span.code.grey--text // Only fired at the end of event resizing.]
   highlight-message(type="tips")
     ul
       li.
@@ -1582,7 +1572,7 @@
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-4.mb-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1634,9 +1624,10 @@
   highlight-message.mt-4
     | Here is the list of available slots:
     ul
+      li #[span.code title]
       li #[span.code arrow-prev]
       li #[span.code arrow-next]
-      li #[span.code title]
+      li #[span.code today-button]
       li #[span.code time-cell]
       li #[span.code cell-content]
       li #[span.code no-event]
@@ -1653,7 +1644,7 @@
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       small
       :time-from="5 * 60"
       :time-step="15"
@@ -1661,7 +1652,7 @@
       default-view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
-      div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
+      .line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt-4(type="tips").
@@ -1700,7 +1691,7 @@
     #[span.code leisure] CSS class.
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
-    //- vue-cal.vuecal--green-theme.ex--custom-events-count(
+    vue-cal.vuecal--green-theme.ex--custom-events-count(
       selected-date="2018-11-19"
       xsmall
       :time-from="10 * 60"
@@ -1709,8 +1700,8 @@
       :disable-views="['day']"
       events-count-on-year-view
       :events="events")
-      span(slot="events-count" slot-scope="{ events, view }" v-if="customEventsCount(events)")
-        | {{ customEventsCount(events) }}
+      template(v-slot:events-count="{ events, view }")
+        span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
 
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -1721,9 +1712,11 @@
              default-view="month"
              events-count-on-year-view
              :events="events"&gt;
-        &lt;span slot="events-count" slot-scope="{ events, view }" v-if="customEventsCount(events)"&gt;
-          {{ '\{\{ customEventsCount(events) \}\}' }}
-        &lt;/span&gt;
+        &lt;template v-slot:events-count="{ events, view }"&gt;
+          &lt;span v-if="customEventsCount(events)"&gt;
+            {{ '\{\{ customEventsCount(events) \}\}' }}
+          &lt;/span&gt;
+        &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   p.
@@ -1732,12 +1725,12 @@
     (Refer to the next example to know more:
     #[a(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells])
   sshpre.mt-2(language="html-vue" label="Vue Template").
-    &lt;span slot="cell-content" slot-scope="{ cell, view, events }"&gt;
+    &lt;template v-slot:cell-content="{ cell, view, events }"&gt;
       &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
       &lt;span class="vuecal__cell-events-count" v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
         {{ '\{\{ customEventsCount(events) \}\}' }}
       &lt;/span&gt;
-    &lt;/span&gt;
+    &lt;/template&gt;
 
   sshpre(language="js" label="Javascript").
     // In your Vue component.
@@ -1770,7 +1763,7 @@
     v-icon(size="22") keyboard_arrow_right
     | Custom title
   p.ml-2.mb-2.
-    2 arguments are available through the scoped slot: #[span.code slot-scope="{ title, view }"]
+    2 arguments are available through the scoped slot: #[span.code v-slot:title="{ title, view }"]
   ul
     li
       | #[span.code title], the formatted title (different on all the views). E.g.
@@ -1796,7 +1789,7 @@
   p.ml-2.mb-2.
     In this example, only the cell number is clickable on month view.#[br]
     5 arguments are available through the scoped slot:#[br]
-    #[span.code slot-scope="{ cell, view, split, events, goNarrower }"]
+    #[span.code v-slot:cell-content="{ cell, view, split, events, goNarrower }"]
   ul
     li #[span.code cell], object containing the cell date.
       sshpre(language="js").mt-2.mb-2.
@@ -1839,7 +1832,7 @@
       &lt;/div&gt;
 
   v-card.my-2.ma-auto.main-content(style="height: 400px")
-    //- vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
+    vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :dbl-click-to-navigate="false"
       default-view="month"
@@ -1926,7 +1919,7 @@
     Note that #[span.code _eid] is a reserved keyword.
 
   v-card.my-2.ma-auto.main-content(style="height: 523px")
-    //- vue-cal.vuecal--green-theme.ex--custom-event-rendering(
+    vue-cal.vuecal--green-theme.ex--custom-event-rendering(
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -2019,7 +2012,6 @@
     splitDays:              [Array],           default: []
     events:                 [Array],           default: []
     editableEvents:         [Boolean],         default: false
-    noEventOverlaps:        [Boolean],         default: false
     eventsOnMonthView:      [Boolean, String], default: false
     eventsCountOnYearView:  [Boolean],         default: false
     showAllDayEvents:       [Boolean, String], default: false
@@ -2258,12 +2250,6 @@
           li Deleting events by click and hold an event
           li Editing events title
     li
-      code.mr-2 noEventOverlaps
-      span.code [Boolean], default: false
-      p.
-        When #[span.code noEventOverlaps] is set to true, all the overlapping events will not
-        overlap but instead split the cell width in 2 or 3.
-    li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
       p.
@@ -2421,26 +2407,19 @@
     a#release-notes(name="release-notes")
 
   div #[strong Version 2.0.0]
+    highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
     highlight-message(type="success")
       ul
-        li New scoped slots syntax, requires Vue@2.6.0+
+        li New scoped slots syntax
         li Added ability to resize horizontally
         li Added function to get minutes at cursor
-        li
-          | Internal events structure has changed:
-          ul
-            li.
-              Externalize all locales from main library#[br]
-              Now, only the locale you need will be loaded on demand (as a separate request).#[br]
-              This will ensure Vue Cal keeps its file size as light as possible.
-            li Refactored multiple day events &amp; save segments inside events
-            li Refactored event object save segments inside events
-            li.
-              #[span.code startDate]/#[span.code endDate] are now Date Objects.#[br]
-              If you want formatted strings, use #[span.code start]/#[span.code end] instead
-            li.
-              #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
-              use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
+        li Now support displaying more than 3 overlapping events!
+        li the #[span.code no-event-overlaps] option is now useless and removed
+        li #[span.code event-duration-change] is now only fired after resizing an event
+        li.
+          Externalize all locales from main library#[br]
+          Now, only the locale you need will be loaded on demand (as a separate request).#[br]
+          This will ensure Vue Cal keeps its file size as light as possible.
         li Add a javascript Date object in events
         li Allow javascript Date object in event dates definition
         li Add a resizing class on events being resized
@@ -2460,6 +2439,18 @@
           On month view, out of scope events returned by emitted events don't include
           events that are already in the events array of the current month.
           (may happen with multiple-day events)
+        li
+          | Internal events structure has changed:
+          ul
+            li Refactored multiple day events &amp; save segments inside events
+            li Refactored event object save segments inside events
+            li.
+              #[span.code startDate]/#[span.code endDate] are now Date Objects.#[br]
+              If you want formatted strings, use #[span.code start]/#[span.code end] instead
+            li.
+              #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
+              use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
+            li Few nesting levels were removed from html markup thanks to the Vue #[span.code &lt;template&gt;] tag
       //- TODO:
         add accessibility
         do all the @todo
@@ -2473,6 +2464,7 @@
         while resizing multiple days, prevent endTime < startTime
         option for sticky split labels
         document about overriding global deletable, resizable
+        hide days in week view?
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
@@ -2771,7 +2763,6 @@ export default {
     locale: 'zh-cn',
     splitsExampleMinCellWidth: 400,
     example1theme: 'green',
-    overlapEvents: true,
     indicatorStyle: 'count',
     now: new Date(),
     logs: [],
