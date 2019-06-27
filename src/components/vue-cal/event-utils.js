@@ -134,18 +134,14 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
   return e
 }
 
-export const deleteAnEvent = (event, vuecal, cell = {}) => {
+export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
   // Delete the event globally.
   vuecal.mutableEvents = vuecal.mutableEvents.filter(e => e._eid !== event._eid)
   // Delete the event from the current view.
+  // checkCellOverlappingEvents() will be re-run automatically from the cell computed events.
   vuecal.view.events = vuecal.view.events.filter(e => e._eid !== event._eid)
-
-  // delete event from cell overlaps array.
-  // checkCellOverlappingEvents() will be re-run automatically from the cell.
-  cell.cellOverlaps = {}
-  cell.splitOverlaps = {}
 }
 
 // EVENT OVERLAPS.
@@ -165,10 +161,10 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
     // Never compare the current event in the next loops. the array is refined as we loop.
     comparisonArray.shift()
 
-    if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
-    cellOverlaps[e._eid].position = 0
-
     if (!e.background && !e.allDay) {
+      if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
+      cellOverlaps[e._eid].position = 0
+
       comparisonArray.forEach(e2 => {
         if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 

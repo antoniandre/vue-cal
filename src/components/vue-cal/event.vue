@@ -127,7 +127,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent(this.event, this.vuecal, this.$parent.$parent)
+      deleteAnEvent(this.event, this.vuecal)
     },
 
     touchDeleteEvent (event) {
@@ -286,6 +286,8 @@ export default {
     bottom: 0;
     z-index: 0;
     opacity: 0.6;
+    width: auto;
+    right: 0;
   }
 
   .vuecal--view-with-time .vuecal__all-day &--all-day {

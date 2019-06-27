@@ -26,7 +26,7 @@
           :all-day="allDay"
           :overlaps="splits.length ? (splitsOverlaps[i][event._eid] || []).overlaps : (cellOverlaps[event._eid] || []).overlaps"
           :event-position="splits.length ? (splitsOverlaps[i][event._eid] || []).position : (cellOverlaps[event._eid] || []).position"
-          :overlaps-streak="overlapsStreak"
+          :overlaps-streak="splits.length ? splitsOverlapsStreak[i] : cellOverlapsStreak"
           :cell-events="splits.length ? splitEvents[i] : events"
           :split="splits.length ? i : 0")
           template(v-slot:event-renderer="{ event, view }")
@@ -71,8 +71,9 @@ export default {
 
   data: () => ({
     cellOverlaps: {},
-    splitsOverlaps: {},
-    overlapsStreak: 1 // Largest amount of simultaneous events in cell.
+    splitsOverlaps: [],
+    cellOverlapsStreak: 1, // Largest amount of simultaneous events in cell.
+    splitsOverlapsStreak: [] // Largest amount of simultaneous events in cell.
   }),
 
   methods: {
@@ -81,15 +82,18 @@ export default {
         if (this.splits.length) {
           this.splits.forEach((s, i) => {
             if ((this.splitEvents[i] || []).length > 1) {
-              this.splitsOverlaps[i] = checkCellOverlappingEvents(this.splitEvents[i], this.splitsOverlaps[i])
+              [this.splitsOverlaps[i], this.splitsOverlapsStreak[i]] = checkCellOverlappingEvents(
+                this.splitEvents[i].filter(e => !e.background), this.splitsOverlaps[i]
+              )
             }
           })
         }
         else if (this.events.length > 1) {
-          [this.cellOverlaps, this.overlapsStreak] = checkCellOverlappingEvents(this.events, this.cellOverlaps)
+          [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
+            this.events.filter(e => !e.background), this.cellOverlaps
+          )
         }
       }
-      // console.log(this.cellOverlaps)
     },
 
     isDOMElementAnEvent (el) {
@@ -188,6 +192,11 @@ export default {
     events () {
       const { startDate: cellStart, endDate: cellEnd } = this.data
       let events = []
+      // Reinit overlaps.
+      this.cellOverlaps = {}
+      this.splitsOverlaps = []
+      this.cellOverlapsStreak = 1 // Largest amount of simultaneous events in cell.
+      this.splitsOverlapsStreak = [] // Largest amount of simultaneous events in cell.
 
       // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
       if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
