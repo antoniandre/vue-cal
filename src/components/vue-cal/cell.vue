@@ -6,29 +6,28 @@
     :appear="options.transitions"
     :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
-      :class="splits.length && `vuecal__cell-split ${splits[i].class}`"
-      :data-split="splits.length && (i + 1)"
-      v-for="(h, i) in (splits.length || 1)"
+      v-for="(split, i) in (splits.length ? splits : 1)"
       :key="options.transitions ? `${view}-${data.content}-${i}` : i"
+      :class="splits.length && `vuecal__cell-split ${split.class}`"
+      :data-split="splits.length ? i + 1 : false"
       column
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell()"
       @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
-      slot(name="cell-content" :events="events" :select-cell="() => {selectCell(true)}" :split="splits.length && splits[i]")
+      slot(name="cell-content" :events="events" :select-cell="() => {selectCell(true)}" :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
-          v-for="(event, j) in (splits.length ? splits[i].events : events)" :key="j"
+          v-for="(event, j) in (splits.length ? split.events : events)" :key="j"
           :vuecal="$parent"
           :cell-formatted-date="data.formattedDate"
           :event="event"
           :all-day="allDay"
-          :cell-events="splits.length ? splits[i].events : events"
-          :split="splits.length ? i + 1 : 0"
-          :overlaps="((splits.length ? splits[i].overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
-          :event-position="((splits.length ? splits[i].overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
-          :overlaps-streak="splits.length ? splits[i].overlapsStreak : cellOverlapsStreak")
+          :cell-events="splits.length ? split.events : events"
+          :overlaps="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
+          :event-position="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
+          :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
           template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
     .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
@@ -76,21 +75,11 @@ export default {
 
   methods: {
     checkCellOverlappingEvents () {
-      if (this.options.time) {
-        if (this.splits.length) {
-          this.splits.forEach((split, i) => {
-            if (split.events.length > 1) {
-              [this.splits[i].overlaps, this.splits[i].overlapsStreak] = checkCellOverlappingEvents(
-                split.events.filter(e => !e.background && !e.allDay && e.split === (i + 1)), split.overlaps
-              )
-            }
-          })
-        }
-        else if (this.events.length > 1) {
-          [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
-            this.events.filter(e => !e.background && !e.allDay), this.cellOverlaps
-          )
-        }
+      // If splits, checkCellOverlappingEvents() is called from within computed splits.
+      if (this.options.time && this.events.length > 1 && !this.splits.length) {
+        [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
+          this.events.filter(e => !e.background && !e.allDay), this.cellOverlaps
+        )
       }
     },
 
@@ -160,9 +149,8 @@ export default {
         selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
           selectedDate.getMonth() === this.data.startDate.getMonth())
       }
-      else {
-        selected = selectedDate.getTime() === this.data.startDate.getTime()
-      }
+      else selected = selectedDate.getTime() === this.data.startDate.getTime()
+
       return selected
     },
     domEvents: {
@@ -224,31 +212,23 @@ export default {
           events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
-        this.$nextTick(this.checkCellOverlappingEvents)
+        // If splits, checkCellOverlappingEvents() is called from within computed splits.
+        if (!this.cellSplits.length) this.$nextTick(this.checkCellOverlappingEvents)
       }
 
       return events
     },
     splits () {
-      if (!this.cellSplits.length) return []
-
-      let splits = []
-      this.cellSplits.forEach((s, i) => {
-        this.$set(splits, i, {
-          ...s,
-          overlaps: {},
-          overlapsStreak: 1,
-          events: []
-        })
-        this.$set(splits[i], 'overlaps', {})
-        this.$set(splits[i], 'events', [])
+      return this.cellSplits.map((item, i) => {
+        const events = this.events.filter(e => e.split === i + 1)
+        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), {})
+        return {
+          ...item,
+          overlaps,
+          overlapsStreak: streak,
+          events
+        }
       })
-
-      this.events.forEach(e => {
-        if (e.split) splits[(e.split * 1) - 1].events.push(e)
-      })
-
-      return splits
     },
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
