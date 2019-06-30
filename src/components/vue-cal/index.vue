@@ -511,10 +511,6 @@ export default {
           createEventSegments(mutableEvent, this.view.startDate, this.view.endDate)
         }
       }
-      // @todo: handle splits?
-      // if (this.hasSplits && this.splitDays) {
-      //   event = event.find(e => e.split === resizeAnEvent.split)
-      // }
     },
 
     onMouseUp (e) {
@@ -651,9 +647,6 @@ export default {
           ...eventDefaults,
           // Keep the event ids scoped to this calendar instance.
           _eid: `${this._uid}_${this.eventIdIncrement++}`,
-          overlapped: {},
-          overlapping: {},
-          simultaneous: {},
           segments: multipleDays ? {} : null,
           start,
           startDate,
@@ -701,8 +694,8 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes',
-        'split', 'segments', 'deletable', 'deleting', 'resizable', 'resizing', 'focused'
+        'height', 'top', 'classes', 'split', 'segments', 'deletable',
+        'deleting', 'resizable', 'resizing', 'focused'
       ]
       for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
 

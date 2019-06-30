@@ -15,9 +15,6 @@ export const eventDefaults = {
   content: '',
   background: false,
   allDay: false,
-  overlapped: {},
-  overlapping: {},
-  simultaneous: {},
   segments: null,
   daysCount: 1,
   height: 0,
@@ -46,11 +43,6 @@ export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vue
 
   let event = {
     ...eventDefaults,
-    // Nested objects need to be reinitialized or they will be shared across all instances.
-    overlapped: {},
-    overlapping: {},
-    simultaneous: {},
-
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start,
     startDate: new Date(start),
@@ -119,9 +111,6 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
       start: formattedDate,
       startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
       endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
-      overlapping: {},
-      overlapped: {},
-      simultaneous: {},
       isFirstDay,
       isLastDay,
       height: 0,
@@ -151,9 +140,7 @@ let comparisonArray = []
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
-  // if (!cellEvents.length || cellEvents[0].start.indexOf('2018-11-21') < 0) return [[], 1]
   comparisonArray = cellEvents.slice(0)
-  console.log('checkCellOverlappingEvents', cellEvents, cellOverlaps)
 
   // @todo: filter !e.background && !e.allDay directly on cellEvents.
   // @todo: try recalculating while dragging (try force update).
@@ -197,7 +184,7 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
   for (const id in cellOverlaps) {
     const item = cellOverlaps[id]
 
-    // Calculate the position of event in current streak (determines CSS left property).
+    // Calculate the position of each event in current streak (determines the CSS left property).
     const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
     overlapsRow.push({ id, start: item.start })
     overlapsRow.sort((a, b) => a.start < b.start ? -1 : (a.start > b.start ? 1 : (a.id > b.id ? -1 : 1)))
@@ -206,7 +193,6 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
     longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
   }
 
-  console.log('cell overlaps', {...cellOverlaps})
   return  [cellOverlaps, longestStreak]
 }
 

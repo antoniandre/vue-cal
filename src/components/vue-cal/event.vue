@@ -12,8 +12,7 @@
     v-if="vuecal.editableEvents && event.deletable"
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
-  //- slot(name="event-renderer" :event="event" :view="vuecal.view.id")
-  p {{overlaps}}-{{eventPosition}}-{{overlapsStreak}}
+  slot(name="event-renderer" :event="event" :view="vuecal.view.id")
   .vuecal__event-resize-handle(
     v-if="resizable"
     @mousedown="onDragHandleMouseDown"
@@ -40,10 +39,6 @@ export default {
     cellEvents: {
       type: Array,
       default: () => []
-    },
-    split: {
-      type: Number,
-      default: 0
     },
     overlaps: {
       type: Array,
@@ -176,53 +171,20 @@ export default {
 
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventClasses () {
-      const event = this.event
-      let overlapping, overlapped, simultaneous
-      let forceLeft = false
-      const segment = this.segment || event
-
-      if (this.vuecal.view.id !== 'month') {
-        overlapping = Object.keys(segment.overlapping).length
-        overlapped = Object.keys(segment.overlapped).length
-        simultaneous = Object.keys(segment.simultaneous).length + 1
-
-        if (simultaneous >= 3) {
-          let split3 = simultaneous - 1
-          Object.keys(segment.simultaneous).forEach(_eid => {
-            if (split3 && Object.keys(this.cellEvents.find(e => e._eid === _eid).simultaneous).length + 1 < 3) {
-              split3--
-            }
-          })
-          if (!split3) simultaneous = 2
-        }
-
-        else if (simultaneous === 2) {
-          const otherEvent = this.cellEvents.find(e => e._eid === Object.keys(segment.simultaneous)[0])
-
-          if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
-            forceLeft = true
-          }
-        }
-      }
+      const { isFirstDay, isLastDay } = this.segment || {}
 
       return {
-        [event.classes.join(' ')]: true,
-        'vuecal__event--focus': event.focused,
-        'vuecal__event--resizing': event.resizing,
-        'vuecal__event--background': event.background,
-        'vuecal__event--deletable': event.deleting,
-        'vuecal__event--overlapped': overlapped,
-        'vuecal__event--overlapping': overlapping,
-        'vuecal__event--split2': simultaneous === 2,
-        'vuecal__event--split3': simultaneous >= 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
-        'vuecal__event--split-left': forceLeft,
-        'vuecal__event--all-day': event.allDay,
+        [this.event.classes.join(' ')]: true,
+        'vuecal__event--focus': this.event.focused,
+        'vuecal__event--resizing': this.event.resizing,
+        'vuecal__event--background': this.event.background,
+        'vuecal__event--deletable': this.event.deleting,
+        'vuecal__event--all-day': this.event.allDay,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
-        'event-start': this.segment && segment.isFirstDay && !segment.isLastDay,
-        'event-middle': this.segment && !segment.isFirstDay && !segment.isLastDay,
-        'event-end': this.segment && segment.isLastDay && !segment.isFirstDay
+        'event-start': this.segment && isFirstDay && !isLastDay,
+        'event-middle': this.segment && !isFirstDay && !isLastDay,
+        'event-end': this.segment && isLastDay && !isFirstDay
       }
     },
     // When multiple-day events, a segment is a portion of event spanning on 1 day.
@@ -247,17 +209,14 @@ export default {
     'event.background' (val) {
       // When the event background property changes, remove all the involved overlapping events
       // if setting to background or check cell overlapping again otherwise.
-      if (val) {
-        // @todo: function to delete the overlaps in event-utils.
-        deleteOverlaps(this.event)
-        // this.event.overlapping = {}
-        // this.event.overlapped = {}
-        // this.event.simultaneous = {}
+      // if (val) {
+      //   // @todo: function to delete the overlaps in event-utils.
+      //   deleteOverlaps(this.event)
 
-        // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
-      }
+      //   // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
+      // }
 
-      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.cellFormattedDate, [])
+      // else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.cellFormattedDate, [])
     }
   }
 }
