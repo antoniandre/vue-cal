@@ -31,7 +31,7 @@ export const eventDefaults = {
 // event attributes through the eventOptions object.
 export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
-  if (!(dateTime instanceof Date)) return false
+  if (!(dateTime instanceof Date) || vuecal.domEvents.cancelClickEventCreation) return false
 
   const hours = dateTime.getHours()
   const minutes = dateTime.getMinutes()
@@ -160,7 +160,7 @@ export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
         if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
         // Add to the overlaps array if overlapping.
-        if (eventInRange(e2, e.startDate, e.endDate, e)) {
+        if (!e2.background && !e2.allDay && eventInRange(e2, e.startDate, e.endDate, e)) {
           cellOverlaps[e._eid].overlaps.push(e2._eid)
           cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 

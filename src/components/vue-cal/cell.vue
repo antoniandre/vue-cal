@@ -14,7 +14,7 @@
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
-      @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
+      @dblclick="!isDisabled && onCellDblClick($event)")
       slot(name="cell-content" :events="events" :select-cell="() => {selectCell($event, true)}" :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
@@ -78,7 +78,7 @@ export default {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
       if (this.options.time && this.events.length > 1 && !this.splits.length) {
         [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
-          this.events.filter(e => !e.background && !e.allDay), this.cellOverlaps
+          this.events, this.cellOverlaps
         )
       }
     },
@@ -99,6 +99,9 @@ export default {
       if ('ontouchstart' in window && !touch) return false
 
       let { clickHoldACell } = this.domEvents
+      // Reinit the click trigger on each mousedown, but it might be intendedly cancelled
+      // before it happens.
+      this.domEvents.cancelClickEventCreation = false
 
       // If not mousedown on an event, click & hold to create an event.
       if (this.options.editableEvents && !this.isDOMElementAnEvent(DOMEvent.target) && ['month', 'week', 'day'].includes(this.view)) {
@@ -110,6 +113,7 @@ export default {
             date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
 
             this.$parent.createEvent(date, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+            this.domEvents.cancelClickEventCreation = true
           }
         }, clickHoldACell.timeout)
       }
@@ -118,6 +122,14 @@ export default {
     onCellTouchStart (DOMEvent, split = null) {
       // If not mousedown on an event.
       if (!this.isDOMElementAnEvent(DOMEvent.target)) this.onCellMouseDown(DOMEvent, split, true)
+    },
+
+    onCellDblClick (DOMEvent) {
+      const date = new Date(this.data.startDate)
+      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      this.$parent.$emit('cell-dblclick', date)
+
+      if (this.options.dblclickToNavigate) this.$parent.switchToNarrowerView()
     }
   },
 

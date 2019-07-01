@@ -1,5 +1,5 @@
 /**
- * Select a cell and go to narrower view on double click or simple click according to vuecal option.
+ * Select a cell and go to narrower view on double click or single click according to vuecal option.
  *
  * @param {Boolean} force Force switching to narrower view.
  * @param {Date} date The selected cell date at the exact time where it was clicked (through cursor coords).
@@ -22,7 +22,7 @@ export const selectCell = (force = false, date, vuecal) => {
   if (vuecal.clickToNavigate || force) vuecal.switchToNarrowerView()
 
   // Handle double click manually for touch devices.
-  else if (vuecal.dblClickToNavigate && 'ontouchstart' in window) {
+  else if (vuecal.dblclickToNavigate && 'ontouchstart' in window) {
     vuecal.domEvents.dblTapACell.taps++
 
     setTimeout(() => (vuecal.domEvents.dblTapACell.taps = 0), vuecal.domEvents.dblTapACell.timeout)
@@ -30,6 +30,7 @@ export const selectCell = (force = false, date, vuecal) => {
     if (vuecal.domEvents.dblTapACell.taps >= 2) {
       vuecal.domEvents.dblTapACell.taps = 0
       vuecal.switchToNarrowerView()
+      vuecal.$emit('cell-dblclick', date)
     }
   }
 }

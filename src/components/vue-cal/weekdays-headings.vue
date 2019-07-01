@@ -6,7 +6,7 @@
     :key="i"
     :style="weekdayCellStyles"
     @click="view.id === 'week' && selectCell(heading.date, $event)"
-    @dblclick="view.id === 'week' && vuecal.dblClickToNavigate && switchToNarrowerView()")
+    @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
       span(:key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
         //- For small/xsmall option. 3 media queries also truncate weekdays.
@@ -90,7 +90,7 @@ export default {
       return { minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null }
     },
     cellHeadingsClickable () {
-      return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblClickToNavigate)
+      return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblclickToNavigate)
     }
   }
 }

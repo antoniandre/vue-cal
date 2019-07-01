@@ -176,7 +176,7 @@ export default {
       type: Boolean,
       default: false
     },
-    dblClickToNavigate: {
+    dblclickToNavigate: {
       type: Boolean,
       default: true
     },
@@ -311,7 +311,10 @@ export default {
           split: null,
           timeout: 1200, // Hold for 1.2s to create an event.
           timeoutId: null
-        }
+        },
+        // A single click can trigger event creation if the user decides so.
+        // But prevent this to happen on click & hold, on event click and on resize event.
+        cancelClickEventCreation: false
       },
       mutableEvents: [], // An array of mutable events updated each time given events array changes.
       transitionDirection: 'right'
@@ -513,11 +516,13 @@ export default {
       }
     },
 
+    // Mouseup can never cancel a click with preventDefault or stopPropagation.
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
+        this.domEvents.cancelClickEventCreation = true
         let event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
           let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
@@ -543,10 +548,10 @@ export default {
         resizeAnEvent.startCell = null
       }
 
+      if (this.isDOMElementAnEvent(e.target)) this.domEvents.cancelClickEventCreation = true
+
       // If not mouse up on an event, unfocus any event except if just dragged.
-      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent._eid) {
-        this.unfocusEvent()
-      }
+      else if (!resizeAnEvent._eid) this.unfocusEvent()
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout is initiated in onMouseDown() in event component.
