@@ -5,7 +5,7 @@
     v-for="(heading, i) in headings"
     :key="i"
     :style="weekdayCellStyles"
-    @click="view.id === 'week' && selectCell(heading.date)"
+    @click="view.id === 'week' && selectCell(heading.date, $event)"
     @dblclick="view.id === 'week' && vuecal.dblClickToNavigate && switchToNarrowerView()")
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
       span(:key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
@@ -50,8 +50,10 @@ export default {
   },
 
   methods: {
-    selectCell (date) {
-      selectCell(null, date, this.vuecal)
+    selectCell (date, DOMEvent) {
+      date = new Date(date)
+      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).startTimeMinutes)
+      selectCell(null, date, this.vuecal, DOMEvent)
     }
   },
   computed: {

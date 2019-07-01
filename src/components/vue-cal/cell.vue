@@ -13,9 +13,9 @@
       column
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
-      @click="!isDisabled && selectCell()"
+      @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && options.dblClickToNavigate && $parent.switchToNarrowerView()")
-      slot(name="cell-content" :events="events" :select-cell="() => {selectCell(true)}" :split="splits.length ? split : false")
+      slot(name="cell-content" :events="events" :select-cell="() => {selectCell($event, true)}" :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -87,31 +87,37 @@ export default {
       return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
     },
 
-    selectCell (force = false) {
-      selectCell(force, this.data.startDate, this.$parent)
+    selectCell (DOMEvent, force = false) {
+      const date = new Date(this.data.startDate)
+      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+
+      selectCell(force, date, this.$parent)
     },
 
-    onCellMouseDown (e, split = null, touch = false) {
+    onCellMouseDown (DOMEvent, split = null, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
       let { clickHoldACell } = this.domEvents
 
       // If not mousedown on an event, click & hold to create an event.
-      if (this.options.editableEvents && !this.isDOMElementAnEvent(e.target) && ['month', 'week', 'day'].includes(this.view)) {
+      if (this.options.editableEvents && !this.isDOMElementAnEvent(DOMEvent.target) && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId) {
-            this.$parent.createEvent(this.data.formattedDate, e, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+            const date = new Date(this.data.startDate)
+            date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+
+            this.$parent.createEvent(date, clickHoldACell.split ? { split: clickHoldACell.split } : {})
           }
         }, clickHoldACell.timeout)
       }
     },
 
-    onCellTouchStart (e, split = null) {
+    onCellTouchStart (DOMEvent, split = null) {
       // If not mousedown on an event.
-      if (!this.isDOMElementAnEvent(e.target)) this.onCellMouseDown(e, split, true)
+      if (!this.isDOMElementAnEvent(DOMEvent.target)) this.onCellMouseDown(DOMEvent, split, true)
     }
   },
 

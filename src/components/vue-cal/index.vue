@@ -683,8 +683,8 @@ export default {
     },
 
     // Allow call from cell click & hold or external call via $refs.
-    createEvent (formattedDate, e = null, eventOptions = {}) {
-      return createAnEvent(formattedDate, this.minutesAtCursor(e).startTimeMinutes, eventOptions, this)
+    createEvent (dateTime, eventOptions = {}) {
+      return createAnEvent(dateTime, eventOptions, this)
     },
 
     // Prepare the event to return it with an emitted event.
