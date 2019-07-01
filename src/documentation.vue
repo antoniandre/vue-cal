@@ -877,26 +877,30 @@
     a(href="#ex--more-advanced-event-creation") # More advanced event creation
     a#ex--more-advanced-event-creation(name="ex--more-advanced-event-creation")
   p.
-    There are 2 ways to create an event, programmatically or by clicking and holding a cell.
+    There are 3 ways to create an event: programmatically, on cell click and hold, or on cell simple click.
   ol.pl-3
     li.mt-3
-      h5.subheading.font-weight-bold Programmatically
+      h5.subheading.font-weight-bold Programmatically &amp; Externally
+      p.
+        You will need to call the vue-cal #[span.code createEvent()] function from a Vue ref like in this example:
       v-layout(row align-center)
-        | See this button?
         v-btn.d-inline-block(small color="primary" @click="customEventCreation") button
         sshpre.ma-0.pa-1(language="html-vue").
           &lt;button @click="customEventCreation"&gt;button&lt;/button&gt;
-      p It will let you choose a date to create an event and set the event content attribute:
+      p.
+        This button will prompt you to choose a date and time as the event start.
+        Then you can give custom event attributes as you wish:
       sshpre.mt-3(language="js" label="Javascript").
         // In methods.
         customEventCreation (event) {
-            const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
-            // Check if date format is correct.
-            if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+            const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+
+            // Check if date format is correct before creating event.
+            if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(date)) {
               this.$refs.vuecal.createEvent(
-                date, // Formatted date.
-                12 * 60, // Event start time in minutes.
-                // Event props.
+                // Formatted start date and time or JavaScript Date object.
+                dateTime,
+                // Custom event props (optional).
                 { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
               )
             } else if (date) alert('Wrong date format.')
@@ -930,7 +934,7 @@
           &lt;/vue-cal&gt;
 
     li.mt-5
-      h5.subheading.font-weight-bold By clicking and holding a cell
+      h5.subheading.font-weight-bold on cell click and hold
       p In this example, a dialog box opens and lets you choose the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
@@ -958,6 +962,42 @@
                    editable-events
                    :events="events"
                    :on-event-create="onEventCreate"&gt;
+          &lt;/vue-cal&gt;
+
+    li.mt-5
+      h5.subheading.font-weight-bold On cell simple click
+      p.
+        As the #[span.code cell-click] emitted event returns a date and time at
+        cursor position (refer to the #[a(href="#ex--emitted-events") emitted events example]),
+        you simply need to call the #[span.code createEvent()] function straight away from #[span.code cell-click]:
+      v-layout(row wrap)
+        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+            ref="vuecal3"
+            selected-date="2018-11-19"
+            small
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year']"
+            hide-view-selector
+            hide-title-bar
+            hide-weekends
+            editable-events
+            :events="events"
+            @cell-click="$refs.vuecal3.createEvent($event)")
+        sshpre.my-2.caption(language="html-vue").
+          &lt;vue-cal ref="vuecal"
+                   selected-date="2018-11-19"
+                   small
+                   :time-from="10 * 60"
+                   :time-to="16 * 60"
+                   :disable-views="['years', 'year']"
+                   hide-view-selector
+                   hide-weekends
+                   hide-title-bar
+                   editable-events
+                   :events="events"
+                   @cell-click="$refs.vuecal.createEvent($event, { title: 'yay'})"&gt;
           &lt;/vue-cal&gt;
 
   p.mt-3.
@@ -1511,10 +1551,16 @@
     li #[span.code view-change]
     li #[span.code cell-click] - is a JS native #[span.code Date] object
     li #[span.code cell-focus] - is a JS native #[span.code Date] object
-  highlight-message(no-icon).
-    #[span.code cell-click] is fired every time you click a day, whereas
-    #[span.code cell-focus] is fired only when the selected day changes.
-  highlight-message(no-icon)
+  highlight-message(type="tips")
+    ul
+      li.
+        #[span.code cell-click] is fired every time you click a day, whereas
+        #[span.code cell-focus] is fired only when the selected day changes.
+      li.
+        #[span.code cell-click] contains the time at cursor position, whereas
+        #[span.code cell-focus] returns the cell start date (at midnight).
+
+  highlight-message
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
     sshpre.mt-2(language="js").
       {
@@ -2458,7 +2504,8 @@
         cleanup mutableEvents
         at any time return view events not mutable events to user
         add recurring events
-        do an example with event creation on simple click
+        check overriding event attributes on event creation
+        option to disable event creation on click and hold
         check resizing multiple day events starting before 1999-11-01
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
@@ -3087,11 +3134,11 @@ export default {
       return event
     },
     customEventCreation (event) {
-      const date = prompt('Create event on (YYYY-mm-dd)', '2018-11-20')
-      if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-        this.$refs.vuecal.createEvent(date, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
+      const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+      if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
+        this.$refs.vuecal.createEvent(dateTime, 12 * 60, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
       }
-      else if (date) alert('Wrong date format.')
+      else if (dateTime) alert('Wrong date format.')
     }
   },
   computed: {

@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate } from './date-utils'
+import { formatDate, stringToDate } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -27,25 +27,28 @@ export const eventDefaults = {
   classes: []
 }
 
-// Create an event on formattedDate at the given startTimeMinutes, and allow overriding
+// Create an event at the given date and time, and allow overriding
 // event attributes through the eventOptions object.
-export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vuecal) => {
-  startTimeMinutes = parseInt(startTimeMinutes)
-  const hours = parseInt(startTimeMinutes / 60)
-  const minutes = parseInt(startTimeMinutes % 60)
+export const createAnEvent = (dateTime, eventOptions, vuecal) => {
+  if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
+  if (!(dateTime instanceof Date)) return false
+
+  const hours = dateTime.getHours()
+  const minutes = dateTime.getMinutes()
+  const startTimeMinutes = hours * 60 + minutes
   const hoursEnd = hours + defaultEventDuration
   const endTimeMinutes = startTimeMinutes + 120
   const formattedHours = (hours < 10 ? '0' : '') + hours
   const formattedHoursEnd = (hoursEnd < 10 ? '0' : '') + hoursEnd
   const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
-  const start = formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
-  const end = formattedDate + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
+  const start = formatDate(dateTime) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
+  const end = formatDate(dateTime) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
 
   let event = {
     ...eventDefaults,
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start,
-    startDate: new Date(start),
+    startDate: dateTime,
     startTimeMinutes,
     end,
     endDate: new Date(end),
