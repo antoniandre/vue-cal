@@ -1,9 +1,20 @@
 let texts = {}
 export const setTexts = t => { texts = t }
 
-export const now = new Date()
+export let now = new Date()
 // Cache today's date for better isDateToday() performances. Formatted without leading 0.
-export const todayFormatted = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+let todayF = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+export const todayFormatted = () => {
+  console.log('get today formatted')
+
+  if (now.getDate() !== (new Date()).getDate()) {
+    console.log('SET today formatted')
+    now = new Date()
+    todayF = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+  }
+
+  return todayF
+}
 
 // eslint-disable-next-line
 Date.prototype.addDays = function (days) {
@@ -29,7 +40,7 @@ Date.prototype.getWeek = function () {
 }
 
 export const isDateToday = date => {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayFormatted
+  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayFormatted()
 }
 
 // Returns today if it's FirstDayOfWeek (Monday or Sunday) or previous FirstDayOfWeek otherwise.

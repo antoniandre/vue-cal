@@ -180,6 +180,10 @@ export default {
       type: Boolean,
       default: true
     },
+    cellClickHold: {
+      type: Boolean,
+      default: true
+    },
     time: {
       type: Boolean,
       default: true
@@ -271,7 +275,6 @@ export default {
         dateFormat: 'DDDD mmmm d, yyyy'
       },
       ready: false,
-      now,
       view: {
         id: '',
         title: '',
@@ -781,6 +784,18 @@ export default {
   },
 
   computed: {
+    now () {
+      // let newNow = now
+      // console.log(now)
+
+      // debugger
+      // if (now.getDate() !== (new Date()).getDate()) {
+      //   debugger
+      //   newNow = new Date()
+      //   todayFormatted = `${newNow.getFullYear()}-${newNow.getMonth()}-${newNow.getDate()}`
+      // }
+      return new Date()
+    },
     views () {
       return {
         years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },

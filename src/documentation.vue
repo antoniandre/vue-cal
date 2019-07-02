@@ -116,24 +116,21 @@
         | Today button
 
     .mb-2 Current backlog
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Externalize locales
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Support more simultaneous events
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
-      | Externalize locales
+      | Recurring events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Recurring events
-    v-chip.pr-1(color="amber darken-1" outline small disabled)
-      v-icon.mr-1 timer
       | Drag events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Optional week number
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Optional tooltip on events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
-      | Support more simultaneous events
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Improve multiple day events
@@ -232,7 +229,7 @@
     sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
-    //- vue-cal(small :time="false" hide-view-selector style="height: 250px")
+    vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
@@ -877,35 +874,62 @@
     a(href="#ex--more-advanced-event-creation") # More advanced event creation
     a#ex--more-advanced-event-creation(name="ex--more-advanced-event-creation")
   p.
-    There are 3 ways to create an event: programmatically, on cell click and hold,
-    or on cell single/double click.
+    There are 3 ways to create an event: on cell click  &amp; hold (default), on cell single/double click,
+    or programmatically.
+  highlight-message Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
+  p Let's see the 3 cases in order of complexity:
+
   ol.pl-3
     li.mt-3
+      h5.subheading.font-weight-bold On cell single or double click
+      p.
+        As the #[span.code cell-click] &amp; #[span.code cell-dblclick] emitted
+        events return a date and time at cursor position (refer to the
+        #[a(href="#ex--emitted-events") emitted events example]),
+        you simply need to call the #[span.code createEvent()] function straight
+        away from #[span.code cell-dblclick]:
+      v-layout(row wrap)
+        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+            ref="vuecal3"
+            selected-date="2018-11-19"
+            small
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year', 'month', 'day']"
+            hide-view-selector
+            hide-title-bar
+            hide-weekends
+            :cell-click-hold="false"
+            editable-events
+            :events="events"
+            @cell-dblclick="$refs.vuecal3.createEvent($event, { title: 'New Event', classes: ['blue-event'] })")
+        sshpre.my-2.caption(language="html-vue").
+          &lt;vue-cal ref="vuecal"
+                   selected-date="2018-11-19"
+                   small
+                   :time-from="10 * 60"
+                   :time-to="16 * 60"
+                   :disable-views="['years', 'year']"
+                   hide-view-selector
+                   hide-weekends
+                   hide-title-bar
+                   :cell-click-hold="false"
+                   editable-events
+                   :events="events"
+                   @cell-dblclick="$refs.vuecal.createEvent($event, { title: 'New Event', classes: ['blue-event'] })"&gt;
+          &lt;/vue-cal&gt;
+      p You may then want to disable the default event creation on cell click &amp; hold by setting #[span.code :cell-click-hold="false"]
+    li.mt-5
       h5.subheading.font-weight-bold Programmatically &amp; externally
-      p.
-        You will need to call the vue-cal #[span.code createEvent()] function from a Vue ref like in this example:
-      v-layout(row align-center)
-        v-btn.d-inline-block(small color="primary" @click="customEventCreation") button
-        sshpre.ma-0.pa-1(language="html-vue").
-          &lt;button @click="customEventCreation"&gt;button&lt;/button&gt;
-      p.
-        This button will prompt you to choose a date and time as the event start.
-        Then you can give custom event attributes as you wish:
-      sshpre.mt-3(language="js" label="Javascript").
-        // In methods.
-        customEventCreation (event) {
-            const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+      p.my-2.
+        To allow an external button to create events, you will need to call the
+        vue-cal #[span.code createEvent()] function from a Vue ref.
+      v-layout.mb-3(row align-center)
+        | This
+        v-btn.my-0(small color="primary" @click="customEventCreation") button
+        | will prompt you to choose a date and time as the event start.
 
-            // Check if date format is correct before creating event.
-            if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(date)) {
-              this.$refs.vuecal.createEvent(
-                // Formatted start date and time or JavaScript Date object.
-                dateTime,
-                // Custom event props (optional).
-                { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
-              )
-            } else if (date) alert('Wrong date format.')
-        }
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -921,6 +945,10 @@
             editable-events
             :events="events")
         sshpre.my-2.caption(language="html-vue").
+          &lt;button @click="customEventCreation"&gt;
+              button
+          &lt;/button&gt;
+
           &lt;vue-cal ref="vuecal"
                    selected-date="2018-11-19"
                    small
@@ -933,10 +961,55 @@
                    editable-events
                    :events="events"&gt;
           &lt;/vue-cal&gt;
+      p Then you can give custom event attributes as you wish:
+      sshpre.mt-3(language="js" label="Javascript").
+        // In methods.
+        customEventCreation () {
+            const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+
+            // Check if date format is correct before creating event.
+            if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(date)) {
+              this.$refs.vuecal.createEvent(
+                // Formatted start date and time or JavaScript Date object.
+                dateTime,
+                // Custom event props (optional).
+                { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
+              )
+            } else if (date) alert('Wrong date format.')
+        }
 
     li.mt-5
-      h5.subheading.font-weight-bold on cell click and hold
-      p In this example, a dialog box opens and lets you choose the event attributes.
+      h5.subheading.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
+      p.mt-3.
+        By default, event will be created with these attributes:
+      sshpre.mt-0(language="js" label="Javascript").
+        {
+            start: {String}, // (Formatted date) starting from your cursor position in the day cell you clicked.
+            end: {String}, // (Formatted date) Event start + 2 hours
+            title: '',
+            content: '',
+            split /* if any */: {Integer} // The current day split you clicked.
+        }
+
+      p.
+        If you want to customize those attributes you can modify the event directly through
+        the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
+      sshpre.mt-4(language="js" label="Javascript").
+        // :on-event-create="onEventCreate", in template.
+
+        /**
+        * @param event {Object} The newly created event that you can override.
+        * @param deleteEventFunction {Function} Allows you to delete this event programmatically.
+        * @return {Object} The event to be passed back to Vue Cal.
+        */
+        onEventCreate (event, deleteEventFunction) {
+            // You can modify event here and return it.
+            return event
+          }
+
+      p.
+        In this example, we are adding a dialog box to the default simple click &amp; hold.#[br]
+        The dialog box will allow you to set all the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -964,124 +1037,52 @@
                    :events="events"
                    :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
+    sshpre(language="html-vue" label="Vue Template - dialog box").
+      &lt;!-- Using Vuetify --&gt;
+      &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
+        &lt;v-card&gt;
+          &lt;v-card-title&gt;
+            &lt;v-text-field v-model="selectedEvent.title" placeholder="Event Title"/&gt;
+          &lt;/v-card-title&gt;
+          &lt;v-card-text&gt;
+            &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content"/&gt;
+            &lt;v-layout&gt;
+              &lt;v-select
+                :items="eventsCssClasses"
+                placeholder="Event CSS Class"
+                @change="selectedEvent.classes = [$event]"/&gt;
+              &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
+            &lt;/v-layout&gt;
+            &lt;v-layout&gt;
+              &lt;v-btn @click="cancelEventCreation()"&gt;Cancel&lt;/v-btn&gt;
+              &lt;v-btn @click="closeCreationDialog()"&gt;Save&lt;/v-btn&gt;
+            &lt;/v-layout&gt;
+          &lt;/v-card-text&gt;
+        &lt;/v-card&gt;
 
-    li.mt-5
-      h5.subheading.font-weight-bold On cell single or double click
-      p.
-        As the #[span.code cell-click] &amp; #[span.code cell-dblclick] emitted
-        events return a date and time at cursor position (refer to the
-        #[a(href="#ex--emitted-events") emitted events example]),
-        you simply need to call the #[span.code createEvent()] function straight
-        away from #[span.code cell-dblclick]:
-      v-layout(row wrap)
-        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-            ref="vuecal3"
-            selected-date="2018-11-19"
-            small
-            :time-from="10 * 60"
-            :time-to="16 * 60"
-            :disable-views="['years', 'year', 'month', 'day']"
-            hide-view-selector
-            hide-title-bar
-            hide-weekends
-            editable-events
-            :events="events"
-            @cell-dblclick="$refs.vuecal3.createEvent($event, { title: 'New Event' })")
-        sshpre.my-2.caption(language="html-vue").
-          &lt;vue-cal ref="vuecal"
-              selected-date="2018-11-19"
-              small
-              :time-from="10 * 60"
-              :time-to="16 * 60"
-              :disable-views="['years', 'year']"
-              hide-view-selector
-              hide-weekends
-              hide-title-bar
-              editable-events
-              :events="events"
-              @cell-dblclick="$refs.vuecal.createEvent($event, { title: 'New Event' })"&gt;
-          &lt;/vue-cal&gt;
+    sshpre(language="js" label="Javascript").
+      data: () => ({
+        selectedEvent: null,
+        showEventCreationDialog: false,
+        eventsCssClasses: ['leisure', 'sport', 'health']
+      }),
+      methods: {
+        onEventCreate (event, deleteEventFunction) {
+          this.selectedEvent = event
+          this.showEventCreationDialog = true
+          this.deleteEventFunction = deleteEventFunction
 
-
-  highlight-message Event creation will not trigger #[strong on event] single or double click.
-  p.mt-3.
-    By default, event will be created with these attributes:
-  sshpre.mt-0(language="js" label="Javascript").
-    {
-        start: {String}, // (Formatted date) starting from your cursor position in the day cell you clicked.
-        end: {String}, // (Formatted date) Event start + 2 hours
-        title: '',
-        content: '',
-        split /* if any */: {Integer} // The current day split you clicked.
-    }
-
-  p.
-    If you want to customize those attributes you can modify the event directly through
-    the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
-  sshpre.mt-4(language="js" label="Javascript").
-    // :on-event-create="onEventCreate", in template.
-
-    /**
-     * @param event {Object} The newly created event that you can override.
-     * @param deleteEventFunction {Function} Allows you to delete this event programmatically.
-     * @return {Object} The event to be passed back to Vue Cal.
-     */
-    onEventCreate (event, deleteEventFunction) {
-        // You can modify event here and return it.
-        return event
+          return event
+        },
+        cancelEventCreation () {
+          this.closeCreationDialog()
+          this.deleteEventFunction()
+        },
+        closeCreationDialog () {
+          this.showEventCreationDialog = false
+          this.selectedEvent = {}
+        }
       }
-
-  p.
-    Alternatively, like in this example, you can give the user the freedom to set a title,
-    content, CSS class &amp; background property - and anything else - in a dialog box.#[br]
-    Here is the markup for the event creation dialog box of this example.
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;!-- Using Vuetify --&gt;
-    &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
-      &lt;v-card&gt;
-        &lt;v-card-title&gt;
-          &lt;v-text-field v-model="selectedEvent.title" placeholder="Event Title"/&gt;
-        &lt;/v-card-title&gt;
-        &lt;v-card-text&gt;
-          &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content"/&gt;
-          &lt;v-layout&gt;
-            &lt;v-select
-              :items="eventsCssClasses"
-              placeholder="Event CSS Class"
-              @change="selectedEvent.classes = [$event]"/&gt;
-            &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
-          &lt;/v-layout&gt;
-          &lt;v-layout&gt;
-            &lt;v-btn @click="cancelEventCreation()"&gt;Cancel&lt;/v-btn&gt;
-            &lt;v-btn @click="closeCreationDialog()"&gt;Save&lt;/v-btn&gt;
-          &lt;/v-layout&gt;
-        &lt;/v-card-text&gt;
-      &lt;/v-card&gt;
-
-  sshpre(language="js" label="Javascript").
-    data: () => ({
-      selectedEvent: null,
-      showEventCreationDialog: false,
-      eventsCssClasses: ['leisure', 'sport', 'health']
-    }),
-    methods: {
-      onEventCreate (event, deleteEventFunction) {
-        this.selectedEvent = event
-        this.showEventCreationDialog = true
-        this.deleteEventFunction = deleteEventFunction
-
-        return event
-      },
-      cancelEventCreation () {
-        this.closeCreationDialog()
-        this.deleteEventFunction()
-      },
-      closeCreationDialog () {
-        this.showEventCreationDialog = false
-        this.selectedEvent = {}
-      }
-    }
 
   //- Example.
   h4.title
@@ -2057,6 +2058,7 @@
     transitions:            [Boolean],         default: true
     clickToNavigate:        [Boolean],         default: false
     dblclickToNavigate:     [Boolean],         default: true
+    cellClickHold:          [Boolean],         default: true
     time:                   [Boolean],         default: true
     timeFrom:               [Number],          default: 0 // In minutes.
     timeTo:                 [Number],          default: 24 * 60 // In minutes.
@@ -2228,6 +2230,12 @@
         You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
         The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblclickToNavigate] to false.
     li
+      code.mr-2 cellClickHold
+      span.code [Boolean], default: true
+      p.
+        Allows you to disable the default event creation on cell click &amp; hold which only
+        happens if #[span.code editableEvents] is set to #[span.code true].
+    li
       code.mr-2 time
       span.code [Boolean], default: true
       p.
@@ -2299,7 +2307,7 @@
       code.mr-2 editableEvents
       span.code [Boolean], default: false
       p
-        | When #[span.code editableEvents] set to true, allows:
+        | When #[span.code editableEvents] set to #[span.code true], allows:
         ul
           li Dragging events (this feature is coming soon)
           li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to true,
@@ -2520,14 +2528,13 @@
         at any time return view events not mutable events to user
         add recurring events
         check event creation documentation about on-create-event function
-        option to disable event creation on click and hold
-        try cell-dblclick on touch device
         check resizing multiple day events starting before 1999-11-01
         multiple day events ending at 24:00 don't show resizer 23:59 ok
         while resizing multiple days, prevent endTime < startTime
         option for sticky split labels
         document about overriding global deletable, resizable
         hide days in week view?
+        update today's date when day changes
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
@@ -3150,7 +3157,7 @@ export default {
 
       return event
     },
-    customEventCreation (event) {
+    customEventCreation () {
       const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
       if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
         this.$refs.vuecal.createEvent(dateTime, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
