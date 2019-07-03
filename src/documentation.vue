@@ -843,7 +843,7 @@
     | #[a(href="#ex--emitted-events") emitted events] example.
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -851,7 +851,7 @@
       hide-view-selector
       hide-weekends
       editable-events
-      :events="events")
+      :events="editableEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -863,10 +863,15 @@
              :events="events"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
-  highlight-message(type="tips").
-    By default the delete button only appears at the top of the event with a set height (1.4em).
-    If you want a full-height delete button like in this example, you can apply the CSS class
-    #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
+  highlight-message(type="tips")
+    ul
+      li.
+        You can override the #[span.code editable-events] ability in each events with the event
+        attributes #[span.code deletable: false] &amp; #[span.code resizable: false].
+      li.
+        By default the delete button only appears at the top of the event with a set height (1.4em).
+        If you want a full-height delete button like in this example, you can apply the CSS class
+        #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
   highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
 
   //- Example.
@@ -2119,21 +2124,21 @@
       code.mr-2 hideViewSelector
       span.code [Boolean], default: false
       p.
-        When set to true, the top view selector will disappear.#[br]
+        When set to #[span.code true], the top view selector will disappear.#[br]
         You can still navigate from a view to another by clicking a cell (narrower view) or
         the view title (broader view).
     li
       code.mr-2 hideTitleBar
       span.code [Boolean], default: false
       p.
-        When set to true, the title bar with navigating arrows will disappear.#[br]
+        When set to #[span.code true], the title bar with navigating arrows will disappear.#[br]
         You can still navigate from a view to another with the view selector and clicking
         a cell (narrower view).
     li
       code.mr-2 hideBody
       span.code [Boolean], default: false
       p.
-        When set to true, the whole calendar body will disappear - cells and timeline.#[br]
+        When set to #[span.code true], the whole calendar body will disappear - cells and timeline.#[br]
         Also means that all the logic usually triggered from the calendar's body won't run at all.
     li
       code.mr-2 hideWeekends
@@ -2205,7 +2210,7 @@
       code.mr-2 xsmall
       span.code [Boolean], default: false
       p.
-        When set to true, the days of the week headings will be truncated to 1 letter.#[br]
+        When set to #[span.code true], the days of the week headings will be truncated to 1 letter.#[br]
         Does not apply to the title of the day view.#[br]
         In Addition, the whole calendar gets applied a smaller font size of 0.9em,
         and the current view title is also reduced.#[br]
@@ -2219,14 +2224,14 @@
       code.mr-2 clickToNavigate
       span.code [Boolean], default: false
       p.
-        When set to true a single click (or tap for touch devices) will take you to a narrower view if available.#[br]
+        When set to #[span.code true] a single click (or tap for touch devices) will take you to a narrower view if available.#[br]
         You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
         The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblclickToNavigate] to false.
     li
       code.mr-2 dblclickToNavigate
       span.code [Boolean], default: true
       p.
-        When set to true a double click (or double tap for touch devices) will take you to a narrower view if available.#[br]
+        When set to #[span.code true] a double click (or double tap for touch devices) will take you to a narrower view if available.#[br]
         You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
         The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblclickToNavigate] to false.
     li
@@ -2269,7 +2274,7 @@
       span.code [Boolean], default: false
       p.
         If #[span.code time] is enabled, the default time format is 24hour.#[br]
-        With #[span.code twelveHour] set to true (use #[span.code twelve-hour] in template),
+        With #[span.code twelveHour] set to #[span.code true] (use #[span.code twelve-hour] in template),
         the time format will show 12 hours suffixed with am/pm.
     li
       code.mr-2 timeFormat
@@ -2307,24 +2312,25 @@
       code.mr-2 editableEvents
       span.code [Boolean], default: false
       p
-        | When #[span.code editableEvents] set to #[span.code true], allows:
+        | When #[span.code editableEvents] is set to #[span.code true], allows:
         ul
           li Dragging events (this feature is coming soon)
-          li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to true,
-          li Deleting events by click and hold an event
+          li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
+          li Deleting events by click and hold an event.
           li Editing events title
+      highlight-message You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
     li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
       p.
-        When set to true, the events will also be displayed on month view
+        When set to #[span.code true], the events will also be displayed on month view
         (including events from visible out of scope days).#[br]
         When set to the string '#[span.code short]', only the event's title will be displayed.
     li
       code.mr-2 eventsCountOnYearView
       span.code [Boolean], default: false
       p.
-        When set to true, the events count will also be displayed on #[span.code years]
+        When set to #[span.code true], the events count will also be displayed on #[span.code years]
         &amp; #[span.code year] views.
     li
       code.mr-2 showAllDayEvents
@@ -2379,14 +2385,16 @@
       p
         sshpre.mt-2(language="js").
           {
-            start: '2018-11-19 12:00', // Required.
-            end: '2018-11-19 14:00', // Required.
+            start: '2018-11-19 12:00', // Required - also accepts Javascript Dates.
+            end: '2018-11-19 14:00', // Required - also accepts Javascript Dates.
             title: 'String', // Optional.
             content: 'String', // Optional.
-            class: 'String', // Optional.
+            class: 'String', // Optional - space-separated css classes.
             background: [Boolean] // Optional. (Event type not CSS property)
             split: [Number] // Optional.
             allDay: [Boolean] // Optional.
+            deletable: false // optional - force undeletable when events are editable.
+            resizable: false // optional - force unresizable when events are editable.
           }
         ul
           li If no #[span.code title] is provided, no title will be displayed.
@@ -2519,21 +2527,24 @@
             li.
               #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
               use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
-            li Few nesting levels were removed from html markup thanks to the Vue #[span.code &lt;template&gt;] tag
+            li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
       //- TODO:
-        add accessibility
-        do all the @todo
-        use view events as much as possible instead of mutableEvents
-        cleanup mutableEvents
-        at any time return view events not mutable events to user
-        add recurring events
-        check event creation documentation about on-create-event function
-        check resizing multiple day events starting before 1999-11-01
-        multiple day events ending at 24:00 don't show resizer 23:59 ok
-        while resizing multiple days, prevent endTime < startTime
-        option for sticky split labels
-        document about overriding global deletable, resizable
-        hide days in week view?
+        General
+        - add accessibility
+        - do all the @todo
+        - use view events as much as possible instead of mutableEvents
+        - cleanup mutableEvents
+        - at any time return view events not mutable events to user
+        - add recurring events
+        - check event creation documentation about on-create-event function
+        - on event creation/deletion overlaps are not refreshed
+        - option for sticky split labels
+        - hide days in week view?
+        Multiple-day events:
+        - check resizing multiple day events starting before 1999-11-01
+        - multiple day events ending at 24:00 don't show resizer 23:59 ok
+        - while resizing multiple days, prevent endTime < startTime
+        - duration format when multiple days (+3d / -3d ?)
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
@@ -2845,6 +2856,18 @@ export default {
     eventsCssClasses: ['leisure', 'sport', 'health'],
     selectedDate: null,
     logMouseEvents: false,
+    editableEvents: [
+      ...events,
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 17:00',
+        title: 'Boring event',
+        content: '<i class="v-icon material-icons">block</i><br>I am not deletable and not resizable.',
+        class: 'blue-event',
+        deletable: false,
+        resizable: false
+      }
+    ],
     overlappingEvents: [
       ...events,
       {
