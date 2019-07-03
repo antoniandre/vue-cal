@@ -560,21 +560,21 @@
       events: [
         {
           start: '2018-11-21',
-          end: '2018-11-23',
+          end: '2018-11-21',
           title: 'Need to go shopping',
           content: '&lt;i class="v-icon material-icons"&gt;shopping_cart&lt;/i&gt;',
           class: 'leisure'
         },
         {
           start: '2018-11-21',
-          end: '2018-11-23',
+          end: '2018-11-21',
           title: 'Golf with John',
           content: '&lt;i class="v-icon material-icons"&gt;golf_course&lt;/i&gt;',
           class: 'sport'
         },
         {
           start: '2018-11-22',
-          end: '2018-11-23',
+          end: '2018-11-22',
           title: 'Dad\'s birthday!',
           content: '&lt;i class="v-icon material-icons"&gt;cake&lt;/i&gt;',
           class: 'sport'
@@ -590,8 +590,10 @@
     a(href="#ex--events-with-time") # Events with time information
     a#ex--events-with-time(name="ex--events-with-time")
   p.
-    Read-only events (by default events are uneditable) with custom HTML content and css class (for event types).#[br]
+    Read-only events (by default events are not editable) with custom HTML content and css class (for event types).#[br]
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
+    The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
+
   v-card.my-2.ma-auto.main-content
     //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -608,6 +610,19 @@
              hide-weekends
              :events="events"&gt;
     &lt;/vue-cal&gt;
+  sshpre(language="js" label="Javascript").
+    events: [
+    {
+      start: '2018-11-16 10:30',
+      end: '2018-11-16 11:30',
+      // You can also define event dates with Javascript Date objects:
+      // startDate: new Date('2018-11-16 10:30'),
+      // endDate: new Date('2018-11-16 11:30'),
+      title: 'Doctor appointment',
+      content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+      class: 'health'
+    },
+    ...
 
   //- Example.
   h4.title
@@ -2385,8 +2400,11 @@
       p
         sshpre.mt-2(language="js").
           {
-            start: '2018-11-19 12:00', // Required - also accepts Javascript Dates.
-            end: '2018-11-19 14:00', // Required - also accepts Javascript Dates.
+            start: '2018-11-19 12:00', // Required.
+            end: '2018-11-19 14:00', // Required.
+            // Instead of formatted dates, you can also provide Javascript Date objects:
+            // startDate: new Date('2018-11-16 10:30'),
+            // endDate: new Date('2018-11-16 11:30'),
             title: 'String', // Optional.
             content: 'String', // Optional.
             class: 'String', // Optional - space-separated css classes.

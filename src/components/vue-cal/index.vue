@@ -617,7 +617,7 @@ export default {
 
       // Group events into dates.
       this.events.forEach(event => {
-        // Event Start, accept formatted string or Date object.
+        // Event Start, accepts formatted string - startDate accepts Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           !([startDateF, startTime = ''] = event.start.split(' '))
@@ -633,7 +633,7 @@ export default {
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
         start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
 
-        // Event End, accept formatted string or Date object.
+        // Event End, accepts formatted string - endDate accepts Date object.
         let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
         if (event.end) {
           !([endDateF, endTime = ''] = event.end.split(' '))
