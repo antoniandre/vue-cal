@@ -1,15 +1,13 @@
 let texts = {}
 export const setTexts = t => { texts = t }
 
-export let now = new Date()
-// Cache today's date for better isDateToday() performances. Formatted without leading 0.
-let todayF = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
-export const todayFormatted = () => {
-  console.log('get today formatted')
-
-  if (now.getDate() !== (new Date()).getDate()) {
-    console.log('SET today formatted')
+// Cache Today's date (to a maximum) for better isDateToday() performances. Formatted without leading 0.
+// We still need to update Today's date when Today changes without page refresh.
+let now, todayDate, todayF
+const todayFormatted = () => {
+  if (todayDate !== (new Date()).getDate()) {
     now = new Date()
+    todayDate = now.getDate()
     todayF = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
   }
 

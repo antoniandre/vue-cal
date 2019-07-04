@@ -2534,7 +2534,6 @@
         option for sticky split labels
         document about overriding global deletable, resizable
         hide days in week view?
-        update today's date when day changes
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language

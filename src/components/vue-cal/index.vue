@@ -101,7 +101,7 @@
 </template>
 
 <script>
-import { setTexts, now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
+import { setTexts, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -741,7 +741,7 @@ export default {
     this.view.id = this.defaultView
     if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
-      this.view.selectedDate = this.now
+      this.view.selectedDate = new Date()
       this.switchView(this.defaultView)
     }
   },
@@ -784,18 +784,6 @@ export default {
   },
 
   computed: {
-    now () {
-      // let newNow = now
-      // console.log(now)
-
-      // debugger
-      // if (now.getDate() !== (new Date()).getDate()) {
-      //   debugger
-      //   newNow = new Date()
-      //   todayFormatted = `${newNow.getFullYear()}-${newNow.getMonth()}-${newNow.getDate()}`
-      // }
-      return new Date()
-    },
     views () {
       return {
         years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },
@@ -915,6 +903,8 @@ export default {
       let cells = []
       let fromYear = null
       let todayFound = false
+      // Don't cache now date, so on next day Today's selected cell will still be accurate.
+      const now = new Date()
 
       switch (this.view.id) {
         case 'years':
@@ -929,7 +919,7 @@ export default {
               formattedDate: formatDate(startDate),
               endDate,
               content: fromYear + i,
-              current: fromYear + i === this.now.getFullYear()
+              current: fromYear + i === now.getFullYear()
             }
           })
           break
@@ -945,7 +935,7 @@ export default {
               formattedDate: formatDate(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
-              current: i === this.now.getMonth() && fromYear === this.now.getFullYear()
+              current: i === now.getMonth() && fromYear === now.getFullYear()
             }
           })
           break
@@ -960,10 +950,7 @@ export default {
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
             // To increase performance skip checking isToday if today already found.
-            const isToday = !todayFound && startDate && startDate.getDate() === this.now.getDate() &&
-                            startDate.getMonth() === this.now.getMonth() &&
-                            startDate.getFullYear() === this.now.getFullYear() &&
-                            !todayFound++
+            const isToday = !todayFound && isDateToday(startDate) && !todayFound++
 
             return {
               startDate,
@@ -992,6 +979,7 @@ export default {
               startDate,
               formattedDate: formatDate(startDate),
               endDate,
+              // To increase performance skip checking isToday if today already found.
               today: !todayFound && isDateToday(startDate) && !todayFound++
             }
           })
