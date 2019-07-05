@@ -203,21 +203,6 @@ export default {
         this.vuecal.domEvents = object
       }
     }
-  },
-
-  watch: {
-    'event.background' (val) {
-      // When the event background property changes, remove all the involved overlapping events
-      // if setting to background or check cell overlapping again otherwise.
-      // if (val) {
-      //   // @todo: function to delete the overlaps in event-utils.
-      //   deleteOverlaps(this.event)
-
-      //   // @todo: If multiple-day events, foreach segment inside the event, delete the overlaps.
-      // }
-
-      // else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.cellFormattedDate, [])
-    }
   }
 }
 </script>

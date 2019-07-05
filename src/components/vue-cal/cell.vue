@@ -76,8 +76,13 @@ export default {
   methods: {
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
-      if (this.options.time && this.events.length > 1 && !this.splits.length) {
-        [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
+      if (this.options.time && this.events.length && !this.splits.length) {
+        if (this.events.length === 1) {
+          this.cellOverlaps = []
+          this.cellOverlapsStreak = 1
+        }
+        // If only 1 event remains re-init the overlaps.
+        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
           this.events, this.cellOverlaps
         )
       }
@@ -231,6 +236,7 @@ export default {
           events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
+        console.log('rechecking cell events', cellStart)
         // If splits, checkCellOverlappingEvents() is called from within computed splits.
         if (!this.cellSplits.length) this.$nextTick(this.checkCellOverlappingEvents)
       }

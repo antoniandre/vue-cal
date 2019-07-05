@@ -145,38 +145,36 @@ let comparisonArray = []
 export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
   comparisonArray = cellEvents.slice(0)
 
-  // @todo: filter !e.background && !e.allDay directly on cellEvents.
-  // @todo: try recalculating while dragging (try force update).
+  // Can't filter background events before calling this function otherwise
+  // when an event is changed to background it would not update its previous overlaps.
   // @todo: implement case when dragging event across multiple cells.
   cellEvents.forEach(e => {
     // Never compare the current event in the next loops. the array is refined as we loop.
     comparisonArray.shift()
 
-    if (!e.background && !e.allDay) {
-      if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
-      cellOverlaps[e._eid].position = 0
+    if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
+    cellOverlaps[e._eid].position = 0
 
-      comparisonArray.forEach(e2 => {
-        if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
+    comparisonArray.forEach(e2 => {
+      if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
-        // Add to the overlaps array if overlapping.
-        if (!e2.background && !e2.allDay && eventInRange(e2, e.startDate, e.endDate, e)) {
-          cellOverlaps[e._eid].overlaps.push(e2._eid)
-          cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
+      // Add to the overlaps array if overlapping.
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventInRange(e2, e.startDate, e.endDate, e)) {
+        cellOverlaps[e._eid].overlaps.push(e2._eid)
+        cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
-          cellOverlaps[e2._eid].overlaps.push(e._eid)
-          cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)] // Dedupe, most performant way.
-          cellOverlaps[e2._eid].position++
-        }
-        // Remove from the overlaps array if not overlapping.
-        else {
-          let pos1, pos2
-          if ((pos1 = (cellOverlaps[e._eid] || { overlaps: [] }).overlaps.indexOf(e2._eid)) > -1) cellOverlaps[e._eid].overlaps.splice(pos1, 1)
-          if ((pos2 = (cellOverlaps[e2._eid] || { overlaps: [] }).overlaps.indexOf(e._eid)) > -1) cellOverlaps[e2._eid].overlaps.splice(pos2, 1)
-          cellOverlaps[e2._eid].position--
-        }
-      })
-    }
+        cellOverlaps[e2._eid].overlaps.push(e._eid)
+        cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)] // Dedupe, most performant way.
+        cellOverlaps[e2._eid].position++
+      }
+      // Remove from the overlaps array if not overlapping or if 1 of the 2 events is background or all-day long.
+      else {
+        let pos1, pos2
+        if ((pos1 = (cellOverlaps[e._eid] || { overlaps: [] }).overlaps.indexOf(e2._eid)) > -1) cellOverlaps[e._eid].overlaps.splice(pos1, 1)
+        if ((pos2 = (cellOverlaps[e2._eid] || { overlaps: [] }).overlaps.indexOf(e._eid)) > -1) cellOverlaps[e2._eid].overlaps.splice(pos2, 1)
+        cellOverlaps[e2._eid].position--
+      }
+    })
   })
 
   // Overlaps streak is the longest horizontal set of simultaneous events.

@@ -2552,12 +2552,12 @@
         - do all the @todo
         - use view events as much as possible instead of mutableEvents
         - cleanup mutableEvents
-        - at any time return view events not mutable events to user
+        - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
-        - check event creation documentation about on-create-event function
-        - on event creation/deletion overlaps are not refreshed
+        - is there a way to get rid of the create-event function?
         - option for sticky split labels
         - hide days in week view?
+        - check overlaps only on the cell that has changed on event create/drag/background change
         Multiple-day events:
         - check resizing multiple day events starting before 1999-11-01
         - multiple day events ending at 24:00 don't show resizer 23:59 ok
