@@ -11,5 +11,5 @@
   "allDay": "تمام روز",
   "deleteEvent": "حذف",
   "createEvent": "ایجاد یک رویداد",
-  "dateFormat": "DDDD mmmm d{S}, yyyy"
+  "dateFormat": "DDDD d mmmm yyyy"
 }
