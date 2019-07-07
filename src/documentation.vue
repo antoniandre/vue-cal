@@ -2563,6 +2563,7 @@
         - multiple day events ending at 24:00 don't show resizer 23:59 ok
         - while resizing multiple days, prevent endTime < startTime
         - duration format when multiple days (+3d / -3d ?)
+  div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
   div #[strong Version 1.59.0] Add Czech language
@@ -2831,6 +2832,7 @@ export default {
   components: { VueCal, Sshpre, highlightMessage },
   data: () => ({
     localesList: [
+      { code: 'ar', label: 'Arabic' },
       { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
@@ -2840,6 +2842,7 @@ export default {
       { code: 'da', label: 'Danish' },
       { code: 'nl', label: 'Dutch' },
       { code: 'en', label: 'English' },
+      { code: 'fa', label: 'Farsi' },
       { code: 'fr', label: 'French' },
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },

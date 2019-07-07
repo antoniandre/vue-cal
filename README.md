@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 1.62.0__ Add Arabic &amp; Farsi languages
 - __Version 1.61.0__ Add Traditional Chinese language
 - __Version 1.60.0__ Add Danish language
 - __Version 1.59.0__ Add Czech language
