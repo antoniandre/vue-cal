@@ -911,8 +911,8 @@
         you simply need to call the #[span.code createEvent()] function straight
         away from #[span.code cell-dblclick]:
       v-layout(row wrap)
-        //- v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
             selected-date="2018-11-19"
             small
@@ -954,7 +954,7 @@
 
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             selected-date="2018-11-19"
             small
@@ -1231,7 +1231,7 @@
     Note that you can still select a background event to put it on top of others and see it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
+    //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1313,7 +1313,7 @@
     span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme.ex--all-day-events(
+    //- vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
@@ -1528,7 +1528,7 @@
   pre {{ eventsCopy.map(e => e.title) }}
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -1649,7 +1649,7 @@
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-4.mb-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -2557,6 +2557,7 @@
         - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
         - is there a way to get rid of the create-event function?
+        - Creating event Programmatically & externally does not work after event resize
         - option for sticky split labels
         - hide days in week view?
         - check overlaps only on the cell that has changed on event create/drag/background change
@@ -2564,6 +2565,8 @@
         - check resizing multiple day events starting before 1999-11-01
         - multiple day events ending at 24:00 don't show resizer 23:59 ok
         - while resizing multiple days, prevent endTime < startTime
+        - multiple days on month view like google calendar
+        - if more than 24 hour duration, consider as all-day
         - duration format when multiple days (+3d / -3d ?)
   div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language

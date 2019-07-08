@@ -139,11 +139,12 @@ export const deleteAnEvent = (event, vuecal) => {
 // EVENT OVERLAPS.
 // ===================================================================
 // Only for the current view, recreated on view change.
-let comparisonArray = []
+let comparisonArray, cellOverlaps
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
-export const checkCellOverlappingEvents = (cellEvents, cellOverlaps = {}) => {
+export const checkCellOverlappingEvents = cellEvents => {
   comparisonArray = cellEvents.slice(0)
+  cellOverlaps = {}
 
   // Can't filter background events before calling this function otherwise
   // when an event is changed to background it would not update its previous overlaps.

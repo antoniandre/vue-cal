@@ -93,7 +93,7 @@
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                         | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
-                        small.days-to-end(v-if="event.daysCount > 1") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
+                        small.days-to-end(v-if="event.daysCount > 1 && event.segments[cell.formattedDate].isFirstDay") &nbsp;+{{ event.daysCount }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -464,8 +464,6 @@ export default {
       let { resizeAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null) return
 
-      console.log('mousemove', this._uid)
-
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
       let segment = event.segments && event.segments[resizeAnEvent.start]
@@ -524,7 +522,6 @@ export default {
     // Mouseup can never cancel a click with preventDefault or stopPropagation.
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
-      console.log('mouseup', this._uid, e)
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
@@ -614,7 +611,9 @@ export default {
       this.emitWithEvent('event-title-change', event)
     },
 
-    // Object of arrays of events indexed by dates.
+    // Object of arrays of events.
+    // mutableEvents can't be a computed value based on this.events, because we add
+    // items to the array. (Cannot mutate props)
     updateMutableEvents () {
       this.mutableEvents = []
 

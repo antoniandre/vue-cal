@@ -15,7 +15,7 @@
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)")
-      slot(name="cell-content" :events="events" :select-cell="() => {selectCell($event, true)}" :split="splits.length ? split : false")
+      slot(name="cell-content" :events="events" :select-cell="$event => {selectCell($event, true)}" :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -82,9 +82,7 @@ export default {
           this.cellOverlapsStreak = 1
         }
         // If only 1 event remains re-init the overlaps.
-        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(
-          this.events, this.cellOverlaps
-        )
+        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(this.events)
       }
     },
 
@@ -246,7 +244,7 @@ export default {
     splits () {
       return this.cellSplits.map((item, i) => {
         const events = this.events.filter(e => e.split === i + 1)
-        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), {})
+        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay))
         return {
           ...item,
           overlaps,
