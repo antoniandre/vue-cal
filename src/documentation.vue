@@ -229,7 +229,7 @@
     sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
-    vue-cal(small :time="false" hide-view-selector style="height: 250px")
+    //- vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   h2.headline.mt-5.pt-5
     a(href="#examples") Examples
@@ -856,6 +856,8 @@
     | #[br]#[br]
     | Vue Cal emits events on calendar event change, read more about it in the
     | #[a(href="#ex--emitted-events") emitted events] example.
+  v-btn(small color="primary" @click="editableEvents[5].background = true") set background
+  p {{editableEvents[5]}}
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -909,7 +911,7 @@
         you simply need to call the #[span.code createEvent()] function straight
         away from #[span.code cell-dblclick]:
       v-layout(row wrap)
-        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+        //- v-card.flex.my-2.mr-3.main-content(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
             selected-date="2018-11-19"
@@ -952,7 +954,7 @@
 
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             selected-date="2018-11-19"
             small
@@ -1032,7 +1034,7 @@
         The dialog box will allow you to set all the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             selected-date="2018-11-19"
             small
             :time-from="10 * 60"
@@ -1117,7 +1119,7 @@
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
+    vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
@@ -1311,7 +1313,7 @@
     span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme.ex--all-day-events(
+    vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
@@ -1382,7 +1384,7 @@
     v-btn(small color="primary" @click="splitEvents[5].background = true") set background
     p {{splitEvents[5]}}
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
+    //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
@@ -1647,7 +1649,7 @@
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-4.mb-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
+    //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -2792,7 +2794,7 @@ const events = [
     content: '<i class="v-icon material-icons">local_cafe</i>',
     class: 'leisure',
     split: 1,
-    background: false
+    // background: false
   },
   {
     start: '2018-11-21 19:30',
@@ -2878,7 +2880,7 @@ export default {
     selectedDate: null,
     logMouseEvents: false,
     editableEvents: [
-      ...events,
+      ...events.slice(0),
       {
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:00',
@@ -2890,7 +2892,7 @@ export default {
       }
     ],
     overlappingEvents: [
-      ...events,
+      ...events.slice(0),
       {
         start: '2018-11-21 14:00',
         end: '2018-11-21 22:00',
@@ -2921,7 +2923,7 @@ export default {
       }
     ],
     eventsCopy: [
-      ...events,
+      ...events.slice(0),
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -2945,7 +2947,7 @@ export default {
       }
     ],
     eventsCopy2: [
-      ...events
+      ...events.slice(0)
     ],
     multipleDayEvents: [
       {
@@ -3053,7 +3055,7 @@ export default {
       }
     ],
     splitEvents: [
-      ...events,
+      ...events.slice(0),
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -3080,7 +3082,7 @@ export default {
       }
     ],
     backgroundEvents: [
-      ...events,
+      ...events.slice(0),
       {
         start: '2018-11-19 12:00',
         end: '2018-11-19 14:00',

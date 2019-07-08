@@ -464,6 +464,8 @@ export default {
       let { resizeAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null) return
 
+      console.log('mousemove', this._uid)
+
       e.preventDefault()
       let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
       let segment = event.segments && event.segments[resizeAnEvent.start]
@@ -522,6 +524,7 @@ export default {
     // Mouseup can never cancel a click with preventDefault or stopPropagation.
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      console.log('mouseup', this._uid, e)
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
@@ -616,7 +619,7 @@ export default {
       this.mutableEvents = []
 
       // Group events into dates.
-      this.events.forEach(event => {
+      this.events.forEach((event, i) => {
         // Event Start, accepts formatted string - startDate accepts Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
@@ -666,7 +669,14 @@ export default {
           classes: (event.class || '').split(' ')
         }, event)
 
+        // this.mutableEvents.push(event)
+        console.log('setting event', event.title)
+
+        this.$set(this.events, i, event)
+        // this.$set(this.events[i], 'background', event.background)
         this.mutableEvents.push(event)
+        // this.mutableEvents[i].background = event.background
+        // this.mutableEvents.push(event)
       })
     },
 
@@ -1026,13 +1036,13 @@ export default {
   },
 
   watch: {
-    events: {
-      handler (events, oldEvents) {
-        this.updateMutableEvents(events)
-        this.addEventsToView()
-      },
-      deep: true
-    },
+    // events: {
+    //   handler (events, oldEvents) {
+    //     this.updateMutableEvents(events)
+    //     this.addEventsToView()
+    //   },
+    //   deep: true
+    // },
     locale (locale) {
       this.loadLocale(locale)
     },

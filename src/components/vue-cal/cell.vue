@@ -236,7 +236,7 @@ export default {
           events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
-        console.log('rechecking cell events', cellStart)
+        // console.log('rechecking cell events', this.$parent._uid, cellStart)
         // If splits, checkCellOverlappingEvents() is called from within computed splits.
         if (!this.cellSplits.length) this.$nextTick(this.checkCellOverlappingEvents)
       }
