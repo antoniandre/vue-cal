@@ -2501,21 +2501,28 @@
   div #[strong Version 2.0.0]
     highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
     highlight-message(type="success")
+      h3.mt-0.pt-0 New features
       ul
-        li New scoped slots syntax
         li Added new emitted event #[span.code cell-dblclick]
         li Added ability to resize horizontally
         li Added ability to create events on single/double cell click
         li Added function to get minutes at cursor
         li Now support displaying more than 3 overlapping events!
+        li Events start &amp; end can now be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
+
+      h3.mt-3 Big changes
+      ul
+        li New scoped slots syntax
         li the #[span.code no-event-overlaps] option is now useless and removed
-        li #[span.code event-duration-change] is now only fired after resizing an event
         li.
           Externalize all locales from main library#[br]
           Now, only the locale you need will be loaded on demand (as a separate request).#[br]
           This will ensure Vue Cal keeps its file size as light as possible.
+
+      h3.mt-3 Other noticeable changes
+      ul
+        li #[span.code event-duration-change] is now only fired after resizing an event
         li Add a javascript Date object in events
-        li Allow javascript Date object in event dates definition
         li Add a resizing class on events being resized
         li Add deletable, resizable attributes on events to override global
         li Cancel event deletion with escape key
@@ -2882,7 +2889,7 @@ export default {
     editableEvents: [
       ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
-        start: '2018-11-20 14:00',
+        start: '2018-11-20 00:00',
         end: '2018-11-20 17:00',
         title: 'Boring event',
         content: '<i class="v-icon material-icons">block</i><br>I am not deletable and not resizable.',
