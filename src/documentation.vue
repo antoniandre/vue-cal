@@ -2797,7 +2797,7 @@ const events = [
     content: '<i class="v-icon material-icons">local_cafe</i>',
     class: 'leisure',
     split: 1,
-    // background: false
+    background: false
   },
   {
     start: '2018-11-21 19:30',
@@ -2883,7 +2883,7 @@ export default {
     selectedDate: null,
     logMouseEvents: false,
     editableEvents: [
-      ...events.slice(0),
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:00',
@@ -2895,7 +2895,7 @@ export default {
       }
     ],
     overlappingEvents: [
-      ...events.slice(0),
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
         start: '2018-11-21 14:00',
         end: '2018-11-21 22:00',
@@ -2926,7 +2926,7 @@ export default {
       }
     ],
     eventsCopy: [
-      ...events.slice(0),
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -2950,7 +2950,7 @@ export default {
       }
     ],
     eventsCopy2: [
-      ...events.slice(0)
+      ...events.map(e => ({ ...e }))// Clone when reusing, so they will be independent.
     ],
     multipleDayEvents: [
       {
@@ -3058,7 +3058,7 @@ export default {
       }
     ],
     splitEvents: [
-      ...events.slice(0),
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -3085,7 +3085,7 @@ export default {
       }
     ],
     backgroundEvents: [
-      ...events.slice(0),
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
         start: '2018-11-19 12:00',
         end: '2018-11-19 14:00',
