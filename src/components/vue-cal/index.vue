@@ -519,7 +519,8 @@ export default {
       }
     },
 
-    // Mouseup can never cancel a click with preventDefault or stopPropagation.
+    // Mouseup can never cancel a click with preventDefault or stopPropagation,
+    // But it always happens before the click event.
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 

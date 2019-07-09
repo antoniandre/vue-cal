@@ -17,13 +17,13 @@ export const eventDefaults = {
   allDay: false,
   segments: null,
   daysCount: 1,
-  height: 0,
-  top: 0,
   deletable: true,
   deleting: false,
   resizable: true,
   resizing: false,
   focused: false,
+  top: 0,
+  height: 0,
   classes: []
 }
 
@@ -31,7 +31,7 @@ export const eventDefaults = {
 // event attributes through the eventOptions object.
 export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
-  if (!(dateTime instanceof Date) || vuecal.domEvents.cancelClickEventCreation) return false
+  if (!(dateTime instanceof Date)) return false
 
   const hours = dateTime.getHours()
   const minutes = dateTime.getMinutes()

@@ -954,7 +954,7 @@
 
       v-layout(row align-top wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          //- vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             selected-date="2018-11-19"
             small
@@ -2553,11 +2553,9 @@
         - add accessibility
         - do all the @todo
         - cleanup mutableEvents
-        - remove endTimeMinutes and use endDate instead?
         - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
         - is there a way to get rid of the create-event function?
-        - Creating event Programmatically & externally does not work after event resize
         - option for sticky split labels
         - hide days in week view?
         - check overlaps only on the cell that has changed on event create/drag/background change

@@ -102,11 +102,12 @@ export default {
       if ('ontouchstart' in window && !touch) return false
 
       let { clickHoldACell } = this.domEvents
-      // Reinit the click trigger on each mousedown, but it might be intendedly cancelled
-      // before it happens.
+      // Reinit the click trigger on each mousedown.
+      // In some cases we explicitly set this flag to prevent the click event to trigger,
+      // and cancel event creation.
       this.domEvents.cancelClickEventCreation = false
 
-      // If cellClickHold is true and not mousedown on an event, click & hold to create an event.
+      // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
       if (this.options.editableEvents && this.options.cellClickHold
         && !this.isDOMElementAnEvent(DOMEvent.target) && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
@@ -116,8 +117,7 @@ export default {
             const date = new Date(this.data.startDate)
             date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
 
-            this.$parent.createEvent(date, clickHoldACell.split ? { split: clickHoldACell.split } : {})
-            this.domEvents.cancelClickEventCreation = true
+            if (!this.domEvents.cancelClickEventCreation) this.$parent.createEvent(date, clickHoldACell.split ? { split: clickHoldACell.split } : {})
           }
         }, clickHoldACell.timeout)
       }
