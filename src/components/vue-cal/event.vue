@@ -13,8 +13,10 @@
     @mousedown.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  //- Force contenteditable="false" for new events without content.
   .vuecal__event-resize-handle(
     v-if="resizable"
+    contenteditable="false"
     @mousedown="onDragHandleMouseDown"
     @touchstart="onDragHandleMouseDown")
 </template>

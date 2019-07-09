@@ -668,14 +668,7 @@ export default {
           classes: (event.class || '').split(' ')
         }, event)
 
-        // this.mutableEvents.push(event)
-        console.log('setting event', event.title)
-
-        this.$set(this.events, i, event)
-        // this.$set(this.events[i], 'background', event.background)
         this.mutableEvents.push(event)
-        // this.mutableEvents[i].background = event.background
-        // this.mutableEvents.push(event)
       })
     },
 
@@ -1035,13 +1028,14 @@ export default {
   },
 
   watch: {
-    // events: {
-    //   handler (events, oldEvents) {
-    //     this.updateMutableEvents(events)
-    //     this.addEventsToView()
-    //   },
-    //   deep: true
-    // },
+    events: {
+      // To be able to detect an event attribute change, it has to be first initialized with a value.
+      handler (events, oldEvents) {
+        this.updateMutableEvents(events)
+        this.addEventsToView()
+      },
+      deep: true
+    },
     locale (locale) {
       this.loadLocale(locale)
     },

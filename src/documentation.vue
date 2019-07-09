@@ -2552,8 +2552,8 @@
         General
         - add accessibility
         - do all the @todo
-        - use view events as much as possible instead of mutableEvents
         - cleanup mutableEvents
+        - remove endTimeMinutes and use endDate instead?
         - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
         - is there a way to get rid of the create-event function?
@@ -2567,7 +2567,6 @@
         - while resizing multiple days, prevent endTime < startTime
         - multiple days on month view like google calendar
         - if more than 24 hour duration, consider as all-day
-        - duration format when multiple days (+3d / -3d ?)
   div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
