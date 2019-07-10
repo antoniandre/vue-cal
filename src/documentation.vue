@@ -207,7 +207,7 @@
     &lt;/head&gt;
   p Then define the component to use in your template:
   sshpre.mt-4(language="js" label="Javascript").
-    // In your VueJS component.
+    // In your Vue.js component.
     export default {
       components: { 'vue-cal': vuecal },
       ...
@@ -355,7 +355,6 @@
       //- vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
         hide-view-selector
-        twelve-hour
         :time="false"
         default-view="month"
         :disable-views="['week']")
@@ -363,7 +362,6 @@
       //- vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
-        twelve-hour
         :time="false"
         default-view="month"
         :disable-views="['week']")
@@ -375,6 +373,27 @@
              default-view="month"
              :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
+  highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
+    a(href="#ex--hiding-particular-week-days") # Hiding particular week days
+    a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
+  p.
+    If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
+    option.#[br]It accepts an array of days to hide (day numbers),
+    #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
+    This option will apply on month &amp; week views.#[br]#[br]
+    If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
+    #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].
+
+  v-card.ma-2.main-content(style="height: 350px")
+    vue-cal.vuecal--green-theme(
+      :hide-weekdays="[2, 3, 5]"
+      :time="false"
+      :disable-views="['years', 'year']")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal :hide-weekdays="[2, 3, 5]" :time="false" :disable-views="['years', 'year']"&gt;&lt;/vue-cal&gt;
   highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
 
   //- Example.
@@ -861,7 +880,6 @@
       :disable-views="['years', 'year']"
       hide-view-selector
       hide-weekends
-      :hide-weekdays="[1,3,4]"
       editable-events
       :events="editableEvents")
   sshpre(language="html-vue" label="Vue Template").
@@ -2063,6 +2081,7 @@
     hideTitleBar:           [Boolean],         default: false
     hideBody:               [Boolean],         default: false
     hideWeekends:           [Boolean],         default: false
+    hideWeekdays:           [Array],           default: []
     disableViews:           [Array],           default: []
     defaultView:            [String],          default: 'week'
     todayButton:            [Boolean],         default: false
@@ -2159,6 +2178,15 @@
         Hide the weekend and shows only Monday to Friday on month view and week view.#[br]
         The weekend are still visible in day view not to break the behavior of the arrows.#[br]
         Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends is true.
+    li
+      code.mr-2 hideWeekdays
+      span.code [Array], default: []
+      p.
+        Hide particular days of the week. This option accepts an array of days (day numbers) to hide,
+        #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
+        This option will apply on month &amp; week views.#[br]#[br]
+        If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
+        #[span.code hideWeekends] in supplement of #[span.code hideWeekdays].
     li
       code.mr-2 disableViews
       span.code [Array], default: []
@@ -2498,10 +2526,11 @@
     highlight-message(type="success")
       h3.mt-0.pt-0 New features
       ul
+        li Added an option to hide particular days of the week
         li Added new emitted event #[span.code cell-dblclick]
         li Added ability to resize horizontally
-        li Added ability to create events on single/double cell click
-        li Added function to get minutes at cursor
+        li Added ability to create events on cell single/double click
+        li Added function to get minutes at cursor (on click of a cell)
         li Now support displaying more than 3 overlapping events!
         li Events start &amp; end can now be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
 
@@ -2559,7 +2588,6 @@
         - add recurring events
         - is there a way to get rid of the create-event function?
         - option for sticky split labels
-        - hide days in week view?
         - check overlaps only on the cell that has changed on event create/drag/background change
         Multiple-day events:
         - check resizing multiple day events starting before 1999-11-01

@@ -15,7 +15,7 @@
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)")
-      slot(name="cell-content" :events="events" :select-cell="$event => {selectCell($event, true)}" :split="splits.length ? split : false")
+      slot(name="cell-content" :events="events" :select-cell="$event => selectCell($event, true)" :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -61,6 +61,10 @@ export default {
     maxTimestamp: {
       type: [Number, null],
       default: null
+    },
+    cellWidth: {
+      type: [Number, Boolean],
+      default: false
     },
     allDay: {
       type: Boolean,
@@ -192,12 +196,10 @@ export default {
     transitionDirection () {
       return this.$parent.transitionDirection
     },
-    cellWidth () {
-      return 100 / (7 - this.$parent.weekDays.reduce((total, day) => total + day.hide, 0))
-    },
     cellStyles () {
       return {
-        ...(this.view === 'week' && this.options.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
+        // cellWidth is only applied when hiding weekdays on month and week views.
+        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {}),
         minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
       }
     },

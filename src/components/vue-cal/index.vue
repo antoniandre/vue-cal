@@ -71,6 +71,7 @@
                   :key="i"
                   :options="$props"
                   :data="cell"
+                  :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
                   :cell-splits="hasSplits && splitDays || []")
@@ -968,15 +969,20 @@ export default {
             }
           })
 
-          if (this.hideWeekends) {
-            cells = cells.filter(cell => cell.startDate.getDay() > 0 && cell.startDate.getDay() < 6)
+          if (this.hideWeekends || this.hideWeekdays.length) {
+            cells = cells.filter(cell => {
+              let day = cell.startDate.getDay()
+              if (!day) day = 7 // Put Sunday at position 7 instead of 0.
+
+              return !((this.hideWeekends && day >= 6) ||
+              (this.hideWeekdays.length && this.hideWeekdays.includes(day)))
+            })
           }
           break
         case 'week':
           todayFound = false
           let firstDayOfWeek = this.view.startDate
           let weekDays = this.weekDays
-          // if (this.hideWeekdays.length) weekDays = weekDays.filter((day, i) => !this.hideWeekdays.includes(i + 1))
 
           cells = weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)
@@ -1006,6 +1012,10 @@ export default {
           break
       }
       return cells
+    },
+    // Only when hiding weekdays on month and week views.
+    cellWidth () {
+      return 100 / (7 - this.weekDays.reduce((total, day) => total + day.hide, 0))
     },
     cssClasses () {
       return {
