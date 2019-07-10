@@ -155,16 +155,10 @@
   v-layout.mb-5(justify-center style="max-width: 690px;margin: auto")
     v-icon.flame(size="100").mr-3 whatshot
     highlight-message(type="tips" no-icon)
-      .title.mt-2.mb-3 #[span.code vue-cal@2.0.0] is coming out soon!
+      .headline.mt-2.mb-3 #[span.code vue-cal@2.0] is out!
       .body-2.
-        The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
-        creation on single click, or overriding the editable-event option per event)
-        and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
-        #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
-      .mt-2
-        v-icon.mr-2(size="20") info_outline
-        span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
-      .mt-2.layout.flex.align-center
+        Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
+      .mt-4.layout.flex.align-center
         v-icon.mr-2(size="20") favorite_border
         span Thank you to all the supporters!
         v-spacer
@@ -183,7 +177,7 @@
   h2.headline.mt-5
     a(href="#installation") Installation
     a#installation(name="installation")
-  highlight-message(type="warning") Vue.js 2.5.18 or later is required.
+  highlight-message(type="warning") Vue.js 2.6.1 or later is required.
   p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
   h3 Via NPM
   sshpre.mt-2(language="shell" label="Shell") npm i --S vue-cal
@@ -867,6 +861,7 @@
       :disable-views="['years', 'year']"
       hide-view-selector
       hide-weekends
+      :hide-weekdays="[1,3,4]"
       editable-events
       :events="editableEvents")
   sshpre(language="html-vue" label="Vue Template").

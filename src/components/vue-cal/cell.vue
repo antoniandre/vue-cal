@@ -192,8 +192,12 @@ export default {
     transitionDirection () {
       return this.$parent.transitionDirection
     },
+    cellWidth () {
+      return 100 / (7 - this.$parent.weekDays.reduce((total, day) => total + day.hide, 0))
+    },
     cellStyles () {
       return {
+        ...(this.view === 'week' && this.options.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
         minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
       }
     },

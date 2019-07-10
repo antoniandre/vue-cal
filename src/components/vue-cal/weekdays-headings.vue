@@ -4,6 +4,7 @@
     :class="{ today: heading.today, clickable: cellHeadingsClickable }"
     v-for="(heading, i) in headings"
     :key="i"
+    v-if="!heading.hide"
     :style="weekdayCellStyles"
     @click="view.id === 'week' && selectCell(heading.date, $event)"
     @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
@@ -68,6 +69,7 @@ export default {
             const date = this.view.startDate.addDays(i)
 
             return {
+              hide: cell.hide,
               full: cell.label,
               // If defined in i18n file, weekDaysShort overrides default truncation of
               // week days when does not fit on screen or with small/xsmall options.
@@ -86,8 +88,14 @@ export default {
       }
       return headings
     },
+    cellWidth () {
+      return 100 / (7 - this.weekDays.reduce((total, day) => total + day.hide, 0))
+    },
     weekdayCellStyles () {
-      return { minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null }
+      return {
+        ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
+        minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null
+      }
     },
     cellHeadingsClickable () {
       return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblclickToNavigate)

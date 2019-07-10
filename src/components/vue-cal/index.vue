@@ -132,6 +132,10 @@ export default {
       type: Boolean,
       default: false
     },
+    hideWeekdays: {
+      type: Array,
+      default: () => []
+    },
     disableViews: {
       type: Array,
       default: () => []
@@ -835,15 +839,14 @@ export default {
     weekDays () {
       let { weekDays } = this.texts
       // Do not modify original for next instances.
-      weekDays = weekDays.slice(0)
+      weekDays = weekDays.slice(0).map((day, i) => ({
+        label: day,
+        hide: (this.hideWeekends && i >= 5) || (this.hideWeekdays.length && this.hideWeekdays.includes(i + 1))
+      }))
 
       if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
 
-      if (this.hideWeekends) {
-        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6) : weekDays.slice(0, 5)
-      }
-
-      return weekDays.map(day => ({ label: day }))
+      return weekDays
     },
     weekDaysShort () {
       let { weekDaysShort = null } = this.texts
@@ -972,8 +975,10 @@ export default {
         case 'week':
           todayFound = false
           let firstDayOfWeek = this.view.startDate
+          let weekDays = this.weekDays
+          // if (this.hideWeekdays.length) weekDays = weekDays.filter((day, i) => !this.hideWeekdays.includes(i + 1))
 
-          cells = this.weekDays.map((cell, i) => {
+          cells = weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
@@ -985,7 +990,7 @@ export default {
               // To increase performance skip checking isToday if today already found.
               today: !todayFound && isDateToday(startDate) && !todayFound++
             }
-          })
+          }).filter((cell, i) => !weekDays[i].hide)
           break
         case 'day':
           const startDate = this.view.startDate
