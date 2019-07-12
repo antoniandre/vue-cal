@@ -1031,6 +1031,7 @@ export default {
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
+        'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,

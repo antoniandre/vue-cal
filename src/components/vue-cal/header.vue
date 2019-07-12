@@ -29,6 +29,9 @@
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView"
   )
+  //- Sticky split-days headers on day view only.
+  .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && options.stickySplitLabels && options.splitDays.length")
+    .day-split-header(v-for="(split, i) in options.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
 <script>

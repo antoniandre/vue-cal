@@ -16,9 +16,8 @@
           span.small {{ heading.small }}
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
-        .vuecal__flex.split-days_headers(v-if="vuecal.stickySplitLabels")
-          .split(v-for="(split, i) in vuecal.splitDays" :key="i" :style="splitDaysHeaderStyles") {{ split.label }}
-
+        .vuecal__flex.vuecal__split-days-headers(v-if="vuecal.stickySplitLabels && vuecal.splitDays.length")
+          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
 <script>
@@ -103,11 +102,6 @@ export default {
     },
     cellHeadingsClickable () {
       return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblclickToNavigate)
-    },
-    splitDaysHeaderStyles () {
-      return {
-        width: `${100 / (this.vuecal.splitDays.length)}%`
-      }
     }
   }
 }
@@ -117,6 +111,7 @@ export default {
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
+$weekdays-headings-height-with-splits: 4em;
 
 .vuecal {
   &__weekdays-headings {
@@ -147,6 +142,8 @@ $weekdays-headings-height: 2.8em;
     position: relative;
     overflow: hidden;
 
+    .vuecal--sticky-split-labels & {height: $weekdays-headings-height-with-splits;}
+
     .vuecal--month-view &, .vuecal--week-view &, .vuecal--day-view & {width: 14.2857%;}
     .vuecal--hide-weekends.vuecal--month-view &,
     .vuecal--hide-weekends.vuecal--week-view &,
@@ -154,7 +151,7 @@ $weekdays-headings-height: 2.8em;
     .vuecal--years-view & {width: 20%;}
     .vuecal--year-view & {width: 33.33%;}
 
-    & > .weekday-label {flex-shrink: 0;display: flex;}
+    .weekday-label {flex-shrink: 0;display: flex;justify-content: center;}
 
     .vuecal--small & .small, .vuecal--xsmall & .xsmall {display: block;}
     .small, .xsmall,
@@ -162,7 +159,7 @@ $weekdays-headings-height: 2.8em;
     .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
   }
 
-  .split-days_headers {height: 2em;}
+  .vuecal__split-days-headers {align-items: center;}
 }
 
 // Media queries.

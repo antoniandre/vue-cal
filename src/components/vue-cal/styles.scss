@@ -1,6 +1,7 @@
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
+$weekdays-headings-height-with-splits: 4em;
 
 .vuecal {
   height: 100%;
@@ -34,6 +35,16 @@ $weekdays-headings-height: 2.8em;
     &[wrap] {
       flex-wrap: wrap;
     }
+  }
+
+  // Calendar header.
+  //==================================//
+  &__split-days-headers {
+
+    .vuecal--day-view & {margin-left: $time-column-width;}
+    .vuecal--day-view.vuecal--twelve-hour & {margin-left: $time-column-width-12;}
+
+    .day-split-header {display: flex;flex-grow: 1;justify-content: center;}
   }
 
   // Calendar body.
@@ -100,6 +111,10 @@ $weekdays-headings-height: 2.8em;
     .vuecal--overflow-x.vuecal--week-view & {
       margin-top: $weekdays-headings-height;
       box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
+    }
+
+    .vuecal--overflow-x.vuecal--week-view.vuecal--sticky-split-labels & {
+      margin-top: $weekdays-headings-height-with-splits;
     }
 
     .vuecal__time-cell {
