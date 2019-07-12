@@ -225,6 +225,10 @@ export default {
       type: Array,
       default: () => []
     },
+    stickySplitLabels: {
+      type: Boolean,
+      default: false
+    },
     events: {
       type: Array,
       default: () => []

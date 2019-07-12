@@ -166,9 +166,7 @@
         a(href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC" target="_blank") Support the project
 
   highlight-message(type="info")
-    strong Important Notes#[br]
-    | Options &amp; CSS classes may change a bit with new version release.
-    | Keep checking the #[a(href="#release-notes") Release Notes]!#[br]#[br]
+    strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!#[br]
     strong Philosophy:&nbsp;
     | Vue Cal tries to separate logic &amp; styles.#[br]
     | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
@@ -1397,12 +1395,13 @@
     v-btn(small color="primary" @click="splitEvents[5].background = true") set background
     p {{splitEvents[5]}}
   v-card.my-2.ma-auto.main-content
-    //- vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year', 'month']"
       :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+      sticky-split-labels
       editable-events
       :events="splitEvents"
       :min-cell-width="splitsExampleMinCellWidth")
@@ -2586,7 +2585,6 @@
         - cleanup mutableEvents
         - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
-        - is there a way to get rid of the create-event function?
         - option for sticky split labels
         - check overlaps only on the cell that has changed on event create/drag/background change
         Multiple-day events:

@@ -9,12 +9,16 @@
     @click="view.id === 'week' && selectCell(heading.date, $event)"
     @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
-      span(:key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
-        //- For small/xsmall option. 3 media queries also truncate weekdays.
-        span.full {{ heading.full }}
-        span.small {{ heading.small }}
-        span.xsmall {{ heading.xsmall }}
-        span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
+      .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
+        .weekday-label
+          //- For small/xsmall option. 3 media queries also truncate weekdays.
+          span.full {{ heading.full }}
+          span.small {{ heading.small }}
+          span.xsmall {{ heading.xsmall }}
+          span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
+        .vuecal__flex.split-days_headers(v-if="vuecal.stickySplitLabels")
+          .split(v-for="(split, i) in vuecal.splitDays" :key="i" :style="splitDaysHeaderStyles") {{ split.label }}
+
 </template>
 
 <script>
@@ -99,6 +103,11 @@ export default {
     },
     cellHeadingsClickable () {
       return this.view.id === 'week' && (this.vuecal.clickToNavigate || this.vuecal.dblclickToNavigate)
+    },
+    splitDaysHeaderStyles () {
+      return {
+        width: `${100 / (this.vuecal.splitDays.length)}%`
+      }
     }
   }
 }
@@ -145,13 +154,15 @@ $weekdays-headings-height: 2.8em;
     .vuecal--years-view & {width: 20%;}
     .vuecal--year-view & {width: 33.33%;}
 
-    & > span {flex-shrink: 0;display: flex;}
+    & > .weekday-label {flex-shrink: 0;display: flex;}
 
     .vuecal--small & .small, .vuecal--xsmall & .xsmall {display: block;}
     .small, .xsmall,
     .vuecal--small & .full, .vuecal--small & .xsmall,
     .vuecal--xsmall & .full, .vuecal--xsmall & .small {display: none;}
   }
+
+  .split-days_headers {height: 2em;}
 }
 
 // Media queries.
