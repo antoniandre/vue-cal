@@ -155,7 +155,12 @@ $weekdays-headings-height-with-splits: 3.4em;
     .vuecal--years-view & {width: 20%;}
     .vuecal--year-view & {width: 33.33%;}
 
-    .weekday-label {flex-shrink: 0;display: flex;justify-content: center;}
+    .weekday-label {
+      flex-shrink: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
 
     .vuecal--small & .small, .vuecal--xsmall & .xsmall {display: block;}
     .small, .xsmall,
