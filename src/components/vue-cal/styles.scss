@@ -1,7 +1,7 @@
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
-$weekdays-headings-height-with-splits: 4em;
+$weekdays-headings-height-with-splits: 3.4em;
 
 .vuecal {
   height: 100%;
@@ -40,8 +40,9 @@ $weekdays-headings-height-with-splits: 4em;
   // Calendar header.
   //==================================//
   &__split-days-headers {
+    &.slide-fade--right-leave-active {display: none;}
 
-    .vuecal--day-view & {margin-left: $time-column-width;}
+    .vuecal--day-view & {margin-left: $time-column-width;height: 2.2em;}
     .vuecal--day-view.vuecal--twelve-hour & {margin-left: $time-column-width-12;}
 
     .day-split-header {display: flex;flex-grow: 1;justify-content: center;}

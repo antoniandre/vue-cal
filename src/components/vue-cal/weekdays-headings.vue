@@ -10,13 +10,15 @@
     @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
       .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
-        .weekday-label
+        .vuecal__flex.weekday-label(grow)
           //- For small/xsmall option. 3 media queries also truncate weekdays.
           span.full {{ heading.full }}
           span.small {{ heading.small }}
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
-        .vuecal__flex.vuecal__split-days-headers(v-if="vuecal.stickySplitLabels && vuecal.splitDays.length")
+        .vuecal__flex.vuecal__split-days-headers(
+          v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
+          grow)
           .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
@@ -111,7 +113,7 @@ export default {
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
 $weekdays-headings-height: 2.8em;
-$weekdays-headings-height-with-splits: 4em;
+$weekdays-headings-height-with-splits: 3.4em;
 
 .vuecal {
   &__weekdays-headings {
@@ -141,6 +143,8 @@ $weekdays-headings-height-with-splits: 4em;
     align-items: center;
     position: relative;
     overflow: hidden;
+
+    > .vuecal__flex {width: 100%;height: 100%;align-items: initial !important;} // For Vue transition.
 
     .vuecal--sticky-split-labels & {height: $weekdays-headings-height-with-splits;}
 
