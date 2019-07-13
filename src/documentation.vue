@@ -122,6 +122,12 @@
     v-chip.pr-1(color="green" outline small disabled)
       v-icon.mr-1 check
       | Support more simultaneous events
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Sticky day splits labels
+    v-chip.pr-1(color="green" outline small disabled)
+      v-icon.mr-1 check
+      | Hide particular weekdays
     v-chip.pr-1(color="amber darken-1" outline small disabled)
       v-icon.mr-1 timer
       | Recurring events
@@ -1391,17 +1397,19 @@
     v-btn(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
       v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
+    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header:
+    v-btn(small color="primary" @click="stickySplitLabels = !stickySplitLabels")
+      v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
+      | Sticky Split Labels
     | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
-    v-btn(small color="primary" @click="splitEvents[5].background = true") set background
-    p {{splitEvents[5]}}
   v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
+    //- vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year', 'month']"
       :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-      sticky-split-labels
+      :sticky-split-labels="stickySplitLabels"
       editable-events
       :events="splitEvents"
       :min-cell-width="splitsExampleMinCellWidth")
@@ -1410,11 +1418,15 @@
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'fit to container\' : \'min cell width 400px\' \}\}' }}
     &lt;/button&gt;
+    &lt;button @click="stickySplitLabels = !stickySplitLabels"&gt;
+      Sticky Split Labels
+    &lt;/button&gt;
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-step="30"
              :disable-views="['years', 'year', 'month']"
              :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+             :sticky-split-labels="stickySplitLabels"
              editable-events
              :events="events"
              :min-cell-width="minCellWidth"&gt;
@@ -1422,6 +1434,7 @@
 
   sshpre(language="js" label="Javascript").
     data: () => ({
+      stickySplitLabels: false,
       minCellWidth: 400,
       events: [
         {
@@ -2103,6 +2116,7 @@
     timeFormat:             [String],          default: ''
     minCellWidth:           [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
+    stickySplitLabels:      [Boolean],         default: false
     events:                 [Array],           default: []
     editableEvents:         [Boolean],         default: false
     eventsOnMonthView:      [Boolean, String], default: false
@@ -2348,6 +2362,12 @@
         Accepts an array of split objects with attributes.#[br]
         Each split object can have these attributes: #[span.code { class: 'string', label: 'string' }]
     li
+      code.mr-2 stickySplitLabels
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], the day splits labels will be displayed in the header
+        instead of in-cell.
+    li
       code.mr-2 editableEvents
       span.code [Boolean], default: false
       p
@@ -2532,6 +2552,7 @@
         li Added function to get minutes at cursor (on click of a cell)
         li Now support displaying more than 3 overlapping events!
         li Events start &amp; end can now be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
+        li Added an option to display day splits labels in the header
 
       h3.mt-3 Big changes
       ul
@@ -2585,7 +2606,6 @@
         - cleanup mutableEvents
         - check event returned from all emitted events / always return view events not mutable ones
         - add recurring events
-        - option for sticky split labels
         - check overlaps only on the cell that has changed on event create/drag/background change
         Multiple-day events:
         - check resizing multiple day events starting before 1999-11-01
@@ -2894,6 +2914,7 @@ export default {
     ],
     locale: 'zh-cn',
     splitsExampleMinCellWidth: 400,
+    stickySplitLabels: false,
     example1theme: 'green',
     indicatorStyle: 'count',
     now: new Date(),
