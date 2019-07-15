@@ -1,13 +1,15 @@
 <template lang="pug">
 .vuecal__header
-  ul.vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector")
+  ul.vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar navigation")
     li(
       v-if="v.enabled"
       :class="{ active: viewProps.view.id === id }"
       v-for="(v, id) in viewProps.views"
-      @click="$parent.switchView(id, null, true)") {{ v.label }}
+      @click="$parent.switchView(id, null, true)"
+      role="tab"
+      :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    .vuecal__arrow.vuecal__arrow--prev(@click="previous")
+    button.vuecal__arrow.vuecal__arrow--prev(role="button" aria-label="Previous" @click="previous")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       transition(:name="`slide-fade--${transitionDirection}`")
@@ -16,9 +18,9 @@
           :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
           @click="switchToBroaderView")
           slot(name="title")
-    .vuecal__today-btn(v-if="options.todayButton" @click="goToToday")
+    button.vuecal__today-btn(v-if="options.todayButton" role="button" aria-label="Today" @click="goToToday")
       slot(name="today-button")
-    .vuecal__arrow.vuecal__arrow--next(@click="next")
+    button.vuecal__arrow.vuecal__arrow--next(role="button" aria-label="Next" @click="next")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
@@ -168,6 +170,12 @@ export default {
     min-height: 2em;
 
     .vuecal--xsmall & {font-size: 1.3em;}
+
+    button {
+      background-color: none;
+      border: none;
+      outline: none;
+    }
   }
 
   &__title {
