@@ -1,26 +1,26 @@
 <template lang="pug">
 .vuecal__header
-  ul.vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar navigation")
-    li(
+  .vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar views navigation")
+    button(
       v-if="v.enabled"
       :class="{ active: viewProps.view.id === id }"
       v-for="(v, id) in viewProps.views"
       @click="$parent.switchView(id, null, true)"
-      role="tab"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    button.vuecal__arrow.vuecal__arrow--prev(role="button" aria-label="Previous" @click="previous")
+    button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       transition(:name="`slide-fade--${transitionDirection}`")
-        span(
-          :class="{ clickable: !!broaderView }"
+        component(
+          :is="!!broaderView ? 'button' : 'span'"
+          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
           :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
           @click="switchToBroaderView")
           slot(name="title")
-    button.vuecal__today-btn(v-if="options.todayButton" role="button" aria-label="Today" @click="goToToday")
+    button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
       slot(name="today-button")
-    button.vuecal__arrow.vuecal__arrow--next(role="button" aria-label="Next" @click="next")
+    button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
@@ -136,6 +136,12 @@ export default {
 
 <style lang="scss">
 .vuecal {
+  button {
+    background-color: none;
+    border: none;
+    outline: none;
+  }
+
   &__menu {
     padding: 0;
     margin: 0;
@@ -143,7 +149,7 @@ export default {
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.02);
 
-    li {
+    button {
       padding: 0.3em 1em;
       height: 2.2em;
       font-size: 1.3em;
@@ -153,7 +159,7 @@ export default {
       transition: 0.2s;
     }
 
-    li.active {
+    button.active {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
@@ -170,17 +176,13 @@ export default {
     min-height: 2em;
 
     .vuecal--xsmall & {font-size: 1.3em;}
-
-    button {
-      background-color: none;
-      border: none;
-      outline: none;
-    }
   }
 
   &__title {
     position: relative;
     justify-content: center;
+    button.slide-fade--left-leave-active,
+    button.slide-fade--right-leave-active {width: 100%;}
   }
 
   &__today-btn {
