@@ -113,158 +113,44 @@ export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
   props: {
-    locale: {
-      type: String,
-      default: 'en'
-    },
-    hideViewSelector: {
-      type: Boolean,
-      default: false
-    },
-    hideTitleBar: {
-      type: Boolean,
-      default: false
-    },
-    hideBody: {
-      type: Boolean,
-      default: false
-    },
-    hideWeekends: {
-      type: Boolean,
-      default: false
-    },
-    hideWeekdays: {
-      type: Array,
-      default: () => []
-    },
-    disableViews: {
-      type: Array,
-      default: () => []
-    },
-    defaultView: {
-      type: String,
-      default: 'week'
-    },
-    todayButton: {
-      type: Boolean,
-      default: false
-    },
-    showAllDayEvents: {
-      type: [Boolean, String],
-      default: false
-    },
-    selectedDate: {
-      type: [String, Date],
-      default: ''
-    },
-    minDate: {
-      type: [String, Date],
-      default: ''
-    },
-    maxDate: {
-      type: [String, Date],
-      default: ''
-    },
-    startWeekOnSunday: {
-      type: Boolean,
-      default: false
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    xsmall: {
-      type: Boolean,
-      default: false
-    },
-    clickToNavigate: {
-      type: Boolean,
-      default: false
-    },
-    dblclickToNavigate: {
-      type: Boolean,
-      default: true
-    },
-    cellClickHold: {
-      type: Boolean,
-      default: true
-    },
-    time: {
-      type: Boolean,
-      default: true
-    },
-    timeFrom: {
-      type: Number,
-      default: 0 // In minutes.
-    },
-    timeTo: {
-      type: Number,
-      default: 24 * 60 // In minutes.
-    },
-    timeStep: {
-      type: Number,
-      default: 60 // In minutes.
-    },
-    timeCellHeight: {
-      type: Number,
-      default: 40 // In pixels.
-    },
-    twelveHour: {
-      type: Boolean,
-      default: false
-    },
-    timeFormat: {
-      type: String,
-      default: ''
-    },
-    minCellWidth: {
-      type: Number,
-      default: 0
-    },
-    splitDays: {
-      type: Array,
-      default: () => []
-    },
-    stickySplitLabels: {
-      type: Boolean,
-      default: false
-    },
-    events: {
-      type: Array,
-      default: () => []
-    },
-    editableEvents: {
-      type: Boolean,
-      default: false
-    },
-    resizeX: {
-      type: Boolean,
-      default: false
-    },
-    eventsOnMonthView: {
-      type: [Boolean, String],
-      default: false
-    },
-    eventsCountOnYearView: {
-      type: Boolean,
-      default: false
-    },
-    onEventClick: {
-      type: [Function, null],
-      default: null
-    },
-    onEventDblclick: {
-      type: [Function, null],
-      default: null
-    },
-    onEventCreate: {
-      type: [Function, null],
-      default: null
-    },
-    transitions: {
-      type: Boolean,
-      default: true
-    }
+    locale: { type: String, default: 'en' },
+    hideViewSelector: { type: Boolean, default: false },
+    hideTitleBar: { type: Boolean, default: false },
+    hideBody: { type: Boolean, default: false },
+    hideWeekends: { type: Boolean, default: false },
+    hideWeekdays: { type: Array, default: () => [] },
+    disableViews: { type: Array, default: () => [] },
+    defaultView: { type: String, default: 'week' },
+    todayButton: { type: Boolean, default: false },
+    showAllDayEvents: { type: [Boolean, String], default: false },
+    selectedDate: { type: [String, Date], default: '' },
+    minDate: { type: [String, Date], default: '' },
+    maxDate: { type: [String, Date], default: '' },
+    startWeekOnSunday: { type: Boolean, default: false },
+    small: { type: Boolean, default: false },
+    xsmall: { type: Boolean, default: false },
+    clickToNavigate: { type: Boolean, default: false },
+    dblclickToNavigate: { type: Boolean, default: true },
+    cellClickHold: { type: Boolean, default: true },
+    time: { type: Boolean, default: true },
+    timeFrom: { type: Number, default: 0 }, // In minutes.
+    timeTo: { type: Number, default: 24 * 60 }, // In minutes.
+    timeStep: { type: Number, default: 60 }, // In minutes.
+    timeCellHeight: { type: Number, default: 40 }, // In pixels.
+    twelveHour: { type: Boolean, default: false },
+    timeFormat: { type: String, default: '' },
+    minCellWidth: { type: Number, default: 0 },
+    splitDays: { type: Array, default: () => [] },
+    stickySplitLabels: { type: Boolean, default: false },
+    events: { type: Array, default: () => [] },
+    editableEvents: { type: Boolean, default: false },
+    resizeX: { type: Boolean, default: false },
+    eventsOnMonthView: { type: [Boolean, String], default: false },
+    eventsCountOnYearView: { type: Boolean, default: false },
+    onEventClick: { type: [Function, null], default: null },
+    onEventDblclick: { type: [Function, null], default: null },
+    onEventCreate: { type: [Function, null], default: null },
+    transitions: { type: Boolean, default: true }
   },
   data: function () {
     return {

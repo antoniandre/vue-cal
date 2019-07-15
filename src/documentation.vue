@@ -2601,6 +2601,7 @@
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
       //- TODO:
         General
+        - overflow hidden on vuecal__body when no min-cell-height
         - add accessibility
         - do all the @todo
         - cleanup mutableEvents
