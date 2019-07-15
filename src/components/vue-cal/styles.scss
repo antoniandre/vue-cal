@@ -52,7 +52,7 @@ $weekdays-headings-height-with-splits: 3.4em;
   //==================================//
   &__body {
     position: relative;
-    overflow: auto;
+    overflow: hidden;
   }
 
   &__all-day {
