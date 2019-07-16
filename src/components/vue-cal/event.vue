@@ -4,7 +4,7 @@
   :style="eventStyles"
   tabindex="0"
   @focus="focusEvent"
-  @keypress.enter="onClick"
+  @keypress.enter.stop="onClick"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @touchstart="onTouchStart"
