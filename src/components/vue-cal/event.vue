@@ -2,6 +2,9 @@
 .vuecal__event(
   :class="eventClasses"
   :style="eventStyles"
+  tabindex="0"
+  @focus="focusEvent"
+  @keypress.enter="onClick"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @touchstart="onTouchStart"
@@ -243,7 +246,8 @@ export default {
   }
 
   &--background {z-index: 0;}
-  &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
+  &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
+  &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);outline: 1px solid rgba(0,0,0,0.25);}
 }
 
 .vuecal__event-resize-handle {
@@ -259,6 +263,7 @@ export default {
   cursor: ns-resize;
 
   .vuecal__event:hover &,
+  .vuecal__event:focus &,
   .vuecal__event--focus & {opacity: 1;transform: translateY(0);}
 }
 

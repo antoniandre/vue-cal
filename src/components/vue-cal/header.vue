@@ -136,10 +136,11 @@ export default {
 
 <style lang="scss">
 .vuecal {
-  button {
-    background-color: none;
+  &__header button {
+    background: none;
     border: none;
     outline: none;
+    font: inherit;
   }
 
   &__menu {
@@ -181,6 +182,7 @@ export default {
   &__title {
     position: relative;
     justify-content: center;
+    button {cursor: pointer;}
     button.slide-fade--left-leave-active,
     button.slide-fade--right-leave-active {width: 100%;}
   }

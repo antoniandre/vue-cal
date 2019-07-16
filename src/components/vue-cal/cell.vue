@@ -3,6 +3,10 @@
     :class="cssClasses"
     :name="`slide-fade--${transitionDirection}`"
     tag="div"
+    tabindex="0"
+    role="button"
+    @focus.native="selectCell($event)"
+    @keypress.enter.native="selectCell($event)"
     :appear="options.transitions"
     :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
@@ -96,7 +100,7 @@ export default {
 
     selectCell (DOMEvent, force = false) {
       const date = new Date(this.data.startDate)
-      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      if (DOMEvent.type !== 'focus') date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
 
       selectCell(force, date, this.$parent)
     },
@@ -343,9 +347,10 @@ export default {
     z-index: 1;
   }
 
-  &.selected {
+  &.selected, &:focus {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
+    outline: none;
 
     // .vuecal--day-view &:before {background: none;border: 1px solid rgba(235, 255, 245, 0.4);}
     .vuecal--day-view & {background: none;}

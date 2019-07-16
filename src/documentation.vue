@@ -184,7 +184,7 @@
         span Thank you to all the supporters!
         v-spacer
         v-icon.mr-1(size="17") attach_money
-        a(href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC" target="_blank") Support the project
+        a(href="https://www.paypal.me/antoniandre1" target="_blank") Support the project
 
   highlight-message(type="info")
     strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!#[br]
