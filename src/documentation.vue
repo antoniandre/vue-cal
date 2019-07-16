@@ -897,8 +897,6 @@
     | #[br]#[br]
     | Vue Cal emits events on calendar event change, read more about it in the
     | #[a(href="#ex--emitted-events") emitted events] example.
-  v-btn(small color="primary" @click="editableEvents[5].background = true") set background
-  p {{editableEvents[5]}}
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -2946,7 +2944,7 @@ export default {
     editableEvents: [
       ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
       {
-        start: '2018-11-20 00:00',
+        start: '2018-11-20 14:00',
         end: '2018-11-20 17:00',
         title: 'Boring event',
         content: '<i class="v-icon material-icons">block</i><br>I am not deletable and not resizable.',

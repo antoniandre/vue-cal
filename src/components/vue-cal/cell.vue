@@ -4,9 +4,9 @@
     :name="`slide-fade--${transitionDirection}`"
     tag="div"
     tabindex="0"
-    role="button"
+    :aria-label="data.content"
     @focus.native="selectCell($event)"
-    @keypress.enter.native="selectCell($event)"
+    @keypress.enter.native="$parent.switchToNarrowerView"
     :appear="options.transitions"
     :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
@@ -244,7 +244,6 @@ export default {
           events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
-        // console.log('rechecking cell events', this.$parent._uid, cellStart)
         // If splits, checkCellOverlappingEvents() is called from within computed splits.
         if (!this.cellSplits.length) this.$nextTick(this.checkCellOverlappingEvents)
       }
