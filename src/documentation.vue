@@ -2623,6 +2623,11 @@
             li.
               #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
               use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
+            li.
+              Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
+              cells and events can now be tabbed with keyboard to select them.#[br]
+              Pressing #[kbd enter] on a cell will go to a narrower view if any, and pressing
+              #[kbd enter] on an event will act like a click.
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
   div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language
