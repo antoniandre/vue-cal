@@ -31,7 +31,7 @@ ___
 
 If you want to support &amp; boost up the development of this library, you can buy me a beer!
 
-[![paypal](https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif)](https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=ZKGPRTRGWNDGC)
+[![paypal](https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/antoniandre1)
 Thank you!
 
 ___
