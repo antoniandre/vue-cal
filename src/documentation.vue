@@ -2573,7 +2573,7 @@
         li Now support displaying more than 3 overlapping events!
         li Events start &amp; end can now be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
         li Added an option to display day splits labels in the header
-        li Vue Cal is now more accessible (WAI-ARIA). You can even navigate through the calendar with the keyboard only.
+        li Vue Cal is now more accessible (WAI-ARIA). You can even navigate through all the calendar with the #[kbd tab] &amp; #[kbd enter] keys only.
 
       h3.mt-3 Big changes
       ul
