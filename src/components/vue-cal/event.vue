@@ -182,6 +182,7 @@ export default {
         [this.event.classes.join(' ')]: true,
         'vuecal__event--focus': this.event.focused,
         'vuecal__event--resizing': this.event.resizing,
+        'vuecal__event--resizing': this.event.resizing,
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
@@ -246,8 +247,7 @@ export default {
   }
 
   &--background {z-index: 0;}
-  &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
-  &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);outline: 1px solid rgba(0,0,0,0.25);}
+  &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
 }
 
 .vuecal__event-resize-handle {
