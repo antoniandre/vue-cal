@@ -9,14 +9,6 @@
 export const selectCell = (force = false, date, vuecal) => {
   // Cell-click event returns a date and time at cursor position.
   vuecal.$emit('cell-click', date)
-  const dateAtMidnight = new Date(date)
-  dateAtMidnight.setHours(0, 0, 0)
-
-  if (vuecal.view.selectedDate.getTime() !== dateAtMidnight.getTime()) {
-    vuecal.view.selectedDate = dateAtMidnight
-    // Cell-focus event returns the cell start date (at midnight).
-    vuecal.$emit('cell-focus', dateAtMidnight)
-  }
 
   // Switch to narrower view.
   if (vuecal.clickToNavigate || force) vuecal.switchToNarrowerView()

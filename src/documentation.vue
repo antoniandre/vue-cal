@@ -1701,7 +1701,7 @@
       :disable-views="['years', 'year']"
       hide-weekends
       editable-events
-      :events="multipleDayEvents"
+      :events="eventsCopy3"
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
       @cell-click="logEvents('cell-click', $event)"
@@ -2945,7 +2945,7 @@ export default {
     selectedDate: null,
     logMouseEvents: false,
     editableEvents: [
-      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:00',
@@ -2957,7 +2957,7 @@ export default {
       }
     ],
     overlappingEvents: [
-      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-21 14:00',
         end: '2018-11-21 22:00',
@@ -2988,7 +2988,7 @@ export default {
       }
     ],
     eventsCopy: [
-      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -3012,7 +3012,10 @@ export default {
       }
     ],
     eventsCopy2: [
-      ...events.map(e => ({ ...e })) // Clone when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
+    ],
+    eventsCopy3: [
+      ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
     ],
     multipleDayEvents: [
       {
@@ -3120,7 +3123,7 @@ export default {
       }
     ],
     splitEvents: [
-      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
@@ -3147,7 +3150,7 @@ export default {
       }
     ],
     backgroundEvents: [
-      ...events.map(e => ({ ...e })), // Clone events when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-19 12:00',
         end: '2018-11-19 14:00',

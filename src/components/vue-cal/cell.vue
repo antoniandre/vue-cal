@@ -3,10 +3,6 @@
     :class="cssClasses"
     :name="`slide-fade--${transitionDirection}`"
     tag="div"
-    tabindex="0"
-    :aria-label="data.content"
-    @focus.native="selectCell($event)"
-    @keypress.enter.native="$parent.switchToNarrowerView"
     :appear="options.transitions"
     :style="cellStyles")
     .vuecal__flex.vuecal__cell-content(
@@ -15,6 +11,10 @@
       :class="splits.length && `vuecal__cell-split ${split.class}`"
       :data-split="splits.length ? i + 1 : false"
       column
+      tabindex="0"
+      :aria-label="data.content"
+      @focus="onCellFocus($event)"
+      @keypress.enter="$parent.switchToNarrowerView"
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
@@ -78,7 +78,10 @@ export default {
 
   data: () => ({
     cellOverlaps: {},
-    cellOverlapsStreak: 1 // Largest amount of simultaneous events in cell.
+    cellOverlapsStreak: 1, // Largest amount of simultaneous events in cell.
+    // On mouse down, save the time at cursor so it can be reused on cell focus event
+    // where there is no cursor coords.
+    timeAtCursor: null
   }),
 
   methods: {
@@ -99,10 +102,23 @@ export default {
     },
 
     selectCell (DOMEvent, force = false) {
-      const date = new Date(this.data.startDate)
-      if (DOMEvent.type !== 'focus') date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      if (!this.selected) this.onCellFocus()
 
-      selectCell(force, date, this.$parent)
+      selectCell(force, this.timeAtCursor, this.$parent)
+      this.timeAtCursor = null
+    },
+
+    /**
+     * On cell focus, from tab key or from click, emit the cell-focus event with
+     * the date of the cell start when focusing from tab or the date & time at cursor
+     * if click/touch.
+     */
+    onCellFocus () {
+      if (!this.selected) {
+        this.selected = this.data.startDate
+        // Cell-focus event returns the cell start date (at midnight).
+        this.$parent.$emit('cell-focus', this.timeAtCursor || this.data.startDate)
+      }
     },
 
     onCellMouseDown (DOMEvent, split = null, touch = false) {
@@ -115,17 +131,17 @@ export default {
       // and cancel event creation.
       this.domEvents.cancelClickEventCreation = false
 
+      this.timeAtCursor = new Date(this.data.startDate)
+      this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
       if (this.options.editableEvents && this.options.cellClickHold
         && !this.isDOMElementAnEvent(DOMEvent.target) && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
-          if (clickHoldACell.cellId) {
-            const date = new Date(this.data.startDate)
-            date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
-
-            if (!this.domEvents.cancelClickEventCreation) this.$parent.createEvent(date, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+          if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
+            this.$parent.createEvent(this.timeAtCursor, clickHoldACell.split ? { split: clickHoldACell.split } : {})
           }
         }, clickHoldACell.timeout)
       }
@@ -168,20 +184,25 @@ export default {
         selected: this.selected
       }
     },
-    selected () {
-      let selected = false
-      const { selectedDate } = this.$parent.view
+    selected: {
+      get () {
+        let selected = false
+        const { selectedDate } = this.$parent.view
 
-      if (this.view === 'years') {
-        selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
-      }
-      else if (this.view === 'year') {
-        selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
-          selectedDate.getMonth() === this.data.startDate.getMonth())
-      }
-      else selected = selectedDate.getTime() === this.data.startDate.getTime()
+        if (this.view === 'years') {
+          selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
+        }
+        else if (this.view === 'year') {
+          selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
+            selectedDate.getMonth() === this.data.startDate.getMonth())
+        }
+        else selected = selectedDate.getTime() === this.data.startDate.getTime()
 
-      return selected
+        return selected
+      },
+      set (date) {
+        this.$parent.view.selectedDate = date
+      }
     },
     domEvents: {
       get () {
@@ -319,6 +340,7 @@ export default {
   &-content {
     position: relative;
     height: 100%;
+    outline: none;
   }
 
   &-split {
@@ -346,10 +368,9 @@ export default {
     z-index: 1;
   }
 
-  &.selected, &:focus {
+  &.selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
-    outline: none;
 
     // .vuecal--day-view &:before {background: none;border: 1px solid rgba(235, 255, 245, 0.4);}
     .vuecal--day-view & {background: none;}
