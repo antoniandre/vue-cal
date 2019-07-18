@@ -131,14 +131,15 @@ export const addEventSegment = e => {
 }
 
 export const removeEventSegment = e => {
-  if (Object.keys(e.segments).length <= 1) return false
+  let segmentsCount = Object.keys(e.segments).length
+  if (segmentsCount <= 1) return e.end.substr(0, 10)
 
   // Remove the last segment.
   delete e.segments[e.end.substr(0, 10)]
+  segmentsCount--
 
   const endDate = e.endDate.subtractDays(1)
   const formattedDate = formatDate(endDate)
-  const segmentsCount = Object.keys(e.segments).length
 
   // If no more segments, reset the segments attribute to null
   if (!segmentsCount) e.segments = null

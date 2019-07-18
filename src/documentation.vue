@@ -160,9 +160,8 @@
       - add recurring events
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
-      - check resizing multiple day events starting before 1999-11-01
+      - check resizing multiple day events starting before 1999-11-01 WTF?!
       - multiple day events ending at 24:00 don't show resizer 23:59 ok
-      - while resizing multiple days, prevent endTime < startTime
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
 
