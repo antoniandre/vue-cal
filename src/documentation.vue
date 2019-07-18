@@ -3012,7 +3012,7 @@ export default {
       }
     ],
     eventsCopy2: [
-      ...events.map(e => ({ ...e }))// Clone when reusing, so they will be independent.
+      ...events.map(e => ({ ...e })) // Clone when reusing, so they will be independent.
     ],
     multipleDayEvents: [
       {

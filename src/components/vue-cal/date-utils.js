@@ -109,8 +109,17 @@ export const stringToDate = string => {
   return new Date(y, parseInt(m) - 1, d, h, min)
 }
 
-export const countDays = (startDate, endDate) => {
-  let start = (new Date(startDate)).setHours(0, 0, 0)
-  let end = (new Date(endDate)).setHours(0, 0, 0)
+/**
+ * Count the number of days between 2 dates.
+ * E.g. countDays(2019-11-02 18:00, 2019-11-03 02:00) = 2
+ *
+ * @param {String, Date} start the start date
+ * @param {String, Date} end the end date
+ */
+export const countDays = (start, end) => {
+  // set start & end at midnight then compare the delta.
+  start = (new Date(start)).setHours(0, 0, 0)
+  // set end at midnight plus 1 min, so Math.ceil will round it up to a full day.
+  end = (new Date(end)).setHours(0, 0, 1)
   return Math.ceil((end - start) / (24 * 3600 * 1000))
 }
