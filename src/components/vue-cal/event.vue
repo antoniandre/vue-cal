@@ -117,7 +117,7 @@ export default {
         _eid: this.event._eid,
         start: (this.segment || this.event).start,
         split: this.event.split || null,
-        segment: !!this.segment,
+        segment: !!this.segment && this.segment.start,
         originalEndTimeMinutes: this.event.endTimeMinutes
       })
 

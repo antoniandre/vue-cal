@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate } from './date-utils'
+import { formatDate, stringToDate, addDays, formatTime } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -85,6 +85,75 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   }
 
   return event
+}
+
+export const addEventSegment = e => {
+  if (!e.segments) {
+    Vue.set(e, 'segments', {})
+    e.segments[e.start.substr(0, 10)] = {
+      startDate: e.startDate,
+      start: e.start.substr(0, 10),
+      startTimeMinutes: e.startTimeMinutes,
+      endTimeMinutes: 24 * 60,
+      isFirstDay: true,
+      isLastDay: false,
+      height: 0,
+      top: 0
+    }
+  }
+
+  // Modify the last segment - which is no more the last one.
+  let previousSegment = e.segments[formatDate(e.endDate)]
+  previousSegment.isLastDay = false
+  previousSegment.endTimeMinutes = 24 * 60
+
+  // Create the new last segment.
+  const startDate = e.endDate.addDays(1)
+  const endDate = new Date(startDate)
+  const formattedDate = formatDate(startDate)
+  startDate.setHours(0, 0)
+  e.segments[formattedDate] = {
+    startDate,
+    start: formattedDate,
+    startTimeMinutes: 0,
+    endTimeMinutes: e.endTimeMinutes,
+    isFirstDay: false,
+    isLastDay: true,
+    height: 0,
+    top: 0
+  }
+
+  e.daysCount = Object.keys(e.segments).length
+  e.endDate = endDate
+  e.end = `${formattedDate} ${formatTime(e.endTimeMinutes)}`
+
+  return formattedDate
+}
+
+export const removeEventSegment = e => {
+  if (Object.keys(e.segments).length <= 1) return false
+
+  // Remove the last segment.
+  delete e.segments[e.end.substr(0, 10)]
+
+  const endDate = e.endDate.subtractDays(1)
+  const formattedDate = formatDate(endDate)
+  const segmentsCount = Object.keys(e.segments).length
+
+  // If no more segments, reset the segments attribute to null
+  if (!segmentsCount) e.segments = null
+  else {
+    // Modify the new last segment.
+    let previousSegment = e.segments[formattedDate]
+    previousSegment.isLastDay = true
+    previousSegment.endTimeMinutes = e.endTimeMinutes
+  }
+
+  e.daysCount = segmentsCount || 1
+  e.endDate = endDate
+  e.end = `${formattedDate} ${formatTime(e.endTimeMinutes)}`
+
+  return formattedDate
 }
 
 export const createEventSegments = (e, viewStartDate, viewEndDate) => {
