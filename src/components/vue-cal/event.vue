@@ -7,8 +7,8 @@
   @keypress.enter.stop="onClick"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
-  @touchstart="onTouchStart"
-  @mousedown="onMouseDown"
+  @touchstart.stop="onTouchStart"
+  @mousedown.stop="onMouseDown"
   @click="onClick"
   @dblclick="onDblClick")
   .vuecal__event-delete(

@@ -136,7 +136,7 @@ export default {
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
       if (this.options.editableEvents && this.options.cellClickHold
-        && !this.isDOMElementAnEvent(DOMEvent.target) && ['month', 'week', 'day'].includes(this.view)) {
+        && ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
@@ -149,7 +149,7 @@ export default {
 
     onCellTouchStart (DOMEvent, split = null) {
       // If not mousedown on an event.
-      if (!this.isDOMElementAnEvent(DOMEvent.target)) this.onCellMouseDown(DOMEvent, split, true)
+      this.onCellMouseDown(DOMEvent, split, true)
     },
 
     onCellDblClick (DOMEvent) {

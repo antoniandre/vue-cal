@@ -164,6 +164,7 @@
       - multiple day events ending at 24:00 don't show resizer 23:59 ok
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
+      - prevent scroll while dragging on mobile
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-3(align-center shrink)

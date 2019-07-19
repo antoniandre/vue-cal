@@ -517,7 +517,7 @@ export default {
         if (event.start) {
           !([startDateF, startTime = ''] = event.start.split(' '))
           !([hoursStart, minutesStart] = startTime.split(':'))
-          startDate = new Date(event.start)
+          startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
           startDateF = formatDate(event.startDate)
@@ -533,7 +533,7 @@ export default {
         if (event.end) {
           !([endDateF, endTime = ''] = event.end.split(' '))
           !([hoursEnd, minutesEnd] = endTime.split(':'))
-          endDate = new Date(event.end)
+          endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.endDate && event.endDate instanceof Date) {
           endDateF = formatDate(event.endDate)
