@@ -163,7 +163,6 @@
       - check resizing multiple day events starting before 1999-11-01 WTF?!
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
-      - prevent scroll while dragging on mobile
 
   h2.headline.mt-5.mb-3.title Github project
   v-layout.mb-3(align-center shrink)
@@ -2250,7 +2249,7 @@
       highlight-message(type="warning").
         A correct string date format is #[code {{ currentDateFormatted }}] or
         #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
-        Only these formats will work in string. You can also provide a native Javascript Date object.
+        Only these formats will work as a string. You can also provide a native Javascript Date object.
     li
       code.mr-2 minDate
       span.code [String, Date], default: ''
@@ -2499,14 +2498,19 @@
             fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
+        p.title.mt-0.ml-1 Important notes
         ul
-          li
-            strong The events are internally identified by the key #[span.code `_eid`]. This is a reserved keyword.
+          li The events are internally identified by the key #[span.code `_eid`]. #[strong This is a reserved keyword.]
           li.mt-2
-            | Correct date formats are #[code {{ currentDateFormatted }}] or
-            | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar.
-            | Only these formats will work.#[br]
+            | Correct date formats are #[code {{ currentDateFormatted }}],
+            | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar,
+            | or a JavaScript #[code Date] object. Only these formats will work.#[br]
             strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
+          li.mt-2.
+            You can set an event end at #[span.code 24:00] if for some reasons that's what you want,
+            #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
+            of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
+            When returned from emitted events, this event #[span.code endDate] will contain a date ending at #[span.code 23:59:59].
 
   h2.headline.mt-5.pt-5
     a(href="#css-notes") CSS Notes
