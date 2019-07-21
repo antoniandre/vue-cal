@@ -104,8 +104,11 @@ export const addEventSegment = e => {
 
   // Modify the last segment - which is no more the last one.
   let previousSegment = e.segments[formatDate(e.endDate)]
-  previousSegment.isLastDay = false
-  previousSegment.endTimeMinutes = 24 * 60
+  // previousSegment might not exist when dragging too fast, prevent errors.
+  if (previousSegment) {
+    previousSegment.isLastDay = false
+    previousSegment.endTimeMinutes = 24 * 60
+  }
 
   // Create the new last segment.
   const startDate = e.endDate.addDays(1)
@@ -140,12 +143,14 @@ export const removeEventSegment = e => {
 
   const endDate = e.endDate.subtractDays(1)
   const formattedDate = formatDate(endDate)
+  let previousSegment = e.segments[formattedDate]
 
-  // If no more segments, reset the segments attribute to null
+  // If no more segments, reset the segments attribute to null.
   if (!segmentsCount) e.segments = null
-  else {
+
+  // previousSegment might not exist when dragging too fast, prevent errors.
+  else if (previousSegment) {
     // Modify the new last segment.
-    let previousSegment = e.segments[formattedDate]
     previousSegment.isLastDay = true
     previousSegment.endTimeMinutes = e.endTimeMinutes
   }
