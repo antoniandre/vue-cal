@@ -370,24 +370,9 @@ export default {
 
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
-
-      // @todo: Find a way to make this more performant while dragging.
-      // ------------------------------------------------------------------
-      let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
-      mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
-      mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-      mutableEvent.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
-
-      // If dragging beyond 23.59, Date object needs to keep same date not next midnight,
-      // so set the Date object at 23.59.59.
-      if (event.endTimeMinutes >= 24 * 60) mutableEvent.endDate.setSeconds(-1)
-
-      // Now update event in view.
-      event.endTimeMinutes = mutableEvent.endTimeMinutes
-      event.end = mutableEvent.end
-      event.endDate = mutableEvent.endDate
+      event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+      event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
       event.daysCount = countDays(event.startDate, event.endDate)
-      // ------------------------------------------------------------------
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
@@ -425,14 +410,11 @@ export default {
         this.domEvents.cancelClickEventCreation = true
         let event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
+          // Store modified event back in mutable events.
           let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
-          mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
-          mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-          mutableEvent.endDate = new Date(event.endDate)
-          event.endTimeMinutes = mutableEvent.endTimeMinutes
-          event.end = mutableEvent.end
-          event.endDate = mutableEvent.endDate
-          event.daysCount = countDays(event.startDate, event.endDate)
+          mutableEvent.endTimeMinutes = event.endTimeMinutes
+          mutableEvent.end = event.end
+          mutableEvent.endDate = event.endDate
 
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
@@ -584,7 +566,7 @@ export default {
       if (typeof e === 'number') startTimeMinutes = e
       else if (typeof e === 'object') {
         cursorCoords = this.getPosition(e)
-        startTimeMinutes = cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
+        startTimeMinutes = Math.round(cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom)
       }
 
       return { startTimeMinutes, cursorCoords }
@@ -668,7 +650,7 @@ export default {
       startDate: this.view.startDate,
       endDate: this.view.endDate,
       ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
-      events: this.view.events,
+      events: this.view.events.map(this.cleanupEvent),
       ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
     }
 
