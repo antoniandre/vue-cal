@@ -161,7 +161,6 @@
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
       - check resizing multiple day events starting before 1999-11-01 WTF?!
-      - multiple day events ending at 24:00 don't show resizer 23:59 ok
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
       - prevent scroll while dragging on mobile
@@ -3020,17 +3019,17 @@ export default {
     multipleDayEvents: [
       {
         start: '1999-10-31 22:00',
-        end: '2018-11-20 23:59',
+        end: '2018-11-20 17:47',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
         class: 'sport'
       },
       {
         start: '2018-11-20 10:00',
-        end: '2018-11-21 13:00',
+        end: '2018-11-20 10:25',
         title: 'Drink water!',
         content: '<i class="v-icon material-icons">local_drink</i>',
-        class: 'health'
+        class: 'health drink-water'
       },
       {
         start: '2018-11-21 19:00',
@@ -3516,6 +3515,7 @@ $primary: #42b983;
   &.event-start {border-radius: 5px 5px 0 0;}
   &.event-middle {border-radius: 0;}
   &.event-end {border-radius: 0 0 5px 5px;}
+  &.drink-water {font-size: 0.85em;line-height: 1;padding-top: 0.2em;}
 }
 
 .ex--open-dialog-on-event-click {

@@ -376,7 +376,12 @@ export default {
       let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
       mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
       mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-      mutableEvent.endDate = new Date(event.end)
+      mutableEvent.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+
+      // If dragging beyond 23.59, Date object needs to keep same date not next midnight,
+      // so set the Date object at 23.59.59.
+      if (event.endTimeMinutes >= 24 * 60) mutableEvent.endDate.setSeconds(-1)
+
       // Now update event in view.
       event.endTimeMinutes = mutableEvent.endTimeMinutes
       event.end = mutableEvent.end
@@ -423,7 +428,7 @@ export default {
           let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
           mutableEvent.endTimeMinutes = Math.round(event.endTimeMinutes)
           mutableEvent.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-          mutableEvent.endDate = new Date(event.end)
+          mutableEvent.endDate = new Date(event.endDate)
           event.endTimeMinutes = mutableEvent.endTimeMinutes
           event.end = mutableEvent.end
           event.endDate = mutableEvent.endDate
