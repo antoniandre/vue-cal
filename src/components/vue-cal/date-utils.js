@@ -110,13 +110,18 @@ export const stringToDate = string => {
 }
 
 /**
- * Count the number of days between 2 dates.
+ * Count the number of days this date range spans onto.
  * E.g. countDays(2019-11-02 18:00, 2019-11-03 02:00) = 2
  *
  * @param {String, Date} start the start date
  * @param {String, Date} end the end date
+ * @return {Integer} The number of days this date range involves
  */
 export const countDays = (start, end) => {
+  // replace '-' with '/' for Safari.
+  if (typeof start === 'string') start = start.replace(/-/g, '/')
+  if (typeof end === 'string') end = end.replace(/-/g, '/')
+
   // set start & end at midnight then compare the delta.
   start = (new Date(start)).setHours(0, 0, 0)
   // set end at midnight plus 1 min, so Math.ceil will round it up to a full day.

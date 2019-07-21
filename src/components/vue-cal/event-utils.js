@@ -51,7 +51,7 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
     startDate: dateTime,
     startTimeMinutes,
     end,
-    endDate: new Date(end),
+    endDate: new Date(end.replace(/-/g, '/')), // replace '-' with '/' for Safari.
     endTimeMinutes,
     segments: null,
     ...eventOptions
@@ -301,7 +301,7 @@ export const updateEventPosition = (event, vuecal) => {
 }
 
 export const eventInRange = (event, start, end) => {
-  const startTimestamp = new Date(event.start).getTime()
-  const endTimestamp = new Date(event.end).getTime()
+  const startTimestamp = event.startDate.getTime()
+  const endTimestamp = event.endDate.getTime()
   return startTimestamp < end.getTime() && endTimestamp > start.getTime()
 }
