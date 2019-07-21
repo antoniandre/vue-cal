@@ -139,7 +139,7 @@
       | Optional week number
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Improve multiple day events
+      | Improve multiple day events Month view
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Resize events snap to time
@@ -148,7 +148,7 @@
       | Drag events snap to time
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
-      | Prevent evt intersect. on drag/resize
+      | Prevent event intersect. on drag/resize
     v-chip.pr-1(color="deep-orange" outline small disabled)
       v-icon.mr-1 access_time
       | Horizontal timeline
@@ -177,10 +177,10 @@
         Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
       .mt-4.layout.flex.align-center
         v-icon.mr-2(size="20") favorite_border
-        span Thank you to all the supporters!
+        span.mr-4 Thank you to all the supporters!
         v-spacer
-        v-icon.mr-1(size="17") attach_money
-        a(href="https://www.paypal.me/antoniandre1" target="_blank") Support the project
+        v-icon.mr-1(size="18" color="primary") attach_money
+        a(href="https://www.paypal.me/antoniandre1" target="_blank") #[strong Support the project]
 
   highlight-message(type="info")
     strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!#[br]
@@ -1146,10 +1146,11 @@
     a(href="#ex--multiple-day-events") # Multiple day events
     a#ex--multiple-day-events(name="ex--multiple-day-events")
   p.
-    Multiple day events are working like a set of single day events linked together.#[br]
+    Multiple day events work like a set of single day events linked together.#[br]
     Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
     Updating the duration by dragging or changing the title will also update on all the days.#[br]
-    Try to resize, rename and delete the events.
+    Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
+    the option #[span.code resize-x].
   highlight-message(type="tips").
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
@@ -1170,6 +1171,7 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends
              editable-events
+             :resize-x="true"
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -2137,6 +2139,7 @@
     stickySplitLabels:      [Boolean],         default: false
     events:                 [Array],           default: []
     editableEvents:         [Boolean],         default: false
+    resizeX:                [Boolean],         default: false
     eventsOnMonthView:      [Boolean, String], default: false
     eventsCountOnYearView:  [Boolean],         default: false
     showAllDayEvents:       [Boolean, String], default: false
@@ -2397,6 +2400,12 @@
           li Editing events title
       highlight-message You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
     li
+      code.mr-2 resizeX
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], allows resizing an event across multiple days.#[br]
+        Resizing on the X axis is only available on #[span.code week] view.
+    li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
       p.
@@ -2568,44 +2577,65 @@
     highlight-message(type="success")
       h3.mt-0.pt-0 New features
       ul
-        li Added an option to hide particular days of the week
-        li Added new emitted event #[span.code cell-dblclick]
-        li Added ability to resize horizontally
-        li Added ability to create events on cell single/double click
-        li Added function to get minutes at cursor (on click of a cell)
-        li Now support displaying more than 3 overlapping events!
-        li Events start &amp; end can now be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
-        li Added an option to display day splits labels in the header
-        li Vue Cal is now more accessible (WAI-ARIA). You can even navigate through all the calendar with the #[kbd tab] &amp; #[kbd enter] keys only.
+        li
+          | Added an option to hide particular days of the week
+          em.grey--text.ml-1 (ref. #[span.code hideWeekdays] in the #[a(href="#api") API] section)
+        li
+          | Added new emitted event #[span.code cell-dblclick]
+          em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
+        li
+          | Added ability to resize horizontally
+          em.grey--text.ml-1 (ref. #[span.code resizeX] in the #[a(href="#api") API] section)
+        li
+          | Added ability to create events on cell single/double click
+          em.grey--text.ml-1 (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+        li
+          | Added function to get minutes at cursor (on click of a cell)
+          em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
+        li
+          | Now support displaying more than 3 overlapping events!
+        l i
+          | Events start &amp; end can now also be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
+          em.grey--text.ml-1 (ref. #[span.code events] in the #[a(href="#api") API] section)
+        li
+          | Added an option to display day splits labels in the header
+          em.grey--text.ml-1 (ref. #[span.code stickySplitLabels] in the #[a(href="#api") API] section)
+        li
+          | Added #[span.code deletable], #[span.code resizable] attributes on events to override globals
+          em.grey--text.ml-1 (ref. #[a(href="#ex--edit-delete-create-events") Edit, delete &amp; create events] example)
+        li.
+          Vue Cal is now more accessible (WAI-ARIA). You can now navigate through the calendar with the keyboard.#[br]
+          Select or focus a cell or an event with the #[kbd tab] key.#[br]
+          Pressing #[kbd enter] on a cell will go to a narrower view if any, and pressing
+          #[kbd enter] on an event will act like a click.
 
       h3.mt-3 Big changes
       ul
-        li New scoped slots syntax
+        li New scoped slots syntax #[em.grey--text.ml-1 (internal change - requires Vue 2.6+)]
         li the #[span.code no-event-overlaps] option is now useless and removed
         li.
-          Externalize all locales from main library#[br]
+          Externalize all locales from main library
+          #[em.grey--text.ml-1 (ref. #[a(href="#ex--internationalization") Internationalization] example)]#[br]
           Now, only the locale you need will be loaded on demand (as a separate request).#[br]
           This will ensure Vue Cal keeps its file size as light as possible.
         li.
-          If you have created your own color theme, you will have to change
-          #[span.code .vuecal__menu li] to #[span.code .vuecal__menu button] (refer to the updated example in the #[a(href="#css-notes") CSS notes] section).
+          If you have a custom color theme, you need to edit #[span.code .vuecal__menu li] to
+          #[span.code .vuecal__menu button]. #[em.grey--text.ml-1 (ref. #[a(href="#css-notes") CSS Notes])].#[br]
           This is for accessibility purpose.
 
       h3.mt-3 Other noticeable changes
       ul
         li #[span.code event-duration-change] is now only fired after resizing an event
-        li Add a javascript Date object in events
-        li Add a resizing class on events being resized
-        li Add deletable, resizable attributes on events to override global
+        li Added a resizing class on events being resized
         li Cancel event deletion with escape key
         li Focus a multiple day event highlights all the segments
-        li Calculate event segments within current view only
+        li Calculate event segments within current view only (great performance gain on long events)
         li Improve rendering performances on event resizing
         li Improve resizing events logic
-        li Week view date range takes #[span.code hideWeekends] in consideration
+        li Week view returned date range (through emitted events) takes #[span.code hideWeekends] in consideration
         li.
-          Renamed the option #[span.code dblClickToNavigate] to
-          #[span.code dblclickToNavigate] for consistency.
+          Renamed the option #[span.code dblClickToNavigate] to #[span.code dblclickToNavigate]
+          for consistency.
         li.
           Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
           #[span.code twelve-hour] and the corresponding css class to
@@ -2618,19 +2648,15 @@
         li
           | Internal events structure has changed:
           ul
-            li Refactored multiple day events &amp; save segments inside events
-            li Refactored event object save segments inside events
+            li Refactored multiple day events &amp; save 'segments' inside events
             li.
-              #[span.code startDate]/#[span.code endDate] are now Date Objects.#[br]
+              #[span.code startDate]/#[span.code endDate] previously containing strings are now Date Objects.#[br]
               If you want formatted strings, use #[span.code start]/#[span.code end] instead
             li.
               #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
               use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
             li.
               Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
-              cells and events can now be tabbed with keyboard to select them.#[br]
-              Pressing #[kbd enter] on a cell will go to a narrower view if any, and pressing
-              #[kbd enter] on an event will act like a click.
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
   div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language
