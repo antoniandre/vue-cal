@@ -390,11 +390,12 @@ export default {
           let newDaysCount = countDays(event.startDate, endDate)
 
           if (newDaysCount !== event.daysCount) {
-            // Check all segments are up to date.
+            // Check that all segments are up to date.
             let lastSegmentFormattedDate = null
             if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
             else lastSegmentFormattedDate = removeEventSegment(event)
             resizeAnEvent.segment = lastSegmentFormattedDate
+            event.endTimeMinutes += 0.001 // Force updating the current event.
           }
         }
       }

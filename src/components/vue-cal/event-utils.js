@@ -102,6 +102,10 @@ export const addEventSegment = e => {
     previousSegment.isLastDay = false
     previousSegment.endTimeMinutes = 24 * 60
   }
+  else {
+    // @todo: when moving fast might lose the previousSegment.
+    // Trying to update it would then result in an error, but do nothing would create a visual bug.
+  }
 
   // Create the new last segment.
   const startDate = e.endDate.addDays(1)
@@ -146,6 +150,10 @@ export const removeEventSegment = e => {
     // Modify the new last segment.
     previousSegment.isLastDay = true
     previousSegment.endTimeMinutes = e.endTimeMinutes
+  }
+  else {
+    // @todo: when moving fast might lose the previousSegment.
+    // Trying to update it would then result in an error, but do nothing would create a visual bug.
   }
 
   e.daysCount = segmentsCount || 1

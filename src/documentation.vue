@@ -160,6 +160,7 @@
       - add recurring events
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
+      - Fix event segments when dragging too fast on x axis.
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
 

@@ -104,7 +104,6 @@ export default {
     },
 
     onClick (e) {
-      // @todo: if (event.deleting) remove event.
       if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(this.event, e)
     },
 
