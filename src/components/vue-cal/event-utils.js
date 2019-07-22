@@ -77,13 +77,6 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
-  // After creating a new event, check if it overlaps any other in current cell OR split.
-  if (vuecal.time) {
-    // const cellEvents = vuecal.mutableEvents[event.startDateF]
-    // @todo check overlaps on event creation.
-    // checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents, formattedDate)
-  }
-
   return event
 }
 

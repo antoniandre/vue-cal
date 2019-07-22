@@ -126,5 +126,8 @@ export const countDays = (start, end) => {
   start = (new Date(start)).setHours(0, 0, 0)
   // set end at midnight plus 1 min, so Math.ceil will round it up to a full day.
   end = (new Date(end)).setHours(0, 0, 1)
-  return Math.ceil((end - start) / (24 * 3600 * 1000))
+
+  // Remove the potential daylight saving delta.
+  let timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
+  return Math.ceil((end - start - timezoneDiffMs) / (24 * 3600 * 1000))
 }

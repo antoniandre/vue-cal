@@ -160,7 +160,6 @@
       - add recurring events
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
-      - check resizing multiple day events starting before 1999-11-01 WTF?!
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
 
@@ -2640,6 +2639,7 @@
           #[span.code twelve-hour] and the corresponding css class to
           #[span.code .vuecal--twelve-hour].
         li Fix bug: allow date selection before the Epoch time!
+        li Fix bug: days count calculation when multiple-day event crosses a daylight saving change
         li.
           On month view, out of scope events returned by emitted events don't include
           events that are already in the events array of the current month.
@@ -3046,17 +3046,6 @@ export default {
       ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
     ],
     multipleDayEvents: [
-      // Buggy ones:
-      // -----------------------------
-      {
-        // Not showing when start not in scope and crossing 1999-10-31 23:59.
-        start: '1999-10-31 23:00',
-        end: '1999-11-01 23:00',
-        title: 'Running Marathon',
-        content: '<i class="v-icon material-icons">directions_run</i>',
-        class: 'sport'
-      },
-      // -----------------------------
       {
         start: '2018-11-17 23:59',
         end: '2018-11-20 17:47',
