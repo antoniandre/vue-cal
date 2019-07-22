@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate, addDays, formatTime } from './date-utils'
+import { formatDate, stringToDate, formatTime, countDays } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -63,7 +63,7 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
 
   // Check if event is a multiple day event and update days count.
   if (event.start.substr(0, 10) !== event.end.substr(0, 10)) {
-    event.daysCount = countEventDays(event)
+    event.daysCount = countDays(event.startDate, event.endDate)
   }
 
   // Add event to the mutableEvents array.
@@ -270,7 +270,7 @@ export const checkCellOverlappingEvents = cellEvents => {
     longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
   }
 
-  return  [cellOverlaps, longestStreak]
+  return [cellOverlaps, longestStreak]
 }
 
 export const getOverlapsStreak = (id, event, cellOverlaps = {}) => {

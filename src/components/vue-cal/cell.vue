@@ -248,7 +248,16 @@ export default {
         if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
         if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
-          events = events.filter(e => e.allDay || e.daysCount > 1 || (e.startTimeMinutes < this.options.timeTo && e.endTimeMinutes > this.options.timeFrom))
+          const { timeFrom, timeTo } = this.options
+
+          events = events.filter(e => {
+            let segment = (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
+            return (
+              e.allDay ||
+              (e.daysCount === 1 && e.startTimeMinutes < timeTo && e.endTimeMinutes > timeFrom) ||
+              (e.daysCount > 1 && (segment.startTimeMinutes < timeTo && segment.endTimeMinutes > timeFrom))
+            )
+          })
         }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.

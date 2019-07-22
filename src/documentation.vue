@@ -1159,7 +1159,6 @@
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
-      hide-weekends
       events-count-on-year-view
       editable-events
       :resize-x="true"
@@ -2594,7 +2593,7 @@
           em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
         li
           | Now support displaying more than 3 overlapping events!
-        l i
+        li
           | Events start &amp; end can now also be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
           em.grey--text.ml-1 (ref. #[span.code events] in the #[a(href="#api") API] section)
         li
@@ -3047,8 +3046,19 @@ export default {
       ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
     ],
     multipleDayEvents: [
+      // Buggy ones:
+      // -----------------------------
       {
-        start: '1999-10-31 22:00',
+        // Not showing when start not in scope and crossing 1999-10-31 23:59.
+        start: '1999-10-31 23:00',
+        end: '1999-11-01 23:00',
+        title: 'Running Marathon',
+        content: '<i class="v-icon material-icons">directions_run</i>',
+        class: 'sport'
+      },
+      // -----------------------------
+      {
+        start: '2018-11-17 23:59',
         end: '2018-11-20 17:47',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
