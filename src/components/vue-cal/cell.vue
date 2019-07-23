@@ -247,7 +247,7 @@ export default {
           events.push(...this.$parent.view.outOfScopeEvents)
         }
 
-        // Only keep events in cell.
+        // Only keep events in cell time range.
         events = events.filter(e => eventInRange(e, cellStart, cellEnd))
 
         if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)

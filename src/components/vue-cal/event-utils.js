@@ -306,8 +306,19 @@ export const updateEventPosition = (event, vuecal) => {
   event.height = bottom - event.top
 }
 
+/**
+ * Tells whether an event is in a given date range.
+ *
+ * @param {Object} event The event to test.
+ * @param {Date} start The start of range date object.
+ * @param {Date} end The end of range date object.
+ * @return {Boolean}
+ */
 export const eventInRange = (event, start, end) => {
   const startTimestamp = event.startDate.getTime()
   const endTimestamp = event.endDate.getTime()
+  if (event.allDay &&
+    (new Date(event.startDate).setHours(0, 0, 0) >= new Date(start).setHours(0, 0, 0)) &&
+    new Date(event.startDate).setHours(0, 0, 0) <= new Date(end).setHours(0, 0, 0)) return true
   return startTimestamp < end.getTime() && endTimestamp > start.getTime()
 }

@@ -154,7 +154,6 @@
       | Horizontal timeline
     //- TODO:
       General
-      - FIX ALL DAY EVENTS
       - do all the @todo
       - cleanup mutableEvents
       - check event returned from all emitted events / always return view events not mutable ones
@@ -2628,6 +2627,7 @@
       ul
         li #[span.code event-duration-change] is now only fired after resizing an event
         li Added a resizing class on events being resized
+        li A click on a cell (outside of events) removes the focus state of event
         li Cancel event deletion with escape key
         li Focus a multiple day event highlights all the segments
         li Calculate event segments within current view only (great performance gain on long events)
