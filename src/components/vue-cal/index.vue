@@ -503,8 +503,10 @@ export default {
         // Event Start, accepts formatted string - startDate accepts Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
-          !([startDateF, startTime = ''] = event.start.split(' '))
-          !([hoursStart, minutesStart] = startTime.split(':'))
+          // eslint-disable-next-line
+          [startDateF, startTime = ''] = event.start.split(' ')
+          // eslint-disable-next-line
+          [hoursStart, minutesStart] = startTime.split(':')
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
@@ -519,8 +521,10 @@ export default {
         // Event End, accepts formatted string - endDate accepts Date object.
         let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
         if (event.end) {
-          !([endDateF, endTime = ''] = event.end.split(' '))
-          !([hoursEnd, minutesEnd] = endTime.split(':'))
+          // eslint-disable-next-line
+          [endDateF, endTime = ''] = event.end.split(' ')
+          // eslint-disable-next-line
+          [hoursEnd, minutesEnd] = endTime.split(':')
           endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.endDate && event.endDate instanceof Date) {
@@ -585,9 +589,10 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'classes', 'split', 'segments', 'deletable',
-        'deleting', 'resizable', 'resizing', 'focused'
-      ].forEach(prop => { if (prop in event) delete event[prop] })
+        'height', 'top', 'classes', 'split', 'segments',
+        'deletable', 'deleting', 'resizable', 'resizing', 'focused'
+      ]
+      discardProps.forEach(prop => { if (prop in event) delete event[prop] })
 
       return event
     },
