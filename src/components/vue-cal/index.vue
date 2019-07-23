@@ -102,7 +102,7 @@
 </template>
 
 <script>
-import { setTexts, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
+import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -222,13 +222,10 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      if (this.locale === 'en') {
-        this.texts = require('./i18n/en.json')
-        setTexts(this.texts)
-      }
+      if (this.locale === 'en') this.texts = require('./i18n/en.json')
       else {
         import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
-          .then(response => ((this.texts = response.default) && setTexts(this.texts)))
+          .then(response => (this.texts = response.default))
       }
     },
 
@@ -328,7 +325,7 @@ export default {
             .filter(e => eventInRange(e, startDate, endDate))
             .map(e => {
               // If multiple-day events.
-              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, startDate, endDate)
+              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, startDate, endDate, this)
             })
         )
 
@@ -397,8 +394,8 @@ export default {
           if (newDaysCount !== event.daysCount) {
             // Check that all segments are up to date.
             let lastSegmentFormattedDate = null
-            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
-            else lastSegmentFormattedDate = removeEventSegment(event)
+            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event, this)
+            else lastSegmentFormattedDate = removeEventSegment(event, this)
             resizeAnEvent.segment = lastSegmentFormattedDate
             event.endTimeMinutes += 0.001 // Force updating the current event.
           }
@@ -515,7 +512,7 @@ export default {
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
-          startDateF = formatDate(event.startDate)
+          startDateF = this.formatDate(event.startDate)
           hoursStart = event.startDate.getHours()
           minutesStart = event.startDate.getMinutes()
           startDate = event.startDate
@@ -533,7 +530,7 @@ export default {
           endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.endDate && event.endDate instanceof Date) {
-          endDateF = formatDate(event.endDate)
+          endDateF = this.formatDate(event.endDate)
           hoursEnd = event.endDate.getHours()
           minutesEnd = event.endDate.getMinutes()
           endDate = event.endDate
@@ -620,7 +617,12 @@ export default {
       }
     },
 
-    countDays
+    countDays,
+
+    // Shorthand function.
+    formatDate (date, format = 'yyyy-mm-dd') {
+      return formatDate(date, format, this.texts)
+    }
   },
 
   created () {
@@ -772,18 +774,18 @@ export default {
           break
         case 'week':
           const lastDayOfWeek = date.addDays(6)
-          let formattedMonthYear = formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)
+          let formattedMonthYear = this.formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')
 
           // If week is not ending in the same month it started in.
           if (lastDayOfWeek.getMonth() !== date.getMonth()) {
             let [m1, y1] = formattedMonthYear.split(' ')
-            let [m2, y2] = formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts).split(' ')
+            let [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy').split(' ')
             formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
         case 'day':
-          title = formatDate(date, this.texts.dateFormat, this.texts)
+          title = this.formatDate(date, this.texts.dateFormat)
           break
       }
 
@@ -806,7 +808,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: fromYear + i,
               current: fromYear + i === now.getFullYear()
@@ -822,7 +824,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
               current: i === now.getMonth() && fromYear === now.getFullYear()
@@ -844,7 +846,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: startDate.getDate(),
               today: isToday,
@@ -874,7 +876,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate),
+              formattedDate: this.formatDate(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
               today: !todayFound && isDateToday(startDate) && !todayFound++
@@ -888,7 +890,7 @@ export default {
 
           cells = [{
             startDate,
-            formattedDate: formatDate(startDate),
+            formattedDate: this.formatDate(startDate),
             endDate,
             today: isDateToday(startDate)
           }]

@@ -1,6 +1,3 @@
-let texts = {}
-export const setTexts = t => { texts = t }
-
 // Cache Today's date (to a maximum) for better isDateToday() performances. Formatted without leading 0.
 // We still need to update Today's date when Today changes without page refresh.
 let now, todayDate, todayF
@@ -79,7 +76,9 @@ export const formatTime = (time, format = 'HH:mm') => {
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => timeObj[contents.replace(/\{|\}/g, '')])
 }
 
-export const formatDate = (date, format = 'yyyy-mm-dd') => {
+export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
+  if (!format) format = 'yyyy-mm-dd' // Allows passing null for default format.
+
   const d = date.getDate()
   const m = date.getMonth() + 1
   const dateObj = {
