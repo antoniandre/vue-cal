@@ -294,6 +294,12 @@ export const getOverlapsStreak = (id, event, cellOverlaps = {}) => {
 export const updateEventPosition = (event, vuecal) => {
   const { startTimeMinutes, endTimeMinutes } = event
 
+  // if (event.dragging) {
+  //   event.top = event.dragging.y
+  //   event.left = event.dragging.x
+  //   return
+  // }
+
   // Top of event.
   let minutesFromTop = startTimeMinutes - vuecal.timeFrom
   const top = Math.round(minutesFromTop * vuecal.timeCellHeight / vuecal.timeStep)

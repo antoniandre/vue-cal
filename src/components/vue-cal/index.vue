@@ -65,6 +65,7 @@
                 :week-days-short="weekDaysShort"
                 :switch-to-narrower-view="switchToNarrowerView")
 
+              .dragging-helper(v-if="domEvents.dragAnEvent._eid" :style="{ transform: `translate3d(${domEvents.dragAnEvent.cursorCoords.x}px, ${domEvents.dragAnEvent.cursorCoords.y}px, 0)` }")
               .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
@@ -191,7 +192,8 @@ export default {
           endCell: null
         },
         dragAnEvent: {
-          _eid: null // Only one at a time.
+          _eid: null, // Only one at a time.
+          cursorCoords: {}
         },
         focusAnEvent: {
           _eid: null // Only one at a time.
@@ -357,54 +359,72 @@ export default {
     // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
     // handlers in the single parent for performance.
     onMouseMove (e) {
-      let { resizeAnEvent } = this.domEvents
-      if (resizeAnEvent._eid === null) return
+      let { resizeAnEvent, dragAnEvent } = this.domEvents
+      if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
       e.preventDefault()
-      let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-      let segment = event.segments && event.segments[resizeAnEvent.segment]
-      const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
-      // Don't allow time above 24 hours.
-      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 24 * 60)
+      if (resizeAnEvent._eid) {
+        let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+        let segment = event.segments && event.segments[resizeAnEvent.segment]
+        const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
-      if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      event.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-      event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
-      event.daysCount = countDays(event.startDate, event.endDate)
+        // Don't allow time above 24 hours.
+        resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 24 * 60)
 
-      // Resize events horizontally if resize-x is enabled (add/remove segments).
-      if (this.resizeX && this.view.id === 'week') {
-        let cells = this.$refs.cells
-        let cellWidth = cells.offsetWidth / cells.childElementCount
-        let endCell = Math.floor(cursorCoords.x / cellWidth)
+        if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes
+        event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+        event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+        event.daysCount = countDays(event.startDate, event.endDate)
 
-        if (!resizeAnEvent.startCell) {
-          resizeAnEvent.startCell = endCell - (event.daysCount - 1)
-        }
-        if (resizeAnEvent.endCell !== endCell) {
-          resizeAnEvent.endCell = endCell
+        // Resize events horizontally if resize-x is enabled (add/remove segments).
+        if (this.resizeX && this.view.id === 'week') {
+          let cells = this.$refs.cells
+          let cellWidth = cells.offsetWidth / cells.childElementCount
+          let endCell = Math.floor(cursorCoords.x / cellWidth)
 
-          let endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
-          let newDaysCount = countDays(event.startDate, endDate)
+          if (!resizeAnEvent.startCell) {
+            resizeAnEvent.startCell = endCell - (event.daysCount - 1)
+          }
+          if (resizeAnEvent.endCell !== endCell) {
+            resizeAnEvent.endCell = endCell
 
-          if (newDaysCount !== event.daysCount) {
-            // Check that all segments are up to date.
-            let lastSegmentFormattedDate = null
-            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
-            else lastSegmentFormattedDate = removeEventSegment(event)
-            resizeAnEvent.segment = lastSegmentFormattedDate
-            event.endTimeMinutes += 0.001 // Force updating the current event.
+            let endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
+            let newDaysCount = countDays(event.startDate, endDate)
+
+            if (newDaysCount !== event.daysCount) {
+              // Check that all segments are up to date.
+              let lastSegmentFormattedDate = null
+              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
+              else lastSegmentFormattedDate = removeEventSegment(event)
+              resizeAnEvent.segment = lastSegmentFormattedDate
+              event.endTimeMinutes += 0.001 // Force updating the current event.
+            }
           }
         }
+      }
+      else if (dragAnEvent._eid) {
+        const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
+
+        let event = this.view.events.find(e => e._eid === dragAnEvent._eid) || { segments: {} }
+        this.$set(event, 'dragging', cursorCoords)
+        dragAnEvent.cursorCoords = { ...cursorCoords }
+        // console.log(cursorCoords, event.top)
+        // event.endTimeMinutes = startTimeMinutes
+        // event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+        // event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+
+        // resizeAnEvent.startTimeMinutes = Math.min(cursorCoords.y, 24 * 60)
       }
     },
 
     // Mouseup can never cancel a click with preventDefault or stopPropagation,
     // But it always happens before the click event.
     onMouseUp (e) {
-      let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      let { resizeAnEvent, clickHoldAnEvent, clickHoldACell, dragAnEvent } = this.domEvents
+
+      dragAnEvent._eid = null
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {

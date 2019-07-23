@@ -16,6 +16,15 @@ $weekdays-headings-height-with-splits: 3.4em;
   .clickable {cursor: pointer;}
 
   &--dragging-event {cursor: ns-resize;}
+  .dragging-helper {
+    position: absolute;
+    width: 60px;
+    height: 40px;
+    background: rgba(138, 190, 230, 0.8);
+    border: 1px solid #61a9e0;
+    z-index: 10;
+    // transition: 0.2s transform;
+  }
 
   &--xsmall {font-size: 0.9em;}
 
