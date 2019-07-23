@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import { deleteAnEvent, deleteOverlaps, checkCellOverlappingEvents } from './event-utils'
+import { deleteAnEvent } from './event-utils'
 
 export default {
   props: {
@@ -180,7 +180,6 @@ export default {
       return {
         [this.event.classes.join(' ')]: true,
         'vuecal__event--focus': this.event.focused,
-        'vuecal__event--resizing': this.event.resizing,
         'vuecal__event--resizing': this.event.resizing,
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,

@@ -154,6 +154,7 @@
       | Horizontal timeline
     //- TODO:
       General
+      - FIX ALL DAY EVENTS
       - do all the @todo
       - cleanup mutableEvents
       - check event returned from all emitted events / always return view events not mutable ones
@@ -1159,9 +1160,10 @@
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-to="23 * 60"
+      hide-weekends
       events-count-on-year-view
       editable-events
-      :resize-x="true"
+      resize-x
       :events="multipleDayEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -1170,7 +1172,7 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends
              editable-events
-             :resize-x="true"
+             resize-x
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -1178,15 +1180,15 @@
     data: () => ({
       events: [
         {
-          start: '2018-11-19 08:30',
-          end: '2018-11-20 20:00',
+          start: '2018-11-16 10:00',
+          end: '2018-11-20 12:37',
           title: 'Running Marathon',
           content: '&lt;i class="v-icon material-icons"&gt;directions_run&lt;/i&gt;',
           class: 'sport'
         },
         {
-          start: '2018-11-20 13:00',
-          end: '2018-11-20 14:30',
+          start: '2018-11-20 10:00',
+          end: '2018-11-20 10:25',
           title: 'Drink water!',
           content: '&lt;i class="v-icon material-icons"&gt;local_drink&lt;/i&gt;',
           class: 'health'
@@ -3048,8 +3050,8 @@ export default {
     ],
     multipleDayEvents: [
       {
-        start: '2018-11-17 23:59',
-        end: '2018-11-20 17:47',
+        start: '2018-11-16 10:00',
+        end: '2018-11-20 12:37',
         title: 'Running Marathon',
         content: '<i class="v-icon material-icons">directions_run</i>',
         class: 'sport'

@@ -587,8 +587,7 @@ export default {
       const discardProps = [
         'height', 'top', 'classes', 'split', 'segments', 'deletable',
         'deleting', 'resizable', 'resizing', 'focused'
-      ]
-      for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
+      ].forEach(prop => { if (prop in event) delete event[prop] })
 
       return event
     },

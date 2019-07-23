@@ -135,8 +135,8 @@ export default {
       this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (this.options.editableEvents && this.options.cellClickHold
-        && ['month', 'week', 'day'].includes(this.view)) {
+      if (this.options.editableEvents && this.options.cellClickHold &&
+        ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
