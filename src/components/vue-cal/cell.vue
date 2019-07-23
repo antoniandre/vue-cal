@@ -125,7 +125,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      let { clickHoldACell } = this.domEvents
+      let { clickHoldACell, focusAnEvent } = this.domEvents
       // Reinit the click trigger on each mousedown.
       // In some cases we explicitly set this flag to prevent the click event to trigger,
       // and cancel event creation.
@@ -133,6 +133,11 @@ export default {
 
       this.timeAtCursor = new Date(this.data.startDate)
       this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+
+      // Unfocus an event if any is focused and clicking on cell outside of an event.
+      if (!this.isDOMElementAnEvent(DOMEvent.target) && focusAnEvent._eid) {
+        (this.$parent.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
+      }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
       if (this.options.editableEvents && this.options.cellClickHold &&
