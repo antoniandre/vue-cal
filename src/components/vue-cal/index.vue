@@ -154,7 +154,7 @@ export default {
   },
   data: function () {
     return {
-      texts: this.locale === 'en' ? require('./i18n/en.json') : {
+      texts: {
         weekDays: Array(7).fill(''),
         months: Array(12).fill(''),
         years: '',
@@ -222,9 +222,14 @@ export default {
 
   methods: {
     loadLocale (locale) {
-      import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
-        .then(response => (this.texts = response.default))
-      setTexts(this.texts)
+      if (this.locale === 'en') {
+        this.texts = require('./i18n/en.json')
+        setTexts(this.texts)
+      }
+      else {
+        import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
+          .then(response => ((this.texts = response.default) && setTexts(this.texts)))
+      }
     },
 
     switchToNarrowerView () {
@@ -504,9 +509,9 @@ export default {
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           // eslint-disable-next-line
-          [startDateF, startTime = ''] = event.start.split(' ')
+          !([startDateF, startTime = ''] = event.start.split(' '))
           // eslint-disable-next-line
-          [hoursStart, minutesStart] = startTime.split(':')
+          !([hoursStart, minutesStart] = startTime.split(':'))
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
@@ -522,9 +527,9 @@ export default {
         let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
         if (event.end) {
           // eslint-disable-next-line
-          [endDateF, endTime = ''] = event.end.split(' ')
+          !([endDateF, endTime = ''] = event.end.split(' '))
           // eslint-disable-next-line
-          [hoursEnd, minutesEnd] = endTime.split(':')
+          !([hoursEnd, minutesEnd] = endTime.split(':'))
           endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.endDate && event.endDate instanceof Date) {
@@ -619,8 +624,7 @@ export default {
   },
 
   created () {
-    if (this.locale !== 'en') this.loadLocale(this.locale)
-    else setTexts(this.texts)
+    this.loadLocale(this.locale)
 
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
