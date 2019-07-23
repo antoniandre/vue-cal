@@ -169,13 +169,14 @@
     v-icon.pr-4.lightgrey--text(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
 
-  v-layout.mb-5(justify-center style="max-width: 690px;margin: auto")
+  v-layout.mb-5(justify-center style="max-width: 700px;margin: auto")
     v-icon.flame(size="100").mr-3 whatshot
     highlight-message(type="tips" no-icon)
-      .headline.mt-2.mb-3 #[span.code vue-cal@2.0] is out!
+      .headline.mt-2.mb-3 #[span.code.mr-1 vue-cal@2.0] is out!
       .body-2.
-        Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
-      .mt-4.layout.flex.align-center
+        Big changes. Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
+      | The example menu will also help you spot the new stuff.
+      .mt-4.layout.flex.align-center.body-2
         v-icon.mr-2(size="20") favorite_border
         span.mr-4 Thank you to all the supporters!
         v-spacer
@@ -183,7 +184,8 @@
         a(href="https://www.paypal.me/antoniandre1" target="_blank") #[strong Support the project]
 
   highlight-message(type="info")
-    strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!#[br]
+    p.mb-2
+      strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!
     strong Philosophy:&nbsp;
     | Vue Cal tries to separate logic &amp; styles.#[br]
     | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
@@ -1207,7 +1209,8 @@
     a(href="#ex--overlapping-events") # Overlapping events
     a#ex--overlapping-events(name="ex--overlapping-events")
   p.
-    Overlapping, editable  &amp; deletable events.#[br]
+    Overlapping, editable &amp; deletable events.#[br]
+    Overlapping now supports more than 3 simultaneous events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
   v-card.my-2.ma-auto.main-content
@@ -1498,118 +1501,9 @@
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
   h3.title
-    a(href="#ex--sync-two-calendars")
+    a(href="#ex--emitted-events")
       v-icon.mr-2(medium) swap_horiz
       | Communicating with Vue Cal
-
-  //- Example.
-  h4.title
-    a(href="#ex--sync-two-calendars") # Sync two vue-cal instances
-    a#ex--sync-two-calendars(name="ex--sync-two-calendars")
-  p.
-    In this example the right calendar is used as a date picker and the selected date is
-    updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
-    To know more about emitted events refer to the
-    #[a(href="#ex--emitted-events") emitted events example].
-
-  v-layout(align-center justify-center)
-    vue-cal.vuecal--blue-theme(
-      small
-      :time="false"
-      hide-view-selector
-      default-view="week"
-      :disable-views="['years', 'year', 'month']"
-      :selected-date="selectedDate"
-      style="max-width: 360px;height: 260px")
-    vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
-      xsmall
-      :time="false"
-      hide-view-selector
-      default-view="month"
-      :disable-views="['years', 'year', 'week', 'day']"
-      @cell-focus="selectedDate = $event"
-      style="max-width: 270px;height: 290px;transform: scale(0.9)")
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal small
-      :time="false"
-      hide-view-selector
-      default-view="week"
-      :disable-views="['years', 'year', 'month']"
-      :selected-date="selectedDate"
-      class="vuecal--blue-theme"
-      style="max-width: 360px;height: 260px"&gt;
-    &lt;/vue-cal&gt;
-    &lt;vue-cal xsmall
-      :time="false"
-      hide-view-selector
-      default-view="month"
-      :disable-views="['years', 'year', 'week', 'day']"
-      @cell-focus="selectedDate = $event"
-      class="vuecal--blue-theme vuecal--rounded-theme"
-      style="max-width: 270px;height: 290px"&gt;
-    &lt;/vue-cal&gt;
-
-  sshpre(language="js" label="Javascript").
-    data: () => ({
-      selectedDate: null
-    })
-
-  //- Example.
-  h4.title
-    a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
-    a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
-  highlight-message(type="tips").
-    It is possible to modify the array of events like adding or removing an event
-    after the first load, but be aware that by doing so all the events in Vue Cal
-    will be replaced by the new array of events. You may lose your changes if you
-    modified events within Vue Cal.
-  v-btn(color="primary" small @click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
-    v-icon.mr-2 add
-    | Add an event
-  v-btn(color="primary" small @click="eventsCopy.pop()")
-    v-icon.mr-2 remove
-    | Remove last event
-  p.mb-0 Here is the live array of event titles:
-  pre {{ eventsCopy.map(e => e.title) }}
-
-  v-card.my-2.ma-auto.main-content
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
-      :time-from="7 * 60"
-      :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
-      hide-weekends
-      :events="eventsCopy")
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;button @click="events.push({
-           start: '2018-11-20 12:00',
-           end: '2018-11-20 17:00',
-           title: 'A new event',
-           class: 'blue-event'
-    })"&gt;Add an event&lt;/button&gt;
-    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
-
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="7 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             :events="events"&gt;
-    &lt;/vue-cal&gt;
-
-  sshpre(language="js" label="Javascript").
-    data: () => ({
-      events: [
-        {
-          start: '2018-11-19 10:35',
-          end: '2018-11-19 11:30',
-          title: 'Doctor appointment',
-          content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
-          class: 'health'
-        },
-        ...
-      ]
-    })
 
   //- Example.
   h4.title
@@ -1738,6 +1632,115 @@
              @event-create="logEvents('event-create', $event)"
              @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
+
+  //- Example.
+  h4.title
+    a(href="#ex--sync-two-calendars") # Sync two vue-cal instances
+    a#ex--sync-two-calendars(name="ex--sync-two-calendars")
+  p.
+    In this example the right calendar is used as a date picker and the selected date is
+    updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
+    To know more about emitted events refer to the
+    #[a(href="#ex--emitted-events") emitted events example].
+
+  v-layout(align-center justify-center)
+    vue-cal.vuecal--blue-theme(
+      small
+      :time="false"
+      hide-view-selector
+      default-view="week"
+      :disable-views="['years', 'year', 'month']"
+      :selected-date="selectedDate"
+      style="max-width: 360px;height: 260px")
+    vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
+      xsmall
+      :time="false"
+      hide-view-selector
+      default-view="month"
+      :disable-views="['years', 'year', 'week', 'day']"
+      @cell-focus="selectedDate = $event"
+      style="max-width: 270px;height: 290px;transform: scale(0.9)")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal small
+      :time="false"
+      hide-view-selector
+      default-view="week"
+      :disable-views="['years', 'year', 'month']"
+      :selected-date="selectedDate"
+      class="vuecal--blue-theme"
+      style="max-width: 360px;height: 260px"&gt;
+    &lt;/vue-cal&gt;
+    &lt;vue-cal xsmall
+      :time="false"
+      hide-view-selector
+      default-view="month"
+      :disable-views="['years', 'year', 'week', 'day']"
+      @cell-focus="selectedDate = $event"
+      class="vuecal--blue-theme vuecal--rounded-theme"
+      style="max-width: 270px;height: 290px"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      selectedDate: null
+    })
+
+  //- Example.
+  h4.title
+    a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
+    a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
+  highlight-message(type="tips").
+    It is possible to modify the array of events like adding or removing an event
+    after the first load, but be aware that by doing so all the events in Vue Cal
+    will be replaced by the new array of events. You may lose your changes if you
+    modified events within Vue Cal.
+  v-btn(color="primary" small @click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
+    v-icon.mr-2 add
+    | Add an event
+  v-btn(color="primary" small @click="eventsCopy.pop()")
+    v-icon.mr-2 remove
+    | Remove last event
+  p.mb-0 Here is the live array of event titles:
+  pre {{ eventsCopy.map(e => e.title) }}
+
+  v-card.my-2.ma-auto.main-content
+    vue-cal.vuecal--green-theme(
+      selected-date="2018-11-19"
+      :time-from="7 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      :events="eventsCopy")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;button @click="events.push({
+           start: '2018-11-20 12:00',
+           end: '2018-11-20 17:00',
+           title: 'A new event',
+           class: 'blue-event'
+    })"&gt;Add an event&lt;/button&gt;
+    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
+
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="7 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year', 'month']"
+             hide-weekends
+             :events="events"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-19 10:35',
+          end: '2018-11-19 11:30',
+          title: 'Doctor appointment',
+          content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
+          class: 'health'
+        },
+        ...
+      ]
+    })
 
   h3.title
     a(href="#ex--timeline-tweaking")

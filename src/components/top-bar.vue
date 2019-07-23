@@ -31,13 +31,16 @@
           v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-tile(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
           v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
-          v-list-tile(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'") Hiding particular week days
+          v-list-tile(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'")
+            | Hiding particular week days
+            v-chip.xsmall.ml-2(small color="primary" outline disabled) new
 
           v-list-tile.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
             v-icon(small).mr-2 translate
             | INTERNATIONALIZATION (I18N)
-          v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
-
+          v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
+            | Internationalization
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
           v-list-tile.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
             v-icon(small).mr-2 access_time
             | TIMELINE &amp; TODAY
@@ -53,20 +56,32 @@
           v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
           v-list-tile(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
           v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-          v-list-tile(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
-          v-list-tile(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
-          v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
-          v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
+          v-list-tile(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'")
+            | Edit, delete &amp; create events
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
+          v-list-tile(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'")
+            | More advanced event creation
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
+          v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'")
+            | Multiple day events
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
+          v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'")
+            | Overlapping events
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
           v-list-tile(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
-          v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
           v-list-tile(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
+          v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'")
+            | Splitting days
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
 
-          v-list-tile.heading(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'")
+          v-list-tile.heading(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             v-icon(small).mr-2 swap_horiz
             | COMMUNICATING WITH VUE CAL
+          v-list-tile(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
+            | Vue Cal emitted events
+            v-chip.xsmall.ml-2(small color="blue" outline disabled) updated
           v-list-tile(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-tile(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
-          v-list-tile(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
 
           v-list-tile.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
             v-icon(small).mr-2 tune
@@ -238,6 +253,9 @@ $lighter-text: #ccc;
   .v-menu__content {
     max-height: 90vh;
   }
+
+  .v-chip.xsmall {height: 18px!important;font-size: 0.85em;}
+  .v-chip.xsmall .v-chip__content {padding: 0 7px;}
 
   .intro {
     position: absolute;
