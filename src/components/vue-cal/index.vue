@@ -535,6 +535,13 @@ export default {
           minutesEnd = event.endDate.getMinutes()
           endDate = event.endDate
         }
+
+        // Correct the common practice to end at 00:00 or 24:00 to count a full day.
+        if (['00:00', '24:00'].includes(endTime)) {
+          endDate.setSeconds(-1) // End at 23:59:59.
+          endDateF = this.formatDate(endDate)
+        }
+
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
         end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
 

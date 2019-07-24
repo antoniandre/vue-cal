@@ -633,6 +633,10 @@
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
     The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
 
+  highlight-message.mt-3(type="tips").
+    Important Note: If you want to end an event at #[span.code 00:00], you have to set
+    #[span.code 24:00] instead, to keep it to the same day you intended.
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -2156,7 +2160,9 @@
       span.code [String], default: 'en'
       p.
         Allows you to translate the calendar texts in a given language.#[br]
-        Use a 2 letter locale code (ISO 639-1) unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
+        Use a 2 letter locale code
+        (#[a(href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank") ISO 639-1])
+        unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
         | Currently available languages are {{ localesList.map(l => l.label).join(', ') }}.#[br]
         | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
@@ -2523,6 +2529,9 @@
             #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
             of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
             When returned from emitted events, this event #[span.code endDate] will contain a date ending at #[span.code 23:59:59].
+          li.mt-2.
+            If you want to end an event at #[span.code 00:00], you have to set
+            #[span.code 24:00] instead, to keep it to the same day you intended.
 
   h2.headline.mt-5.pt-5
     a(href="#css-notes") CSS Notes
