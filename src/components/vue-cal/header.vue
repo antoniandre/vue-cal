@@ -156,6 +156,7 @@ export default {
       font-size: 1.3em;
       border-bottom: 0 solid currentColor;
       cursor: pointer;
+      color: inherit;
       box-sizing: border-box;
       transition: 0.2s;
     }

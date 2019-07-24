@@ -172,7 +172,7 @@
   v-layout.mb-5(justify-center style="max-width: 700px;margin: auto")
     v-icon.flame(size="100").mr-3 whatshot
     highlight-message(type="tips" no-icon)
-      .headline.mt-2.mb-3 #[span.code.mr-1 vue-cal@2.0] is out!
+      .headline.mt-2.mb-3 #[span.code.mr-1 vue-cal@2.0] is out! &nbsp; 🎉🎉
       .body-2.
         Big changes. Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
       | The example menu will also help you spot the new stuff.
