@@ -2427,6 +2427,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 1.63.0] Add Japanese language
   div #[strong Version 1.62.0] Add Arabic &amp; Farsi languages
   div #[strong Version 1.61.0] Add Traditional Chinese language
   div #[strong Version 1.60.0] Add Danish language
@@ -2713,6 +2714,7 @@ export default {
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
+      { code: 'ja', label: 'Japanese' },
       { code: 'no', label: 'Norwegian' },
       { code: 'pl', label: 'Polish' },
       { code: 'pt-br', label: 'Portuguese Brasilian' },
