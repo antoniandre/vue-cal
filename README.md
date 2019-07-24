@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.0.0__ Many new features - check the Release Notes in the documentation
 - __Version 1.63.0__ Add Japanese language
 - __Version 1.62.0__ Add Arabic &amp; Farsi languages
 - __Version 1.61.0__ Add Traditional Chinese language
