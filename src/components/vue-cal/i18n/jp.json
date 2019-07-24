@@ -11,6 +11,6 @@
     "allDay": "終日",
     "deleteEvent": "削除",
     "createEvent": "イベント作成",
-    "dateFormat": "yyyy mmmm d DDDD"
+    "dateFormat": "yyyy年 mmmm d日 (DDDD)"
   }
   
