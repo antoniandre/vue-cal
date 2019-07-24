@@ -1,8 +1,8 @@
 <template lang="pug">
   v-app.white(:class="{ ready: ready }" v-scroll="onScroll")
     v-container
-      top-bar(:offset-top="offsetTop")
-      documentation
+      component(:is="$route.path.indexOf('/v1') > -1 ? 'top-bar-v1' : 'top-bar-v2'" :offset-top="offsetTop")
+      router-view
 
     v-footer.mt-5.pa-2.pb-4(color="white")
       v-layout.max-widthed(row wrap align-center justify-center)
@@ -14,12 +14,14 @@
 </template>
 
 <script>
-import Documentation from '@/documentation'
-import TopBar from '@/components/top-bar'
+// Including the top bar from the documentation view and passing the
+// offsetTop var slows down too much the top bar animation on scroll.
+import TopBarV1 from '@/components/top-bar-v1'
+import TopBarV2 from '@/components/top-bar-v2'
 
 export default {
   name: 'app',
-  components: { Documentation, TopBar },
+  components: { TopBarV1, TopBarV2 },
   data: () => ({
     ready: false,
     offsetTop: 0,

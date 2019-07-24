@@ -9,6 +9,9 @@
           div.top-bar__logo-title Vue Cal&nbsp;
         span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
     v-toolbar-items.top-bar__items
+      v-btn(to="/v1" flat small color="grey" slot="activator")
+        v-icon.mr-2(size="20") restore
+        span V1 Docs
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
         v-btn(flat color="secondary" slot="activator")
           v-icon.mr-2 school
