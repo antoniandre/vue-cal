@@ -2604,7 +2604,7 @@
 </template>
 
 <script>
-// This is older version 1.62.1.
+// This is older version 1.63.0.
 import VueCal from 'vue-cal'
 import 'vue-cal/dist/vuecal.css'
 
