@@ -216,6 +216,7 @@ export default {
   color: #666;
   background-color: #f8f8f8;
   position: relative;
+  box-sizing: border-box;
   left: 0;
   width: 100%;
   z-index: 1;
