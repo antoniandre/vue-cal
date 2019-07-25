@@ -3291,7 +3291,7 @@ export default {
   }),
   methods: {
     logEvents (emittedEventName, params) {
-      if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].indexOf(emittedEventName) !== -1) {
+      if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].includes(emittedEventName)) {
         return
       }
       this.logs.unshift({ name: emittedEventName, args: JSON.stringify(params) })

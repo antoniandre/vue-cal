@@ -281,15 +281,41 @@ export default {
           // Used in viewCells computed array & returned in emitted events.
           this.view.firstCellDate = startDate
           this.view.lastCellDate = startDate.addDays(41)
+          this.view.lastCellDate.setHours(23, 59, 59)
+
+          if (this.hideWeekends) {
+            // Remove first weekend from firstCellDate if hide-weekends.
+            if ([0, 6].includes(this.view.firstCellDate.getDay())) {
+              const daysToAdd = this.view.firstCellDate.getDay() === 6 && !this.startWeekOnSunday ? 2 : 1
+              this.view.firstCellDate = this.view.firstCellDate.addDays(daysToAdd)
+            }
+            // Remove first weekend from startDate if hide-weekends.
+            if ([0, 6].includes(this.view.startDate.getDay())) {
+              const daysToAdd = this.view.startDate.getDay() === 6 ? 2 : 1
+              this.view.startDate = this.view.startDate.addDays(daysToAdd)
+            }
+            // Remove last weekend from lastCellDate if hide-weekends.
+            if ([0, 6].includes(this.view.lastCellDate.getDay())) {
+              const daysToSubtract = this.view.lastCellDate.getDay() === 0 && !this.startWeekOnSunday ? 2 : 1
+              this.view.lastCellDate = this.view.lastCellDate.subtractDays(daysToSubtract)
+            }
+            // Remove last weekend from endDate if hide-weekends.
+            if ([0, 6].includes(this.view.endDate.getDay())) {
+              const daysToSubtract = this.view.endDate.getDay() === 0 ? 2 : 1
+              this.view.endDate = this.view.endDate.subtractDays(daysToSubtract)
+            }
+          }
           break
         case 'week':
           const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
+          this.view.startDate.setHours(0, 0, 0)
           this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
         case 'day':
           this.view.startDate = date
+          this.view.startDate.setHours(0, 0, 0)
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
           break
