@@ -253,7 +253,8 @@
         | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
         | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
         | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells].
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
+        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
 
   h3.title
     a(href="#ex--basic")
