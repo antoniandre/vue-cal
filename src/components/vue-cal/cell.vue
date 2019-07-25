@@ -102,9 +102,17 @@ export default {
     },
 
     selectCell (DOMEvent, force = false) {
-      if (!this.selected) this.onCellFocus()
+      if (!this.selected) this.onCellFocus(DOMEvent)
 
-      selectCell(force, this.timeAtCursor, this.$parent)
+      // If splitting days, also return the clicked split on cell click when emitting event.
+      let split
+      if (this.$parent.splitDays.length) {
+        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+        if (split) split = split.attributes['data-split'].value
+      }
+
+      selectCell(force, this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
     },
 
@@ -113,11 +121,22 @@ export default {
      * the date of the cell start when focusing from tab or the date & time at cursor
      * if click/touch.
      */
-    onCellFocus () {
+    onCellFocus (DOMEvent) {
       if (!this.selected) {
         this.selected = this.data.startDate
-        // Cell-focus event returns the cell start date (at midnight).
-        this.$parent.$emit('cell-focus', this.timeAtCursor || this.data.startDate)
+
+        // If splitting days, also return the clicked split on cell click when emitting event.
+        let split
+        if (this.$parent.splitDays.length) {
+          split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+            this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+          if (split) split = split.attributes['data-split'].value
+        }
+
+        // Cell-focus event returns the cell start date (at midnight) if triggered from tab key,
+        // or cursor coords time if clicked.
+        const date = this.timeAtCursor || this.data.startDate
+        this.$parent.$emit('cell-focus', split ? { date, split } : date)
       }
     },
 

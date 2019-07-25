@@ -1531,8 +1531,12 @@
         #[span.code cell-click] is fired every time you click a day, whereas
         #[span.code cell-focus] is fired only when the selected day changes.
       li.
-        #[span.code cell-click] contains the time at cursor position, whereas
-        #[span.code cell-focus] returns the cell start date (at midnight).
+        #[span.code cell-click], #[span.code cell-dblclick] and #[span.code cell-focus]
+        return the time at cursor position, unless the cell was focused from tab key.
+        It would then return the cell start date (at midnight).
+      li.
+        If split-days is provided, #[span.code cell-click], #[span.code cell-dblclick] and #[span.code cell-focus]
+        emitted events will return an object containing the date and the clicked split id.
 
   highlight-message
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
@@ -2584,6 +2588,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click] #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
   div #[strong Version 2.0.0]
     highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
     highlight-message(type="success")

@@ -59,7 +59,7 @@ export default {
     selectCell (date, DOMEvent) {
       date = new Date(date)
       date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).startTimeMinutes)
-      selectCell(null, date, this.vuecal, DOMEvent)
+      selectCell(false, this.vuecal, date, DOMEvent)
     }
   },
   computed: {
