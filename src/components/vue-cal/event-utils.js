@@ -58,7 +58,10 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   }
 
   if (typeof vuecal.onEventCreate === 'function') {
-    vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
+    let canAddEvent = vuecal.onEventCreate(event, function () {
+      return deleteAnEvent(event, vuecal)
+    })
+    if (canAddEvent === false) return
   }
 
   // Check if event is a multiple day event and update days count.
