@@ -179,7 +179,16 @@ export default {
     onCellDblClick (DOMEvent) {
       const date = new Date(this.data.startDate)
       date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
-      this.$parent.$emit('cell-dblclick', date)
+
+      // If splitting days, also return the clicked split on cell click when emitting event.
+      let split
+      if (this.$parent.splitDays.length) {
+        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+        if (split) split = split.attributes['data-split'].value
+      }
+
+      this.$parent.$emit('cell-dblclick', split ? { date, split } : date)
 
       if (this.options.dblclickToNavigate) this.$parent.switchToNarrowerView()
     }
