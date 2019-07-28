@@ -318,9 +318,9 @@ export const eventInRange = (event, start, end) => {
   // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
   if (event.allDay || event.start.indexOf(':') === -1) {
     // Get the date and discard the time if any, then check it's within the date range.
-    const eventStart = new Date(event.startDate).setHours(0, 0, 0)
-    return (eventStart >= new Date(start).setHours(0, 0, 0) &&
-      eventStart <= new Date(end).setHours(0, 0, 0))
+    const eventStart = new Date(event.startDate).setHours(0, 0, 0, 0)
+    return (eventStart >= new Date(start).setHours(0, 0, 0, 0) &&
+      eventStart <= new Date(end).setHours(0, 0, 0, 0))
   }
 
   const startTimestamp = event.startDate.getTime()
