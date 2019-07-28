@@ -58,7 +58,7 @@ export default {
       default: () => []
     },
     weekDaysShort: {
-      type: [Array, null],
+      type: Array,
       default: () => []
     },
     switchToNarrowerView: {

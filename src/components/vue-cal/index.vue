@@ -156,6 +156,7 @@ export default {
     return {
       texts: {
         weekDays: Array(7).fill(''),
+        weekDaysShort: [],
         months: Array(12).fill(''),
         years: '',
         year: '',
@@ -768,9 +769,9 @@ export default {
       return weekDays
     },
     weekDaysShort () {
-      let { weekDaysShort = null } = this.texts
+      let { weekDaysShort = [] } = this.texts
 
-      if (weekDaysShort) {
+      if (weekDaysShort.length) {
         // Do not modify original for next instances.
         weekDaysShort = weekDaysShort.slice(0)
 
@@ -781,7 +782,7 @@ export default {
         }
       }
 
-      return weekDaysShort && weekDaysShort.map(day => ({ label: day }))
+      return (weekDaysShort.length && weekDaysShort.map(day => ({ label: day }))) || []
     },
     weekDaysInHeader () {
       return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
