@@ -57,11 +57,11 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
     ...eventOptions
   }
 
+  // If the onEventCreate() function is given as a parameter to vue-cal:
+  // 1. give it access to the created event & the deleteAnEvent() function.
+  // 2. Prevent creation of the event if this function returns false.
   if (typeof vuecal.onEventCreate === 'function') {
-    let canAddEvent = vuecal.onEventCreate(event, function () {
-      return deleteAnEvent(event, vuecal)
-    })
-    if (canAddEvent === false) return
+    if (!vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))) return
   }
 
   // Check if event is a multiple day event and update days count.

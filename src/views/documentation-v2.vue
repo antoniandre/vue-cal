@@ -1068,6 +1068,7 @@
         */
         onEventCreate (event, deleteEventFunction) {
             // You can modify event here and return it.
+            // You can also return false to reject the event creation.
             return event
           }
 
@@ -2473,8 +2474,10 @@
       span.code [Function], default: null
       p.
         A callback function to execute when an event is created.#[br]
-        this function receives 2 parameters: #[span.code event], the created event,
-        and #[span.code deleteEvent], a function to delete the created event.
+        This function receives 2 parameters: #[span.code event], the created event,
+        and #[span.code deleteEvent], a function to delete the created event.#[br]
+        You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
+        If this function returns #[span.code false], the event creation will be cancelled.
     li
       code.mr-2 events
       span.code [Array], default: []
