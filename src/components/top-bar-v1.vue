@@ -1,82 +1,84 @@
 <template lang="pug">
-  v-toolbar.top-bar(app light dense flat fixed align-center :class="{ scrolled: offsetTop > 104 }")
+  v-app-bar.top-bar.elevation-0(app light dense text fixed align-center :class="{ scrolled: offsetTop > 104 }")
     v-toolbar-title.top-bar__title
       span.top-bar__title-line
       span.top-bar__title-line
-      h1.primary--text.px-3
+      h1.layout.primary--text.px-6
         a.layout.align-center.top-bar__logo-link(href="#top" v-scroll-to="'#top'")
           .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
           div.top-bar__logo-title Vue Cal&nbsp;
         span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
     v-toolbar-items.top-bar__items
-      v-btn(to="/" flat color="primary" slot="activator")
+      v-btn(to="/" text color="primary")
         v-icon.mr-2 update
         span V2 Documentation
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
-        v-btn(flat color="secondary" slot="activator")
-          v-icon.mr-2 school
-          span Doc
-        v-list.no-wrap
-          v-list-tile(href="#installation" v-scroll-to="'#installation'") Installation
-          v-list-tile(href="#how-to-use" v-scroll-to="'#how-to-use'") How To Use
-          v-list-tile(href="#api" v-scroll-to="'#api'") API
-          v-list-tile(href="#css-notes" v-scroll-to="'#css-notes'") CSS Notes
-          v-list-tile(href="#release-notes" v-scroll-to="'#release-notes'") Release Notes
+        template(v-slot:activator="{ on }")
+          v-btn(text color="secondary" v-on="on")
+            v-icon.mr-2 school
+            span Doc
+        v-list.text-no-wrap(dense)
+          v-list-item(href="#installation" v-scroll-to="'#installation'") Installation
+          v-list-item(href="#how-to-use" v-scroll-to="'#how-to-use'") How To Use
+          v-list-item(href="#api" v-scroll-to="'#api'") API
+          v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS Notes
+          v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release Notes
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
-        v-btn(flat color="secondary" slot="activator")
-          v-icon.mr-2 apps
-          span Examples
-        v-list(dense allow-overflow).no-wrap
-          v-list-tile.heading(href="#ex--basic" v-scroll-to="'#ex--basic'")
+        template(v-slot:activator="{ on }")
+          v-btn(text color="secondary" v-on="on")
+            v-icon.mr-2 apps
+            span Examples
+        v-list.text-no-wrap(dense allow-overflow)
+          v-list-item.heading(href="#ex--basic" v-scroll-to="'#ex--basic'")
             v-icon(small).mr-2 done
             | BASIC
-          v-list-tile(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
-          v-list-tile(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
-          v-list-tile(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
-          v-list-tile(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
+          v-list-item(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
+          v-list-item(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
+          v-list-item(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
+          v-list-item(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
 
-          v-list-tile.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
+          v-list-item.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
             v-icon(small).mr-2 translate
             | INTERNATIONALIZATION (I18N)
-          v-list-tile(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
+          v-list-item(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
 
-          v-list-tile.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
+          v-list-item.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
             v-icon(small).mr-2 access_time
             | TIMELINE &amp; TODAY
-          v-list-tile(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-tile(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
-          v-list-tile(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
+          v-list-item(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
+          v-list-item(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
+          v-list-item(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
-          v-list-tile.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
+          v-list-item.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
             v-icon(small).mr-2 event
             | EVENTS
-          v-list-tile(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless events
-          v-list-tile(href="#ex--events-with-time" v-scroll-to="'#ex--events-with-time'") Events with time information
-          v-list-tile(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
-          v-list-tile(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
-          v-list-tile(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-          v-list-tile(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
-          v-list-tile(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
-          v-list-tile(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
-          v-list-tile(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
-          v-list-tile(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
-          v-list-tile(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
-          v-list-tile(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
+          v-list-item(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'") Timeless events
+          v-list-item(href="#ex--events-with-time" v-scroll-to="'#ex--events-with-time'") Events with time information
+          v-list-item(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
+          v-list-item(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
+          v-list-item(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
+          v-list-item(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
+          v-list-item(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
+          v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
+          v-list-item(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
+          v-list-item(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
+          v-list-item(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
+          v-list-item(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
 
-          v-list-tile.heading(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'")
+          v-list-item.heading(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'")
             v-icon(small).mr-2 swap_horiz
             | COMMUNICATING WITH VUE CAL
-          v-list-tile(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
-          v-list-tile(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
-          v-list-tile(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
+          v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
+          v-list-item(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
+          v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
 
-          v-list-tile.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
+          v-list-item.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
             v-icon(small).mr-2 tune
             | ADVANCED VUE CAL CUSTOMIZATION
-          v-list-tile(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
-          v-list-tile(href="#ex--custom-events-count" v-scroll-to="'#ex--custom-events-count'") Custom events count
-          v-list-tile(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
-          v-list-tile(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
+          v-list-item(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
+          v-list-item(href="#ex--custom-events-count" v-scroll-to="'#ex--custom-events-count'") Custom events count
+          v-list-item(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
+          v-list-item(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
 </template>
 
 <script>
@@ -104,20 +106,18 @@ $secondary: #2c3e50;
 $lighter-text: #ccc;
 
 .top-bar {
-  z-index: 10;
-  position: absolute;
-  background: linear-gradient(rgba(255, 255, 255, 0.7)) !important;
-  border-bottom: 1px solid transparent !important;
-  transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
-  top: 0;
-
-  .v-toolbar__content {
-    padding: 0;
+  &.v-app-bar--fixed {
+    z-index: 10;
+    position: absolute;
+    background: linear-gradient(rgba(255, 255, 255, 0.7)) !important;
+    border-bottom: 1px solid transparent !important;
+    transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
+    top: 0;
   }
 
-  h1 {
-    height: 100%;
-  }
+  .v-toolbar__content {padding: 0;}
+
+  h1 {height: 100%;}
 
   &__title {
     position: relative;
@@ -201,6 +201,7 @@ $lighter-text: #ccc;
     display: inline-flex;
     background-color: rgba(255, 255, 255, 0.7);
     height: 100%;
+    font-size: 0.7em;
   }
 
   &__logo-title {
@@ -220,7 +221,7 @@ $lighter-text: #ccc;
     transition: opacity 0.3s ease-in-out;
   }
 
-  .top-bar__items {
+  &__items {
     position: absolute;
     right: 0;
     transition: 0.3s ease-in-out;
@@ -229,16 +230,13 @@ $lighter-text: #ccc;
     background-color: rgba(255, 255, 255, 0.7);
   }
 
-  .v-menu__content .v-list__tile {
+  .v-menu__content {max-height: 90vh;}
+  .v-menu__content .v-list-item {
     height: 30px;
     font-size: 1em;
-  }
+    padding-left: 32px;
 
-  .v-menu__content .v-list__tile {padding-left: 32px;}
-  .v-menu__content .heading .v-list__tile {padding-left: 8px;margin-top: 8px;color: #888;}
-
-  .v-menu__content {
-    max-height: 90vh;
+    &.heading {padding-left: 8px;margin-top: 8px;color: #888 !important;}
   }
 
   .intro {
@@ -263,28 +261,20 @@ $lighter-text: #ccc;
     padding-top: 3px;
     opacity: 0.6;
     transition: 0.3s;
-  }
 
-  .intro em:hover {
-    opacity: 0.9;
+    &:hover {opacity: 0.9;}
   }
 
   &.scrolled {
-    transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
-    border-bottom-color: $lighter-text !important;
-    position: fixed;
-
-    & .top-bar__title {
-      width: 100%;
+    &.v-app-bar--fixed {
+      transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
+      border-bottom-color: $lighter-text !important;
+      position: fixed;
     }
 
-    & .top-bar__logo-title {
-      font-size: 0.9em;
-    }
-
-    & .top-bar__logo-title:after {
-      opacity: 0;
-    }
+    & .top-bar__title {width: 100%;}
+    & .top-bar__logo-title {font-size: 0.9em;}
+    & .top-bar__logo-title:after {opacity: 0;}
 
     & .top-bar__items {
       transition: 0.3s 0.3s ease-in-out all;
@@ -302,24 +292,17 @@ $lighter-text: #ccc;
 }
 
 @media screen and (max-width: 600px) {
-  .scrolled .top-bar__logo {
-    transform: scale(0.7);
-  }
+  .scrolled .top-bar__logo {transform: scale(0.7);}
 
   .top-bar.scrolled .v-toolbar__content,
   .scrolled .top-bar__logo-link {
     height: 32px !important;
   }
+
+  .top-bar__items .v-btn {padding: 0 10px !important;}
 }
 
 @media screen and (max-width: 449px) {
-  .top-bar__items .v-btn {
-    min-width: 50px;
-    padding: 0 8px;
-  }
-
-  .top-bar__items a .v-btn__content span {
-    display: none;
-  }
+  .top-bar__items a .v-btn__content span {display: none;}
 }
 </style>

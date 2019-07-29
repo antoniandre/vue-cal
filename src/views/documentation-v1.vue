@@ -1,173 +1,173 @@
 <template lang="pug">
 .documentation
-  .text-xs-center.todo(style="margin: 0 auto 7em;max-width: 900px")
-    h2.title.mt-5.mb-2.todo To do...
+  .text-center.todo(style="margin: 0 auto 7em;max-width: 900px")
+    h2.title.mt-12.mb-2.todo To do...
     p.mb-2 Here is my ongoing to do list.
 
     div Earlier
     div(style="transform: scale(0.85);opacity: 0.8")
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | default active view
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Enable / disable views
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Hide / show weekends
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Add timeline w/ timerange &amp; increment
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Add timeline
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | time format 12/24 h
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Support for i18n
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Split days
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Support events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Background events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Overlap events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Keep only default style in CSS
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Allow custom arrows
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Default active date
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Double tap on touch devices
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         strong 1st NPM Release!
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Built-in themes
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Resize events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Delete events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Emit DOM events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Event indicator on month view
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Custom time format
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Highlight current time
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Show events on month view
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | sync 2 vue-cal instances
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Add CSS transitions
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Multiple day events
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Custom events rendering
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Custom callback on event click
-      v-chip.pr-1(color="green" outline small disabled)
-        v-icon.mr-1 check
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
         | Option to start week on Sunday
 
     .mb-2 Current backlog
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | All day events in top bar
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | Custom cell rendering
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | Events count on year(s) views
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | Create new event
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | min &amp; max dates
-    v-chip.pr-1(color="green" outline small disabled)
-      v-icon.mr-1 check
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | Today button
-    v-chip.pr-1(color="amber darken-1" outline small disabled)
-      v-icon.mr-1 timer
+    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
+      v-icon.mr-1(size="20") timer
       | Support more simultaneous events
-    v-chip.pr-1(color="amber darken-1" outline small disabled)
-      v-icon.mr-1 timer
+    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
+      v-icon.mr-1(size="20") timer
       | Drag events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Optional week number
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Optional tooltip on events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Improve multiple day events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Externalize locales
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Recurring events
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Resize events snap to time
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Drag events snap to time
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Prevent evt intersect. on drag/resize
-    v-chip.pr-1(color="deep-orange" outline small disabled)
-      v-icon.mr-1 access_time
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
       | Horizontal timeline
 
-  h2.headline.mt-5.mb-3.title Github project
+  h2.headline.mt-12.mb-3.title Github project
   v-layout.mb-3(align-center shrink)
     v-icon.pr-4.lightgrey--text(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
 
-  v-layout.mb-5(justify-center style="max-width: 690px;margin: auto")
+  v-layout.mb-12(justify-center style="max-width: 690px;margin: auto")
     v-icon.flame(size="100").mr-3 whatshot
     highlight-message(type="tips" no-icon)
       .title.mt-2.mb-3 #[span.code vue-cal@2.0.0] is coming out soon!
-      .body-2.
+      .subtitle-1.font-weight-medium.
         The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
         creation on simple click, or overriding the editable-event option per event)
         and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
         #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
       .mt-2
-        v-icon.mr-2(size="20") info_outline
+        v-icon.mr-2(size="20") info_outlined
         span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
-      .mt-2.layout.flex.align-center
+      .mt-2.layout.flex.align-center.subtitle-1.font-weight-medium
         v-icon.mr-2(size="20") favorite_border
         span Thank you to all the supporters!
         v-spacer
@@ -183,7 +183,7 @@
     | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
     | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.
 
-  h2.headline.mt-5
+  h2.headline.mt-12
     a(href="#installation") Installation
     a#installation(name="installation")
   highlight-message(type="warning") Vue.js 2.5.18 or later is required.
@@ -207,7 +207,7 @@
 
   h3 Via #[span.code &lt;script&gt;] tag
   p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-  sshpre.mt-4(language="html" label="HTML").
+  sshpre.mt-6(language="html" label="HTML").
     &lt;head&gt;
       ...
       &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
@@ -215,14 +215,14 @@
       &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
     &lt;/head&gt;
   p Then define the component to use in your template:
-  sshpre.mt-4(language="js" label="Javascript").
+  sshpre.mt-6(language="js" label="Javascript").
     // In your VueJS component.
     export default {
       components: { 'vue-cal': vuecal },
       ...
     }
 
-  h2.headline.mt-5.pt-5
+  h2.headline.mt-12.pt-12
     a(href="#how-to-use") How to use
     a#how-to-use(name="how-to-use")
   highlight-message(type="warning")
@@ -234,7 +234,7 @@
       &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
-  h2.headline.mt-5.pt-5
+  h2.headline.mt-12.pt-12
     a(href="#examples") Examples
     a#examples(name="examples")
   highlight-message.mt-3(type="success" no-icon)
@@ -259,7 +259,7 @@
     | Double click cell to go to a narrower view and click the title to go to a broader view.#[br]
     | By default the calendar theme is grey to match with most of web pages.#[br]
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
-    v-btn(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
+    v-btn.ma-1(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
@@ -441,7 +441,7 @@
     The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
     You can easily customize the now-line as you wish via CSS.
     Changing the line and arrow color is as easy as:#[br]
-  sshpre.mt-4(language="css" label="CSS").
+  sshpre.mt-6(language="css" label="CSS").
     .vuecal__now-line {color: #06c;}
   p.
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
@@ -470,7 +470,7 @@
   p.ex--adding-a-today-button
     | If you are not satisfied with the position of this button, you can also place it
     | outside of Vue Cal like so:
-    v-btn.today-button(small color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+    v-btn.ma-1.today-button(small color="primary" outlined rounded @click="selectedDate = new Date()") Another Today Button
     | #[br]You might want to change view as well when going to Today's date, here is an example how:
     a.mx-1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
     v-icon(small color="green lighten-2") fab fa-codepen
@@ -497,8 +497,9 @@
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
         div(slot="today-button")
           v-tooltip(bottom)
-            v-btn.ma-0(small fab slot="activator" depressed)
-              v-icon(color="primary" size="20") my_location
+            template(v-slot:activator="{ on }")
+              v-btn(small fab depressed v-on="on")
+                v-icon(color="primary" size="20") my_location
             span Go to Today's date
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal ref="vuecal"
@@ -513,10 +514,12 @@
       &lt;div slot="today-button"&gt;
         &lt;!-- Using Vuetify --&gt;
         &lt;v-tooltip&gt;
-          &lt;v-btn slot="activator"&gt;
-            &lt;v-icon&gt;my_location&lt;/v-icon&gt;
-          &lt;/v-btn&gt;
-          &lt;span&gt;Go to Today's date&lt;/span&gt;
+          &lt;template v-slot:activator="{ on }"&gt;
+            &lt;v-btn v-on="on"&gt;
+              &lt;v-icon&gt;my_location&lt;/v-icon&gt;
+            &lt;/v-btn&gt;
+            &lt;span&gt;Go to Today's date&lt;/span&gt;
+          &lt;/template&gt;
         &lt;/v-tooltip&gt;
       &lt;/div&gt;
     &lt;/vue-cal&gt;
@@ -876,7 +879,7 @@
       h5.subheading.font-weight-bold Programmatically
       v-layout(row align-center)
         | See this button?
-        v-btn.d-inline-block(small color="primary" @click="customEventCreation") button
+        v-btn.ma-1.d-inline-block(small color="primary" @click="customEventCreation") button
         sshpre.ma-0.pa-1(language="html-vue").
           &lt;button @click="customEventCreation"&gt;button&lt;/button&gt;
       p It will let you choose a date to create an event and set the event content attribute:
@@ -922,7 +925,7 @@
                    :events="events"&gt;
           &lt;/vue-cal&gt;
 
-    li.mt-5
+    li.mt-12
       h5.subheading.font-weight-bold By clicking and holding a cell
       p In this example, a dialog box opens and lets you choose the event attributes.
       v-layout(row wrap)
@@ -967,7 +970,7 @@
   p.
     If you want to customize those attributes you can modify the event directly through
     the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
-  sshpre.mt-4(language="js" label="Javascript").
+  sshpre.mt-6(language="js" label="Javascript").
     // :on-event-create="onEventCreate", in template.
 
     /**
@@ -1097,7 +1100,7 @@
     Overlapping, editable  &amp; deletable events.#[br]
     #[strong Up to 3 overlapping events starting or running at the same time]. Try to resize &amp; delete events to see the overlapping redrawn.#[br]
     You can also use the option #[span.code no-event-overlaps] to show #[strong up to 3 events side by side] (splitting the cell width) instead of overlapping.
-  v-btn.ma-0(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
+  v-btn(color="primary" small @click="overlapEvents = !overlapEvents;$forceUpdate()") #[span.code :no-event-overlaps="{{ overlapEvents ? 'false' : 'true' }}"]
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1240,9 +1243,9 @@
     Multiple-day events feature will be improved in a future version to display across
     multiple cells in the all day bar.
 
-  v-btn(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
+  v-btn.ma-1(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
     span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
-  v-btn(small color="primary" @click="shortEventsOnMonthView = !shortEventsOnMonthView")
+  v-btn.ma-1(small color="primary" @click="shortEventsOnMonthView = !shortEventsOnMonthView")
     span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
@@ -1286,7 +1289,7 @@
         start: '2019-02-14',
         end: '2019-02-14',
         title: 'Valentine\'s day',
-        content: '&lt;i class="v-icon material-icons"&gt;favorite_outline&lt;/i&gt;',
+        content: '&lt;i class="v-icon material-icons"&gt;favorite_outlined&lt;/i&gt;',
         class: 'love',
         allDay: true
       },
@@ -1306,11 +1309,11 @@
   h4.title
     a(href="#ex--splitting-days") # Splitting days &amp; split events
     a#ex--splitting-days(name="ex--splitting-days")
-  p.mb-4
+  p.mb-6
     | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.#[br]
     | disabled views: years, year, month.#[br]
     | On week view you can also overflow your content using a min-width on cells, like in this example, or fit to container:
-    v-btn(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
+    v-btn.ma-1(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
       v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
       | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
     | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
@@ -1449,10 +1452,10 @@
     after the first load, but be aware that by doing so all the events in Vue Cal
     will be replaced by the new array of events. You may lose your changes if you
     modified events within Vue Cal.
-  v-btn(color="primary" small @click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
+  v-btn.ma-1(color="primary" small @click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
     v-icon.mr-2 add
     | Add an event
-  v-btn(color="primary" small @click="eventsCopy.pop()")
+  v-btn.ma-1(color="primary" small @click="eventsCopy.pop()")
     v-icon.mr-2 remove
     | Remove last event
   p.mb-0 Here is the live array of event titles:
@@ -1558,21 +1561,21 @@
   p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
     v-layout(wrap)
-      div.grey--text //&nbsp;
+      .grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
       v-spacer
-      v-btn.ma-0(color="primary" outline small @click="clearEventsLog")
-        v-icon(small).mr-1 clear
+      v-btn(color="primary" outlined small @click="clearEventsLog")
+        v-icon.mr-1(small) clear
         | Clear log
-      v-btn.my-0.mr-0.ml-2(color="primary" outline small @click="logMouseEvents = !logMouseEvents")
-        v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
+      v-btn.ml-2(color="primary" outlined small @click="logMouseEvents = !logMouseEvents")
+        v-icon.mr-1(small) {{ logMouseEvents ? 'remove' : 'add' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
-    div.scrollable
-      div.mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
+    .scrollable
+      .mt-2.pt-2(v-for="(l, i) in log" :key="i" :style="i && 'border-top: 1px solid #ddd'")
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
-  v-card.mt-4.mb-2.ma-auto.main-content
+  v-card.mt-6.mb-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
@@ -1622,7 +1625,7 @@
       | Advanced Vue Cal customization
       small.ml-2 #[em="- when CSS won't do it"]
 
-  highlight-message.mt-4
+  highlight-message.mt-6
     | Here is the list of available slots:
     ul
       li #[span.code arrow-prev]
@@ -1655,7 +1658,7 @@
       div.line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
-  highlight-message.mt-4(type="tips")
+  highlight-message.mt-6(type="tips")
     ul
       li.
         if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
@@ -1679,7 +1682,7 @@
       &lt;/div&gt;
     &lt;/vue-cal&gt;
 
-  sshpre.mt-4(language="css" label="CSS").
+  sshpre.mt-6(language="css" label="CSS").
     .vuecal__time-cell .hours.line:before {border-color: #42b983;}
 
   //- Example.
@@ -1772,7 +1775,7 @@
       li
         strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
 
-  h5.mt-4.subheading.font-weight-medium
+  h5.mt-6.subheading.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom title
   p.ml-2.mb-2.
@@ -1796,7 +1799,7 @@
     If you render the date yourself from #[span.code view.startDate], don't forget
     the different formats for all the views: years, year, month, week, day.
 
-  h5.mt-4.subheading.font-weight-medium
+  h5.mt-6.subheading.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom cells
   p.ml-2.mb-2.
@@ -1945,7 +1948,7 @@
       :events="eventsToPop")
       div(slot="event-renderer" slot-scope="{ event, view }")
         v-icon.mt-2(color="white" x-large) {{ event.icon }}
-        .vuecal__event-title.mb-4(v-html="event.title")
+        .vuecal__event-title.mb-6(v-html="event.title")
         small.vuecal__event-time
           strong.mr-1 Event start:
           span {{ event.startTime }}
@@ -1990,7 +1993,7 @@
     ]
 
   //- API
-  h2.headline.mt-5.pt-5
+  h2.headline.mt-12.pt-12
     a(href="#api") API
     a#api(name="api")
   p Here is the list of all the available views.
@@ -2376,12 +2379,12 @@
             | Only these formats will work.#[br]
             strong You can't mix events with time and events without, and you can only remove time if the time option is set to false.
 
-  h2.headline.mt-5.pt-5
+  h2.headline.mt-12.pt-12
     a(href="#css-notes") CSS Notes
     a#css-notes(name="css-notes")
   p You can easily change the calendar design with CSS.
 
-  h3.mt-5 # Color &amp; rounded Themes
+  h3.mt-12 # Color &amp; rounded Themes
   p.
     Currently 2 color themes (green &amp; blue) are available, in addition to the standard grey theme.#[br]
     You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme] or  #[span.code vuecal--blue-theme].
@@ -2406,7 +2409,7 @@
     | You can use the rounded cells theme like in the Example #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
     | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
 
-  h3.mt-5 # Responsiveness &amp; Media Queries
+  h3.mt-12 # Responsiveness &amp; Media Queries
   p.
     This calendar is fully responsive.#[br]
     To help you in making the calendar always look perfect,
@@ -2418,12 +2421,12 @@
     Additionally, you can use the options #[span.code small] &amp; #[span.code xsmall]
     to truncate week days at any size.
 
-  h3.mt-5 # Disabled Text Selection
+  h3.mt-12 # Disabled Text Selection
   p.
     By default the selection is disabled in the whole calendar except in the events.
     you can override this by CSS.
 
-  h2.headline.mt-5.pt-5.mb-2
+  h2.headline.mt-12.pt-12.mb-2
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
@@ -2599,8 +2602,8 @@
           v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
         v-layout
           v-spacer
-          v-btn(small @click="cancelEventCreation()") Cancel
-          v-btn(small color="primary" @click="closeCreationDialog()") Save
+          v-btn.ma-1(small @click="cancelEventCreation()") Cancel
+          v-btn.ma-1(small color="primary" @click="closeCreationDialog()") Save
 </template>
 
 <script>
@@ -2841,7 +2844,7 @@ export default {
         start: '2019-02-14',
         end: '2019-02-14',
         title: 'Valentine\'s day',
-        content: '<i class="v-icon material-icons">favorite_outline</i>',
+        content: '<i class="v-icon material-icons">favorite_outlined</i>',
         class: 'love',
         allDay: true
       },
@@ -3123,7 +3126,7 @@ $primary: #42b983;
     font-weight: normal;
     color: #888 !important;
 
-    .v-icon {vertical-align: bottom;}
+    .v-icon {vertical-align: middle;}
   }
 
   h4 {margin: 70px 0 8px;}
