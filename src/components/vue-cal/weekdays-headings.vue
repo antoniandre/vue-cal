@@ -44,11 +44,6 @@ export default {
       type: Array,
       default: () => []
     },
-    // Will override default truncation of weekDays if this is defined in i18n file.
-    weekDaysShort: {
-      type: Array,
-      default: () => []
-    },
     switchToNarrowerView: {
       type: Function,
       default: () => {}
@@ -78,8 +73,8 @@ export default {
               full: cell.label,
               // If defined in i18n file, weekDaysShort overrides default truncation of
               // week days when does not fit on screen or with small/xsmall options.
-              small: this.weekDaysShort.length ? this.weekDaysShort[i].label : cell.label.substr(0, 3),
-              xsmall: this.weekDaysShort.length ? this.weekDaysShort[i].label : cell.label.substr(0, 1),
+              small: cell.short || cell.label.substr(0, 3),
+              xsmall: cell.short || cell.label.substr(0, 1),
 
               // Only for week view.
               ...(this.view.id === 'week' ? {

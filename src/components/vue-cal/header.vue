@@ -27,7 +27,6 @@
     :vuecal="$parent"
     :view="viewProps.view"
     :week-days="weekDays"
-    :week-days-short="weekDaysShort"
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView"
   )
@@ -54,10 +53,6 @@ export default {
       default: () => ({})
     },
     weekDays: {
-      type: Array,
-      default: () => []
-    },
-    weekDaysShort: {
       type: Array,
       default: () => []
     },

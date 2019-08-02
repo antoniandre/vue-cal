@@ -4,7 +4,6 @@
     :options="$props"
     :view-props="{ views, view, weekDaysInHeader }"
     :week-days="weekDays"
-    :week-days-short="weekDaysShort"
     :switch-to-narrower-view="switchToNarrowerView")
     template(v-slot:arrow-prev)
       slot(name="arrow-prev")
@@ -62,7 +61,6 @@
                 :view="view"
                 :min-cell-width="minCellWidth"
                 :week-days="weekDays"
-                :week-days-short="weekDaysShort"
                 :switch-to-narrower-view="switchToNarrowerView")
 
               .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
@@ -757,32 +755,17 @@ export default {
       return date ? date.getTime() : null
     },
     weekDays () {
-      let { weekDays } = this.texts
+      let { weekDays, weekDaysShort = [] } = this.texts
       // Do not modify original for next instances.
       weekDays = weekDays.slice(0).map((day, i) => ({
         label: day,
+        ...(weekDaysShort.length ? { short: weekDaysShort[i] } : {}),
         hide: (this.hideWeekends && i >= 5) || (this.hideWeekdays.length && this.hideWeekdays.includes(i + 1))
       }))
 
       if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
 
       return weekDays
-    },
-    weekDaysShort () {
-      let { weekDaysShort = [] } = this.texts
-
-      if (weekDaysShort.length) {
-        // Do not modify original for next instances.
-        weekDaysShort = weekDaysShort.slice(0)
-
-        if (this.startWeekOnSunday) weekDaysShort.unshift(weekDaysShort.pop())
-
-        if (this.hideWeekends) {
-          weekDaysShort = this.startWeekOnSunday ? weekDaysShort.slice(1, 6) : weekDaysShort.slice(0, 5)
-        }
-      }
-
-      return (weekDaysShort.length && weekDaysShort.map(day => ({ label: day }))) || []
     },
     weekDaysInHeader () {
       return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
