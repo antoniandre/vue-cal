@@ -166,7 +166,7 @@
         #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
       .mt-2
         v-icon.mr-2(size="20") info_outlined
-        span Follow my progress in the #[a.code.subheading(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
+        span Follow my progress in the #[a.code.subtitle-1(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
       .mt-2.layout.flex.align-center.subtitle-1.font-weight-medium
         v-icon.mr-2(size="20") favorite_border
         span Thank you to all the supporters!
@@ -498,7 +498,7 @@
         div(slot="today-button")
           v-tooltip(bottom)
             template(v-slot:activator="{ on }")
-              v-btn(small fab depressed v-on="on")
+              v-btn(x-small fab text v-on="on")
                 v-icon(color="primary" size="20") my_location
             span Go to Today's date
   sshpre(language="html-vue" label="Vue Template").
@@ -876,10 +876,10 @@
     There are 2 ways to create an event, programmatically or by clicking and holding a cell.
   ol.pl-3
     li.mt-3
-      h5.subheading.font-weight-bold Programmatically
+      h5.subtitle-1.font-weight-bold Programmatically
       v-layout(row align-center)
         | See this button?
-        v-btn.ma-1.d-inline-block(small color="primary" @click="customEventCreation") button
+        v-btn.mx-1.d-inline-block(x-small color="primary" @click="customEventCreation") button
         sshpre.ma-0.pa-1(language="html-vue").
           &lt;button @click="customEventCreation"&gt;button&lt;/button&gt;
       p It will let you choose a date to create an event and set the event content attribute:
@@ -926,7 +926,7 @@
           &lt;/vue-cal&gt;
 
     li.mt-12
-      h5.subheading.font-weight-bold By clicking and holding a cell
+      h5.subtitle-1.font-weight-bold By clicking and holding a cell
       p In this example, a dialog box opens and lets you choose the event attributes.
       v-layout(row wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
@@ -1560,7 +1560,7 @@
         So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
   p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
-    v-layout(wrap)
+    v-layout(wrap align-center)
       .grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
@@ -1775,7 +1775,7 @@
       li
         strong Mind the difference of syntax for scoped slots since version 2.6.0 of Vue.js.
 
-  h5.mt-6.subheading.font-weight-medium
+  h5.mt-6.subtitle-1.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom title
   p.ml-2.mb-2.
@@ -1799,7 +1799,7 @@
     If you render the date yourself from #[span.code view.startDate], don't forget
     the different formats for all the views: years, year, month, week, day.
 
-  h5.mt-6.subheading.font-weight-medium
+  h5.mt-6.subtitle-1.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom cells
   p.ml-2.mb-2.

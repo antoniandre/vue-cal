@@ -405,7 +405,7 @@
     If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
     #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].
 
-  v-card.ma-2.main-content(style="height: 350px")
+  v-card.mx-auto.main-content(style="height: 350px")
     vue-cal.vuecal--green-theme(
       :hide-weekdays="[2, 3, 5]"
       :time="false"
@@ -537,7 +537,7 @@
         template(v-slot:today-button)
           v-tooltip(bottom)
             template(v-slot:activator="{ on }")
-              v-btn(small fab depressed v-on="on")
+              v-btn(x-Programmatically small fab text v-on="on")
                 v-icon(color="primary" size="20") my_location
             span Go to Today's date
   sshpre(language="html-vue" label="Vue Template").
@@ -948,7 +948,7 @@
 
   ol.pl-3
     li.mt-3
-      h5.subheading.font-weight-bold On cell single or double click
+      h5.subtitle-1.font-weight-bold On cell single or double click
       p.
         As the #[span.code cell-click] &amp; #[span.code cell-dblclick] emitted
         events return a date and time at cursor position (refer to the
@@ -988,13 +988,13 @@
           &lt;/vue-cal&gt;
       p You may then want to disable the default event creation on cell click &amp; hold by setting #[span.code :cell-click-hold="false"]
     li.mt-12
-      h5.subheading.font-weight-bold Programmatically &amp; externally
+      h5.subtitle-1.font-weight-bold Programmatically &amp; externally
       p.my-2.
         To allow an external button to create events, you will need to call the
         vue-cal #[span.code createEvent()] function from a Vue ref.
       v-layout.mb-3(row align-center)
         | This
-        v-btn(small color="primary" @click="customEventCreation") button
+        v-btn.mx-1(x-small color="primary" @click="customEventCreation") button
         | will prompt you to choose a date and time as the event start.
 
       v-layout(row align-top wrap)
@@ -1046,7 +1046,7 @@
         }
 
     li.mt-12
-      h5.subheading.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
+      h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
       p.mt-3.
         By default, event will be created with these attributes:
       sshpre.mt-0(language="js" label="Javascript").
@@ -1585,7 +1585,7 @@
         So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
   p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
-    v-layout(wrap)
+    v-layout(wrap align-center)
       div.grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
@@ -1796,7 +1796,7 @@
         strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt-6(type="tips").
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
@@ -1824,7 +1824,7 @@
 
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   p.
     In the following example, we only count the events which have the custom
@@ -1897,9 +1897,9 @@
     a#ex--custom-title-and-cells(name="ex--custom-title-and-cells")
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
-    if you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
+    If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-  h5.mt-6.subheading.font-weight-medium
+  h5.mt-6.subtitle-1.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom title
   p.ml-2.mb-2.
@@ -1923,7 +1923,7 @@
     If you render the date yourself from #[span.code view.startDate], don't forget
     the different formats for all the views: years, year, month, week, day.
 
-  h5.mt-6.subheading.font-weight-medium
+  h5.mt-6.subtitle-1.font-weight-medium
     v-icon(size="22") keyboard_arrow_right
     | Custom cells
   p.ml-2.mb-2.
@@ -2596,7 +2596,7 @@
     a#release-notes(name="release-notes")
 
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
-  div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click] #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
+  div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
   div #[strong Version 2.0.0]
     highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
     highlight-message(type="success")
