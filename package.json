@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "1.61.0",
+  "version": "2.3.0",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "repository": "https://github.com/antoniandre/vue-cal",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
@@ -24,24 +24,27 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
+    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n && mv ./dist/vuecal.umd.min.i18n ./dist/i18n",
     "lint": "vue-cli-service lint"
   },
   "devDependencies": {
-    "@vue/cli-plugin-babel": "^3.8.0",
-    "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-plugin-babel": "^3.9.2",
+    "@vue/cli-plugin-eslint": "^3.9.2",
+    "@vue/cli-service": "^3.9.3",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-polyfill": "^6.26.0",
     "node-sass": "^4.12.0",
-    "pug": "^2.0.3",
+    "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
     "sass-loader": "^7.0.1",
     "simple-syntax-highlighter": "^1.0.6",
     "vue": "^2.6.10",
-    "vue-cli-plugin-vuetify": "^0.5.0",
+    "vue-cal": "^1.63.0",
+    "vue-cli-plugin-vuetify": "^0.6.1",
+    "vue-router": "^3.0.7",
     "vue-scrollto": "^2.15.0",
     "vue-template-compiler": "^2.6.10",
-    "vuetify": "^1.5.14"
+    "vuetify": "^2.0.2"
   },
   "dependencies": {}
 }

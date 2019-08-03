@@ -1,245 +1,301 @@
 import Vue from 'vue'
+import { formatDate, stringToDate, formatTime, countDays } from './date-utils'
+const dayMilliseconds = 24 * 3600 * 1000
+const defaultEventDuration = 2 // In hours.
 
 export const eventDefaults = {
   _eid: null,
-  startDate: '',
-  startTime: '',
+  start: '', // Externally given formatted date & time.
+  startDate: '', // Date object.
   startTimeMinutes: 0,
-  endDate: '',
-  endTime: '',
+  end: '', // Externally given formatted date & time.
+  endDate: '', // Date object.
   endTimeMinutes: 0,
   title: '',
   content: '',
   background: false,
   allDay: false,
-  overlapped: {},
-  overlapping: {},
-  simultaneous: {},
-  linked: [], // Linked events.
-  multipleDays: {},
-  height: 0,
+  segments: null,
+  daysCount: 1,
+  deletable: true,
+  deleting: false,
+  resizable: true,
+  resizing: false,
+  focused: false,
   top: 0,
+  height: 0,
   classes: []
 }
 
-// Create an event on formattedDate at the given startTimeMinutes, and allow overriding
+// Create an event at the given date and time, and allow overriding
 // event attributes through the eventOptions object.
-export const createAnEvent = (formattedDate, startTimeMinutes, eventOptions, vuecal) => {
-  startTimeMinutes = parseInt(startTimeMinutes)
-  const hours = parseInt(startTimeMinutes / 60)
-  const minutes = parseInt(startTimeMinutes % 60)
+export const createAnEvent = (dateTime, eventOptions, vuecal) => {
+  if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
+  if (!(dateTime instanceof Date)) return false
+
+  const hours = dateTime.getHours()
+  const minutes = dateTime.getMinutes()
+  const startTimeMinutes = hours * 60 + minutes
+  const hoursEnd = hours + defaultEventDuration
   const endTimeMinutes = startTimeMinutes + 120
   const formattedHours = (hours < 10 ? '0' : '') + hours
-  const formattedEndHours = (hours + 2 < 10 ? '0' : '') + (hours + 2)
+  const formattedHoursEnd = (hoursEnd < 10 ? '0' : '') + hoursEnd
   const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
+  const start = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
+  const end = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
 
   let event = {
     ...eventDefaults,
-    // Nested objects need to be reinitialized or they will be shared across all instances.
-    overlapped: {},
-    overlapping: {},
-    simultaneous: {},
-    multipleDays: {},
-
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
-    start: formattedDate + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : ''),
-    startDate: formattedDate,
-    startTime: (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : null),
+    start,
+    startDate: dateTime,
     startTimeMinutes,
-    end: formattedDate + (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : ''),
-    endDate: formattedDate,
-    endTime: (vuecal.time ? ` ${formattedEndHours}:${formattedMinutes}` : null),
+    end,
+    endDate: new Date(end.replace(/-/g, '/')), // replace '-' with '/' for Safari.
     endTimeMinutes,
+    segments: null,
     ...eventOptions
   }
 
+  // If the onEventCreate() function is given as a parameter to vue-cal:
+  // 1. give it access to the created event & the deleteAnEvent() function.
+  // 2. Prevent creation of the event if this function returns false.
   if (typeof vuecal.onEventCreate === 'function') {
-    vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))
+    if (!vuecal.onEventCreate(event, () => deleteAnEvent(event, vuecal))) return
   }
 
-  // Make array reactive for future events creations & deletions.
-  if (!(event.startDate in vuecal.mutableEvents)) Vue.set(vuecal.mutableEvents, event.startDate, [])
+  // Check if event is a multiple day event and update days count.
+  if (event.start.substr(0, 10) !== event.end.substr(0, 10)) {
+    event.daysCount = countDays(event.startDate, event.endDate)
+  }
 
-  vuecal.mutableEvents[event.startDate].push(event)
+  // Add event to the mutableEvents array.
+  vuecal.mutableEvents.push(event)
+
+  // Add the new event to the current view.
+  // The event may have been edited on the fly to become a multiple-day event,
+  // the method addEventsToView makes sure the segments are created.
+  vuecal.addEventsToView([event])
+
   vuecal.emitWithEvent('event-create', event)
   vuecal.emitWithEvent('event-change', event)
 
-  // After creating a new event, check if it overlaps any other in current cell OR split.
-  const cellEvents = vuecal.mutableEvents[event.startDate]
-  if (vuecal.time) {
-    checkCellOverlappingEvents(eventOptions.split ? cellEvents.filter(e => e.split === eventOptions.split) : cellEvents)
+  return event
+}
+
+export const addEventSegment = (e, vuecal) => {
+  if (!e.segments) {
+    Vue.set(e, 'segments', {})
+    e.segments[e.start.substr(0, 10)] = {
+      startDate: e.startDate,
+      start: e.start.substr(0, 10),
+      startTimeMinutes: e.startTimeMinutes,
+      endTimeMinutes: 24 * 60,
+      isFirstDay: true,
+      isLastDay: false,
+      height: 0,
+      top: 0
+    }
   }
 
-  return event
+  // Modify the last segment - which is no more the last one.
+  let previousSegment = e.segments[formatDate(e.endDate, null, vuecal.texts)]
+  // previousSegment might not exist when dragging too fast, prevent errors.
+  if (previousSegment) {
+    previousSegment.isLastDay = false
+    previousSegment.endTimeMinutes = 24 * 60
+  }
+  else {
+    // @todo: when moving fast might lose the previousSegment.
+    // Trying to update it would then result in an error, but do nothing would create a visual bug.
+  }
+
+  // Create the new last segment.
+  const startDate = e.endDate.addDays(1)
+  const endDate = new Date(startDate)
+  const formattedDate = formatDate(startDate, null, vuecal.texts)
+  startDate.setHours(0, 0)
+  e.segments[formattedDate] = {
+    startDate,
+    start: formattedDate,
+    startTimeMinutes: 0,
+    endTimeMinutes: e.endTimeMinutes,
+    isFirstDay: false,
+    isLastDay: true,
+    height: 0,
+    top: 0
+  }
+
+  e.daysCount = Object.keys(e.segments).length
+  e.endDate = endDate
+  e.end = `${formattedDate} ${formatTime(e.endTimeMinutes)}`
+
+  return formattedDate
+}
+
+export const removeEventSegment = (e, vuecal) => {
+  let segmentsCount = Object.keys(e.segments).length
+  if (segmentsCount <= 1) return e.end.substr(0, 10)
+
+  // Remove the last segment.
+  delete e.segments[e.end.substr(0, 10)]
+  segmentsCount--
+
+  const endDate = e.endDate.subtractDays(1)
+  const formattedDate = formatDate(endDate, null, vuecal.texts)
+  let previousSegment = e.segments[formattedDate]
+
+  // If no more segments, reset the segments attribute to null.
+  if (!segmentsCount) e.segments = null
+
+  // previousSegment might not exist when dragging too fast, prevent errors.
+  else if (previousSegment) {
+    // Modify the new last segment.
+    previousSegment.isLastDay = true
+    previousSegment.endTimeMinutes = e.endTimeMinutes
+  }
+  else {
+    // @todo: when moving fast might lose the previousSegment.
+    // Trying to update it would then result in an error, but do nothing would create a visual bug.
+  }
+
+  e.daysCount = segmentsCount || 1
+  e.endDate = endDate
+  e.end = `${formattedDate} ${formatTime(e.endTimeMinutes)}`
+
+  return formattedDate
+}
+
+export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
+  const eventStart = e.startDate.getTime()
+  let eventEnd = e.endDate.getTime()
+  if (!e.endDate.getHours() && !e.endDate.getMinutes()) eventEnd -= 1000
+
+  Vue.set(e, 'segments', {})
+
+  // Create 1 segment per day in the event, but only within the current view.
+  let timestamp = Math.max(viewStartDate.getTime(), eventStart)
+  const end = Math.min(viewEndDate.getTime(), eventEnd)
+
+  while (timestamp <= end) {
+    const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
+    const isFirstDay = timestamp === eventStart
+
+    // const isLastDay = end === eventEnd && nextMidnight > end
+    // @todo: testing this:
+    const isLastDay = end === eventEnd && nextMidnight >= end
+
+    const startDate = isFirstDay ? e.startDate : new Date(timestamp)
+    const formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDate(startDate, null, vuecal.texts)
+
+    e.segments[formattedDate] = {
+      startDate,
+      start: formattedDate,
+      startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
+      endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
+      isFirstDay,
+      isLastDay,
+      height: 0,
+      top: 0
+    }
+
+    timestamp = nextMidnight
+  }
+
+  return e
 }
 
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
-  const eventDate = (event.multipleDays && event.multipleDays.startDate) || event.startDate
-  // Filtering from vuecal.mutableEvents since current cell might only contain all day events or vice-versa.
-  let cellEvents = vuecal.mutableEvents[eventDate]
-  // Delete the event.
-  vuecal.mutableEvents[eventDate] = cellEvents.filter(e => e._eid !== event._eid)
-  cellEvents = vuecal.mutableEvents[eventDate]
-
-  // If deleting a multiple-day event, delete all the events pieces (days).
-  if (event.multipleDays.daysCount) {
-    event.linked.forEach(e => {
-      const dayToModify = vuecal.mutableEvents[e.date]
-      const eventToDelete = dayToModify.find(e2 => e2._eid === e._eid)
-      vuecal.mutableEvents[e.date] = dayToModify.filter(e2 => e2._eid !== e._eid)
-
-      if (!e.background) {
-        // Remove this event from possible other overlapping events of the same cell.
-        deleteLinkedEvents(eventToDelete, dayToModify)
-      }
-    })
-  }
-
-  // Remove this event from possible other overlapping events of the same cell, then
-  // after mutableEvents has changed, rerender will start & checkCellOverlappingEvents()
-  // will be run again.
-  if (!event.background) deleteLinkedEvents(event, cellEvents)
+  // Delete the event globally.
+  vuecal.mutableEvents = vuecal.mutableEvents.filter(e => e._eid !== event._eid)
+  // Delete the event from the current view.
+  // checkCellOverlappingEvents() will be re-run automatically from the cell computed events.
+  vuecal.view.events = vuecal.view.events.filter(e => e._eid !== event._eid)
 }
 
-export const deleteLinkedEvents = (event, cellEvents) => {
-  Object.keys(event.overlapped).forEach(id => (delete cellEvents.find(item => item._eid === id).overlapping[event._eid]))
-  Object.keys(event.overlapping).forEach(id => (delete cellEvents.find(item => item._eid === id).overlapped[event._eid]))
-  Object.keys(event.simultaneous).forEach(id => (delete cellEvents.find(item => item._eid === id).simultaneous[event._eid]))
-}
-
-export const onResizeEvent = (cellEvents, vuecal) => {
-  let { _eid, newHeight } = vuecal.domEvents.resizeAnEvent
-  let event = cellEvents.find(e => e._eid === _eid)
-
-  if (event) {
-    const minEventHeight = Math.max(newHeight, 10)
-    const eventStart = !isNaN(event.multipleDays.startTimeMinutes)
-      ? Math.max(event.multipleDays.startTimeMinutes, vuecal.timeFrom) : event.startTimeMinutes
-
-    // While dragging event, prevent event to span beyond vuecal.timeTo.
-    let maxEventHeight = (vuecal.timeTo - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    event.height = Math.min(minEventHeight, maxEventHeight)
-
-    // Allow dragging until midnight but block height at vuecal.timeTo.
-    maxEventHeight = (24 * 60 - eventStart) * vuecal.timeCellHeight / vuecal.timeStep
-    event.maxHeight = Math.min(minEventHeight, maxEventHeight)
-    updateEndTimeOnResize(event, vuecal)
-  }
-}
-
-const updateEndTimeOnResize = (event, vuecal) => {
-  // event.maxHeight is the maximum height the event can take, up to midnight.
-  // But event.height is limited to vuecal.timeTo to prevent event overflowing the view.
-  const bottom = event.top + event.maxHeight
-  const endTime = (bottom / vuecal.timeCellHeight * vuecal.timeStep + vuecal.timeFrom) / 60
-  const hours = parseInt(endTime)
-  const minutes = parseInt((endTime - hours) * 60)
-
-  event.endTimeMinutes = endTime * 60
-  event.endTime = `${hours}:${(minutes < 10 ? '0' : '') + minutes}`
-  event.end = event.end.split(' ')[0] + ` ${event.endTime}`
-
-  if (event.multipleDays.daysCount) {
-    event.multipleDays.endTimeMinutes = event.endTimeMinutes
-    event.multipleDays.endTime = event.endTime
-    event.multipleDays.end = event.end
-
-    event.linked.forEach(e => {
-      const dayToModify = vuecal.mutableEvents[e.date]
-      let eventToModify = dayToModify.find(e2 => e2._eid === e._eid)
-
-      eventToModify.endTimeMinutes = event.endTimeMinutes
-      eventToModify.endTime = event.endTime
-      eventToModify.end = event.end
-    })
-  }
-}
-
+// EVENT OVERLAPS.
+// ===================================================================
+// Only for the current view, recreated on view change.
+let comparisonArray, cellOverlaps
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
 export const checkCellOverlappingEvents = cellEvents => {
-  if (cellEvents) {
-    const foregroundEventsList = cellEvents.filter(item => !item.background && !item.allDay)
+  comparisonArray = cellEvents.slice(0)
+  cellOverlaps = {}
 
-    if (foregroundEventsList.length) {
-      // Do the mapping outside of the next loop if not split cell.
-      // If split need the whole event object to compare splits.
-      const foregroundEventsIdList = foregroundEventsList.map(item => item._eid)
-      let comparisonArray = {}
+  // Can't filter background events before calling this function otherwise
+  // when an event is changed to background it would not update its previous overlaps.
+  // @todo: implement case when dragging event across multiple cells.
+  cellEvents.forEach(e => {
+    // Never compare the current event in the next loops. the array is refined as we loop.
+    comparisonArray.shift()
 
-      cellEvents.forEach(event => {
-        if (!event.background && !event.allDay) {
-          let comparisonArrayKeys = Object.keys(comparisonArray)
+    if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
+    cellOverlaps[e._eid].position = 0
 
-          // Unique comparison of events.
-          comparisonArray[event._eid] = cellEvents.length
-            ? foregroundEventsList.filter(item => (
-              item._eid !== event._eid && !comparisonArrayKeys.includes(item._eid))
-            ).map(item => item._eid)
-            : foregroundEventsIdList.filter(id => (id !== event._eid && !comparisonArrayKeys.includes(id)))
+    comparisonArray.forEach(e2 => {
+      if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
-          if (comparisonArray[event._eid].length) {
-            checkOverlappingEvents(event, comparisonArray[event._eid], cellEvents)
-          }
-        }
-      })
-    }
+      // Add to the overlaps array if overlapping.
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventInRange(e2, e.startDate, e.endDate, e)) {
+        cellOverlaps[e._eid].overlaps.push(e2._eid)
+        cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
+
+        cellOverlaps[e2._eid].overlaps.push(e._eid)
+        cellOverlaps[e2._eid].overlaps = [...new Set(cellOverlaps[e2._eid].overlaps)] // Dedupe, most performant way.
+        cellOverlaps[e2._eid].position++
+      }
+      // Remove from the overlaps array if not overlapping or if 1 of the 2 events is background or all-day long.
+      else {
+        let pos1, pos2
+        if ((pos1 = (cellOverlaps[e._eid] || { overlaps: [] }).overlaps.indexOf(e2._eid)) > -1) cellOverlaps[e._eid].overlaps.splice(pos1, 1)
+        if ((pos2 = (cellOverlaps[e2._eid] || { overlaps: [] }).overlaps.indexOf(e._eid)) > -1) cellOverlaps[e2._eid].overlaps.splice(pos2, 1)
+        cellOverlaps[e2._eid].position--
+      }
+    })
+  })
+
+  // Overlaps streak is the longest horizontal set of simultaneous events.
+  // This is determining the width of events in a streak.
+  // e.g. 3 overlapping events [1, 2, 3]; 1 overlaps 2 & 3; 2 & 3 don't overlap;
+  //      => streak = 2; each width = 50% not 33%.
+  let longestStreak = 0
+  for (const id in cellOverlaps) {
+    const item = cellOverlaps[id]
+
+    // Calculate the position of each event in current streak (determines the CSS left property).
+    const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
+    overlapsRow.push({ id, start: item.start })
+    overlapsRow.sort((a, b) => a.start < b.start ? -1 : (a.start > b.start ? 1 : (a.id > b.id ? -1 : 1)))
+    item.position = overlapsRow.findIndex(e => e.id === id)
+
+    longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
   }
 
-  return cellEvents
+  return [cellOverlaps, longestStreak]
 }
 
-export const checkOverlappingEvents = (event, comparisonArray, cellEvents) => {
-  const src = (event.multipleDays.daysCount && event.multipleDays) || event
-  const { startTimeMinutes: startTimeMinE1, endTimeMinutes: endTimeMinE1 } = src
-
-  comparisonArray.forEach(event2id => {
-    let event2 = cellEvents.find(item => item._eid === event2id)
-    const src2 = (event2.multipleDays.daysCount && event2.multipleDays) || event2
-    const { startTimeMinutes: startTimeMinE2, endTimeMinutes: endTimeMinE2 } = src2
-
-    const event1startsFirst = startTimeMinE1 < startTimeMinE2
-    const event1overlapsEvent2 = !event1startsFirst && endTimeMinE2 > startTimeMinE1
-    const event2overlapsEvent1 = event1startsFirst && endTimeMinE1 > startTimeMinE2
-
-    if (event1overlapsEvent2) {
-      Vue.set(event.overlapping, event2._eid, true)
-      Vue.set(event2.overlapped, event._eid, true)
-    }
-
-    else {
-      delete event.overlapping[event2._eid]
-      delete event2.overlapped[event._eid]
-    }
-
-    if (event2overlapsEvent1) {
-      Vue.set(event2.overlapping, event._eid, true)
-      Vue.set(event.overlapped, event2._eid, true)
-    }
-
-    else {
-      delete event2.overlapping[event._eid]
-      delete event.overlapped[event2._eid]
-    }
-
-    // If up to 3 events start at the same time.
-    if (startTimeMinE1 === startTimeMinE2 || (event1overlapsEvent2 || event2overlapsEvent1)) {
-      Vue.set(event.simultaneous, event2._eid, true)
-      Vue.set(event2.simultaneous, event._eid, true)
-    }
-
-    else {
-      delete event.simultaneous[event2._eid]
-      delete event2.simultaneous[event._eid]
+export const getOverlapsStreak = (id, event, cellOverlaps = {}) => {
+  let streak = event.overlaps.length + 1
+  let removeFromStreak = []
+  event.overlaps.forEach(id2 => {
+    if (!removeFromStreak.includes(id2)) {
+      let overlapsWithoutSelf = event.overlaps.filter(id3 => id3 !== id2)
+      overlapsWithoutSelf.forEach(id4 => {
+        if (!cellOverlaps[id4].overlaps.includes(id2)) removeFromStreak.push(id4)
+      })
     }
   })
+
+  removeFromStreak = [...new Set(removeFromStreak)] // Dedupe, most performant way.
+  streak -= removeFromStreak.length
+  return streak
 }
 
 export const updateEventPosition = (event, vuecal) => {
-  const src = (event.multipleDays.daysCount && event.multipleDays) || event
-  const { startTimeMinutes, endTimeMinutes } = src
+  const { startTimeMinutes, endTimeMinutes } = event
 
   // Top of event.
   let minutesFromTop = startTimeMinutes - vuecal.timeFrom
@@ -251,4 +307,26 @@ export const updateEventPosition = (event, vuecal) => {
 
   event.top = Math.max(top, 0)
   event.height = bottom - event.top
+}
+
+/**
+ * Tells whether an event is in a given date range, even partially.
+ *
+ * @param {Object} event The event to test.
+ * @param {Date} start The start of range date object.
+ * @param {Date} end The end of range date object.
+ * @return {Boolean}
+ */
+export const eventInRange = (event, start, end) => {
+  // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
+  if (event.allDay || event.start.indexOf(':') === -1) {
+    // Get the date and discard the time if any, then check it's within the date range.
+    const eventStart = new Date(event.startDate).setHours(0, 0, 0, 0)
+    return (eventStart >= new Date(start).setHours(0, 0, 0, 0) &&
+      eventStart <= new Date(end).setHours(0, 0, 0, 0))
+  }
+
+  const startTimestamp = event.startDate.getTime()
+  const endTimestamp = event.endDate.getTime()
+  return startTimestamp < end.getTime() && endTimestamp > start.getTime()
 }

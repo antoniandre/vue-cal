@@ -1,34 +1,39 @@
 <template lang="pug">
 .vuecal__header
-  ul.vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector")
-    li(
+  .vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar views navigation")
+    button(
       v-if="v.enabled"
       :class="{ active: viewProps.view.id === id }"
       v-for="(v, id) in viewProps.views"
-      @click="$parent.switchView(id, null, true)") {{ v.label }}
+      @click="$parent.switchView(id, null, true)"
+      :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    .vuecal__arrow.vuecal__arrow--prev(@click="previous")
+    button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       transition(:name="`slide-fade--${transitionDirection}`")
-        span(
-          :class="{ clickable: !!broaderView }"
+        component(
+          :is="!!broaderView ? 'button' : 'span'"
+          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
           :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
           @click="switchToBroaderView")
           slot(name="title")
-    .vuecal__today-btn(v-if="options.todayButton" @click="goToToday")
-      slot(name="today-btn")
-    .vuecal__arrow.vuecal__arrow--next(@click="next")
+    button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
+      slot(name="today-button")
+    button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
     :vuecal="$parent"
     :view="viewProps.view"
     :week-days="weekDays"
-    :week-days-short="weekDaysShort"
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView"
   )
+  //- Sticky split-days headers on day view only.
+  transition(:name="`slide-fade--${transitionDirection}`")
+    .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && options.stickySplitLabels && options.splitDays.length")
+      .day-split-header(v-for="(split, i) in options.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
 <script>
@@ -49,10 +54,6 @@ export default {
     },
     weekDays: {
       type: Array,
-      default: () => []
-    },
-    weekDaysShort: {
-      type: [Array, null],
       default: () => []
     },
     switchToNarrowerView: {
@@ -97,7 +98,8 @@ export default {
     },
 
     goToToday () {
-      this.$parent.updateSelectedDate(new Date())
+      // Last midnight.
+      this.$parent.updateSelectedDate(new Date(new Date().setHours(0, 0, 0)))
     },
 
     switchToBroaderView () {
@@ -129,23 +131,32 @@ export default {
 
 <style lang="scss">
 .vuecal {
+  &__header button {
+    background: none;
+    border: none;
+    outline: none;
+    font: inherit;
+  }
+
   &__menu {
     padding: 0;
+    margin: 0;
     list-style-type: none;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.02);
 
-    li {
+    button {
       padding: 0.3em 1em;
       height: 2.2em;
       font-size: 1.3em;
       border-bottom: 0 solid currentColor;
       cursor: pointer;
+      color: inherit;
       box-sizing: border-box;
       transition: 0.2s;
     }
 
-    li.active {
+    button.active {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
@@ -167,6 +178,9 @@ export default {
   &__title {
     position: relative;
     justify-content: center;
+    button {cursor: pointer;}
+    button.slide-fade--left-leave-active,
+    button.slide-fade--right-leave-active {width: 100%;}
   }
 
   &__today-btn {

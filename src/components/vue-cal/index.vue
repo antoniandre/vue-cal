@@ -3,17 +3,19 @@
   vuecal-header(
     :options="$props"
     :view-props="{ views, view, weekDaysInHeader }"
-    :months="months"
     :week-days="weekDays"
-    :week-days-short="weekDaysShort"
     :switch-to-narrower-view="switchToNarrowerView")
-    slot(slot="arrow-prev" name="arrow-prev")
-      i.angle
-    slot(slot="arrow-next" name="arrow-next")
-      i.angle
-    slot(slot="today-btn" name="today-button")
-      span.default {{ texts.today }}
-    slot(slot="title" name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    template(v-slot:arrow-prev)
+      slot(name="arrow-prev")
+        i.angle
+    template(v-slot:arrow-next)
+      slot(name="arrow-next")
+        i.angle
+    template(v-slot:today-button)
+      slot(name="today-button")
+        span.default {{ texts.today }}
+    template(v-slot:title)
+      slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -30,8 +32,8 @@
               :all-day="true"
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
-              :splits="hasSplits && splitDays || []")
-              div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+              :cell-splits="hasSplits && splitDays || []")
+              template(v-slot:event-renderer="{ event, view }")
                 slot(name="event-renderer" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
                     v-if="editableEvents && event.title"
@@ -59,27 +61,27 @@
                 :view="view"
                 :min-cell-width="minCellWidth"
                 :week-days="weekDays"
-                :week-days-short="weekDaysShort"
                 :switch-to-narrower-view="switchToNarrowerView")
 
-              .vuecal__flex(grow :wrap="!minCellWidth || view.id !== 'week'")
+              .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
                   :options="$props"
                   :data="cell"
+                  :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
-                  :splits="hasSplits && splitDays || []")
-                  div(slot="cell-content" slot-scope="{ events, split, selectCell }")
-                    slot(name="cell-content" :cell="cell" :view="view" :goNarrower="selectCell" :events="events")
-                      .split-label(v-if="split" v-html="split.label")
+                  :cell-splits="hasSplits && splitDays || []")
+                  template(v-slot:cell-content="{ events, split, selectCell }")
+                    slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
+                      .split-label(v-if="split && !stickySplitLabels" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                       .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
                       .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                         slot(name="no-event") {{ texts.noEvent }}
-                  div(slot="event-renderer" slot-scope="{ event, view }" :view="view" :event="event")
+                  template(v-slot:event-renderer="{ event, view }")
                     slot(name="event-renderer" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
                         v-if="editableEvents && event.title"
@@ -88,18 +90,18 @@
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
-                        | {{ event.startTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || ($props['12Hour'] ? 'h:mm{am}' : 'HH:mm')) }}
-                        small.days-to-end(v-if="event.multipleDays.daysCount") &nbsp;+{{ event.multipleDays.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
+                        | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
+                        small.days-to-end(v-if="event.daysCount > 1 && event.segments[cell.formattedDate].isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
-                  slot(slot="no-event" name="no-event") {{ texts.noEvent }}
+                  slot(v-slot:no-event) {{ texts.noEvent }}
 </template>
 
 <script>
-import { now, isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate } from './date-utils'
-import { createAnEvent, eventDefaults, onResizeEvent } from './event-utils'
+import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
+import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
@@ -109,151 +111,50 @@ export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
   props: {
-    locale: {
-      type: String,
-      default: 'en'
-    },
-    hideViewSelector: {
-      type: Boolean,
-      default: false
-    },
-    hideTitleBar: {
-      type: Boolean,
-      default: false
-    },
-    hideBody: {
-      type: Boolean,
-      default: false
-    },
-    hideWeekends: {
-      type: Boolean,
-      default: false
-    },
-    disableViews: {
-      type: Array,
-      default: () => []
-    },
-    defaultView: {
-      type: String,
-      default: 'week'
-    },
-    todayButton: {
-      type: Boolean,
-      default: false
-    },
-    showAllDayEvents: {
-      type: [Boolean, String],
-      default: false
-    },
-    selectedDate: {
-      type: [String, Date],
-      default: ''
-    },
-    minDate: {
-      type: [String, Date],
-      default: ''
-    },
-    maxDate: {
-      type: [String, Date],
-      default: ''
-    },
-    startWeekOnSunday: {
-      type: Boolean,
-      default: false
-    },
-    small: {
-      type: Boolean,
-      default: false
-    },
-    xsmall: {
-      type: Boolean,
-      default: false
-    },
-    clickToNavigate: {
-      type: Boolean,
-      default: false
-    },
-    dblClickToNavigate: {
-      type: Boolean,
-      default: true
-    },
-    time: {
-      type: Boolean,
-      default: true
-    },
-    timeFrom: {
-      type: Number,
-      default: 0 // In minutes.
-    },
-    timeTo: {
-      type: Number,
-      default: 24 * 60 // In minutes.
-    },
-    timeStep: {
-      type: Number,
-      default: 60 // In minutes.
-    },
-    timeCellHeight: {
-      type: Number,
-      default: 40 // In pixels.
-    },
-    '12Hour': {
-      type: Boolean,
-      default: false
-    },
-    timeFormat: {
-      type: String,
-      default: ''
-    },
-    minCellWidth: {
-      type: Number,
-      default: 0
-    },
-    splitDays: {
-      type: Array,
-      default: () => []
-    },
-    events: {
-      type: Array,
-      default: () => []
-    },
-    editableEvents: {
-      type: Boolean,
-      default: false
-    },
-    noEventOverlaps: {
-      type: Boolean,
-      default: false
-    },
-    eventsOnMonthView: {
-      type: [Boolean, String],
-      default: false
-    },
-    eventsCountOnYearView: {
-      type: Boolean,
-      default: false
-    },
-    onEventClick: {
-      type: Function,
-      default: () => {}
-    },
-    onEventDblclick: {
-      type: Function,
-      default: () => {}
-    },
-    onEventCreate: {
-      type: Function,
-      default: () => {}
-    },
-    transitions: {
-      type: Boolean,
-      default: true
-    }
+    locale: { type: String, default: 'en' },
+    hideViewSelector: { type: Boolean, default: false },
+    hideTitleBar: { type: Boolean, default: false },
+    hideBody: { type: Boolean, default: false },
+    hideWeekends: { type: Boolean, default: false },
+    hideWeekdays: { type: Array, default: () => [] },
+    disableViews: { type: Array, default: () => [] },
+    defaultView: { type: String, default: 'week' },
+    todayButton: { type: Boolean, default: false },
+    showAllDayEvents: { type: [Boolean, String], default: false },
+    selectedDate: { type: [String, Date], default: '' },
+    minDate: { type: [String, Date], default: '' },
+    maxDate: { type: [String, Date], default: '' },
+    startWeekOnSunday: { type: Boolean, default: false },
+    small: { type: Boolean, default: false },
+    xsmall: { type: Boolean, default: false },
+    clickToNavigate: { type: Boolean, default: false },
+    dblclickToNavigate: { type: Boolean, default: true },
+    cellClickHold: { type: Boolean, default: true },
+    time: { type: Boolean, default: true },
+    timeFrom: { type: Number, default: 0 }, // In minutes.
+    timeTo: { type: Number, default: 24 * 60 }, // In minutes.
+    timeStep: { type: Number, default: 60 }, // In minutes.
+    timeCellHeight: { type: Number, default: 40 }, // In pixels.
+    twelveHour: { type: Boolean, default: false },
+    timeFormat: { type: String, default: '' },
+    minCellWidth: { type: Number, default: 0 },
+    splitDays: { type: Array, default: () => [] },
+    stickySplitLabels: { type: Boolean, default: false },
+    events: { type: Array, default: () => [] },
+    editableEvents: { type: Boolean, default: false },
+    resizeX: { type: Boolean, default: false },
+    eventsOnMonthView: { type: [Boolean, String], default: false },
+    eventsCountOnYearView: { type: Boolean, default: false },
+    onEventClick: { type: [Function, null], default: null },
+    onEventDblclick: { type: [Function, null], default: null },
+    onEventCreate: { type: [Function, null], default: null },
+    transitions: { type: Boolean, default: true }
   },
   data: function () {
     return {
-      texts: this.locale === 'en' ? require('./i18n/en.json') : {
+      texts: {
         weekDays: Array(7).fill(''),
+        weekDaysShort: [],
         months: Array(12).fill(''),
         years: '',
         year: '',
@@ -268,23 +169,25 @@ export default {
         dateFormat: 'DDDD mmmm d, yyyy'
       },
       ready: false,
-      now,
       view: {
         id: '',
         title: '',
         startDate: null,
         endDate: null,
-        selectedDate: null
+        selectedDate: null,
+        events: []
       },
       eventIdIncrement: 1,
       domEvents: {
         resizeAnEvent: {
           _eid: null, // Only one at a time.
-          startDate: null,
           start: null,
-          originalHeight: 0,
-          newHeight: 0,
-          split: null
+          split: null,
+          segment: null,
+          originalEndTimeMinutes: 0,
+          endTimeMinutes: 0,
+          startCell: null,
+          endCell: null
         },
         dragAnEvent: {
           _eid: null // Only one at a time.
@@ -306,18 +209,23 @@ export default {
           split: null,
           timeout: 1200, // Hold for 1.2s to create an event.
           timeoutId: null
-        }
+        },
+        // A single click can trigger event creation if the user decides so.
+        // But prevent this to happen on click & hold, on event click and on resize event.
+        cancelClickEventCreation: false
       },
-      mutableEvents: {}, // An indexed array of mutable events updated each time given events array changes.
+      mutableEvents: [], // An array of mutable events updated each time given events array changes.
       transitionDirection: 'right'
     }
   },
 
   methods: {
     loadLocale (locale) {
-      // import(/* webpackInclude: /\.json$/, webpackChunkName: "[request]" */ `./i18n/${locale}`)
-      //   .then(response => (this.texts = response.default))
-      this.texts = require(`./i18n/${locale}.json`)
+      if (this.locale === 'en') this.texts = require('./i18n/en.json')
+      else {
+        import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
+          .then(response => (this.texts = response.default))
+      }
     },
 
     switchToNarrowerView () {
@@ -340,7 +248,6 @@ export default {
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
       this.view.lastCellDate = null // For month view, if filling cells after current month.
-      let dateTmp, endTime, formattedDate, dayEvents
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
@@ -363,8 +270,6 @@ export default {
           this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
           this.view.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          dateTmp = new Date(this.view.startDate)
-          endTime = this.view.endDate.getTime()
 
           // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
           let startDate = new Date(this.view.startDate)
@@ -375,52 +280,47 @@ export default {
           // Used in viewCells computed array & returned in emitted events.
           this.view.firstCellDate = startDate
           this.view.lastCellDate = startDate.addDays(41)
+          this.view.lastCellDate.setHours(23, 59, 59)
 
-          // Save out of scope events into the view object separated from the array of in-scope events.
-          let currentMonth = this.view.startDate.getMonth()
-          let cellDate = null
-          this.view.outOfScopeEvents = []
-          for (let i = 0; i < 42; i++) { // 42 cells (6 rows x 7 days).
-            cellDate = startDate.addDays(i)
-
-            if (currentMonth !== cellDate.getMonth()) {
-              formattedDate = formatDate(cellDate, 'yyyy-mm-dd', this.texts)
-              dayEvents = this.mutableEvents[formattedDate] || []
-
-              if (dayEvents.length) {
-                this.view.outOfScopeEvents.push(...dayEvents.map(e => this.cleanupEvent(e)))
-              }
+          if (this.hideWeekends) {
+            // Remove first weekend from firstCellDate if hide-weekends.
+            if ([0, 6].includes(this.view.firstCellDate.getDay())) {
+              const daysToAdd = this.view.firstCellDate.getDay() === 6 && !this.startWeekOnSunday ? 2 : 1
+              this.view.firstCellDate = this.view.firstCellDate.addDays(daysToAdd)
             }
-          }
-
-          while (dateTmp.getTime() <= endTime) {
-            dateTmp = dateTmp.addDays(1)
-            formattedDate = formatDate(dateTmp, 'yyyy-mm-dd', this.texts)
-
-            // Save the events of each day of month into view object.
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
+            // Remove first weekend from startDate if hide-weekends.
+            if ([0, 6].includes(this.view.startDate.getDay())) {
+              const daysToAdd = this.view.startDate.getDay() === 6 ? 2 : 1
+              this.view.startDate = this.view.startDate.addDays(daysToAdd)
+            }
+            // Remove last weekend from lastCellDate if hide-weekends.
+            if ([0, 6].includes(this.view.lastCellDate.getDay())) {
+              const daysToSubtract = this.view.lastCellDate.getDay() === 0 && !this.startWeekOnSunday ? 2 : 1
+              this.view.lastCellDate = this.view.lastCellDate.subtractDays(daysToSubtract)
+            }
+            // Remove last weekend from endDate if hide-weekends.
+            if ([0, 6].includes(this.view.endDate.getDay())) {
+              const daysToSubtract = this.view.endDate.getDay() === 0 ? 2 : 1
+              this.view.endDate = this.view.endDate.subtractDays(daysToSubtract)
+            }
           }
           break
         case 'week':
+          const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
-          this.view.endDate = date.addDays(7)
+          this.view.startDate.setHours(0, 0, 0)
+          this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
-          dateTmp = new Date(date)
-          for (let i = 0; i < 7; i++) {
-            formattedDate = formatDate(dateTmp.addDays(i), 'yyyy-mm-dd', this.texts)
-            dayEvents = this.mutableEvents[formattedDate] || []
-            if (dayEvents.length) this.view.events.push(...dayEvents.map(e => this.cleanupEvent(e)))
-          }
           break
         case 'day':
           this.view.startDate = date
+          this.view.startDate.setHours(0, 0, 0)
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
-          dayEvents = this.mutableEvents[formatDate(date, 'yyyy-mm-dd', this.texts)] || []
-          if (dayEvents.length) this.view.events = dayEvents.map(e => this.cleanupEvent(e))
           break
       }
+
+      this.addEventsToView()
 
       if (this.ready) {
         const params = {
@@ -430,12 +330,45 @@ export default {
           ...(this.view.id === 'month' ? {
             firstCellDate: this.view.firstCellDate,
             lastCellDate: this.view.lastCellDate,
-            outOfScopeEvents: this.view.outOfScopeEvents
+            outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
-          events: this.view.events,
+          events: this.view.events.map(this.cleanupEvent),
           ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
+      }
+    },
+
+    addEventsToView (events = []) {
+      const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
+      if (!events.length) this.view.events = []
+      events = events.length ? events : this.mutableEvents
+
+      if (['month', 'week', 'day'].includes(id) && events) {
+        this.view.events.push(
+          ...events
+            .filter(e => eventInRange(e, startDate, endDate))
+            .map(e => {
+              // If multiple-day events.
+              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, startDate, endDate, this)
+            })
+        )
+
+        if (id === 'month') {
+          // Save out of scope events into the view object separated from the array of in-scope events.
+          this.view.outOfScopeEvents = []
+          events.forEach(e => {
+            if (eventInRange(e, firstCellDate, startDate) || eventInRange(e, endDate, lastCellDate)) {
+              // Only add to the view events array if not already there (multiple-day events case).
+              if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.outOfScopeEvents.push(e)
+              // if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.events.push(e)
+            }
+          })
+        }
+      }
+
+      else if (['years', 'year'].includes(id) && events && this.eventsCountOnYearView) {
+        this.view.events.push(...events.filter(e => eventInRange(e, startDate, endDate)))
       }
     },
 
@@ -455,36 +388,84 @@ export default {
       if (resizeAnEvent._eid === null) return
 
       e.preventDefault()
-      const y = 'ontouchstart' in window ? e.touches[0].clientY : e.clientY
-      resizeAnEvent.newHeight = resizeAnEvent.originalHeight + (y - resizeAnEvent.start)
+      let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+      let segment = event.segments && event.segments[resizeAnEvent.segment]
+      const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
-      let cellEvents = this.mutableEvents[resizeAnEvent.startDate]
-      if (this.hasSplits && this.splitDays) {
-        cellEvents = cellEvents.filter(e => e.split === resizeAnEvent.split)
+      // Don't allow time above 24 hours.
+      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 24 * 60)
+
+      if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes
+      event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
+      event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+      event.daysCount = countDays(event.startDate, event.endDate)
+
+      // Resize events horizontally if resize-x is enabled (add/remove segments).
+      if (this.resizeX && this.view.id === 'week') {
+        let cells = this.$refs.cells
+        let cellWidth = cells.offsetWidth / cells.childElementCount
+        let endCell = Math.floor(cursorCoords.x / cellWidth)
+
+        if (!resizeAnEvent.startCell) {
+          resizeAnEvent.startCell = endCell - (event.daysCount - 1)
+        }
+        if (resizeAnEvent.endCell !== endCell) {
+          resizeAnEvent.endCell = endCell
+
+          let endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
+          let newDaysCount = countDays(event.startDate, endDate)
+
+          if (newDaysCount !== event.daysCount) {
+            // Check that all segments are up to date.
+            let lastSegmentFormattedDate = null
+            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event, this)
+            else lastSegmentFormattedDate = removeEventSegment(event, this)
+            resizeAnEvent.segment = lastSegmentFormattedDate
+            event.endTimeMinutes += 0.001 // Force updating the current event.
+          }
+        }
       }
-      onResizeEvent(cellEvents, this)
     },
 
+    // Mouseup can never cancel a click with preventDefault or stopPropagation,
+    // But it always happens before the click event.
     onMouseUp (e) {
-      let { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
-      if (resizeAnEvent._eid && resizeAnEvent.newHeight !== resizeAnEvent.originalHeight) {
-        let event = this.mutableEvents[resizeAnEvent.startDate].find(item => item._eid === resizeAnEvent._eid)
-        if (event) {
+      if (resizeAnEvent._eid) {
+        this.domEvents.cancelClickEventCreation = true
+        let event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
+        if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
+          // Store modified event back in mutable events.
+          let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
+          mutableEvent.endTimeMinutes = event.endTimeMinutes
+          mutableEvent.end = event.end
+          mutableEvent.endDate = event.endDate
+
           this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
         }
+
+        if (event) event.resizing = false
+        resizeAnEvent._eid = null
+        resizeAnEvent.start = null
+        resizeAnEvent.split = null
+        resizeAnEvent.segment = null
+        resizeAnEvent.originalEndTimeMinutes = null
+        resizeAnEvent.endTimeMinutes = null
+        resizeAnEvent.startCell = null
+        resizeAnEvent.endCell = null
       }
+
+      if (this.isDOMElementAnEvent(e.target)) this.domEvents.cancelClickEventCreation = true
 
       // If not mouse up on an event, unfocus any event except if just dragged.
-      if (!this.isDOMElementAnEvent(e.target) && !resizeAnEvent._eid) {
-        focusAnEvent._eid = null // Cancel event focus.
-        clickHoldAnEvent._eid = null // Hide delete button.
-      }
+      else if (!resizeAnEvent._eid) this.unfocusEvent()
 
       // Prevent showing delete button if click and hold was not long enough.
-      // Click & hold timeout happens in onMouseDown() in cell component.
+      // Click & hold timeout is initiated in onMouseDown() in event component.
       if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent._eid) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
@@ -495,12 +476,37 @@ export default {
         clearTimeout(clickHoldACell.timeoutId)
         clickHoldACell.timeoutId = null
       }
+    },
 
-      // Any mouse up must cancel event resizing.
-      resizeAnEvent._eid = null
-      resizeAnEvent.start = null
-      resizeAnEvent.originalHeight = null
-      resizeAnEvent.newHeight = null
+    onKeyUp (e) {
+      // Escape key.
+      if (e.keyCode === 27) {
+        this.cancelDelete()
+      }
+    },
+
+    unfocusEvent () {
+      let { focusAnEvent, clickHoldAnEvent } = this.domEvents
+      const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
+      focusAnEvent._eid = null // Cancel event focus.
+      clickHoldAnEvent._eid = null // Hide delete button.
+
+      if (event) {
+        event.focused = false
+        event.deleting = false
+      }
+    },
+
+    // Cancel an event deletion.
+    cancelDelete () {
+      let { clickHoldAnEvent } = this.domEvents
+      if (clickHoldAnEvent._eid) {
+        const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
+        if (event) event.deleting = false
+
+        clickHoldAnEvent._eid = null
+        clickHoldAnEvent.timeoutId = null
+      }
     },
 
     onEventTitleBlur (e, event) {
@@ -509,150 +515,105 @@ export default {
 
       event.title = e.target.innerHTML
 
-      if (event.linked.daysCount) {
-        event.linked.forEach(e => {
-          let dayToModify = this.mutableEvents[e.date]
-          dayToModify.find(e2 => e2._eid === e._eid).title = event.title
-        })
-      }
-
       this.emitWithEvent('event-change', event)
       this.emitWithEvent('event-title-change', event)
     },
 
-    // Object of arrays of events indexed by dates.
+    // Object of arrays of events.
+    // mutableEvents can't be a computed value based on this.events, because we add
+    // items to the array. (Cannot mutate props)
     updateMutableEvents () {
-      // eslint-disable-next-line
-      this.mutableEvents = {}
+      this.mutableEvents = []
 
       // Group events into dates.
-      this.events.map(event => {
-        let [startDate, startTime = ''] = event.start.split(' ')
-        const [hoursStart, minutesStart] = startTime.split(':')
+      this.events.forEach((event, i) => {
+        // Event Start, accepts formatted string - startDate accepts Date object.
+        let start, startDate, startDateF, startTime, hoursStart, minutesStart
+        if (event.start) {
+          // eslint-disable-next-line
+          !([startDateF, startTime = ''] = event.start.split(' '))
+          // eslint-disable-next-line
+          !([hoursStart, minutesStart] = startTime.split(':'))
+          startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+        }
+        else if (event.startDate && event.startDate instanceof Date) {
+          startDateF = this.formatDate(event.startDate)
+          hoursStart = event.startDate.getHours()
+          minutesStart = event.startDate.getMinutes()
+          startDate = event.startDate
+        }
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
+        start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
 
-        let [endDate, endTime = ''] = event.end.split(' ')
-        const [hoursEnd, minutesEnd] = endTime.split(':')
+        // Event End, accepts formatted string - endDate accepts Date object.
+        let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
+        if (event.end) {
+          // eslint-disable-next-line
+          !([endDateF, endTime = ''] = event.end.split(' '))
+          // eslint-disable-next-line
+          !([hoursEnd, minutesEnd] = endTime.split(':'))
+          endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+        }
+        else if (event.endDate && event.endDate instanceof Date) {
+          endDateF = this.formatDate(event.endDate)
+          hoursEnd = event.endDate.getHours()
+          minutesEnd = event.endDate.getMinutes()
+          endDate = event.endDate
+        }
+
+        // Correct the common practice to end at 00:00 or 24:00 to count a full day.
+        if (['00:00', '24:00'].includes(endTime)) {
+          endDate.setSeconds(-1) // End at 23:59:59.
+          endDateF = this.formatDate(endDate)
+        }
+
         const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-        const multipleDays = startDate !== endDate
+        end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
 
-        // Keep the event ids scoped to this calendar instance.
-        // eslint-disable-next-line
-        let _eid = `${this._uid}_${this.eventIdIncrement++}`
+        const multipleDays = startDateF !== endDateF
 
         event = Object.assign({
           ...eventDefaults,
-          _eid,
-          overlapped: {},
-          overlapping: {},
-          simultaneous: {},
-          multipleDays: {},
+          // Keep the event ids scoped to this calendar instance.
+          _eid: `${this._uid}_${this.eventIdIncrement++}`,
+          segments: multipleDays ? {} : null,
+          start,
           startDate,
-          startTime,
           startTimeMinutes,
+          end,
           endDate,
-          endTime,
           endTimeMinutes,
+          daysCount: multipleDays ? countDays(startDate, endDate) : 1,
           classes: (event.class || '').split(' ')
         }, event)
 
-        // Make array reactive for future events creations & deletions.
-        if (!(event.startDate in this.mutableEvents)) this.$set(this.mutableEvents, event.startDate, [])
-        // eslint-disable-next-line
-        this.mutableEvents[event.startDate].push(event)
-
-        if (multipleDays) {
-          // Create an array of linked events to attach to each event piece (piece = 1 day),
-          // So that deletion and modification reflects on all the pieces.
-          let eventPieces = []
-
-          const oneDayInMs = 24 * 60 * 60 * 1000
-          const [y1, m1, d1] = startDate.split('-')
-          const [y2, m2, d2] = endDate.split('-')
-          startDate = new Date(y1, parseInt(m1) - 1, d1)
-          endDate = new Date(y2, parseInt(m2) - 1, d2)
-          const datesDiff = Math.round(Math.abs((startDate.getTime() - endDate.getTime()) / oneDayInMs))
-          const startDateFormatted = formatDate(startDate, 'yyyy-mm-dd', this.texts)
-
-          // Update First day event.
-          event.multipleDays = {
-            start: true,
-            startDate: startDateFormatted,
-            startTime,
-            startTimeMinutes,
-            endDate: startDateFormatted,
-            endTime: '24:00',
-            endTimeMinutes: 24 * 60,
-            daysCount: datesDiff + 1
-          }
-
-          // Generate event pieces ids to link them all together
-          // and update the first event linked events array with all ids of pieces.
-          for (let i = 1; i <= datesDiff; i++) {
-            const date = formatDate(new Date(startDate).addDays(i), 'yyyy-mm-dd', this.texts)
-            eventPieces.push({
-              _eid: `${this._uid}_${this.eventIdIncrement++}`,
-              date
-            })
-          }
-          event.linked = eventPieces
-
-          // Create 1 event per day and link them all.
-          for (let i = 1; i <= datesDiff; i++) {
-            const date = eventPieces[i - 1].date
-            const linked = [
-              { _eid: event._eid, date: event.startDate },
-              ...eventPieces.slice(0).filter(e => e._eid !== eventPieces[i - 1]._eid)
-            ]
-
-            // Make array reactive for future events creations & deletions.
-            if (!(date in this.mutableEvents)) this.$set(this.mutableEvents, date, [])
-
-            this.mutableEvents[date].push({
-              ...event,
-              _eid: eventPieces[i - 1]._eid,
-              overlapped: {},
-              overlapping: {},
-              simultaneous: {},
-              linked,
-              // All the dates in the multipleDays object property are related
-              // to the current event piece (only 1 day) not the whole event.
-              multipleDays: {
-                start: false,
-                middle: i < datesDiff,
-                end: i === datesDiff,
-                startDate: date,
-                startTime: '00:00',
-                startTimeMinutes: 0,
-                endDate: date,
-                endTime: i === datesDiff ? endTime : '24:00',
-                endTimeMinutes: i === datesDiff ? endTimeMinutes : 24 * 60,
-                daysCount: datesDiff + 1
-              }
-            })
-          }
-        }
-
-        return event
+        this.mutableEvents.push(event)
       })
     },
 
     getPosition (e) {
-      const rect = e.target.getBoundingClientRect()
+      // @todo: Cache bounding box & update it on resize.
+      const rect = this.$refs.cells.getBoundingClientRect()
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
-    // Allow call from cell click & hold or external call via $refs.
-    createEvent (formattedDate, e = null, eventOptions = {}) {
+    minutesAtCursor (e) {
       let startTimeMinutes = 0
+      let cursorCoords = {}
+
       if (typeof e === 'number') startTimeMinutes = e
       else if (typeof e === 'object') {
-        const mouseY = this.getPosition(e).y
-        startTimeMinutes = mouseY * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom
+        cursorCoords = this.getPosition(e)
+        startTimeMinutes = Math.round(cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom)
       }
 
-      return createAnEvent(formattedDate, startTimeMinutes, eventOptions, this)
+      return { startTimeMinutes, cursorCoords }
+    },
+
+    // Allow call from cell click & hold or external call via $refs.
+    createEvent (dateTime, eventOptions = {}) {
+      return createAnEvent(dateTime, eventOptions, this)
     },
 
     // Prepare the event to return it with an emitted event.
@@ -661,20 +622,11 @@ export default {
 
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
-      const discardProps = ['height', 'top', 'overlapped', 'overlapping', 'simultaneous', 'classes', 'split']
-      for (let prop in event) if (discardProps.includes(prop)) delete event[prop]
-      if (!event.multipleDays.daysCount) delete event.multipleDays
-
-      // Return date objects for easy manipulation.
-      const [date1, time1] = event.start.split(' ')
-      const [y1, m1, d1] = (date1 && date1.split('-')) || [0, 0, 0]
-      const [h1, min1] = (time1 && time1.split(':')) || [0, 0]
-      event.startDate = new Date(y1, parseInt(m1) - 1, d1, h1, min1)
-
-      const [date2, time2] = event.end.split(' ')
-      const [y2, m2, d2] = (date2 && date2.split('-')) || [0, 0, 0]
-      const [h2, min2] = (time2 && time2.split(':')) || [0, 0]
-      event.endDate = new Date(y2, parseInt(m2) - 1, d2, h2, min2)
+      const discardProps = [
+        'height', 'top', 'classes', 'split', 'segments',
+        'deletable', 'deleting', 'resizable', 'resizing', 'focused'
+      ]
+      discardProps.forEach(prop => { if (prop in event) delete event[prop] })
 
       return event
     },
@@ -687,17 +639,26 @@ export default {
       if (date && typeof date === 'string') date = stringToDate(date)
 
       if (date && date instanceof Date) {
-        if (this.view.selectedDate) this.transitionDirection = this.view.selectedDate.getTime() > date.getTime() ? 'left' : 'right'
+        let { selectedDate } = this.view
+        if (selectedDate) this.transitionDirection = selectedDate.getTime() > date.getTime() ? 'left' : 'right'
         // Select the day at midnight in order to allow fetching events on whole day.
         date.setHours(0, 0, 0)
-        this.view.selectedDate = date
+
+        if (!selectedDate || selectedDate.getTime() !== date.getTime()) this.view.selectedDate = date
         this.switchView(this.view.id)
       }
+    },
+
+    countDays,
+
+    // Shorthand function.
+    formatDate (date, format = 'yyyy-mm-dd') {
+      return formatDate(date, format, this.texts)
     }
   },
 
   created () {
-    if (this.locale !== 'en') this.loadLocale(this.locale)
+    this.loadLocale(this.locale)
 
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
@@ -705,7 +666,7 @@ export default {
     this.view.id = this.defaultView
     if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
-      this.view.selectedDate = this.now
+      this.view.selectedDate = new Date()
       this.switchView(this.defaultView)
     }
   },
@@ -716,6 +677,7 @@ export default {
     if (this.editableEvents) {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+      window.addEventListener('keyup', this.onKeyUp)
     }
 
     // Disable context menu on touch devices on the whole vue-cal instance.
@@ -731,7 +693,7 @@ export default {
       startDate: this.view.startDate,
       endDate: this.view.endDate,
       ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
-      events: this.view.events,
+      events: this.view.events.map(this.cleanupEvent),
       ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
     }
 
@@ -743,12 +705,10 @@ export default {
     const hasTouch = 'ontouchstart' in window
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+    window.removeEventListener('keyup', this.onKeyUp)
   },
 
   computed: {
-    selectedDateFormatted () {
-      return formatDate(this.view.selectedDate, 'yyyy-mm-dd', this.texts)
-    },
     views () {
       return {
         years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },
@@ -771,7 +731,7 @@ export default {
         timeCells.push({
           hours: Math.floor(i / 60),
           minutes: i % 60,
-          label: formatTime(i, this.timeFormat || (this['12Hour'] ? 'h:mm{am}' : 'HH:mm')),
+          label: formatTime(i, this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
       }
@@ -786,42 +746,26 @@ export default {
       let date = null
       if (this.minDate && typeof this.minDate === 'string') date = stringToDate(this.minDate)
       else if (this.minDate && this.minDate instanceof Date) date = this.minDate
-      return date ? date.getTime() : 0
+      return date ? date.getTime() : null
     },
     maxTimestamp () {
       let date = null
       if (this.maxDate && typeof this.maxDate === 'string') date = stringToDate(this.maxDate)
       else if (this.maxDate && this.minDate instanceof Date) date = this.maxDate
-      return date ? date.getTime() : 0
+      return date ? date.getTime() : null
     },
     weekDays () {
-      let { weekDays } = this.texts
+      let { weekDays, weekDaysShort = [] } = this.texts
       // Do not modify original for next instances.
-      weekDays = weekDays.slice(0)
+      weekDays = weekDays.slice(0).map((day, i) => ({
+        label: day,
+        ...(weekDaysShort.length ? { short: weekDaysShort[i] } : {}),
+        hide: (this.hideWeekends && i >= 5) || (this.hideWeekdays.length && this.hideWeekdays.includes(i + 1))
+      }))
 
       if (this.startWeekOnSunday) weekDays.unshift(weekDays.pop())
 
-      if (this.hideWeekends) {
-        weekDays = this.startWeekOnSunday ? weekDays.slice(1, 6) : weekDays.slice(0, 5)
-      }
-
-      return weekDays.map(day => ({ label: day }))
-    },
-    weekDaysShort () {
-      let { weekDaysShort = null } = this.texts
-
-      if (weekDaysShort) {
-        // Do not modify original for next instances.
-        weekDaysShort = weekDaysShort.slice(0)
-
-        if (this.startWeekOnSunday) weekDaysShort.unshift(weekDaysShort.pop())
-
-        if (this.hideWeekends) {
-          weekDaysShort = this.startWeekOnSunday ? weekDaysShort.slice(1, 6) : weekDaysShort.slice(0, 5)
-        }
-      }
-
-      return weekDaysShort && weekDaysShort.map(day => ({ label: day }))
+      return weekDays
     },
     weekDaysInHeader () {
       return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
@@ -847,18 +791,18 @@ export default {
           break
         case 'week':
           const lastDayOfWeek = date.addDays(6)
-          let formattedMonthYear = formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts)
+          let formattedMonthYear = this.formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')
 
           // If week is not ending in the same month it started in.
           if (lastDayOfWeek.getMonth() !== date.getMonth()) {
             let [m1, y1] = formattedMonthYear.split(' ')
-            let [m2, y2] = formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy', this.texts).split(' ')
+            let [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy').split(' ')
             formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
         case 'day':
-          title = formatDate(date, this.texts.dateFormat, this.texts)
+          title = this.formatDate(date, this.texts.dateFormat)
           break
       }
 
@@ -868,6 +812,8 @@ export default {
       let cells = []
       let fromYear = null
       let todayFound = false
+      // Don't cache now date, so on next day Today's selected cell will still be accurate.
+      const now = new Date()
 
       switch (this.view.id) {
         case 'years':
@@ -879,10 +825,10 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: fromYear + i,
-              current: fromYear + i === this.now.getFullYear()
+              current: fromYear + i === now.getFullYear()
             }
           })
           break
@@ -895,19 +841,17 @@ export default {
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
-              current: i === this.now.getMonth() && fromYear === this.now.getFullYear()
+              current: i === now.getMonth() && fromYear === now.getFullYear()
             }
           })
           break
         case 'month':
           const month = this.view.startDate.getMonth()
-          let selectedDateAtMidnight = new Date(this.view.selectedDate.getTime())
-          selectedDateAtMidnight.setHours(0, 0, 0, 0)
-          todayFound = false
           const firstCellDate = new Date(this.view.firstCellDate)
+          todayFound = false
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
@@ -915,14 +859,11 @@ export default {
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
             // To increase performance skip checking isToday if today already found.
-            const isToday = !todayFound && startDate && startDate.getDate() === this.now.getDate() &&
-                            startDate.getMonth() === this.now.getMonth() &&
-                            startDate.getFullYear() === this.now.getFullYear() &&
-                            !todayFound++
+            const isToday = !todayFound && isDateToday(startDate) && !todayFound++
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: this.formatDate(startDate),
               endDate,
               content: startDate.getDate(),
               today: isToday,
@@ -930,26 +871,34 @@ export default {
             }
           })
 
-          if (this.hideWeekends) {
-            cells = cells.filter(cell => cell.startDate.getDay() > 0 && cell.startDate.getDay() < 6)
+          if (this.hideWeekends || this.hideWeekdays.length) {
+            cells = cells.filter(cell => {
+              let day = cell.startDate.getDay()
+              if (!day) day = 7 // Put Sunday at position 7 instead of 0.
+
+              return !((this.hideWeekends && day >= 6) ||
+              (this.hideWeekdays.length && this.hideWeekdays.includes(day)))
+            })
           }
           break
         case 'week':
           todayFound = false
           let firstDayOfWeek = this.view.startDate
+          let weekDays = this.weekDays
 
-          cells = this.weekDays.map((cell, i) => {
+          cells = weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
 
             return {
               startDate,
-              formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+              formattedDate: this.formatDate(startDate),
               endDate,
+              // To increase performance skip checking isToday if today already found.
               today: !todayFound && isDateToday(startDate) && !todayFound++
             }
-          })
+          }).filter((cell, i) => !weekDays[i].hide)
           break
         case 'day':
           const startDate = this.view.startDate
@@ -958,7 +907,7 @@ export default {
 
           cells = [{
             startDate,
-            formattedDate: formatDate(startDate, 'yyyy-mm-dd', this.texts),
+            formattedDate: this.formatDate(startDate),
             endDate,
             today: isDateToday(startDate)
           }]
@@ -966,21 +915,25 @@ export default {
       }
       return cells
     },
+    // Only when hiding weekdays on month and week views.
+    cellWidth () {
+      return 100 / (7 - this.weekDays.reduce((total, day) => total + day.hide, 0))
+    },
     cssClasses () {
       return {
         [`vuecal--${this.view.id}-view`]: true,
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
-        'vuecal--time-12-hour': this['12Hour'],
+        'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
+        'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
         'vuecal--overflow-x': this.minCellWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--no-event-overlaps': this.noEventOverlaps,
-        'vuecal--dragging-event': this.domEvents.resizeAnEvent.start,
+        'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
@@ -995,8 +948,10 @@ export default {
 
   watch: {
     events: {
+      // To be able to detect an event attribute change, it has to be first initialized with a value.
       handler (events, oldEvents) {
         this.updateMutableEvents(events)
+        this.addEventsToView()
       },
       deep: true
     },

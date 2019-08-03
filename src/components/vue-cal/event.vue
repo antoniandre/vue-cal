@@ -1,30 +1,35 @@
 <template lang="pug">
 .vuecal__event(
-  :class="eventClasses(event)"
-  :style="eventStyles(event)"
-  @mouseenter="onMouseEnter($event, event)"
-  @mouseleave="onMouseLeave($event, event)"
-  @touchstart="onTouchStart($event, event)"
-  @mousedown="onMouseDown($event, event)"
-  @click="onClick($event, event)"
-  @dblclick="onDblClick($event, event)")
+  :class="eventClasses"
+  :style="eventStyles"
+  tabindex="0"
+  @focus="focusEvent"
+  @keypress.enter.stop="onClick"
+  @mouseenter="onMouseEnter"
+  @mouseleave="onMouseLeave"
+  @touchstart.stop="onTouchStart"
+  @mousedown.stop="onMouseDown"
+  @click="onClick"
+  @dblclick="onDblClick")
   .vuecal__event-delete(
-    v-if="vuecal.editableEvents"
-    @mousedown.stop.prevent="deleteEvent(event)"
-    @touchstart.stop.prevent="touchDeleteEvent(event)") {{ vuecal.texts.deleteEvent }}
-  slot(:event="event" :view="vuecal.view.id" name="event-renderer")
+    v-if="vuecal.editableEvents && event.deletable"
+    @mousedown.stop="deleteEvent"
+    @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
+  slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  //- Force contenteditable="false" for new events without content.
   .vuecal__event-resize-handle(
     v-if="resizable"
-    @mousedown="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)"
-    @touchstart="vuecal.editableEvents && vuecal.time && onDragHandleMouseDown($event, event)")
+    contenteditable="false"
+    @mousedown="onDragHandleMouseDown"
+    @touchstart="onDragHandleMouseDown")
 </template>
 
 <script>
-import { deleteAnEvent, deleteLinkedEvents, checkCellOverlappingEvents } from './event-utils'
+import { deleteAnEvent } from './event-utils'
 
 export default {
   props: {
-    formattedDate: {
+    cellFormattedDate: {
       type: String,
       default: ''
     },
@@ -40,7 +45,15 @@ export default {
       type: Array,
       default: () => []
     },
-    split: {
+    overlaps: {
+      type: Array,
+      default: () => []
+    },
+    eventPosition: {
+      type: Number,
+      default: 0
+    },
+    overlapsStreak: {
       type: Number,
       default: 0
     },
@@ -51,147 +64,140 @@ export default {
   },
 
   methods: {
-    eventStyles (event) {
-      if (!this.vuecal.time || !event.startTime || this.vuecal.view.id === 'month' || this.allDay) return {}
-      const resizeAnEvent = this.domEvents.resizeAnEvent
-
-      return {
-        top: `${event.top}px`,
-        height: `${resizeAnEvent.newHeight && resizeAnEvent._eid === event._eid ? resizeAnEvent.newHeight : event.height}px`
-      }
-    },
-
-    eventClasses (event) {
-      const { clickHoldAnEvent, focusAnEvent } = this.domEvents
-      let overlapping, overlapped, simultaneous
-      let forceLeft = false
-      let deletable = clickHoldAnEvent._eid &&
-                      (clickHoldAnEvent._eid === event._eid ||
-                      event.linked.find(e => e._eid === clickHoldAnEvent._eid))
-
-      if (this.vuecal.view.id !== 'month') {
-        overlapping = Object.keys(event.overlapping).length
-        overlapped = Object.keys(event.overlapped).length
-        simultaneous = Object.keys(event.simultaneous).length + 1
-
-        if (simultaneous >= 3) {
-          let split3 = simultaneous - 1
-          Object.keys(event.simultaneous).forEach(_eid => {
-            if (split3 && Object.keys(this.cellEvents.find(e => e._eid === _eid).simultaneous).length + 1 < 3) {
-              split3--
-            }
-          })
-          if (!split3) simultaneous = 2
-        }
-
-        else if (simultaneous === 2) {
-          const otherEvent = this.cellEvents.find(e => e._eid === Object.keys(event.simultaneous)[0])
-
-          if (otherEvent && Object.keys(otherEvent.overlapping).length && Object.keys(otherEvent.overlapped).length) {
-            forceLeft = true
-          }
-        }
-      }
-
-      return {
-        [event.classes.join(' ')]: true,
-        'vuecal__event--focus': focusAnEvent._eid === event._eid,
-        'vuecal__event--background': event.background,
-        'vuecal__event--deletable': deletable,
-        'vuecal__event--overlapped': overlapped,
-        'vuecal__event--overlapping': overlapping,
-        'vuecal__event--split2': simultaneous === 2,
-        'vuecal__event--split3': simultaneous >= 3,
-        'vuecal__event--split-middle': overlapped && overlapping && simultaneous >= 3,
-        'vuecal__event--split-left': forceLeft,
-        'vuecal__event--all-day': event.allDay,
-        // Multiple days events.
-        'vuecal__event--multiple-days': Object.keys(event.multipleDays).length,
-        'event-start': Object.keys(event.multipleDays).length && event.multipleDays.start,
-        'event-middle': Object.keys(event.multipleDays).length && event.multipleDays.middle,
-        'event-end': Object.keys(event.multipleDays).length && event.multipleDays.end
-      }
-    },
-
     // On an event.
-    onMouseDown (e, event, touch = false) {
+    onMouseDown (e, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
       let { clickHoldAnEvent, resizeAnEvent, focusAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
-      if (focusAnEvent._eid === event._eid && clickHoldAnEvent._eid === event._eid) {
+      if (focusAnEvent._eid === this.event._eid && clickHoldAnEvent._eid === this.event._eid) {
         return true
       }
 
       // Focus the clicked event.
-      this.focusEvent(event)
+      this.focusEvent()
 
       clickHoldAnEvent._eid = null // Reinit click hold on each click.
 
-      // Don't show delete button if dragging event.
-      if (!resizeAnEvent.start && this.vuecal.editableEvents) {
+      // Show event delete button - only if not dragging.
+      if (!resizeAnEvent._eid && this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
-          clickHoldAnEvent._eid = event._eid
+          clickHoldAnEvent._eid = this.event._eid
+          this.event.deleting = true
         }, clickHoldAnEvent.timeout)
       }
     },
 
-    onMouseEnter (e, event) {
+    onMouseEnter (e) {
       e.preventDefault()
-      this.vuecal.emitWithEvent('event-mouse-enter', event)
+      this.vuecal.emitWithEvent('event-mouse-enter', this.event)
     },
 
-    onMouseLeave (e, event) {
+    onMouseLeave (e) {
       e.preventDefault()
-      this.vuecal.emitWithEvent('event-mouse-leave', event)
+      this.vuecal.emitWithEvent('event-mouse-leave', this.event)
     },
 
-    onTouchStart (e, event) {
-      this.onMouseDown(e, event, true)
+    onTouchStart (e) {
+      this.onMouseDown(e, true)
     },
 
-    onClick (e, event) {
-      if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(event, e)
+    onClick (e) {
+      if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(this.event, e)
     },
 
-    onDblClick (e, event) {
-      if (typeof this.vuecal.onEventDblclick === 'function') return this.vuecal.onEventDblclick(event, e)
+    onDblClick (e) {
+      if (typeof this.vuecal.onEventDblclick === 'function') return this.vuecal.onEventDblclick(this.event, e)
     },
 
-    onDragHandleMouseDown (e, event) {
-      const start = 'ontouchstart' in window && e.touches ? e.touches[0].clientY : e.clientY
+    onDragHandleMouseDown () {
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
-        start,
-        originalHeight: event.height,
-        newHeight: event.height,
-        _eid: event._eid,
-        split: event.split || null,
-        startDate: event.multipleDays.startDate || event.startDate
+        _eid: this.event._eid,
+        start: (this.segment || this.event).start,
+        split: this.event.split || null,
+        segment: !!this.segment && this.segment.start,
+        originalEndTimeMinutes: this.event.endTimeMinutes
       })
+
+      this.event.resizing = true
     },
 
-    deleteEvent (event, touch = false) {
+    deleteEvent (touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent(event, this.vuecal)
+      deleteAnEvent(this.event, this.vuecal)
     },
 
     touchDeleteEvent (event) {
-      this.deleteEvent(event, true)
+      this.deleteEvent(true)
     },
 
-    focusEvent (event) {
-      this.vuecal.emitWithEvent('event-focus', event)
-      this.domEvents.focusAnEvent._eid = event._eid
+    cancelDeleteEvent () {
+      this.event.deleting = false
+    },
+
+    focusEvent () {
+      let { focusAnEvent } = this.domEvents
+
+      this.vuecal.emitWithEvent('event-focus', this.event)
+
+      // Unfocus previous event if any.
+      const onFocus = focusAnEvent._eid
+      if (onFocus && onFocus !== this.event._eid) {
+        let event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
+        if (event) event.focused = false
+      }
+
+      // Cancel delete on previous event if any.
+      this.vuecal.cancelDelete()
+
+      focusAnEvent._eid = this.event._eid
+      this.event.focused = true
     }
   },
 
   computed: {
+    // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
+    eventStyles () {
+      if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
+      // const width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
+      return {
+        top: `${(this.segment || this.event).top}px`,
+        height: `${(this.segment || this.event).height}px`,
+        width: `${100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)}%`,
+        left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition}%`
+        // width: `${width}%`,
+        // left: `${width * this.eventPosition}%`
+      }
+    },
+
+    // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
+    eventClasses () {
+      const { isFirstDay, isLastDay } = this.segment || {}
+
+      return {
+        [this.event.classes.join(' ')]: true,
+        'vuecal__event--focus': this.event.focused,
+        'vuecal__event--resizing': this.event.resizing,
+        'vuecal__event--background': this.event.background,
+        'vuecal__event--deletable': this.event.deleting,
+        'vuecal__event--all-day': this.event.allDay,
+        // Multiple days events.
+        'vuecal__event--multiple-days': !!this.segment,
+        'event-start': this.segment && isFirstDay && !isLastDay,
+        'event-middle': this.segment && !isFirstDay && !isLastDay,
+        'event-end': this.segment && isLastDay && !isFirstDay
+      }
+    },
+    // When multiple-day events, a segment is a portion of event spanning on 1 day.
+    segment () {
+      return (this.event.segments && this.event.segments[this.cellFormattedDate]) || null
+    },
     resizable () {
-      return (this.vuecal.editableEvents && this.vuecal.time && this.event.startTime && !this.allDay &&
-        !this.event.multipleDays.start && !this.event.multipleDays.middle && this.vuecal.view.id !== 'month')
+      return (this.vuecal.editableEvents && this.event.resizable && this.vuecal.time && this.event.endTimeMinutes && !this.allDay &&
+        (!this.segment || (this.segment && this.segment.isLastDay)) && this.vuecal.view.id !== 'month')
     },
     domEvents: {
       get () {
@@ -200,21 +206,6 @@ export default {
       set (object) {
         this.vuecal.domEvents = object
       }
-    }
-  },
-
-  watch: {
-    'event.background' (val) {
-      // When the event background property changes, remove all the involved overlapping events
-      // if setting to background or check cell overlapping again otherwise.
-      if (val) {
-        deleteLinkedEvents(this.event, this.cellEvents)
-        this.event.overlapping = {}
-        this.event.overlapped = {}
-        this.event.simultaneous = {}
-      }
-
-      else if (this.vuecal.time) checkCellOverlappingEvents(this.cellEvents, this.vuecal)
     }
   }
 }
@@ -225,10 +216,11 @@ export default {
   color: #666;
   background-color: #f8f8f8;
   position: relative;
+  box-sizing: border-box;
   left: 0;
-  right: 0;
+  width: 100%;
   z-index: 1;
-  transition: box-shadow 0.3s, left 0.3s, right 0.3s;
+  transition: box-shadow 0.3s, left 0.3s, width 0.3s;
   overflow: hidden;// For sliding delete button.
 
   .vuecal:not(.vuecal--dragging-event) &:hover {z-index: 2;}
@@ -244,35 +236,17 @@ export default {
     bottom: 0;
     z-index: 0;
     opacity: 0.6;
+    width: auto;
+    right: 0;
   }
 
   .vuecal--view-with-time .vuecal__all-day &--all-day {
     position: relative;
     left: 0;
-    right: 0;
   }
 
-  &--overlapped {right: 20%;}
-  &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  &--overlapped.vuecal__event--split2 {right: 25%;}
-  &--overlapping.vuecal__event--split2 {left: 25%;}
-  &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 25%;}
-  &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 25%;right: 0;}
-  &--overlapped.vuecal__event--split3 {right: 40%;}
-  &--overlapping.vuecal__event--split3 {left: 40%;}
-  &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 20%;right: 20%;}
-
-  .vuecal--no-event-overlaps &--overlapping:not(.vuecal__event--split2):not(.vuecal__event--split3) {left: 30%;box-shadow: 0 0 5px rgba(#000, 0.2);}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split2 {right: 50%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2 {left: 50%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split2.vuecal__event--split-left {left: 0;right: 50%;}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--overlapping.vuecal__event--split2 {left: 50%;right: 0;}
-  .vuecal--no-event-overlaps &--overlapped.vuecal__event--split3 {right: 66.66%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3 {left: 66.66%;}
-  .vuecal--no-event-overlaps &--overlapping.vuecal__event--split3.vuecal__event--split-middle {left: 33.33%;right: 33.33%;}
-
   &--background {z-index: 0;}
-  &--focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;}
+  &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
 }
 
 .vuecal__event-resize-handle {
@@ -288,6 +262,7 @@ export default {
   cursor: ns-resize;
 
   .vuecal__event:hover &,
+  .vuecal__event:focus &,
   .vuecal__event--focus & {opacity: 1;transform: translateY(0);}
 }
 
