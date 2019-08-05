@@ -2960,6 +2960,7 @@ export default {
       { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
+      { code: 'cs', label: 'Czech' },
       { code: 'zh-cn', label: 'Chinese (Simplified)' },
       { code: 'zh-hk', label: 'Chinese (Traditional)' },
       { code: 'hr', label: 'Croatian' },
