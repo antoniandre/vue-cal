@@ -2595,6 +2595,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.4.0] Added Korean language
   div #[strong Version 2.3.0] Added Turkish language
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
   div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
@@ -2975,6 +2976,7 @@ export default {
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
       { code: 'ja', label: 'Japanese' },
+      { code: 'ko', label: 'Korean' },
       { code: 'no', label: 'Norwegian' },
       { code: 'pl', label: 'Polish' },
       { code: 'pt-br', label: 'Portuguese Brasilian' },
