@@ -44,7 +44,8 @@ ___
 
 ## Release Notes
 
-- __Version 2.4.0__ Control Previous & Next externally
+- __Version 2.5.0__ Control Previous & Next externally
+- __Version 2.4.0__ Added Korean language
 - __Version 2.3.0__ Added Turkish language
 - __Version 2.2.0__ Allow rejecting event creation through `on-event-create`
 - __Version 2.1.0__ Added split id in `cell-click`, `cell-dblclick` &amp; `cell-focus` emitted events
