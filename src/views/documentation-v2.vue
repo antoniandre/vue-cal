@@ -1648,6 +1648,59 @@
 
   //- Example.
   h4.title
+    a(href="#ex--external-controls") # External controls
+    a#ex--external-controls(name="ex--external-controls")
+  p.
+    You can access any #[strong.code vue-cal] internal method through Vue refs.#[br]
+    This example shows how to control the Previous, Next and Today functions and the view selections
+    from external buttons.
+
+  v-layout.my-2.mx-auto(align-center style="max-width: 500px")
+    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('day')") Day
+    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('week')") Week
+    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('month')") Month
+    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('year')") Year
+    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('years')") Years
+
+  v-layout.mt-2.mb-6.mx-auto(justify-center style="max-width: 500px")
+    v-btn.mx-1.flex(small color="primary lighten-1" @click="$refs.vuecal4.previous()")
+      v-icon.mr-1 keyboard_arrow_left
+      | Previous
+    v-btn.mx-1.flex(small color="primary lighten-1" @click="$refs.vuecal4.switchView('day', new Date())")
+      v-icon.mr-1(small) my_location
+      | Today
+    v-btn.mx-1.flex(small color="primary lighten-1" @click="$refs.vuecal4.next()")
+      | Next
+      v-icon.ml-1 keyboard_arrow_right
+
+  v-layout(align-center justify-center)
+    vue-cal.vuecal--green-theme(
+      small
+      ref="vuecal4"
+      :time="false"
+      hide-view-selector
+      :selected-date="selectedDate"
+      style="max-width: 500px;height: 260px")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;button @click="$refs.vuecal.switchView('day')"&gt;Day&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.switchView('week')"&gt;Week&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.switchView('month')"&gt;Month&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.switchView('year')"&gt;Year&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.switchView('years')"&gt;Years&lt;/button&gt;
+    &lt;br /&gt;
+    &lt;button @click="$refs.vuecal.previous()"&gt;Previous&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.switchView('day', new Date())"&gt;Today&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.next()"&gt;Next&lt;/button&gt;
+
+    &lt;vue-cal small
+      ref="vuecal"
+      :time="false"
+      hide-view-selector
+      :selected-date="selectedDate"&gt;
+    &lt;/vue-cal&gt;
+
+  //- Example.
+  h4.title
     a(href="#ex--sync-two-calendars") # Sync two vue-cal instances
     a#ex--sync-two-calendars(name="ex--sync-two-calendars")
   p.
@@ -2595,6 +2648,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.4.0] Control Previous & Next externally
   div #[strong Version 2.3.0] Added Turkish language
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
   div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events

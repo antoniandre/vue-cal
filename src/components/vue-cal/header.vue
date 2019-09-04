@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { getPreviousFirstDayOfWeek } from './date-utils'
 import WeekdaysHeadings from './weekdays-headings'
 
 export default {
@@ -64,37 +63,11 @@ export default {
 
   methods: {
     previous () {
-      this.onArrowClick(false)
+      this.$parent.previousNext(false)
     },
 
     next () {
-      this.onArrowClick()
-    },
-
-    onArrowClick (next = true) {
-      this.transitionDirection = next ? 'right' : 'left'
-      const modifier = next ? 1 : -1
-      let firstCellDate = null
-      let { startDate, id: viewId } = this.viewProps.view
-
-      switch (this.viewProps.view.id) {
-        case 'years':
-          firstCellDate = new Date(startDate.getFullYear() + 25 * modifier, 0, 1)
-          break
-        case 'year':
-          firstCellDate = new Date(startDate.getFullYear() + 1 * modifier, 1, 1)
-          break
-        case 'month':
-          firstCellDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1 * modifier, 1)
-          break
-        case 'week':
-          firstCellDate = getPreviousFirstDayOfWeek(startDate, this.options.startWeekOnSunday)[next ? 'addDays' : 'subtractDays'](7)
-          break
-        case 'day':
-          firstCellDate = startDate[next ? 'addDays' : 'subtractDays'](1)
-          break
-      }
-      if (firstCellDate) this.$parent.switchView(viewId, firstCellDate)
+      this.$parent.previousNext()
     },
 
     goToToday () {

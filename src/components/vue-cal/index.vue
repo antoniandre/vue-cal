@@ -339,6 +339,41 @@ export default {
       }
     },
 
+    previous () {
+      this.previousNext(false)
+    },
+
+    next () {
+      this.previousNext()
+    },
+
+    // On click on previous or next arrow, update the calendar visible date range.
+    previousNext (next = true) {
+      this.transitionDirection = next ? 'right' : 'left'
+      const modifier = next ? 1 : -1
+      let firstCellDate = null
+      let { startDate, id: viewId } = this.view
+
+      switch (viewId) {
+        case 'years':
+          firstCellDate = new Date(startDate.getFullYear() + 25 * modifier, 0, 1)
+          break
+        case 'year':
+          firstCellDate = new Date(startDate.getFullYear() + 1 * modifier, 1, 1)
+          break
+        case 'month':
+          firstCellDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1 * modifier, 1)
+          break
+        case 'week':
+          firstCellDate = getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)[next ? 'addDays' : 'subtractDays'](7)
+          break
+        case 'day':
+          firstCellDate = startDate[next ? 'addDays' : 'subtractDays'](1)
+          break
+      }
+      if (firstCellDate) this.switchView(viewId, firstCellDate)
+    },
+
     addEventsToView (events = []) {
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       if (!events.length) this.view.events = []

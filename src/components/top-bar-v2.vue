@@ -85,6 +85,8 @@
           v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             | Vue Cal emitted events
             v-chip.xsmall.ml-2(small color="blue" outlined) updated
+          v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'") External controls
+            v-chip.xsmall.ml-2(small color="primary" outlined) new
           v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-item(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
 
