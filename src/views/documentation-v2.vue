@@ -2648,7 +2648,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 2.5.0] Control Previous & Next externally
+  div #[strong Version 2.5.0] Control Previous &amp; Next externally
   div #[strong Version 2.4.0] Added Korean language
   div #[strong Version 2.3.0] Added Turkish language
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
