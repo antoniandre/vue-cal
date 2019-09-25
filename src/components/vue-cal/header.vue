@@ -33,7 +33,7 @@
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
     .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && options.stickySplitLabels && options.splitDays.length")
-      .day-split-header(v-for="(split, i) in options.splitDays" :key="i" :class="split.class || false") {{ split.label }}
+      .day-split-header(v-for="(split, i) in options.splitDays" :key="i" :class="split.class || false" :style="splitHeaderStyles") {{ split.label }}
 </template>
 
 <script>
@@ -97,6 +97,14 @@ export default {
       views.reverse()
 
       return views.find(v => this.viewProps.views[v].enabled)
+    },
+    splitHeaderStyles () {
+      console.log(this.$parent.minSplitWidth && ['week', 'day'].includes(this.viewProps.view.id), 'here')
+
+      debugger
+      return {
+        minWidth: this.$parent.minSplitWidth && ['week', 'day'].includes(this.viewProps.view.id) ? `${this.$parent.minSplitWidth}px` : false
+      }
     }
   }
 }

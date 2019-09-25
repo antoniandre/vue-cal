@@ -16,10 +16,11 @@
           span.small {{ heading.small }}
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
+        //- Sticky split-days headers on week view only.
         .vuecal__flex.vuecal__split-days-headers(
           v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
           grow)
-          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
+          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false" :style="splitHeaderStyles") {{ split.label }}
 </template>
 
 <script>
@@ -94,7 +95,12 @@ export default {
     weekdayCellStyles () {
       return {
         ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null
+        minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : false
+      }
+    },
+    splitHeaderStyles () {
+      return {
+        minWidth: this.vuecal.minSplitWidth && ['week', 'day'].includes(this.view.id) ? `${this.vuecal.minSplitWidth}px` : false
       }
     },
     cellHeadingsClickable () {

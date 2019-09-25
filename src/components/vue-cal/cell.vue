@@ -9,6 +9,7 @@
       v-for="(split, i) in (splits.length ? splits : 1)"
       :key="options.transitions ? `${view}-${data.content}-${i}` : i"
       :class="splits.length && `vuecal__cell-split ${split.class}`"
+      :style="splitStyles"
       :data-split="splits.length ? i + 1 : false"
       column
       tabindex="0"
@@ -258,7 +259,12 @@ export default {
       return {
         // cellWidth is only applied when hiding weekdays on month and week views.
         ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
+        minWidth: this.$parent.minCellWidth && this.view === 'week' ? `${this.$parent.minCellWidth}px` : false
+      }
+    },
+    splitStyles () {
+      return {
+        minWidth: this.$parent.minSplitWidth && ['week', 'day'].includes(this.view) ? `${this.$parent.minSplitWidth}px` : false
       }
     },
     events () {

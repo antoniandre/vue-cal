@@ -138,6 +138,7 @@ export default {
     twelveHour: { type: Boolean, default: false },
     timeFormat: { type: String, default: '' },
     minCellWidth: { type: Number, default: 0 },
+    minSplitWidth: { type: Number, default: 0 },
     splitDays: { type: Array, default: () => [] },
     stickySplitLabels: { type: Boolean, default: false },
     events: { type: Array, default: () => [] },

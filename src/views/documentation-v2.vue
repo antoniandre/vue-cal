@@ -1440,11 +1440,12 @@
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year', 'month']"
-      :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
+      :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
       :sticky-split-labels="stickySplitLabels"
       editable-events
       :events="splitEvents"
-      :min-cell-width="splitsExampleMinCellWidth")
+      :min-cell-width="splitsExampleMinCellWidth"
+      :min-split-width="200")
       template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
