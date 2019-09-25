@@ -1,4 +1,5 @@
 <template lang="pug">
+//- weekdays-headings are on week view only.
 .vuecal__flex.vuecal__weekdays-headings
   .vuecal__flex.vuecal__heading(
     :class="{ today: heading.today, clickable: cellHeadingsClickable }"
@@ -16,7 +17,6 @@
           span.small {{ heading.small }}
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
-        //- Sticky split-days headers on week view only.
         .vuecal__flex.vuecal__split-days-headers(
           v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
           grow)

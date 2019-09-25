@@ -43,8 +43,8 @@ $weekdays-headings-height-with-splits: 3.4em;
   &__split-days-headers {
     &.slide-fade--right-leave-active {display: none;}
 
-    .vuecal--day-view & {margin-left: $time-column-width;height: 2.2em;}
-    .vuecal--day-view.vuecal--twelve-hour & {margin-left: $time-column-width-12;}
+    .vuecal--day-view:not(.vuecal--overflow-x) & {margin-left: $time-column-width;height: 2.2em;}
+    .vuecal--day-view.vuecal--twelve-hour:not(.vuecal--overflow-x) & {margin-left: $time-column-width-12;}
 
     .day-split-header {display: flex;flex-grow: 1;justify-content: center;}
   }
@@ -115,7 +115,8 @@ $weekdays-headings-height-with-splits: 3.4em;
       box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.3);
     }
 
-    .vuecal--overflow-x.vuecal--week-view.vuecal--sticky-split-labels & {
+    .vuecal--overflow-x.vuecal--week-view.vuecal--sticky-split-labels &,
+    .vuecal--overflow-x.vuecal--day-view.vuecal--sticky-split-labels & {
       margin-top: $weekdays-headings-height-with-splits;
     }
 
@@ -141,6 +142,7 @@ $weekdays-headings-height-with-splits: 3.4em;
     margin: 0 1px 1px 0;
     .vuecal--events-on-month-view.vuecal--short-events & {width: 99.9%;}
 
+    .vuecal--overflow-x.vuecal--day-view &,
     .vuecal--overflow-x.vuecal--week-view & {
       flex-wrap: nowrap;
       overflow: auto;
