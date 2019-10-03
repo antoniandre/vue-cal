@@ -20,7 +20,7 @@
         .vuecal__flex.vuecal__split-days-headers(
           v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
           grow)
-          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false" :style="splitHeaderStyles") {{ split.label }}
+          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
 <script>
@@ -94,14 +94,7 @@ export default {
     },
     weekdayCellStyles () {
       return {
-        ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
-        ...(this.vuecal.minCellWidth && !this.vuecal.minSplitWidth && this.view.id === 'week' ? { minWidth: `${this.vuecal.minCellWidth}px` } : {}),
-        ...(this.vuecal.minSplitWidth ? { minWidth: `${this.vuecal.minSplitWidth * this.vuecal.splitDays.length}px` } : {})
-      }
-    },
-    splitHeaderStyles () {
-      return {
-        ...(this.vuecal.minSplitWidth && ['week', 'day'].includes(this.view.id) ? { minWidth: `${this.vuecal.minSplitWidth}px` } : {})
+        ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {})
       }
     },
     cellHeadingsClickable () {
@@ -156,11 +149,6 @@ $weekdays-headings-height-with-splits: 3.4em;
     .vuecal--hide-weekends.vuecal--day-view & {width: 20%;}
     .vuecal--years-view & {width: 20%;}
     .vuecal--year-view & {width: 33.33%;}
-    .vuecal--has-min-split-width & {
-      flex-shrink: 0;
-      width: auto;
-      border-left: 1px solid #ddd;
-    }
 
     .weekday-label {
       flex-shrink: 0;

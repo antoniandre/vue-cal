@@ -9,7 +9,6 @@
       v-for="(split, i) in (splits.length ? splits : 1)"
       :key="options.transitions ? `${view}-${data.content}-${i}` : i"
       :class="splits.length && `vuecal__cell-split ${split.class}`"
-      :style="splitStyles"
       :data-split="splits.length ? i + 1 : false"
       column
       tabindex="0"
@@ -258,14 +257,7 @@ export default {
     cellStyles () {
       return {
         // cellWidth is only applied when hiding weekdays on month and week views.
-        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {}),
-        // Don't set a min cell width if there is a minSplitWidth.
-        ...(this.$parent.minCellWidth && !this.$parent.minSplitWidth && this.view === 'week' ? { minWidth: `${this.$parent.minCellWidth}px` } : {})
-      }
-    },
-    splitStyles () {
-      return {
-        ...(this.$parent.minSplitWidth && ['week', 'day'].includes(this.view) ? { minWidth: `${this.$parent.minSplitWidth}px` } : {})
+        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {})
       }
     },
     events () {
@@ -385,7 +377,6 @@ export default {
     flex-direction: row;
     display: flex;
   }
-  .vuecal--has-min-split-width &.vuecal__cell--has-splits {flex-shrink: 0;width: auto;}
 
   &-content {
     position: relative;
