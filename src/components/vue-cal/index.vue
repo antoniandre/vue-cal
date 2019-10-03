@@ -27,7 +27,7 @@
             :class="`${view.id}-view`"
             grow
             :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
-            :column="!!minCellWidth && !!minSplitWidth")
+            :column="!!minCellWidth || !!minSplitWidth")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
@@ -60,7 +60,7 @@
               :class="`${view.id}-view`"
               grow
               :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
-              :column="!!minCellWidth && !!minSplitWidth")
+              :column="!!minCellWidth || !!minSplitWidth")
               //- Only for minCellWidth on week view.
               weekdays-headings(
                 v-if="(minCellWidth || minSplitWidth) && view.id === 'week'"
@@ -820,7 +820,10 @@ export default {
       return weekDays
     },
     weekDaysInHeader () {
-      return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
+      // return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
+      return (
+        this.view.id === 'month' ||
+        (this.view.id === 'week' && !this.minCellWidth && !this.minSplitWidth))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
@@ -982,7 +985,7 @@ export default {
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
         'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
-        'vuecal--overflow-x': this.minCellWidth || this.minSplitWidth,
+        'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || this.minSplitWidth,
         'vuecal--has-min-split-width': this.minSplitWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,

@@ -265,7 +265,7 @@ export default {
     },
     splitStyles () {
       return {
-        minWidth: this.$parent.minSplitWidth && ['week', 'day'].includes(this.view) ? `${this.$parent.minSplitWidth}px` : false
+        ...(this.$parent.minSplitWidth && ['week', 'day'].includes(this.view) ? { minWidth: `${this.$parent.minSplitWidth}px` } : {})
       }
     },
     events () {

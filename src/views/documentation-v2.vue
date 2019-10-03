@@ -1434,6 +1434,10 @@
       v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
       | Sticky Split Labels
     | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
+    br
+    br
+    v-btn(small @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400") cell width: {{splitsExampleMinCellWidth}}
+    v-btn(small @click="splitsExampleMinSplitWidth = splitsExampleMinSplitWidth ? 0 : 200") split width: {{splitsExampleMinSplitWidth}}
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -1445,7 +1449,7 @@
       editable-events
       :events="splitEvents"
       :min-cell-width="splitsExampleMinCellWidth"
-      :min-split-width="200")
+      :min-split-width="splitsExampleMinSplitWidth")
       template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
@@ -3050,6 +3054,7 @@ export default {
     ],
     locale: 'zh-cn',
     splitsExampleMinCellWidth: 400,
+    splitsExampleMinSplitWidth: 0,
     stickySplitLabels: false,
     example1theme: 'green',
     indicatorStyle: 'count',

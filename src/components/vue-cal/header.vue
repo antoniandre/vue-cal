@@ -101,9 +101,8 @@ export default {
     splitHeaderStyles () {
       console.log(this.$parent.minSplitWidth && ['week', 'day'].includes(this.viewProps.view.id), 'here')
 
-      debugger
       return {
-        minWidth: this.$parent.minSplitWidth && ['week', 'day'].includes(this.viewProps.view.id) ? `${this.$parent.minSplitWidth}px` : false
+        ...(this.$parent.minSplitWidth && ['week', 'day'].includes(this.viewProps.view.id) ? { minWidth: `${this.$parent.minSplitWidth}px` } : {})
       }
     }
   }
