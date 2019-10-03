@@ -1423,21 +1423,32 @@
     a(href="#ex--splitting-days") # Splitting days &amp; split events
     a#ex--splitting-days(name="ex--splitting-days")
   p.mb-6
-    | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.#[br]
-    | disabled views: years, year, month.#[br]
-    | On week view you can also overflow your content using a min-width on cells, like in this example, or fit to container:
-    v-btn.ma-1(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
-      v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
-      | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
-    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header:
-    v-btn.ma-1(small color="primary" @click="stickySplitLabels = !stickySplitLabels")
-      v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
-      | Sticky Split Labels
-    | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
+    | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.
     br
     br
-    v-btn(small @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400") cell width: {{splitsExampleMinCellWidth}}
-    v-btn(small @click="splitsExampleMinSplitWidth = splitsExampleMinSplitWidth ? 0 : 200") split width: {{splitsExampleMinSplitWidth}}
+    | By default the body of the calendar will fit the container.#[br]
+    | But with the options #[span.code min-cell-width] or #[span.code min-split-width], you can increase the calendar
+    | body width and it will become scrollable horizontally.
+    ul
+      li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
+      li If both #[span.code min-cell-width] and #[span.code min-split-width] are set, #[span.code min-split-width] will be used.
+
+    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header.#[br]
+    | Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
+
+    v-layout(align-center)
+      v-btn.mr-2(small color="primary" @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
+        v-icon.mr-2 {{ splitsExample.minCellWidth ? 'close' : 'add' }}
+        | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
+
+      v-btn.mr-2(small color="primary" @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
+        v-icon.mr-2 {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
+        | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
+
+      v-btn(small color="primary" @click="stickySplitLabels = !stickySplitLabels")
+        v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
+        | Sticky Split Labels
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -1448,8 +1459,8 @@
       :sticky-split-labels="stickySplitLabels"
       editable-events
       :events="splitEvents"
-      :min-cell-width="splitsExampleMinCellWidth"
-      :min-split-width="splitsExampleMinSplitWidth")
+      :min-cell-width="splitsExample.minCellWidth"
+      :min-split-width="splitsExample.minSplitWidth")
       template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
@@ -3053,8 +3064,7 @@ export default {
       { code: 'vi', label: 'Vietnamese' }
     ],
     locale: 'zh-cn',
-    splitsExampleMinCellWidth: 400,
-    splitsExampleMinSplitWidth: 0,
+    splitsExample: { minCellWidth: 400, minSplitWidth: 0 },
     stickySplitLabels: false,
     example1theme: 'green',
     indicatorStyle: 'count',
