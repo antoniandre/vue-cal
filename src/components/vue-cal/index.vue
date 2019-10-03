@@ -23,7 +23,11 @@
         .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
           span(style="width: 3em")
             span {{ texts.allDay }}
-          .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+          .vuecal__flex.vuecal__cells(
+            :class="`${view.id}-view`"
+            grow
+            :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+            :column="!!minCellWidth && !!minSplitWidth")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
@@ -52,20 +56,23 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
 
-            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+            .vuecal__flex.vuecal__cells(
+              :class="`${view.id}-view`"
+              grow
+              :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+              :column="!!minCellWidth && !!minSplitWidth")
               //- Only for minCellWidth on week view.
               weekdays-headings(
-                v-if="minCellWidth && view.id === 'week'"
+                v-if="(minCellWidth || minSplitWidth) && view.id === 'week'"
                 :vuecal="this"
                 :transition-direction="transitionDirection"
                 :view="view"
-                :min-cell-width="minCellWidth"
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="stickySplitLabels && minSplitWidth")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false" :style="splitHeaderStyles") {{ split.label }}
 
-              .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
+              .vuecal__flex(ref="cells" grow :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
@@ -976,6 +983,7 @@ export default {
         'vuecal--split-days': this.hasSplits,
         'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
         'vuecal--overflow-x': this.minCellWidth || this.minSplitWidth,
+        'vuecal--has-min-split-width': this.minSplitWidth,
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,

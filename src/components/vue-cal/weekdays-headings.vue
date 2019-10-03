@@ -95,12 +95,13 @@ export default {
     weekdayCellStyles () {
       return {
         ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : false
+        ...(this.vuecal.minCellWidth && !this.vuecal.minSplitWidth && this.view.id === 'week' ? { minWidth: `${this.vuecal.minCellWidth}px` } : {}),
+        ...(this.vuecal.minSplitWidth ? { minWidth: `${this.vuecal.minSplitWidth * this.vuecal.splitDays.length}px` } : {})
       }
     },
     splitHeaderStyles () {
       return {
-        minWidth: this.vuecal.minSplitWidth && ['week', 'day'].includes(this.view.id) ? `${this.vuecal.minSplitWidth}px` : false
+        ...(this.vuecal.minSplitWidth && ['week', 'day'].includes(this.view.id) ? { minWidth: `${this.vuecal.minSplitWidth}px` } : {})
       }
     },
     cellHeadingsClickable () {
@@ -155,6 +156,11 @@ $weekdays-headings-height-with-splits: 3.4em;
     .vuecal--hide-weekends.vuecal--day-view & {width: 20%;}
     .vuecal--years-view & {width: 20%;}
     .vuecal--year-view & {width: 33.33%;}
+    .vuecal--has-min-split-width & {
+      flex-shrink: 0;
+      width: auto;
+      border-left: 1px solid #ddd;
+    }
 
     .weekday-label {
       flex-shrink: 0;

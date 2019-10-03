@@ -259,7 +259,8 @@ export default {
       return {
         // cellWidth is only applied when hiding weekdays on month and week views.
         ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.$parent.minCellWidth && this.view === 'week' ? `${this.$parent.minCellWidth}px` : false
+        // Don't set a min cell width if there is a minSplitWidth.
+        ...(this.$parent.minCellWidth && !this.$parent.minSplitWidth && this.view === 'week' ? { minWidth: `${this.$parent.minCellWidth}px` } : {})
       }
     },
     splitStyles () {
@@ -384,6 +385,7 @@ export default {
     flex-direction: row;
     display: flex;
   }
+  .vuecal--has-min-split-width &.vuecal__cell--has-splits {flex-shrink: 0;width: auto;}
 
   &-content {
     position: relative;
