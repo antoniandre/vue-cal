@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.7.0__ Added `minSplitWidth` option for `splitDays`
 - __Version 2.6.0__ Added Bangla language
 - __Version 2.5.0__ Control Previous &amp; Next externally
 - __Version 2.4.0__ Added Korean language

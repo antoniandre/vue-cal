@@ -1427,26 +1427,38 @@
     br
     br
     | By default the body of the calendar will fit the container.#[br]
-    | But with the options #[span.code min-cell-width] or #[span.code min-split-width], you can increase the calendar
+    | But with the options #[span.code.black--text min-cell-width] or #[span.code.black--text min-split-width], you can increase the calendar
     | body width and it will become scrollable horizontally.
     ul
-      li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
-      li If both #[span.code min-cell-width] and #[span.code min-split-width] are set, #[span.code min-split-width] will be used.
+      li #[span.code min-cell-width.black--text] will only be activated on week view, since there is only 1 cell in day view.
+      li If both #[span.code.black--text min-cell-width] and #[span.code.black--text min-split-width] are set, #[span.code.black--text min-split-width] will be used.
 
-    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header.#[br]
-    | Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
+    | #[br]You can also use the option #[span.code.black--text sticky-split-labels] to place the split labels in the header.#[br]
+    | Refer to the #[span.code min-cell-width.black--text], #[span.code.black--text min-split-width] and #[span.code.black--text splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
 
     v-layout(align-center)
-      v-btn.mr-2(small color="primary" @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
+      v-btn.mr-2(
+        small
+        color="primary"
+        :outlined="!splitsExample.minCellWidth"
+        @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
         v-icon.mr-2 {{ splitsExample.minCellWidth ? 'close' : 'add' }}
         | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
 
-      v-btn.mr-2(small color="primary" @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
+      v-btn.mr-2(
+        small
+        color="primary"
+        :outlined="!splitsExample.minSplitWidth"
+        @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
         v-icon.mr-2 {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
         | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
 
-      v-btn(small color="primary" @click="stickySplitLabels = !stickySplitLabels")
-        v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
+      v-btn(
+        small
+        color="primary"
+        :outlined="!splitsExample.stickySplitLabels"
+        @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
+        v-icon.mr-2 {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
         | Sticky Split Labels
 
   v-card.my-2.ma-auto.main-content
@@ -1455,35 +1467,48 @@
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year', 'month']"
-      :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }, { class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-      :sticky-split-labels="stickySplitLabels"
       editable-events
       :events="splitEvents"
+      :split-days="splitsExample.splitDays"
+      :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
       :min-split-width="splitsExample.minSplitWidth")
       template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-      {{ '\{\{ minCellWidth ? \'fit to container\' : \'min cell width 400px\' \}\}' }}
+      {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
+    &lt;/button&gt;
+    &lt;button @click="minSplitWidth = minSplitWidth ? 0 : 200"&gt;
+      {{ '\{\{ minSplitWidth ? \'min split width: 200px\' : \'Add min split width\' \}\}' }}
     &lt;/button&gt;
     &lt;button @click="stickySplitLabels = !stickySplitLabels"&gt;
       Sticky Split Labels
     &lt;/button&gt;
+
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-step="30"
              :disable-views="['years', 'year', 'month']"
-             :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-             :sticky-split-labels="stickySplitLabels"
              editable-events
              :events="events"
-             :min-cell-width="minCellWidth"&gt;
+             :split-days="splitDays"
+             :sticky-split-labels="stickySplitLabels"
+             :min-cell-width="minCellWidth"
+             :min-split-width="minSplitWidth"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
       stickySplitLabels: false,
       minCellWidth: 400,
+      minSplitWidth: 0,
+      splitDays: [
+        { class: 'mom', label: 'Mom' },
+        { class: 'dad', label: 'Dad' },
+        { class: 'kid1', label: 'Kid 1' },
+        { class: 'kid2', label: 'Kid 2' },
+        { class: 'kid3', label: 'Kid 3' }
+      ]
       events: [
         {
           start: '2018-11-19 10:35',
@@ -1507,7 +1532,7 @@
           title: 'Crossfit',
           content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
           class: 'sport',
-          split: 2
+          split: 1
         },
         ...
       ]
@@ -1515,10 +1540,12 @@
 
   sshpre(language="css" label="CSS").
     /* You can easily set a different style for each split of your days. */
-    .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
-    .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;}
-    .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
-    .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;}
+    .vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
+    .vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
+    .vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+    .vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+    .vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+    .vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
     /* Different color for different event types. */
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
@@ -2220,6 +2247,7 @@
     twelveHour:             [Boolean],         default: false
     timeFormat:             [String],          default: ''
     minCellWidth:           [Number],          default: 0 // In pixels.
+    minSplitWidth:          [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
     stickySplitLabels:      [Boolean],         default: false
     events:                 [Array],           default: []
@@ -2452,16 +2480,27 @@
         li #[strong.code mm]: Minutes with leading zero
         li #[strong.code {am}]: am or pm
         li.
-          The characters #[strong.code {], #[strong.code }] are removed and used only to
+          The characters #[strong.code {], #[strong.code }]] are removed and used only to
           separate characters with no space.#[br]
           E.g. #[span.code "h:mm{am}"].
     li
       code.mr-2 minCellWidth
       span.code [Number], default: 0
       p.
-        In the current version, this is for day splits only.#[br]
-        When a number is set, in pixels, the calendar body will have a horizontal
-        scrollbar if the cells don't fit naturally in the calendar container.
+        When a number is set, in pixels, each cell #[strong of the #[span.code week] view (only)]
+        will have this minimum width.#[br]
+        If it does not fit in the calendar body, the overflow will be scrollable.
+        If #[span.code minSplitWidth] is also set, it will override #[span.code minCellWidth].
+    li
+      code.mr-2 minSplitWidth
+      span.code [Number], default: 0
+      p.
+        This is for day splits only, and it applies to the
+        #[strong #[span.code week] and #[span.code day] views (only)].#[br]
+        When a number is set, in pixels, each split of each cell will have this minimum width.#[br]
+        If it does not fit in the calendar body, the overflow will be scrollable.#[br]
+        If #[span.code minCellWidth] is also set, #[span.code minSplitWidth] will override it on
+        #[span.code week] view.
     li
       code.mr-2 splitDays
       span.code [Array], default: []
@@ -2664,6 +2703,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
   div #[strong Version 2.6.0] Added Bangla language
   div #[strong Version 2.5.0] Control Previous &amp; Next externally
   div #[strong Version 2.4.0] Added Korean language
@@ -2979,7 +3019,7 @@ const events = [
     title: 'Crossfit',
     content: '<i class="v-icon material-icons">fitness_center</i>',
     class: 'sport',
-    split: 1
+    split: 2
   },
   {
     start: '2018-11-21 11:00',
@@ -2996,7 +3036,7 @@ const events = [
     title: 'Swimming lesson',
     content: '<i class="v-icon material-icons">pool</i>',
     class: 'sport',
-    split: 1
+    split: 2
   },
   {
     start: '2018-11-23 12:30',
@@ -3064,8 +3104,18 @@ export default {
       { code: 'vi', label: 'Vietnamese' }
     ],
     locale: 'zh-cn',
-    splitsExample: { minCellWidth: 400, minSplitWidth: 0 },
-    stickySplitLabels: false,
+    splitsExample: {
+      minCellWidth: 400,
+      minSplitWidth: 0,
+      stickySplitLabels: false,
+      splitDays: [
+        { class: 'mom', label: 'Mom' },
+        { class: 'dad', label: 'Dad' },
+        { class: 'kid1', label: 'Kid 1' },
+        { class: 'kid2', label: 'Kid 2' },
+        { class: 'kid3', label: 'Kid 3' }
+      ]
+    },
     example1theme: 'green',
     indicatorStyle: 'count',
     now: new Date(),
@@ -3127,7 +3177,7 @@ export default {
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
-        title: 'Call mum',
+        title: 'Recall Dave',
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure'
       },
@@ -3238,7 +3288,7 @@ export default {
         title: 'Swimming lesson',
         content: '<i class="v-icon material-icons">pool</i>',
         class: 'sport',
-        split: 1
+        split: 2
       },
       {
         start: '2019-02-15 12:30',
@@ -3262,7 +3312,7 @@ export default {
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
-        title: 'Call mum',
+        title: 'Recall Dave',
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure',
         split: 1
@@ -3273,7 +3323,7 @@ export default {
         title: 'Salsa',
         content: '<i class="v-icon material-icons">directions_walk</i>',
         class: 'sport',
-        split: 2
+        split: 1
       },
       {
         start: '2018-11-23 21:00',
@@ -3603,10 +3653,12 @@ $primary: #42b983;
 }
 
 // Split days example.
-.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}
-.vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
-.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.5);}
-.vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+.vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
+.vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
+.vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+.vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+.vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+.vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
