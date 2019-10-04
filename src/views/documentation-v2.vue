@@ -270,7 +270,7 @@
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn.ma-1(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends show-weeks-column)
+    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -365,8 +365,7 @@
     You can easily change the calendar color theme or use the rounded-cells theme
     by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
     E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
-    Read more about calendar themes in the
-    #[a(href="#css-notes") CSS Notes] section.
+    Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
@@ -391,28 +390,38 @@
              default-view="month"
              :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
-  highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+  highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
 
   //- Example.
   h4.title
-    a(href="#ex--hiding-particular-week-days") # Hiding particular week days
+    a(href="#ex--hiding-particular-week-days") # Hiding particular week days &amp; showing weeks numbers
     a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
   p.
     If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
     option.#[br]It accepts an array of days to hide (day numbers),
     #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
-    This option will apply on month &amp; week views.#[br]#[br]
+    This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
     If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
-    #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].
+    #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
+    You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
+    You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+
+  highlight-message.
+    Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
   v-card.mx-auto.main-content(style="height: 350px")
     vue-cal.vuecal--green-theme(
-      :hide-weekdays="[2, 3, 5]"
       :time="false"
+      show-week-numbers
+      :hide-weekdays="[2, 3, 5]"
       :disable-views="['years', 'year']")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :hide-weekdays="[2, 3, 5]" :time="false" :disable-views="['years', 'year']"&gt;&lt;/vue-cal&gt;
-  highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+    &lt;vue-cal
+             :time="false"
+             show-week-numbers
+             :hide-weekdays="[2, 3, 5]"
+             :disable-views="['years', 'year']"&gt;
+    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title
@@ -1469,7 +1478,7 @@
       :disable-views="['years', 'year']"
       editable-events
       :events="splitEvents"
-      show-weeks-column
+      show-week-numbers
       :split-days="splitsExample.splitDays"
       :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
@@ -1866,6 +1875,7 @@
       li #[span.code arrow-next]
       li #[span.code today-button]
       li #[span.code time-cell]
+      li #[span.code week-number-cell]
       li #[span.code cell-content]
       li #[span.code no-event]
       li #[span.code events-count]
@@ -1889,9 +1899,10 @@
       default-view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
-      .line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
-        strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
-        span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
+      template(v-slot:time-cell="{ hours, minutes }")
+        .line(:class="{ hours: !minutes }")
+          strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
+          span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt-6(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
@@ -1903,12 +1914,12 @@
              default-view="day"
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
-      &lt;div class="{ line: true, hours: !minutes }"
-           slot="time-cell"
-           slot-scope="{ hours, minutes }"&gt;
-        &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
-        &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
-      &lt;/div&gt;
+      &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
+        &lt;div class="{ line: true, hours: !minutes }"&gt;
+          &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
+          &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   sshpre.mt-6(language="css" label="CSS").
@@ -2230,6 +2241,8 @@
     disableViews:           [Array],           default: []
     defaultView:            [String],          default: 'week'
     todayButton:            [Boolean],         default: false
+    showAllDayEvents:       [Boolean, String], default: false
+    showWeekNumbers:        [Boolean, String], default: false
     selectedDate:           [String, Date],    default: ''
     minDate:                [String, Date],    default: ''
     maxDate:                [String, Date],    default: ''
@@ -2256,7 +2269,6 @@
     resizeX:                [Boolean],         default: false
     eventsOnMonthView:      [Boolean, String], default: false
     eventsCountOnYearView:  [Boolean],         default: false
-    showAllDayEvents:       [Boolean, String], default: false
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
     onEventCreate:          [Function],        default: null
@@ -2355,6 +2367,34 @@
       code.mr-2 todayButton
       span.code [Boolean], default: false
       p Adds a Today button in the title bar to quickly go to Today's date.#[br]
+    li
+      code.mr-2 showAllDayEvents
+      span.code [Boolean, String], default: false
+      ul
+        li.mb-2.
+          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
+          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
+          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
+          #[span.code time] are set to #[span.code true].#[br]
+          #[span.code time] is important since without time information every event is an all-day
+          event there is no point in separating them then.
+        li.mb-2.
+          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
+          background event.
+        li.mb-2.
+          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
+          since both should display the all day events.
+        li.mb-2.
+          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
+          #[span.code 'short'], to display only the event title.
+    li
+      code.mr-2 showWeekNumbers
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], the weeks numbers will show in the first column on the #[span.code month] view (only).#[br]
+        You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
     li
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
@@ -2546,28 +2586,6 @@
         When set to #[span.code true], the events count will also be displayed on #[span.code years]
         &amp; #[span.code year] views.
     li
-      code.mr-2 showAllDayEvents
-      span.code [Boolean, String], default: false
-      ul
-        li.mb-2.
-          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
-          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
-          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
-          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
-          #[span.code time] are set to #[span.code true].#[br]
-          #[span.code time] is important since without time information every event is an all-day
-          event there is no point in separating them then.
-        li.mb-2.
-          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
-          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
-          background event.
-        li.mb-2.
-          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
-          since both should display the all day events.
-        li.mb-2.
-          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
-          #[span.code 'short'], to display only the event title.
-    li
       code.mr-2 onEventClick
       span.code [Function], default: null
       p.
@@ -2704,6 +2722,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
   div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
   div #[strong Version 2.6.0] Added Bangla language
   div #[strong Version 2.5.0] Control Previous &amp; Next externally

@@ -55,10 +55,9 @@
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
-            .vuecal__flex.vuecal__weeks-column(v-if="showWeeksColumn && view.id === 'month'" column)
+            .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
               .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
-                slot(name="week-number-cell" :week-number="(firstCellDateWeekNumber + (i - 1)) % 52 || 52")
-                  | {{ (firstCellDateWeekNumber + (i - 1)) % 52 || 52 }}
+                slot(name="week-number-cell" :week="getWeekNumber(i - 1)") {{ getWeekNumber(i - 1) }}
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
               grow
@@ -139,7 +138,7 @@ export default {
     defaultView: { type: String, default: 'week' },
     todayButton: { type: Boolean, default: false },
     showAllDayEvents: { type: [Boolean, String], default: false },
-    showWeeksColumn: { type: [Boolean, String], default: false },
+    showWeekNumbers: { type: [Boolean, String], default: false },
     selectedDate: { type: [String, Date], default: '' },
     minDate: { type: [String, Date], default: '' },
     maxDate: { type: [String, Date], default: '' },
@@ -711,7 +710,18 @@ export default {
     // Shorthand function.
     formatDate (date, format = 'yyyy-mm-dd') {
       return formatDate(date, format, this.texts)
-    }
+    },
+
+    // Getting the week number is not that straightforward as there might be a 53rd week in the year.
+    // Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
+    // By using the `firstCellDateWeekNumber` computed value, the `getWeek` function call is avoided 5 times out of 6.
+    getWeekNumber (weekFromFirstCell) {
+      const firstCellWeekNumber = this.firstCellDateWeekNumber
+      const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell
+
+      if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
+      else return currentWeekNumber
+    },
   },
 
   created () {
@@ -999,7 +1009,7 @@ export default {
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
-        'vuecal--has-weeks-column': this.showWeeksColumn && this.view.id === 'month',
+        'vuecal--week-numbers': this.showWeekNumbers && this.view.id === 'month',
         'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
