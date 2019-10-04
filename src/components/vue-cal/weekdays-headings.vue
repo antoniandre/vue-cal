@@ -18,7 +18,7 @@
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
         .vuecal__flex.vuecal__split-days-headers(
-          v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
+          v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
           grow)
           .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>

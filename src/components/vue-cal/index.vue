@@ -65,14 +65,14 @@
               :column="!!minCellWidth || !!minSplitWidth")
               //- Only for minCellWidth or minSplitWidth on week view.
               weekdays-headings(
-                v-if="(minCellWidth || minSplitWidth) && view.id === 'week'"
+                v-if="(minCellWidth || (hasSplits && minSplitWidth)) && view.id === 'week'"
                 :vuecal="this"
                 :transition-direction="transitionDirection"
                 :view="view"
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
-              .vuecal__flex.vuecal__split-days-headers(v-else-if="stickySplitLabels && minSplitWidth"
+              .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
 
@@ -816,7 +816,7 @@ export default {
     contentMinWidth () {
       let minWidth = null
 
-      if (this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.splitDays.length
+      if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.splitDays.length
       else if (this.minCellWidth && this.view.id === 'week') minWidth = this.visibleDaysCount * this.minCellWidth
 
       return minWidth
@@ -1015,7 +1015,7 @@ export default {
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
         'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
-        'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || this.minSplitWidth,
+        'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
