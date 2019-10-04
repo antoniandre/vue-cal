@@ -107,8 +107,10 @@ $splits-headers-height: 1.5em;
 
   &__weeks-column {
     width: $weeks-column-width;
+    flex-shrink: 0 !important;
 
     .vuecal__week-number-cell {
+      font-size: 0.9em;
       align-items: center;
       justify-items: center;
       justify-content: center;

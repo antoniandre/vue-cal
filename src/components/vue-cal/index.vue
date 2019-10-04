@@ -57,9 +57,8 @@
                   span.line {{ cell.label }}
             .vuecal__flex.vuecal__weeks-column(v-if="showWeeksColumn && view.id === 'month'" column)
               .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
-                slot(name="week-number-cell" :week-number="i")
-                  span W {{ i.toString() }}
-
+                slot(name="week-number-cell" :week-number="(firstCellDateWeekNumber + (i - 1)) % 52 || 52")
+                  | {{ (firstCellDateWeekNumber + (i - 1)) % 52 || 52 }}
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
               grow
@@ -195,6 +194,8 @@ export default {
         title: '',
         startDate: null,
         endDate: null,
+        firstCellDate: null,
+        lastCellDate: null,
         selectedDate: null,
         events: []
       },
@@ -779,6 +780,9 @@ export default {
     },
     isShortMonthView () {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
+    },
+    firstCellDateWeekNumber () {
+      return this.view.firstCellDate.getWeek()
     },
     // For week & day views.
     timeCells () {
