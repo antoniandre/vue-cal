@@ -107,6 +107,7 @@ export default {
 <style lang="scss">
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
+$weeks-column-width: 3em;
 $weekdays-headings-height: 2.8em;
 $weekdays-headings-height-with-splits: 3.4em;
 
@@ -115,18 +116,15 @@ $weekdays-headings-height-with-splits: 3.4em;
     border-bottom: 1px solid #ddd;
     margin-bottom: -1px;
 
-    .vuecal--view-with-time & {
-      padding-left: $time-column-width;
-    }
+    .vuecal--has-weeks-column & {padding-left: $weeks-column-width;}
+    .vuecal--view-with-time & {padding-left: $time-column-width;}
 
     .vuecal--view-with-time.vuecal--twelve-hour & {
       font-size: 0.9em;
       padding-left: $time-column-width-12;
     }
 
-    .vuecal--overflow-x.vuecal--view-with-time & {
-      padding-left: 0;
-    }
+    .vuecal--overflow-x.vuecal--view-with-time & {padding-left: 0;}
   }
 
   &__heading {

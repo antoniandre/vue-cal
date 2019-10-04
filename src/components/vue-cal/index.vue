@@ -55,6 +55,10 @@
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
+            .vuecal__flex.vuecal__weeks-column(v-if="showWeeksColumn && view.id === 'month'" column)
+              .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
+                slot(name="week-number-cell" :week-number="i")
+                  span W {{ i.toString() }}
 
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
@@ -136,6 +140,7 @@ export default {
     defaultView: { type: String, default: 'week' },
     todayButton: { type: Boolean, default: false },
     showAllDayEvents: { type: [Boolean, String], default: false },
+    showWeeksColumn: { type: [Boolean, String], default: false },
     selectedDate: { type: [String, Date], default: '' },
     minDate: { type: [String, Date], default: '' },
     maxDate: { type: [String, Date], default: '' },
@@ -990,6 +995,7 @@ export default {
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
+        'vuecal--has-weeks-column': this.showWeeksColumn && this.view.id === 'month',
         'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,

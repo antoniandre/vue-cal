@@ -270,7 +270,7 @@
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     v-btn.ma-1(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
-    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
+    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends show-weeks-column)
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -1466,9 +1466,10 @@
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
-      :disable-views="['years', 'year', 'month']"
+      :disable-views="['years', 'year']"
       editable-events
       :events="splitEvents"
+      show-weeks-column
       :split-days="splitsExample.splitDays"
       :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
