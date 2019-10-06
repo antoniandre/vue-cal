@@ -2395,6 +2395,9 @@
       p.
         When set to #[span.code true], the weeks numbers will show in the first column on the #[span.code month] view (only).#[br]
         You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+      highlight-message
+        Strong Did you know there can be 53 weeks in the year?#[br]
+        | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year. In this case the week number will be 53 instead of 1.
     li
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
