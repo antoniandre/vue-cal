@@ -517,7 +517,6 @@ export default {
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell, dragAnEvent } = this.domEvents
 
-
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
         this.domEvents.cancelClickEventCreation = true
@@ -755,7 +754,7 @@ export default {
 
       if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
       else return currentWeekNumber
-    },
+    }
   },
 
   created () {
