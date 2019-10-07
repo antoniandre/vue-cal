@@ -1231,6 +1231,16 @@
     Overlapping now supports more than 3 simultaneous events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
+  v-layout.mb-6(align-center)
+    | Optionally you can set a min width (in percent) to the events:
+    v-btn.ml-2(small color="primary" @click="minEventWidth = minEventWidth ? 0 : 50")
+      v-icon {{ minEventWidth ? 'close' : 'add' }}
+      | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
+  div(style="min-height: 30px")
+    v-slide-y-transition
+      .grey--text(v-if="minEventWidth").
+        #[span.code min-event-width="50"] will only apply a min width of 50% on events that would be smaller than that.
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
@@ -1239,6 +1249,7 @@
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       editable-events
+      :min-event-width="minEventWidth"
       :events="overlappingEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -1247,11 +1258,13 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends
              editable-events
+             :min-event-width="minEventWidth"
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
+      minEventWidth: 0,
       events: [
         {
           start: '2018-11-21 14:00',
@@ -2260,6 +2273,7 @@
     timeCellHeight:         [Number],          default: 40 // In pixels.
     twelveHour:             [Boolean],         default: false
     timeFormat:             [String],          default: ''
+    minEventWidth:          [Number],          default: 0 // In percent.
     minCellWidth:           [Number],          default: 0 // In pixels.
     minSplitWidth:          [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
@@ -2528,6 +2542,12 @@
           separate characters with no space.#[br]
           E.g. #[span.code "h:mm{am}"].
     li
+      code.mr-2 minEventWidth
+      span.code [Number], default: 0
+      p.
+        When a number is set, in percent, each event within a cell will have a minimum width.#[br]
+        If the provided percentage is bigger than what it would naturally be, the events will partially overlap.
+    li
       code.mr-2 minCellWidth
       span.code [Number], default: 0
       p.
@@ -2725,6 +2745,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
   div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
   div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
   div #[strong Version 2.6.0] Added Bangla language
@@ -3140,6 +3161,7 @@ export default {
       ]
     },
     example1theme: 'green',
+    minEventWidth: 0,
     indicatorStyle: 'count',
     now: new Date(),
     logs: [],
