@@ -162,12 +162,16 @@ export default {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
       if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
-      // const width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
+      let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak), left = (100 / (this.overlaps.length + 1)) * this.eventPosition
+      if (width < this.vuecal.minEventWidth) {
+        width = this.vuecal.minEventWidth
+        left = ((100 - this.vuecal.minEventWidth) / (this.overlaps.length)) * this.eventPosition
+      }
       return {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
-        width: `${100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)}%`,
-        left: `${(100 / (this.overlaps.length + 1)) * this.eventPosition}%`
+        width: `${width}%`,
+        left: `${left}%`
         // width: `${width}%`,
         // left: `${width * this.eventPosition}%`
       }
