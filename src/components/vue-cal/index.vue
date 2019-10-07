@@ -154,6 +154,7 @@ export default {
     timeStep: { type: Number, default: 60 }, // In minutes.
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
     twelveHour: { type: Boolean, default: false },
+    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     timeFormat: { type: String, default: '' },
     minCellWidth: { type: Number, default: 0 },
     minSplitWidth: { type: Number, default: 0 },
