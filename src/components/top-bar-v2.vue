@@ -37,7 +37,7 @@
           v-list-item(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
           v-list-item(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
           v-list-item(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'")
-            | Hiding particular week days
+            | Hide particular weekdays &amp; show week numbers
             v-chip.xsmall.ml-2(small color="primary" outlined) new
 
           v-list-item.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")

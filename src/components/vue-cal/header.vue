@@ -32,7 +32,7 @@
   )
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
-    .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && options.stickySplitLabels && options.splitDays.length")
+    .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && $parent.hasSplits && options.stickySplitLabels && !options.minSplitWidth")
       .day-split-header(v-for="(split, i) in options.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 

@@ -1,4 +1,5 @@
 <template lang="pug">
+//- weekdays-headings are on week view only.
 .vuecal__flex.vuecal__weekdays-headings
   .vuecal__flex.vuecal__heading(
     :class="{ today: heading.today, clickable: cellHeadingsClickable }"
@@ -17,7 +18,7 @@
           span.xsmall {{ heading.xsmall }}
           span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
         .vuecal__flex.vuecal__split-days-headers(
-          v-if="vuecal.stickySplitLabels && vuecal.splitDays.length"
+          v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
           grow)
           .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
 </template>
@@ -93,8 +94,7 @@ export default {
     },
     weekdayCellStyles () {
       return {
-        ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.vuecal.minCellWidth && this.view.id === 'week' ? `${this.vuecal.minCellWidth}px` : null
+        ...(this.vuecal.hideWeekdays.length ? { width: `${this.cellWidth}%` } : {})
       }
     },
     cellHeadingsClickable () {
@@ -107,6 +107,7 @@ export default {
 <style lang="scss">
 $time-column-width: 3em;
 $time-column-width-12: 4em; // twelve-hour clock shows am/pm.
+$week-numbers-width: 3em;
 $weekdays-headings-height: 2.8em;
 $weekdays-headings-height-with-splits: 3.4em;
 
@@ -115,18 +116,15 @@ $weekdays-headings-height-with-splits: 3.4em;
     border-bottom: 1px solid #ddd;
     margin-bottom: -1px;
 
-    .vuecal--view-with-time & {
-      padding-left: $time-column-width;
-    }
+    .vuecal--week-numbers & {padding-left: $week-numbers-width;}
+    .vuecal--view-with-time & {padding-left: $time-column-width;}
 
     .vuecal--view-with-time.vuecal--twelve-hour & {
       font-size: 0.9em;
       padding-left: $time-column-width-12;
     }
 
-    .vuecal--overflow-x.vuecal--view-with-time & {
-      padding-left: 0;
-    }
+    .vuecal--overflow-x.vuecal--view-with-time & {padding-left: 0;}
   }
 
   &__heading {

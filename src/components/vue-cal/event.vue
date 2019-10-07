@@ -167,14 +167,19 @@ export default {
       // if (this.event._eid === '9_138') console.log('rendering events', this.event._eid, this.event.top)
 
       if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
-      // const width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
+      let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
+      let left = (100 / (this.overlaps.length + 1)) * this.eventPosition
+
+      if (this.vuecal.minEventWidth && width < this.vuecal.minEventWidth) {
+        width = this.vuecal.minEventWidth
+        left = ((100 - this.vuecal.minEventWidth) / this.overlaps.length) * this.eventPosition
+      }
+
       return {
         top: `${(this.segment || this.event).top}px`,
         height: `${(this.segment || this.event).height}px`,
-        width: `${100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)}%`,
-        left: (this.event.left && `${this.event.left}px`) || `${(100 / (this.overlaps.length + 1)) * this.eventPosition}%`
-        // width: `${width}%`,
-        // left: `${width * this.eventPosition}%`
+        width: `${width}%`,
+        left: (this.event.left && `${this.event.left}px`) || `${left}%`
       }
     },
 

@@ -23,7 +23,11 @@
         .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
           span(style="width: 3em")
             span {{ texts.allDay }}
-          .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
+          .vuecal__flex.vuecal__cells(
+            :class="`${view.id}-view`"
+            grow
+            :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+            :column="!!minCellWidth || !!minSplitWidth")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
@@ -51,20 +55,37 @@
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.line {{ cell.label }}
-
-            .vuecal__flex.vuecal__cells(:class="`${view.id}-view`" grow :wrap="!minCellWidth || view.id !== 'week'" :column="!!minCellWidth")
-              //- Only for minCellWidth on week view.
+            .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
+              .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
+                slot(name="week-number-cell" :week="getWeekNumber(i - 1)") {{ getWeekNumber(i - 1) }}
+            .vuecal__flex.vuecal__cells(
+              :class="`${view.id}-view`"
+              grow
+              :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+              :column="!!minCellWidth || !!minSplitWidth")
+              //- Only for minCellWidth or minSplitWidth on week view.
               weekdays-headings(
-                v-if="minCellWidth && view.id === 'week'"
+                v-if="(minCellWidth || (hasSplits && minSplitWidth)) && view.id === 'week'"
                 :vuecal="this"
                 :transition-direction="transitionDirection"
                 :view="view"
-                :min-cell-width="minCellWidth"
                 :week-days="weekDays"
-                :switch-to-narrower-view="switchToNarrowerView")
+                :switch-to-narrower-view="switchToNarrowerView"
+                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
 
-              .dragging-helper(v-if="domEvents.dragAnEvent._eid" :style="{ transform: `translate3d(${domEvents.dragAnEvent.cursorCoords.x}px, ${domEvents.dragAnEvent.cursorCoords.y}px, 0)` }")
-              .vuecal__flex(ref="cells" grow :wrap="!minCellWidth || view.id !== 'week'")
+              .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
+                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
+                .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
+
+              .dragging-helper(
+                v-if="domEvents.dragAnEvent._eid"
+                :style="{ transform: `translate3d(${domEvents.dragAnEvent.cursorCoords.x}px, ${domEvents.dragAnEvent.cursorCoords.y}px, 0)` }")
+
+              .vuecal__flex(
+                ref="cells"
+                grow
+                :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
@@ -122,6 +143,7 @@ export default {
     defaultView: { type: String, default: 'week' },
     todayButton: { type: Boolean, default: false },
     showAllDayEvents: { type: [Boolean, String], default: false },
+    showWeekNumbers: { type: [Boolean, String], default: false },
     selectedDate: { type: [String, Date], default: '' },
     minDate: { type: [String, Date], default: '' },
     maxDate: { type: [String, Date], default: '' },
@@ -139,6 +161,8 @@ export default {
     twelveHour: { type: Boolean, default: false },
     timeFormat: { type: String, default: '' },
     minCellWidth: { type: Number, default: 0 },
+    minSplitWidth: { type: Number, default: 0 },
+    minEventWidth: { type: Number, default: 0 },
     splitDays: { type: Array, default: () => [] },
     stickySplitLabels: { type: Boolean, default: false },
     events: { type: Array, default: () => [] },
@@ -175,6 +199,8 @@ export default {
         title: '',
         startDate: null,
         endDate: null,
+        firstCellDate: null,
+        lastCellDate: null,
         selectedDate: null,
         events: []
       },
@@ -718,7 +744,18 @@ export default {
     // Shorthand function.
     formatDate (date, format = 'yyyy-mm-dd') {
       return formatDate(date, format, this.texts)
-    }
+    },
+
+    // Getting the week number is not that straightforward as there might be a 53rd week in the year.
+    // Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
+    // By using the `firstCellDateWeekNumber` computed value, the `getWeek` function call is avoided 5 times out of 6.
+    getWeekNumber (weekFromFirstCell) {
+      const firstCellWeekNumber = this.firstCellDateWeekNumber
+      const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell
+
+      if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
+      else return currentWeekNumber
+    },
   },
 
   created () {
@@ -788,6 +825,9 @@ export default {
     isShortMonthView () {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
     },
+    firstCellDateWeekNumber () {
+      return this.view.firstCellDate.getWeek()
+    },
     // For week & day views.
     timeCells () {
       let timeCells = []
@@ -806,6 +846,16 @@ export default {
     hasSplits () {
       return !!this.splitDays.length && ['week', 'day'].includes(this.view.id)
     },
+
+    contentMinWidth () {
+      let minWidth = null
+
+      if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.splitDays.length
+      else if (this.minCellWidth && this.view.id === 'week') minWidth = this.visibleDaysCount * this.minCellWidth
+
+      return minWidth
+    },
+
     minTimestamp () {
       let date = null
       if (this.minDate && typeof this.minDate === 'string') date = stringToDate(this.minDate)
@@ -832,7 +882,7 @@ export default {
       return weekDays
     },
     weekDaysInHeader () {
-      return (this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth))
+      return this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth && !this.minSplitWidth)
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
@@ -980,8 +1030,12 @@ export default {
       return cells
     },
     // Only when hiding weekdays on month and week views.
+    visibleDaysCount () {
+      if (this.view.id === 'day') return 1
+      return 7 - this.weekDays.reduce((total, day) => total + day.hide, 0)
+    },
     cellWidth () {
-      return 100 / (7 - this.weekDays.reduce((total, day) => total + day.hide, 0))
+      return 100 / this.visibleDaysCount
     },
     cssClasses () {
       return {
@@ -989,12 +1043,13 @@ export default {
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
+        'vuecal--week-numbers': this.showWeekNumbers && this.view.id === 'month',
         'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
         'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
-        'vuecal--overflow-x': this.minCellWidth,
+        'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,

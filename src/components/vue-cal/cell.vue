@@ -257,8 +257,7 @@ export default {
     cellStyles () {
       return {
         // cellWidth is only applied when hiding weekdays on month and week views.
-        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {}),
-        minWidth: this.view === 'week' && this.$parent.minCellWidth ? `${this.$parent.minCellWidth}px` : null
+        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {})
       }
     },
     events () {
@@ -355,20 +354,19 @@ export default {
   text-align: center;
 
   .vuecal__cells.month-view &,
-  .vuecal__cells.week-view &,
-  .vuecal__cells.day-view & {
+  .vuecal__cells.week-view & {
     width: 14.2857%;
   }
 
   .vuecal--hide-weekends .vuecal__cells.month-view &,
-  .vuecal--hide-weekends .vuecal__cells.week-view &,
-  .vuecal--hide-weekends .vuecal__cells.day-view & {
+  .vuecal--hide-weekends .vuecal__cells.week-view & {
     width: 20%;
   }
 
   .vuecal__cells.years-view & {width: 20%;}
   .vuecal__cells.year-view & {width: 33.33%;}
   .vuecal__cells.day-view & {flex: 1;}
+  .vuecal--overflow-x.vuecal--day-view & {width: auto;}
 
   .vuecal--click-to-navigate & {cursor: pointer;}
   .vuecal--view-with-time &,
@@ -404,6 +402,7 @@ export default {
     bottom: -1px;
     border: 1px solid #ddd;
   }
+  .vuecal--overflow-x.vuecal--day-view &:before {bottom: 0;}
 
   &.today,
   &.current {

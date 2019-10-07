@@ -365,8 +365,7 @@
     You can easily change the calendar color theme or use the rounded-cells theme
     by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
     E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
-    Read more about calendar themes in the
-    #[a(href="#css-notes") CSS Notes] section.
+    Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
 
   v-layout.ma-auto(row justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
@@ -391,28 +390,38 @@
              default-view="month"
              :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
-  highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+  highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
 
   //- Example.
   h4.title
-    a(href="#ex--hiding-particular-week-days") # Hiding particular week days
+    a(href="#ex--hiding-particular-week-days") # Hiding particular week days &amp; showing weeks numbers
     a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
   p.
     If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
     option.#[br]It accepts an array of days to hide (day numbers),
     #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
-    This option will apply on month &amp; week views.#[br]#[br]
+    This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
     If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
-    #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].
+    #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
+    You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
+    You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+
+  highlight-message.
+    Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
   v-card.mx-auto.main-content(style="height: 350px")
     vue-cal.vuecal--green-theme(
-      :hide-weekdays="[2, 3, 5]"
       :time="false"
+      show-week-numbers
+      :hide-weekdays="[2, 3, 5]"
       :disable-views="['years', 'year']")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :hide-weekdays="[2, 3, 5]" :time="false" :disable-views="['years', 'year']"&gt;&lt;/vue-cal&gt;
-  highlight-message Refer to the #[span.code disableViews] option in the #[a(href="#api") API] section.
+    &lt;vue-cal
+             :time="false"
+             show-week-numbers
+             :hide-weekdays="[2, 3, 5]"
+             :disable-views="['years', 'year']"&gt;
+    &lt;/vue-cal&gt;
 
   //- Example.
   h3.title
@@ -1222,6 +1231,16 @@
     Overlapping now supports more than 3 simultaneous events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
+  v-layout.mb-6(align-center)
+    | Optionally you can set a min width (in percent) to the events:
+    v-btn.ml-2(small color="primary" @click="minEventWidth = minEventWidth ? 0 : 50")
+      v-icon {{ minEventWidth ? 'close' : 'add' }}
+      | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
+  div(style="min-height: 30px")
+    v-slide-y-transition
+      .grey--text(v-if="minEventWidth").
+        #[span.code min-event-width="50"] will only apply a min width of 50% on events that would be smaller than that.
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
@@ -1230,6 +1249,7 @@
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       editable-events
+      :min-event-width="minEventWidth"
       :events="overlappingEvents")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -1238,11 +1258,13 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends
              editable-events
+             :min-event-width="minEventWidth"
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
+      minEventWidth: 0,
       events: [
         {
           start: '2018-11-21 14:00',
@@ -1423,51 +1445,93 @@
     a(href="#ex--splitting-days") # Splitting days &amp; split events
     a#ex--splitting-days(name="ex--splitting-days")
   p.mb-6
-    | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.#[br]
-    | disabled views: years, year, month.#[br]
-    | On week view you can also overflow your content using a min-width on cells, like in this example, or fit to container:
-    v-btn.ma-1(small color="primary" @click="splitsExampleMinCellWidth = splitsExampleMinCellWidth ? 0 : 400")
-      v-icon.mr-2 {{ splitsExampleMinCellWidth ? 'remove' : 'add' }}
-      | {{ splitsExampleMinCellWidth ? ' fit to container ' : 'min cell width 400px' }}
-    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header:
-    v-btn.ma-1(small color="primary" @click="stickySplitLabels = !stickySplitLabels")
-      v-icon.mr-2 {{ stickySplitLabels ? 'close' : 'add' }}
-      | Sticky Split Labels
-    | #[br]Refer to the #[span.code splitDays] option in the #[a(href="#api") API] section.
+    | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.
+    br
+    br
+    | By default the body of the calendar will fit the container.#[br]
+    | But with the options #[span.code.black--text min-cell-width] or #[span.code.black--text min-split-width], you can increase the calendar
+    | body width and it will become scrollable horizontally.
+    ul
+      li #[span.code min-cell-width.black--text] will only be activated on week view, since there is only 1 cell in day view.
+      li If both #[span.code.black--text min-cell-width] and #[span.code.black--text min-split-width] are set, #[span.code.black--text min-split-width] will be used.
+
+    | #[br]You can also use the option #[span.code.black--text sticky-split-labels] to place the split labels in the header.#[br]
+    | Refer to the #[span.code min-cell-width.black--text], #[span.code.black--text min-split-width] and #[span.code.black--text splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
+
+    v-layout(align-center)
+      v-btn.mr-2(
+        small
+        color="primary"
+        :outlined="!splitsExample.minCellWidth"
+        @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
+        v-icon.mr-2 {{ splitsExample.minCellWidth ? 'close' : 'add' }}
+        | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
+
+      v-btn.mr-2(
+        small
+        color="primary"
+        :outlined="!splitsExample.minSplitWidth"
+        @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
+        v-icon.mr-2 {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
+        | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
+
+      v-btn(
+        small
+        color="primary"
+        :outlined="!splitsExample.stickySplitLabels"
+        @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
+        v-icon.mr-2 {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
+        | Sticky Split Labels
+
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
       :time-step="30"
-      :disable-views="['years', 'year', 'month']"
-      :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-      :sticky-split-labels="stickySplitLabels"
+      :disable-views="['years', 'year']"
       editable-events
       :events="splitEvents"
-      :min-cell-width="splitsExampleMinCellWidth")
+      show-week-numbers
+      :split-days="splitsExample.splitDays"
+      :sticky-split-labels="splitsExample.stickySplitLabels"
+      :min-cell-width="splitsExample.minCellWidth"
+      :min-split-width="splitsExample.minSplitWidth")
       template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-      {{ '\{\{ minCellWidth ? \'fit to container\' : \'min cell width 400px\' \}\}' }}
+      {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
+    &lt;/button&gt;
+    &lt;button @click="minSplitWidth = minSplitWidth ? 0 : 200"&gt;
+      {{ '\{\{ minSplitWidth ? \'min split width: 200px\' : \'Add min split width\' \}\}' }}
     &lt;/button&gt;
     &lt;button @click="stickySplitLabels = !stickySplitLabels"&gt;
       Sticky Split Labels
     &lt;/button&gt;
+
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-step="30"
              :disable-views="['years', 'year', 'month']"
-             :split-days="[{ class: 'him', label: 'Him' }, { class: 'her', label: 'Her' }]"
-             :sticky-split-labels="stickySplitLabels"
              editable-events
              :events="events"
-             :min-cell-width="minCellWidth"&gt;
+             :split-days="splitDays"
+             :sticky-split-labels="stickySplitLabels"
+             :min-cell-width="minCellWidth"
+             :min-split-width="minSplitWidth"&gt;
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
     data: () => ({
       stickySplitLabels: false,
       minCellWidth: 400,
+      minSplitWidth: 0,
+      splitDays: [
+        { class: 'mom', label: 'Mom' },
+        { class: 'dad', label: 'Dad' },
+        { class: 'kid1', label: 'Kid 1' },
+        { class: 'kid2', label: 'Kid 2' },
+        { class: 'kid3', label: 'Kid 3' }
+      ]
       events: [
         {
           start: '2018-11-19 10:35',
@@ -1491,7 +1555,7 @@
           title: 'Crossfit',
           content: '&lt;i class="v-icon material-icons"&gt;fitness_center&lt;/i&gt;',
           class: 'sport',
-          split: 2
+          split: 1
         },
         ...
       ]
@@ -1499,10 +1563,12 @@
 
   sshpre(language="css" label="CSS").
     /* You can easily set a different style for each split of your days. */
-    .vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.6);}
-    .vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;}
-    .vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.6);}
-    .vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;}
+    .vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
+    .vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
+    .vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+    .vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+    .vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+    .vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
     /* Different color for different event types. */
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
@@ -1822,6 +1888,7 @@
       li #[span.code arrow-next]
       li #[span.code today-button]
       li #[span.code time-cell]
+      li #[span.code week-number-cell]
       li #[span.code cell-content]
       li #[span.code no-event]
       li #[span.code events-count]
@@ -1845,9 +1912,10 @@
       default-view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
-      .line(:class="{ hours: !minutes }" slot="time-cell" slot-scope="{ hours, minutes }")
-        strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{hours}}
-        span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
+      template(v-slot:time-cell="{ hours, minutes }")
+        .line(:class="{ hours: !minutes }")
+          strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
+          span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt-6(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
@@ -1859,12 +1927,12 @@
              default-view="day"
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
-      &lt;div class="{ line: true, hours: !minutes }"
-           slot="time-cell"
-           slot-scope="{ hours, minutes }"&gt;
-        &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
-        &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
-      &lt;/div&gt;
+      &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
+        &lt;div class="{ line: true, hours: !minutes }"&gt;
+          &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
+          &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
+        &lt;/div&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   sshpre.mt-6(language="css" label="CSS").
@@ -2186,6 +2254,8 @@
     disableViews:           [Array],           default: []
     defaultView:            [String],          default: 'week'
     todayButton:            [Boolean],         default: false
+    showAllDayEvents:       [Boolean, String], default: false
+    showWeekNumbers:        [Boolean, String], default: false
     selectedDate:           [String, Date],    default: ''
     minDate:                [String, Date],    default: ''
     maxDate:                [String, Date],    default: ''
@@ -2203,7 +2273,9 @@
     timeCellHeight:         [Number],          default: 40 // In pixels.
     twelveHour:             [Boolean],         default: false
     timeFormat:             [String],          default: ''
+    minEventWidth:          [Number],          default: 0 // In percent.
     minCellWidth:           [Number],          default: 0 // In pixels.
+    minSplitWidth:          [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
     stickySplitLabels:      [Boolean],         default: false
     events:                 [Array],           default: []
@@ -2211,7 +2283,6 @@
     resizeX:                [Boolean],         default: false
     eventsOnMonthView:      [Boolean, String], default: false
     eventsCountOnYearView:  [Boolean],         default: false
-    showAllDayEvents:       [Boolean, String], default: false
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
     onEventCreate:          [Function],        default: null
@@ -2310,6 +2381,37 @@
       code.mr-2 todayButton
       span.code [Boolean], default: false
       p Adds a Today button in the title bar to quickly go to Today's date.#[br]
+    li
+      code.mr-2 showAllDayEvents
+      span.code [Boolean, String], default: false
+      ul
+        li.mb-2.
+          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
+          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
+          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
+          #[span.code time] are set to #[span.code true].#[br]
+          #[span.code time] is important since without time information every event is an all-day
+          event there is no point in separating them then.
+        li.mb-2.
+          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
+          background event.
+        li.mb-2.
+          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
+          since both should display the all day events.
+        li.mb-2.
+          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
+          #[span.code 'short'], to display only the event title.
+    li
+      code.mr-2 showWeekNumbers
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], the weeks numbers will show in the first column on the #[span.code month] view (only).#[br]
+        You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+      highlight-message
+        Strong Did you know there can be 53 weeks in the year?#[br]
+        | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year. In this case the week number will be 53 instead of 1.
     li
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
@@ -2436,16 +2538,33 @@
         li #[strong.code mm]: Minutes with leading zero
         li #[strong.code {am}]: am or pm
         li.
-          The characters #[strong.code {], #[strong.code }] are removed and used only to
+          The characters #[strong.code {], #[strong.code }]] are removed and used only to
           separate characters with no space.#[br]
           E.g. #[span.code "h:mm{am}"].
+    li
+      code.mr-2 minEventWidth
+      span.code [Number], default: 0
+      p.
+        When a number is set, in percent, each event within a cell will have a minimum width.#[br]
+        If the provided percentage is bigger than what it would naturally be, the events will partially overlap.
     li
       code.mr-2 minCellWidth
       span.code [Number], default: 0
       p.
-        In the current version, this is for day splits only.#[br]
-        When a number is set, in pixels, the calendar body will have a horizontal
-        scrollbar if the cells don't fit naturally in the calendar container.
+        When a number is set, in pixels, each cell #[strong of the #[span.code week] view (only)]
+        will have this minimum width.#[br]
+        If it does not fit in the calendar body, the overflow will be scrollable.
+        If #[span.code minSplitWidth] is also set, it will override #[span.code minCellWidth].
+    li
+      code.mr-2 minSplitWidth
+      span.code [Number], default: 0
+      p.
+        This is for day splits only, and it applies to the
+        #[strong #[span.code week] and #[span.code day] views (only)].#[br]
+        When a number is set, in pixels, each split of each cell will have this minimum width.#[br]
+        If it does not fit in the calendar body, the overflow will be scrollable.#[br]
+        If #[span.code minCellWidth] is also set, #[span.code minSplitWidth] will override it on
+        #[span.code week] view.
     li
       code.mr-2 splitDays
       span.code [Array], default: []
@@ -2489,28 +2608,6 @@
       p.
         When set to #[span.code true], the events count will also be displayed on #[span.code years]
         &amp; #[span.code year] views.
-    li
-      code.mr-2 showAllDayEvents
-      span.code [Boolean, String], default: false
-      ul
-        li.mb-2.
-          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
-          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
-          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
-          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
-          #[span.code time] are set to #[span.code true].#[br]
-          #[span.code time] is important since without time information every event is an all-day
-          event there is no point in separating them then.
-        li.mb-2.
-          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
-          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
-          background event.
-        li.mb-2.
-          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
-          since both should display the all day events.
-        li.mb-2.
-          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
-          #[span.code 'short'], to display only the event title.
     li
       code.mr-2 onEventClick
       span.code [Function], default: null
@@ -2648,7 +2745,11 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 2.5.0] Control Previous & Next externally
+  div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
+  div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
+  div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
+  div #[strong Version 2.6.0] Added Bangla language
+  div #[strong Version 2.5.0] Control Previous &amp; Next externally
   div #[strong Version 2.4.0] Added Korean language
   div #[strong Version 2.3.0] Added Turkish language
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
@@ -2962,7 +3063,7 @@ const events = [
     title: 'Crossfit',
     content: '<i class="v-icon material-icons">fitness_center</i>',
     class: 'sport',
-    split: 1
+    split: 2
   },
   {
     start: '2018-11-21 11:00',
@@ -2979,7 +3080,7 @@ const events = [
     title: 'Swimming lesson',
     content: '<i class="v-icon material-icons">pool</i>',
     class: 'sport',
-    split: 1
+    split: 2
   },
   {
     start: '2018-11-23 12:30',
@@ -3012,6 +3113,7 @@ export default {
   data: () => ({
     localesList: [
       { code: 'ar', label: 'Arabic' },
+      { code: 'bn', label: 'Bangla' },
       { code: 'bs', label: 'Bosnian' },
       { code: 'bg', label: 'Bulgarian' },
       { code: 'ca', label: 'Catalan' },
@@ -3046,9 +3148,20 @@ export default {
       { code: 'vi', label: 'Vietnamese' }
     ],
     locale: 'zh-cn',
-    splitsExampleMinCellWidth: 400,
-    stickySplitLabels: false,
+    splitsExample: {
+      minCellWidth: 400,
+      minSplitWidth: 0,
+      stickySplitLabels: false,
+      splitDays: [
+        { class: 'mom', label: 'Mom' },
+        { class: 'dad', label: 'Dad' },
+        { class: 'kid1', label: 'Kid 1' },
+        { class: 'kid2', label: 'Kid 2' },
+        { class: 'kid3', label: 'Kid 3' }
+      ]
+    },
     example1theme: 'green',
+    minEventWidth: 0,
     indicatorStyle: 'count',
     now: new Date(),
     logs: [],
@@ -3109,7 +3222,7 @@ export default {
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
-        title: 'Call mum',
+        title: 'Recall Dave',
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure'
       },
@@ -3220,7 +3333,7 @@ export default {
         title: 'Swimming lesson',
         content: '<i class="v-icon material-icons">pool</i>',
         class: 'sport',
-        split: 1
+        split: 2
       },
       {
         start: '2019-02-15 12:30',
@@ -3244,7 +3357,7 @@ export default {
       {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
-        title: 'Call mum',
+        title: 'Recall Dave',
         content: '<i class="v-icon material-icons">local_cafe</i>',
         class: 'leisure',
         split: 1
@@ -3255,7 +3368,7 @@ export default {
         title: 'Salsa',
         content: '<i class="v-icon material-icons">directions_walk</i>',
         class: 'sport',
-        split: 2
+        split: 1
       },
       {
         start: '2018-11-23 21:00',
@@ -3585,10 +3698,12 @@ $primary: #42b983;
 }
 
 // Split days example.
-.vuecal__cell-split.him {background-color: rgba(221, 238, 255, 0.5);}
-.vuecal__cell-split.him .split-label {color: rgba(0, 84, 194, 0.1);font-size: 30px;font-weight: 500;}
-.vuecal__cell-split.her {background-color: rgba(255, 232, 251, 0.5);}
-.vuecal__cell-split.her .split-label {color: rgba(255, 0, 106, 0.1);font-size: 30px;font-weight: 500;}
+.vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
+.vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
+.vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+.vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+.vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+.vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
