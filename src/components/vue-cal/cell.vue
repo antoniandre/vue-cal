@@ -74,7 +74,7 @@ export default {
           this.cellOverlapsStreak = 1
         }
         // If only 1 event remains re-init the overlaps.
-        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(this.events)
+        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(this.events, this.options.overlapEventStartOnly)
       }
     },
 
@@ -303,7 +303,7 @@ export default {
     splits () {
       return this.cellSplits.map((item, i) => {
         const events = this.events.filter(e => e.split === i + 1)
-        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay))
+        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), this.options.overlapEventStartOnly)
         return {
           ...item,
           overlaps,
