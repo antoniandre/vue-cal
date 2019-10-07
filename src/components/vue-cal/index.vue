@@ -154,8 +154,8 @@ export default {
     timeStep: { type: Number, default: 60 }, // In minutes.
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
     twelveHour: { type: Boolean, default: false },
-    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     timeFormat: { type: String, default: '' },
+    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     minCellWidth: { type: Number, default: 0 },
     minSplitWidth: { type: Number, default: 0 },
     minEventWidth: { type: Number, default: 0 },
@@ -723,7 +723,7 @@ export default {
 
       if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
       else return currentWeekNumber
-    },
+    }
   },
 
   created () {

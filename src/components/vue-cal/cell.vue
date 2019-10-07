@@ -62,7 +62,7 @@ export default {
     // where there is no cursor coords.
     timeAtCursor: null,
     now: new Date(),
-    timeTickerId: null
+    timeTickerIds: [null, null] // 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   }),
 
   methods: {
@@ -177,7 +177,7 @@ export default {
     timeTick () {
       // Updating `now` will re-trigger the computed `todaysTimePosition`.
       this.now = new Date()
-      this.timeTickerId = setTimeout(this.timeTick, 60000) // Every minute.
+      this.timeTickerIds[1] = setTimeout(this.timeTick, 60000) // Every minute.
     }
   },
 
@@ -329,19 +329,20 @@ export default {
 
   created () {
     // Timers are expensive, this should only trigger on demand.
-    if (this.options.time && this.options.watchRealTime) {
+    if (this.data.today && this.options.time && this.options.watchRealTime) {
       const now = new Date()
       // Snap the time ticker on sharp minutes (when seconds = 0), so that we can set
       // the time ticker interval to 60 seconds and spare some function calls.
-      setTimeout(this.timeTick, 60 - now.getSeconds())
+      this.timeTickerIds[0] = setTimeout(this.timeTick, (60 - now.getSeconds()) * 1000)
     }
   },
 
   beforeDestroy () {
     // Don't keep the ticking running if unused.
-    if (this.timeTickerId) {
-      clearTimeout(this.timeTickerId)
-      this.timeTickerId = null
+    if (this.timeTickerIds[0] || this.timeTickerIds[1]) {
+      clearTimeout(this.timeTickerIds[0])
+      clearTimeout(this.timeTickerIds[1])
+      this.timeTickerIds = [null, null]
     }
   }
 }
