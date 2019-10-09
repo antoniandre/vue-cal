@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
+import DocumentationV2 from '@/views/documentation-v2'
 
 Vue.use(Router)
 export default new Router({
@@ -8,7 +9,7 @@ export default new Router({
   routes: [
     {
       path: '/',
-      component: () => import(/* webpackChunkName: "documentation-v2" */ './views/documentation-v2.vue')
+      component: DocumentationV2
     },
     {
       path: '/v1',
