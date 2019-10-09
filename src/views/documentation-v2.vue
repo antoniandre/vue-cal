@@ -114,29 +114,35 @@
       v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
         v-icon.mr-1(size="20") check
         | Today button
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Externalize locales
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Support more simultaneous events
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Sticky day splits labels
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Hide particular weekdays
 
     .mb-2 Current backlog
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
-      | Externalize locales
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Support more simultaneous events
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Sticky day splits labels
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Hide particular weekdays
+      | Optional week number
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
       | Recurring events
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
+    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
+      v-icon.mr-1(size="20") timer
       | Drag events
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
-      | Optional week number
+      a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
+      a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       | Improve multiple day events Month view
