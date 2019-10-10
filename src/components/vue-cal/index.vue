@@ -160,6 +160,7 @@ export default {
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
     twelveHour: { type: Boolean, default: false },
     timeFormat: { type: String, default: '' },
+    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     minCellWidth: { type: Number, default: 0 },
     minSplitWidth: { type: Number, default: 0 },
     minEventWidth: { type: Number, default: 0 },
@@ -175,79 +176,93 @@ export default {
     onEventCreate: { type: [Function, null], default: null },
     transitions: { type: Boolean, default: true }
   },
-  data: function () {
-    return {
-      texts: {
-        weekDays: Array(7).fill(''),
-        weekDaysShort: [],
-        months: Array(12).fill(''),
-        years: '',
-        year: '',
-        month: '',
-        week: '',
-        day: '',
-        today: '',
-        noEvent: '',
-        allDay: '',
-        deleteEvent: '',
-        createEvent: '',
-        dateFormat: 'DDDD mmmm d, yyyy'
+  data: () => ({
+    // Make texts reactive before a locale is loaded.
+    texts: {
+      weekDays: Array(7).fill(''),
+      weekDaysShort: [],
+      months: Array(12).fill(''),
+      years: '',
+      year: '',
+      month: '',
+      week: '',
+      day: '',
+      today: '',
+      noEvent: '',
+      allDay: '',
+      deleteEvent: '',
+      createEvent: '',
+      dateFormat: 'DDDD mmmm d, yyyy'
+    },
+    ready: false, // Is vue-cal ready.
+
+    // At any time this object will be filled with current view, visible events and selected date.
+    view: {
+      id: '',
+      title: '',
+      startDate: null,
+      endDate: null,
+      firstCellDate: null,
+      lastCellDate: null,
+      selectedDate: null,
+      // All the events are stored in the mutableEvents array, but subset of visible ones are passed
+      // Into the current view for fast lookup and manipulation.
+      events: []
+    },
+    eventIdIncrement: 1, // Internal unique id.
+
+    // All the possible events/cells interractions:
+    // e.g. focus, click, click & hold, resize, drag & drop (coming).
+    domEvents: {
+      resizeAnEvent: {
+        _eid: null, // Only one at a time.
+        start: null,
+        split: null,
+        segment: null,
+        originalEndTimeMinutes: 0,
+        endTimeMinutes: 0,
+        startCell: null,
+        endCell: null
       },
-      ready: false,
-      view: {
-        id: '',
-        title: '',
-        startDate: null,
-        endDate: null,
-        firstCellDate: null,
-        lastCellDate: null,
-        selectedDate: null,
-        events: []
+      dragAnEvent: {
+        _eid: null, // Only one at a time.
+        cursorCoords: {}
       },
-      eventIdIncrement: 1,
-      domEvents: {
-        resizeAnEvent: {
-          _eid: null, // Only one at a time.
-          start: null,
-          split: null,
-          segment: null,
-          originalEndTimeMinutes: 0,
-          endTimeMinutes: 0,
-          startCell: null,
-          endCell: null
-        },
-        dragAnEvent: {
-          _eid: null, // Only one at a time.
-          cursorCoords: {}
-        },
-        focusAnEvent: {
-          _eid: null // Only one at a time.
-        },
-        clickHoldAnEvent: {
-          _eid: null, // Only one at a time.
-          timeout: 1200, // Hold for 1.2s to delete an event.
-          timeoutId: null
-        },
-        dblTapACell: {
-          taps: 0,
-          timeout: 500 // Allowed latency between first and second click.
-        },
-        clickHoldACell: {
-          cellId: null,
-          split: null,
-          timeout: 1200, // Hold for 1.2s to create an event.
-          timeoutId: null
-        },
-        // A single click can trigger event creation if the user decides so.
-        // But prevent this to happen on click & hold, on event click and on resize event.
-        cancelClickEventCreation: false
+      focusAnEvent: {
+        _eid: null // Only one at a time.
       },
-      mutableEvents: [], // An array of mutable events updated each time given events array changes.
-      transitionDirection: 'right'
-    }
-  },
+      clickHoldAnEvent: {
+        _eid: null, // Only one at a time.
+        timeout: 1200, // Hold for 1.2s to delete an event.
+        timeoutId: null
+      },
+      dblTapACell: {
+        taps: 0,
+        timeout: 500 // Allowed latency between first and second click.
+      },
+      clickHoldACell: {
+        cellId: null,
+        split: null,
+        timeout: 1200, // Hold for 1.2s to create an event.
+        timeoutId: null
+      },
+      // A single click can trigger event creation if the user decides so.
+      // But prevent this to happen on click & hold, on event click and on resize event.
+      cancelClickEventCreation: false
+    },
+    // The events source of truth.
+    // An array of mutable events updated each time given external events array changes.
+    mutableEvents: [],
+    // Transition when switching view. left when going toward the past, right when going toward future.
+    transitionDirection: 'right'
+  }),
 
   methods: {
+    /**
+     * Only import locale on demand to keep a small library weight.
+     *
+     * @param {String} locale the language user whishes to have on vue-cal
+     */
     loadLocale (locale) {
       if (this.locale === 'en') this.texts = require('./i18n/en.json')
       else {
@@ -256,6 +271,10 @@ export default {
       }
     },
 
+    /**
+     * On click/dblclick of a cell go to a narrower view if available.
+     * E.g. Click on month cell takes you to week view if not hidden, otherwise on day view if not hidden.
+     */
     switchToNarrowerView () {
       this.transitionDirection = 'right'
 
@@ -266,6 +285,15 @@ export default {
       if (view) this.switchView(view)
     },
 
+    /**
+     * Switches to the specified view on view selector click, or programmatically form external call (via $refs).
+     * If a date is given, it will be selected and if the view does not contain it, it will go to that date.
+     *
+     * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
+     * @param {String, Date} date A starting date for the view, if none, fallbacks to selected date
+     *                            If also empty fallbacks to the current view start date.
+     * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
+     */
     switchView (view, date = null, fromViewSelector = false) {
       if (this.transitions && fromViewSelector) {
         const views = Object.keys(this.views)
@@ -367,15 +395,25 @@ export default {
       }
     },
 
+    /**
+     * Shorthand function for external call (via $refs).
+     */
     previous () {
       this.previousNext(false)
     },
 
+    /**
+     * Shorthand function for external call (via $refs).
+     */
     next () {
       this.previousNext()
     },
 
-    // On click on previous or next arrow, update the calendar visible date range.
+    /**
+     * On click on previous or next arrow, update the calendar visible date range.
+     *
+     * @param {Boolean} next
+     */
     previousNext (next = true) {
       this.transitionDirection = next ? 'right' : 'left'
       const modifier = next ? 1 : -1
@@ -402,6 +440,12 @@ export default {
       if (firstCellDate) this.switchView(viewId, firstCellDate)
     },
 
+    /**
+     * Add events (subset from mutableEvents) to the current view (in `this.view.events`).
+     * This is done for performance, so that all the cells have a quick lookup of only what's needed.
+     *
+     * @param {Array} events
+     */
     addEventsToView (events = []) {
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       if (!events.length) this.view.events = []
@@ -435,17 +479,37 @@ export default {
       }
     },
 
+    /**
+     * find a DOM ancestor of a given DOM node `el` matching given class name.
+     *
+     * @param {Object} el a DOM node to find ancestor from.
+     * @param {String} Class the CSS class name of the ancestor.
+     * @return {Object} The matched DOM node or null if no match.
+     */
     findAncestor (el, Class) {
       while ((el = el.parentElement) && !el.classList.contains(Class)) {}
       return el
     },
 
+    /**
+     * Tells whether a clicked DOM node is or is within a calendar event.
+     *
+     * @param {Object} el a DOM node to check if event.
+     * @return {Boolean} true if the given DOM node is - or is in - an event.
+     */
     isDOMElementAnEvent (el) {
       return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
     },
 
-    // Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
-    // handlers in the single parent for performance.
+    /**
+     * Capture mousemove anywhere in the page.
+     * If resizing an event was started earlier, this will update event end.
+     * If resizing was not started, this method is calculation is avoided with a premature return.
+     * Notes: Event resizing is started in cell component (onMouseDown) but place onMouseMove & onMouseUp
+     *        handlers in the single-instance parent for performance.
+     *
+     * @param {Object} e the native DOM event object.
+     */
     onMouseMove (e) {
       let { resizeAnEvent, dragAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
@@ -512,8 +576,14 @@ export default {
       }
     },
 
-    // Mouseup can never cancel a click with preventDefault or stopPropagation,
-    // But it always happens before the click event.
+    /**
+     * Capture mouseup anywhere in the page, not only on a cell or event.
+     * Then end up any resize, drag & drop, click & hold or event or cell.
+     * Notes: Mouseup can never cancel a click with preventDefault or stopPropagation,
+     *        But it always happens before the click event.
+     *
+     * @param {Object} e the native DOM event object.
+     */
     onMouseUp (e) {
       let { resizeAnEvent, clickHoldAnEvent, clickHoldACell, dragAnEvent } = this.domEvents
 
@@ -567,13 +637,18 @@ export default {
       }
     },
 
+    /**
+     * Capture `escape` keypress when delete button is visible, and cancel deletion.
+     *
+     * @param {Object} e the native DOM event object.
+     */
     onKeyUp (e) {
-      // Escape key.
-      if (e.keyCode === 27) {
-        this.cancelDelete()
-      }
+      if (e.keyCode === 27) this.cancelDelete() // Escape key.
     },
 
+    /**
+     * Unfocus an event (e.g. when clicking outside of focused event).
+     */
     unfocusEvent () {
       let { focusAnEvent, clickHoldAnEvent } = this.domEvents
       const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
@@ -586,7 +661,9 @@ export default {
       }
     },
 
-    // Cancel an event deletion.
+    /**
+     * Cancel an event deletion (e.g. when clicking outside of visible delete button).
+     */
     cancelDelete () {
       let { clickHoldAnEvent } = this.domEvents
       if (clickHoldAnEvent._eid) {
@@ -598,6 +675,13 @@ export default {
       }
     },
 
+    /**
+     * After editing an event title (if `this.editable`), save the new string into the event object
+     * and emit event to the outside world.
+     *
+     * @param {Object} e the native DOM event object.
+     * @param {Object} event the vue-cal event object.
+     */
     onEventTitleBlur (e, event) {
       // If no change cancel action.
       if (event.title === e.target.innerHTML) return
@@ -608,14 +692,20 @@ export default {
       this.emitWithEvent('event-title-change', event)
     },
 
-    // Object of arrays of events.
-    // mutableEvents can't be a computed value based on this.events, because we add
-    // items to the array. (Cannot mutate props)
+    /**
+     * The `mutableEvents` array of events is the source of truth.
+     * It is first populated from the `events` prop and every time the `events` prop changes.
+     * When the user updates an event through interractions, the event gets updated here.
+     * Notes: mutableEvents couldn't be a computed variable based on this.events, because we add
+     *        items to the array. (Cannot mutate props)
+     */
     updateMutableEvents () {
       this.mutableEvents = []
 
-      // Group events into dates.
-      this.events.forEach((event, i) => {
+      // For each event of the `events` prop, prepare the event for vue-cal:
+      // Populate missing keys: start, startDate, startTimeMinutes, end, endDate, endTimeMinutes, daysCount.
+      // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
+      this.events.forEach(event => {
         // Event Start, accepts formatted string - startDate accepts Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
@@ -680,13 +770,25 @@ export default {
       })
     },
 
+    /**
+     * Get the coordinates of the mouse cursor from the cells wrapper referential (`ref="cells"`).
+     *
+     * @todo Cache bounding box & update it on resize.
+     * @param {Object} e the native DOM event object.
+     * @return {Object} containing { x: {Number}, y: {Number} }
+     */
     getPosition (e) {
-      // @todo: Cache bounding box & update it on resize.
       const rect = this.$refs.cells.getBoundingClientRect()
       const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
       return { x: clientX - rect.left, y: clientY - rect.top }
     },
 
+    /**
+     * Get the number of minutes from the top to the mouse cursor.
+     *
+     * @param {Object} e the native DOM event object.
+     * @return {Object} containing { startTimeMinutes: {Number}, cursorCoords: { x: {Number}, y: {Number} } }
+     */
     minutesAtCursor (e) {
       let startTimeMinutes = 0
       let cursorCoords = {}
@@ -700,12 +802,25 @@ export default {
       return { startTimeMinutes, cursorCoords }
     },
 
-    // Allow call from cell click & hold or external call via $refs.
+    /**
+     * Creates a new event in vue-cal memory (in the mutableEvents array) starting at the given date & time.
+     * Proxy method to allow call from cell click & hold or external call (via $refs).
+     * Notes: Event duration is by default 2 hours. You can override the event end through eventOptions.
+     *
+     * @param {String, Date} dateTime date & time at which the event will start.
+     * @param {Object} eventOptions an object of options to override the event creation defaults.
+     *                              (can be any key allowed in an event object)
+     * @return {Object} the created event.
+     */
     createEvent (dateTime, eventOptions = {}) {
       return createAnEvent(dateTime, eventOptions, this)
     },
 
-    // Prepare the event to return it with an emitted event.
+    /**
+     * Remove all the vue-cal private vars from the event (before returning it through $emit()).
+     *
+     * @param {Object} event the event object to cleanup.
+     */
     cleanupEvent (event) {
       event = { ...event }
 
@@ -720,10 +835,24 @@ export default {
       return event
     },
 
+    /**
+     * Emits an event (custom DOM event) to the outside world.
+     * This event has an event name and a clean calendar event as a parameter.
+     *
+     * @param {String} eventName the name of the custom emitted event (e.g. `event-focus`).
+     * @param {Object} event the event to return to the outside world.
+     */
     emitWithEvent (eventName, event) {
       this.$emit(eventName, this.cleanupEvent(event))
     },
 
+    /**
+     * Update the selected date on created from given selectedDate prop, on click/dblClick
+     * of another cell, or from external call (via $refs), or even if the given selectedDate prop changes.
+     * If date is not in the view the view will change to show it.
+     *
+     * @param {String, Date} date The date to select.
+     */
     updateSelectedDate (date) {
       if (date && typeof date === 'string') date = stringToDate(date)
 
@@ -738,16 +867,31 @@ export default {
       }
     },
 
-    countDays,
-
-    // Shorthand function.
+    /**
+     * Formats a date and returns the formatted string.
+     * Shorthand function, to avoid passing the localized texts everywhere.
+     *
+     * @param {String, Date} date the date to format - can contain the time info or not.
+     * @param {String} format the wanted format.
+     * @return {String} the formatted date.
+     */
     formatDate (date, format = 'yyyy-mm-dd') {
       return formatDate(date, format, this.texts)
     },
 
-    // Getting the week number is not that straightforward as there might be a 53rd week in the year.
-    // Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
-    // By using the `firstCellDateWeekNumber` computed value, the `getWeek` function call is avoided 5 times out of 6.
+    /**
+     * Double checks the week number is correct. Read bellow to understand!
+     * this is a wrapper around the `getWeek()` function for performance:
+     * As this is called multiple times from the template and cannot be in computed since there is
+     * a parameter, this wrapper function avoids the `getWeek()` function call 5 times out of 6
+     * using the computed `firstCellDateWeekNumber`.
+     *
+     * Reason why:
+     * Getting the week number is not that straightforward as there might be a 53rd week in the year.
+     * Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
+     *
+     * @param {Number} weekFromFirstCell
+     */
     getWeekNumber (weekFromFirstCell) {
       const firstCellWeekNumber = this.firstCellDateWeekNumber
       const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell

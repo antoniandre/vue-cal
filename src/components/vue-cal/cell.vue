@@ -46,34 +46,13 @@ export default {
   components: { Event },
   props: {
     // Vue-cal main component options (props).
-    options: {
-      type: Object,
-      default: () => ({})
-    },
-    data: {
-      type: Object,
-      required: true
-    },
-    cellSplits: {
-      type: Array,
-      default: () => []
-    },
-    minTimestamp: {
-      type: [Number, null],
-      default: null
-    },
-    maxTimestamp: {
-      type: [Number, null],
-      default: null
-    },
-    cellWidth: {
-      type: [Number, Boolean],
-      default: false
-    },
-    allDay: {
-      type: Boolean,
-      default: false
-    }
+    options: { type: Object, default: () => ({}) },
+    data: { type: Object, required: true },
+    cellSplits: { type: Array, default: () => [] },
+    minTimestamp: { type: [Number, null], default: null },
+    maxTimestamp: { type: [Number, null], default: null },
+    cellWidth: { type: [Number, Boolean], default: false },
+    allDay: { type: Boolean, default: false }
   },
 
   data: () => ({
@@ -81,7 +60,9 @@ export default {
     cellOverlapsStreak: 1, // Largest amount of simultaneous events in cell.
     // On mouse down, save the time at cursor so it can be reused on cell focus event
     // where there is no cursor coords.
-    timeAtCursor: null
+    timeAtCursor: null,
+    now: new Date(),
+    timeTickerIds: [null, null] // 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   }),
 
   methods: {
@@ -191,6 +172,12 @@ export default {
       this.$parent.$emit('cell-dblclick', split ? { date, split } : date)
 
       if (this.options.dblclickToNavigate) this.$parent.switchToNarrowerView()
+    },
+
+    timeTick () {
+      // Updating `now` will re-trigger the computed `todaysTimePosition`.
+      this.now = new Date()
+      this.timeTickerIds[1] = setTimeout(this.timeTick, 60000) // Every minute.
     }
   },
 
@@ -328,17 +315,34 @@ export default {
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
 
-      const now = new Date()
-      return (now.getHours() * 60 + now.getMinutes()) <= this.options.timeTo
+      return (this.now.getHours() * 60 + this.now.getMinutes()) <= this.options.timeTo
     },
     todaysTimePosition () {
       // Skip the Maths if not relevant.
       if (!this.data.today || !this.options.time) return
 
-      const now = new Date()
-      const startTimeMinutes = now.getHours() * 60 + now.getMinutes()
+      const startTimeMinutes = this.now.getHours() * 60 + this.now.getMinutes()
       const minutesFromTop = startTimeMinutes - this.options.timeFrom
       return Math.round(minutesFromTop * this.options.timeCellHeight / this.options.timeStep)
+    }
+  },
+
+  created () {
+    // Timers are expensive, this should only trigger on demand.
+    if (this.data.today && this.options.time && this.options.watchRealTime) {
+      const now = new Date()
+      // Snap the time ticker on sharp minutes (when seconds = 0), so that we can set
+      // the time ticker interval to 60 seconds and spare some function calls.
+      this.timeTickerIds[0] = setTimeout(this.timeTick, (60 - now.getSeconds()) * 1000)
+    }
+  },
+
+  beforeDestroy () {
+    // Don't keep the ticking running if unused.
+    if (this.timeTickerIds[0] || this.timeTickerIds[1]) {
+      clearTimeout(this.timeTickerIds[0])
+      clearTimeout(this.timeTickerIds[1])
+      this.timeTickerIds = [null, null]
     }
   }
 }

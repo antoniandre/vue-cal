@@ -114,29 +114,35 @@
       v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
         v-icon.mr-1(size="20") check
         | Today button
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Externalize locales
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Support more simultaneous events
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Sticky day splits labels
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Hide particular weekdays
 
     .mb-2 Current backlog
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
-      | Externalize locales
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Support more simultaneous events
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Sticky day splits labels
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Hide particular weekdays
+      | Optional week number
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
       | Recurring events
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
+    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
+      v-icon.mr-1(size="20") timer
       | Drag events
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
-      | Optional week number
+      a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
+      a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       | Improve multiple day events Month view
@@ -494,6 +500,10 @@
   p.
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
+
+  p.
+    If you want the now line to keep accurate position even while your calendar is iddle, you can use the option
+    #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
       xsmall
@@ -2243,7 +2253,10 @@
   p Here is the list of all the available views.
   sshpre.mt-2(language="js").
     ['years', 'year', 'month', 'week', 'day']
-  p Here is the list of all the parameters available and their decription bellow this table.
+  p.
+    Here is the list of all the parameters available and their decription bellow this table.#[br]
+    Don't forget that in HTML the #[span.code camelCase] is not correct and you must use
+    the #[span.code kebab-case].
   sshpre.mt-2(language="js").
     locale:                 [String],          default: 'en'
     hideViewSelector:       [Boolean],         default: false
@@ -2273,6 +2286,7 @@
     timeCellHeight:         [Number],          default: 40 // In pixels.
     twelveHour:             [Boolean],         default: false
     timeFormat:             [String],          default: ''
+    watchRealTime:          [Boolean],         default: false
     minEventWidth:          [Number],          default: 0 // In percent.
     minCellWidth:           [Number],          default: 0 // In pixels.
     minSplitWidth:          [Number],          default: 0 // In pixels.
@@ -2538,9 +2552,16 @@
         li #[strong.code mm]: Minutes with leading zero
         li #[strong.code {am}]: am or pm
         li.
-          The characters #[strong.code {], #[strong.code }]] are removed and used only to
-          separate characters with no space.#[br]
+          The characters `#[strong.code {]` and `#[strong.code }]` are removed and used only to
+          delimit keywords when there is no space.#[br]
           E.g. #[span.code "h:mm{am}"].
+    li
+      code.mr-2 watchRealTime
+      span.code [Boolean], default: false
+      p.
+        When set to #[strong.code true], the current time line in today's cell, on #[span.code week] and
+        #[span.code day] views, will stay in sync with real time.#[br]
+        #[span.grey--text (This requires a #[span.code setTimeout] every minute)]
     li
       code.mr-2 minEventWidth
       span.code [Number], default: 0
@@ -2629,7 +2650,7 @@
         A callback function to execute when an event is created.#[br]
         This function receives 2 parameters: #[span.code event], the created event,
         and #[span.code deleteEvent], a function to delete the created event.#[br]
-        You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
+        //- You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
         If this function returns #[span.code false], the event creation will be cancelled.
     li
       code.mr-2 events
@@ -2745,6 +2766,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
   div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
   div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
   div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
