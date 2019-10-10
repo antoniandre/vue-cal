@@ -171,78 +171,91 @@ export default {
     onEventCreate: { type: [Function, null], default: null },
     transitions: { type: Boolean, default: true }
   },
-  data: function () {
-    return {
-      texts: {
-        weekDays: Array(7).fill(''),
-        weekDaysShort: [],
-        months: Array(12).fill(''),
-        years: '',
-        year: '',
-        month: '',
-        week: '',
-        day: '',
-        today: '',
-        noEvent: '',
-        allDay: '',
-        deleteEvent: '',
-        createEvent: '',
-        dateFormat: 'DDDD mmmm d, yyyy'
+  data: () => ({
+    // Make texts reactive before a locale is loaded.
+    texts: {
+      weekDays: Array(7).fill(''),
+      weekDaysShort: [],
+      months: Array(12).fill(''),
+      years: '',
+      year: '',
+      month: '',
+      week: '',
+      day: '',
+      today: '',
+      noEvent: '',
+      allDay: '',
+      deleteEvent: '',
+      createEvent: '',
+      dateFormat: 'DDDD mmmm d, yyyy'
+    },
+    ready: false, // Is vue-cal ready.
+
+    // At any time this object will be filled with current view, visible events and selected date.
+    view: {
+      id: '',
+      title: '',
+      startDate: null,
+      endDate: null,
+      firstCellDate: null,
+      lastCellDate: null,
+      selectedDate: null,
+      // All the events are stored in the mutableEvents array, but subset of visible ones are passed
+      // Into the current view for fast lookup and manipulation.
+      events: []
+    },
+    eventIdIncrement: 1, // Internal unique id.
+
+    // All the possible events/cells interractions:
+    // e.g. focus, click, click & hold, resize, drag & drop (coming).
+    domEvents: {
+      resizeAnEvent: {
+        _eid: null, // Only one at a time.
+        start: null,
+        split: null,
+        segment: null,
+        originalEndTimeMinutes: 0,
+        endTimeMinutes: 0,
+        startCell: null,
+        endCell: null
       },
-      ready: false,
-      view: {
-        id: '',
-        title: '',
-        startDate: null,
-        endDate: null,
-        firstCellDate: null,
-        lastCellDate: null,
-        selectedDate: null,
-        events: []
+      dragAnEvent: {
+        _eid: null // Only one at a time.
       },
-      eventIdIncrement: 1,
-      domEvents: {
-        resizeAnEvent: {
-          _eid: null, // Only one at a time.
-          start: null,
-          split: null,
-          segment: null,
-          originalEndTimeMinutes: 0,
-          endTimeMinutes: 0,
-          startCell: null,
-          endCell: null
-        },
-        dragAnEvent: {
-          _eid: null // Only one at a time.
-        },
-        focusAnEvent: {
-          _eid: null // Only one at a time.
-        },
-        clickHoldAnEvent: {
-          _eid: null, // Only one at a time.
-          timeout: 1200, // Hold for 1.2s to delete an event.
-          timeoutId: null
-        },
-        dblTapACell: {
-          taps: 0,
-          timeout: 500 // Allowed latency between first and second click.
-        },
-        clickHoldACell: {
-          cellId: null,
-          split: null,
-          timeout: 1200, // Hold for 1.2s to create an event.
-          timeoutId: null
-        },
-        // A single click can trigger event creation if the user decides so.
-        // But prevent this to happen on click & hold, on event click and on resize event.
-        cancelClickEventCreation: false
+      focusAnEvent: {
+        _eid: null // Only one at a time.
       },
-      mutableEvents: [], // An array of mutable events updated each time given events array changes.
-      transitionDirection: 'right'
-    }
-  },
+      clickHoldAnEvent: {
+        _eid: null, // Only one at a time.
+        timeout: 1200, // Hold for 1.2s to delete an event.
+        timeoutId: null
+      },
+      dblTapACell: {
+        taps: 0,
+        timeout: 500 // Allowed latency between first and second click.
+      },
+      clickHoldACell: {
+        cellId: null,
+        split: null,
+        timeout: 1200, // Hold for 1.2s to create an event.
+        timeoutId: null
+      },
+      // A single click can trigger event creation if the user decides so.
+      // But prevent this to happen on click & hold, on event click and on resize event.
+      cancelClickEventCreation: false
+    },
+    // An array of mutable events updated each time given external events array changes.
+    mutableEvents: [],
+    // Transition when switching view. left when going toward the past, right when going toward future.
+    transitionDirection: 'right'
+  }),
 
   methods: {
+    /**
+     * Only import locale on demand to keep a small library weight.
+     *
+     * @param {String} locale the language user whishes to have on vue-cal
+     */
     loadLocale (locale) {
       if (this.locale === 'en') this.texts = require('./i18n/en.json')
       else {
@@ -251,6 +264,10 @@ export default {
       }
     },
 
+    /**
+     * On click/dblclick of a cell go to a narrower view if available.
+     * E.g. Click on month cell takes you to week view if not hidden, otherwise on day view if not hidden.
+     */
     switchToNarrowerView () {
       this.transitionDirection = 'right'
 
@@ -261,6 +278,14 @@ export default {
       if (view) this.switchView(view)
     },
 
+    /**
+     * Switches to the specified view on view selector click, or programmatically form external call.
+     *
+     * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
+     * @param {String, Date} date A starting date for the view, if none, fallbacks to selected date
+     *                            If also empty fallbacks to the current view start date.
+     * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
+     */
     switchView (view, date = null, fromViewSelector = false) {
       if (this.transitions && fromViewSelector) {
         const views = Object.keys(this.views)
@@ -362,15 +387,25 @@ export default {
       }
     },
 
+    /**
+     * Shorthand function for external call use.
+     */
     previous () {
       this.previousNext(false)
     },
 
+    /**
+     * Shorthand function for external call use.
+     */
     next () {
       this.previousNext()
     },
 
-    // On click on previous or next arrow, update the calendar visible date range.
+    /**
+     * On click on previous or next arrow, update the calendar visible date range.
+     *
+     * @param {Boolean} next
+     */
     previousNext (next = true) {
       this.transitionDirection = next ? 'right' : 'left'
       const modifier = next ? 1 : -1
@@ -397,6 +432,11 @@ export default {
       if (firstCellDate) this.switchView(viewId, firstCellDate)
     },
 
+    /**
+     * Add events to view.
+     *
+     * @param {Array} events
+     */
     addEventsToView (events = []) {
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       if (!events.length) this.view.events = []
@@ -430,11 +470,24 @@ export default {
       }
     },
 
+    /**
+     * find a DOM ancestor of a DOM node matching given class name.
+     *
+     * @param {Object} el a DOM node to test.
+     * @param {String} Class
+     * @return {Object} The matched DOM node.
+     */
     findAncestor (el, Class) {
       while ((el = el.parentElement) && !el.classList.contains(Class)) {}
       return el
     },
 
+    /**
+     * Tells whether a clicked DOM node is or is within a calendar event.
+     *
+     * @param {Object} el
+     * @return {Boolean}
+     */
     isDOMElementAnEvent (el) {
       return el.classList.contains('vuecal__event') || this.findAncestor(el, 'vuecal__event')
     },
