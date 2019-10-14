@@ -34,7 +34,11 @@
           :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
           template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
-    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
+    .vuecal__now-line(
+      v-if="timelineVisible"
+      :style="`top: ${todaysTimePosition}px`"
+      :key="options.transitions ? `${view}-now-line` : 'now-line'"
+      :title="$parent.formatTime(nowInMinutes)")
 </template>
 
 <script>
@@ -79,7 +83,7 @@ export default {
     },
 
     isDOMElementAnEvent (el) {
-      return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
+      return this.$parent.isDOMElementAnEvent(el)
     },
 
     selectCell (DOMEvent, force = false) {
@@ -182,6 +186,9 @@ export default {
   },
 
   computed: {
+    nowInMinutes () {
+      return this.now.getHours() * 60 + this.now.getMinutes()
+    },
     isBeforeMinDate () {
       return this.minTimestamp !== null && this.minTimestamp > this.data.endDate.getTime()
     },

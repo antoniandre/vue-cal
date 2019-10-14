@@ -107,8 +107,8 @@
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
-                        | {{ event.startTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endTimeMinutes | formatTime(timeFormat || (twelveHour ? 'h:mm{am}' : 'HH:mm')) }}
+                        | {{ formatTime(event.startTimeMinutes) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ formatTime(event.endTimeMinutes) }}
                         small.days-to-end(v-if="event.daysCount > 1 && event.segments[cell.formattedDate].isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
@@ -848,6 +848,18 @@ export default {
     },
 
     /**
+     * Formats a time and returns the formatted string.
+     * Shorthand function, to avoid passing the common format.
+     *
+     * @param {Number} time the time to format in minutes.
+     * @param {String} format the wanted format.
+     * @return {String} the formatted time.
+     */
+    formatTime (time, format) {
+      return formatTime(time, format || this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm'))
+    },
+
+    /**
      * Double checks the week number is correct. Read bellow to understand!
      * this is a wrapper around the `getWeek()` function for performance:
      * As this is called multiple times from the template and cannot be in computed since there is
@@ -946,7 +958,7 @@ export default {
         timeCells.push({
           hours: Math.floor(i / 60),
           minutes: i % 60,
-          label: formatTime(i, this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')),
+          label: this.formatTime(i),
           value: i
         })
       }
@@ -1167,12 +1179,6 @@ export default {
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
-    }
-  },
-
-  filters: {
-    formatTime (value, format) {
-      return formatTime(value, format) || ''
     }
   },
 
