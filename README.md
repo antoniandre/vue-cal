@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.11.0__ Added Greek language
 - __Version 2.10.0__ Added the `watchRealTime` option
 - __Version 2.9.0__ Added the `minEventWidth` option
 - __Version 2.8.0__ Added the `showWeekNumbers` option

@@ -2766,6 +2766,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.11.0] Added Greek language
   div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
   div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
   div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
@@ -3150,6 +3151,7 @@ export default {
       { code: 'fr', label: 'French' },
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
+      { code: 'el', label: 'Greek' },
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },

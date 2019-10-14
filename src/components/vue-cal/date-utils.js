@@ -57,10 +57,10 @@ const nth = d => {
 }
 
 // Time in minutes.
-export const formatTime = (time, format = 'HH:mm') => {
+export const formatTime = (time, format = 'HH:mm', texts) => {
   const H = Math.floor(time / 60)
   const h = H % 12 ? H % 12 : 12
-  const am = H < 12 ? 'am' : 'pm'
+  const am = (texts || { am: 'am', pm: 'pm' })[H < 12 ? 'am' : 'pm']
   const m = Math.floor(time % 60)
   const timeObj = {
     H,

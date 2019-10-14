@@ -187,7 +187,9 @@ export default {
       allDay: '',
       deleteEvent: '',
       createEvent: '',
-      dateFormat: 'DDDD mmmm d, yyyy'
+      dateFormat: 'DDDD mmmm d, yyyy',
+      am: 'am',
+      pm: 'pm'
     },
     ready: false, // Is vue-cal ready.
 
@@ -856,7 +858,7 @@ export default {
      * @return {String} the formatted time.
      */
     formatTime (time, format) {
-      return formatTime(time, format || this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm'))
+      return formatTime(time, format || this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm'), this.texts)
     },
 
     /**
