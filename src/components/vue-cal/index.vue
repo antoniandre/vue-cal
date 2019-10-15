@@ -124,6 +124,25 @@ import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
 import './styles.scss'
 
+const textsDefaults = {
+  weekDays: Array(7).fill(''),
+  weekDaysShort: [],
+  months: Array(12).fill(''),
+  years: '',
+  year: '',
+  month: '',
+  week: '',
+  day: '',
+  today: '',
+  noEvent: '',
+  allDay: '',
+  deleteEvent: '',
+  createEvent: '',
+  dateFormat: 'DDDD mmmm d, yyyy',
+  am: 'am',
+  pm: 'pm'
+}
+
 export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
@@ -173,24 +192,7 @@ export default {
   },
   data: () => ({
     // Make texts reactive before a locale is loaded.
-    texts: {
-      weekDays: Array(7).fill(''),
-      weekDaysShort: [],
-      months: Array(12).fill(''),
-      years: '',
-      year: '',
-      month: '',
-      week: '',
-      day: '',
-      today: '',
-      noEvent: '',
-      allDay: '',
-      deleteEvent: '',
-      createEvent: '',
-      dateFormat: 'DDDD mmmm d, yyyy',
-      am: 'am',
-      pm: 'pm'
-    },
+    texts: { ...textsDefaults },
     ready: false, // Is vue-cal ready.
 
     // At any time this object will be filled with current view, visible events and selected date.
@@ -260,10 +262,10 @@ export default {
      * @param {String} locale the language user whishes to have on vue-cal
      */
     loadLocale (locale) {
-      if (this.locale === 'en') this.texts = require('./i18n/en.json')
+      if (this.locale === 'en') this.texts = Object.assign({}, textsDefaults, require('./i18n/en.json'))
       else {
         import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
-          .then(response => (this.texts = response.default))
+          .then(response => (this.texts = Object.assign({}, textsDefaults, response.default)))
       }
     },
 

@@ -93,7 +93,7 @@ export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
     mm: (m < 10 ? '0' : '') + m, // 01 to 12.
     mmm: texts.months[m - 1].substr(0, 3), // Jan to Dec.
     mmmm: texts.months[m - 1], // January to December.
-    mmmmG: texts.monthsGenitive[m - 1], // January to December in genitive form (Greek...)
+    mmmmG: (texts.monthsGenitive || texts.months)[m - 1], // January to December in genitive form (Greek...)
     yyyy: date.getFullYear(), // 2018.
     yy: date.getFullYear().toString().substr(2, 4) // 18.
   }
