@@ -221,7 +221,7 @@ export const deleteAnEvent = (event, vuecal) => {
 let comparisonArray, cellOverlaps
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
-export const checkCellOverlappingEvents = (cellEvents, overlapEventStartOnly) => {
+export const checkCellOverlappingEvents = (cellEvents, options) => {
   comparisonArray = cellEvents.slice(0)
   cellOverlaps = {}
 
@@ -239,7 +239,7 @@ export const checkCellOverlappingEvents = (cellEvents, overlapEventStartOnly) =>
       if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
       // Add to the overlaps array if overlapping.
-      if (!e.background && !e.allDay && !e2.background && !e2.allDay && (overlapEventStartOnly) ? e.start === e2.start : eventInRange(e2, e.startDate, e.endDate, e)) {
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && (options.overlapEventStartOnly) ? datesInSameTimestep(e.startDate, e2.startDate, options.timeStep) : eventInRange(e2, e.startDate, e.endDate, e)) {
         cellOverlaps[e._eid].overlaps.push(e2._eid)
         cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
@@ -329,4 +329,11 @@ export const eventInRange = (event, start, end) => {
   const startTimestamp = event.startDate.getTime()
   const endTimestamp = event.endDate.getTime()
   return startTimestamp < end.getTime() && endTimestamp > start.getTime()
+}
+
+export const datesInSameTimestep = (date1, date2, timeStep) => {
+  const stepAsMs = 1000 * 60 * timeStep
+  const date1step = Math.floor(date1.getTime() / stepAsMs) * stepAsMs
+  const date2step = Math.floor(date2.getTime() / stepAsMs) * stepAsMs
+  return date1step === date2step
 }
