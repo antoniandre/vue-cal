@@ -178,6 +178,7 @@ export default {
     minCellWidth: { type: Number, default: 0 },
     minSplitWidth: { type: Number, default: 0 },
     minEventWidth: { type: Number, default: 0 },
+    overlapEventStartOnly: {type: Boolean, default: false},
     splitDays: { type: Array, default: () => [] },
     stickySplitLabels: { type: Boolean, default: false },
     events: { type: Array, default: () => [] },

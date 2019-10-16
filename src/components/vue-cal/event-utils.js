@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate, formatTime, countDays } from './date-utils'
+import { formatDate, stringToDate, formatTime, countDays, datesInSameTimestep } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -221,7 +221,7 @@ export const deleteAnEvent = (event, vuecal) => {
 let comparisonArray, cellOverlaps
 // Will recalculate all the overlaps of the current cell OR split.
 // cellEvents will contain only the current split events if in a split.
-export const checkCellOverlappingEvents = cellEvents => {
+export const checkCellOverlappingEvents = (cellEvents, options) => {
   comparisonArray = cellEvents.slice(0)
   cellOverlaps = {}
 
@@ -239,7 +239,7 @@ export const checkCellOverlappingEvents = cellEvents => {
       if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
       // Add to the overlaps array if overlapping.
-      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventInRange(e2, e.startDate, e.endDate, e)) {
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && (options.overlapEventStartOnly) ? datesInSameTimestep(e.startDate, e2.startDate, options.timeStep) : eventInRange(e2, e.startDate, e.endDate, e)) {
         cellOverlaps[e._eid].overlaps.push(e2._eid)
         cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
