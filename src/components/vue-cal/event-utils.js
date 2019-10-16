@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate, formatTime, countDays } from './date-utils'
+import { formatDate, stringToDate, formatTime, countDays, datesInSameTimestep } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -329,11 +329,4 @@ export const eventInRange = (event, start, end) => {
   const startTimestamp = event.startDate.getTime()
   const endTimestamp = event.endDate.getTime()
   return startTimestamp < end.getTime() && endTimestamp > start.getTime()
-}
-
-export const datesInSameTimestep = (date1, date2, timeStep) => {
-  const stepAsMs = 1000 * 60 * timeStep
-  const date1step = Math.floor(date1.getTime() / stepAsMs) * stepAsMs
-  const date2step = Math.floor(date2.getTime() / stepAsMs) * stepAsMs
-  return date1step === date2step
 }

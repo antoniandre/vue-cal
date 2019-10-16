@@ -130,3 +130,10 @@ export const countDays = (start, end) => {
   let timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
   return Math.ceil((end - start - timezoneDiffMs) / (24 * 3600 * 1000))
 }
+
+export const datesInSameTimestep = (date1, date2, timeStep) => {
+  const stepAsMs = 1000 * 60 * timeStep
+  const date1step = Math.floor(date1.getTime() / stepAsMs) * stepAsMs
+  const date2step = Math.floor(date2.getTime() / stepAsMs) * stepAsMs
+  return date1step === date2step
+}
