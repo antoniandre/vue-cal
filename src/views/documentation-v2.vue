@@ -1938,7 +1938,7 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
       &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
-        &lt;div class="{ line: true, hours: !minutes }"&gt;
+        &lt;div :class="{ line: true, hours: !minutes }"&gt;
           &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
           &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
         &lt;/div&gt;
