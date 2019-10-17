@@ -1265,7 +1265,6 @@
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       editable-events
-      overlapsPerTimeStep
       :min-event-width="minEventWidth"
       :events="overlappingEvents")
   sshpre(language="html-vue" label="Vue Template").
