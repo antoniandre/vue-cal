@@ -34,7 +34,11 @@
           :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
           template(v-slot:event-renderer="{ event, view }")
             slot(name="event-renderer" :view="view" :event="event")
-    .vuecal__now-line(v-if="timelineVisible" :style="`top: ${todaysTimePosition}px`" :key="options.transitions ? `${view}-now-line` : 'now-line'")
+    .vuecal__now-line(
+      v-if="timelineVisible"
+      :style="`top: ${todaysTimePosition}px`"
+      :key="options.transitions ? `${view}-now-line` : 'now-line'"
+      :title="$parent.formatTime(nowInMinutes)")
 </template>
 
 <script>
@@ -74,12 +78,12 @@ export default {
           this.cellOverlapsStreak = 1
         }
         // If only 1 event remains re-init the overlaps.
-        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(this.events)
+        else [this.cellOverlaps, this.cellOverlapsStreak] = checkCellOverlappingEvents(this.events, this.options)
       }
     },
 
     isDOMElementAnEvent (el) {
-      return el.classList.contains('vuecal__event') || this.$parent.findAncestor(el, 'vuecal__event')
+      return this.$parent.isDOMElementAnEvent(el)
     },
 
     selectCell (DOMEvent, force = false) {
@@ -182,6 +186,9 @@ export default {
   },
 
   computed: {
+    nowInMinutes () {
+      return this.now.getHours() * 60 + this.now.getMinutes()
+    },
     isBeforeMinDate () {
       return this.minTimestamp !== null && this.minTimestamp > this.data.endDate.getTime()
     },
@@ -303,7 +310,7 @@ export default {
     splits () {
       return this.cellSplits.map((item, i) => {
         const events = this.events.filter(e => e.split === i + 1)
-        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay))
+        const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), this.options)
         return {
           ...item,
           overlaps,

@@ -1241,15 +1241,21 @@
     Overlapping now supports more than 3 simultaneous events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
-  v-layout.mb-6(align-center)
+  v-layout.mb-3(align-center)
     | Optionally you can set a min width (in percent) to the events:
     v-btn.ml-2(small color="primary" @click="minEventWidth = minEventWidth ? 0 : 50")
       v-icon {{ minEventWidth ? 'close' : 'add' }}
       | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
-  div(style="min-height: 30px")
+  div(style="min-height: 40px")
     v-slide-y-transition
       .grey--text(v-if="minEventWidth").
-        #[span.code min-event-width="50"] will only apply a min width of 50% on events that would be smaller than that.
+        #[span.code min-event-width="50"] will only apply a min width of 50% on events that
+        would be smaller than that.
+  highlight-message.mb-6.
+    In some cases you may want to set the events overlaps calculation only per same time step
+    (default time step is 1 hour), like in
+    #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
+    You can achieve this event overlaps grouping with the option #[span.code overlaps-per-time-step].
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1938,7 +1944,7 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
       &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
-        &lt;div class="{ line: true, hours: !minutes }"&gt;
+        &lt;div :class="{ line: true, hours: !minutes }"&gt;
           &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
           &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
         &lt;/div&gt;
@@ -2288,6 +2294,7 @@
     timeFormat:             [String],          default: ''
     watchRealTime:          [Boolean],         default: false
     minEventWidth:          [Number],          default: 0 // In percent.
+    overlapsPerTimeStep:    [Boolean],         default: false
     minCellWidth:           [Number],          default: 0 // In pixels.
     minSplitWidth:          [Number],          default: 0 // In pixels.
     splitDays:              [Array],           default: []
@@ -2559,7 +2566,7 @@
       code.mr-2 watchRealTime
       span.code [Boolean], default: false
       p.
-        When set to #[strong.code true], the current time line in today's cell, on #[span.code week] and
+        When set to #[span.code true], the current time line in today's cell, on #[span.code week] and
         #[span.code day] views, will stay in sync with real time.#[br]
         #[span.grey--text (This requires a #[span.code setTimeout] every minute)]
     li
@@ -2568,6 +2575,13 @@
       p.
         When a number is set, in percent, each event within a cell will have a minimum width.#[br]
         If the provided percentage is bigger than what it would naturally be, the events will partially overlap.
+    li
+      code.mr-2 overlapsPerTimeStep
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], each event of the same cell will have a width of
+        #[span.code 100% / [number of simultaneous events]] only if these events are within the same time step.#[br]
+        Refere to #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].
     li
       code.mr-2 minCellWidth
       span.code [Number], default: 0
@@ -2766,6 +2780,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
+  div #[strong Version 2.11.0] Added Greek language
   div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
   div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
   div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
@@ -3150,6 +3166,7 @@ export default {
       { code: 'fr', label: 'French' },
       { code: 'ka', label: 'Georgian' },
       { code: 'de', label: 'German' },
+      { code: 'el', label: 'Greek' },
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
