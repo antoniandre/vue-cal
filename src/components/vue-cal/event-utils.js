@@ -238,11 +238,10 @@ export const checkCellOverlappingEvents = (cellEvents, options) => {
     comparisonArray.forEach(e2 => {
       if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
+      const eventInRange = eventInRange(e2, e.startDate, e.endDate)
+      const eventsInSameTimeStep = options.overlapsPerTimeStep ? datesInSameTimeStep(e.startDate, e2.startDate, options.timeStep) : 1
       // Add to the overlaps array if overlapping.
-      const eventsInRangeOrClose = options.overlapsPerTimeStep
-        ? datesInSameTimeStep(e.startDate, e2.startDate, options.timeStep)
-        : eventInRange(e2, e.startDate, e.endDate)
-      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventsInRangeOrClose) {
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventInRange && eventsInSameTimeStep) {
         cellOverlaps[e._eid].overlaps.push(e2._eid)
         cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
