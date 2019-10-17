@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate, formatTime, countDays, datesInSameTimestep } from './date-utils'
+import { formatDate, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
 const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
@@ -227,9 +227,9 @@ export const checkCellOverlappingEvents = (cellEvents, options) => {
 
   // Can't filter background events before calling this function otherwise
   // when an event is changed to background it would not update its previous overlaps.
-  // @todo: implement case when dragging event across multiple cells.
   cellEvents.forEach(e => {
-    // Never compare the current event in the next loops. the array is refined as we loop.
+    // For performance, never compare the current event in the next loops.
+    // The array is smaller and smaller as we loop.
     comparisonArray.shift()
 
     if (!cellOverlaps[e._eid]) Vue.set(cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
@@ -239,7 +239,10 @@ export const checkCellOverlappingEvents = (cellEvents, options) => {
       if (!cellOverlaps[e2._eid]) Vue.set(cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
       // Add to the overlaps array if overlapping.
-      if (!e.background && !e.allDay && !e2.background && !e2.allDay && (options.overlapEventStartOnly) ? datesInSameTimestep(e.startDate, e2.startDate, options.timeStep) : eventInRange(e2, e.startDate, e.endDate, e)) {
+      const eventsInRangeOrClose = options.overlapsPerTimeStep
+        ? datesInSameTimeStep(e.startDate, e2.startDate, options.timeStep)
+        : eventInRange(e2, e.startDate, e.endDate)
+      if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventsInRangeOrClose) {
         cellOverlaps[e._eid].overlaps.push(e2._eid)
         cellOverlaps[e._eid].overlaps = [...new Set(cellOverlaps[e._eid].overlaps)] // Dedupe, most performant way.
 
@@ -271,20 +274,30 @@ export const checkCellOverlappingEvents = (cellEvents, options) => {
     overlapsRow.sort((a, b) => a.start < b.start ? -1 : (a.start > b.start ? 1 : (a.id > b.id ? -1 : 1)))
     item.position = overlapsRow.findIndex(e => e.id === id)
 
-    longestStreak = Math.max(getOverlapsStreak(id, item, cellOverlaps), longestStreak)
+    longestStreak = Math.max(getOverlapsStreak(item, cellOverlaps), longestStreak)
   }
 
   return [cellOverlaps, longestStreak]
 }
 
-export const getOverlapsStreak = (id, event, cellOverlaps = {}) => {
+/**
+ * Overlaps streak is the longest horizontal set of simultaneous events.
+ * This is determining the width of each events in this streak.
+ * E.g. 3 overlapping events [1, 2, 3]; 1 overlaps 2 & 3; 2 & 3 don't overlap;
+ *      => streak = 2; each width = 50% not 33%.
+ *
+ * @param {Object} event The current event we are checking among all the events of the current cell.
+ * @param {Object} cellOverlaps An indexed array of all the events overlaps for the current cell.
+ * @return {Number} The number of simultaneous event for this event.
+ */
+export const getOverlapsStreak = (event, cellOverlaps = {}) => {
   let streak = event.overlaps.length + 1
   let removeFromStreak = []
-  event.overlaps.forEach(id2 => {
-    if (!removeFromStreak.includes(id2)) {
-      let overlapsWithoutSelf = event.overlaps.filter(id3 => id3 !== id2)
-      overlapsWithoutSelf.forEach(id4 => {
-        if (!cellOverlaps[id4].overlaps.includes(id2)) removeFromStreak.push(id4)
+  event.overlaps.forEach(id => {
+    if (!removeFromStreak.includes(id)) {
+      let overlapsWithoutSelf = event.overlaps.filter(id2 => id2 !== id)
+      overlapsWithoutSelf.forEach(id3 => {
+        if (!cellOverlaps[id3].overlaps.includes(id)) removeFromStreak.push(id3)
       })
     }
   })
@@ -315,7 +328,7 @@ export const updateEventPosition = (event, vuecal) => {
  * @param {Object} event The event to test.
  * @param {Date} start The start of range date object.
  * @param {Date} end The end of range date object.
- * @return {Boolean}
+ * @return {Boolean} true if in range, even partially.
  */
 export const eventInRange = (event, start, end) => {
   // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
