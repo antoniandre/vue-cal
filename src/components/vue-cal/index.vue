@@ -210,6 +210,11 @@ export default {
       events: []
     },
     eventIdIncrement: 1, // Internal unique id.
+    // Preset at now date on load, but updated every minute if watchRealTime,
+    // or updated at least on each cells rerender, in order to keep Today's date accurate.
+    now: new Date(),
+    // Useful when watchRealTime = true, 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+    timeTickerIds: [null, null],
 
     // All the possible events/cells interractions:
     // e.g. focus, click, click & hold, resize, drag & drop (coming).
@@ -883,6 +888,17 @@ export default {
 
       if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
       else return currentWeekNumber
+    },
+
+    /**
+     * Only if watchRealTime is true.
+     * Pull the current time from user machine every minute to keep vue-cal accurate even when idle.
+     * This will redraw the now line every minute and ensure that Today's date is always accurate.
+     */
+    timeTick () {
+      // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+      this.now = new Date()
+      this.timeTickerIds[1] = setTimeout(this.timeTick, 60 * 1000) // Every minute.
     }
   },
 
@@ -897,6 +913,13 @@ export default {
     else {
       this.view.selectedDate = new Date()
       this.switchView(this.defaultView)
+    }
+
+    // Timers are expensive, this should only trigger on demand.
+    if (this.time && this.watchRealTime) {
+      // Snap the time ticker on sharp minutes (when seconds = 0), so that we can set
+      // the time ticker interval to 60 seconds and spare some function calls.
+      this.timeTickerIds[0] = setTimeout(this.timeTick, (60 - this.now.getSeconds()) * 1000)
     }
   },
 
@@ -935,6 +958,11 @@ export default {
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     window.removeEventListener('keyup', this.onKeyUp)
+
+    // Don't keep the ticking running if unused.
+    if (this.timeTickerIds[0]) clearTimeout(this.timeTickerIds[0])
+    if (this.timeTickerIds[1]) clearTimeout(this.timeTickerIds[1])
+    this.timeTickerIds = [null, null]
   },
 
   computed: {
@@ -1054,8 +1082,12 @@ export default {
       let cells = []
       let fromYear = null
       let todayFound = false
-      // Don't cache now date, so on next day Today's selected cell will still be accurate.
-      const now = new Date()
+
+      // If watchRealTime = true, a time ticker will keep updating this.now every minute.
+      // If watchRealTime = false, and by default, update this.now value each time we rerender the cells:
+      // Minimum cost, maximum performance, and keep Today's date always accurate.
+      if (!this.watchRealTime) this.now = new Date()
+      const now = this.now
 
       switch (this.view.id) {
         case 'years':
