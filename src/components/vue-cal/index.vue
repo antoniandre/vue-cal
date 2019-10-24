@@ -688,9 +688,9 @@ export default {
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           // eslint-disable-next-line
-          [startDateF, startTime = ''] = event.start.split(' ')
+          !([startDateF, startTime = ''] = event.start.split(' '))
           // eslint-disable-next-line
-          [hoursStart, minutesStart] = startTime.split(':')
+          !([hoursStart, minutesStart] = startTime.split(':'))
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
