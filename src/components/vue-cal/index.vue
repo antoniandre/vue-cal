@@ -688,9 +688,9 @@ export default {
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           // eslint-disable-next-line
-          !([startDateF, startTime = ''] = event.start.split(' '))
+          [startDateF, startTime = ''] = event.start.split(' ')
           // eslint-disable-next-line
-          !([hoursStart, minutesStart] = startTime.split(':'))
+          [hoursStart, minutesStart] = startTime.split(':')
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
@@ -1084,8 +1084,9 @@ export default {
       let todayFound = false
 
       // If watchRealTime = true, a time ticker will keep updating this.now every minute.
-      // If watchRealTime = false, and by default, update this.now value each time we rerender the cells:
-      // Minimum cost, maximum performance, and keep Today's date always accurate.
+      // If watchRealTime = false - and by default - update this.now value each time we rerender the cells
+      // so we keep Today's date always accurate at a minimum cost and maximum performance.
+      // eslint-disable-next-line
       if (!this.watchRealTime) this.now = new Date()
       const now = this.now
 
