@@ -2787,6 +2787,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.13.0] Added Indonesian language
   div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
   div #[strong Version 2.11.0] Added Greek language
   div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
@@ -3177,6 +3178,7 @@ export default {
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
+      { code: 'id', label: 'Indonesian' },
       { code: 'ja', label: 'Japanese' },
       { code: 'ko', label: 'Korean' },
       { code: 'no', label: 'Norwegian' },
