@@ -252,15 +252,20 @@
     a(href="#examples") Examples
     a#examples(name="examples")
   highlight-message.mt-3(type="success" no-icon)
-    v-layout(align-center)
+    v-layout
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
       div
-        | Try it yourself:
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
+        .title Try it yourself on Codepen. Here is a set of frequent use cases:
+        ul
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank") Calendar with custom title],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank") Localized calendar (i18n)],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank") 2 Vue Cal instances to show 2 weeks],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank") 12 Vue Cal instances to show a full year view (slower - not recommended)],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
 
   h3.title
     a(href="#ex--basic")
@@ -454,14 +459,16 @@
   a#ex--internationalization(name="ex--internationalization")
   p.
     Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
-    Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.
+    Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
+    Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
   v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
     vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
+  highlight-message(type="warning") Don't forget to import the locale file you want as follows:
   sshpre(language="js" label="Javascript").
-    // In your Vue.js component import the language file you want.
+    // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/i18n/{{locale}}.js'
     import 'vue-cal/dist/vuecal.css'
