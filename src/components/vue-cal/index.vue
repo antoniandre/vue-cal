@@ -295,7 +295,7 @@ export default {
      * If a date is given, it will be selected and if the view does not contain it, it will go to that date.
      *
      * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
-     * @param {String, Date} date A starting date for the view, if none, fallbacks to selected date
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to selected date
      *                            If also empty fallbacks to the current view start date.
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
@@ -786,7 +786,7 @@ export default {
      * Proxy method to allow call from cell click & hold or external call (via $refs).
      * Notes: Event duration is by default 2 hours. You can override the event end through eventOptions.
      *
-     * @param {String, Date} dateTime date & time at which the event will start.
+     * @param {String | Date} dateTime date & time at which the event will start.
      * @param {Object} eventOptions an object of options to override the event creation defaults.
      *                              (can be any key allowed in an event object)
      * @return {Object} the created event.
@@ -830,7 +830,7 @@ export default {
      * of another cell, or from external call (via $refs), or even if the given selectedDate prop changes.
      * If date is not in the view the view will change to show it.
      *
-     * @param {String, Date} date The date to select.
+     * @param {String | Date} date The date to select.
      */
     updateSelectedDate (date) {
       if (date && typeof date === 'string') date = stringToDate(date)
@@ -850,7 +850,7 @@ export default {
      * Formats a date and returns the formatted string.
      * Shorthand function, to avoid passing the localized texts everywhere.
      *
-     * @param {String, Date} date the date to format - can contain the time info or not.
+     * @param {String | Date} date the date to format - can contain the time info or not.
      * @param {String} format the wanted format.
      * @return {String} the formatted date.
      */

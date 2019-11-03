@@ -1741,10 +1741,10 @@
 
   //- Example.
   h4.title
-    a(href="#ex--external-controls") # External controls
+    a(href="#ex--external-controls") # External controls &amp; use of Vue Cal methods
     a#ex--external-controls(name="ex--external-controls")
   p.
-    You can access any #[strong.code vue-cal] internal method through Vue refs.#[br]
+    You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
     This example shows how to control the Previous, Next and Today functions and the view selections
     from external buttons.
 
@@ -1791,6 +1791,46 @@
       hide-view-selector
       :selected-date="selectedDate"&gt;
     &lt;/vue-cal&gt;
+
+  h5.subtitle-1.font-weight-bold Other useful Vue Cal internal methods &amp; Date prototypes
+  highlight-message(type="tips")
+    | Along with these Vue Cal internal methods that you can use externally,
+    | you can also call other useful Vue Cal methods.
+    ul
+      li
+        code #[span.code switchToNarrowerView()]
+        p Will drilldown the current view on selected date if there is a narrower view available.
+      li
+        code minutesAtCursor(e)
+        p.
+          Will return the time (in minutes) at the cursor position when a DOM event occurs.
+          `e` is the DOM event.
+      li
+        code formatDate(date, format = 'yyyy-mm-dd')
+        p.
+          Will return a string with formatted date (and time if given) using the loaded locale.#[br]
+          For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
+          in the [a(href="#api") API section].
+      li
+        code formatTime(time, format = 'HH:mm' | 'h:mm{am}' if `twelve-hour`)
+        p.
+          Will return a string with formatted time using the loaded locale.#[br]
+          For the formatting syntax, refer to the #[span.code timeFormat] in the [a(href="#api") API section].
+
+    strong Useful #[span.code Date] prototypes
+    p.
+      Vue Cal has no dependency and performs date operations through 3 useful #[span.code Date] functions that have been
+      added to the native #[span.code Date] class through prototype for convenience. (E.g. #[span.code (new Date()).addDays(2)])
+    ul
+      li
+        code.mr-2 addDays(days)
+        | allows you to easily add days directly on the Date object. `days` is an integer.
+      li
+        code.mr-2 subtractDays(days)
+        | allows you to easily subtract days directly on the Date object. `days` is an integer.
+      li
+        code.mr-2 getWeek()
+        | allows you to get the week number of a Date, directly on the Date object.
 
   //- Example.
   h4.title
