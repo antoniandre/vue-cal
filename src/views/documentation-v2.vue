@@ -1070,6 +1070,10 @@
               )
             } else if (date) alert('Wrong date format.')
         }
+      highlight-message(type="warning").
+        Note that you can also override the default end date (2 hours duration),
+        by setting the property #[span.code end], but for internal Vue Cal calculations
+        #[strong you will also need to set the property #[span.code endTimeMinutes]].
 
     li.mt-12
       h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
