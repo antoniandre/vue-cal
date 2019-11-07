@@ -219,7 +219,7 @@ export default {
 <style lang="scss">
 .vuecal__event {
   color: #666;
-  background-color: #f8f8f8;
+  background-color: rgba(248, 248, 248, 0.8);
   position: relative;
   box-sizing: border-box;
   left: 0;

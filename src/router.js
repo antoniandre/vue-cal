@@ -14,6 +14,10 @@ export default new Router({
     {
       path: '/v1',
       component: () => import(/* webpackChunkName: "documentation-v1" */ './views/documentation-v1.vue')
+    },
+    {
+      path: '/test',
+      component: () => import(/* webpackChunkName: "isolated-test-view" */ './views/isolated-test-view.vue')
     }
   ]
 })
