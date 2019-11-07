@@ -166,6 +166,7 @@ $lighter-text: #ccc;
 
   &__logo {
     position: relative;
+    flex-shrink: 0;
     margin-right: 15px;
     vertical-align: middle;
     transition: 0.2s 0s ease-in-out;
