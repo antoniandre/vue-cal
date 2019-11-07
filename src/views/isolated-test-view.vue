@@ -14,11 +14,16 @@ const now = new Date()
 export default {
   components: { VueCal },
   data: () => ({
-    selectedDate: now,
+    selectedDate: '2020-04-05',
     events: [
+      // {
+      //   startDate: new Date(new Date(now).setHours(9, 0, 0, 0)),
+      //   endDate: new Date(new Date(now).setHours(12, 0, 0, 0)),
+      //   title: 'Event'
+      // },
       {
-        startDate: new Date(new Date(now).setHours(9, 0, 0, 0)),
-        endDate: new Date(new Date(now).setHours(12, 0, 0, 0)),
+        start: '2020-04-04 00:00',
+        end: '2020-04-05 08:00',
         title: 'Event'
       }
     ]
