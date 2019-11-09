@@ -13,7 +13,7 @@
       .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
         .vuecal__flex.weekday-label(grow)
           //- For small/xsmall option. 3 media queries also truncate weekdays.
-          slot(name="weekday-renderer" :heading="{ heading }")
+          slot(name="weekday-renderer" :heading="{ heading }" :view="{ view }" )
             span.full {{ heading.full }}
             span.small {{ heading.small }}
             span.xsmall {{ heading.xsmall }}

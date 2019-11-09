@@ -30,8 +30,8 @@
     :week-days="weekDays"
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView")
-    template(v-slot:weekday-renderer="{ heading }")
-      slot(name="weekday-renderer" :heading="heading")
+    template(v-slot:weekday-renderer="{ heading, view }")
+      slot(name="weekday-renderer" :heading="heading" :view="view")
 
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
