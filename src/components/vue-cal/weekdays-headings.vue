@@ -12,7 +12,7 @@
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
       .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
         .vuecal__flex.weekday-label(grow)
-          slot(name="weekday-renderer" :heading="cleanupHeading(heading)" :view="view")
+          slot(name="weekday-heading" :heading="cleanupHeading(heading)" :view="view")
             //- For small/xsmall option. 3 media queries also truncate weekdays.
             span.full {{ heading.full }}
             span.small {{ heading.small }}
