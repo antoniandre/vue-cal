@@ -1954,6 +1954,7 @@
       li #[span.code arrow-prev]
       li #[span.code arrow-next]
       li #[span.code today-button]
+      li #[span.code weekday-heading]
       li #[span.code time-cell]
       li #[span.code week-number-cell]
       li #[span.code cell-content]
@@ -2831,6 +2832,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
   div #[strong Version 2.13.0] Added Indonesian language
   div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
   div #[strong Version 2.11.0] Added Greek language
