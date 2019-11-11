@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "2.13.2",
+  "version": "2.14.0",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "license": "MIT",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
