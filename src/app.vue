@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app(:class="{ ready: ready }" v-scroll="onScroll")
+  v-app(:class="{ ready }" v-scroll="onScroll")
     v-container
       component(:is="$route.path.includes('/v1') ? 'top-bar-v1' : 'top-bar-v2'" :offset-top="offsetTop")
       router-view
@@ -46,23 +46,9 @@ export default {
 <style lang="scss">
 $primary: #42b983;
 
+* {margin: 0;padding: 0;}
+
 html {font-size: 14px;}
-
-* {
-  margin: 0;
-  padding: 0;
-}
-
-a {
-  text-decoration: none;
-  color: $primary;
-
-  &[name] {
-    position: relative;
-    top: -4em;
-    display: block;
-  }
-}
 
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
@@ -81,6 +67,17 @@ a {
 .main-content {
   max-width: 800px;
   height: 650px;
+}
+
+a {
+  text-decoration: none;
+  color: $primary;
+
+  &[name] {
+    position: relative;
+    top: -4em;
+    display: block;
+  }
 }
 
 .code {

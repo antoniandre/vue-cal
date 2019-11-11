@@ -16,6 +16,8 @@
         span.default {{ texts.today }}
     template(v-slot:title)
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    template(v-slot:weekday-heading="{ heading, view }")
+      slot(name="weekday-heading" :heading="heading" :view="view")
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -54,7 +56,8 @@
             .vuecal__time-column(v-if="hasTimeColumn")
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
-                  span.line {{ cell.label }}
+                  span.line
+                  span.label {{ cell.label }}
             .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
               .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
                 slot(name="week-number-cell" :week="getWeekNumber(i - 1)") {{ getWeekNumber(i - 1) }}
@@ -72,7 +75,8 @@
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
-
+                template(v-slot:weekday-heading="{ heading, view }")
+                  slot(name="weekday-heading" :heading="heading" :view="view")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
@@ -215,6 +219,11 @@ export default {
       events: []
     },
     eventIdIncrement: 1, // Internal unique id.
+    // Preset at now date on load, but updated every minute if watchRealTime,
+    // or updated at least on each cells rerender, in order to keep Today's date accurate.
+    now: new Date(),
+    // Useful when watchRealTime = true, 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+    timeTickerIds: [null, null],
 
     // All the possible events/cells interractions:
     // e.g. focus, click, click & hold, resize, drag & drop (coming).
@@ -295,7 +304,7 @@ export default {
      * If a date is given, it will be selected and if the view does not contain it, it will go to that date.
      *
      * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
-     * @param {String, Date} date A starting date for the view, if none, fallbacks to selected date
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to selected date
      *                            If also empty fallbacks to the current view start date.
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
@@ -812,7 +821,7 @@ export default {
      * Proxy method to allow call from cell click & hold or external call (via $refs).
      * Notes: Event duration is by default 2 hours. You can override the event end through eventOptions.
      *
-     * @param {String, Date} dateTime date & time at which the event will start.
+     * @param {String | Date} dateTime date & time at which the event will start.
      * @param {Object} eventOptions an object of options to override the event creation defaults.
      *                              (can be any key allowed in an event object)
      * @return {Object} the created event.
@@ -856,7 +865,7 @@ export default {
      * of another cell, or from external call (via $refs), or even if the given selectedDate prop changes.
      * If date is not in the view the view will change to show it.
      *
-     * @param {String, Date} date The date to select.
+     * @param {String | Date} date The date to select.
      */
     updateSelectedDate (date) {
       if (date && typeof date === 'string') date = stringToDate(date)
@@ -876,7 +885,7 @@ export default {
      * Formats a date and returns the formatted string.
      * Shorthand function, to avoid passing the localized texts everywhere.
      *
-     * @param {String, Date} date the date to format - can contain the time info or not.
+     * @param {String | Date} date the date to format - can contain the time info or not.
      * @param {String} format the wanted format.
      * @return {String} the formatted date.
      */
@@ -915,6 +924,17 @@ export default {
 
       if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
       else return currentWeekNumber
+    },
+
+    /**
+     * Only if watchRealTime is true.
+     * Pull the current time from user machine every minute to keep vue-cal accurate even when idle.
+     * This will redraw the now line every minute and ensure that Today's date is always accurate.
+     */
+    timeTick () {
+      // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+      this.now = new Date()
+      this.timeTickerIds[1] = setTimeout(this.timeTick, 60 * 1000) // Every minute.
     }
   },
 
@@ -929,6 +949,13 @@ export default {
     else {
       this.view.selectedDate = new Date()
       this.switchView(this.defaultView)
+    }
+
+    // Timers are expensive, this should only trigger on demand.
+    if (this.time && this.watchRealTime) {
+      // Snap the time ticker on sharp minutes (when seconds = 0), so that we can set
+      // the time ticker interval to 60 seconds and spare some function calls.
+      this.timeTickerIds[0] = setTimeout(this.timeTick, (60 - this.now.getSeconds()) * 1000)
     }
   },
 
@@ -967,6 +994,11 @@ export default {
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     window.removeEventListener('keyup', this.onKeyUp)
+
+    // Don't keep the ticking running if unused.
+    if (this.timeTickerIds[0]) clearTimeout(this.timeTickerIds[0])
+    if (this.timeTickerIds[1]) clearTimeout(this.timeTickerIds[1])
+    this.timeTickerIds = [null, null]
   },
 
   computed: {
@@ -1086,8 +1118,13 @@ export default {
       let cells = []
       let fromYear = null
       let todayFound = false
-      // Don't cache now date, so on next day Today's selected cell will still be accurate.
-      const now = new Date()
+
+      // If watchRealTime = true, a time ticker will keep updating this.now every minute.
+      // If watchRealTime = false - and by default - update this.now value each time we rerender the cells
+      // so we keep Today's date always accurate at a minimum cost and maximum performance.
+      // eslint-disable-next-line
+      if (!this.watchRealTime) this.now = new Date()
+      const now = this.now
 
       switch (this.view.id) {
         case 'years':

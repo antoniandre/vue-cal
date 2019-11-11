@@ -60,7 +60,7 @@ const nth = d => {
 export const formatTime = (time, format = 'HH:mm', texts) => {
   const H = Math.floor(time / 60)
   const h = H % 12 ? H % 12 : 12
-  const am = (texts || { am: 'am', pm: 'pm' })[H < 12 ? 'am' : 'pm']
+  const am = (texts || { am: 'am', pm: 'pm' })[H === 24 || H < 12 ? 'am' : 'pm']
   const m = Math.floor(time % 60)
   const timeObj = {
     H,
@@ -113,8 +113,8 @@ export const stringToDate = string => {
  * Count the number of days this date range spans onto.
  * E.g. countDays(2019-11-02 18:00, 2019-11-03 02:00) = 2
  *
- * @param {String, Date} start the start date
- * @param {String, Date} end the end date
+ * @param {String | Date} start the start date
+ * @param {String | Date} end the end date
  * @return {Integer} The number of days this date range involves
  */
 export const countDays = (start, end) => {

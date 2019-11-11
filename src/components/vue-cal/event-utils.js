@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import { formatDate, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
-const dayMilliseconds = 24 * 3600 * 1000
 const defaultEventDuration = 2 // In hours.
 
 export const eventDefaults = {
@@ -178,13 +177,11 @@ export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
   const end = Math.min(viewEndDate.getTime(), eventEnd)
 
   while (timestamp <= end) {
-    const nextMidnight = (new Date(timestamp + dayMilliseconds)).setHours(0, 0, 0)
+    // Be careful not to simply add 24 hours!
+    // In case of DLS, that would cause the event to never end and browser to hang.
+    const nextMidnight = (new Date(timestamp).addDays(1)).setHours(0, 0, 0)
     const isFirstDay = timestamp === eventStart
-
-    // const isLastDay = end === eventEnd && nextMidnight > end
-    // @todo: testing this:
     const isLastDay = end === eventEnd && nextMidnight >= end
-
     const startDate = isFirstDay ? e.startDate : new Date(timestamp)
     const formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDate(startDate, null, vuecal.texts)
 

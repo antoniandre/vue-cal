@@ -11,11 +11,12 @@
     button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
-      transition(:name="`slide-fade--${transitionDirection}`")
+      //- Best way to disable transition is to convert it to simple div tag.
+      component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
         component(
           :is="!!broaderView ? 'button' : 'span'"
           :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
-          :key="options.transitions ? `${viewProps.view.id}${viewProps.view.startDate.toString()}` : false"
+          :key="`${viewProps.view.id}${viewProps.view.startDate.toString()}`"
           @click="switchToBroaderView")
           slot(name="title")
     button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
@@ -28,8 +29,10 @@
     :view="viewProps.view"
     :week-days="weekDays"
     :transition-direction="transitionDirection"
-    :switch-to-narrower-view="switchToNarrowerView"
-  )
+    :switch-to-narrower-view="switchToNarrowerView")
+    template(v-slot:weekday-heading="{ heading, view }")
+      slot(name="weekday-heading" :heading="heading" :view="view")
+
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
     .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && $parent.hasSplits && options.stickySplitLabels && !options.minSplitWidth")

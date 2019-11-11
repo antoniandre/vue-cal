@@ -252,15 +252,20 @@
     a(href="#examples") Examples
     a#examples(name="examples")
   highlight-message.mt-3(type="success" no-icon)
-    v-layout(align-center)
+    v-layout
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
       div
-        | Try it yourself:
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
-        | #[a.ml-2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
+        .title Try it yourself on Codepen. Here is a set of frequent use cases:
+        ul
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank") Calendar with custom title],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank") Localized calendar (i18n)],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank") 2 Vue Cal instances to show 2 weeks],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank") 12 Vue Cal instances to show a full year view (slower - not recommended)],
+          li #[a.ml-2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
 
   h3.title
     a(href="#ex--basic")
@@ -454,14 +459,16 @@
   a#ex--internationalization(name="ex--internationalization")
   p.
     Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
-    Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.
+    Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
+    Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
   v-card.my-2.ma-auto.main-content(style="width: 500px;height: 340px;max-width: 100%")
     vue-cal.vuecal--green-theme(:time="false" small default-view="year" :locale="locale")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
+  highlight-message(type="warning") Don't forget to import the locale file you want as follows:
   sshpre(language="js" label="Javascript").
-    // In your Vue.js component import the language file you want.
+    // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/i18n/{{locale}}.js'
     import 'vue-cal/dist/vuecal.css'
@@ -1063,6 +1070,10 @@
               )
             } else if (date) alert('Wrong date format.')
         }
+      highlight-message(type="warning").
+        Note that you can also override the default end date (2 hours duration),
+        by setting the property #[span.code end], but for internal Vue Cal calculations
+        #[strong you will also need to set the property #[span.code endTimeMinutes]].
 
     li.mt-12
       h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
@@ -1730,10 +1741,10 @@
 
   //- Example.
   h4.title
-    a(href="#ex--external-controls") # External controls
+    a(href="#ex--external-controls") # External controls &amp; use of Vue Cal methods
     a#ex--external-controls(name="ex--external-controls")
   p.
-    You can access any #[strong.code vue-cal] internal method through Vue refs.#[br]
+    You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
     This example shows how to control the Previous, Next and Today functions and the view selections
     from external buttons.
 
@@ -1780,6 +1791,46 @@
       hide-view-selector
       :selected-date="selectedDate"&gt;
     &lt;/vue-cal&gt;
+
+  h5.subtitle-1.font-weight-bold Other useful Vue Cal internal methods &amp; Date prototypes
+  highlight-message(type="tips")
+    | Along with these Vue Cal internal methods that you can use externally,
+    | you can also call other useful Vue Cal methods.
+    ul
+      li
+        code #[span.code switchToNarrowerView()]
+        p Will drilldown the current view on selected date if there is a narrower view available.
+      li
+        code minutesAtCursor(e)
+        p.
+          Will return the time (in minutes) at the cursor position when a DOM event occurs.
+          `e` is the DOM event.
+      li
+        code formatDate(date, format = 'yyyy-mm-dd')
+        p.
+          Will return a string with formatted date (and time if given) using the loaded locale.#[br]
+          For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
+          in the [a(href="#api") API section].
+      li
+        code formatTime(time, format = 'HH:mm' | 'h:mm{am}' if `twelve-hour`)
+        p.
+          Will return a string with formatted time using the loaded locale.#[br]
+          For the formatting syntax, refer to the #[span.code timeFormat] in the [a(href="#api") API section].
+
+    strong Useful #[span.code Date] prototypes
+    p.
+      Vue Cal has no dependency and performs date operations through 3 useful #[span.code Date] functions that have been
+      added to the native #[span.code Date] class through prototype for convenience. (E.g. #[span.code (new Date()).addDays(2)])
+    ul
+      li
+        code.mr-2 addDays(days)
+        | allows you to easily add days directly on the Date object. `days` is an integer.
+      li
+        code.mr-2 subtractDays(days)
+        | allows you to easily subtract days directly on the Date object. `days` is an integer.
+      li
+        code.mr-2 getWeek()
+        | allows you to get the week number of a Date, directly on the Date object.
 
   //- Example.
   h4.title
@@ -1903,6 +1954,7 @@
       li #[span.code arrow-prev]
       li #[span.code arrow-next]
       li #[span.code today-button]
+      li #[span.code weekday-heading]
       li #[span.code time-cell]
       li #[span.code week-number-cell]
       li #[span.code cell-content]
@@ -2780,6 +2832,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
+  div #[strong Version 2.13.0] Added Indonesian language
   div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
   div #[strong Version 2.11.0] Added Greek language
   div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
@@ -3170,6 +3224,7 @@ export default {
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
       { code: 'it', label: 'Italian' },
+      { code: 'id', label: 'Indonesian' },
       { code: 'ja', label: 'Japanese' },
       { code: 'ko', label: 'Korean' },
       { code: 'no', label: 'Norwegian' },
@@ -3579,11 +3634,6 @@ $primary: #42b983;
   height: 250px;
   overflow-y: scroll;
   padding-right: 1.8em;
-}
-
-.main-content {
-  max-width: 800px;
-  height: 650px;
 }
 
 .documentation {

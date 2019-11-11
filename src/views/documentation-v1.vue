@@ -3103,11 +3103,6 @@ $primary: #42b983;
   padding-right: 1.8em;
 }
 
-.main-content {
-  max-width: 800px;
-  height: 650px;
-}
-
 .documentation {
   h2:not(.todo) {
     font-size: 27px !important;

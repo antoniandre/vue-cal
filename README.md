@@ -44,6 +44,8 @@ ___
 
 ## Release Notes
 
+- __Version 2.14.0__ Allow custom weekday render (`month` &amp; `week` views)
+- __Version 2.13.0__ Added Indonesian language
 - __Version 2.12.0__ Added the `overlapsPerTimeStep` option
 - __Version 2.11.0__ Added Greek language
 - __Version 2.10.0__ Added the `watchRealTime` option

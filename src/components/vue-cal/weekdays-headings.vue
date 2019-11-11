@@ -12,11 +12,12 @@
     transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
       .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
         .vuecal__flex.weekday-label(grow)
-          //- For small/xsmall option. 3 media queries also truncate weekdays.
-          span.full {{ heading.full }}
-          span.small {{ heading.small }}
-          span.xsmall {{ heading.xsmall }}
-          span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
+          slot(name="weekday-heading" :heading="cleanupHeading(heading)" :view="view")
+            //- For small/xsmall option. 3 media queries also truncate weekdays.
+            span.full {{ heading.full }}
+            span.small {{ heading.small }}
+            span.xsmall {{ heading.xsmall }}
+            span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
         .vuecal__flex.vuecal__split-days-headers(
           v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
           grow)
@@ -29,26 +30,11 @@ import { selectCell } from './cell-utils'
 
 export default {
   props: {
-    vuecal: {
-      type: Object,
-      default: () => ({})
-    },
-    view: {
-      type: Object,
-      default: () => ({})
-    },
-    transitionDirection: {
-      type: String,
-      default: 'right'
-    },
-    weekDays: {
-      type: Array,
-      default: () => []
-    },
-    switchToNarrowerView: {
-      type: Function,
-      default: () => {}
-    }
+    vuecal: { type: Object, default: () => ({}) },
+    view: { type: Object, default: () => ({}) },
+    transitionDirection: { type: String, default: 'right' },
+    weekDays: { type: Array, default: () => [] },
+    switchToNarrowerView: { type: Function, default: () => {} }
   },
 
   methods: {
@@ -56,37 +42,38 @@ export default {
       date = new Date(date)
       date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).startTimeMinutes)
       selectCell(false, this.vuecal, date, DOMEvent)
-    }
+    },
+    cleanupHeading: heading => ({
+      label: heading.full,
+      date: heading.date,
+      ...(heading.today ? { today: heading.today } : {})
+    })
   },
+
   computed: {
     headings () {
-      let headings = []
+      if (!['month', 'week'].includes(this.view.id)) return []
 
-      switch (this.view.id) {
-        case 'month':
-        case 'week':
-          let todayFound = false
-          headings = this.weekDays.map((cell, i) => {
-            const date = this.view.startDate.addDays(i)
+      let todayFound = false
+      const headings = this.weekDays.map((cell, i) => {
+        const date = this.view.startDate.addDays(i)
 
-            return {
-              hide: cell.hide,
-              full: cell.label,
-              // If defined in i18n file, weekDaysShort overrides default truncation of
-              // week days when does not fit on screen or with small/xsmall options.
-              small: cell.short || cell.label.substr(0, 3),
-              xsmall: cell.short || cell.label.substr(0, 1),
+        return {
+          hide: cell.hide,
+          full: cell.label,
+          // If defined in i18n file, weekDaysShort overrides default truncation of
+          // week days when does not fit on screen or with small/xsmall options.
+          small: cell.short || cell.label.substr(0, 3),
+          xsmall: cell.short || cell.label.substr(0, 1),
 
-              // Only for week view.
-              ...(this.view.id === 'week' ? {
-                dayOfMonth: date.getDate(),
-                date,
-                today: !todayFound && isDateToday(date) && !todayFound++
-              } : {})
-            }
-          })
-          break
-      }
+          // Only for week view.
+          ...(this.view.id === 'week' ? {
+            dayOfMonth: date.getDate(),
+            date,
+            today: !todayFound && isDateToday(date) && !todayFound++
+          } : {})
+        }
+      })
       return headings
     },
     cellWidth () {

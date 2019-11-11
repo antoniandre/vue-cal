@@ -7,18 +7,9 @@
 <script>
 export default {
   props: {
-    tag: {
-      type: String,
-      default: 'p'
-    },
-    type: {
-      type: String,
-      default: 'info'
-    },
-    noIcon: {
-      type: Boolean,
-      default: false
-    }
+    tag: { type: String, default: 'p' },
+    type: { type: String, default: 'info' },
+    noIcon: { type: Boolean, default: false }
   },
   computed: {
     icon () {
