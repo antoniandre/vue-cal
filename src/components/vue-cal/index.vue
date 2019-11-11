@@ -16,6 +16,8 @@
         span.default {{ texts.today }}
     template(v-slot:title)
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+    template(v-slot:weekday-renderer="{ heading, view }")
+      slot(name="weekday-renderer" :heading="heading" :view="view")
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -73,6 +75,8 @@
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
+                template(v-slot:weekday-renderer="{ heading, view }")
+                  slot(name="weekday-renderer" :heading="heading" :view="view")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
