@@ -4,6 +4,7 @@ module.exports = {
   chainWebpack: config => {
     config.plugins.delete('prefetch')
 
+    // Preserve whitespaces for ssh-pre component.
     config.module
       .rule('vue')
       .use('vue-loader')
