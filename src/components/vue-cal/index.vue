@@ -469,7 +469,7 @@ export default {
               // If we don't display the event on month view (eventsOnMonthView = false),
               // then don't create segments.
               const createSegments = e.daysCount > 1 && !(id === 'month' && !this.eventsOnMonthView)
-              return createSegments ? createEventSegments(e, firstCellDate, lastCellDate, this) : e
+              return createSegments ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate, this) : e
             })
         )
 
