@@ -114,7 +114,7 @@
                       .vuecal__event-time(v-if="(event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView")
                         | {{ formatTime(event.startTimeMinutes) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ formatTime(event.endTimeMinutes) }}
-                        small.days-to-end(v-if="event.daysCount > 1 && event.segments[cell.formattedDate].isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
+                        small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -464,9 +464,12 @@ export default {
         this.view.events.push(
           ...events
             .filter(e => eventInRange(e, startDate, endDate))
+            // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
             .map(e => {
-              // If multiple-day events.
-              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, firstCellDate, lastCellDate, this)
+              // If we don't display the event on month view (eventsOnMonthView = false),
+              // then don't create segments.
+              const createSegments = e.daysCount > 1 && !(id === 'month' && !this.eventsOnMonthView)
+              return createSegments ? createEventSegments(e, firstCellDate, lastCellDate, this) : e
             })
         )
 

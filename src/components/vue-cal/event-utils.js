@@ -165,6 +165,17 @@ export const removeEventSegment = (e, vuecal) => {
   return formattedDate
 }
 
+/**
+ * Create 1 segment per day of the given event, but only within the current view.
+ * (It won't create segments for all the days in view that are not in the event!)
+ *
+ * An event segment is a piece of event per day that contains more day-specific data.
+ *
+ * @param {Object} e the multiple-day event to create segments for.
+ * @param {Date} viewStartDate the starting date of the view.
+ * @param {Date} viewEndDate the ending date of the view.
+ * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
+ */
 export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
   const eventStart = e.startDate.getTime()
   let eventEnd = e.endDate.getTime()
