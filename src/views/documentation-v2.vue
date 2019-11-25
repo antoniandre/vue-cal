@@ -170,39 +170,36 @@
       - multiple days on month view like google calendar
       - if more than 24 hour duration, consider as all-day
 
-  h2.headline.mt-12.mb-3.title Github project
-  v-layout.mb-3(align-center shrink)
-    v-icon.pr-4.lightgrey--text(x-large) fab fa-github
-    a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
+  h2.headline.mt-12.mb-8.title Github project &nbsp;&amp;&nbsp; important notes
+  v-layout.mb-3(align-center)
+    v-icon.pl-2.pr-1.mr-4.grey--text.text--lighten-1(x-large) fab fa-github
+    a(href="https://github.com/antoniandre/vue-cal" target="_blank") github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
 
-  v-layout.mb-12(justify-center style="max-width: 700px;margin: auto")
-    v-icon.flame(size="100").mr-3 whatshot
-    highlight-message(type="tips" no-icon)
-      .headline.mt-2.mb-3 #[span.code.mr-1 vue-cal@2.0] is out! &nbsp; 🎉🎉
-      .subtitle-1.font-weight-medium.
-        Big changes. Check all the new features and changes in the #[a(href="#release-notes") Release Notes]!#[br]
-      | The example menu will also help you spot the new stuff.
-      .mt-6.layout.flex.align-center.subtitle-1.font-weight-medium
-        v-icon.mr-2(size="20") favorite_border
-        span.mr-4 Thank you to all the supporters!
-        v-spacer
-        v-icon.mr-1(size="18" color="primary") attach_money
-        a(href="https://www.paypal.me/antoniandre1" target="_blank") #[strong Support the project]
+  v-layout.mt-8(align-center)
+    v-icon.mr-4(size="50" color="amber lighten-2") info
+    v-alert.ma-0(dense border="left" text color="yellow")
+      div.black--text
+        p.mb-2
+          strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!
+        strong Philosophy:&nbsp;
+        | Vue Cal tries to separate logic &amp; styles.#[br]
+        | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
+        | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.
 
-  highlight-message(type="info")
-    p.mb-2
-      strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!
-    strong Philosophy:&nbsp;
-    | Vue Cal tries to separate logic &amp; styles.#[br]
-    | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
-    | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.
+  v-layout.my-8(align-center)
+    v-icon.mr-4(size="50" color="pink lighten-3") favorite
+    v-alert.ma-0(dense border="left" text color="pink")
+      | If you like Vue Cal, you can
+      a.pink--text.ml-2(href="https://www.paypal.me/antoniandre1" target="_blank" style="text-decoration: underline") #[strong Support the project]!
+      div Thank you to all the supporters!
 
-  h2.headline.mt-12
+
+  h2.headline.mt-12.pt-12
     a(href="#installation") Installation
     a#installation(name="installation")
-  highlight-message(type="warning") Vue.js 2.6.1 or later is required.
-  p You have 2 options: #[em NPM] #[strong.mx-2 or] #[span.code &lt;script&gt;] tag.
-  h3 Via NPM
+  strong.black--text Vue.js 2.6.1 or later is required.
+  p.mt-2 You have 2 options: using NPM or #[span.code &lt;script&gt;] tag.
+  h3.mt-8 Via NPM
   sshpre.mt-2(language="shell" label="Shell") npm i --S vue-cal
   p Then import the component and use it:
   sshpre.mt-2(language="js" label="Javascript").
