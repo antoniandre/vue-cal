@@ -43,7 +43,7 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   const start = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
   const end = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
 
-  let event = {
+  const event = {
     ...eventDefaults,
     _eid: `${vuecal._uid}_${vuecal.eventIdIncrement++}`,
     start,
@@ -98,7 +98,7 @@ export const addEventSegment = (e, vuecal) => {
   }
 
   // Modify the last segment - which is no more the last one.
-  let previousSegment = e.segments[formatDate(e.endDate, null, vuecal.texts)]
+  const previousSegment = e.segments[formatDate(e.endDate, null, vuecal.texts)]
   // previousSegment might not exist when dragging too fast, prevent errors.
   if (previousSegment) {
     previousSegment.isLastDay = false
@@ -142,7 +142,7 @@ export const removeEventSegment = (e, vuecal) => {
 
   const endDate = e.endDate.subtractDays(1)
   const formattedDate = formatDate(endDate, null, vuecal.texts)
-  let previousSegment = e.segments[formattedDate]
+  const previousSegment = e.segments[formattedDate]
 
   // If no more segments, reset the segments attribute to null.
   if (!segmentsCount) e.segments = null
@@ -302,7 +302,7 @@ export const getOverlapsStreak = (event, cellOverlaps = {}) => {
   let removeFromStreak = []
   event.overlaps.forEach(id => {
     if (!removeFromStreak.includes(id)) {
-      let overlapsWithoutSelf = event.overlaps.filter(id2 => id2 !== id)
+      const overlapsWithoutSelf = event.overlaps.filter(id2 => id2 !== id)
       overlapsWithoutSelf.forEach(id3 => {
         if (!cellOverlaps[id3].overlaps.includes(id)) removeFromStreak.push(id3)
       })

@@ -427,7 +427,7 @@ export default {
       this.transitionDirection = next ? 'right' : 'left'
       const modifier = next ? 1 : -1
       let firstCellDate = null
-      let { startDate, id: viewId } = this.view
+      const { startDate, id: viewId } = this.view
 
       switch (viewId) {
         case 'years':
@@ -523,12 +523,12 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseMove (e) {
-      let { resizeAnEvent } = this.domEvents
+      const { resizeAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null) return
 
       e.preventDefault()
-      let event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-      let segment = event.segments && event.segments[resizeAnEvent.segment]
+      const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+      const segment = event.segments && event.segments[resizeAnEvent.segment]
       const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
       // Don't allow time above 24 hours.
@@ -542,9 +542,9 @@ export default {
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
-        let cells = this.$refs.cells
-        let cellWidth = cells.offsetWidth / cells.childElementCount
-        let endCell = Math.floor(cursorCoords.x / cellWidth)
+        const cells = this.$refs.cells
+        const cellWidth = cells.offsetWidth / cells.childElementCount
+        const endCell = Math.floor(cursorCoords.x / cellWidth)
 
         if (!resizeAnEvent.startCell) {
           resizeAnEvent.startCell = endCell - (event.daysCount - 1)
@@ -552,8 +552,8 @@ export default {
         if (resizeAnEvent.endCell !== endCell) {
           resizeAnEvent.endCell = endCell
 
-          let endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
-          let newDaysCount = countDays(event.startDate, endDate)
+          const endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
+          const newDaysCount = countDays(event.startDate, endDate)
 
           if (newDaysCount !== event.daysCount) {
             // Check that all segments are up to date.
@@ -576,15 +576,15 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseUp (e) {
-      let { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      const { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
         this.domEvents.cancelClickEventCreation = true
-        let event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
+        const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
           // Store modified event back in mutable events.
-          let mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
+          const mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
           mutableEvent.endTimeMinutes = event.endTimeMinutes
           mutableEvent.end = event.end
           mutableEvent.endDate = event.endDate
@@ -636,7 +636,7 @@ export default {
      * Unfocus an event (e.g. when clicking outside of focused event).
      */
     unfocusEvent () {
-      let { focusAnEvent, clickHoldAnEvent } = this.domEvents
+      const { focusAnEvent, clickHoldAnEvent } = this.domEvents
       const event = this.view.events.find(e => e._eid === (focusAnEvent._eid || clickHoldAnEvent._eid))
       focusAnEvent._eid = null // Cancel event focus.
       clickHoldAnEvent._eid = null // Hide delete button.
@@ -651,7 +651,7 @@ export default {
      * Cancel an event deletion (e.g. when clicking outside of visible delete button).
      */
     cancelDelete () {
-      let { clickHoldAnEvent } = this.domEvents
+      const { clickHoldAnEvent } = this.domEvents
       if (clickHoldAnEvent._eid) {
         const event = this.view.events.find(e => e._eid === clickHoldAnEvent._eid)
         if (event) event.deleting = false
@@ -843,7 +843,7 @@ export default {
       if (date && typeof date === 'string') date = stringToDate(date)
 
       if (date && date instanceof Date) {
-        let { selectedDate } = this.view
+        const { selectedDate } = this.view
         if (selectedDate) this.transitionDirection = selectedDate.getTime() > date.getTime() ? 'left' : 'right'
         // Select the day at midnight in order to allow fetching events on whole day.
         date.setHours(0, 0, 0)
@@ -994,7 +994,7 @@ export default {
     },
     // For week & day views.
     timeCells () {
-      let timeCells = []
+      const timeCells = []
       for (let i = this.timeFrom, max = this.timeTo; i < max; i += this.timeStep) {
         timeCells.push({
           hours: Math.floor(i / 60),
@@ -1073,8 +1073,8 @@ export default {
 
           // If week is not ending in the same month it started in.
           if (lastDayOfWeek.getMonth() !== date.getMonth()) {
-            let [m1, y1] = formattedMonthYear.split(' ')
-            let [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy').split(' ')
+            const [m1, y1] = formattedMonthYear.split(' ')
+            const [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy').split(' ')
             formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
@@ -1166,8 +1166,8 @@ export default {
           break
         case 'week':
           todayFound = false
-          let firstDayOfWeek = this.view.startDate
-          let weekDays = this.weekDays
+          const firstDayOfWeek = this.view.startDate
+          const weekDays = this.weekDays
 
           cells = weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)

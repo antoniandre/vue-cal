@@ -348,14 +348,14 @@
   sshpre(language="js" label="Javascript").
     computed: {
       minDate () {
-        let now = new Date()
-        let date = new Date(now)
+        const now = new Date()
+        const date = new Date(now)
         date.setDate(now.getDate() - 15)
         return date
       },
       maxDate () {
-        let now = new Date()
-        let date = new Date(now)
+        const now = new Date()
+        const date = new Date(now)
         date.setDate(now.getDate() + 15)
         return date
       }
@@ -3612,14 +3612,14 @@ export default {
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
     },
     minDate () {
-      let now = new Date()
-      let date = new Date(now)
+      const now = new Date()
+      const date = new Date(now)
       date.setDate(now.getDate() - 15)
       return date
     },
     maxDate () {
-      let now = new Date()
-      let date = new Date(now)
+      const now = new Date()
+      const date = new Date(now)
       date.setDate(now.getDate() + 15)
       return date
     }

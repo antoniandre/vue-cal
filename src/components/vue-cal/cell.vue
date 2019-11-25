@@ -127,7 +127,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      let { clickHoldACell, focusAnEvent } = this.domEvents
+      const { clickHoldACell, focusAnEvent } = this.domEvents
       // Reinit the click trigger on each mousedown.
       // In some cases we explicitly set this flag to prevent the click event to trigger,
       // and cancel event creation.
@@ -270,7 +270,7 @@ export default {
           const { timeFrom, timeTo } = this.options
 
           events = events.filter(e => {
-            let segment = (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
+            const segment = (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
             return (
               e.allDay ||
               (e.daysCount === 1 && e.startTimeMinutes < timeTo && e.endTimeMinutes > timeFrom) ||
