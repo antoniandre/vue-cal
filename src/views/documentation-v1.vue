@@ -155,25 +155,6 @@
     v-icon.pr-4.lightgrey--text(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
 
-  v-layout.mb-12(justify-center style="max-width: 690px;margin: auto")
-    v-icon.flame(size="100").mr-3 whatshot
-    highlight-message(type="tips" no-icon)
-      .title.mt-2.mb-3 #[span.code vue-cal@2.0.0] is coming out soon!
-      .subtitle-1.font-weight-medium.
-        The V2 will include performance improvements, smaller package size, bug fixes, new features (like event
-        creation on simple click, or overriding the editable-event option per event)
-        and a fresh codebase to start developing the Drag &amp; Drop feature.#[br]
-        #[span.code vue-cal@2.0.0] will require #[span.code vue@2.6.0+].
-      .mt-2
-        v-icon.mr-2(size="20") info_outlined
-        span Follow my progress in the #[a.code.subtitle-1(href="https://github.com/antoniandre/vue-cal/compare/v2" target="_blank") V2] branch!
-      .mt-2.layout.flex.align-center.subtitle-1.font-weight-medium
-        v-icon.mr-2(size="20") favorite_border
-        span Thank you to all the supporters!
-        v-spacer
-        v-icon.mr-1(size="17") attach_money
-        a(href="https://www.paypal.me/antoniandre1" target="_blank") Support the project
-
   highlight-message(type="info")
     strong Important Notes#[br]
     | Options &amp; CSS classes may change a bit with new version release.
@@ -326,14 +307,14 @@
   sshpre(language="js" label="Javascript").
     computed: {
       minDate () {
-        let now = new Date()
-        let date = new Date(now)
+        const now = new Date()
+        const date = new Date(now)
         date.setDate(now.getDate() - 15)
         return date
       },
       maxDate () {
-        let now = new Date()
-        let date = new Date(now)
+        const now = new Date()
+        const date = new Date(now)
         date.setDate(now.getDate() + 15)
         return date
       }
@@ -3079,14 +3060,14 @@ export default {
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
     },
     minDate () {
-      let now = new Date()
-      let date = new Date(now)
+      const now = new Date()
+      const date = new Date(now)
       date.setDate(now.getDate() - 15)
       return date
     },
     maxDate () {
-      let now = new Date()
-      let date = new Date(now)
+      const now = new Date()
+      const date = new Date(now)
       date.setDate(now.getDate() + 15)
       return date
     }

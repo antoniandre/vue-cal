@@ -68,7 +68,7 @@ export default {
     onMouseDown (e, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
-      let { clickHoldAnEvent, focusAnEvent, resizeAnEvent, dragAnEvent } = this.domEvents
+      const { clickHoldAnEvent, focusAnEvent, resizeAnEvent, dragAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
       if (focusAnEvent._eid === this.event._eid && clickHoldAnEvent._eid === this.event._eid) {
@@ -142,14 +142,14 @@ export default {
     },
 
     focusEvent () {
-      let { focusAnEvent } = this.domEvents
+      const { focusAnEvent } = this.domEvents
 
       this.vuecal.emitWithEvent('event-focus', this.event)
 
       // Unfocus previous event if any.
       const onFocus = focusAnEvent._eid
       if (onFocus && onFocus !== this.event._eid) {
-        let event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
+        const event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
         if (event) event.focused = false
       }
 

@@ -13,21 +13,21 @@ const todayFormatted = () => {
 
 // eslint-disable-next-line
 Date.prototype.addDays = function (days) {
-  let date = new Date(this.valueOf())
+  const date = new Date(this.valueOf())
   date.setDate(date.getDate() + days)
   return date
 }
 
 // eslint-disable-next-line
 Date.prototype.subtractDays = function (days) {
-  let date = new Date(this.valueOf())
+  const date = new Date(this.valueOf())
   date.setDate(date.getDate() - days)
   return date
 }
 
 // eslint-disable-next-line
 Date.prototype.getWeek = function () {
-  let d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
+  const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
   const dayNum = d.getUTCDay() || 7
   d.setUTCDate(d.getUTCDate() + 4 - dayNum)
   const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
@@ -40,8 +40,8 @@ export const isDateToday = date => {
 
 // Returns today if it's FirstDayOfWeek (Monday or Sunday) or previous FirstDayOfWeek otherwise.
 export const getPreviousFirstDayOfWeek = (date = null, weekStartsOnSunday) => {
-  let prevFirstDayOfWeek = (date && new Date(date.valueOf())) || new Date()
-  let dayModifier = weekStartsOnSunday ? 7 : 6
+  const prevFirstDayOfWeek = (date && new Date(date.valueOf())) || new Date()
+  const dayModifier = weekStartsOnSunday ? 7 : 6
   prevFirstDayOfWeek.setDate(prevFirstDayOfWeek.getDate() - (prevFirstDayOfWeek.getDay() + dayModifier) % 7)
   return prevFirstDayOfWeek
 }
@@ -128,7 +128,7 @@ export const countDays = (start, end) => {
   end = (new Date(end)).setHours(0, 0, 1)
 
   // Remove the potential daylight saving delta.
-  let timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
+  const timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
   return Math.ceil((end - start - timezoneDiffMs) / (24 * 3600 * 1000))
 }
 

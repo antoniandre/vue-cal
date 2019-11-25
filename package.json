@@ -1,39 +1,38 @@
 {
   "name": "vue-cal",
-  "version": "2.14.0",
-  "author": "Antoni Andre <antoniandre.web@gmail.com>",
-  "license": "MIT",
+  "version": "2.14.1",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
-  "repository": "https://github.com/antoniandre/vue-cal",
+  "author": "Antoni Andre <antoniandre.web@gmail.com>",
+  "scripts": {
+    "serve": "vue-cli-service serve",
+    "build": "vue-cli-service build",
+    "lint": "vue-cli-service lint",
+    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
+    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n && mv ./dist/vuecal.umd.min.i18n ./dist/i18n"
+  },
   "main": "./dist/vuecal.common.js",
   "unpkg": "dist/vuecal.umd.min.js",
-  "keywords": [
-    "full calendar",
-    "calendar",
-    "vue",
-    "vuejs",
-    "ui"
-  ],
   "files": [
     "dist",
     "package.json",
     "README.md",
     "LICENSE"
   ],
-  "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
-    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n && mv ./dist/vuecal.umd.min.i18n ./dist/i18n",
-    "lint": "vue-cli-service lint"
-  },
+  "dependencies": {},
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.5",
     "@vue/cli-plugin-eslint": "^4.0.5",
     "@vue/cli-plugin-router": "^4.0.5",
     "@vue/cli-service": "^4.0.5",
-    "@vue/eslint-config-standard": "^4.0.0",
-    "core-js": "^3.4.0",
+    "@vue/eslint-config-standard": "^5.0.0",
+    "babel-eslint": "^10.0.3",
+    "core-js": "^3.4.2",
+    "eslint": "^6.7.1",
+    "eslint-plugin-import": "^2.18.2",
+    "eslint-plugin-node": "^10.0.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.1",
+    "eslint-plugin-vue": "^6.0.1",
     "node-sass": "^4.13.0",
     "pug": "^2.0.4",
     "pug-plain-loader": "^1.0.0",
@@ -45,7 +44,15 @@
     "vue-router": "^3.1.3",
     "vue-scrollto": "^2.17.1",
     "vue-template-compiler": "^2.6.10",
-    "vuetify": "^2.1.9"
+    "vuetify": "^2.1.11"
   },
-  "dependencies": {}
+  "keywords": [
+    "full calendar",
+    "calendar",
+    "vue",
+    "vuejs",
+    "ui"
+  ],
+  "license": "MIT",
+  "repository": "https://github.com/antoniandre/vue-cal"
 }
