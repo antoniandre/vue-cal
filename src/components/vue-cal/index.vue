@@ -466,7 +466,7 @@ export default {
             .filter(e => eventInRange(e, startDate, endDate))
             .map(e => {
               // If multiple-day events.
-              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, startDate, endDate, this)
+              return e.start.substr(0, 10) === e.end.substr(0, 10) ? e : createEventSegments(e, firstCellDate, lastCellDate, this)
             })
         )
 
