@@ -326,7 +326,7 @@ export const updateEventPosition = (event, vuecal) => {
   const bottom = Math.round(minutesFromTop * vuecal.timeCellHeight / vuecal.timeStep)
 
   event.top = Math.max(top, 0)
-  event.height = bottom - event.top
+  event.height = Math.max(bottom - event.top, 5) // Min height is 5px.
 }
 
 /**
