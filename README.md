@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.15.0__ Allow events to end at `00:00`
 - __Version 2.14.0__ Allow custom weekday render (`month` &amp; `week` views)
 - __Version 2.13.0__ Added Indonesian language
 - __Version 2.12.0__ Added the `overlapsPerTimeStep` option
