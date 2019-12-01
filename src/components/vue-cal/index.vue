@@ -533,21 +533,21 @@ export default {
 
       e.preventDefault()
       const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+      const { minutes, cursorCoords } = this.minutesAtCursor(e)
       const segment = event.segments && event.segments[resizeAnEvent.segment]
-      const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
       // Don't allow time above 24 hours.
       // 1440 = 24 * 60. Stay performant here.
-      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 1440)
-      // Prevent reducing event duration to less than 5min.
-      resizeAnEvent.endTimeMinutes = Math.max(startTimeMinutes, event.startTimeMinutes + 5)
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, 1440)
+      // Prevent reducing event duration to less than 1 min so it does not disappear.
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
 
-      if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      event.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      event.endDate = new Date(event.endDate.setHours(
+      if (segment) segment.endTimeMinutes = event.endTimeMinutes
+
+      event.endDate.setHours(
         0,
         event.endTimeMinutes,
-        event.endTimeMinutes === 1440 ? -1 : 0) // Remove 1 second if time is 24:00.
+        event.endTimeMinutes === 1440 ? -1 : 0 // Remove 1 second if time is 24:00.
       )
       event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
 
@@ -723,7 +723,7 @@ export default {
         const start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
 
         // `event.end` accepts a formatted string - `event.endDate` accepts a Date object.
-        let endDate, endDateF, hoursEnd, minutesEnd
+        let endDate, endDateF, endTime, hoursEnd, minutesEnd
         if (event.end) {
           // eslint-disable-next-line
           !([endDateF, endTime = ''] = event.end.split(' '))
@@ -787,19 +787,19 @@ export default {
      * Get the number of minutes from the top to the mouse cursor.
      *
      * @param {Object} e the native DOM event object.
-     * @return {Object} containing { startTimeMinutes: {Number}, cursorCoords: { x: {Number}, y: {Number} } }
+     * @return {Object} containing { minutes: {Number}, cursorCoords: { x: {Number}, y: {Number} } }
      */
     minutesAtCursor (e) {
-      let startTimeMinutes = 0
+      let minutes = 0
       let cursorCoords = {}
 
-      if (typeof e === 'number') startTimeMinutes = e
+      if (typeof e === 'number') minutes = e
       else if (typeof e === 'object') {
         cursorCoords = this.getPosition(e)
-        startTimeMinutes = Math.round(cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom)
+        minutes = Math.round(cursorCoords.y * this.timeStep / parseInt(this.timeCellHeight) + this.timeFrom)
       }
 
-      return { startTimeMinutes, cursorCoords }
+      return { minutes, cursorCoords }
     },
 
     /**

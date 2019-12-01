@@ -134,7 +134,7 @@ export default {
       this.domEvents.cancelClickEventCreation = false
 
       this.timeAtCursor = new Date(this.data.startDate)
-      this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
       // Unfocus an event if any is focused and clicking on cell outside of an event.
       if (!this.isDOMElementAnEvent(DOMEvent.target) && focusAnEvent._eid) {
@@ -161,7 +161,7 @@ export default {
 
     onCellDblClick (DOMEvent) {
       const date = new Date(this.data.startDate)
-      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       let split
