@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatTime, stringToDate, countDays } from './date-utils'
+import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, stringToDate, countDays } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -532,16 +532,21 @@ export default {
       const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
 
       // Don't allow time above 24 hours.
-      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 24 * 60)
+      // 1440 = 24 * 60. Stay performant here.
+      resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 1440)
 
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
-      event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-      event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
-      event.daysCount = countDays(event.startDate, event.endDate)
+      event.endDate = new Date(event.endDate.setHours(
+        0,
+        event.endTimeMinutes,
+        event.endTimeMinutes === 1440 ? -1 : 0) // Remove 1 second if time is 24:00.
+      )
+      event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.view.id === 'week') {
+        event.daysCount = countDays(event.startDate, event.endDate)
         const cells = this.$refs.cells
         const cellWidth = cells.offsetWidth / cells.childElementCount
         const endCell = Math.floor(cursorCoords.x / cellWidth)
@@ -692,7 +697,7 @@ export default {
       // Populate missing keys: start, startDate, startTimeMinutes, end, endDate, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // Event Start, accepts formatted string - startDate accepts Date object.
+        // `event.start` accepts a formatted string - `event.startDate` accepts a Date object.
         let start, startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           // eslint-disable-next-line
@@ -710,8 +715,8 @@ export default {
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
         start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
 
-        // Event End, accepts formatted string - endDate accepts Date object.
-        let end, endDate, endDateF, endTime, hoursEnd, minutesEnd
+        // `event.end` accepts a formatted string - `event.endDate` accepts a Date object.
+        let endDate, endDateF, hoursEnd, minutesEnd
         if (event.end) {
           // eslint-disable-next-line
           !([endDateF, endTime = ''] = event.end.split(' '))
@@ -726,14 +731,16 @@ export default {
           endDate = event.endDate
         }
 
+        let endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
+        const end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
+
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
-        if (['00:00', '24:00'].includes(endTime)) {
+        // 1440 = 24 * 60. Stay performant here.
+        if (!endTimeMinutes || endTimeMinutes === 1440) {
           endDate.setSeconds(-1) // End at 23:59:59.
           endDateF = this.formatDate(endDate)
+          endTimeMinutes = 1440
         }
-
-        const endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-        end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
 
         const multipleDays = startDateF !== endDateF
 
@@ -841,6 +848,7 @@ export default {
      */
     updateSelectedDate (date) {
       if (date && typeof date === 'string') date = stringToDate(date)
+      else date = new Date(date) // Clone to keep original untouched.
 
       if (date && date instanceof Date) {
         const { selectedDate } = this.view
