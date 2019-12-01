@@ -18,8 +18,8 @@ export default {
     selectedDate: now,
     events: [
       {
-        startDate: new Date(new Date(now).setHours(9, 0, 0, 0)),
-        endDate: new Date(new Date(now).setHours(12, 0, 0, 0)),
+        startDate: now.subtractDays(1),
+        endDate: now.addDays(1),
         title: 'Event'
       }
     ]
