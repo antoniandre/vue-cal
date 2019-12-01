@@ -539,6 +539,8 @@ export default {
       // Don't allow time above 24 hours.
       // 1440 = 24 * 60. Stay performant here.
       resizeAnEvent.endTimeMinutes = Math.min(startTimeMinutes, 1440)
+      // Prevent reducing event duration to less than 5min.
+      resizeAnEvent.endTimeMinutes = Math.max(startTimeMinutes, event.startTimeMinutes + 5)
 
       if (segment) segment.endTimeMinutes = resizeAnEvent.endTimeMinutes
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes
