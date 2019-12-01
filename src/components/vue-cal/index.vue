@@ -320,18 +320,20 @@ export default {
       }
 
       switch (view) {
-        case 'years':
+        case 'years': {
           // Always fill first cell with a multiple of 25 years, E.g. year 2000, or 2025.
           this.view.startDate = new Date(Math.floor(date.getFullYear() / 25) * 25 || 2000, 0, 1)
           this.view.endDate = new Date(this.view.startDate.getFullYear() + 25, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
-        case 'year':
+        }
+        case 'year': {
           this.view.startDate = new Date(date.getFullYear(), 0, 1)
           this.view.endDate = new Date(date.getFullYear() + 1, 0, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
-        case 'month':
+        }
+        case 'month': {
           this.view.startDate = new Date(date.getFullYear(), date.getMonth(), 1)
           this.view.endDate = new Date(date.getFullYear(), date.getMonth() + 1, 1)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
@@ -370,19 +372,22 @@ export default {
             }
           }
           break
-        case 'week':
+        }
+        case 'week': {
           const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
           this.view.startDate.setHours(0, 0, 0)
           this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
-        case 'day':
+        }
+        case 'day': {
           this.view.startDate = date
           this.view.startDate.setHours(0, 0, 0)
           this.view.endDate = new Date(date)
           this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
           break
+        }
       }
 
       this.addEventsToView()
@@ -698,7 +703,7 @@ export default {
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
         // `event.start` accepts a formatted string - `event.startDate` accepts a Date object.
-        let start, startDate, startDateF, startTime, hoursStart, minutesStart
+        let startDate, startDateF, startTime, hoursStart, minutesStart
         if (event.start) {
           // eslint-disable-next-line
           !([startDateF, startTime = ''] = event.start.split(' '))
@@ -713,7 +718,7 @@ export default {
           startDate = event.startDate
         }
         const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-        start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
+        const start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
 
         // `event.end` accepts a formatted string - `event.endDate` accepts a Date object.
         let endDate, endDateF, hoursEnd, minutesEnd
@@ -1066,16 +1071,19 @@ export default {
       const month = date.getMonth()
 
       switch (this.view.id) {
-        case 'years':
+        case 'years': {
           title = this.texts.years
           break
-        case 'year':
+        }
+        case 'year': {
           title = year
           break
-        case 'month':
+        }
+        case 'month': {
           title = `${this.months[month].label} ${year}`
           break
-        case 'week':
+        }
+        case 'week': {
           const lastDayOfWeek = date.addDays(6)
           let formattedMonthYear = this.formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')
 
@@ -1087,9 +1095,11 @@ export default {
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
-        case 'day':
+        }
+        case 'day': {
           title = this.formatDate(date, this.texts.dateFormat)
           break
+        }
       }
 
       return title
@@ -1107,7 +1117,7 @@ export default {
       const now = this.now
 
       switch (this.view.id) {
-        case 'years':
+        case 'years': {
           fromYear = this.view.startDate.getFullYear()
           cells = Array.apply(null, Array(25)).map((cell, i) => {
             const startDate = new Date(fromYear + i, 0, 1)
@@ -1123,7 +1133,8 @@ export default {
             }
           })
           break
-        case 'year':
+        }
+        case 'year': {
           fromYear = this.view.startDate.getFullYear()
           cells = Array.apply(null, Array(12)).map((cell, i) => {
             const startDate = new Date(fromYear, i, 1)
@@ -1139,7 +1150,8 @@ export default {
             }
           })
           break
-        case 'month':
+        }
+        case 'month': {
           const month = this.view.startDate.getMonth()
           const firstCellDate = new Date(this.view.firstCellDate)
           todayFound = false
@@ -1172,7 +1184,8 @@ export default {
             })
           }
           break
-        case 'week':
+        }
+        case 'week': {
           todayFound = false
           const firstDayOfWeek = this.view.startDate
           const weekDays = this.weekDays
@@ -1191,7 +1204,8 @@ export default {
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break
-        case 'day':
+        }
+        case 'day': {
           const startDate = this.view.startDate
           const endDate = new Date(this.view.startDate)
           endDate.setHours(23, 59, 59) // End at 23:59:59.
@@ -1203,6 +1217,7 @@ export default {
             today: isDateToday(startDate)
           }]
           break
+        }
       }
       return cells
     },

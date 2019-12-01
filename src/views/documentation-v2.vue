@@ -193,7 +193,6 @@
       a.pink--text.ml-2(href="https://www.paypal.me/antoniandre1" target="_blank" style="text-decoration: underline") #[strong Support the project]!
       div Thank you to all the supporters!
 
-
   h2.headline.mt-12.pt-12
     a(href="#installation") Installation
     a#installation(name="installation")
