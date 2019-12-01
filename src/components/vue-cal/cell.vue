@@ -453,6 +453,7 @@ export default {
   color: red;
   border-top: 1px solid currentColor;
   opacity: 0.6;
+  z-index: 1;
 
   &:before {
     content: "";

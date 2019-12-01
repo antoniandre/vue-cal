@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import { formatDate, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
+import { formatDate, formatDateLite, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
 const defaultEventDuration = 2 // In hours.
 
 export const eventDefaults = {
@@ -40,8 +40,8 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   const formattedHours = (hours < 10 ? '0' : '') + hours
   const formattedHoursEnd = (hoursEnd < 10 ? '0' : '') + hoursEnd
   const formattedMinutes = (minutes < 10 ? '0' : '') + minutes
-  const start = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
-  const end = formatDate(dateTime, null, vuecal.texts) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
+  const start = formatDateLite(dateTime) + (vuecal.time ? ` ${formattedHours}:${formattedMinutes}` : '')
+  const end = formatDateLite(dateTime) + (vuecal.time ? ` ${formattedHoursEnd}:${formattedMinutes}` : '')
 
   const event = {
     ...eventDefaults,
@@ -98,7 +98,7 @@ export const addEventSegment = (e, vuecal) => {
   }
 
   // Modify the last segment - which is no more the last one.
-  const previousSegment = e.segments[formatDate(e.endDate, null, vuecal.texts)]
+  const previousSegment = e.segments[formatDateLite(e.endDate)]
   // previousSegment might not exist when dragging too fast, prevent errors.
   if (previousSegment) {
     previousSegment.isLastDay = false
@@ -112,7 +112,7 @@ export const addEventSegment = (e, vuecal) => {
   // Create the new last segment.
   const startDate = e.endDate.addDays(1)
   const endDate = new Date(startDate)
-  const formattedDate = formatDate(startDate, null, vuecal.texts)
+  const formattedDate = formatDateLite(startDate)
   startDate.setHours(0, 0)
   e.segments[formattedDate] = {
     startDate,
@@ -141,7 +141,7 @@ export const removeEventSegment = (e, vuecal) => {
   segmentsCount--
 
   const endDate = e.endDate.subtractDays(1)
-  const formattedDate = formatDate(endDate, null, vuecal.texts)
+  const formattedDate = formatDateLite(endDate)
   const previousSegment = e.segments[formattedDate]
 
   // If no more segments, reset the segments attribute to null.
@@ -194,7 +194,7 @@ export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
     const isFirstDay = timestamp === eventStart
     const isLastDay = end === eventEnd && nextMidnight >= end
     const startDate = isFirstDay ? e.startDate : new Date(timestamp)
-    const formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDate(startDate, null, vuecal.texts)
+    const formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDateLite(startDate)
 
     e.segments[formattedDate] = {
       startDate,

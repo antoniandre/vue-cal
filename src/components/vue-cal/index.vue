@@ -714,7 +714,7 @@ export default {
           startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.startDate && event.startDate instanceof Date) {
-          startDateF = this.formatDate(event.startDate)
+          startDateF = formatDateLite(event.startDate)
           hoursStart = event.startDate.getHours()
           minutesStart = event.startDate.getMinutes()
           startDate = event.startDate
@@ -732,7 +732,7 @@ export default {
           endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
         }
         else if (event.endDate && event.endDate instanceof Date) {
-          endDateF = this.formatDate(event.endDate)
+          endDateF = formatDateLite(event.endDate)
           hoursEnd = event.endDate.getHours()
           minutesEnd = event.endDate.getMinutes()
           endDate = event.endDate
@@ -745,7 +745,7 @@ export default {
         // 1440 = 24 * 60. Stay performant here.
         if (!endTimeMinutes || endTimeMinutes === 1440) {
           endDate.setSeconds(-1) // End at 23:59:59.
-          endDateF = this.formatDate(endDate)
+          endDateF = formatDateLite(endDate)
           endTimeMinutes = 1440
         }
 
@@ -1128,7 +1128,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.formatDate(startDate),
+              formattedDate: formatDateLite(startDate),
               endDate,
               content: fromYear + i,
               current: fromYear + i === now.getFullYear()
@@ -1145,7 +1145,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.formatDate(startDate),
+              formattedDate: formatDateLite(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
               current: i === now.getMonth() && fromYear === now.getFullYear()
@@ -1168,7 +1168,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.formatDate(startDate),
+              formattedDate: formatDateLite(startDate),
               endDate,
               content: startDate.getDate(),
               today: isToday,
@@ -1199,7 +1199,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.formatDate(startDate),
+              formattedDate: formatDateLite(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
               today: !todayFound && isDateToday(startDate) && !todayFound++
@@ -1214,7 +1214,7 @@ export default {
 
           cells = [{
             startDate,
-            formattedDate: this.formatDate(startDate),
+            formattedDate: formatDateLite(startDate),
             endDate,
             today: isDateToday(startDate)
           }]
