@@ -78,6 +78,7 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
 
 export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   if (!format) format = 'yyyy-mm-dd' // Allows passing null for default format.
+  if (format === 'yyyy-mm-dd') return formatDateLite(date)
 
   const d = date.getDate()
   const m = date.getMonth() + 1
@@ -104,6 +105,13 @@ export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   })
 }
 
+// More performant function to convert a Date to `yyyy-mm-dd` formatted string only.
+export const formatDateLite = date => {
+  const m = date.getMonth() + 1
+  const d = date.getDate()
+  return `${date.getFullYear()}-${m < 10 ? '0' : ''}${m}-${d < 10 ? '0' : ''}${d}`
+}
+
 export const stringToDate = string => {
   const [, y, m, d, h = 0, min = 0] = string.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
   return new Date(y, parseInt(m) - 1, d, h, min)
@@ -122,9 +130,9 @@ export const countDays = (start, end) => {
   if (typeof start === 'string') start = start.replace(/-/g, '/')
   if (typeof end === 'string') end = end.replace(/-/g, '/')
 
-  // set start & end at midnight then compare the delta.
+  // Set start & end at midnight then compare the delta. Don't modify the original dates.
   start = (new Date(start)).setHours(0, 0, 0)
-  // set end at midnight plus 1 min, so Math.ceil will round it up to a full day.
+  // Set end at midnight plus 1 min, so Math.ceil will round it up to a full day.
   end = (new Date(end)).setHours(0, 0, 1)
 
   // Remove the potential daylight saving delta.

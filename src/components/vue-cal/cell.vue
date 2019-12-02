@@ -21,7 +21,7 @@
       @dblclick="!isDisabled && onCellDblClick($event)")
       slot(name="cell-content" :events="events" :select-cell="$event => selectCell($event, true)" :split="splits.length ? split : false")
       .vuecal__cell-events(
-        v-if="events.length && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
+        v-if="eventsCount && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
           v-for="(event, j) in (splits.length ? split.events : events)" :key="j"
           :vuecal="$parent"
@@ -70,8 +70,8 @@ export default {
   methods: {
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
-      if (this.options.time && this.events.length && !this.splits.length) {
-        if (this.events.length === 1) {
+      if (this.options.time && this.eventsCount && !this.splits.length) {
+        if (this.eventsCount === 1) {
           this.cellOverlaps = []
           this.cellOverlapsStreak = 1
         }
@@ -134,7 +134,7 @@ export default {
       this.domEvents.cancelClickEventCreation = false
 
       this.timeAtCursor = new Date(this.data.startDate)
-      this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
       // Unfocus an event if any is focused and clicking on cell outside of an event.
       if (!this.isDOMElementAnEvent(DOMEvent.target) && focusAnEvent._eid) {
@@ -161,7 +161,7 @@ export default {
 
     onCellDblClick (DOMEvent) {
       const date = new Date(this.data.startDate)
-      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).startTimeMinutes)
+      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       let split
@@ -193,7 +193,7 @@ export default {
     cssClasses () {
       return {
         'vuecal__cell--has-splits': this.splits.length,
-        'vuecal__cell--has-events': this.events.length,
+        'vuecal__cell--has-events': this.eventsCount,
         current: this.data.current,
         today: this.data.today,
         'out-of-scope': this.data.outOfScope,
@@ -298,6 +298,12 @@ export default {
       }
 
       return events
+    },
+    eventsCount: {
+      get () {
+        return this.events.length
+      },
+      set () {}
     },
     splits () {
       return this.cellSplits.map((item, i) => {
@@ -453,6 +459,7 @@ export default {
   color: red;
   border-top: 1px solid currentColor;
   opacity: 0.6;
+  z-index: 1;
 
   &:before {
     content: "";

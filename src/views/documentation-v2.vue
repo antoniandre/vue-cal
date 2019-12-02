@@ -193,7 +193,6 @@
       a.pink--text.ml-2(href="https://www.paypal.me/antoniandre1" target="_blank" style="text-decoration: underline") #[strong Support the project]!
       div Thank you to all the supporters!
 
-
   h2.headline.mt-12.pt-12
     a(href="#installation") Installation
     a#installation(name="installation")
@@ -2829,6 +2828,10 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.15.0]
+    ul
+      li Allow ending an event at #[span.code 00:00] both from #[span.code event.end] and #[span.code event.endDate]
+      li Prevent resizing an event bellow a 1 minute duration or a minimum height of 5px.
   div #[strong Version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
   div #[strong Version 2.13.0] Added Indonesian language
   div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option

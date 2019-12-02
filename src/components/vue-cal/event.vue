@@ -29,38 +29,14 @@ import { deleteAnEvent } from './event-utils'
 
 export default {
   props: {
-    cellFormattedDate: {
-      type: String,
-      default: ''
-    },
-    vuecal: {
-      type: Object,
-      default: () => ({})
-    },
-    event: {
-      type: Object,
-      default: () => ({})
-    },
-    cellEvents: {
-      type: Array,
-      default: () => []
-    },
-    overlaps: {
-      type: Array,
-      default: () => []
-    },
-    eventPosition: {
-      type: Number,
-      default: 0
-    },
-    overlapsStreak: {
-      type: Number,
-      default: 0
-    },
-    allDay: {
-      type: Boolean,
-      default: false
-    }
+    cellFormattedDate: { type: String, default: '' },
+    vuecal: { type: Object, default: () => ({}) },
+    event: { type: Object, default: () => ({}) },
+    cellEvents: { type: Array, default: () => [] },
+    overlaps: { type: Array, default: () => [] },
+    eventPosition: { type: Number, default: 0 },
+    overlapsStreak: { type: Number, default: 0 },
+    allDay: { type: Boolean, default: false }
   },
 
   methods: {

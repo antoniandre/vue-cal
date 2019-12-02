@@ -40,7 +40,7 @@ export default {
   methods: {
     selectCell (date, DOMEvent) {
       date = new Date(date)
-      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).startTimeMinutes)
+      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
       selectCell(false, this.vuecal, date, DOMEvent)
     },
     cleanupHeading: heading => ({

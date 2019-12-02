@@ -46,22 +46,10 @@ export default {
   components: { WeekdaysHeadings },
   props: {
     // Vuecal main component options (props).
-    options: {
-      type: Object,
-      default: () => ({})
-    },
-    viewProps: {
-      type: Object,
-      default: () => ({})
-    },
-    weekDays: {
-      type: Array,
-      default: () => []
-    },
-    switchToNarrowerView: {
-      type: Function,
-      default: () => {}
-    }
+    options: { type: Object, default: () => ({}) },
+    viewProps: { type: Object, default: () => ({}) },
+    weekDays: { type: Array, default: () => [] },
+    switchToNarrowerView: { type: Function, default: () => {} }
   },
 
   methods: {
