@@ -586,7 +586,7 @@ export default {
         }
       }
       else if (dragAnEvent._eid) {
-        const { startTimeMinutes, cursorCoords } = this.minutesAtCursor(e)
+        const { minutes, cursorCoords } = this.minutesAtCursor(e)
 
         let event = this.view.events.find(e => e._eid === dragAnEvent._eid) || { segments: {} }
         this.$set(event, 'dragging', cursorCoords)
@@ -595,7 +595,7 @@ export default {
 
         // @todo: Need to modify event start & end time on same model as above `if (resizeAnEvent._eid)` case.
         // Also need to modify the date of event on mouse release (in `onMouseUp` bellow) when dropping event into another day.
-        // event.endTimeMinutes = startTimeMinutes
+        // event.endTimeMinutes = minutes
         // event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
         // event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
 
