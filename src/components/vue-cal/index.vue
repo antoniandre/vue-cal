@@ -475,7 +475,7 @@ export default {
               // If we don't display the event on month view (eventsOnMonthView = false),
               // then don't create segments.
               const createSegments = e.daysCount > 1 && !(id === 'month' && !this.eventsOnMonthView)
-              return createSegments ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate, this) : e
+              return createSegments ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
             })
         )
 
@@ -570,8 +570,8 @@ export default {
           if (newDaysCount !== event.daysCount) {
             // Check that all segments are up to date.
             let lastSegmentFormattedDate = null
-            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event, this)
-            else lastSegmentFormattedDate = removeEventSegment(event, this)
+            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
+            else lastSegmentFormattedDate = removeEventSegment(event)
             resizeAnEvent.segment = lastSegmentFormattedDate
             event.endTimeMinutes += 0.001 // Force updating the current event.
           }
