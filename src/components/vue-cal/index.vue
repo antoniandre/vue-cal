@@ -129,6 +129,7 @@ import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
 import './styles.scss'
 
+const minutesInADay = 24 * 60 // Don't do the maths every time.
 const textsDefaults = {
   weekDays: Array(7).fill(''),
   weekDaysShort: [],
@@ -174,7 +175,7 @@ export default {
     cellClickHold: { type: Boolean, default: true },
     time: { type: Boolean, default: true },
     timeFrom: { type: Number, default: 0 }, // In minutes.
-    timeTo: { type: Number, default: 24 * 60 }, // In minutes.
+    timeTo: { type: Number, default: minutesInADay }, // In minutes.
     timeStep: { type: Number, default: 60 }, // In minutes.
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
     twelveHour: { type: Boolean, default: false },
@@ -537,8 +538,7 @@ export default {
       const segment = event.segments && event.segments[resizeAnEvent.segment]
 
       // Don't allow time above 24 hours.
-      // 1440 = 24 * 60. Stay performant here.
-      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, 1440)
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, minutesInADay)
       // Prevent reducing event duration to less than 1 min so it does not disappear.
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
 
@@ -547,7 +547,7 @@ export default {
       event.endDate.setHours(
         0,
         event.endTimeMinutes,
-        event.endTimeMinutes === 1440 ? -1 : 0 // Remove 1 second if time is 24:00.
+        event.endTimeMinutes === minutesInADay ? -1 : 0 // Remove 1 second if time is 24:00.
       )
       event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
 
@@ -742,11 +742,10 @@ export default {
         const end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
-        // 1440 = 24 * 60. Stay performant here.
-        if (!endTimeMinutes || endTimeMinutes === 1440) {
+        if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
           endDate.setSeconds(-1) // End at 23:59:59.
           endDateF = formatDateLite(endDate)
-          endTimeMinutes = 1440
+          endTimeMinutes = minutesInADay
         }
 
         const multipleDays = startDateF !== endDateF

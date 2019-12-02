@@ -1,6 +1,8 @@
 import Vue from 'vue'
-import { formatDate, formatDateLite, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
+import { formatDateLite, stringToDate, formatTime, countDays, datesInSameTimeStep } from './date-utils'
+
 const defaultEventDuration = 2 // In hours.
+const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const eventDefaults = {
   _eid: null,
@@ -26,8 +28,14 @@ export const eventDefaults = {
   classes: []
 }
 
-// Create an event at the given date and time, and allow overriding
-// event attributes through the eventOptions object.
+/**
+ * Create an event at the given date and time, and allow overriding
+ * event attributes through the eventOptions object.
+ *
+ * @param {Date | String} dateTime The date and time of the new event start.
+ * @param {Object} eventOptions some options to override the `eventDefaults` - optional.
+ * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
+ */
 export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
   if (!(dateTime instanceof Date)) return false
@@ -82,14 +90,19 @@ export const createAnEvent = (dateTime, eventOptions, vuecal) => {
   return event
 }
 
-export const addEventSegment = (e, vuecal) => {
+/**
+ * Add an event segment (= day) to a multiple-day event.
+ *
+ * @param {Object} e the multiple-day event to add segment in.
+ */
+export const addEventSegment = e => {
   if (!e.segments) {
     Vue.set(e, 'segments', {})
     e.segments[e.start.substr(0, 10)] = {
       startDate: e.startDate,
       start: e.start.substr(0, 10),
       startTimeMinutes: e.startTimeMinutes,
-      endTimeMinutes: 24 * 60,
+      endTimeMinutes: minutesInADay,
       isFirstDay: true,
       isLastDay: false,
       height: 0,
@@ -102,7 +115,7 @@ export const addEventSegment = (e, vuecal) => {
   // previousSegment might not exist when dragging too fast, prevent errors.
   if (previousSegment) {
     previousSegment.isLastDay = false
-    previousSegment.endTimeMinutes = 24 * 60
+    previousSegment.endTimeMinutes = minutesInADay
   }
   else {
     // @todo: when moving fast might lose the previousSegment.
@@ -132,7 +145,12 @@ export const addEventSegment = (e, vuecal) => {
   return formattedDate
 }
 
-export const removeEventSegment = (e, vuecal) => {
+/**
+ * Remove an event segment (= day) from a multiple-day event.
+ *
+ * @param {Object} e the multiple-day event to remove segments from.
+ */
+export const removeEventSegment = e => {
   let segmentsCount = Object.keys(e.segments).length
   if (segmentsCount <= 1) return e.end.substr(0, 10)
 
@@ -176,7 +194,7 @@ export const removeEventSegment = (e, vuecal) => {
  * @param {Date} viewEndDate the ending date of the view.
  * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
  */
-export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
+export const createEventSegments = (e, viewStartDate, viewEndDate) => {
   const eventStart = e.startDate.getTime()
   let eventEnd = e.endDate.getTime()
   if (!e.endDate.getHours() && !e.endDate.getMinutes()) eventEnd -= 1000
@@ -200,7 +218,7 @@ export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
       startDate,
       start: formattedDate,
       startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
-      endTimeMinutes: isLastDay ? e.endTimeMinutes : (24 * 60),
+      endTimeMinutes: isLastDay ? e.endTimeMinutes : (minutesInADay),
       isFirstDay,
       isLastDay,
       height: 0,
@@ -213,6 +231,12 @@ export const createEventSegments = (e, viewStartDate, viewEndDate, vuecal) => {
   return e
 }
 
+/**
+ * Delete an event.
+ *
+ * @param {Object} event the calendar event to delete.
+ * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
+ */
 export const deleteAnEvent = (event, vuecal) => {
   vuecal.emitWithEvent('event-delete', event)
 
@@ -314,6 +338,12 @@ export const getOverlapsStreak = (event, cellOverlaps = {}) => {
   return streak
 }
 
+/**
+ * Update the event top and height CSS properties of each event as long as vuecal.time is true.
+ *
+ * @param {Object} event The event to update position (top & height) of.
+ * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
+ */
 export const updateEventPosition = (event, vuecal) => {
   const { startTimeMinutes, endTimeMinutes } = event
 

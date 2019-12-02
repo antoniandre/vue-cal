@@ -78,6 +78,7 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
 
 export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   if (!format) format = 'yyyy-mm-dd' // Allows passing null for default format.
+  if (format === 'yyyy-mm-dd') return formatDateLite(date)
 
   const d = date.getDate()
   const m = date.getMonth() + 1
@@ -104,7 +105,7 @@ export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   })
 }
 
-// Converts a Date to 'yyyy-mm-dd' formatted string.
+// More performant function to convert a Date to `yyyy-mm-dd` formatted string only.
 export const formatDateLite = date => {
   const m = date.getMonth() + 1
   const d = date.getDate()
