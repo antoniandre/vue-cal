@@ -3081,6 +3081,7 @@
   div #[strong Version 2.15.0]
     ul
       li New Date prototype functions, refer to: #[a(href="#date-prototypes") Date prototypes]
+      li Scroll the view to a particular time: #[a(href="#ex--scroll-to-time") see the example]
       li Fix bug where timeless and all-day events were displaying time
     highlight-message.mb-2(type="warning")
       ul
