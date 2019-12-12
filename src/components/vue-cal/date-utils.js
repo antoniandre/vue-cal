@@ -49,14 +49,14 @@ const initDatePrototypes = function () {
   }
 
   // eslint-disable-next-line
-  // Date.prototype.format = function (format = 'yyyy-mm-dd') {
-  //   return formatDate(this, format, Date.texts)
-  // }
+  Date.prototype.format = function (format = 'YYYY-MM-DD') {
+    return formatDate(this, format, Date.texts)
+  }
 
   // eslint-disable-next-line
-  // Date.prototype.formatTime = function (format = 'HH:mm') {
-  //   return formatTime(this.getHours() * 60 + this.getMinutes(), format, Date.texts)
-  // }
+  Date.prototype.formatTime = function (format = 'HH:mm') {
+    return formatTime(this.getHours() * 60 + this.getMinutes(), format, Date.texts)
+  }
 }
 
 // Add prototypes ASAP.
@@ -105,29 +105,37 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
   })
 }
 
-export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
-  if (!format) format = 'yyyy-mm-dd' // Allows passing null for default format.
-  if (format === 'yyyy-mm-dd') return formatDateLite(date)
+export const formatDate = (date, format = 'YYYY-MM-DD', texts) => {
+  if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
+  if (format === 'YYYY-MM-DD') return formatDateLite(date)
 
+  const YYYY = date.getFullYear()
+  const M = date.getMonth() + 1
+  const D = date.getDate()
   const day = date.getDay() // Day of the week.
   const dayNumber = (day - 1 + 7) % 7 // Day of the week. 0 to 6 with 6 = Sunday.
-  const d = date.getDate()
-  const m = date.getMonth() + 1
   const dateObj = {
-    D: dayNumber + 1, // 1 to 7 with 7 = Sunday.
-    DD: texts.weekDays[dayNumber][0], // M to S.
-    DDD: texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
-    DDDD: texts.weekDays[dayNumber], // Monday to Sunday.
-    d, // 1 to 31.
-    dd: (d < 10 ? '0' : '') + d, // 01 to 31.
-    S: nth(d), // st, nd, rd, th.
-    m, // 1 to 12.
-    mm: (m < 10 ? '0' : '') + m, // 01 to 12.
-    mmm: texts.months[m - 1].substr(0, 3), // Jan to Dec.
-    mmmm: texts.months[m - 1], // January to December.
-    mmmmG: (texts.monthsGenitive || texts.months)[m - 1], // January to December in genitive form (Greek...)
-    yyyy: date.getFullYear(), // 2018.
-    yy: date.getFullYear().toString().substr(2, 4) // 18.
+    // Year.
+    YYYY, // 2019.
+    YY: YYYY.toString().substring(2), // 19.
+
+    // Month.
+    M, // 1 to 12.
+    MM: (M < 10 ? '0' : '') + M, // 01 to 12.
+    MMM: texts.months[M - 1].substring(0, 3), // Jan to Dec.
+    MMMM: texts.months[M - 1], // January to December.
+    MMMMG: (texts.monthsGenitive || texts.months)[M - 1], // January to December in genitive form (Greek...)
+
+    // Day.
+    D, // 1 to 31.
+    DD: (D < 10 ? '0' : '') + D, // 01 to 31.
+    S: nth(D), // st, nd, rd, th.
+
+    // Day of the week.
+    d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
+    dd: texts.weekDays[dayNumber][0], // M to S.
+    ddd: texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
+    dddd: texts.weekDays[dayNumber], // Monday to Sunday.
   }
 
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
@@ -136,7 +144,7 @@ export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   })
 }
 
-// More performant function to convert a Date to `yyyy-mm-dd` formatted string only.
+// More performant function to convert a Date to `YYYY-MM-DD` formatted string only.
 export const formatDateLite = date => {
   const m = date.getMonth() + 1
   const d = date.getDate()

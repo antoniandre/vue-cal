@@ -144,7 +144,7 @@ const textsDefaults = {
   allDay: '',
   deleteEvent: '',
   createEvent: '',
-  dateFormat: 'DDDD mmmm d, yyyy',
+  dateFormat: 'dddd MMMM D, YYYY',
   am: 'am',
   pm: 'pm'
 }
@@ -880,7 +880,7 @@ export default {
      * @param {String} format the wanted format.
      * @return {String} the formatted date.
      */
-    formatDate (date, format = 'yyyy-mm-dd') {
+    formatDate (date, format = 'YYYY-MM-DD') {
       return formatDate(date, format, this.texts)
     },
 
@@ -1091,12 +1091,12 @@ export default {
         }
         case 'week': {
           const lastDayOfWeek = date.addDays(6)
-          let formattedMonthYear = this.formatDate(date, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy')
+          let formattedMonthYear = this.formatDate(date, this.xsmall ? 'mmm YYYY' : 'mmmm YYYY')
 
           // If week is not ending in the same month it started in.
           if (lastDayOfWeek.getMonth() !== date.getMonth()) {
             const [m1, y1] = formattedMonthYear.split(' ')
-            const [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm yyyy' : 'mmmm yyyy').split(' ')
+            const [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'mmm YYYY' : 'mmmm YYYY').split(' ')
             formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`

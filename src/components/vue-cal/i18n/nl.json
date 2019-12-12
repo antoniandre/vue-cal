@@ -11,5 +11,5 @@
   "allDay": "Hele dag",
   "deleteEvent": "Verwijderen",
   "createEvent": "Nieuwe afspraak aanmaken",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

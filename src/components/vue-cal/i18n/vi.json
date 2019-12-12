@@ -12,5 +12,5 @@
   "allDay": "Cả ngày",
   "deleteEvent": "Xóa",
   "createEvent": "Tạo event",
-  "dateFormat": "DDDD mmmm d yyyy"
+  "dateFormat": "dddd MMMM D YYYY"
 }

@@ -1054,7 +1054,7 @@
       sshpre.mt-3(language="js" label="Javascript").
         // In methods.
         customEventCreation () {
-            const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+            const dateTime = prompt('Create event on (YYYY-MM-DD hh:mm)', '2018-11-20 13:15')
 
             // Check if date format is correct before creating event.
             if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(date)) {
@@ -1918,7 +1918,7 @@
           Will return the time (in minutes) at the cursor position when a DOM event occurs.
           `e` is the DOM event.
       li
-        code formatDate(date, format = 'yyyy-mm-dd')
+        code formatDate(date, format = 'YYYY-MM-DD')
         p.
           Will return a string with formatted date (and time if given) using the loaded locale.#[br]
           For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
@@ -2008,22 +2008,22 @@
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
-      :time-from="7 * 60"
+      :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="eventsCopy")
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="events.push({
-           start: '2018-11-20 12:00',
-           end: '2018-11-20 17:00',
-           title: 'A new event',
-           class: 'blue-event'
+        start: '2018-11-20 12:00',
+        end: '2018-11-20 17:00',
+        title: 'A new event',
+        class: 'blue-event'
     })"&gt;Add an event&lt;/button&gt;
     &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
-             :time-from="7 * 60"
+             :time-from="9 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year', 'month']"
              hide-weekends
@@ -2402,10 +2402,10 @@
         .vuecal__event-title.mb-6(v-html="event.title")
         small.vuecal__event-time
           strong.mr-1 Event start:
-          span {{ event.start.substr(11) }}
+          span {{ event.startDate.formatTime('h O\'clock') }}
           br
           strong.mr-1 Event end:
-          span {{ event.end.substr(11) }}
+          span {{ event.endDate.formatTime('h O\'clock') }}
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -2423,11 +2423,16 @@
              v-html="event.title" /&gt;
 
         &lt;small class="vuecal__event-time"&gt;
-          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.substr(11) \}\}' }}&lt;/span&gt;&lt;br/&gt;
-          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.substr(11) \}\}' }}&lt;/span&gt;
+          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.startDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
+          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.endDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
+
+  highlight-message.my-2(type="tips").
+    The #[a(href="#date-prototypes") #[span.code formatTime()] Date prototype] will help you format time easily,
+    but if you prefer you could also extract the time from the formatted date:
+    e.g. #[span.code event.start.substr(11)]
 
   sshpre(language="js" label="Javascript").
     events: [
@@ -2531,14 +2536,14 @@
             "allDay": "All day",
             "deleteEvent": "Delete",
             "createEvent": "Create an event",
-            "dateFormat": "DDDD d mmmm yyyy"
+            "dateFormat": "dddd D MMMM YYYY"
           }
         p.
           Regarding the #[span.code dateFormat] translation, this is the format of the full
           date you can see in a single day view title.#[br]
           #[span.code DDDD] stands for the full-letter day of week, #[span.code mmmm] stands for
           full-letter month, #[span.code d] stands for the date of the month (0-31),
-          #[span.code yyyy] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
+          #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
       highlight-message(type="tips").
         Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
@@ -2971,11 +2976,11 @@
       code.mr-2 .format(format)
       div.
         Returns a formatted date string.
-        Default format is #[span.code `yyyy-mm-dd`], but you can use any formatting keyword from
+        Default format is #[span.code `YYYY-MM-DD`], but you can use any formatting keyword from
         this list, and add any character not present in this mapping:
       ul
-        li #[strong.code.black--text yyyy]: full year. #[span.grey--text.ml-2 E.g. `2019`]
-        li #[strong.code.black--text yy]: 2 last digits of the year. #[span.grey--text.ml-2 E.g. `19`]
+        li #[strong.code.black--text YYYY]: full year. #[span.grey--text.ml-2 E.g. `2019`]
+        li #[strong.code.black--text YY]: 2 last digits of the year. #[span.grey--text.ml-2 E.g. `19`]
         li #[strong.code.black--text mmmm]: month in full. #[span.grey--text.ml-2 E.g. `January`]
         li #[strong.code.black--text mmm]: 3 first letters of the month. #[span.grey--text.ml-2 E.g. `Jan`]
         li #[strong.code.black--text mm]: month number with leading zero. (01-12) #[span.grey--text.ml-2 E.g. `01`]
@@ -3007,7 +3012,7 @@
       li.
         To separate 2 keywords or a keyword and another text not from this list without adding spaces or
         any separation, you can use the delimiters #[span.code.black--text `{ }`].#[br]
-        For instance #[span.code `new Date().format('yyyy{mm}dd')`] (or even #[span.code `{yyyy}{mm}{dd}`]) will produce:
+        For instance #[span.code `new Date().format('YYYY{mm}dd')`] (or even #[span.code `{YYYY}{mm}{dd}`]) will produce:
         "#[span.code {{ nowFormatted }}]".
       li.
         If you can't use the formatting functions because your locale (language) is trickier than that,
@@ -3847,7 +3852,7 @@ export default {
       return event
     },
     customEventCreation () {
-      const dateTime = prompt('Create event on (yyyy-mm-dd hh:mm)', '2018-11-20 13:15')
+      const dateTime = prompt('Create event on (YYYY-MM-DD hh:mm)', '2018-11-20 13:15')
       if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
         this.$refs.vuecal.createEvent(dateTime, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
       }
@@ -3856,7 +3861,7 @@ export default {
   },
   computed: {
     nowFormatted () {
-      return Date.prototype.format && (new Date()).format('yyyy{mm}dd')
+      return Date.prototype.format && (new Date()).format('YYYY{mm}dd')
     },
     currentDateFormatted () {
       const y = this.now.getFullYear()

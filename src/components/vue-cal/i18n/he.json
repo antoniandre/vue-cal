@@ -11,5 +11,5 @@
   "allDay": "כל היום",
   "deleteEvent": "מחיקה",
   "createEvent": "צור אירוע",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

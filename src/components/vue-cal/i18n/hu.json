@@ -11,5 +11,5 @@
   "allDay": "Egész nap",
   "deleteEvent": "Esemény törlese",
   "createEvent": "Esemény létrehozása",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

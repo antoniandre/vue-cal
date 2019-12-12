@@ -12,7 +12,7 @@
     "allDay": "Ημερήσιο συμβάν",
     "deleteEvent": "Διαγραφή",
     "createEvent": "Δημιουργία συμβάντος",
-    "dateFormat": "DDDD d mmmmG yyyy",
+    "dateFormat": "dddd D MMMMG YYYY",
     "am": "π.μ.",
     "pm": "μ.μ."
 }

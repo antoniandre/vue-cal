@@ -11,5 +11,5 @@
   "allDay": "Celý den",
   "deleteEvent": "Odstranit",
   "createEvent": "Vytvořit událost",
-  "dateFormat": "DDDD d. mmmm yyyy"
+  "dateFormat": "dddd D. MMMM YYYY"
 }

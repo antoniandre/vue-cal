@@ -11,5 +11,5 @@
   "allDay": "Hele dagen",
   "deleteEvent": "Ta bort",
   "createEvent": "Ny hendelse",
-  "dateFormat": "DDDD den d mmmm yyyy"
+  "dateFormat": "dddd den D MMMM YYYY"
 }
