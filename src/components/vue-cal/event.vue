@@ -137,7 +137,7 @@ export default {
   computed: {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
-      if (!this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
+      if (this.event.allDay || !this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
       let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
       let left = (100 / (this.overlaps.length + 1)) * this.eventPosition
 
