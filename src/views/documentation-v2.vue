@@ -511,7 +511,8 @@
       xsmall
       :time-cell-height="26"
       default-view="day"
-      :disable-views="['years', 'year', 'month']")
+      :disable-views="['years', 'year', 'month']"
+      @ready="scrollToCurrentTime('.ex--today-current-time-and-disabled-views')")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall
              default-view="day"
@@ -2066,6 +2067,36 @@
 
   //- Example.
   h4.title
+    a(href="#ex--scroll-to-time") # Scroll the view to a particular time
+    a#ex--scroll-to-time(name="ex--scroll-to-time")
+  p.mb-0.
+    It is quite easy to scroll to a particular time but it does not apply to all the use cases.#[br]
+    This is how to do it:
+  sshpre(language="js" label="Javascript").
+    // timeCellHeight set to 26 in data.
+    scrollToCurrentTime () {
+      const calendar = document.querySelector('#vuecal .vuecal__bg')
+      const hours = this.now.getHours() + this.now.getMinutes() / 60
+      calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
+    },
+    scrollToTop () {
+      const calendar = document.querySelector('#vuecal .vuecal__bg')
+      calendar.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+
+  v-btn(small color="primary" @click="scrollToCurrentTime('.ex--scroll-to-time')") Scroll to current time
+  v-btn(small color="primary" @click="scrollToTop('.ex--scroll-to-time')") Scroll to top
+  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
+    vue-cal.ex--scroll-to-time.vuecal--green-theme(
+      small
+      default-view="day"
+      :disable-views="['years', 'year', 'month', 'week']"
+      hide-view-selector
+      :time-cell-height="timeCellHeight"
+      @ready="scrollToCurrentTime()")
+
+  //- Example.
+  h4.title
     a(href="#ex--timeline-tweaking") # Timeline tweaking
     a#ex--timeline-tweaking(name="ex--timeline-tweaking")
   p.mb-0.
@@ -3456,6 +3487,7 @@ export default {
     },
     example1theme: 'green',
     minEventWidth: 0,
+    timeCellHeight: 26,
     indicatorStyle: 'count',
     now: new Date(),
     logs: [],
@@ -3775,6 +3807,15 @@ export default {
       this.logs = []
     },
     customEventsCount: events => events ? events.filter(e => e.class === 'leisure').length : 0,
+    scrollToCurrentTime (vuecal) {
+      const calendar = document.querySelectorAll(`${vuecal} .vuecal__bg`)
+      const hours = this.now.getHours() + this.now.getMinutes() / 60
+      calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
+    },
+    scrollToTop () {
+      const calendar = document.querySelectorAll(`${vuecal} .vuecal__bg`)
+      calendar.scrollTo({ top: 0, behavior: 'smooth' })
+    },
     onEventClick (event, e) {
       this.selectedEvent = event
       this.showDialog = true
