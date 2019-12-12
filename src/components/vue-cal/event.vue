@@ -207,7 +207,7 @@ export default {
   .vuecal:not(.vuecal--dragging-event) &:hover {z-index: 2;}
 
   // Reactivate user selection in events.
-  .vuecal__cell & * {user-select: auto;}
+  .vuecal__cell & * {user-select: text;}
 
   .vuecal--view-with-time &:not(&--all-day) {position: absolute;}
 
