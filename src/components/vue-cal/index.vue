@@ -928,6 +928,13 @@ export default {
       // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
       this.now = new Date()
       this.timeTickerIds[1] = setTimeout(this.timeTick, 60 * 1000) // Every minute.
+    },
+
+    /**
+     * Callable from outside of Vue Cal.
+     */
+    updateDateTexts () {
+      updateDateTexts(this.texts)
     }
   },
 
