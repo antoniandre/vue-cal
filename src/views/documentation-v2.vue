@@ -2070,30 +2070,40 @@
     a(href="#ex--scroll-to-time") # Scroll the view to a particular time
     a#ex--scroll-to-time(name="ex--scroll-to-time")
   p.mb-0.
-    It is quite easy to scroll to a particular time but it does not apply to all the use cases.#[br]
-    This is how to do it:
-  sshpre(language="js" label="Javascript").
-    // timeCellHeight set to 26 in data.
-    scrollToCurrentTime () {
-      const calendar = document.querySelector('#vuecal .vuecal__bg')
-      const hours = this.now.getHours() + this.now.getMinutes() / 60
-      calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
-    },
-    scrollToTop () {
-      const calendar = document.querySelector('#vuecal .vuecal__bg')
-      calendar.scrollTo({ top: 0, behavior: 'smooth' })
-    }
+    It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal:
 
-  v-btn(small color="primary" @click="scrollToCurrentTime('.ex--scroll-to-time')") Scroll to current time
-  v-btn(small color="primary" @click="scrollToTop('.ex--scroll-to-time')") Scroll to top
-  v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.ex--scroll-to-time.vuecal--green-theme(
-      small
-      default-view="day"
-      :disable-views="['years', 'year', 'month', 'week']"
-      hide-view-selector
-      :time-cell-height="timeCellHeight"
-      @ready="scrollToCurrentTime()")
+  v-btn.mt-2.mr-2(small color="primary" @click="scrollToCurrentTime('.ex--scroll-to-time')")
+    v-icon vertical_align_bottom
+    | Scroll to current time
+  v-btn.mt-2.mr-2(small color="primary" @click="scrollToTop('.ex--scroll-to-time')")
+    v-icon vertical_align_top
+    | Scroll to top
+  v-layout(wrap)
+    v-card.my-4.mr-2.flex(style="width: 360px;height: 360px;max-width: 100%")
+      vue-cal.ex--scroll-to-time.vuecal--green-theme(
+        small
+        default-view="day"
+        :disable-views="['years', 'year', 'month', 'week']"
+        hide-view-selector
+        :time-cell-height="timeCellHeight"
+        @ready="scrollToCurrentTime('.ex--scroll-to-time')")
+    .flex
+      sshpre.mt-4.flex(language="html-vue" label="Vue Template").
+        &lt;vue-cal id="vuecal"
+                 :time-cell-height="timeCellHeight"
+                 @ready="scrollToCurrentTime"&gt;
+        &lt;/vue-cal&gt;
+      sshpre.mt-4.flex(language="js" label="Javascript").
+        // `timeCellHeight` is set to 26 in the component data.
+        scrollToCurrentTime () {
+          const calendar = document.querySelector('#vuecal .vuecal__bg')
+          const hours = this.now.getHours() + this.now.getMinutes() / 60
+          calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
+        },
+        scrollToTop () {
+          const calendar = document.querySelector('#vuecal .vuecal__bg')
+          calendar.scrollTo({ top: 0, behavior: 'smooth' })
+        }
 
   //- Example.
   h4.title
@@ -3808,12 +3818,12 @@ export default {
     },
     customEventsCount: events => events ? events.filter(e => e.class === 'leisure').length : 0,
     scrollToCurrentTime (vuecal) {
-      const calendar = document.querySelectorAll(`${vuecal} .vuecal__bg`)
+      const calendar = document.querySelector(`${vuecal} .vuecal__bg`)
       const hours = this.now.getHours() + this.now.getMinutes() / 60
       calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
     },
-    scrollToTop () {
-      const calendar = document.querySelectorAll(`${vuecal} .vuecal__bg`)
+    scrollToTop (vuecal) {
+      const calendar = document.querySelector(`${vuecal} .vuecal__bg`)
       calendar.scrollTo({ top: 0, behavior: 'smooth' })
     },
     onEventClick (event, e) {

@@ -89,6 +89,9 @@
           v-list-item.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
             v-icon(small).mr-2 tune
             | ADVANCED VUE CAL CUSTOMIZATION
+          v-list-item(href="#ex--scroll-to-time" v-scroll-to="'#ex--scroll-to-time'")
+            | Scroll the view to a particular time
+            v-chip.xsmall.ml-2(small color="primary" outlined) new
           v-list-item(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
           v-list-item(href="#ex--custom-events-count" v-scroll-to="'#ex--custom-events-count'") Custom events count
           v-list-item(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
