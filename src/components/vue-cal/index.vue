@@ -836,6 +836,8 @@ export default {
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })
 
+      if (!event.repeat) delete event.repeat // If empty we don't need it.
+
       return event
     },
 
