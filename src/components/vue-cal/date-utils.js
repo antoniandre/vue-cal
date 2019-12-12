@@ -99,7 +99,10 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
     mm: (m < 10 ? '0' : '') + m
   }
 
-  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => timeObj[contents.replace(/\{|\}/g, '')])
+  return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
+    const result = timeObj[contents.replace(/\{|\}/g, '')]
+    return result !== undefined ? result : contents
+  })
 }
 
 export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
