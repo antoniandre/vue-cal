@@ -163,7 +163,6 @@
       - do all the @todo
       - cleanup mutableEvents
       - check event returned from all emitted events / always return view events not mutable ones
-      - add recurring events
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
       - Fix event segments when dragging too fast on x axis.
@@ -374,7 +373,7 @@
     E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
     Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
 
-  v-layout.ma-auto(row justify-center wrap)
+  v-layout.ma-auto(justify-center wrap)
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
@@ -435,11 +434,11 @@
     a(href="#ex--internationalization")
       v-icon.mr-2 translate
       | Internationalization (i18n)
-  v-layout(row align-end wrap)
+  v-layout(align-end wrap)
     h4.title.mt-6
       a(href="#ex--internationalization") # Internationalization
     v-spacer
-    v-layout.shrink(row align-center)
+    v-layout.shrink(align-center)
       v-icon.mr-2(color="primary") translate
       span.mr-2 Current language:
       v-select.pa-0.ma-0.shrink(
@@ -685,8 +684,8 @@
       start: '2018-11-16 10:30',
       end: '2018-11-16 11:30',
       // You can also define event dates with Javascript Date objects:
-      // startDate: new Date('2018-11-16 10:30'),
-      // endDate: new Date('2018-11-16 11:30'),
+      // startDate: new Date(2018, 11 - 1, 16, 10, 30),
+      // endDate: new Date(2018, 11 - 1, 16, 11, 30),
       title: 'Doctor appointment',
       content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
       class: 'health'
@@ -816,8 +815,8 @@
       v-radio(label="dash" value="dash" color="primary")
       v-radio(label="dot" value="dot" color="primary")
       v-radio(label="cell background" value="cell" color="primary")
-  v-layout.ma-auto(row justify-center wrap)
-    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
+  v-layout.ma-auto(justify-center wrap)
+    v-card.ma-2.my-2.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -827,7 +826,7 @@
         :disable-views="['day']"
         events-count-on-year-view
         :events="events")
-    v-card.ma-2.my-2.ma-auto.main-content(style="width: 300px;height: 360px")
+    v-card.ma-2.my-2.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -977,8 +976,8 @@
         #[a(href="#ex--emitted-events") emitted events example]),
         you simply need to call the #[span.code createEvent()] function straight
         away from #[span.code cell-dblclick]:
-      v-layout(row wrap)
-        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+      v-layout(wrap)
+        v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
             selected-date="2018-11-19"
@@ -1014,13 +1013,13 @@
       p.my-2.
         To allow an external button to create events, you will need to call the
         vue-cal #[span.code createEvent()] function from a Vue ref.
-      v-layout.mb-3(row align-center)
+      v-layout.mb-3(align-center)
         | This
         v-btn.mx-1(x-small color="primary" @click="customEventCreation") button
         | will prompt you to choose a date and time as the event start.
 
-      v-layout(row align-top wrap)
-        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+      v-layout(align-top wrap)
+        v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             selected-date="2018-11-19"
@@ -1104,7 +1103,7 @@
       p.
         In this example, we are adding a dialog box to the default simple click &amp; hold.#[br]
         The dialog box will allow you to set all the event attributes.
-      v-layout(row wrap)
+      v-layout(wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             selected-date="2018-11-19"
@@ -1235,6 +1234,122 @@
           title: 'Trip to India',
           content: '&lt;i class="v-icon material-icons"&gt;flight&lt;/i&gt;',
           class: 'leisure'
+        }
+      ]
+    })
+
+  //- Example.
+  h4.title
+    a(href="#ex--recurring-events")
+      | # Recurring events
+      v-chip.ml-2.white--text(small color="red") Coming soon
+    a#ex--recurring-events(name="ex--recurring-events")
+  .mt-4 #[strong When it will be ready, this is how it will work.]
+  .mb-2 You can repeat an event:
+  ul
+    li Every day - by providing a #[span.code every: "day"] property.
+    li Every week - by providing a #[span.code every: "week"] property.
+    li Every month - by providing a #[span.code every: "month"] property.
+    li Every year - by providing a #[span.code every: "year"] property.
+    li Every specific week days - by providing a #[span.code weekdays] array containing the weekdays numbers (1 to 7 for Sunday).
+    li Every `x` days - by providing a #[span.code every: x] property, with #[span.code x] being an integer.
+    li Forever; Or until an expiry date if you provide an #[span.code until: {String | Date}] property.
+    li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
+  sshpre(language="js" label="Still to do...").
+    // month view event count => OK.
+    // @todo: check years/year views event counts.
+    // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
+    // @todo: on month view with show events, occurrences don't appear on out of scope days.
+    // @todo: overlapping does not work.
+    // @todo: if 2 occurences are in the same day (multiple-day events), only one is shown.
+    // @todo: check all the above points one by one.
+
+  p.
+    Recurrring events work like a set of single day events linked together.#[br]
+    That means, deleting, resizing or editing one of the day will apply to all the other days.
+  v-card.my-4.ma-auto.py-12.grey.lighten-5.elevation-1
+    .text-center.headline.grey--text Demo coming soon.
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="8 * 60"
+             :time-to="23 * 60"
+             hide-weekends
+             events-count-on-year-view
+             editable-events
+             show-all-day-events
+             :events="events"&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-19 22:00',
+          end: '2018-11-20 11:00',
+          title: 'Nightclub',
+          content: '&lt;i class="v-icon material-icons"&gt;local_drink&lt;/i&gt;',
+          class: 'leisure',
+          repeat: {
+            weekdays: [1, 3], // You can repeat on multiple days of the week.
+            until: '2020-11-30' // Don't need a time here as it will take the same as original event date.
+          }
+        },
+        {
+          start: '2018-11-23', // You can put time or not, will be discarded if all-day.
+          end: '2018-11-23',
+          title: 'Pizza day!',
+          content: '&lt;i class="v-icon material-icons"&gt;local_pizza&lt;/i&gt;',
+          class: 'pink-event',
+          allDay: true,
+          repeat: {
+            weekdays: [5] // If original event day is not in these days, original event will still show up.
+            // Without `until` property, it will go on forever.
+          }
+        },
+        {
+          start: '2018-11-22 10:00',
+          end: '2018-11-22 12:00',
+          title: 'Piano lesson',
+          content: '&lt;i class="v-icon material-icons"&gt;queue_music&lt;/i&gt;',
+          class: 'leisure',
+          repeat: {
+            every: 'week',
+            until: new Date('2019/06/01') // You can also use a Javascript Date.
+          }
+        },
+        {
+          start: '2018-11-20 18:00',
+          end: '2018-11-20 20:00',
+          title: 'Tennis tournament',
+          content: '&lt;i class="v-icon material-icons"&gt;sports_tennis&lt;/i&gt;',
+          class: 'sport',
+          repeat: {
+            every: 14,
+            until: '2019-01-20'
+          }
+        },
+        {
+          start: '2018-11-01',
+          end: '2018-11-01',
+          title: 'Crêpes day',
+          content: '&lt;i class="v-icon material-icons"&gt;restaurant&lt;/i&gt;',
+          class: 'yellow-event',
+          allDay: true,
+          repeat: {
+            every: 'month',
+            until: '2019-12-26'
+          }
+        },
+        {
+          start: '2015-06-15',
+          end: '2015-06-15',
+          title: 'My Birthday',
+          content: '&lt;i class="v-icon material-icons"&gt;cake&lt;/i&gt;<br>I am 4.',
+          class: 'blue-event',
+          allDay: true,
+          repeat: {
+            every: 'year'
+          }
         }
       ]
     })
@@ -1440,7 +1555,7 @@
         end: '2019-02-12',
         title: 'Day off!',
         content: '&lt;i class="v-icon material-icons"&gt;beach_access&lt;/i&gt;',
-        class: 'beach',
+        class: 'yellow-event',
         allDay: true
       },
       {
@@ -1448,7 +1563,7 @@
         end: '2019-02-14',
         title: 'Valentine\'s day',
         content: '&lt;i class="v-icon material-icons"&gt;favorite_outline&lt;/i&gt;',
-        class: 'love',
+        class: 'pink-event',
         allDay: true
       },
       ...
@@ -1458,8 +1573,8 @@
     .vuecal__cell-content {align-self: flex-start;}
     .vuecal__cell-date {text-align: right;padding: 4px;}
 
-    .vuecal--week-view .vuecal__bg .vuecal__event--all-day.love,
-    .vuecal--day-view .vuecal__bg .vuecal__event--all-day.love {right: 50%;}
+    .vuecal--week-view .vuecal__bg .vuecal__event--all-day.pink-event,
+    .vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
     .vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
     .vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 
@@ -1806,27 +1921,18 @@
         p.
           Will return a string with formatted date (and time if given) using the loaded locale.#[br]
           For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
-          in the [a(href="#api") API section].
+          in the #[a(href="#api") API section].
       li
         code formatTime(time, format = 'HH:mm' | 'h:mm{am}' if `twelve-hour`)
         p.
           Will return a string with formatted time using the loaded locale.#[br]
-          For the formatting syntax, refer to the #[span.code timeFormat] in the [a(href="#api") API section].
+          For the formatting syntax, refer to the
+          #[a(href="#time-format") #[span.code timeFormat] option] in the API section.
 
     strong Useful #[span.code Date] prototypes
     p.
-      Vue Cal has no dependency and performs date operations through 3 useful #[span.code Date] functions that have been
-      added to the native #[span.code Date] class through prototype for convenience. (E.g. #[span.code (new Date()).addDays(2)])
-    ul
-      li
-        code.mr-2 addDays(days)
-        | allows you to easily add days directly on the Date object. `days` is an integer.
-      li
-        code.mr-2 subtractDays(days)
-        | allows you to easily subtract days directly on the Date object. `days` is an integer.
-      li
-        code.mr-2 getWeek()
-        | allows you to get the week number of a Date, directly on the Date object.
+      Don't miss out on these convenient functions! Read on in the
+      #[a(href="date-prototypes") #[span.code Date] prototypes section].
 
   //- Example.
   h4.title
@@ -2479,6 +2585,7 @@
         When set to #[span.code true], the weeks numbers will show in the first column on the #[span.code month] view (only).#[br]
         You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
       highlight-message
+        a#there-can-be-53-weeks-in-a-year(name="there-can-be-53-weeks-in-a-year")
         Strong Did you know there can be 53 weeks in the year?#[br]
         | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year. In this case the week number will be 53 instead of 1.
     li
@@ -2593,6 +2700,7 @@
         With #[span.code twelveHour] set to #[span.code true] (use #[span.code twelve-hour] in template),
         the time format will show 12 hours suffixed with am/pm.
     li
+      a(id="time-format" name="time-format")
       code.mr-2 timeFormat
       span.code [String], default: ''
       p.mb-2.
@@ -2712,7 +2820,7 @@
         A callback function to execute when an event is created.#[br]
         This function receives 2 parameters: #[span.code event], the created event,
         and #[span.code deleteEvent], a function to delete the created event.#[br]
-        //- You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
+        You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
         If this function returns #[span.code false], the event creation will be cancelled.
     li
       code.mr-2 events
@@ -2727,8 +2835,8 @@
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
             // Instead of formatted dates, you can also provide Javascript Date objects:
-            // startDate: new Date('2018-11-16 10:30'),
-            // endDate: new Date('2018-11-16 11:30'),
+            // startDate: new Date(2018, 11 - 1, 19, 12, 0),
+            // endDate: new Date(2018, 11 - 1, 19, 14, 0),
             title: 'String', // Optional.
             content: 'String', // Optional.
             class: 'String', // Optional - space-separated css classes.
@@ -2776,6 +2884,98 @@
           li.mt-2.
             If you want to end an event at #[span.code 00:00], you have to set
             #[span.code 24:00] instead, to keep it to the same day you intended.
+
+  h2.headline.mt-12.pt-12
+    a(href="#date-prototypes") #[strong.code Date] Prototypes
+    a#date-prototypes(name="date-prototypes")
+  p
+    | Vue Cal has no dependency and performs date operations through a few notable useful and efficient functions that
+    | have been added to the native #[span.code Date] class for your convenience.#[br]
+    strong.mr-2.
+      Once Vue Cal is loaded, you can access the following functions from anywhere in your code
+      just like a simple #[span.code Date] function.
+    | E.g. #[span.code (new Date()).addDays(2)]
+
+  highlight-message.my-4(type="tips")
+    ul
+      li.
+        Remember the Date functions are added when Vue Cal loads not before. You can always check if you have it before you use it:#[br]
+        #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
+      li With this set of functions, you will most likely not need #[em Moment.js] or any other additional Date library!
+  ul
+    li.mt-3
+      code.mr-2 .addDays(days)
+      | Adds days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `days` is an integer.
+    li.mt-3
+      code.mr-2 .subtractDays(days)
+      | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `days` is an integer.
+    li.mt-3
+      code.mr-2 .getWeek()
+      | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
+    li.mt-3
+      code.mr-2 .isToday()
+      | Returns true if the date is Today.
+    li.mt-3
+      code.mr-2 .isLeapYear()
+      | Allows you to get the week number of a Date, directly on the Date object.
+
+  h3.mt-4 And because everyone needs a Date/time formatting function...
+  p.
+    It is now available directly from the Date object, with your loaded locale!
+
+  ul
+    li.mt-3
+      code.mr-2 .format(format)
+      div.
+        Returns a formatted date string.
+        Default format is #[span.code `yyyy-mm-dd`], but you can use any formatting keyword from
+        this list, and add any character not present in this mapping:
+      ul
+        li #[strong.code.black--text yyyy]: full year. #[span.grey--text.ml-2 E.g. `2019`]
+        li #[strong.code.black--text yy]: 2 last digits of the year. #[span.grey--text.ml-2 E.g. `19`]
+        li #[strong.code.black--text mmmm]: month in full. #[span.grey--text.ml-2 E.g. `January`]
+        li #[strong.code.black--text mmm]: 3 first letters of the month. #[span.grey--text.ml-2 E.g. `Jan`]
+        li #[strong.code.black--text mm]: month number with leading zero. (01-12) #[span.grey--text.ml-2 E.g. `01`]
+        li #[strong.code.black--text m]: month number without leading zero. (1-12) #[span.grey--text.ml-2 E.g. `1`]
+        li #[strong.code.black--text dd]: date of the month with leading zero. (01-31) #[span.grey--text.ml-2 E.g. `01`]
+        li #[strong.code.black--text d]: date of the month without leading zero. (1-31) #[span.grey--text.ml-2 E.g. `1`]
+        li #[strong.code.black--text S]: (usually with surrounding #[span.code.black--text `{ }`]) only in English, will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
+        li #[strong.code.black--text DDDD]: day of the week in full. #[span.grey--text.ml-2 E.g. `Monday`]
+        li #[strong.code.black--text DDD]: 3 first letters of the day of the week. #[span.grey--text.ml-2 E.g. `Mon`]
+        li #[strong.code.black--text DD]: first letter of the day of the week. #[span.grey--text.ml-2 E.g. `M`]
+
+    li.mt-3
+      code.mr-2 .formatTime(format)
+      div.
+        Returns a formatted time string.#[br]
+        Default format is 'HH:mm', but you can use any formatting keyword from
+        this list, and add any character not present in this mapping:
+      ul
+        li #[strong.code.black--text HH]: Hours with leading zero, 24-hour format. (00-24)#[span.grey--text.ml-2 E.g. `20`]
+        li #[strong.code.black--text H]: Hours without leading zero, 24-hour format. (0-24)#[span.grey--text.ml-2 E.g. `20`]
+        li #[strong.code.black--text hh]: Hours with leading zero, 12-hour format. #[span.grey--text.ml-2 E.g. `08`]
+        li #[strong.code.black--text h]: Hours without leading zero, 12-hour format. #[span.grey--text.ml-2 E.g. `8`]
+        li #[strong.code.black--text mm]: Minutes with leading zero. #[span.grey--text.ml-2 E.g. `08`]
+        li #[strong.code.black--text m]: Minutes without leading zero. #[span.grey--text.ml-2 E.g. `8`]
+        li #[strong.code.black--text am]: (usually with surrounding #[span.code.black--text `{ }`]) am or pm (also localized if any)
+
+  highlight-message(type="tips")
+    ul
+      li.
+        To separate 2 keywords or a keyword and another text not from this list without adding spaces or
+        any separation, you can use the delimiters #[span.code.black--text `{ }`].#[br]
+        For instance #[span.code `new Date().format('yyyy{mm}dd')`] (or even #[span.code `{yyyy}{mm}{dd}`]) will produce:
+        "#[span.code {{ nowFormatted }}]".
+      li.
+        If you can't use the formatting functions because your locale (language) is trickier than that,
+        feel free to open an issue to discuss it.
+
+  highlight-message(type="warning")
+    strong.
+      To allow formatting both date and time in the same function, the formatting keywords will probably change in a
+      next version since the month and minutes keywords are conflicting (#[strong.code.black--text mm] and #[strong.code.black--text m]).
 
   h2.headline.mt-12.pt-12
     a(href="#css-notes") CSS Notes
@@ -3364,13 +3564,14 @@ export default {
         class: 'leisure'
       }
     ],
+    recurringEvents: [],
     allDayEvents: [
       {
         start: '2019-02-12',
         end: '2019-02-12',
         title: 'Day off!',
         content: '<i class="v-icon material-icons">beach_access</i>',
-        class: 'beach',
+        class: 'yellow-event',
         allDay: true
       },
       {
@@ -3378,7 +3579,7 @@ export default {
         end: '2019-02-14',
         title: 'Valentine\'s day',
         content: '<i class="v-icon material-icons">favorite_outline</i>',
-        class: 'love',
+        class: 'pink-event',
         allDay: true
       },
       {
@@ -3603,6 +3804,9 @@ export default {
     }
   },
   computed: {
+    nowFormatted () {
+      return Date.prototype.format && (new Date()).format('yyyy{mm}dd')
+    },
     currentDateFormatted () {
       const y = this.now.getFullYear()
       const m = this.now.getMonth()
@@ -3797,9 +4001,9 @@ $primary: #42b983;
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
 .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
-.vuecal__event.love {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
+.vuecal__event.pink-event {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
 .vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
-.vuecal__event.beach {background-color: rgba(255, 200, 90, 0.75);border: 1px solid #ffc356;}
+.vuecal__event.yellow-event {background-color: rgba(255, 200, 90, 0.75);border: 1px solid #ffc356;}
 
 .vuecal__event.lunch {
   background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
@@ -3871,8 +4075,8 @@ $primary: #42b983;
     padding: 4px;
   }
 
-  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.love,
-  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.love {right: 50%;}
+  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.pink-event,
+  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
   &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
   &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 }

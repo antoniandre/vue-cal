@@ -19,7 +19,11 @@
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)")
-      slot(name="cell-content" :events="events" :select-cell="$event => selectCell($event, true)" :split="splits.length ? split : false")
+      slot(
+        name="cell-content"
+        :events="events"
+        :select-cell="$event => selectCell($event, true)"
+        :split="splits.length ? split : false")
       .vuecal__cell-events(
         v-if="eventsCount && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
         event(
@@ -265,17 +269,16 @@ export default {
 
         if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
-        // From events in view, filter the ones that are out of time range in this cell.
+        // From events in view, filter the ones that are out of `time-from`-`time-to` range in this cell.
         if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
           const { timeFrom, timeTo } = this.options
 
           events = events.filter(e => {
             const segment = (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
-            return (
-              e.allDay ||
-              (e.daysCount === 1 && e.startTimeMinutes < timeTo && e.endTimeMinutes > timeFrom) ||
-              (e.daysCount > 1 && (segment.startTimeMinutes < timeTo && segment.endTimeMinutes > timeFrom))
-            )
+            const singleDayInRange = e.daysCount === 1 && e.startTimeMinutes < timeTo && e.endTimeMinutes > timeFrom
+            const multipleDayInRange = e.daysCount > 1 && (segment.startTimeMinutes < timeTo && segment.endTimeMinutes > timeFrom)
+            const recurrMultDayInRange = false // e.daysCount > 1 && e.repeat && recurringEventInRange(e, cellStart, cellEnd)
+            return (e.allDay || singleDayInRange || multipleDayInRange || recurrMultDayInRange)
           })
         }
 
@@ -286,6 +289,7 @@ export default {
             // So they behave as background events if not in allDay slot.
             // @todo: Do we want this or not?
             const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
+
             if ((event.startTimeMinutes || event.endTimeMinutes) && !event.allDay) updateEventPosition(eventToUpdate, this.$parent)
           })
 
@@ -299,11 +303,8 @@ export default {
 
       return events
     },
-    eventsCount: {
-      get () {
-        return this.events.length
-      },
-      set () {}
+    eventsCount () {
+      return this.events.length
     },
     splits () {
       return this.cellSplits.map((item, i) => {

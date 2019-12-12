@@ -1,4 +1,4 @@
-// Cache Today's date (to a maximum) for better isDateToday() performances. Formatted without leading 0.
+// Cache Today's date (to a maximum) for better isToday() performances. Formatted without leading 0.
 // We still need to update Today's date when Today changes without page refresh.
 let now, todayDate, todayF
 const todayFormatted = () => {
@@ -11,32 +11,58 @@ const todayFormatted = () => {
   return todayF
 }
 
-// eslint-disable-next-line
-Date.prototype.addDays = function (days) {
-  const date = new Date(this.valueOf())
-  date.setDate(date.getDate() + days)
-  return date
+const initDatePrototypes = function () {
+  Date.texts = { weekDays: Array(7).fill(''), months: Array(12).fill('') }
+
+  // eslint-disable-next-line
+  Date.prototype.addDays = function (days) {
+    const date = new Date(this.valueOf())
+    date.setDate(date.getDate() + days)
+    return date
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.subtractDays = function (days) {
+    const date = new Date(this.valueOf())
+    date.setDate(date.getDate() - days)
+    return date
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.getWeek = function () {
+    const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
+    const dayNum = d.getUTCDay() || 7
+    d.setUTCDate(d.getUTCDate() + 4 - dayNum)
+    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.isToday = function () {
+    return `${this.getFullYear()}-${this.getMonth()}-${this.getDate()}` === todayFormatted()
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.isLeapYear = function () {
+    const year = this.getFullYear()
+    return !(year % 400) || (year % 100 && !(year % 4))
+  }
+
+  // eslint-disable-next-line
+  // Date.prototype.format = function (format = 'yyyy-mm-dd') {
+  //   return formatDate(this, format, Date.texts)
+  // }
+
+  // eslint-disable-next-line
+  // Date.prototype.formatTime = function (format = 'HH:mm') {
+  //   return formatTime(this.getHours() * 60 + this.getMinutes(), format, Date.texts)
+  // }
 }
 
-// eslint-disable-next-line
-Date.prototype.subtractDays = function (days) {
-  const date = new Date(this.valueOf())
-  date.setDate(date.getDate() - days)
-  return date
-}
+// Add prototypes ASAP.
+if (Date && !Date.prototype.addDays) initDatePrototypes()
 
-// eslint-disable-next-line
-Date.prototype.getWeek = function () {
-  const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
-  const dayNum = d.getUTCDay() || 7
-  d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-  const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-  return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
-}
-
-export const isDateToday = date => {
-  return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === todayFormatted()
-}
+export const updateDateTexts = texts => { Date.texts = texts }
 
 // Returns today if it's FirstDayOfWeek (Monday or Sunday) or previous FirstDayOfWeek otherwise.
 export const getPreviousFirstDayOfWeek = (date = null, weekStartsOnSunday) => {
@@ -80,13 +106,15 @@ export const formatDate = (date, format = 'yyyy-mm-dd', texts) => {
   if (!format) format = 'yyyy-mm-dd' // Allows passing null for default format.
   if (format === 'yyyy-mm-dd') return formatDateLite(date)
 
+  const day = date.getDay() // Day of the week.
+  const dayNumber = (day - 1 + 7) % 7 // Day of the week. 0 to 6 with 6 = Sunday.
   const d = date.getDate()
   const m = date.getMonth() + 1
   const dateObj = {
-    D: date.getDay(), // 0 to 6.
-    DD: texts.weekDays[(date.getDay() - 1 + 7) % 7][0], // M to S.
-    DDD: texts.weekDays[(date.getDay() - 1 + 7) % 7].substr(0, 3), // Mon to Sun.
-    DDDD: texts.weekDays[(date.getDay() - 1 + 7) % 7], // Monday to Sunday.
+    D: dayNumber + 1, // 1 to 7 with 7 = Sunday.
+    DD: texts.weekDays[dayNumber][0], // M to S.
+    DDD: texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
+    DDDD: texts.weekDays[dayNumber], // Monday to Sunday.
     d, // 1 to 31.
     dd: (d < 10 ? '0' : '') + d, // 01 to 31.
     S: nth(d), // st, nd, rd, th.
@@ -112,9 +140,19 @@ export const formatDateLite = date => {
   return `${date.getFullYear()}-${m < 10 ? '0' : ''}${m}-${d < 10 ? '0' : ''}${d}`
 }
 
-export const stringToDate = string => {
-  const [, y, m, d, h = 0, min = 0] = string.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
-  return new Date(y, parseInt(m) - 1, d, h, min)
+/**
+ * Converts a string to a Javascript Date object. If a Date object is passed, return it as is.
+ *
+ * @param {String | Date} date the string to convert to Date.
+ * @return {Date} the equivalent Javascript Date object.
+ */
+export const stringToDate = date => {
+  if (date instanceof Date) return date
+  // Regexp way is less performant: https://jsperf.com/string-to-date-regexp-vs-new-date
+  // const [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
+  // return new Date(y, parseInt(m) - 1, d, h, min)
+
+  return new Date(date.replace(/-/g, '/')) // replace '-' with '/' for Safari.
 }
 
 /**

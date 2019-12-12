@@ -4,7 +4,7 @@
       span.top-bar__title-line
       span.top-bar__title-line
       h1.layout.primary--text.px-6
-        a.layout.align-center.top-bar__logo-link(href="#top" v-scroll-to="'#top'")
+        a.layout.align-center.top-bar__logo-link.shrink(href="#top" v-scroll-to="'#top'")
           .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
           div.top-bar__logo-title Vue Cal&nbsp;
         span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
@@ -21,6 +21,9 @@
           v-list-item(href="#installation" v-scroll-to="'#installation'") Installation
           v-list-item(href="#how-to-use" v-scroll-to="'#how-to-use'") How To Use
           v-list-item(href="#api" v-scroll-to="'#api'") API
+          v-list-item(href="#date-prototypes" v-scroll-to="'#date-prototypes'")
+            | #[span.code.mr-2 Date] Prototypes
+            v-chip.xsmall.ml-2(small color="primary" outlined) new
           v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS Notes
           v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release Notes
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
@@ -64,6 +67,9 @@
           v-list-item(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
           v-list-item(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
+          v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
+            | Recurring events
+            v-chip.xsmall.ml-2(small color="red" outlined) Coming soon
           v-list-item(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-item(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-item(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
@@ -120,6 +126,7 @@ $lighter-text: #ccc;
   border-bottom: 1px solid transparent !important;
   transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
   top: 0;
+  box-sizing: content-box;
 
   .v-toolbar__content {padding: 0;}
 
@@ -151,6 +158,8 @@ $lighter-text: #ccc;
       width: 100%;
       display: block;
       z-index: -1;
+      border-left: none !important;
+      border-right: none !important;
     }
 
     &:before {
@@ -169,6 +178,7 @@ $lighter-text: #ccc;
     flex-shrink: 0;
     margin-right: 15px;
     vertical-align: middle;
+    box-sizing: border-box;
     transition: 0.2s 0s ease-in-out;
     background-color: $primary;
     width: 38px;
@@ -303,10 +313,9 @@ $lighter-text: #ccc;
 @media screen and (max-width: 600px) {
   .scrolled .top-bar__logo {transform: scale(0.7);}
 
+  .top-bar.scrolled,
   .top-bar.scrolled .v-toolbar__content,
-  .scrolled .top-bar__logo-link {
-    height: 32px !important;
-  }
+  .scrolled .top-bar__logo-link {height: 32px !important;}
 
   .top-bar__items .v-btn {padding: 0 10px !important;}
 }

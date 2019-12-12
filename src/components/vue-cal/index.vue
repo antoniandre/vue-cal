@@ -122,7 +122,7 @@
 </template>
 
 <script>
-import { isDateToday, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, stringToDate, countDays } from './date-utils'
+import { updateDateTexts, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, stringToDate, countDays } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -277,7 +277,10 @@ export default {
       if (this.locale === 'en') this.texts = Object.assign({}, textsDefaults, require('./i18n/en.json'))
       else {
         import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
-          .then(response => (this.texts = Object.assign({}, textsDefaults, response.default)))
+          .then(response => {
+            this.texts = Object.assign({}, textsDefaults, response.default)
+            updateDateTexts(this.texts)
+          })
       }
     },
 
@@ -463,37 +466,39 @@ export default {
      */
     addEventsToView (events = []) {
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
+      // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
-      events = events.length ? events : this.mutableEvents
+      // @todo: remove the code that explicitely updates this.mutableEvents (e.g on event resize).
+      // as we are already mutating the event from mutableEvents.
+      events = events.length ? events : [...this.mutableEvents]
 
-      if (['month', 'week', 'day'].includes(id) && events) {
-        this.view.events.push(
-          ...events
-            .filter(e => eventInRange(e, startDate, endDate))
-            // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
-            .map(e => {
-              // If we don't display the event on month view (eventsOnMonthView = false),
-              // then don't create segments.
-              const createSegments = e.daysCount > 1 && !(id === 'month' && !this.eventsOnMonthView)
-              return createSegments ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
-            })
-        )
+      // In no event or if on years/year view and eventsCountOnYearView is false
+      // then don't add events to view.
+      if (!events || (['years', 'year'].includes(id) && !this.eventsCountOnYearView)) return
 
-        if (id === 'month') {
-          // Save out of scope events into the view object separated from the array of in-scope events.
-          this.view.outOfScopeEvents = []
-          events.forEach(e => {
-            if (eventInRange(e, firstCellDate, startDate) || eventInRange(e, endDate, lastCellDate)) {
-              // Only add to the view events array if not already there (multiple-day events case).
-              if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.outOfScopeEvents.push(e)
-              // if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.events.push(e)
-            }
-          })
-        }
+      // First remove the events that are not in view.
+      events = events.filter(e => eventInRange(e, startDate, endDate))
+
+      // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
+      // If we don't display the event on month view (eventsOnMonthView = false) then don't create segments.
+      if (['month', 'week', 'day'].includes(id) && !(id === 'month' && !this.eventsOnMonthView)) {
+        events = events.map(e => {
+          return e.daysCount > 1 ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
+        })
       }
 
-      else if (['years', 'year'].includes(id) && events && this.eventsCountOnYearView) {
-        this.view.events.push(...events.filter(e => eventInRange(e, startDate, endDate)))
+      this.view.events.push(...events)
+
+      if (id === 'month') {
+        // Save out of scope events into the view object separated from the array of in-scope events.
+        this.view.outOfScopeEvents = []
+        events.forEach(e => {
+          if (eventInRange(e, firstCellDate, startDate) || eventInRange(e, endDate, lastCellDate)) {
+            // Only add events to the view.outOfScopeEvents array if not already in view.events
+            // (multiple-day events case).
+            if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.outOfScopeEvents.push(e)
+          }
+        })
       }
     },
 
@@ -711,7 +716,7 @@ export default {
           !([startDateF, startTime = ''] = event.start.split(' '))
           // eslint-disable-next-line
           !([hoursStart, minutesStart] = startTime.split(':'))
-          startDate = new Date(event.start.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+          startDate = stringToDate(event.start)
         }
         else if (event.startDate && event.startDate instanceof Date) {
           startDateF = formatDateLite(event.startDate)
@@ -729,7 +734,7 @@ export default {
           !([endDateF, endTime = ''] = event.end.split(' '))
           // eslint-disable-next-line
           !([hoursEnd, minutesEnd] = endTime.split(':'))
-          endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
+          endDate = stringToDate(event.end)
         }
         else if (event.endDate && event.endDate instanceof Date) {
           endDateF = formatDateLite(event.endDate)
@@ -927,6 +932,8 @@ export default {
   created () {
     this.loadLocale(this.locale)
 
+    updateDateTexts(this.texts)
+
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
@@ -1024,7 +1031,6 @@ export default {
     hasSplits () {
       return !!this.splitDays.length && ['week', 'day'].includes(this.view.id)
     },
-
     contentMinWidth () {
       let minWidth = null
 
@@ -1033,7 +1039,6 @@ export default {
 
       return minWidth
     },
-
     minTimestamp () {
       let date = null
       if (this.minDate && typeof this.minDate === 'string') date = stringToDate(this.minDate)
@@ -1163,7 +1168,7 @@ export default {
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59) // End at 23:59:59.
             // To increase performance skip checking isToday if today already found.
-            const isToday = !todayFound && isDateToday(startDate) && !todayFound++
+            const isToday = !todayFound && startDate.isToday() && !todayFound++
 
             return {
               startDate,
@@ -1201,7 +1206,7 @@ export default {
               formattedDate: formatDateLite(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
-              today: !todayFound && isDateToday(startDate) && !todayFound++
+              today: !todayFound && startDate.isToday() && !todayFound++
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break
@@ -1215,7 +1220,7 @@ export default {
             startDate,
             formattedDate: formatDateLite(startDate),
             endDate,
-            today: isDateToday(startDate)
+            today: startDate.isToday()
           }]
           break
         }
