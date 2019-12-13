@@ -1099,14 +1099,22 @@ export default {
           break
         }
         case 'week': {
-          const lastDayOfWeek = date.addDays(6)
-          let formattedMonthYear = this.formatDate(date, this.xsmall ? 'MMM YYYY' : 'MMMM YYYY')
+          const lastDayOfWeek = this.view.endDate // Might be another day than Sunday, if hiding days.
+          const y1 = date.getFullYear()
+          let m1 = this.texts.months[date.getMonth()]
+          if (this.xsmall) m1 = m1.substring(0, 3)
+          let formattedMonthYear = `${m1} ${y1}`
 
           // If week is not ending in the same month it started in.
           if (lastDayOfWeek.getMonth() !== date.getMonth()) {
-            const [m1, y1] = formattedMonthYear.split(' ')
-            const [m2, y2] = this.formatDate(lastDayOfWeek, this.xsmall ? 'MMM YYYY' : 'MMMM YYYY').split(' ')
-            formattedMonthYear = y1 === y2 ? `${m1} - ${m2} ${y1}` : `${m1} ${y1} - ${m2} ${y2}`
+            const y2 = lastDayOfWeek.getFullYear()
+            let m2 = this.texts.months[lastDayOfWeek.getMonth()]
+            if (this.xsmall) m2 = m2.substring(0, 3)
+            if (y1 === y2) formattedMonthYear = `${m1} - ${m2} ${y1}`
+            else {
+              if (this.small) formattedMonthYear = `${m1.substring(0, 3)} ${y1} - ${m2.substring(0, 3)} ${y2}`
+              else formattedMonthYear = `${m1} ${y1} - ${m2} ${y2}`
+            }
           }
           title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
           break
