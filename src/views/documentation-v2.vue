@@ -2967,7 +2967,7 @@
       | Returns true if the date is Today.
     li.mt-3
       code.mr-2 .isLeapYear()
-      | Allows you to get the week number of a Date, directly on the Date object.
+      | Returns true if the date is in a leap year.
 
   h3.mt-4 And because everyone needs a Date/time formatting function...
   p.

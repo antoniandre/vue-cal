@@ -39,10 +39,7 @@
           v-list-item(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-item(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
           v-list-item(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
-          v-list-item(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'")
-            | Hide particular weekdays &amp; show week numbers
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
-
+          v-list-item(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'") Hide particular weekdays &amp; show week numbers
           v-list-item.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
             v-icon(small).mr-2 translate
             | INTERNATIONALIZATION (I18N)
@@ -51,9 +48,7 @@
             v-icon(small).mr-2 access_time
             | TIMELINE &amp; TODAY
           v-list-item(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-item(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'")
-            | Today's current time &amp; disabled views
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
+          v-list-item(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
           v-list-item(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
           v-list-item.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
@@ -73,9 +68,7 @@
           v-list-item(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-item(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-item(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
-          v-list-item(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'")
-            | Splitting days
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
+          v-list-item(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
 
           v-list-item.heading(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             v-icon(small).mr-2 swap_horiz
