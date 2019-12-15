@@ -724,7 +724,7 @@
              :events="events"
              :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
-    ...
+
     &lt;!-- Using Vuetify --&gt;
     &lt;v-dialog v-model="showDialog"&gt;
       &lt;v-card&gt;
@@ -2945,16 +2945,11 @@
     | Vue Cal has no dependency and performs date operations through a few notable useful and efficient functions that
     | have been added to the native #[span.code Date] class for your convenience.#[br]
     strong.mr-2.
+      With this set of functions, you will most likely not need #[em Moment.js] or any other additional Date library!#[br]#[br]
       Once Vue Cal is loaded, you can access the following functions from anywhere in your code
       just like a simple #[span.code Date] function.
     | E.g. #[span.code (new Date()).addDays(2)]
 
-  highlight-message.my-4(type="tips")
-    ul
-      li.
-        Remember the Date functions are added when Vue Cal loads not before. You can always check if you have it before you use it:#[br]
-        #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
-      li With this set of functions, you will most likely not need #[em Moment.js] or any other additional Date library!
   ul
     li.mt-3
       code.mr-2 .addDays(days)
@@ -2972,7 +2967,7 @@
       | Returns true if the date is Today.
     li.mt-3
       code.mr-2 .isLeapYear()
-      | Allows you to get the week number of a Date, directly on the Date object.
+      | Returns true if the date is in a leap year.
 
   h3.mt-4 And because everyone needs a Date/time formatting function...
   p.
@@ -2983,7 +2978,7 @@
       code.mr-2 .format(format)
       div.
         Returns a formatted date string.
-        Default format is #[span.code `YYYY-MM-DD`], but you can use any formatting keyword from
+        Default format is #[span.code 'YYYY-MM-DD'], but you can use any formatting keyword from
         this list, and add any character not present in this mapping:
       ul
         li #[strong.code.black--text YYYY]: full year. #[span.grey--text.ml-2 E.g. `2019`]
@@ -2994,17 +2989,24 @@
         li #[strong.code.black--text M]: month number without leading zero. (1-12) #[span.grey--text.ml-2 E.g. `1`]
         li #[strong.code.black--text DD]: date of the month with leading zero. (01-31) #[span.grey--text.ml-2 E.g. `01`]
         li #[strong.code.black--text D]: date of the month without leading zero. (1-31) #[span.grey--text.ml-2 E.g. `1`]
-        li #[strong.code.black--text S]: (usually with surrounding #[span.code.black--text `{ }`]) only in English, will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
+        li.
+          #[strong.code.black--text S]: (usually with surrounding #[span.code.black--text `{ }`]) only in English,
+          will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
         li #[strong.code.black--text dddd]: day of the week in full. #[span.grey--text.ml-2 E.g. `Monday`]
         li #[strong.code.black--text ddd]: 3 first letters of the day of the week. #[span.grey--text.ml-2 E.g. `Mon`]
         li #[strong.code.black--text dd]: first letter of the day of the week. #[span.grey--text.ml-2 E.g. `M`]
         li #[strong.code.black--text d]: number of the day of the week. (1-7) #[span.grey--text.ml-2 E.g. `1` for Monday]
+        li #[strong.black--text And also all the keywords from the following #[span.code formatTime()] function.]
 
     li.mt-3
       code.mr-2 .formatTime(format)
       div.
         Returns a formatted time string.#[br]
-        Default format is 'HH:mm', but you can use any formatting keyword from
+        The #[span.code format()] function can also do this, but this might be a shortcut if you just want
+        the default time formatting.#[br]
+        E.g. `#[span.code formatTime()]`).#[br]
+        This function will also be slightly faster than #[span.code format()] as lighter in functionality.#[br]
+        Default format is #[span.code 'HH:mm'], but you can use any formatting keyword from
         this list, and add any character not present in this mapping:
       ul
         li #[strong.code.black--text HH]: Hours with leading zero, 24-hour format. (00-24)#[span.grey--text.ml-2 E.g. `20`]
@@ -3015,16 +3017,16 @@
         li #[strong.code.black--text m]: Minutes without leading zero. #[span.grey--text.ml-2 E.g. `8`]
         li #[strong.code.black--text am]: (usually with surrounding #[span.code.black--text `{ }`]) am or pm (also localized if any)
 
-  highlight-message(type="tips")
+  highlight-message.my-4(type="tips")
     ul
       li.
         To separate 2 keywords or a keyword and another text not from this list without adding spaces or
         any separation, you can use the delimiters #[span.code.black--text `{ }`].#[br]
         For instance #[span.code `new Date().format('YYYY{MM}DD')`] (or even #[span.code `{YYYY}{MM}{DD}`]) will produce:
         "#[span.code {{ nowFormatted }}]".
-      li.
-        If you can't use the formatting functions because your locale (language) is trickier than that,
-        feel free to open an issue to discuss it.
+      li.mt-4.
+        The Date functions are added when Vue Cal loads, you can always check if you have it before you use it:#[br]
+        #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
 
   h2.headline.mt-12.pt-12
     a(href="#css-notes") CSS Notes
@@ -3091,9 +3093,9 @@
           from the recurring-event branch to support the new feature.
         li
           strong.
-            To allow formatting both date and time in the same Date prototype function
-            (in a next release), the formatting keywords have changed, since the month and
-            minutes keywords were both #[strong.code.black--text mm] but in 2 different functions.#[br]
+            To allow formatting both date and time in the same Date prototype function,
+            the formatting keywords have changed, since the month and minutes keywords were
+            both #[strong.code.black--text mm] but in 2 different functions.#[br]
             The new formatting keywords are more commonly used.#[br]
             Ref. #[a(href="#date-prototypes") Date prototypes]
 
