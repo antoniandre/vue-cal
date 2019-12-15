@@ -3093,9 +3093,9 @@
           from the recurring-event branch to support the new feature.
         li
           strong.
-            To allow formatting both date and time in the same Date prototype function
-            (in a next release), the formatting keywords have changed, since the month and
-            minutes keywords were both #[strong.code.black--text mm] but in 2 different functions.#[br]
+            To allow formatting both date and time in the same Date prototype function,
+            the formatting keywords have changed, since the month and minutes keywords were
+            both #[strong.code.black--text mm] but in 2 different functions.#[br]
             The new formatting keywords are more commonly used.#[br]
             Ref. #[a(href="#date-prototypes") Date prototypes]
 
