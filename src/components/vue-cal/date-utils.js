@@ -82,13 +82,60 @@ const nth = d => {
   }
 }
 
-// Time in minutes.
-export const formatTime = (time, format = 'HH:mm', texts) => {
-  const H = Math.floor(time / 60)
+let dateObject = {}
+const hydrateDateObject = (date, texts) => {
+  if (dateObject.D) return dateObject
+
+  const YYYY = date.getFullYear()
+  const M = date.getMonth() + 1
+  const D = date.getDate()
+  const day = date.getDay() // Day of the week.
+  const dayNumber = (day - 1 + 7) % 7 // Day of the week. 0 to 6 with 6 = Sunday.
+  // Some of this props are functions, to only calculate on demand.
+  dateObject = {
+    // Year.
+    YYYY, // 2019.
+    YY: () => YYYY.toString().substring(2), // 19.
+
+    // Month.
+    M, // 1 to 12.
+    MM: () => (M < 10 ? '0' : '') + M, // 01 to 12.
+    MMM: () => texts.months[M - 1].substring(0, 3), // Jan to Dec.
+    MMMM: () => texts.months[M - 1], // January to December.
+    MMMMG: () => (texts.monthsGenitive || texts.months)[M - 1], // January to December in genitive form (Greek...)
+
+    // Day.
+    D, // 1 to 31.
+    DD: () => (D < 10 ? '0' : '') + D, // 01 to 31.
+    S: () => nth(D), // st, nd, rd, th.
+
+    // Day of the week.
+    d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
+    dd: () => texts.weekDays[dayNumber][0], // M to S.
+    ddd: () => texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
+    dddd: () => texts.weekDays[dayNumber] // Monday to Sunday.
+  }
+
+  return dateObject
+}
+
+let timeObject = {}
+const hydrateTimeObject = (date, texts) => {
+  if (timeObject.am) return timeObject
+
+  let H, m
+  if (date instanceof Date) {
+    H = date.getHours()
+    m = date.getMinutes()
+  }
+  else {
+    H = Math.floor(date / 60)
+    m = Math.floor(date % 60)
+  }
+
   const h = H % 12 ? H % 12 : 12
   const am = (texts || { am: 'am', pm: 'pm' })[H === 24 || H < 12 ? 'am' : 'pm']
-  const m = Math.floor(time % 60)
-  const timeObj = {
+  timeObject = {
     H,
     h,
     HH: (H < 10 ? '0' : '') + H,
@@ -99,48 +146,65 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
     mm: (m < 10 ? '0' : '') + m
   }
 
+  return timeObject
+}
+
+// Time in minutes.
+export const formatTime = (time, format = 'HH:mm', texts) => {
+  timeObject = {} // Reinit the time object on each function call.
+  const timeObj = hydrateTimeObject(time, texts)
+
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
     const result = timeObj[contents.replace(/\{|\}/g, '')]
     return result !== undefined ? result : contents
   })
 }
 
+/**
+ * Formats a date/time to the given format and returns the formatted string.
+ *
+ * @param {Date} date a JavaScript Date object to format.
+ * @param {String} format the wanted format.
+ * @param {Object} texts the vue-cal localized texts object.
+ * @return {String} the formatted string.
+ */
 export const formatDate = (date, format = 'YYYY-MM-DD', texts) => {
   if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
   if (format === 'YYYY-MM-DD') return formatDateLite(date)
 
-  const YYYY = date.getFullYear()
-  const M = date.getMonth() + 1
-  const D = date.getDate()
-  const day = date.getDay() // Day of the week.
-  const dayNumber = (day - 1 + 7) % 7 // Day of the week. 0 to 6 with 6 = Sunday.
+  // Reinit the date and time object on each function call.
+  dateObject = {}
+  timeObject = {}
+
+  // Each keyword is a function to load the dateObject or timeObject on demand: no wasted resource.
   const dateObj = {
-    // Year.
-    YYYY, // 2019.
-    YY: YYYY.toString().substring(2), // 19.
-
-    // Month.
-    M, // 1 to 12.
-    MM: (M < 10 ? '0' : '') + M, // 01 to 12.
-    MMM: texts.months[M - 1].substring(0, 3), // Jan to Dec.
-    MMMM: texts.months[M - 1], // January to December.
-    MMMMG: (texts.monthsGenitive || texts.months)[M - 1], // January to December in genitive form (Greek...)
-
-    // Day.
-    D, // 1 to 31.
-    DD: (D < 10 ? '0' : '') + D, // 01 to 31.
-    S: nth(D), // st, nd, rd, th.
-
-    // Day of the week.
-    d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
-    dd: texts.weekDays[dayNumber][0], // M to S.
-    ddd: texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
-    dddd: texts.weekDays[dayNumber], // Monday to Sunday.
+    YYYY: () => hydrateDateObject(date, texts).YYYY,
+    YY: () => hydrateDateObject(date, texts).YY(),
+    M: () => hydrateDateObject(date, texts).M,
+    MM: () => hydrateDateObject(date, texts).MM(),
+    MMM: () => hydrateDateObject(date, texts).MMM(),
+    MMMM: () => hydrateDateObject(date, texts).MMMM(),
+    MMMMG: () => hydrateDateObject(date, texts).MMMMG(),
+    D: () => hydrateDateObject(date, texts).D,
+    DD: () => hydrateDateObject(date, texts).DD(),
+    S: () => hydrateDateObject(date, texts).S(),
+    d: () => hydrateDateObject(date, texts).d,
+    dd: () => hydrateDateObject(date, texts).dd(),
+    ddd: () => hydrateDateObject(date, texts).ddd(),
+    dddd: () => hydrateDateObject(date, texts).dddd(),
+    HH: () => hydrateTimeObject(date, texts).HH,
+    H: () => hydrateTimeObject(date, texts).H,
+    hh: () => hydrateTimeObject(date, texts).hh,
+    h: () => hydrateTimeObject(date, texts).h,
+    am: () => hydrateTimeObject(date, texts).am,
+    AM: () => hydrateTimeObject(date, texts).AM,
+    mm: () => hydrateTimeObject(date, texts).mm,
+    m: () => hydrateTimeObject(date, texts).m
   }
 
   return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
     const result = dateObj[contents.replace(/\{|\}/g, '')]
-    return result !== undefined ? result : contents
+    return result !== undefined ? result() : contents
   })
 }
 
