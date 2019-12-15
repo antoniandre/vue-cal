@@ -11,5 +11,5 @@
   "allDay": "Toată ziua",
   "deleteEvent": "Șterge",
   "createEvent": "Adaugă un eveniment",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

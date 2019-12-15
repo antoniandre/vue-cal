@@ -11,5 +11,5 @@
   "allDay": "Cel dan",
   "deleteEvent": "Odstrani",
   "createEvent": "Ustvari dogodek",
-  "dateFormat": "DDDD mmmm d, yyyy"
+  "dateFormat": "dddd MMMM D, YYYY"
 }

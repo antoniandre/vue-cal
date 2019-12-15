@@ -11,5 +11,5 @@
   "allDay": "Sepanjang Hari",
   "deleteEvent": "Hapus",
   "createEvent": "Tambah Kegiatan",
-  "dateFormat": "DDDD, d mmmm yyyy"
+  "dateFormat": "dddd, D MMMM YYYY"
 }

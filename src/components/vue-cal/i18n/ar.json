@@ -11,5 +11,5 @@
   "allDay": "طوال اليوم",
   "deleteEvent": "حذف",
   "createEvent": "إنشاء حدث",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

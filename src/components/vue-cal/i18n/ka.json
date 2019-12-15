@@ -11,5 +11,5 @@
   "allDay": "მთელი დღე",
   "deleteEvent": "წაშლა",
   "createEvent": "შექმენით ღონისძიება",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

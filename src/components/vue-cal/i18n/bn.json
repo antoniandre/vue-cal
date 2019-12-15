@@ -11,5 +11,5 @@
   "allDay": "সারাদিন",
   "deleteEvent": "মুছুন",
   "createEvent": "কার্যসূচী তৈরি করুন",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

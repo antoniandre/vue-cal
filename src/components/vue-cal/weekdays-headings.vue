@@ -25,7 +25,6 @@
 </template>
 
 <script>
-import { isDateToday } from './date-utils'
 import { selectCell } from './cell-utils'
 
 export default {
@@ -70,7 +69,7 @@ export default {
           ...(this.view.id === 'week' ? {
             dayOfMonth: date.getDate(),
             date,
-            today: !todayFound && isDateToday(date) && !todayFound++
+            today: !todayFound && date.isToday() && !todayFound++
           } : {})
         }
       })

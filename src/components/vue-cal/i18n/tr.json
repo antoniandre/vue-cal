@@ -11,5 +11,5 @@
   "allDay": "Tüm gün",
   "deleteEvent": "Sil",
   "createEvent": "Etkinlik ekle",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

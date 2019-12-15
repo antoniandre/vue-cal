@@ -11,5 +11,5 @@
   "allDay": "Весь день",
   "deleteEvent": "Удалить",
   "createEvent": "Создать событие",
-  "dateFormat": "DDDD d mmmm yyyy"
+  "dateFormat": "dddd D MMMM YYYY"
 }

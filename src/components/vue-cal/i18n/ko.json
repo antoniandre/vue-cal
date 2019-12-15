@@ -11,5 +11,5 @@
   "allDay": "하루 종일",
   "deleteEvent": "삭제",
   "createEvent": "일정 추가",
-  "dateFormat": "yyyy년 mmmm d일 DDDD요일"
+  "dateFormat": "YYYY년 MMMM D일 dddd요일"
 }
