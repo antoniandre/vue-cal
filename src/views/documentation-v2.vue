@@ -3080,7 +3080,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 2.15.0]
+  div #[strong Version 2.17.0] Added Lithuanian language
+  div #[strong Version 2.16.0]
     ul
       li New Date prototype functions, refer to: #[a(href="#date-prototypes") Date prototypes]
       li Scroll the view to a particular time: #[a(href="#ex--scroll-to-time") see the example]
@@ -3498,6 +3499,7 @@ export default {
       { code: 'id', label: 'Indonesian' },
       { code: 'ja', label: 'Japanese' },
       { code: 'ko', label: 'Korean' },
+      { code: 'lt', label: 'Lithuanian' },
       { code: 'no', label: 'Norwegian' },
       { code: 'pl', label: 'Polish' },
       { code: 'pt-br', label: 'Portuguese Brasilian' },
