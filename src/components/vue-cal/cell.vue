@@ -18,7 +18,8 @@
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
-      @dblclick="!isDisabled && onCellDblClick($event)")
+      @dblclick="!isDisabled && onCellDblClick($event)"
+      @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
       slot(
         name="cell-content"
         :events="events"
@@ -178,6 +179,25 @@ export default {
       this.$parent.$emit('cell-dblclick', split ? { date, split } : date)
 
       if (this.options.dblclickToNavigate) this.$parent.switchToNarrowerView()
+    },
+
+    onCellContextMenu (DOMEvent) {
+      DOMEvent.stopPropagation()
+      DOMEvent.preventDefault()
+
+      const date = new Date(this.data.startDate)
+      const { cursorCoords, minutes } = this.$parent.minutesAtCursor(DOMEvent)
+      date.setMinutes(minutes)
+
+      // If splitting days, also return the clicked split on cell contextmenu when emitting event.
+      let split
+      if (this.$parent.splitDays.length) {
+        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+        if (split) split = split.attributes['data-split'].value
+      }
+
+      this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     }
   },
 

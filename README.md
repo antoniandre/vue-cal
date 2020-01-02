@@ -44,6 +44,8 @@ ___
 
 ## Release Notes
 
+- __Version 2.18.0__ Added a `cell-contextmenu` option and emitted event
+- __Version 2.17.0__ Added Lithuanian language
 - __Version 2.16.0__ Added Date formatting prototypes
 - __Version 2.15.0__ Allow events to end at `00:00`
 - __Version 2.14.0__ Allow custom weekday render (`month` &amp; `week` views)
