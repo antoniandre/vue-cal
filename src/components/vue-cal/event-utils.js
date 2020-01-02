@@ -239,8 +239,8 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
     let isFirstDay, isLastDay, startDate, formattedDate
 
     if (e.repeat) {
-      let tmpDate = new Date(timestamp)
-      let tmpDateFormatted = formatDateLite(tmpDate)
+      const tmpDate = new Date(timestamp)
+      const tmpDateFormatted = formatDateLite(tmpDate)
       // If the current day in loop is a known date of the repeated event (in `e.occurrences`),
       // then we found the first day of the event repetition, now update the `eventStart` and
       // the end of the loop at current day + event days count.
