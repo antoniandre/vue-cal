@@ -173,6 +173,7 @@ export default {
     clickToNavigate: { type: Boolean, default: false },
     dblclickToNavigate: { type: Boolean, default: true },
     cellClickHold: { type: Boolean, default: true },
+    cellContextmenu: { type: Boolean, default: false },
     time: { type: Boolean, default: true },
     timeFrom: { type: Number, default: 0 }, // In minutes.
     timeTo: { type: Number, default: minutesInADay }, // In minutes.
