@@ -186,7 +186,8 @@ export default {
       DOMEvent.preventDefault()
 
       const date = new Date(this.data.startDate)
-      date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
+      const { cursorCoords, minutes } = this.$parent.minutesAtCursor(DOMEvent)
+      date.setMinutes(minutes)
 
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
       let split
@@ -196,7 +197,7 @@ export default {
         if (split) split = split.attributes['data-split'].value
       }
 
-      this.$parent.$emit('cell-contextmenu', split ? { date, split } : date)
+      this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     }
   },
 

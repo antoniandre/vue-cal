@@ -1738,7 +1738,7 @@
     li #[span.code view-change]
     li #[span.code cell-click] - returns a JS native #[span.code Date] object
     li #[span.code cell-dblclick] - returns a JS native #[span.code Date] object
-    li #[span.code cell-contextmenu] - returns a JS native #[span.code Date] object
+    li #[span.code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
     li #[span.code cell-focus] - returns a JS native #[span.code Date] object
   highlight-message(type="tips")
     ul
@@ -1820,6 +1820,7 @@
       hide-weekends
       editable-events
       :events="eventsCopy3"
+      cell-contextmenu
       @ready="logEvents('ready', $event)"
       @view-change="logEvents('view-change', $event)"
       @cell-click="logEvents('cell-click', $event)"
@@ -1843,6 +1844,7 @@
              hide-weekends
              editable-events
              :events="events"
+             cell-contextmenu
              @ready="logEvents('ready', $event)"
              @view-change="logEvents('view-change', $event)"
              @cell-click="logEvents('cell-click', $event)"
