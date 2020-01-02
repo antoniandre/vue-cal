@@ -73,7 +73,9 @@
           v-list-item.heading(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             v-icon(small).mr-2 swap_horiz
             | COMMUNICATING WITH VUE CAL
-          v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
+          v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
+            | Vue Cal emitted events
+            v-chip.xsmall.ml-2(small color="blue" outlined) updated
           v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'") External controls &amp; use of Vue Cal methods
             v-chip.xsmall.ml-2(small color="blue" outlined) updated
           v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
