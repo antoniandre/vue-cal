@@ -4,7 +4,6 @@ vue-cal(
   :selected-date="selectedDate"
   :events="events"
   editable-events
-  twelve-hour
   style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -19,7 +18,7 @@ export default {
     events: [
       {
         startDate: now.subtractDays(1),
-        endDate: now.addDays(1),
+        endDate: now.addDays(0),
         title: 'Event'
       }
     ]

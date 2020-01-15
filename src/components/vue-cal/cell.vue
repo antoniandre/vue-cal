@@ -19,7 +19,11 @@
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
-      @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
+      @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
+      @dragover="cellDragOver($event, $data, $parent)"
+      @dragenter="cellDragEnter($event, $data, $parent)"
+      @dragleave="cellDragLeave($event, $data, $parent)"
+      @drop="cellDragDrop($event, $data, $parent)")
       slot(
         name="cell-content"
         :events="events"
@@ -49,6 +53,7 @@
 <script>
 import { selectCell } from './cell-utils'
 import { updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
+import { cellDragOver, cellDragEnter, cellDragLeave, cellDragDrop } from './drag-and-drop'
 import Event from './event'
 
 export default {
@@ -69,7 +74,8 @@ export default {
     cellOverlapsStreak: 1, // Largest amount of simultaneous events in cell.
     // On mouse down, save the time at cursor so it can be reused on cell focus event
     // where there is no cursor coords.
-    timeAtCursor: null
+    timeAtCursor: null,
+    highlighted: false
   }),
 
   methods: {
@@ -198,7 +204,12 @@ export default {
       }
 
       this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
-    }
+    },
+
+    cellDragOver,
+    cellDragEnter,
+    cellDragLeave,
+    cellDragDrop
   },
 
   computed: {
@@ -221,10 +232,11 @@ export default {
         current: this.data.current,
         today: this.data.today,
         'out-of-scope': this.data.outOfScope,
-        disabled: this.isDisabled,
         'before-min': this.isDisabled && this.isBeforeMinDate,
         'after-max': this.isDisabled && this.isAfterMaxDate,
-        selected: this.selected
+        'vuecal__cell--disabled': this.isDisabled,
+        'vuecal__cell--selected': this.selected,
+        'vuecal__cell--highlighted': this.highlighted,
       }
     },
     selected: {
@@ -421,7 +433,7 @@ export default {
     z-index: 1;
   }
 
-  &.selected {
+  &--selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
 
@@ -430,7 +442,8 @@ export default {
   }
 
   &.out-of-scope {color: #ccc;}
-  &.disabled {color: #ccc;cursor: not-allowed;}
+  &--disabled {color: #ccc;cursor: not-allowed;}
+  &--highlighted {background-color: rgba(172, 255, 210, 0.1);}
 
   &-events-count {
     position: absolute;

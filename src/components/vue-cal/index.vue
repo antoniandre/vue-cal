@@ -81,7 +81,7 @@
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
 
-              .dragging-helper(
+              //- .dragging-helper(
                 v-if="domEvents.dragAnEvent._eid"
                 :style="{ transform: `translate3d(${domEvents.dragAnEvent.cursorCoords.x}px, ${domEvents.dragAnEvent.cursorCoords.y}px, 0)` }")
 

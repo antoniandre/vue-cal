@@ -10,7 +10,10 @@
   @touchstart.stop="onTouchStart"
   @mousedown.stop="onMouseDown"
   @click="onClick"
-  @dblclick="onDblClick")
+  @dblclick="onDblClick"
+  draggable="true"
+  @dragstart="onDragStart"
+  @dragend="onDragEnd")
   .vuecal__event-delete(
     v-if="vuecal.editableEvents && event.deletable"
     @mousedown.stop="deleteEvent"
@@ -26,6 +29,7 @@
 
 <script>
 import { deleteAnEvent } from './event-utils'
+import { eventDragStart, eventDragEnd } from './drag-and-drop'
 
 export default {
   props: {
@@ -56,13 +60,13 @@ export default {
 
       clickHoldAnEvent._eid = null // Reinit click hold on each click.
 
-      dragAnEvent._eid = this.event._eid
-
-      // Show event delete button - only if not dragging.
-      if (!resizeAnEvent._eid && this.vuecal.editableEvents) {
+      // Show event delete button.
+      if (this.vuecal.editableEvents) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
-          clickHoldAnEvent._eid = this.event._eid
-          this.event.deleting = true
+          if (!resizeAnEvent._eid && !dragAnEvent._eid) {
+            clickHoldAnEvent._eid = this.event._eid
+            this.event.deleting = true
+          }
         }, clickHoldAnEvent.timeout)
       }
     },
@@ -87,6 +91,14 @@ export default {
 
     onDblClick (e) {
       if (typeof this.vuecal.onEventDblclick === 'function') return this.vuecal.onEventDblclick(this.event, e)
+    },
+
+    onDragStart (e) {
+      eventDragStart(e, this.event, this.vuecal)
+    },
+
+    onDragEnd (e) {
+      eventDragEnd(e, this.event, this.vuecal)
     },
 
     onDragHandleMouseDown () {
@@ -140,7 +152,6 @@ export default {
   computed: {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
-      // if (this.event._eid === '9_138') console.log('rendering events', this.event._eid, this.event.top)
       if (this.event.allDay || !this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
       let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
       let left = (100 / (this.overlaps.length + 1)) * this.eventPosition
