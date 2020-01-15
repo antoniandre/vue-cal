@@ -37,7 +37,7 @@ export const selectCell = (force = false, vuecal, date, split) => {
  */
 export const keyPressEnterCell = (vuecal, date, split) => {
   // Cell-key-press-enter event returns a date and time at cursor position.
-  vuecal.$emit('cell-key-press-enter', split ? { date, split } : date)
+  vuecal.$emit('cell-keypress-enter', split ? { date, split } : date)
 
   // Switch to narrower view.
   vuecal.switchToNarrowerView()

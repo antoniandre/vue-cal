@@ -14,7 +14,7 @@
       tabindex="0"
       :aria-label="data.content"
       @focus="onCellFocus($event)"
-      @keypress.enter="keyPressEnterCell($event)"
+      @keypress.enter="onCellkeyPressEnter($event)"
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
@@ -104,7 +104,7 @@ export default {
       this.timeAtCursor = null
     },
 
-    keyPressEnterCell (DOMEvent) {
+    onCellkeyPressEnter (DOMEvent) {
       if (!this.selected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
