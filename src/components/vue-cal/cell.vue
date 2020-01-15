@@ -20,10 +20,10 @@
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-      @dragover="cellDragOver($event, $data, $parent)"
-      @dragenter="cellDragEnter($event, $data, $parent)"
-      @dragleave="cellDragLeave($event, $data, $parent)"
-      @drop="cellDragDrop($event, $data, $parent)")
+      @dragover="!isDisabled && options.editableEvents && cellDragOver($event, $data, data.startDate, $parent)"
+      @dragenter="!isDisabled && options.editableEvents && cellDragEnter($event, $data, data.startDate, $parent)"
+      @dragleave="!isDisabled && options.editableEvents && cellDragLeave($event, $data, data.startDate, $parent)"
+      @drop="!isDisabled && options.editableEvents && cellDragDrop($event, $data, data.startDate, $parent)")
       slot(
         name="cell-content"
         :events="events"
