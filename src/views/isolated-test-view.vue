@@ -16,9 +16,14 @@ export default {
   data: () => ({
     selectedDate: now,
     events: [
+      // {
+      //   startDate: now.subtractDays(1),
+      //   endDate: now.addDays(1),
+      //   title: 'Event'
+      // },
       {
-        startDate: now.subtractDays(1),
-        endDate: now.addDays(0),
+        startDate: new Date(new Date(now).setHours(1, 0, 0)),
+        endDate: new Date(new Date(now).setHours(3, 0, 0)),
         title: 'Event'
       }
     ]

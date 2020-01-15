@@ -81,10 +81,6 @@
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
 
-              //- .dragging-helper(
-                v-if="domEvents.dragAnEvent._eid"
-                :style="{ transform: `translate3d(${domEvents.dragAnEvent.cursorCoords.x}px, ${domEvents.dragAnEvent.cursorCoords.y}px, 0)` }")
-
               .vuecal__flex(
                 ref="cells"
                 grow
@@ -242,7 +238,7 @@ export default {
       },
       dragAnEvent: {
         _eid: null, // Only one at a time.
-        cursorCoords: {}
+        cursorGrabAt: 0 // The cursor position (in minutes) in the event.
       },
       focusAnEvent: {
         _eid: null // Only one at a time.
@@ -591,22 +587,6 @@ export default {
           }
         }
       }
-      else if (dragAnEvent._eid) {
-        const { minutes, cursorCoords } = this.minutesAtCursor(e)
-
-        let event = this.view.events.find(e => e._eid === dragAnEvent._eid) || { segments: {} }
-        this.$set(event, 'dragging', cursorCoords)
-        dragAnEvent.cursorCoords = { ...cursorCoords }
-        console.log(cursorCoords, event.top)
-
-        // @todo: Need to modify event start & end time on same model as above `if (resizeAnEvent._eid)` case.
-        // Also need to modify the date of event on mouse release (in `onMouseUp` bellow) when dropping event into another day.
-        // event.endTimeMinutes = minutes
-        // event.end = event.end.substr(0, 11) + formatTime(event.endTimeMinutes)
-        // event.endDate = new Date(event.end.replace(/-/g, '/')) // replace '-' with '/' for Safari.
-
-        // resizeAnEvent.startTimeMinutes = Math.min(cursorCoords.y, 24 * 60)
-      }
     },
 
     /**
@@ -618,7 +598,7 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseUp (e) {
-      const { resizeAnEvent, clickHoldAnEvent, clickHoldACell, dragAnEvent } = this.domEvents
+      const { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
 
       // On event resize end, emit event if duration has changed.
       if (resizeAnEvent._eid) {
@@ -644,11 +624,6 @@ export default {
         resizeAnEvent.endTimeMinutes = null
         resizeAnEvent.startCell = null
         resizeAnEvent.endCell = null
-      }
-
-      else if (dragAnEvent._eid) {
-        // @todo: do other stuffs here on same model as above `if (resizeAnEvent._eid)` case.
-        dragAnEvent._eid = null
       }
 
       if (this.isDOMElementAnEvent(e.target)) this.domEvents.cancelClickEventCreation = true

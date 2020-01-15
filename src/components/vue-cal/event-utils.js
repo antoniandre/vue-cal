@@ -27,6 +27,8 @@ export const eventDefaults = {
   deleting: false,
   resizable: true,
   resizing: false,
+  draggable: true,
+  dragging: false,
   focused: false,
   top: 0,
   height: 0,
