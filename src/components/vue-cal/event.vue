@@ -11,7 +11,7 @@
   @mousedown.stop="onMouseDown"
   @click="onClick"
   @dblclick="onDblClick"
-  draggable="true"
+  :draggable="vuecal.editableEvents && event.draggable"
   @dragstart="onDragStart"
   @dragend="onDragEnd")
   .vuecal__event-delete(
@@ -180,6 +180,8 @@ export default {
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
+        'vuecal__event--ghost': this.event.dragging,
+        'vuecal__event--dragging': this.event.dragging,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
         'event-start': this.segment && isFirstDay && !isLastDay,
@@ -243,6 +245,9 @@ export default {
 
   &--background {z-index: 0;}
   &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
+
+  &--ghost {opacity: 0.01;}
+  &--dragging {border: 1px solid rgba(0, 0, 0, 0.4);}
 }
 
 .vuecal__event-resize-handle {
