@@ -14,7 +14,7 @@
       tabindex="0"
       :aria-label="data.content"
       @focus="onCellFocus($event)"
-      @keypress.enter="$parent.switchToNarrowerView"
+      @keypress.enter="keyPressEnterCell($event)"
       @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
       @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
       @click="!isDisabled && selectCell($event)"
@@ -47,7 +47,7 @@
 </template>
 
 <script>
-import { selectCell } from './cell-utils'
+import { selectCell, keyPressEnterCell } from './cell-utils'
 import { updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
 import Event from './event'
 
@@ -101,6 +101,21 @@ export default {
       }
 
       selectCell(force, this.$parent, this.timeAtCursor, split)
+      this.timeAtCursor = null
+    },
+
+    keyPressEnterCell (DOMEvent) {
+      if (!this.selected) this.onCellFocus(DOMEvent)
+
+      // If splitting days, also return the clicked split on cell click when emitting event.
+      let split
+      if (this.$parent.splitDays.length) {
+        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+        if (split) split = split.attributes['data-split'].value
+      }
+
+      keyPressEnterCell(this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
     },
 
