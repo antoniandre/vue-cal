@@ -26,3 +26,19 @@ export const selectCell = (force = false, vuecal, date, split) => {
     }
   }
 }
+
+/**
+ * Select a cell and go to narrower view on enter.
+ *
+ * @param {Boolean} force Force switching to narrower view.
+ * @param {Object} vuecal The vuecal instance.
+ * @param {Date} date The selected cell date at the exact time where it was clicked (through cursor coords).
+ * @param {Integer} split The selected cell split if any.
+ */
+export const keyPressEnterCell = (vuecal, date, split) => {
+  // Cell-key-press-enter event returns a date and time at cursor position.
+  vuecal.$emit('cell-keypress-enter', split ? { date, split } : date)
+
+  // Switch to narrower view.
+  vuecal.switchToNarrowerView()
+}
