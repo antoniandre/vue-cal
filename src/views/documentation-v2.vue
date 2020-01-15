@@ -1739,6 +1739,7 @@
     li #[span.code cell-click] - returns a JS native #[span.code Date] object
     li #[span.code cell-dblclick] - returns a JS native #[span.code Date] object
     li #[span.code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
+    li #[span.code cell-keypress-enter] - returns a JS native #[span.code Date] object
     li #[span.code cell-focus] - returns a JS native #[span.code Date] object
   highlight-message(type="tips")
     ul
@@ -1751,8 +1752,8 @@
         was focused from tab key.
         It would then return the cell start date (at midnight).
       li.
-        If split-days is provided, #[span.code cell-click], #[span.code cell-dblclick] and #[span.code cell-focus]
-        emitted events will return an object containing the date and the clicked split id.
+        If split-days is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
+        and #[span.code cell-focus] emitted events will return an object containing the date and the clicked split id.
 
   highlight-message
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
@@ -3086,6 +3087,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
   div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
   div #[strong Version 2.17.0] Added Lithuanian language
   div #[strong Version 2.16.0]
