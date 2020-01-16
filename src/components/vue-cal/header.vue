@@ -1,14 +1,24 @@
 <template lang="pug">
 .vuecal__header
-  .vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar views navigation")
+  .vuecal__flex.vuecal__menu(
+    v-if="!options.hideViewSelector"
+    role="tablist"
+    aria-label="Calendar views navigation")
     button(
       v-if="v.enabled"
-      :class="{ active: viewProps.view.id === id }"
+      :class="{ active: viewProps.view.id === id, highlighted: highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
+      @dragenter="options.editableEvents && viewSelectorDragEnter(id, $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave(id, $parent, $data)"
       @click="$parent.switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
+    button.vuecal__arrow.vuecal__arrow--prev(
+      :aria-label="`Previous ${viewProps.view.id}`"
+      :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
+      @click="previous"
+      @dragenter="options.editableEvents && viewSelectorDragEnter('previous', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave('previous', $parent, $data)")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       //- Best way to disable transition is to convert it to simple div tag.
@@ -21,7 +31,12 @@
           slot(name="title")
     button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
       slot(name="today-button")
-    button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
+    button.vuecal__arrow.vuecal__arrow--next(
+      :aria-label="`Next ${viewProps.view.id}`"
+      :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
+      @click="next"
+      @dragenter="options.editableEvents && viewSelectorDragEnter('next', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave('next', $parent, $data)")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
@@ -41,6 +56,7 @@
 
 <script>
 import WeekdaysHeadings from './weekdays-headings'
+import { viewSelectorDragEnter, viewSelectorDragLeave } from './drag-and-drop'
 
 export default {
   components: { WeekdaysHeadings },
@@ -51,6 +67,10 @@ export default {
     weekDays: { type: Array, default: () => [] },
     switchToNarrowerView: { type: Function, default: () => {} }
   },
+
+  data: () => ({
+    highlightedControl: null
+  }),
 
   methods: {
     previous () {
@@ -70,7 +90,10 @@ export default {
       this.transitionDirection = 'left'
 
       if (this.broaderView) this.$parent.switchView(this.broaderView)
-    }
+    },
+
+    viewSelectorDragEnter,
+    viewSelectorDragLeave
   },
 
   computed: {
@@ -124,6 +147,8 @@ export default {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
+
+    button.highlighted {background-color: rgba(0, 255, 0, 0.2) !important;}
   }
 
   &__title-bar {
@@ -168,6 +193,7 @@ export default {
 
     &--prev {padding-left: 0.6em;}
     &--next {padding-right: 0.6em;}
+    &--highlighted {outline: 4px solid green !important;}
 
     i.angle {
       display: inline-block;
