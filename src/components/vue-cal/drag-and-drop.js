@@ -1,6 +1,7 @@
 let changeViewTimeoutId = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
 let viewChanged = false
+let cancelViewChange = true
 
 export const eventDragStart = (e, event, vuecal) => {
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
@@ -12,18 +13,24 @@ export const eventDragStart = (e, event, vuecal) => {
   // When click and drag an event the cursor can be anywhere in the event,
   // when later dropping the event, we need to subtract the cursor position in the event.
   dragAnEvent.cursorGrabAt = minutes - event.startTimeMinutes
+  console.log('event drag start')
+
+  cancelViewChange = true // Reinit the cancel view: should cancel unless a cell received the event.
 }
 
 export const eventDragEnd = (e, event, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
   dragAnEvent._eid = null
   event.dragging = false
+  console.log('event drag end')
 
-  if (viewChanged && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
+  // When droping the event, cancel view change if no cell received the event (in cellDragDrop).
+  if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
 export const cellDragOver = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
+  cell.highlighted = true
 }
 
 export const cellDragEnter = (e, cell, cellDate, vuecal) => {
@@ -45,6 +52,8 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   event.dragging = false
   cell.highlighted = false
+  cancelViewChange = false
+  console.log('event dropped in cell')
 }
 
 export const viewSelectorDragEnter = (id, vuecal, headerData) => {

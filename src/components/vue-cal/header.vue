@@ -147,8 +147,6 @@ export default {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
-
-    button.highlighted {background-color: rgba(0, 255, 0, 0.2) !important;}
   }
 
   &__title-bar {
@@ -193,7 +191,6 @@ export default {
 
     &--prev {padding-left: 0.6em;}
     &--next {padding-right: 0.6em;}
-    &--highlighted {outline: 4px solid green !important;}
 
     i.angle {
       display: inline-block;
@@ -204,6 +201,49 @@ export default {
     }
 
     &--prev i.angle {border-width: 2px 0 0 2px;}
+  }
+
+  // Pulse buttons when drag over with an event.
+  &__arrow--highlighted,
+  button.highlighted {
+    position: relative;
+    background-color: rgba(0, 255, 0, 0.2) !important;
+
+    &:before {
+      content: '';
+      background-color: inherit;
+      animation: sonar 1.5s infinite ease-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 3em;
+      height: 3em;
+      border-radius: 3em;
+      margin-top: -1.5em;
+      margin-left: -1.5em;
+    }
+
+    &:after {
+      content: '';
+      background-color: inherit;
+      animation: sonar 1.5s 0.1s infinite ease-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 2.6em;
+      height: 2.6em;
+      border-radius: 2.6em;
+      margin-top: -1.3em;
+      margin-left: -1.3em;
+    }
+  }
+}
+
+@keyframes sonar {
+  0%, 20% {opacity: 1;}
+  100% {
+    transform: scale(3);
+    opacity: 0;
   }
 }
 
