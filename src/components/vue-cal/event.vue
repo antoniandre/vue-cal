@@ -16,7 +16,7 @@
   @dragend="onDragEnd")
   .vuecal__event-delete(
     v-if="vuecal.editableEvents && event.deletable"
-    @mousedown.stop="deleteEvent"
+    @click.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event-renderer" :event="event" :view="vuecal.view.id")
   //- Force contenteditable="false" for new events without content.
@@ -298,6 +298,7 @@ export default {
     }
   }
   .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
+  .vuecal__event--dragging & {display: none;}
 }
 
 .vuecal--month-view .vuecal__event-title {
