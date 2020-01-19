@@ -5,6 +5,11 @@ let cancelViewChange = true
 
 export const eventDragStart = (e, event, vuecal) => {
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
+  // Remove delete button if held for too long.
+  clickHoldAnEvent._eid = null
+  clearTimeout(clickHoldAnEvent.timeoutId)
+  event.deleting = false
+
   dragAnEvent._eid = event._eid
   event.dragging = true
   viewBeforeDrag = { id: vuecal.view.id, date: vuecal.view.startDate }
@@ -43,7 +48,9 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
 
 export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
-  const event = (vuecal.view.events.find(e => e._eid === dragAnEvent._eid) || {})
+  let event = vuecal.view.events.find(e => e._eid === dragAnEvent._eid)
+  const eventInView = !!event
+  if (!event) event = (vuecal.mutableEvents.find(e => e._eid === dragAnEvent._eid) || {})
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
   const startTimeMinutes = vuecal.minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt
   event.startTimeMinutes = startTimeMinutes
@@ -53,6 +60,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   event.dragging = false
   cell.highlighted = false
   cancelViewChange = false
+  if (!eventInView) vuecal.addEventsToView([event])
   console.log('event dropped in cell')
 }
 
