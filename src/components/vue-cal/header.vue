@@ -212,7 +212,7 @@ export default {
     &:before {
       content: '';
       background-color: inherit;
-      animation: sonar 1.5s infinite ease-out;
+      animation: sonar 0.8s infinite ease-out;
       position: absolute;
       top: 50%;
       left: 50%;
@@ -239,10 +239,12 @@ export default {
   }
 }
 
+// Animations.
+//==================================//
 @keyframes sonar {
   0%, 20% {opacity: 1;}
   100% {
-    transform: scale(3);
+    transform: scale(2.5);
     opacity: 0;
   }
 }
