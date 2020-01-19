@@ -6,9 +6,11 @@ let cancelViewChange = true
 export const eventDragStart = (e, event, vuecal) => {
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
   // Remove delete button if held for too long.
-  clickHoldAnEvent._eid = null
-  clearTimeout(clickHoldAnEvent.timeoutId)
-  event.deleting = false
+  setTimeout(() => {
+    clickHoldAnEvent._eid = null
+    clearTimeout(clickHoldAnEvent.timeoutId)
+    event.deleting = false
+  }, 0)
 
   dragAnEvent._eid = event._eid
   event.dragging = true

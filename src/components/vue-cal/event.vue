@@ -298,7 +298,10 @@ export default {
     }
   }
   .vuecal__event--deletable & {transform: translateY(0);z-index: 1;}
-  .vuecal__event--dragging & {display: none;}
+  .vuecal__event--deletable.vuecal__event--dragging & {
+    opacity: 0;
+    transition: none;
+  }
 }
 
 .vuecal--month-view .vuecal__event-title {
