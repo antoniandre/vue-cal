@@ -479,17 +479,18 @@ export default {
       if (!events || (['years', 'year'].includes(id) && !this.eventsCountOnYearView)) return
 
       // First remove the events that are not in view.
-      events = events.filter(e => eventInRange(e, startDate, endDate))
+      // Keep the unfiltered array of events for outOfScopeEvents bellow.
+      let filteredEvents = events.filter(e => eventInRange(e, startDate, endDate))
 
       // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
       // If we don't display the event on month view (eventsOnMonthView = false) then don't create segments.
       if (['month', 'week', 'day'].includes(id) && !(id === 'month' && !this.eventsOnMonthView)) {
-        events = events.map(e => {
+        filteredEvents = filteredEvents.map(e => {
           return e.daysCount > 1 ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
         })
       }
 
-      this.view.events.push(...events)
+      this.view.events.push(...filteredEvents)
 
       if (id === 'month') {
         // Save out of scope events into the view object separated from the array of in-scope events.

@@ -30,6 +30,9 @@ export default {
   }),
 
   methods: {
+    log (params) {
+      console.log(params)
+    }
   }
 }
 </script>
