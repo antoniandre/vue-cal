@@ -2,10 +2,13 @@
 //- This is an isolated test view. Just for testing purpose.
 vue-cal(
   :selected-date="selectedDate"
+  events-on-month-view
+  default-view="month"
   :events="events"
   editable-events
   twelve-hour
-  style="min-height: 400px;max-height: 65vh")
+  style="min-height: 400px;max-height: 65vh"
+  @view-change="log($event)")
 </template>
 
 <script>
@@ -21,11 +24,19 @@ export default {
         startDate: now.subtractDays(1),
         endDate: now.addDays(1),
         title: 'Event'
+      },
+      {
+        start: '2019-12-31 18:00',
+        end: '2019-12-31 22:00',
+        title: 'Event'
       }
     ]
   }),
 
   methods: {
+    log (params) {
+      console.log(params)
+    }
   }
 }
 </script>
