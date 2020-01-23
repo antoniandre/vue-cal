@@ -3216,11 +3216,11 @@
               Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
 
-  v-layout(align-center)
+  v-layout.my-12(align-center)
     v-btn.ml-n5.primary--text(flat rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       v-icon.mr-2 {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
       strong {{ seeOldReleaseNotes ? 'Hide' : 'See' }} older release notes
-    v-divider.my-12.primary
+    v-divider.primary
   v-slide-y-transition
     div(v-if="seeOldReleaseNotes")
       div #[strong Version 1.63.0] Added Japanese language
