@@ -3218,7 +3218,7 @@
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
 
   v-layout.my-12(align-center)
-    v-btn.ml-n5.primary--text(flat rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
+    v-btn.ml-n5.primary--text(rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       v-icon.mr-2 {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
       strong {{ seeOldReleaseNotes ? 'Hide' : 'See' }} older release notes
     v-divider.primary
