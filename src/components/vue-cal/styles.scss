@@ -16,7 +16,13 @@ $splits-headers-height: 1.5em;
   //==================================//
   .clickable {cursor: pointer;}
 
-  &--dragging-event {cursor: ns-resize;}
+  &--resizing-event {cursor: ns-resize;}
+  &--dragging-event {
+    cursor: move;
+    cursor: -webkit-grabbing;
+    cursor: grabbing;
+  }
+
   .dragging-helper {
     position: absolute;
     width: 60px;

@@ -1273,7 +1273,8 @@ export default {
         'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
+        'vuecal--resizing-event': this.domEvents.resizeAnEvent.endTimeMinutes,
+        'vuecal--dragging-event': this.domEvents.dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }
