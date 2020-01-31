@@ -56,7 +56,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
   const startTimeMinutes = vuecal.minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt
   event.startTimeMinutes = startTimeMinutes
-  event.endTimeMinutes = startTimeMinutes + eventDuration
+  event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
   event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
   event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   event.dragging = false
