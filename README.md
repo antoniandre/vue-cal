@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.20.0__ Added Icelandic language
 - __Version 2.19.0__ Emit an event on `cell-keypress-enter`
 - __Version 2.18.0__ Added a `cell-contextmenu` option and emitted event
 - __Version 2.17.0__ Added Lithuanian language

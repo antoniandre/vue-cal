@@ -3087,6 +3087,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.20.0] Added Icelandic language
   div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
   div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
   div #[strong Version 2.17.0] Added Lithuanian language
@@ -3217,7 +3218,7 @@
             li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
 
   v-layout.my-12(align-center)
-    v-btn.ml-n5.primary--text(flat rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
+    v-btn.ml-n5.primary--text(rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       v-icon.mr-2 {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
       strong {{ seeOldReleaseNotes ? 'Hide' : 'See' }} older release notes
     v-divider.primary
@@ -3512,6 +3513,7 @@ export default {
       { code: 'el', label: 'Greek' },
       { code: 'he', label: 'Hebrew' },
       { code: 'hu', label: 'Hungarian' },
+      { code: 'is', label: 'Icelandic' },
       { code: 'it', label: 'Italian' },
       { code: 'id', label: 'Indonesian' },
       { code: 'ja', label: 'Japanese' },
