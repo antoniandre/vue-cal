@@ -398,9 +398,10 @@ export default {
       this.addEventsToView()
 
       if (this.ready) {
+        const startDate = this.view.startDate
         const params = {
           view,
-          startDate: this.view.startDate,
+          startDate,
           endDate: this.view.endDate,
           ...(this.view.id === 'month' ? {
             firstCellDate: this.view.firstCellDate,
@@ -408,7 +409,7 @@ export default {
             outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
           events: this.view.events.map(this.cleanupEvent),
-          ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
+          ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
       }
@@ -911,13 +912,16 @@ export default {
      * Getting the week number is not that straightforward as there might be a 53rd week in the year.
      * Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
      *
-     * @param {Number} weekFromFirstCell
+     * @param {Number} weekFromFirstCell Number from 0 to 6.
      */
     getWeekNumber (weekFromFirstCell) {
       const firstCellWeekNumber = this.firstCellDateWeekNumber
       const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell
+      const modifier = this.startWeekOnSunday ? 1 : 0
 
-      if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
+      if (currentWeekNumber > 52) {
+        return this.view.firstCellDate.addDays(7 * weekFromFirstCell + modifier).getWeek()
+      }
       else return currentWeekNumber
     },
 
@@ -980,13 +984,14 @@ export default {
       }
     }
 
+    const startDate = this.view.startDate
     const params = {
       view: this.view.id,
-      startDate: this.view.startDate,
+      startDate,
       endDate: this.view.endDate,
       ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
       events: this.view.events.map(this.cleanupEvent),
-      ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
+      ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
     }
 
     this.$emit('ready', params)
@@ -1022,7 +1027,8 @@ export default {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
     },
     firstCellDateWeekNumber () {
-      return this.view.firstCellDate.getWeek()
+      const date = this.view.firstCellDate
+      return this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()
     },
     // For week & day views.
     timeCells () {
@@ -1118,7 +1124,7 @@ export default {
               else formattedMonthYear = `${m1} ${y1} - ${m2} ${y2}`
             }
           }
-          title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
+          title = `${this.texts.week} ${this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()} (${formattedMonthYear})`
           break
         }
         case 'day': {
