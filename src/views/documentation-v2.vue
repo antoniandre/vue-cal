@@ -1517,9 +1517,15 @@
       #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
       #[span.code 'short'], to display only the event title.
 
-  highlight-message.
-    Multiple-day events feature will be improved in a future version to display across
-    multiple cells in the all day bar.
+  highlight-message
+    ul
+      li.
+        Notice that on Windows machines, and on devices where the scrollbar takes some space and pushes
+        the calendar main content (#[span.code week] and #[span.code day] views), the all-day bar is added some
+        padding right to align well with the main content. This is done once, in the #[span.code mounted] hook.
+      li.
+        Multiple-day events feature will be improved in a future version to display across
+        multiple cells in the all day bar.
 
   v-btn.ma-1(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
     span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
