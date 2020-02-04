@@ -3087,7 +3087,8 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
-  div.grey--text #[strong Version 2.20.1] Fix wrong week number with startWeekOnSunday.
+  div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
+  div.grey--text #[strong Version 2.20.1] Fix wrong week number with startWeekOnSunday
   div #[strong Version 2.20.0] Added Icelandic language
   div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
   div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
