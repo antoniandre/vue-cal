@@ -941,6 +941,30 @@ export default {
      */
     updateDateTexts () {
       updateDateTexts(this.texts)
+    },
+
+    /**
+     * On Windows devices, the .vuecal__bg's vertical scrollbar takes space and pushes the content.
+     * This function will also push the all-day bar to have it properly aligned.
+     * The calculated style will be placed in the docment head in a style tag so it's only done once
+     * (the scrollbar width never changes).
+     * Ref. https://github.com/antoniandre/vue-cal/issues/221
+     */
+    alignAllDayBar () {
+      // If already done from another instance, exit.
+      if (document.getElementById('align-all-day-bar')) return
+
+      const bg = this.$refs.vuecal.getElementsByClassName('vuecal__bg')[0]
+      const scrollbarWidth = bg.offsetWidth - bg.children[0].offsetWidth
+
+      // Only add a style tag once and if a scrollbar width is detected.
+      if (scrollbarWidth) {
+        const style = document.createElement('style')
+        style.id = 'align-all-day-bar'
+        style.type = 'text/css'
+        style.innerHTML = `.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
+        document.head.appendChild(style)
+      }
     }
   },
 
@@ -984,6 +1008,10 @@ export default {
       }
     }
 
+    // https://github.com/antoniandre/vue-cal/issues/221
+    if (this.showAllDayEvents) this.alignAllDayBar()
+
+    // Emit the `ready` event with useful parameters.
     const startDate = this.view.startDate
     const params = {
       view: this.view.id,
