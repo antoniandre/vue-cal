@@ -29,6 +29,34 @@ const initDatePrototypes = function () {
   }
 
   // eslint-disable-next-line
+  Date.prototype.addHours = function (hours) {
+    const date = new Date(this.valueOf())
+    date.setHours(date.getHours() + hours)
+    return date
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.subtractHours = function (hours) {
+    const date = new Date(this.valueOf())
+    date.setHours(date.getHours() - hours)
+    return date
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.addMinutes = function (minutes) {
+    const date = new Date(this.valueOf())
+    date.setMinutes(date.getMinutes() + minutes)
+    return date
+  }
+
+  // eslint-disable-next-line
+  Date.prototype.subtractMinutes = function (minutes) {
+    const date = new Date(this.valueOf())
+    date.setMinutes(date.getMinutes() - minutes)
+    return date
+  }
+
+  // eslint-disable-next-line
   Date.prototype.getWeek = function () {
     const d = new Date(Date.UTC(this.getFullYear(), this.getMonth(), this.getDate()))
     const dayNum = d.getUTCDay() || 7
