@@ -44,6 +44,7 @@ ___
 
 ## Release Notes
 
+- __Version 2.22.0__ Added `addHours`, `subtractHours`, `addMinutes`, `subtractMinutes` Date prototypes
 - __Version 2.21.0__ Align the all-day bar on devices with fixed scrollbar width
 - __Version 2.20.0__ Added Icelandic language
 - __Version 2.19.0__ Emit an event on `cell-keypress-enter`

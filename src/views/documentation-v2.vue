@@ -2973,6 +2973,22 @@
       | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `days` is an integer.
     li.mt-3
+      code.mr-2 .addHours(hours)
+      | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `hours` is an integer.
+    li.mt-3
+      code.mr-2 .subtractHours(hours)
+      | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `hours` is an integer.
+    li.mt-3
+      code.mr-2 .addMinutes(minutes)
+      | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `minutes` is an integer.
+    li.mt-3
+      code.mr-2 .subtractMinutes(minutes)
+      | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `minutes` is an integer.
+    li.mt-3
       code.mr-2 .getWeek()
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
     li.mt-3
@@ -3093,6 +3109,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
   div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
   div.grey--text #[strong Version 2.20.1] Fix wrong week number with startWeekOnSunday
   div #[strong Version 2.20.0] Added Icelandic language
