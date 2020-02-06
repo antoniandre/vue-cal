@@ -1514,10 +1514,33 @@
 
   highlight-message
     ul
-      li.
-        Notice that on Windows machines, and on devices where the scrollbar takes some space and pushes
-        the calendar main content (#[span.code week] and #[span.code day] views), the all-day bar is added some
-        padding right to align well with the main content. This is done once, in the #[span.code mounted] hook.
+      li
+        | Notice that on Windows machines, and on devices where the scrollbar takes some space and
+        | pushes the calendar main content (#[span.code week] and #[span.code day] views), the
+        | all-day bar is added some padding right to align well with the main content.
+        | This is done once, in the #[span.code mounted] hook.#[br]
+        | If your Vue Cal does not start in the #[span.code week] or #[span.code day] view, the
+        | realignment of the all-day bar will not happen, you can trigger it:
+        .layout(:class="{ column: $vuetify.breakpoint.sm }")
+          sshpre.mt-3.mb-0.flex.fill-height(
+            language="html-vue"
+            :class="{ 'mr-2': !$vuetify.breakpoint.sm }").
+            &lt;vue-cal
+              ref="vuecal"
+              show-all-day-events
+              @view-change="!aligned &amp;&amp; alignAllDayBar()"&gt;
+            &lt;/vue-cal&gt;
+          sshpre.mt-3.flex.fill-height(language="js").
+            data: () => ({
+              aligned: false
+            }),
+            methods: {
+              alignAllDayBar () {
+                this.$nextTick(this.$refs.vuecal.alignAllDayBar)
+                this.aligned = true
+              }
+            }
+
       li.
         Multiple-day events feature will be improved in a future version to display across
         multiple cells in the all day bar.
