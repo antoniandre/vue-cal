@@ -341,18 +341,13 @@
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
+    // Using Vue Cal Date Prototypes.
     computed: {
       minDate () {
-        const now = new Date()
-        const date = new Date(now)
-        date.setDate(now.getDate() - 15)
-        return date
+        return new Date().subtractDays(15)
       },
       maxDate () {
-        const now = new Date()
-        const date = new Date(now)
-        date.setDate(now.getDate() + 15)
-        return date
+        return new Date().addDays(15)
       }
     }
 
@@ -407,7 +402,7 @@
     option.#[br]It accepts an array of days to hide (day numbers),
     #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
     This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
-    If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
+    If you want to hide Saturday and Sunday you can put `#[span.code 6, 7]` in the array or use
     #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
     You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
     You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
@@ -3949,16 +3944,10 @@ export default {
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
     },
     minDate () {
-      const now = new Date()
-      const date = new Date(now)
-      date.setDate(now.getDate() - 15)
-      return date
+      return new Date().subtractDays(15)
     },
     maxDate () {
-      const now = new Date()
-      const date = new Date(now)
-      date.setDate(now.getDate() + 15)
-      return date
+      return new Date().addDays(15)
     }
   }
 }
