@@ -353,7 +353,7 @@ export default {
           // Used in viewCells computed array & returned in emitted events.
           this.view.firstCellDate = startDate
           this.view.lastCellDate = startDate.addDays(41)
-          this.view.lastCellDate.setHours(23, 59, 59)
+          this.view.lastCellDate.setHours(23, 59, 59, 0)
 
           if (this.hideWeekends) {
             // Remove first weekend from firstCellDate if hide-weekends.
@@ -382,16 +382,16 @@ export default {
         case 'week': {
           const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
-          this.view.startDate.setHours(0, 0, 0)
+          this.view.startDate.setHours(0, 0, 0, 0)
           this.view.endDate = date.addDays(weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
         }
         case 'day': {
           this.view.startDate = date
-          this.view.startDate.setHours(0, 0, 0)
+          this.view.startDate.setHours(0, 0, 0, 0)
           this.view.endDate = new Date(date)
-          this.view.endDate.setHours(23, 59, 59) // End at 23:59:59.
+          this.view.endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
           break
         }
       }
@@ -399,9 +399,10 @@ export default {
       this.addEventsToView()
 
       if (this.ready) {
+        const startDate = this.view.startDate
         const params = {
           view,
-          startDate: this.view.startDate,
+          startDate,
           endDate: this.view.endDate,
           ...(this.view.id === 'month' ? {
             firstCellDate: this.view.firstCellDate,
@@ -409,7 +410,7 @@ export default {
             outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
           events: this.view.events.map(this.cleanupEvent),
-          ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
+          ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
         }
         this.$emit('view-change', params)
       }
@@ -557,7 +558,8 @@ export default {
         event.endDate.setHours(
           0,
           event.endTimeMinutes,
-          event.endTimeMinutes === minutesInADay ? -1 : 0 // Remove 1 second if time is 24:00.
+          event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
+          0
         )
         event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
 
@@ -859,9 +861,12 @@ export default {
     },
 
     /**
-     * Update the selected date on created from given selectedDate prop, on click/dblClick
-     * of another cell, or from external call (via $refs), or even if the given selectedDate prop changes.
-     * If date is not in the view the view will change to show it.
+     * Update the selected date:
+     * - on created, from given selectedDate prop
+     * - on click/dblClick of another cell
+     * - from external call (via $refs)
+     * - when the given selectedDate prop changes.
+     * If date is not in the view, the view will change to show it.
      *
      * @param {String | Date} date The date to select.
      */
@@ -873,7 +878,8 @@ export default {
         const { selectedDate } = this.view
         if (selectedDate) this.transitionDirection = selectedDate.getTime() > date.getTime() ? 'left' : 'right'
         // Select the day at midnight in order to allow fetching events on whole day.
-        date.setHours(0, 0, 0)
+        // Setting milliseconds to 0 is critical as well for timestamp comparison.
+        date.setHours(0, 0, 0, 0)
 
         if (!selectedDate || selectedDate.getTime() !== date.getTime()) this.view.selectedDate = date
         this.switchView(this.view.id)
@@ -915,13 +921,16 @@ export default {
      * Getting the week number is not that straightforward as there might be a 53rd week in the year.
      * Whenever the year starts on a Thursday or any leap year starting on a Wednesday, this week will be 53.
      *
-     * @param {Number} weekFromFirstCell
+     * @param {Number} weekFromFirstCell Number from 0 to 6.
      */
     getWeekNumber (weekFromFirstCell) {
       const firstCellWeekNumber = this.firstCellDateWeekNumber
       const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell
+      const modifier = this.startWeekOnSunday ? 1 : 0
 
-      if (currentWeekNumber > 52) return this.view.firstCellDate.addDays(7 * weekFromFirstCell).getWeek()
+      if (currentWeekNumber > 52) {
+        return this.view.firstCellDate.addDays(7 * weekFromFirstCell + modifier).getWeek()
+      }
       else return currentWeekNumber
     },
 
@@ -941,6 +950,30 @@ export default {
      */
     updateDateTexts () {
       updateDateTexts(this.texts)
+    },
+
+    /**
+     * On Windows devices, the .vuecal__bg's vertical scrollbar takes space and pushes the content.
+     * This function will also push the all-day bar to have it properly aligned.
+     * The calculated style will be placed in the docment head in a style tag so it's only done once
+     * (the scrollbar width never changes).
+     * Ref. https://github.com/antoniandre/vue-cal/issues/221
+     */
+    alignAllDayBar () {
+      // If already done from another instance, exit.
+      if (document.getElementById('align-all-day-bar')) return
+
+      const bg = this.$refs.vuecal.getElementsByClassName('vuecal__bg')[0]
+      const scrollbarWidth = bg.offsetWidth - bg.children[0].offsetWidth
+
+      // Only add a style tag once and if a scrollbar width is detected.
+      if (scrollbarWidth) {
+        const style = document.createElement('style')
+        style.id = 'align-all-day-bar'
+        style.type = 'text/css'
+        style.innerHTML = `.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
+        document.head.appendChild(style)
+      }
     }
   },
 
@@ -984,13 +1017,18 @@ export default {
       }
     }
 
+    // https://github.com/antoniandre/vue-cal/issues/221
+    if (this.showAllDayEvents) this.alignAllDayBar()
+
+    // Emit the `ready` event with useful parameters.
+    const startDate = this.view.startDate
     const params = {
       view: this.view.id,
-      startDate: this.view.startDate,
+      startDate,
       endDate: this.view.endDate,
       ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
       events: this.view.events.map(this.cleanupEvent),
-      ...(this.view.id === 'week' ? { week: this.view.startDate.getWeek() } : {})
+      ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
     }
 
     this.$emit('ready', params)
@@ -1026,7 +1064,8 @@ export default {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
     },
     firstCellDateWeekNumber () {
-      return this.view.firstCellDate.getWeek()
+      const date = this.view.firstCellDate
+      return this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()
     },
     // For week & day views.
     timeCells () {
@@ -1122,7 +1161,7 @@ export default {
               else formattedMonthYear = `${m1} ${y1} - ${m2} ${y2}`
             }
           }
-          title = `${this.texts.week} ${date.getWeek()} (${formattedMonthYear})`
+          title = `${this.texts.week} ${this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()} (${formattedMonthYear})`
           break
         }
         case 'day': {
@@ -1189,7 +1228,7 @@ export default {
           cells = Array.apply(null, Array(42)).map((cell, i) => {
             const startDate = firstCellDate.addDays(i)
             const endDate = new Date(startDate)
-            endDate.setHours(23, 59, 59) // End at 23:59:59.
+            endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
             // To increase performance skip checking isToday if today already found.
             const isToday = !todayFound && startDate.isToday() && !todayFound++
 
@@ -1222,7 +1261,7 @@ export default {
           cells = weekDays.map((cell, i) => {
             const startDate = firstDayOfWeek.addDays(i)
             const endDate = new Date(startDate)
-            endDate.setHours(23, 59, 59) // End at 23:59:59.
+            endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
 
             return {
               startDate,
@@ -1237,7 +1276,7 @@ export default {
         case 'day': {
           const startDate = this.view.startDate
           const endDate = new Date(this.view.startDate)
-          endDate.setHours(23, 59, 59) // End at 23:59:59.
+          endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
 
           cells = [{
             startDate,

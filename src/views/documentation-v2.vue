@@ -341,18 +341,13 @@
     &lt;/vue-cal&gt;
 
   sshpre(language="js" label="Javascript").
+    // Using Vue Cal Date Prototypes.
     computed: {
       minDate () {
-        const now = new Date()
-        const date = new Date(now)
-        date.setDate(now.getDate() - 15)
-        return date
+        return new Date().subtractDays(15)
       },
       maxDate () {
-        const now = new Date()
-        const date = new Date(now)
-        date.setDate(now.getDate() + 15)
-        return date
+        return new Date().addDays(15)
       }
     }
 
@@ -407,7 +402,7 @@
     option.#[br]It accepts an array of days to hide (day numbers),
     #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
     This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
-    If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
+    If you want to hide Saturday and Sunday you can put `#[span.code 6, 7]` in the array or use
     #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
     You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
     You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
@@ -1517,9 +1512,15 @@
       #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
       #[span.code 'short'], to display only the event title.
 
-  highlight-message.
-    Multiple-day events feature will be improved in a future version to display across
-    multiple cells in the all day bar.
+  highlight-message
+    ul
+      li.
+        Notice that on Windows machines, and on devices where the scrollbar takes some space and pushes
+        the calendar main content (#[span.code week] and #[span.code day] views), the all-day bar is added some
+        padding right to align well with the main content. This is done once, in the #[span.code mounted] hook.
+      li.
+        Multiple-day events feature will be improved in a future version to display across
+        multiple cells in the all day bar.
 
   v-btn.ma-1(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
     span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
@@ -2967,6 +2968,22 @@
       | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `days` is an integer.
     li.mt-3
+      code.mr-2 .addHours(hours)
+      | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `hours` is an integer.
+    li.mt-3
+      code.mr-2 .subtractHours(hours)
+      | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `hours` is an integer.
+    li.mt-3
+      code.mr-2 .addMinutes(minutes)
+      | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `minutes` is an integer.
+    li.mt-3
+      code.mr-2 .subtractMinutes(minutes)
+      | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
+      | `minutes` is an integer.
+    li.mt-3
       code.mr-2 .getWeek()
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
     li.mt-3
@@ -3087,6 +3104,10 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
+  div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
+  div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
+  div.grey--text #[strong Version 2.20.1] Fix wrong week number with startWeekOnSunday
   div #[strong Version 2.20.0] Added Icelandic language
   div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
   div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
@@ -3924,16 +3945,10 @@ export default {
       return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
     },
     minDate () {
-      const now = new Date()
-      const date = new Date(now)
-      date.setDate(now.getDate() - 15)
-      return date
+      return new Date().subtractDays(15)
     },
     maxDate () {
-      const now = new Date()
-      const date = new Date(now)
-      date.setDate(now.getDate() + 15)
-      return date
+      return new Date().addDays(15)
     }
   }
 }
