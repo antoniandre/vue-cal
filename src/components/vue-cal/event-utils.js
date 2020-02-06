@@ -131,7 +131,7 @@ export const addEventSegment = e => {
   const startDate = e.endDate.addDays(1)
   const endDate = new Date(startDate)
   const formattedDate = formatDateLite(startDate)
-  startDate.setHours(0, 0)
+  startDate.setHours(0, 0, 0, 0)
   e.segments[formattedDate] = {
     startDate,
     start: formattedDate,
@@ -235,7 +235,7 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
     // Be careful not to simply add 24 hours!
     // In case of DLS, that would cause the event to never end and browser to hang.
     // So use `addDays(1)` instead.
-    const nextMidnight = (new Date(timestamp).addDays(1)).setHours(0, 0, 0)
+    const nextMidnight = (new Date(timestamp).addDays(1)).setHours(0, 0, 0, 0)
     let isFirstDay, isLastDay, startDate, formattedDate
 
     if (e.repeat) {
@@ -247,7 +247,7 @@ export const createEventSegments = (e, viewStartDate, viewEndDate) => {
       if (repeatedEventStartFound || (e.occurrences && e.occurrences[tmpDateFormatted])) {
         if (!repeatedEventStartFound) {
           eventStart = e.occurrences[tmpDateFormatted].start
-          eventStartAtMidnight = new Date(eventStart).setHours(0, 0, 0)
+          eventStartAtMidnight = new Date(eventStart).setHours(0, 0, 0, 0)
           eventEnd = e.occurrences[tmpDateFormatted].end
         }
         repeatedEventStartFound = true

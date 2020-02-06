@@ -1,14 +1,15 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
-vue-cal(
-  :selected-date="selectedDate"
-  events-on-month-view
-  default-view="month"
-  :events="events"
-  editable-events
-  twelve-hour
-  style="min-height: 400px;max-height: 65vh"
-  @view-change="log($event)")
+div
+  v-btn(@click="selectedDate = new Date()") Select today
+  vue-cal(
+    :selected-date="selectedDate"
+    events-on-month-view
+    default-view="month"
+    :events="events"
+    editable-events
+    twelve-hour
+    style="min-height: 400px;max-height: 65vh")
 </template>
 
 <script>

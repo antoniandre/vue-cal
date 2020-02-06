@@ -272,9 +272,9 @@ export const countDays = (start, end) => {
   if (typeof end === 'string') end = end.replace(/-/g, '/')
 
   // Set start & end at midnight then compare the delta. Don't modify the original dates.
-  start = (new Date(start)).setHours(0, 0, 0)
-  // Set end at midnight plus 1 min, so Math.ceil will round it up to a full day.
-  end = (new Date(end)).setHours(0, 0, 1)
+  start = (new Date(start)).setHours(0, 0, 0, 0)
+  // Set end at midnight plus 1 sec, so Math.ceil will round it up to a full day.
+  end = (new Date(end)).setHours(0, 0, 1, 0)
 
   // Remove the potential daylight saving delta.
   const timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
