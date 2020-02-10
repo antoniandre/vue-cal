@@ -1288,12 +1288,14 @@ export default {
           const startDate = this.view.startDate
           const endDate = new Date(this.view.startDate)
           endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
+          const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
 
           cells = [{
             startDate,
             formattedDate: formatDateLite(startDate),
             endDate,
-            today: startDate.isToday()
+            today: startDate.isToday(),
+            specialHours: this.specialDayHours[dayOfWeek]
           }]
           break
         }
