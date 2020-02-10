@@ -21,7 +21,7 @@
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
       .vuecal__special-hours(
-        v-if="['week', 'day'].includes(view) && specialHours.from !== null"
+        v-if="isWeekOrDayView && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
         :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
       slot(
@@ -30,7 +30,7 @@
         :select-cell="$event => selectCell($event, true)"
         :split="splits.length ? split : false")
       .vuecal__cell-events(
-        v-if="eventsCount && (['week', 'day'].includes(view) || (view === 'month' && options.eventsOnMonthView))")
+        v-if="eventsCount && (isWeekOrDayView || (view === 'month' && options.eventsOnMonthView))")
         event(
           v-for="(event, j) in (splits.length ? split.events : events)" :key="j"
           :vuecal="$parent"
@@ -269,6 +269,10 @@ export default {
     view () {
       return this.$parent.view.id
     },
+    // Cache result for performance.
+    isWeekOrDayView () {
+      return ['week', 'day'].includes(this.view)
+    },
     transitionDirection () {
       return this.$parent.transitionDirection
     },
@@ -302,7 +306,7 @@ export default {
         if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
         // From events in view, filter the ones that are out of `time-from`-`time-to` range in this cell.
-        if (this.options.time && ['week', 'day'].includes(this.view) && !this.allDay) {
+        if (this.options.time && this.isWeekOrDayView && !this.allDay) {
           const { timeFrom, timeTo } = this.options
 
           events = events.filter(e => {
@@ -315,7 +319,7 @@ export default {
         }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
-        if (this.options.time && ['week', 'day'].includes(this.view) && !(this.options.showAllDayEvents && this.allDay)) {
+        if (this.options.time && this.isWeekOrDayView && !(this.options.showAllDayEvents && this.allDay)) {
           events.forEach(event => {
             // all-day events are positionned via css: top-0 & bottom-0.
             // So they behave as background events if not in allDay slot.
@@ -370,7 +374,7 @@ export default {
       }
     },
     timelineVisible () {
-      if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
+      if (!this.data.today || !this.options.time || this.allDay || !this.isWeekOrDayView) return
 
       return (this.$parent.now.getHours() * 60 + this.$parent.now.getMinutes()) <= this.options.timeTo
     },
