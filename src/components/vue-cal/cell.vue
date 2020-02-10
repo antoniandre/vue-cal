@@ -90,7 +90,7 @@ export default {
     },
 
     selectCell (DOMEvent, force = false) {
-      if (!this.selected) this.onCellFocus(DOMEvent)
+      if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       let split
@@ -105,7 +105,7 @@ export default {
     },
 
     onCellkeyPressEnter (DOMEvent) {
-      if (!this.selected) this.onCellFocus(DOMEvent)
+      if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       let split
@@ -125,8 +125,8 @@ export default {
      * if click/touch.
      */
     onCellFocus (DOMEvent) {
-      if (!this.selected) {
-        this.selected = this.data.startDate
+      if (!this.isSelected) {
+        this.isSelected = this.data.startDate
 
         // If splitting days, also return the clicked split on cell click when emitting event.
         let split
@@ -226,23 +226,12 @@ export default {
     isAfterMaxDate () {
       return this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()
     },
+    // Is the current cell disabled or not.
     isDisabled () {
       return this.isBeforeMinDate || this.isAfterMaxDate
     },
-    cssClasses () {
-      return {
-        'vuecal__cell--has-splits': this.splits.length,
-        'vuecal__cell--has-events': this.eventsCount,
-        current: this.data.current,
-        today: this.data.today,
-        'out-of-scope': this.data.outOfScope,
-        disabled: this.isDisabled,
-        'before-min': this.isDisabled && this.isBeforeMinDate,
-        'after-max': this.isDisabled && this.isAfterMaxDate,
-        selected: this.selected
-      }
-    },
-    selected: {
+    // Is the current cell selected or not.
+    isSelected: {
       get () {
         let selected = false
         const { selectedDate } = this.$parent.view
@@ -278,12 +267,6 @@ export default {
     },
     transitionDirection () {
       return this.$parent.transitionDirection
-    },
-    cellStyles () {
-      return {
-        // cellWidth is only applied when hiding weekdays on month and week views.
-        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {})
-      }
     },
     events () {
       const { startDate: cellStart, endDate: cellEnd } = this.data
@@ -352,6 +335,25 @@ export default {
           events
         }
       })
+    },
+    cssClasses () {
+      return {
+        'vuecal__cell--has-splits': this.splits.length,
+        'vuecal__cell--has-events': this.eventsCount,
+        current: this.data.current,
+        today: this.data.today,
+        'out-of-scope': this.data.outOfScope,
+        disabled: this.isDisabled,
+        'before-min': this.isDisabled && this.isBeforeMinDate,
+        'after-max': this.isDisabled && this.isAfterMaxDate,
+        selected: this.isSelected
+      }
+    },
+    cellStyles () {
+      return {
+        // cellWidth is only applied when hiding weekdays on month and week views.
+        ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {})
+      }
     },
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !['week', 'day'].includes(this.view)) return
