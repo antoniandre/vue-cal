@@ -8,7 +8,10 @@ div
     default-view="month"
     :events="events"
     editable-events
-    :special-hours="{ 1: { from: 8 * 60, to: 20 * 60, class: 'open' }, 2: { from: 10 * 60, to: 18 * 60, class: 'open' } }"
+    :time-from="6 * 60"
+    :time-to="22 * 60"
+    :time-step="30"
+    :special-hours="specialHours"
     style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -16,10 +19,17 @@ div
 import VueCal from '@/components/vue-cal'
 
 const now = new Date()
+const dailyHours = { from: 8 * 60, to: 20 * 60, class: 'open' }
+
 export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
+    // specialHours: {
+    //   ...Array(8).fill('').map(() => dailyHours)
+    // },
+
+    specialHours: Array(7).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {}),
     events: [
       // {
       //   startDate: now.subtractDays(1),

@@ -23,7 +23,7 @@
       .vuecal__special-hours(
         v-if="['week', 'day'].includes(view) && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
-        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`") {{ specialHours }}
+        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
       slot(
         name="cell-content"
         :events="events"
@@ -278,8 +278,8 @@ export default {
       to = Math.min(to, this.options.timeTo)
       return {
         ...this.data.specialHours,
-        height: (to - from) * this.options.timeCellHeight / this.options.timeStep,
-        top: from * this.options.timeCellHeight / this.options.timeStep
+        height: (to - from) * this.timeScale,
+        top: (from - this.options.timeFrom) * this.timeScale
       }
     },
     events () {
@@ -380,7 +380,10 @@ export default {
 
       const startTimeMinutes = this.$parent.now.getHours() * 60 + this.$parent.now.getMinutes()
       const minutesFromTop = startTimeMinutes - this.options.timeFrom
-      return Math.round(minutesFromTop * this.options.timeCellHeight / this.options.timeStep)
+      return Math.round(minutesFromTop * this.timeScale)
+    },
+    timeScale () {
+      return this.options.timeCellHeight / this.options.timeStep
     }
   }
 }
