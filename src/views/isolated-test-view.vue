@@ -19,17 +19,13 @@ div
 import VueCal from '@/components/vue-cal'
 
 const now = new Date()
-const dailyHours = { from: 8 * 60, to: 20 * 60, class: 'open' }
+const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
 export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
-    // specialHours: {
-    //   ...Array(8).fill('').map(() => dailyHours)
-    // },
-
-    specialHours: Array(7).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {}),
+    specialHours: Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {}),
     events: [
       // {
       //   startDate: now.subtractDays(1),
@@ -53,9 +49,7 @@ export default {
 </script>
 
 <style lang="scss">
-.vuecal__special-hours.open {
-  background-color: rgba(255, 255, 0, 0.2);
-}
+.business-hours {background-color: rgba(255, 255, 0, 0.2);}
 .v-application--wrap {min-height: 0;}
 footer {display: none !important;}
 </style>
