@@ -509,8 +509,8 @@
     a(href="#ex--special-hours") # Special hours (or business hours)
     a#ex--special-hours(name="ex--special-hours")
   p.
-    The special hours are visible on #[span.code week] and #[span.code day] views.#[br]
-    You can use this option to highlight a particular time range on each day of the week.#[br]
+    The special hours are visible on #[span.code week] and #[span.code day] views and allow
+    you to highlight a particular time range on each day of the week individually.#[br]
   highlight-message.
     Refer to the #[a(href="#api") API] section to read more about the
     #[span.code special-hours] option.
@@ -3200,6 +3200,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.23] Added #[span.code special-hours] option
   div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
   div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
   div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
