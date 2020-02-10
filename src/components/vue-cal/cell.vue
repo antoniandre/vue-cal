@@ -21,9 +21,9 @@
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
       .vuecal__special-hours(
-        v-if="['week', 'day'].includes(view) && data.specialHours.from !== null"
-        :class="`vuecal__special-hours--day${data.specialHours.day} ${data.specialHours.class}`"
-        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`") {{ data.specialHours }}
+        v-if="['week', 'day'].includes(view) && specialHours.from !== null"
+        :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
+        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`") {{ specialHours }}
       slot(
         name="cell-content"
         :events="events"
@@ -273,11 +273,13 @@ export default {
       return this.$parent.transitionDirection
     },
     specialHours () {
-      const { from, to } = this.data.specialHours
+      let { from, to } = this.data.specialHours
+      from = Math.max(from, this.options.timeFrom)
+      to = Math.min(to, this.options.timeTo)
       return {
         ...this.data.specialHours,
-        height: to - from,
-        top: Math.max(this.options.timeFrom, from) * this.options.timeCellHeight / this.options.timeStep
+        height: (to - from) * this.options.timeCellHeight / this.options.timeStep,
+        top: from * this.options.timeCellHeight / this.options.timeStep
       }
     },
     events () {
