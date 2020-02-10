@@ -20,6 +20,10 @@
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
+      .vuecal__special-hours(
+        v-if="['week', 'day'].includes(view) && data.specialHours.from !== null"
+        :class="`vuecal__special-hours--day${data.specialHours.day} ${data.specialHours.class}`"
+        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`") {{ data.specialHours }}
       slot(
         name="cell-content"
         :events="events"
@@ -268,6 +272,14 @@ export default {
     transitionDirection () {
       return this.$parent.transitionDirection
     },
+    specialHours () {
+      const { from, to } = this.data.specialHours
+      return {
+        ...this.data.specialHours,
+        height: to - from,
+        top: Math.max(this.options.timeFrom, from) * this.options.timeCellHeight / this.options.timeStep
+      }
+    },
     events () {
       const { startDate: cellStart, endDate: cellEnd } = this.data
       let events = []
@@ -404,6 +416,12 @@ export default {
   &.vuecal__cell--has-splits {
     flex-direction: row;
     display: flex;
+  }
+
+  .vuecal__special-hours {
+    position: absolute;
+    left: 0;
+    right: 0;
   }
 
   &-content {

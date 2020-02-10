@@ -183,6 +183,7 @@ export default {
     showAllDayEvents: { type: [Boolean, String], default: false },
     showWeekNumbers: { type: [Boolean, String], default: false },
     small: { type: Boolean, default: false },
+    specialHours: { type: Object, default: () => ({}) },
     splitDays: { type: Array, default: () => [] },
     startWeekOnSunday: { type: Boolean, default: false },
     stickySplitLabels: { type: Boolean, default: false },
@@ -1120,6 +1121,18 @@ export default {
     months () {
       return this.texts.months.map(month => ({ label: month }))
     },
+    // Prepare the special hours object once for all at root level and not in cell.
+    specialDayHours () {
+      return Array(7).fill('').map((cell, i) => {
+        const specialHours = this.specialHours[i + 1] || {}
+        return {
+          day: i + 1,
+          from: specialHours.from * 1 || null,
+          to: specialHours.to * 1 || null,
+          class: specialHours.class || ''
+        }
+      })
+    },
     viewTitle () {
       let title = ''
       const date = this.view.startDate
@@ -1258,13 +1271,15 @@ export default {
             const startDate = firstDayOfWeek.addDays(i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
+            const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
 
             return {
               startDate,
               formattedDate: formatDateLite(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
-              today: !todayFound && startDate.isToday() && !todayFound++
+              today: !todayFound && startDate.isToday() && !todayFound++,
+              specialHours: this.specialDayHours[dayOfWeek]
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break

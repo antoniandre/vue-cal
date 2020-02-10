@@ -8,7 +8,7 @@ div
     default-view="month"
     :events="events"
     editable-events
-    twelve-hour
+    :special-hours="{ 1: { from: 8 * 60, to: 20 * 60, class: 'open' }, 2: { from: 10 * 60, to: 18 * 60, class: 'open' } }"
     style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -21,16 +21,16 @@ export default {
   data: () => ({
     selectedDate: now,
     events: [
-      {
-        startDate: now.subtractDays(1),
-        endDate: now.addDays(1),
-        title: 'Event'
-      },
-      {
-        start: '2019-12-31 18:00',
-        end: '2019-12-31 22:00',
-        title: 'Event'
-      }
+      // {
+      //   startDate: now.subtractDays(1),
+      //   endDate: now.addDays(1),
+      //   title: 'Event'
+      // },
+      // {
+      //   start: '2019-12-31 18:00',
+      //   end: '2019-12-31 22:00',
+      //   title: 'Event'
+      // }
     ]
   }),
 
@@ -43,6 +43,9 @@ export default {
 </script>
 
 <style lang="scss">
+.vuecal__special-hours.open {
+  background-color: rgba(255, 255, 0, 0.2);
+}
 .v-application--wrap {min-height: 0;}
 footer {display: none !important;}
 </style>
