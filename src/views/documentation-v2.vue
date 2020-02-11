@@ -133,6 +133,9 @@
     .mb-2 Current backlog
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
+      | Date prototypes
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
       | Business hours
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
