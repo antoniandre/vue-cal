@@ -126,11 +126,14 @@
       v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
         v-icon.mr-1(size="20") check
         | Hide particular weekdays
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Optional week number
 
     .mb-2 Current backlog
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
-      | Optional week number
+      | Business hours
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
       | Recurring events
