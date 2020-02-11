@@ -240,7 +240,7 @@
       By default Vue Cal will take the full width &amp; height of its container if it has a set height.
     sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
-      &lt;vue-cal style="height: 250px"&gt;&lt;/vue-cal&gt;
+      &lt;vue-cal style="height: 250px" /&gt;
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   h2.headline.mt-12.pt-12
@@ -278,7 +278,7 @@
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :time="false" hide-weekends&gt;&lt;/vue-cal&gt;
+    &lt;vue-cal :time="false" hide-weekends /&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
@@ -301,6 +301,24 @@
     &lt;/vue-cal&gt;
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
+    a(href="#ex--disable-views") # Disable views, default view
+    a#ex--disable-views(name="ex--disable-views")
+  p.
+    To hide views, you can use the #[span.code disable-views] option and provide an array of views
+    to disable.#[br]
+    The views are not only hidden from the menu bar, they are totally disabled,
+    even when navigating from cells and title bar clicks.#[br]#[br]
+    By default all the views are visible and the default view is #[span.code week].
+  v-card.mx-auto.main-content(style="height: 350px")
+    vue-cal.vuecal--green-theme.ex--disable-views(
+      :time="false"
+      default-view="month"
+      :disable-views="['years', 'year', 'week']")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal :time="false" default-view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
   //- Example.
   h4.title
@@ -395,7 +413,7 @@
 
   //- Example.
   h4.title
-    a(href="#ex--hiding-particular-week-days") # Hiding particular week days &amp; showing weeks numbers
+    a(href="#ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
     a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
   p.
     If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
@@ -417,8 +435,7 @@
       :hide-weekdays="[2, 3, 5]"
       :disable-views="['years', 'year']")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal
-             :time="false"
+    &lt;vue-cal :time="false"
              show-week-numbers
              :hide-weekdays="[2, 3, 5]"
              :disable-views="['years', 'year']"&gt;
@@ -460,7 +477,7 @@
       @ready="overrideDateTexts")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
-    &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale"&gt;&lt;/vue-cal&gt;
+    &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale" /&gt;
   highlight-message(type="warning") Don't forget to import the locale file you want as follows:
   sshpre(language="js" label="Javascript").
     // In your Vue.js component import the locale file in your component:
@@ -471,26 +488,63 @@
   h3.title
     a(href="#ex--timeline")
       v-icon.mr-2 access_time
-      | Timeline &amp; Today
+      | Timeline, business hours &amp; Today
 
   //- Example.
   h4.title
     a(href="#ex--timeline") # Timeline
     a#ex--timeline(name="ex--timeline")
   p.
-    Timelines are visible on week view and day view.#[br]
-    This examples has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
+    Timelines are only visible on #[span.code week] and #[span.code day] view.#[br]
+    This example has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends&gt;&lt;/vue-cal&gt;
+    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends /&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
   h4.title
-    a(href="#ex--today-current-time-and-disabled-views") # Today's current time &amp; disabled views
-    a#ex--today-current-time-and-disabled-views(name="ex--today-current-time-and-disabled-views")
+    a(href="#ex--special-hours") # Special hours (or business hours)
+    a#ex--special-hours(name="ex--special-hours")
+  p.
+    The special hours are visible on #[span.code week] and #[span.code day] views and allow
+    you to highlight a particular time range on each day of the week individually.#[br]
+  highlight-message.
+    Refer to the #[a(href="#api") API] section to read more about the
+    #[span.code special-hours] option.
+  v-card.my-2.ma-auto.main-content(style="height: 450px")
+    vue-cal.vuecal--green-theme.ex--special-hours(
+      :time-from="8 * 60"
+      :time-to="20 * 60"
+      :disable-views="['years', 'year', 'month']"
+      :special-hours="specialHours")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal :time-from="8 * 60" :time-to="20 * 60" :special-hours="specialHours" /&gt;
+  sshpre(language="js" label="JavaScript").
+    // `from` and `to` are expected in minutes.
+    const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+
+    // In your component's data, special hours from Monday to Friday.
+    specialHours: {
+      1: dailyHours,
+      2: dailyHours,
+      3: dailyHours,
+      4: dailyHours,
+      5: dailyHours
+    }
+  sshpre(language="css" label="CSS").
+    .business-hours {
+      background-color: rgba(255, 255, 0, 0.2);
+      border: solid rgba(255, 210, 0, 0.6);
+      border-width: 2px 0;
+    }
+
+  //- Example.
+  h4.title
+    a(href="#ex--today-current-time") # Today's current time
+    a#ex--today-current-time(name="ex--today-current-time")
   p.mb-0.
     When you choose to show the time in vue-cal, the current time of today's date will
     be marked with a line (scroll to the current time to see it).#[br]
@@ -507,17 +561,14 @@
     If you want the now line to keep accurate position even while your calendar is iddle, you can use the option
     #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
   v-card.my-2.ma-auto.main-content(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--today-current-time-and-disabled-views(
+    vue-cal.vuecal--green-theme.ex--today-current-time(
       xsmall
       :time-cell-height="26"
       default-view="day"
       :disable-views="['years', 'year', 'month']"
-      @ready="scrollToCurrentTime('.ex--today-current-time-and-disabled-views')")
+      @ready="scrollToCurrentTime('.ex--today-current-time')")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal xsmall
-             default-view="day"
-             :disable-views="['years', 'year', 'month']"&gt;
-    &lt;/vue-cal&gt;
+    &lt;vue-cal xsmall default-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
   //- Example.
   h4.title
@@ -1514,10 +1565,32 @@
 
   highlight-message
     ul
-      li.
-        Notice that on Windows machines, and on devices where the scrollbar takes some space and pushes
-        the calendar main content (#[span.code week] and #[span.code day] views), the all-day bar is added some
-        padding right to align well with the main content. This is done once, in the #[span.code mounted] hook.
+      li
+        | Notice that on Windows machines, and on devices where the scrollbar takes some space and
+        | pushes the calendar main content (#[span.code week] and #[span.code day] views), the
+        | all-day bar is added some padding right to align well with the main content.
+        | This is done once, in the #[span.code mounted] hook.#[br]
+        | If your Vue Cal does not start in the #[span.code week] or #[span.code day] view, the
+        | realignment of the all-day bar will not happen, you can trigger it:
+        .layout(:class="{ column: $vuetify.breakpoint.sm }")
+          sshpre.mt-3.mb-0.flex.fill-height(
+            language="html-vue"
+            :class="{ 'mr-2': !$vuetify.breakpoint.sm }").
+            &lt;vue-cal
+              ref="vuecal"
+              show-all-day-events
+              @view-change="!aligned &amp;&amp; alignAllDayBar()" /&gt;
+          sshpre.mt-3.flex.fill-height(language="js").
+            data: () => ({
+              aligned: false
+            }),
+            methods: {
+              alignAllDayBar () {
+                this.$nextTick(this.$refs.vuecal.alignAllDayBar)
+                this.aligned = true
+              }
+            }
+
       li.
         Multiple-day events feature will be improved in a future version to display across
         multiple cells in the all day bar.
@@ -2496,6 +2569,7 @@
     selectedDate:           [String, Date],    default: ''
     minDate:                [String, Date],    default: ''
     maxDate:                [String, Date],    default: ''
+    specialHours:           [Object],          default: {}
     startWeekOnSunday:      [Boolean],         default: false
     small:                  [Boolean],         default: false
     xsmall:                 [Boolean],         default: false
@@ -2679,7 +2753,23 @@
       p.
         Accepts a formatted string or plain JS Date object.#[br]
         Set a maximum date for the cells to be selectable.#[br]
-        By default the cell will be grayed out when out of range but CSS classes let you customize this.
+        By default the cell will be grayed out when out of range but CSS classes let you
+        customize this.
+    li
+      code.mr-2 specialHours
+      span.code [Object], default: {}
+      p
+        | Allows an individual highlighted time range for each day of the week.#[br]
+        | For instance, it could represent the business hours.#[br]
+        | The object must contain indexed days, #[strong from 1 for Monday to 7 for Sunday], of the
+        | days you want to highlight.#[br]
+        | Each day must contain an object with a #[span.code from] and #[span.code to] properties
+        | defining the beginning and the end of the time range #[strong in minutes].#[br]
+        | In addition, you can optionally set a CSS class for each day of the week.#[br]
+        | Example for Wednesday:
+        sshpre.mt-1(language="html-vue" label="Vue Template").
+          :special-hours="{ 3: { from: 8 * 60, to: 20 * 60, class: 'open' } }"
+
     li
       code.mr-2 startWeekOnSunday
       span.code [Boolean], default: false
@@ -2711,16 +2801,22 @@
       code.mr-2 clickToNavigate
       span.code [Boolean], default: false
       p.
-        When set to #[span.code true] a single click (or tap for touch devices) will take you to a narrower view if available.#[br]
-        You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
-        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblclickToNavigate] to false.
+        When set to #[span.code true] a single click (or tap for touch devices) will take you to a
+        narrower view if available.#[br]
+        You can always go back to a broader view by clicking the view title or selecting another view
+        from the view selector if enabled.#[br]
+        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate]
+        and #[span.code dblclickToNavigate] to false.
     li
       code.mr-2 dblclickToNavigate
       span.code [Boolean], default: true
       p.
-        When set to #[span.code true] a double click (or double tap for touch devices) will take you to a narrower view if available.#[br]
-        You can always go back to a broader view by clicking the view title or selecting another view from the view selector if enabled.#[br]
-        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate] and #[span.code dblclickToNavigate] to false.
+        When set to #[span.code true] a double click (or double tap for touch devices) will take you to a
+        narrower view if available.#[br]
+        You can always go back to a broader view by clicking the view title or selecting another view
+        from the view selector if enabled.#[br]
+        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate]
+        and #[span.code dblclickToNavigate] to false.
     li
       code.mr-2 cellClickHold
       span.code [Boolean], default: true
@@ -3104,6 +3200,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.23.0] Added #[span.code special-hours] option
   div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
   div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
   div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
@@ -3426,6 +3523,8 @@ import VueCal from '@/components/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import highlightMessage from '@/components/highlight-message'
+
+const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
 const events = [
   {
@@ -3949,7 +4048,8 @@ export default {
     },
     maxDate () {
       return new Date().addDays(15)
-    }
+    },
+    specialHours: () => Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
   }
 }
 </script>
@@ -4022,6 +4122,15 @@ $primary: #42b983;
   .before-min {color: #b6d6c7;}
   .after-max {color: #008b8b;}
 }
+
+.ex--special-hours {
+  .business-hours {
+    background-color: rgba(255, 255, 0, 0.2);
+    border: solid rgba(255, 210, 0, 0.6);
+    border-width: 2px 0;
+  }
+}
+
 // Custom vue-cal title & "no event" text example.
 .ex--custom-title-and-cells {
   .vuecal__cell-events-count {margin-top: -2px;}
@@ -4045,7 +4154,7 @@ $primary: #42b983;
 }
 
 // Today-current-time example.
-.ex--today-current-time-and-disabled-views {
+.ex--today-current-time {
   .vuecal__now-line {color: #06c;}
 }
 

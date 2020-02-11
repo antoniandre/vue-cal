@@ -153,50 +153,51 @@ export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
   props: {
-    locale: { type: String, default: 'en' },
-    hideViewSelector: { type: Boolean, default: false },
-    hideTitleBar: { type: Boolean, default: false },
-    hideBody: { type: Boolean, default: false },
-    hideWeekends: { type: Boolean, default: false },
-    hideWeekdays: { type: Array, default: () => [] },
-    disableViews: { type: Array, default: () => [] },
-    defaultView: { type: String, default: 'week' },
-    todayButton: { type: Boolean, default: false },
-    showAllDayEvents: { type: [Boolean, String], default: false },
-    showWeekNumbers: { type: [Boolean, String], default: false },
-    selectedDate: { type: [String, Date], default: '' },
-    minDate: { type: [String, Date], default: '' },
-    maxDate: { type: [String, Date], default: '' },
-    startWeekOnSunday: { type: Boolean, default: false },
-    small: { type: Boolean, default: false },
-    xsmall: { type: Boolean, default: false },
-    clickToNavigate: { type: Boolean, default: false },
-    dblclickToNavigate: { type: Boolean, default: true },
     cellClickHold: { type: Boolean, default: true },
     cellContextmenu: { type: Boolean, default: false },
-    time: { type: Boolean, default: true },
-    timeFrom: { type: Number, default: 0 }, // In minutes.
-    timeTo: { type: Number, default: minutesInADay }, // In minutes.
-    timeStep: { type: Number, default: 60 }, // In minutes.
-    timeCellHeight: { type: Number, default: 40 }, // In pixels.
-    twelveHour: { type: Boolean, default: false },
-    timeFormat: { type: String, default: '' },
-    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
-    minCellWidth: { type: Number, default: 0 },
-    minSplitWidth: { type: Number, default: 0 },
-    minEventWidth: { type: Number, default: 0 },
-    overlapsPerTimeStep: { type: Boolean, default: false },
-    splitDays: { type: Array, default: () => [] },
-    stickySplitLabels: { type: Boolean, default: false },
-    events: { type: Array, default: () => [] },
+    clickToNavigate: { type: Boolean, default: false },
+    dblclickToNavigate: { type: Boolean, default: true },
+    defaultView: { type: String, default: 'week' },
+    disableViews: { type: Array, default: () => [] },
     editableEvents: { type: Boolean, default: false },
-    resizeX: { type: Boolean, default: false },
-    eventsOnMonthView: { type: [Boolean, String], default: false },
+    events: { type: Array, default: () => [] },
     eventsCountOnYearView: { type: Boolean, default: false },
+    eventsOnMonthView: { type: [Boolean, String], default: false },
+    hideBody: { type: Boolean, default: false },
+    hideTitleBar: { type: Boolean, default: false },
+    hideViewSelector: { type: Boolean, default: false },
+    hideWeekdays: { type: Array, default: () => [] },
+    hideWeekends: { type: Boolean, default: false },
+    locale: { type: String, default: 'en' },
+    maxDate: { type: [String, Date], default: '' },
+    minCellWidth: { type: Number, default: 0 },
+    minDate: { type: [String, Date], default: '' },
+    minEventWidth: { type: Number, default: 0 },
+    minSplitWidth: { type: Number, default: 0 },
     onEventClick: { type: [Function, null], default: null },
-    onEventDblclick: { type: [Function, null], default: null },
     onEventCreate: { type: [Function, null], default: null },
-    transitions: { type: Boolean, default: true }
+    onEventDblclick: { type: [Function, null], default: null },
+    overlapsPerTimeStep: { type: Boolean, default: false },
+    resizeX: { type: Boolean, default: false },
+    selectedDate: { type: [String, Date], default: '' },
+    showAllDayEvents: { type: [Boolean, String], default: false },
+    showWeekNumbers: { type: [Boolean, String], default: false },
+    small: { type: Boolean, default: false },
+    specialHours: { type: Object, default: () => ({}) },
+    splitDays: { type: Array, default: () => [] },
+    startWeekOnSunday: { type: Boolean, default: false },
+    stickySplitLabels: { type: Boolean, default: false },
+    time: { type: Boolean, default: true },
+    timeCellHeight: { type: Number, default: 40 }, // In pixels.
+    timeFormat: { type: String, default: '' },
+    timeFrom: { type: Number, default: 0 }, // In minutes.
+    timeStep: { type: Number, default: 60 }, // In minutes.
+    timeTo: { type: Number, default: minutesInADay }, // In minutes.
+    todayButton: { type: Boolean, default: false },
+    transitions: { type: Boolean, default: true },
+    twelveHour: { type: Boolean, default: false },
+    watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
+    xsmall: { type: Boolean, default: false }
   },
   data: () => ({
     // Make texts reactive before a locale is loaded.
@@ -1124,6 +1125,18 @@ export default {
     months () {
       return this.texts.months.map(month => ({ label: month }))
     },
+    // Prepare the special hours object once for all at root level and not in cell.
+    specialDayHours () {
+      return Array(7).fill('').map((cell, i) => {
+        const specialHours = this.specialHours[i + 1] || {}
+        return {
+          day: i + 1,
+          from: specialHours.from * 1 || null,
+          to: specialHours.to * 1 || null,
+          class: specialHours.class || ''
+        }
+      })
+    },
     viewTitle () {
       let title = ''
       const date = this.view.startDate
@@ -1262,13 +1275,15 @@ export default {
             const startDate = firstDayOfWeek.addDays(i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
+            const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
 
             return {
               startDate,
               formattedDate: formatDateLite(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
-              today: !todayFound && startDate.isToday() && !todayFound++
+              today: !todayFound && startDate.isToday() && !todayFound++,
+              specialHours: this.specialDayHours[dayOfWeek]
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break
@@ -1277,12 +1292,14 @@ export default {
           const startDate = this.view.startDate
           const endDate = new Date(this.view.startDate)
           endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
+          const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
 
           cells = [{
             startDate,
             formattedDate: formatDateLite(startDate),
             endDate,
-            today: startDate.isToday()
+            today: startDate.isToday(),
+            specialHours: this.specialDayHours[dayOfWeek]
           }]
           break
         }

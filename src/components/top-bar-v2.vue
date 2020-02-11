@@ -37,6 +37,7 @@
             | BASIC
           v-list-item(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
           v-list-item(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
+          v-list-item(href="#ex--disable-views" v-scroll-to="'#ex--disable-views'") Disable views, default view
           v-list-item(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
           v-list-item(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
           v-list-item(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'") Hide particular weekdays &amp; show week numbers
@@ -46,9 +47,12 @@
           v-list-item(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'") Internationalization
           v-list-item.heading(href="#ex--timeline" v-scroll-to="'#ex--timeline'")
             v-icon(small).mr-2 access_time
-            | TIMELINE &amp; TODAY
+            | TIMELINE, BUSINESS HOURS &amp; TODAY
           v-list-item(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-item(href="#ex--today-current-time-and-disabled-views" v-scroll-to="'#ex--today-current-time-and-disabled-views'") Today's current time &amp; disabled views
+          v-list-item(href="#ex--special-hours" v-scroll-to="'#ex--special-hours'")
+            | Business Hours
+            v-chip.xsmall.ml-2(small color="primary" outlined) new
+          v-list-item(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
           v-list-item(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
           v-list-item.heading(href="#ex--timeless-events" v-scroll-to="'#ex--timeless-events'")
