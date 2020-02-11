@@ -2,16 +2,19 @@
 //- This is an isolated test view. Just for testing purpose.
 div
   v-btn(@click="selectedDate = new Date()") Select today
-  vue-cal(
+  v-btn(@click="splitDays[1].hide = !splitDays[1].hide") Toggle Doctor 2
+  p {{splitDays}}
+  vue-cal.vuecal--blue-theme(
     :selected-date="selectedDate"
     events-on-month-view
     default-view="month"
     :events="events"
     editable-events
+    :split-days="splitDays"
+    sticky-split-labels
     :time-from="6 * 60"
     :time-to="22 * 60"
     :time-step="30"
-    :special-hours="specialHours"
     style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -25,18 +28,24 @@ export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
-    specialHours: Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {}),
+    splitDays: [
+      { class: 'doctor1', label: 'Doctor 1', hide: false },
+      { class: 'doctor2', label: 'Doctor 2', hide: false },
+      { class: 'doctor3', label: 'Doctor 3', hide: false }
+    ],
     events: [
-      // {
-      //   startDate: now.subtractDays(1),
-      //   endDate: now.addDays(1),
-      //   title: 'Event'
-      // },
-      // {
-      //   start: '2019-12-31 18:00',
-      //   end: '2019-12-31 22:00',
-      //   title: 'Event'
-      // }
+      {
+        startDate: now.subtractHours(6),
+        endDate: now.subtractHours(4),
+        title: 'Event 1',
+        split: 1
+      },
+      {
+        startDate: now.subtractHours(3),
+        endDate: now.subtractHours(1),
+        title: 'Event 2',
+        split: 3
+      }
     ]
   }),
 
