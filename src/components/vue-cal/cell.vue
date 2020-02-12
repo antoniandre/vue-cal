@@ -9,14 +9,14 @@
       v-for="(split, i) in (splits.length ? splits : 1)"
       :key="options.transitions ? `${view}-${data.content}-${i}` : i"
       :class="splits.length && `vuecal__cell-split ${split.class}`"
-      :data-split="splits.length ? i + 1 : false"
+      :data-split="splits.length ? split.id : false"
       column
       tabindex="0"
       :aria-label="data.content"
       @focus="onCellFocus($event)"
       @keypress.enter="onCellkeyPressEnter($event)"
-      @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? i + 1 : null)"
-      @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? i + 1 : null)"
+      @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? split.id : null)"
+      @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? split.id : null)"
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
@@ -77,6 +77,11 @@ export default {
   }),
 
   methods: {
+    getSplitAtCursor (DOMEvent) {
+      const split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+      return (split && split.attributes['data-split'].value) || null
+    },
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
       if (this.options.time && this.eventsCount && !this.splits.length) {
@@ -97,12 +102,7 @@ export default {
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
-      let split
-      if (this.$parent.splitDays.length) {
-        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-        if (split) split = split.attributes['data-split'].value
-      }
+      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
       selectCell(force, this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
@@ -111,13 +111,8 @@ export default {
     onCellkeyPressEnter (DOMEvent) {
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
-      // If splitting days, also return the clicked split on cell click when emitting event.
-      let split
-      if (this.$parent.splitDays.length) {
-        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-        if (split) split = split.attributes['data-split'].value
-      }
+      // If splitting days, also return the clicked split on cell keypress when emitting event.
+      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
       keyPressEnterCell(this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
@@ -132,13 +127,8 @@ export default {
       if (!this.isSelected) {
         this.isSelected = this.data.startDate
 
-        // If splitting days, also return the clicked split on cell click when emitting event.
-        let split
-        if (this.$parent.splitDays.length) {
-          split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-            this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-          if (split) split = split.attributes['data-split'].value
-        }
+        // If splitting days, also return the clicked split on cell focus when emitting event.
+        const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
         // Cell-focus event returns the cell start date (at midnight) if triggered from tab key,
         // or cursor coords time if clicked.
@@ -187,13 +177,8 @@ export default {
       const date = new Date(this.data.startDate)
       date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
-      // If splitting days, also return the clicked split on cell click when emitting event.
-      let split
-      if (this.$parent.splitDays.length) {
-        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-        if (split) split = split.attributes['data-split'].value
-      }
+      // If splitting days, also return the clicked split on cell dblclick when emitting event.
+      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
       this.$parent.$emit('cell-dblclick', split ? { date, split } : date)
 
@@ -209,12 +194,7 @@ export default {
       date.setMinutes(minutes)
 
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
-      let split
-      if (this.$parent.splitDays.length) {
-        split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-          this.$parent.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-        if (split) split = split.attributes['data-split'].value
-      }
+      let split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
       this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     }
@@ -344,7 +324,7 @@ export default {
     },
     splits () {
       return this.cellSplits.map((item, i) => {
-        const events = this.events.filter(e => e.split === i + 1)
+        const events = this.events.filter(e => e.split === item.id)
         const [overlaps, streak] = checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), this.options)
         return {
           ...item,
