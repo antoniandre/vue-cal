@@ -1762,7 +1762,7 @@
       minSplitWidth: 0,
       splitDays: [
         // The id property is added automatically if none (starting from 1), but you can set a custom one.
-        // If you need the toggle the splits, you must set the id explicitly.
+        // If you need to toggle the splits, you must set the id explicitly.
         { id: 1, class: 'mom', label: 'Mom' },
         { id: 2, class: 'dad', label: 'Dad', hide: false },
         { id: 3, class: 'kid1', label: 'Kid 1' },
@@ -2942,10 +2942,10 @@
       p
         | Split each day into multiple vertical splits.#[br]
         | Accepts an array of split objects with attributes.#[br]
-        | Each split object can have these attributes:
+        | Each split object can have these attributes, they are all optional:
         sshpre(language="js").
           {
-            id: {Integer | String},
+            id: {Integer | String}, // All ids must be set if using `hide`.
             class: {String},
             label: {String},
             hide: {Boolean} // You can toggle the column on and of with this.
@@ -3049,7 +3049,7 @@
           li.
             When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
             starting from 1, corresponding to the split you want the event to appear in.#[br]
-            Optionnally, if you have set the #[span.code id] property in #[span.code splitDays],
+            Optionally, if you have set the #[span.code id] property in #[span.code splitDays],
             you have to use the same #[span.code id] here (Integer or String).
           li.
             When the #[span.code showAllDayEvents] and #[span.code time] options are set to
