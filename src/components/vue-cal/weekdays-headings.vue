@@ -21,7 +21,7 @@
         .vuecal__flex.vuecal__split-days-headers(
           v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
           grow)
-          .day-split-header(v-for="(split, i) in vuecal.splitDays" :key="i" :class="split.class || false") {{ split.label }}
+          .day-split-header(v-for="(split, i) in vuecal.daySplits" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
 <script>

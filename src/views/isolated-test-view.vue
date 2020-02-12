@@ -30,7 +30,7 @@ export default {
   }),
 
   methods: {
-    log (params) {
+    log (...params) {
       console.log(params)
     }
   }
@@ -38,6 +38,11 @@ export default {
 </script>
 
 <style lang="scss">
+.vuecal__event {
+  background-color: rgba(160, 220, 255, 0.5);
+  border: 1px solid rgba(0, 100, 150, 0.15);
+}
+
 .v-application--wrap {min-height: 0;}
 footer {display: none !important;}
 </style>
