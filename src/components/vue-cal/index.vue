@@ -4,6 +4,7 @@
     :options="$props"
     :view-props="{ views, view, weekDaysInHeader }"
     :week-days="weekDays"
+    :day-splits="daySplits"
     :switch-to-narrower-view="switchToNarrowerView")
     template(v-slot:arrow-prev)
       slot(name="arrow-prev")
@@ -38,7 +39,7 @@
               :all-day="true"
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
-              :cell-splits="hasSplits && splitDays || []")
+              :cell-splits="hasSplits && daySplits || []")
               template(v-slot:event-renderer="{ event, view }")
                 slot(name="event-renderer" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
@@ -79,7 +80,7 @@
                   slot(name="weekday-heading" :heading="heading" :view="view")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
-                .day-split-header(v-for="(split, i) in splitDays" :key="i" :class="split.class || false") {{ split.label }}
+                .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
 
               .vuecal__flex(
                 ref="cells"
@@ -94,7 +95,7 @@
                   :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
-                  :cell-splits="hasSplits && splitDays || []")
+                  :cell-splits="hasSplits && daySplits || []")
                   template(v-slot:cell-content="{ events, split, selectCell }")
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split && !stickySplitLabels" v-html="split.label")
@@ -1078,14 +1079,21 @@ export default {
 
       return timeCells
     },
+    // Filter out the day splits that are hidden.
+    daySplits () {
+      return (
+        (this.splitDays.filter(item => !item.hide) || [])
+          .map((item, i) => ({ ...item, id: item.id || (i + 1) })) // Make sure there's always an id.
+      )
+    },
     // Whether the current view has days splits.
     hasSplits () {
-      return !!this.splitDays.length && ['week', 'day'].includes(this.view.id)
+      return this.daySplits.length && ['week', 'day'].includes(this.view.id)
     },
     contentMinWidth () {
       let minWidth = null
 
-      if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.splitDays.length
+      if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.daySplits.length
       else if (this.minCellWidth && this.view.id === 'week') minWidth = this.visibleDaysCount * this.minCellWidth
 
       return minWidth
