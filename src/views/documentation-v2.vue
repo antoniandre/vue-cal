@@ -166,9 +166,7 @@
       | Horizontal timeline
     //- TODO:
       General
-      - do all the @todo
-      - cleanup mutableEvents
-      - check event returned from all emitted events / always return view events not mutable ones
+      - do all the @todo in the codebase
       - check overlaps only on the cell that has changed on event create/drag/background change
       Multiple-day events:
       - Fix event segments when dragging too fast on x axis.
@@ -1137,7 +1135,7 @@
             end: {String}, // (Formatted date) Event start + 2 hours
             title: '',
             content: '',
-            split /* if any */: {Integer} // The current day split you clicked.
+            split /* if any */: {Integer | String} // The current day split id you clicked.
         }
 
       p.
@@ -1678,11 +1676,14 @@
       li #[span.code min-cell-width.black--text] will only be activated on week view, since there is only 1 cell in day view.
       li If both #[span.code.black--text min-cell-width] and #[span.code.black--text min-split-width] are set, #[span.code.black--text min-split-width] will be used.
 
-    | #[br]You can also use the option #[span.code.black--text sticky-split-labels] to place the split labels in the header.#[br]
+    | #[br]You can also use the option #[span.code.black--text sticky-split-labels] to place the split labels in the header.#[br]#[br]
+
+    | You can toggle the splits thanks to the #[span.code.black--text hide] property of each split in #[span.code splitDays].#[br]#[br]
+
     | Refer to the #[span.code min-cell-width.black--text], #[span.code.black--text min-split-width] and #[span.code.black--text splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
 
     v-layout(align-center)
-      v-btn.mr-2(
+      v-btn.px-2.mr-2(
         small
         color="primary"
         :outlined="!splitsExample.minCellWidth"
@@ -1690,7 +1691,7 @@
         v-icon.mr-2 {{ splitsExample.minCellWidth ? 'close' : 'add' }}
         | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
 
-      v-btn.mr-2(
+      v-btn.px-2.mr-2(
         small
         color="primary"
         :outlined="!splitsExample.minSplitWidth"
@@ -1698,13 +1699,21 @@
         v-icon.mr-2 {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
         | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
 
-      v-btn(
+      v-btn.px-2.mr-2(
         small
         color="primary"
         :outlined="!splitsExample.stickySplitLabels"
         @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
         v-icon.mr-2 {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
         | Sticky Split Labels
+
+      v-btn.px-2(
+        small
+        color="primary"
+        :outlined="splitsExample.splitDays[1].hide"
+        @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
+        v-icon.mr-2 {{ splitsExample.splitDays[1].hide ? 'add' : 'remove' }}
+        | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme(
@@ -1730,6 +1739,9 @@
     &lt;button @click="stickySplitLabels = !stickySplitLabels"&gt;
       Sticky Split Labels
     &lt;/button&gt;
+    &lt;button @click="splitDays[1].hide = !splitDays[1].hide"&gt;
+      Show/Hide Dad
+    &lt;/button&gt;
 
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
@@ -1749,11 +1761,13 @@
       minCellWidth: 400,
       minSplitWidth: 0,
       splitDays: [
-        { class: 'mom', label: 'Mom' },
-        { class: 'dad', label: 'Dad' },
-        { class: 'kid1', label: 'Kid 1' },
-        { class: 'kid2', label: 'Kid 2' },
-        { class: 'kid3', label: 'Kid 3' }
+        // The id property is added automatically if none (starting from 1), but you can set a custom one.
+        // If you need the toggle the splits, you must set the id explicitly.
+        { id: 1, class: 'mom', label: 'Mom' },
+        { id: 2, class: 'dad', label: 'Dad', hide: false },
+        { id: 3, class: 'kid1', label: 'Kid 1' },
+        { id: 4, class: 'kid2', label: 'Kid 2' },
+        { id: 5, class: 'kid3', label: 'Kid 3' }
       ]
       events: [
         {
@@ -1762,7 +1776,7 @@
           title: 'Doctor appointment',
           content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
           class: 'health',
-          split: 1
+          split: 1 // Has to match the id of the split you have set (or integers if none).
         },
         {
           start: '2018-11-19 18:30',
@@ -2925,10 +2939,17 @@
     li
       code.mr-2 splitDays
       span.code [Array], default: []
-      p.
-        Split each day into multiple vertical splits.#[br]
-        Accepts an array of split objects with attributes.#[br]
-        Each split object can have these attributes: #[span.code { class: 'string', label: 'string' }]
+      p
+        | Split each day into multiple vertical splits.#[br]
+        | Accepts an array of split objects with attributes.#[br]
+        | Each split object can have these attributes:
+        sshpre(language="js").
+          {
+            id: {Integer | String},
+            class: {String},
+            label: {String},
+            hide: {Boolean} // You can toggle the column on and of with this.
+          }
     li
       code.mr-2 stickySplitLabels
       span.code [Boolean], default: false
@@ -3003,12 +3024,12 @@
             // Instead of formatted dates, you can also provide Javascript Date objects:
             // startDate: new Date(2018, 11 - 1, 19, 12, 0),
             // endDate: new Date(2018, 11 - 1, 19, 14, 0),
-            title: 'String', // Optional.
-            content: 'String', // Optional.
-            class: 'String', // Optional - space-separated css classes.
-            background: [Boolean] // Optional. (Event type not CSS property)
-            split: [Number] // Optional.
-            allDay: [Boolean] // Optional.
+            title: {String}, // Optional.
+            content: {String}, // Optional.
+            class: {String}, // Optional - space-separated css classes.
+            background: {Boolean} // Optional. (Event type not CSS property)
+            split: {Number|String} // Optional.
+            allDay: {Boolean} // Optional.
             deletable: false // optional - force undeletable when events are editable.
             resizable: false // optional - force unresizable when events are editable.
           }
@@ -3027,16 +3048,20 @@
             which allows overlapping and disable the ability to drag &amp; resize.
           li.
             When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
-            starting from 1, corresponding to the split you want the event to appear in.
+            starting from 1, corresponding to the split you want the event to appear in.#[br]
+            Optionnally, if you have set the #[span.code id] property in #[span.code splitDays],
+            you have to use the same #[span.code id] here (Integer or String).
           li.
-            When the #[span.code showAllDayEvents] and #[span.code time] options are set to true,
-            all the events with an attribute #[span.code allDay] set to true will show up in a
-            fixed bar (week &amp; day views).
+            When the #[span.code showAllDayEvents] and #[span.code time] options are set to
+            #[span.code true], all the events with an attribute #[span.code allDay] set to
+            #[span.code true] will show up in a fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
         p.title.mt-0.ml-1 Important notes
         ul
-          li The events are internally identified by the key #[span.code `_eid`]. #[strong This is a reserved keyword.]
+          li.
+            The events are internally identified by the key #[span.code `_eid`].
+            #[strong This is a reserved keyword.]
           li.mt-2
             | Correct date formats are #[code {{ currentDateFormatted }}],
             | #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar,
@@ -3666,11 +3691,11 @@ export default {
       minSplitWidth: 0,
       stickySplitLabels: false,
       splitDays: [
-        { class: 'mom', label: 'Mom' },
-        { class: 'dad', label: 'Dad' },
-        { class: 'kid1', label: 'Kid 1' },
-        { class: 'kid2', label: 'Kid 2' },
-        { class: 'kid3', label: 'Kid 3' }
+        { id: 1, class: 'mom', label: 'Mom' },
+        { id: 2, class: 'dad', label: 'Dad', hide: false },
+        { id: 3, class: 'kid1', label: 'Kid 1' },
+        { id: 4, class: 'kid2', label: 'Kid 2' },
+        { id: 5, class: 'kid3', label: 'Kid 3' }
       ]
     },
     example1theme: 'green',
