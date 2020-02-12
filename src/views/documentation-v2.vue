@@ -3231,6 +3231,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div #[strong Version 2.24.0] Allow toggling day splits
   div #[strong Version 2.23.0] Added #[span.code special-hours] option
   div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
   div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
