@@ -194,7 +194,7 @@ export default {
       date.setMinutes(minutes)
 
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
-      let split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
 
       this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     }

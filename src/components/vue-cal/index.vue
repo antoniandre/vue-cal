@@ -1083,7 +1083,7 @@ export default {
     daySplits () {
       return (
         (this.splitDays.filter(item => !item.hide) || [])
-        .map((item, i) => ({ ...item, id: item.id || (i + 1) })) // Make sure there's always an id.
+          .map((item, i) => ({ ...item, id: item.id || (i + 1) })) // Make sure there's always an id.
       )
     },
     // Whether the current view has days splits.
