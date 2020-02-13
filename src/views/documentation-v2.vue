@@ -2175,7 +2175,12 @@
     a(href="#ex--scroll-to-time") # Scroll the view to a particular time
     a#ex--scroll-to-time(name="ex--scroll-to-time")
   p.mb-0.
-    It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal:
+    It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal.
+  highlight-message(type="tips")
+    | Bear in mind that IE11 needs a polyfill before you can use the scrollTo method on a DOM element, this single line will do.
+    sshpre.mt-2.mb-0.flex(language="js").
+      // For IE11. Adds this to your page once (in `created` hook for instance).
+      if (!HTMLElement.scrollTo) HTMLElement.prototype.scrollTo = function ({ top }) { this.scrollTop = top }
 
   v-btn.mt-2.mr-2(small color="primary" @click="scrollToCurrentTime('.ex--scroll-to-time')")
     v-icon vertical_align_bottom
@@ -4010,6 +4015,7 @@ export default {
     ],
     deleteEventFunction: null
   }),
+
   methods: {
     logEvents (emittedEventName, params) {
       if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].includes(emittedEventName)) {
@@ -4063,6 +4069,7 @@ export default {
       setTimeout(this.$refs.vuecal.updateDateTexts, 3000)
     }
   },
+
   computed: {
     nowFormatted () {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
@@ -4082,6 +4089,10 @@ export default {
       return new Date().addDays(15)
     },
     specialHours: () => Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
+  },
+
+  created () {
+    if (!HTMLElement.scrollTo) HTMLElement.prototype.scrollTo = function ({ top }) { this.scrollTop = top }
   }
 }
 </script>
