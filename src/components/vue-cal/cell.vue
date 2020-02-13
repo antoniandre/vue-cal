@@ -347,11 +347,11 @@ export default {
     },
     cssClasses () {
       return {
-        current: this.data.current,
-        today: this.data.today,
-        'out-of-scope': this.data.outOfScope,
-        'before-min': this.isDisabled && this.isBeforeMinDate,
-        'after-max': this.isDisabled && this.isAfterMaxDate,
+        'vuecal__cell--current': this.data.current,
+        'vuecal__cell--today': this.data.today,
+        'vuecal__cell--out-of-scope': this.data.outOfScope,
+        'vuecal__cell--before-min': this.isDisabled && this.isBeforeMinDate,
+        'vuecal__cell--after-max': this.isDisabled && this.isAfterMaxDate,
         'vuecal__cell--disabled': this.isDisabled,
         'vuecal__cell--selected': this.isSelected,
         'vuecal__cell--highlighted': this.highlighted,
@@ -451,8 +451,8 @@ export default {
   }
   .vuecal--overflow-x.vuecal--day-view &:before {bottom: 0;}
 
-  &.today,
-  &.current {
+  &--today,
+  &--current {
     background-color: rgba(240, 240, 255, 0.4);
     z-index: 1;
   }
@@ -465,9 +465,9 @@ export default {
     .vuecal--day-view & {background: none;}
   }
 
-  &.out-of-scope {color: #ccc;}
+  &--out-of-scope {color: #ccc;}
   &--disabled {color: #ccc;cursor: not-allowed;}
-  &--highlighted {background-color: rgba(172, 255, 210, 0.1);}
+  &--highlighted {background-color: rgba(172, 255, 210, 1);}
 
   &-events-count {
     position: absolute;

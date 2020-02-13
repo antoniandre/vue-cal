@@ -2,6 +2,8 @@ let changeViewTimeoutId = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
 let viewChanged = false
 let cancelViewChange = true
+let dragOverYearCellTimeout = null
+let dragOverCell = null
 
 export const eventDragStart = (e, event, vuecal) => {
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
@@ -35,17 +37,47 @@ export const eventDragEnd = (e, event, vuecal) => {
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
+export const cellDragEnter = (e, cell, cellDate, vuecal) => {
+  // e.preventDefault()
+  const target = e.currentTarget
+  // setTimeout(() => {
+    if (target === dragOverCell || !target.className.includes('vuecal__cell-content')) return false
+    dragOverCell = target
+    console.log('cellDragEnter')
+    cell.highlighted = true
+  // }, 0)
+
+  // setTimeout(() => {
+  //   cell.highlighted = true
+  //   clearTimeout(dragOverYearCellTimeout)
+
+  //   // On `years` & `year` views go to narrower view on drag and hold.
+  //   if (vuecal.view.id.includes('year')) {
+  //     dragOverYearCellTimeout = setTimeout(() => {
+  //       vuecal.switchToNarrowerView()
+  //     }, 3000)
+  //   }
+  // }, 0)
+}
+
+// When starting to drag event on the same cell it's in.
 export const cellDragOver = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
   cell.highlighted = true
 }
 
-export const cellDragEnter = (e, cell, cellDate, vuecal) => {
-  cell.highlighted = true
-}
-
 export const cellDragLeave = (e, cell, cellDate, vuecal) => {
+  e.preventDefault()
+  // return
+  if (!dragOverCell || e.target !== dragOverCell || !e.target.className.includes('vuecal__cell-content') || (e.target.className.includes('vuecal__cell-content') && !e.relatedTarget.className.includes('vuecal__cell-content'))) return false
+  // if (e.currentTarget.className.includes('vuecal__cell-content')) return false
+  debugger
+  dragOverCell = null
+
   cell.highlighted = false
+  console.log('cellDragLeave')
+  if (vuecal.view.id === 'year') debugger
+  // clearTimeout(dragOverYearCellTimeout)
 }
 
 export const cellDragDrop = (e, cell, cellDate, vuecal) => {
