@@ -46,19 +46,21 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   // otherwise the dragLeave will cancel this.
   setTimeout(() => {
     console.log('cellDragEnter')
-    // if (dragOverCell.el) {
-    //   dragOverCell.cell.highlighted = false
-    //   if (dragOverCell.timeout) {
-    //     dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
-    //   }
-    // }
+    // Un-highlight the previous cell.
+    if (dragOverCell.el) {
+      dragOverCell.cell.highlighted = false
+      if (dragOverCell.timeout) dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
+    }
 
     dragOverCell = { el: target, cell, timeout: null }
     cell.highlighted = true
 
     // On `years` & `year` views go to narrower view on drag and hold.
     if (vuecal.view.id.includes('year')) {
-      dragOverCell.timeout = setTimeout(vuecal.switchToNarrowerView, 2000)
+      dragOverCell.timeout = setTimeout(() => {
+        dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
+        vuecal.switchToNarrowerView()
+      }, 2000)
     }
   }, 0)
 }

@@ -393,6 +393,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
+  transition: 0.15s ease-in-out background-color;
 
   .vuecal__cells.month-view &,
   .vuecal__cells.week-view & {
