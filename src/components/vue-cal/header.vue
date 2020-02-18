@@ -204,11 +204,14 @@ export default {
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
 
-  // Pulse buttons when drag over with an event.
+  // Pulse buttons when dragging over with an event.
   &__arrow--highlighted,
   button.highlighted {
     position: relative;
     background-color: rgba(0, 255, 0, 0.2) !important;
+
+    // Prevent event bubbling on hover and move.
+    * {pointer-events: none;}
 
     &:before {
       content: '';
@@ -222,6 +225,7 @@ export default {
       border-radius: 3em;
       margin-top: -1.5em;
       margin-left: -1.5em;
+      pointer-events: none; // Prevent event bubbling on hover and move.
     }
 
     &:after {
@@ -236,6 +240,7 @@ export default {
       border-radius: 2.6em;
       margin-top: -1.3em;
       margin-left: -1.3em;
+      pointer-events: none; // Prevent event bubbling on hover and move.
     }
   }
 }
