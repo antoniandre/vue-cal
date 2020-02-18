@@ -39,7 +39,6 @@
     "sass-loader": "^8.0.2",
     "simple-syntax-highlighter": "^1.0.6",
     "vue": "^2.6.11",
-    "vue-cal": "^1.63.0",
     "vue-cli-plugin-vuetify": "^2.0.3",
     "vue-router": "^3.1.5",
     "vue-scrollto": "^2.17.1",
