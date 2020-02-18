@@ -1,4 +1,5 @@
-let changeViewTimeoutId = null
+let changeViewTimeout = null
+let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
 let viewChanged = false
 let cancelViewChange = true
@@ -32,7 +33,7 @@ export const eventDragEnd = (e, event, vuecal) => {
   event.dragging = false
   console.log('event drag end')
 
-  // When droping the event, cancel view change if no cell received the event (in cellDragDrop).
+  // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
@@ -40,29 +41,22 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   const target = e.currentTarget
 
   // Cancel dragEnter event if hovering a child.
+  if (e.currentTarget.contains(e.relatedTarget)) return
   if (target === dragOverCell.el || !target.className.includes('vuecal__cell-content')) return false
 
-  // Run the cellDragEnter 1 frame after the cellDragLeave,
-  // otherwise the dragLeave will cancel this.
-  setTimeout(() => {
-    console.log('cellDragEnter')
-    // Un-highlight the previous cell.
-    if (dragOverCell.el) {
-      dragOverCell.cell.highlighted = false
-      if (dragOverCell.timeout) dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
-    }
+  console.log('cellDragEnter')
+  // Un-highlight the previous cell.
+  if (dragOverCell.el) dragOverCell.cell.highlighted = false
 
-    dragOverCell = { el: target, cell, timeout: null }
-    cell.highlighted = true
+  dragOverCell = { el: target, cell, timeout: clearTimeout(dragOverCell.timeout) }
+  cell.highlighted = true
 
-    // On `years` & `year` views go to narrower view on drag and hold.
-    if (vuecal.view.id.includes('year')) {
-      dragOverCell.timeout = setTimeout(() => {
-        dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
-        vuecal.switchToNarrowerView()
-      }, 2000)
-    }
-  }, 0)
+  // On `years` & `year` views go to narrower view on drag and hold.
+  if (vuecal.view.id.includes('year')) {
+    dragOverCell.timeout = setTimeout(() => {
+      vuecal.switchToNarrowerView()
+    }, 2000)
+  }
 }
 
 // When starting to drag event on the same cell it's in.
@@ -71,15 +65,20 @@ export const cellDragOver = (e, cell, cellDate, vuecal) => {
   cell.highlighted = true
 }
 
+// Warning: cell dragleave event happens AFTER another cell dragenter!
 export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
 
   if (e.currentTarget.contains(e.relatedTarget)) return
 
-  dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
-  cell.highlighted = false
-
-  dragOverCell = { el: null, cell: null, timeout: null }
+  // Only cancel the timer if leaving the current cell to no other one.
+  // If leaving this cell to enter another, a cancel is done in cellDragEnter,
+  // and a new timer is started.
+  if (dragOverCell.cell === cell) {
+    clearTimeout(dragOverCell.timeout)
+    cell.highlighted = false
+    dragOverCell = { el: null, cell: null, timeout: null }
+  }
 
   console.log('cellDragLeave')
 }
@@ -102,20 +101,32 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   console.log('event dropped in cell')
 }
 
+// On drag enter on a view button or on prev & next buttons.
 export const viewSelectorDragEnter = (id, vuecal, headerData) => {
   // setTimeout 0: Has to be set slightly after a potential viewSelectorDragLeave
   // so that it does not get cancelled. (Case where the buttons are very close)
-  setTimeout(() => {
+  console.log('viewSelectorDragEnter')
+  // setTimeout(() => {
     headerData.highlightedControl = id
-    changeViewTimeoutId = setTimeout(() => {
-      if (['previous', 'next'].includes(id)) vuecal[id]()
+    clearTimeout(changeViewTimeout)
+    changeViewTimeout = setTimeout(() => {
+      if (['previous', 'next'].includes(id)) {
+        vuecal[id]()
+        // Keep pressing on previous or next button until user goes away.
+        clearInterval(pressPrevOrNextInterval)
+        pressPrevOrNextInterval = setInterval(() => {
+          vuecal[id]()
+        }, 800)
+      }
       else vuecal.switchView(id, null, true)
       viewChanged = true
     }, 800)
-  }, 0)
+  // }, 0)
 }
 
 export const viewSelectorDragLeave = (id, vuecal, headerData) => {
+  console.log('viewSelectorDragLeave')
   headerData.highlightedControl = null
-  if (changeViewTimeoutId) clearTimeout(changeViewTimeoutId)
+  if (changeViewTimeout) changeViewTimeout = clearTimeout(changeViewTimeout)
+  if (pressPrevOrNextInterval) pressPrevOrNextInterval = clearInterval(pressPrevOrNextInterval)
 }
