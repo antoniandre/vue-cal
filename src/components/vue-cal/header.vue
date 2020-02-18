@@ -8,8 +8,8 @@
       v-if="v.enabled"
       :class="{ active: viewProps.view.id === id, highlighted: highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
-      @dragenter="options.editableEvents && viewSelectorDragEnter(id, $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave(id, $parent, $data)"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, id, $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, id, $parent, $data)"
       @click="$parent.switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
@@ -17,8 +17,8 @@
       :aria-label="`Previous ${viewProps.view.id}`"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
-      @dragenter="options.editableEvents && viewSelectorDragEnter('previous', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave('previous', $parent, $data)")
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'previous', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'previous', $parent, $data)")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       //- Best way to disable transition is to convert it to simple div tag.
@@ -35,8 +35,8 @@
       :aria-label="`Next ${viewProps.view.id}`"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
-      @dragenter="options.editableEvents && viewSelectorDragEnter('next', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave('next', $parent, $data)")
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'next', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'next', $parent, $data)")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"

@@ -1,3 +1,6 @@
+// @todo: switchToNarrowerView with correct cell date.
+// @todo: Use transferData.setImage() for header buttons.
+
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
@@ -24,7 +27,7 @@ export const eventDragStart = (e, event, vuecal) => {
   dragAnEvent.cursorGrabAt = minutes - event.startTimeMinutes
   console.log('event drag start')
 
-  cancelViewChange = true // Reinit the cancel view: should cancel unless a cell received the event.
+  cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
 }
 
 export const eventDragEnd = (e, event, vuecal) => {
@@ -102,31 +105,36 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
 }
 
 // On drag enter on a view button or on prev & next buttons.
-export const viewSelectorDragEnter = (id, vuecal, headerData) => {
-  // setTimeout 0: Has to be set slightly after a potential viewSelectorDragLeave
-  // so that it does not get cancelled. (Case where the buttons are very close)
+export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
+  if (e.currentTarget.contains(e.relatedTarget)) return
+
   console.log('viewSelectorDragEnter')
-  // setTimeout(() => {
-    headerData.highlightedControl = id
-    clearTimeout(changeViewTimeout)
-    changeViewTimeout = setTimeout(() => {
-      if (['previous', 'next'].includes(id)) {
+  headerData.highlightedControl = id
+  clearTimeout(changeViewTimeout)
+  changeViewTimeout = setTimeout(() => {
+    if (['previous', 'next'].includes(id)) {
+      vuecal[id]()
+      // Keep pressing on previous or next button until user goes away.
+      clearInterval(pressPrevOrNextInterval)
+      pressPrevOrNextInterval = setInterval(() => {
         vuecal[id]()
-        // Keep pressing on previous or next button until user goes away.
-        clearInterval(pressPrevOrNextInterval)
-        pressPrevOrNextInterval = setInterval(() => {
-          vuecal[id]()
-        }, 800)
-      }
-      else vuecal.switchView(id, null, true)
-      viewChanged = true
-    }, 800)
-  // }, 0)
+      }, 800)
+    }
+    else vuecal.switchView(id, null, true)
+    viewChanged = true
+  }, 800)
 }
 
-export const viewSelectorDragLeave = (id, vuecal, headerData) => {
+export const viewSelectorDragLeave = (e, id, vuecal, headerData) => {
+  if (e.currentTarget.contains(e.relatedTarget)) return
   console.log('viewSelectorDragLeave')
-  headerData.highlightedControl = null
-  if (changeViewTimeout) changeViewTimeout = clearTimeout(changeViewTimeout)
-  if (pressPrevOrNextInterval) pressPrevOrNextInterval = clearInterval(pressPrevOrNextInterval)
+
+  // Only cancel the timer if leaving the current nav button to no other one.
+  // If leaving this nav button to enter another, a cancel is done in viewSelectorDragEnter,
+  // and a new timer is started.
+  if (headerData.highlightedControl === id) {
+    headerData.highlightedControl = null
+    if (changeViewTimeout) changeViewTimeout = clearTimeout(changeViewTimeout)
+    if (pressPrevOrNextInterval) pressPrevOrNextInterval = clearInterval(pressPrevOrNextInterval)
+  }
 }
