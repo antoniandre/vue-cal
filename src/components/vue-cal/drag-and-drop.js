@@ -2,8 +2,7 @@ let changeViewTimeoutId = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
 let viewChanged = false
 let cancelViewChange = true
-let dragOverYearCellTimeout = null
-let dragOverCell = null
+let dragOverCell = { el: null, cell: null, timeout: null }
 
 export const eventDragStart = (e, event, vuecal) => {
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
@@ -38,26 +37,30 @@ export const eventDragEnd = (e, event, vuecal) => {
 }
 
 export const cellDragEnter = (e, cell, cellDate, vuecal) => {
-  // e.preventDefault()
   const target = e.currentTarget
-  // setTimeout(() => {
-    if (target === dragOverCell || !target.className.includes('vuecal__cell-content')) return false
-    dragOverCell = target
+
+  // Cancel dragEnter event if hovering a child.
+  if (target === dragOverCell.el || !target.className.includes('vuecal__cell-content')) return false
+
+  // Run the cellDragEnter 1 frame after the cellDragLeave,
+  // otherwise the dragLeave will cancel this.
+  setTimeout(() => {
     console.log('cellDragEnter')
+    // if (dragOverCell.el) {
+    //   dragOverCell.cell.highlighted = false
+    //   if (dragOverCell.timeout) {
+    //     dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
+    //   }
+    // }
+
+    dragOverCell = { el: target, cell, timeout: null }
     cell.highlighted = true
-  // }, 0)
 
-  // setTimeout(() => {
-  //   cell.highlighted = true
-  //   clearTimeout(dragOverYearCellTimeout)
-
-  //   // On `years` & `year` views go to narrower view on drag and hold.
-  //   if (vuecal.view.id.includes('year')) {
-  //     dragOverYearCellTimeout = setTimeout(() => {
-  //       vuecal.switchToNarrowerView()
-  //     }, 3000)
-  //   }
-  // }, 0)
+    // On `years` & `year` views go to narrower view on drag and hold.
+    if (vuecal.view.id.includes('year')) {
+      dragOverCell.timeout = setTimeout(vuecal.switchToNarrowerView, 2000)
+    }
+  }, 0)
 }
 
 // When starting to drag event on the same cell it's in.
@@ -68,16 +71,15 @@ export const cellDragOver = (e, cell, cellDate, vuecal) => {
 
 export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
-  // return
-  if (!dragOverCell || e.target !== dragOverCell || !e.target.className.includes('vuecal__cell-content') || (e.target.className.includes('vuecal__cell-content') && !e.relatedTarget.className.includes('vuecal__cell-content'))) return false
-  // if (e.currentTarget.className.includes('vuecal__cell-content')) return false
-  debugger
-  dragOverCell = null
 
+  if (e.currentTarget.contains(e.relatedTarget)) return
+
+  dragOverCell.timeout = clearTimeout(dragOverCell.timeout)
   cell.highlighted = false
+
+  dragOverCell = { el: null, cell: null, timeout: null }
+
   console.log('cellDragLeave')
-  if (vuecal.view.id === 'year') debugger
-  // clearTimeout(dragOverYearCellTimeout)
 }
 
 export const cellDragDrop = (e, cell, cellDate, vuecal) => {
