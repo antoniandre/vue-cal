@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app-bar.top-bar.elevation-0(app light dense text fixed align-center :class="{ scrolled: offsetTop > 104 }")
+  v-app-bar.top-bar.elevation-0(absolute :class="{ scrolled: offsetTop > 104 }")
     v-toolbar-title.top-bar__title
       span.top-bar__title-line
       span.top-bar__title-line
@@ -9,9 +9,6 @@
           div.top-bar__logo-title Vue Cal&nbsp;
         span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
     v-toolbar-items.top-bar__items
-      v-btn(to="/v1" text small color="grey")
-        v-icon.mr-2(size="20") restore
-        span V1 Docs
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
         template(v-slot:activator="{ on }")
           v-btn(text color="secondary" v-on="on")
@@ -289,11 +286,9 @@ $lighter-text: #ccc;
   }
 
   &.scrolled {
-    &.v-app-bar--fixed {
-      transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
-      border-bottom-color: $lighter-text !important;
-      position: fixed;
-    }
+    transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
+    border-bottom-color: $lighter-text !important;
+    position: fixed !important;
 
     & .top-bar__title {width: 100%;}
     & .top-bar__logo-title {font-size: 0.9em;}

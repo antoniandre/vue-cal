@@ -1,7 +1,7 @@
 <template lang="pug">
   v-app(:class="{ ready }" v-scroll="onScroll")
     v-container
-      component(:is="$route.path.includes('/v1') ? 'top-bar-v1' : 'top-bar-v2'" :offset-top="offsetTop")
+      top-bar(:offset-top="offsetTop")
       router-view
 
     v-fab-transition
@@ -20,12 +20,11 @@
 <script>
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
-import TopBarV1 from '@/components/top-bar-v1'
-import TopBarV2 from '@/components/top-bar-v2'
+import TopBar from '@/components/top-bar'
 
 export default {
   name: 'app',
-  components: { TopBarV1, TopBarV2 },
+  components: { TopBar },
   data: () => ({
     ready: false,
     offsetTop: 0,
