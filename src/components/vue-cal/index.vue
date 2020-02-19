@@ -291,15 +291,18 @@ export default {
     /**
      * On click/dblclick of a cell go to a narrower view if available.
      * E.g. Click on month cell takes you to week view if not hidden, otherwise on day view if not hidden.
+     *
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to the selected date,
+     *                             If also empty fallbacks to the current view start date.
      */
-    switchToNarrowerView () {
+    switchToNarrowerView (date = null) {
       this.transitionDirection = 'right'
 
       let views = Object.keys(this.views)
       views = views.slice(views.indexOf(this.view.id) + 1)
       const view = views.find(v => this.views[v].enabled)
 
-      if (view) this.switchView(view)
+      if (view) this.switchView(view, date)
     },
 
     /**
@@ -307,8 +310,8 @@ export default {
      * If a date is given, it will be selected and if the view does not contain it, it will go to that date.
      *
      * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
-     * @param {String | Date} date A starting date for the view, if none, fallbacks to selected date
-     *                            If also empty fallbacks to the current view start date.
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to the selected date,
+     *                             If also empty fallbacks to the current view start date.
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
     switchView (view, date = null, fromViewSelector = false) {

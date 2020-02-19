@@ -1,6 +1,3 @@
-// @todo: switchToNarrowerView with correct cell date.
-// @todo: Use transferData.setImage() for header buttons.
-
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
@@ -57,7 +54,7 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   // On `years` & `year` views go to narrower view on drag and hold.
   if (vuecal.view.id.includes('year')) {
     dragOverCell.timeout = setTimeout(() => {
-      vuecal.switchToNarrowerView()
+      vuecal.switchToNarrowerView(cellDate)
     }, 2000)
   }
 }
