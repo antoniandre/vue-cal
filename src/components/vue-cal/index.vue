@@ -543,7 +543,7 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseMove (e) {
-      let { resizeAnEvent, dragAnEvent } = this.domEvents
+      const { resizeAnEvent, dragAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
       e.preventDefault()
