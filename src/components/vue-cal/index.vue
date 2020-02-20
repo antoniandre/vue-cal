@@ -844,7 +844,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'classes', 'split', 'segments',
+        'height', 'top', 'classes', 'segments',
         'deletable', 'deleting', 'resizable', 'resizing', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })

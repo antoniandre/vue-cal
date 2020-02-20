@@ -3,7 +3,7 @@
 //    - modularize this file
 //    - add javadoc
 // OK - handle drag and drop and splits / highlight splits separately
-//    - add split in emitted event
+// OK - add split in emitted event
 // OK - check that event.draggable = false prevents dragging
 
 let changeViewTimeout = null
@@ -47,7 +47,7 @@ export const eventDragEnd = (e, event, vuecal) => {
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
-export const cellDragEnter = (e, cell, cellDate, vuecal, split) => {
+export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   const target = e.currentTarget
 
   // Cancel dragEnter event if hovering a child.
@@ -104,12 +104,15 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
 
   // Modify the event start and end date.
   const oldDate = event.startDate
+  const oldSplit = event.split
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
   const startTimeMinutes = vuecal.minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt
   event.startTimeMinutes = startTimeMinutes
   event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
   event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
   event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
+  event.start = `${event.startDate.format()} ${event.startDate.formatTime()}`
+  event.end = `${event.endDate.format()} ${event.endDate.formatTime()}`
   event.dragging = false
   if (split || split === 0) event.split = split
   if (!eventInView) vuecal.addEventsToView([event])
@@ -118,7 +121,13 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   cell.highlightedSplit = null
   cancelViewChange = false
 
-  vuecal.emitWithEvent('event-drop', { event, oldDate, newDate: event.startDate })
+  const params = {
+    event: vuecal.cleanupEvent(event),
+    oldDate,
+    newDate: event.startDate,
+    ...((split || split === 0) && { oldSplit, newSplit: split })
+  }
+  vuecal.$emit('event-drop', params)
 }
 
 // On drag enter on a view button or on prev & next buttons.
