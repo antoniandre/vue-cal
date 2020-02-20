@@ -1,7 +1,10 @@
 // @todo:
-// - emit an event-drop event
+// - emit an event-drop event => OK
 // - modularize this file
 // - add javadoc
+// - handle drag and drop and splits
+// - add split in emitted event
+// - check that event.draggable = false prevents dragging. => OK
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -11,6 +14,9 @@ let cancelViewChange = true
 let dragOverCell = { el: null, cell: null, timeout: null }
 
 export const eventDragStart = (e, event, vuecal) => {
+  // Cancel the drag if event has draggable set to false and trying to drag a text selection.
+  if (e.target.nodeType === 3) return e.preventDefault()
+
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
   // Remove delete button if held for too long.
   setTimeout(() => {
