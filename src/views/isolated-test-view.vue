@@ -4,6 +4,7 @@ vue-cal(
   :selected-date="selectedDate"
   :events="events"
   editable-events
+  @event-drop="log"
   style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -30,7 +31,7 @@ export default {
   }),
 
   methods: {
-    log (...params) {
+    log (params) {
       console.log(params)
     }
   }

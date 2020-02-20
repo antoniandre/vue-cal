@@ -1,3 +1,8 @@
+// @todo:
+// - emit an event-drop event
+// - modularize this file
+// - add javadoc
+
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
@@ -22,7 +27,6 @@ export const eventDragStart = (e, event, vuecal) => {
   // When click and drag an event the cursor can be anywhere in the event,
   // when later dropping the event, we need to subtract the cursor position in the event.
   dragAnEvent.cursorGrabAt = minutes - event.startTimeMinutes
-  console.log('event drag start')
 
   cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
 }
@@ -53,9 +57,7 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
 
   // On `years` & `year` views go to narrower view on drag and hold.
   if (vuecal.view.id.includes('year')) {
-    dragOverCell.timeout = setTimeout(() => {
-      vuecal.switchToNarrowerView(cellDate)
-    }, 2000)
+    dragOverCell.timeout = setTimeout(() => vuecal.switchToNarrowerView(cellDate), 2000)
   }
 }
 
@@ -85,9 +87,14 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
 
 export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
+
+  // Find the dragged event from its _eid in the view or mutableEvents array.
   let event = vuecal.view.events.find(e => e._eid === dragAnEvent._eid)
   const eventInView = !!event
   if (!event) event = (vuecal.mutableEvents.find(e => e._eid === dragAnEvent._eid) || {})
+
+  // Modify the event start and end date.
+  const oldDate = event.startDate
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
   const startTimeMinutes = vuecal.minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt
   event.startTimeMinutes = startTimeMinutes
@@ -98,14 +105,14 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   cell.highlighted = false
   cancelViewChange = false
   if (!eventInView) vuecal.addEventsToView([event])
-  console.log('event dropped in cell')
+
+  vuecal.emitWithEvent('event-drop', { event, oldDate, newDate: event.startDate })
 }
 
 // On drag enter on a view button or on prev & next buttons.
 export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
 
-  console.log('viewSelectorDragEnter')
   headerData.highlightedControl = id
   clearTimeout(changeViewTimeout)
   changeViewTimeout = setTimeout(() => {
@@ -124,7 +131,6 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
 
 export const viewSelectorDragLeave = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
-  console.log('viewSelectorDragLeave')
 
   // Only cancel the timer if leaving the current nav button to no other one.
   // If leaving this nav button to enter another, a cancel is done in viewSelectorDragEnter,
