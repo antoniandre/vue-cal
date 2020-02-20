@@ -8,7 +8,7 @@
     .vuecal__flex.vuecal__cell-content(
       v-for="(split, i) in (splits.length ? splits : 1)"
       :key="options.transitions ? `${view}-${data.content}-${i}` : i"
-      :class="splits.length && `vuecal__cell-split ${split.class}`"
+      :class="splits.length && `vuecal__cell-split ${split.class}${highlightedSplit === split.id ? ' vuecal__cell-split--highlighted' : ''}`"
       :data-split="splits.length ? split.id : false"
       column
       tabindex="0"
@@ -20,10 +20,10 @@
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-      @dragover="!isDisabled && options.editableEvents && cellDragOver($event, $data, data.startDate, $parent)"
       @dragenter="!isDisabled && options.editableEvents && cellDragEnter($event, $data, data.startDate, $parent)"
+      @dragover="!isDisabled && options.editableEvents && cellDragOver($event, $data, data.startDate, $parent, splits.length ? split.id : null)"
       @dragleave="!isDisabled && options.editableEvents && cellDragLeave($event, $data, data.startDate, $parent)"
-      @drop="!isDisabled && options.editableEvents && cellDragDrop($event, $data, data.startDate, $parent)")
+      @drop="!isDisabled && options.editableEvents && cellDragDrop($event, $data, data.startDate, $parent, splits.length ? split.id : null)")
       .vuecal__special-hours(
         v-if="isWeekOrDayView && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
@@ -79,7 +79,8 @@ export default {
     // On mouse down, save the time at cursor so it can be reused on cell focus event
     // where there is no cursor coords.
     timeAtCursor: null,
-    highlighted: false
+    highlighted: false, // On event drag over.
+    highlightedSplit: null
   }),
 
   methods: {
@@ -438,6 +439,7 @@ export default {
     flex-direction: column;
     height: 100%;
     position: relative;
+    transition: 0.15s ease-in-out background-color;
   }
 
   &:before {
@@ -468,7 +470,9 @@ export default {
 
   &--out-of-scope {color: #ccc;}
   &--disabled {color: #ccc;cursor: not-allowed;}
-  &--highlighted {background-color: rgba(172, 255, 210, 1);}
+  &--highlighted:not(.vuecal__cell--has-splits), &--has-splits &-split--highlighted {
+    background-color: rgba(172, 255, 210, 1);
+  }
 
   &-events-count {
     position: absolute;

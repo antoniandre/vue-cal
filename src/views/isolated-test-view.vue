@@ -5,6 +5,7 @@ vue-cal(
   :events="events"
   editable-events
   @event-drop="log"
+  :split-days="[{ id: 1, label: 'doctor 1' }, { id: 2, label: 'doctor 2' }]"
   style="min-height: 400px;max-height: 65vh")
 </template>
 
@@ -31,7 +32,7 @@ export default {
         startDate: new Date(new Date(now).setHours(1, 0, 0)),
         endDate: new Date(new Date(now).setHours(3, 0, 0)),
         title: 'Event',
-        draggable: false
+        split: 2
       }
     ]
   }),

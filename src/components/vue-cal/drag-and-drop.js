@@ -1,10 +1,10 @@
 // @todo:
-// - emit an event-drop event => OK
-// - modularize this file
-// - add javadoc
-// - handle drag and drop and splits
-// - add split in emitted event
-// - check that event.draggable = false prevents dragging. => OK
+// OK - emit an event-drop event
+//    - modularize this file
+//    - add javadoc
+// OK - handle drag and drop and splits / highlight splits separately
+//    - add split in emitted event
+// OK - check that event.draggable = false prevents dragging
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -47,7 +47,7 @@ export const eventDragEnd = (e, event, vuecal) => {
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
-export const cellDragEnter = (e, cell, cellDate, vuecal) => {
+export const cellDragEnter = (e, cell, cellDate, vuecal, split) => {
   const target = e.currentTarget
 
   // Cancel dragEnter event if hovering a child.
@@ -68,9 +68,10 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
 }
 
 // When starting to drag event on the same cell it's in.
-export const cellDragOver = (e, cell, cellDate, vuecal) => {
+export const cellDragOver = (e, cell, cellDate, vuecal, split) => {
   e.preventDefault()
   cell.highlighted = true
+  if (split || split === 0) cell.highlightedSplit = split
 }
 
 // Warning: cell dragleave event happens AFTER another cell dragenter!
@@ -78,6 +79,8 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
 
   if (e.currentTarget.contains(e.relatedTarget)) return
+
+  cell.highlightedSplit = false
 
   // Only cancel the timer if leaving the current cell to no other one.
   // If leaving this cell to enter another, a cancel is done in cellDragEnter,
@@ -91,7 +94,7 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   console.log('cellDragLeave')
 }
 
-export const cellDragDrop = (e, cell, cellDate, vuecal) => {
+export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   const { dragAnEvent } = vuecal.domEvents
 
   // Find the dragged event from its _eid in the view or mutableEvents array.
@@ -108,9 +111,12 @@ export const cellDragDrop = (e, cell, cellDate, vuecal) => {
   event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
   event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   event.dragging = false
-  cell.highlighted = false
-  cancelViewChange = false
+  if (split || split === 0) event.split = split
   if (!eventInView) vuecal.addEventsToView([event])
+
+  cell.highlighted = false
+  cell.highlightedSplit = null
+  cancelViewChange = false
 
   vuecal.emitWithEvent('event-drop', { event, oldDate, newDate: event.startDate })
 }
