@@ -20,7 +20,7 @@
           v-list-item(href="#api" v-scroll-to="'#api'") API
           v-list-item(href="#date-prototypes" v-scroll-to="'#date-prototypes'")
             | #[span.code.mr-2 Date] Prototypes
-            v-chip.xsmall.ml-2(small color="primary" outlined) new
+            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS Notes
           v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release Notes
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
@@ -48,7 +48,7 @@
           v-list-item(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
           v-list-item(href="#ex--special-hours" v-scroll-to="'#ex--special-hours'")
             | Business Hours
-            v-chip.xsmall.ml-2(small color="primary" outlined) new
+            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
           v-list-item(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
@@ -65,31 +65,24 @@
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
             | Recurring events
-            v-chip.xsmall.ml-2(small color="red" outlined) Coming soon
+            v-chip.xsmall.ml-2(small color="red" outlined) DELAYED
           v-list-item(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-item(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-item(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
-          v-list-item(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'")
-            | Splitting days
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
+          v-list-item(href="#ex--splitting-days" v-scroll-to="'#ex--splitting-days'") Splitting days
 
           v-list-item.heading(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             v-icon(small).mr-2 swap_horiz
             | COMMUNICATING WITH VUE CAL
-          v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
-            | Vue Cal emitted events
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
+          v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
           v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'") External controls &amp; use of Vue Cal methods
-            v-chip.xsmall.ml-2(small color="blue" outlined) updated
           v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-item(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
 
           v-list-item.heading(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'")
             v-icon(small).mr-2 tune
             | ADVANCED VUE CAL CUSTOMIZATION
-          v-list-item(href="#ex--scroll-to-time" v-scroll-to="'#ex--scroll-to-time'")
-            | Scroll the view to a particular time
-            v-chip.xsmall.ml-2(small color="primary" outlined) new
+          v-list-item(href="#ex--scroll-to-time" v-scroll-to="'#ex--scroll-to-time'") Scroll the view to a particular time
           v-list-item(href="#ex--timeline-tweaking" v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
           v-list-item(href="#ex--custom-events-count" v-scroll-to="'#ex--custom-events-count'") Custom events count
           v-list-item(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells

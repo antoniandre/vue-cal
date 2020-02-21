@@ -139,10 +139,10 @@
       | Business hours
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
-      | Recurring events
+      | Drag events
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
-      | Drag events
+      | Recurring events
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
@@ -1297,7 +1297,7 @@
   h4.title
     a(href="#ex--recurring-events")
       | # Recurring events
-      v-chip.ml-2.white--text(small color="red") Coming soon
+      v-chip.ml-2.white--text(small color="red") Coming soon - Delayed
     a#ex--recurring-events(name="ex--recurring-events")
   .mt-4 #[strong When it will be ready, this is how it will work.]
   .mb-2 You can repeat an event:
