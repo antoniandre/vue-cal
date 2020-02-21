@@ -265,6 +265,7 @@ export default {
   .vuecal__event:hover &,
   .vuecal__event:focus &,
   .vuecal__event--focus & {opacity: 1;transform: translateY(0);}
+  .vuecal__event--dragging & {display: none;}
 }
 
 .vuecal__event-delete {
