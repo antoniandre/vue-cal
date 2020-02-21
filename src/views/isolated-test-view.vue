@@ -26,7 +26,8 @@ export default {
       {
         startDate: new Date(new Date(now).setHours(1, 0, 0)),
         endDate: new Date(new Date(now).setHours(3, 0, 0)),
-        title: 'Event'
+        title: 'Event',
+        split: 1
       },
       {
         startDate: new Date(new Date(now).setHours(1, 0, 0)),

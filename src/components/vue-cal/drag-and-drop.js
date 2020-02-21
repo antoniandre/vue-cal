@@ -5,6 +5,9 @@
 // OK - handle drag and drop and splits / highlight splits separately
 // OK - add split in emitted event
 // OK - check that event.draggable = false prevents dragging
+// OK - check edge and IE
+// OK - also go to narrower view from month view
+//    - Fix drag image not visible on Safari
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -29,7 +32,7 @@ export const eventDragStart = (e, event, vuecal) => {
   event.dragging = true
   viewBeforeDrag = { id: vuecal.view.id, date: vuecal.view.startDate }
 
-  const minutes = vuecal.minutesAtCursor(e).minutes
+  const { minutes } = vuecal.minutesAtCursor(e)
   // When click and drag an event the cursor can be anywhere in the event,
   // when later dropping the event, we need to subtract the cursor position in the event.
   dragAnEvent.cursorGrabAt = minutes - event.startTimeMinutes
@@ -61,8 +64,8 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   dragOverCell = { el: target, cell, timeout: clearTimeout(dragOverCell.timeout) }
   cell.highlighted = true
 
-  // On `years` & `year` views go to narrower view on drag and hold.
-  if (vuecal.view.id.includes('year')) {
+  // On `years`, `year` & `month` views, go to narrower view on drag and hold.
+  if (['years', 'year', 'month'].includes(vuecal.view.id)) {
     dragOverCell.timeout = setTimeout(() => vuecal.switchToNarrowerView(cellDate), 2000)
   }
 }
