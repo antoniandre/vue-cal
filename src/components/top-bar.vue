@@ -114,7 +114,7 @@ $secondary: #2c3e50;
 $lighter-text: #ccc;
 
 .top-bar {
-  z-index: 10;
+  z-index: 10 !important;
   position: absolute;
   background: linear-gradient(rgba(255, 255, 255, 0.7)) !important;
   border-bottom: 1px solid transparent !important;
