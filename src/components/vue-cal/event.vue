@@ -181,7 +181,7 @@ export default {
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
         'vuecal__event--dragging': this.event.dragging,
-        'vuecal__event--static': this.event.draggingStatic,
+        'vuecal__event--static': this.event.dragging && this.event.draggingStatic,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
         'event-start': this.segment && isFirstDay && !isLastDay,

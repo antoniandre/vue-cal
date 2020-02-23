@@ -47,8 +47,8 @@ export const eventDragStart = (e, event, vuecal) => {
 export const eventDragEnd = (e, event, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
   dragAnEvent._eid = null
-  event.draggingStatic = false
   event.dragging = false
+  event.draggingStatic = false
 
   // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
