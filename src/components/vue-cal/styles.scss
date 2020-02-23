@@ -65,13 +65,14 @@ $splits-headers-height: 1.5em;
     min-height: 1.7em;
     margin-bottom: -1px;
     flex-shrink: 0;
+    box-sizing: border-box;
 
     > span {
       width: $time-column-width;
-      min-width: $time-column-width;
       color: #999;
       padding-right: 2px;
       display: flex;
+      flex-shrink: 0;
       align-items: center;
       justify-content: flex-end;
       border-bottom: 1px solid #ddd;
