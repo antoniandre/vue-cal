@@ -4,9 +4,9 @@
     v-if="!options.hideViewSelector"
     role="tablist"
     aria-label="Calendar views navigation")
-    button(
+    button.vuecal__view-btn(
       v-if="v.enabled"
-      :class="{ active: viewProps.view.id === id, highlighted: highlightedControl === id }"
+      :class="{ 'vuecal__view-btn--active': viewProps.view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
       @dragenter="options.editableEvents && viewSelectorDragEnter($event, id, $parent, $data)"
       @dragleave="options.editableEvents && viewSelectorDragLeave($event, id, $parent, $data)"
@@ -120,10 +120,8 @@ export default {
 <style lang="scss">
 .vuecal {
   &__header button {
-    background: none;
-    border: none;
     outline: none;
-    font: inherit;
+    font-family: inherit;
   }
 
   &__menu {
@@ -132,19 +130,21 @@ export default {
     list-style-type: none;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.02);
+  }
 
-    button {
-      padding: 0.3em 1em;
-      height: 2.2em;
-      font-size: 1.3em;
-      border-bottom: 0 solid currentColor;
-      cursor: pointer;
-      color: inherit;
-      box-sizing: border-box;
-      transition: 0.2s;
-    }
+  &__view-btn {
+    background: none;
+    border: none;
+    padding: 0.3em 1em;
+    height: 2.2em;
+    font-size: 1.3em;
+    border-bottom: 0 solid currentColor;
+    cursor: pointer;
+    color: inherit;
+    box-sizing: border-box;
+    transition: 0.2s;
 
-    button.active {
+    &--active {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
@@ -166,7 +166,11 @@ export default {
   &__title {
     position: relative;
     justify-content: center;
-    button {cursor: pointer;}
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
     button.slide-fade--left-leave-active,
     button.slide-fade--right-leave-active {width: 100%;}
   }
@@ -176,6 +180,8 @@ export default {
     align-items: center;
     display: flex;
     font-size: 0.8em;
+    background: none;
+    border: none;
 
     span.default {
       font-size: 0.8em;
@@ -189,9 +195,11 @@ export default {
     cursor: pointer;
     position: relative;
     z-index: 1;
+    background: none;
+    border: none;
 
-    &--prev {padding-left: 0.6em;}
-    &--next {padding-right: 0.6em;}
+    &--prev {margin-left: 0.6em;}
+    &--next {margin-right: 0.6em;}
 
     i.angle {
       display: inline-block;
@@ -204,43 +212,43 @@ export default {
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
 
-  // Pulse buttons when dragging over with an event.
+  // Pulse header buttons when dragging over with an event.
+  // Double classes neeeded to verride color, don't put in the underneath set of rules.
+  &__arrow.vuecal__arrow--highlighted,
+  &__view-btn.vuecal__view-btn--highlighted {background-color: rgba(0, 0, 0, 0.04);}
+
   &__arrow--highlighted,
-  button.highlighted {
+  &__view-btn--highlighted {
     position: relative;
-    background-color: rgba(0, 255, 0, 0.2) !important;
 
     // Prevent event bubbling on hover and move.
     * {pointer-events: none;}
 
-    &:before {
+    &:before, &:after {
       content: '';
       background-color: inherit;
       animation: sonar 0.8s infinite ease-out;
       position: absolute;
       top: 50%;
       left: 50%;
+    }
+
+    &:before {
       width: 3em;
       height: 3em;
       border-radius: 3em;
       margin-top: -1.5em;
       margin-left: -1.5em;
-      pointer-events: none; // Prevent event bubbling on hover and move.
     }
 
     &:after {
-      content: '';
-      background-color: inherit;
-      animation: sonar 1.5s 0.1s infinite ease-out;
-      position: absolute;
-      top: 50%;
-      left: 50%;
+      animation-duration: 1.5s;
+      animation-delay: 0.1s;
       width: 2.6em;
       height: 2.6em;
       border-radius: 2.6em;
       margin-top: -1.3em;
       margin-left: -1.3em;
-      pointer-events: none; // Prevent event bubbling on hover and move.
     }
   }
 }

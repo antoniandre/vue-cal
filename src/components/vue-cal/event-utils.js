@@ -29,7 +29,7 @@ export const eventDefaults = {
   resizing: false,
   draggable: true,
   dragging: false,
-  draggingStatic: false, // The class for the static clone while dragging.
+  draggingStatic: false, // Controls the CSS class of the static clone while dragging.
   focused: false,
   top: 0,
   height: 0,
