@@ -21,7 +21,7 @@
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)")
       .vuecal__special-hours(
-        v-if="isWeekOrDayView && specialHours.from !== null"
+        v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
         :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
       slot(
@@ -411,6 +411,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
+    box-sizing: border-box;
   }
 
   &-content {
