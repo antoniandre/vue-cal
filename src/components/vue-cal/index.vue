@@ -845,7 +845,8 @@ export default {
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
         'height', 'top', 'classes', 'segments',
-        'deletable', 'deleting', 'resizable', 'resizing', 'focused'
+        'deletable', 'deleting', 'resizable', 'resizing',
+        'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })
 
