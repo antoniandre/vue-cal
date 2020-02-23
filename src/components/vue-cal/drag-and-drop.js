@@ -33,7 +33,7 @@ export const eventDragStart = (e, event, vuecal) => {
 
   dragAnEvent._eid = event._eid
   event.dragging = true
-  setTimeout(() => (event.draggingGhost = true), 0)
+  event.draggingStatic = true
   viewBeforeDrag = { id: vuecal.view.id, date: vuecal.view.startDate }
 
   const { minutes } = vuecal.minutesAtCursor(e)
@@ -47,7 +47,7 @@ export const eventDragStart = (e, event, vuecal) => {
 export const eventDragEnd = (e, event, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
   dragAnEvent._eid = null
-  event.draggingGhost = false
+  event.draggingStatic = false
   event.dragging = false
 
   // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
