@@ -65,10 +65,10 @@ $splits-headers-height: 1.5em;
     min-height: 1.7em;
     margin-bottom: -1px;
     flex-shrink: 0;
-    box-sizing: border-box;
 
     > span {
       width: $time-column-width;
+      box-sizing: border-box;
       color: #999;
       padding-right: 2px;
       display: flex;
@@ -84,10 +84,7 @@ $splits-headers-height: 1.5em;
         line-height: 1.1;
       }
     }
-    .vuecal--twelve-hour & > span {
-      width: $time-column-width-12;
-      min-width: $time-column-width-12;
-    }
+    .vuecal--twelve-hour & > span {width: $time-column-width-12;}
   }
 
   &__bg {
