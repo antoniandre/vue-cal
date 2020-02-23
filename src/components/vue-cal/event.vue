@@ -253,6 +253,11 @@ export default {
   }
 }
 
+// Firefox sets a half opacity already, so don't dim the element being dragged.
+@-moz-document url-prefix() {
+  .vuecal__event--dragging:not(.vuecal__event--static) {opacity: 1;}
+}
+
 .vuecal__event-resize-handle {
   position: absolute;
   bottom: 0;
