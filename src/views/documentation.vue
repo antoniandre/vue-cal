@@ -3208,6 +3208,11 @@
     .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
     .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
     .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+    /* Cells and buttons get highlighted when an event is dragged over it. */
+    .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
+    .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
+    .vuecal__arrow.vuecal__arrow--highlighted,
+    .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
 
   p
     strong Rounded Theme#[br]
@@ -3235,6 +3240,24 @@
   h2.headline.mt-12.pt-12.mb-4
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
+
+  div #[strong Version 2.24.0] Drag and drop feature
+    highlight-message.mb-2(type="warning")
+      ul
+        li.
+          A few CSS classes have been renamed for consistency
+          ul
+            li.
+              the view buttons now have the class #[span.code .vuecal__view-btn],
+              #[span.code .vuecal__view-btn--active] when active,
+              &amp; #[span.code .vuecal__view-btn--highlighted] when dragging over.
+            //- li. about cells?
+        li.
+          If you have a custom color theme, you should add the new CSS rules on these new classes:
+          #[span.code .vuecal__view-btn--highlighted],
+          #[span.code .vuecal__arrow--highlighted],
+          #[span.code .vuecal__cell--highlighted].#[br]
+          Refer to the #[a(href="#css-notes") CSS Notes].
 
   div #[strong Version 2.24.0] Allow toggling day splits
   div #[strong Version 2.23.0] Added #[span.code special-hours] option
