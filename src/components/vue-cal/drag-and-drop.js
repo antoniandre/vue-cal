@@ -7,7 +7,7 @@
 // OK - check that event.draggable = false prevents dragging
 // OK - check edge and IE
 // OK - also go to narrower view from month view
-//    - Fix drag image not visible on Safari
+// OK - Fix drag image not visible on Safari
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null

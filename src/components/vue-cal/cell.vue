@@ -470,8 +470,9 @@ export default {
 
   &--out-of-scope {color: #ccc;}
   &--disabled {color: #ccc;cursor: not-allowed;}
-  &--highlighted:not(.vuecal__cell--has-splits), &--has-splits &-split--highlighted {
-    background-color: rgba(172, 255, 210, 1);
+  // Cell gets highlighted when dragging an event over it.
+  &--highlighted:not(.vuecal__cell--has-splits), &-split--highlighted {
+    background-color: rgba(0, 0, 0, 0.04);
   }
 
   &-events-count {

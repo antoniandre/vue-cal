@@ -1,6 +1,6 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
-vue-cal(
+vue-cal.vuecal--blue-theme(
   :selected-date="selectedDate"
   :events="events"
   editable-events

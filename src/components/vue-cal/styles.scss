@@ -220,6 +220,8 @@ $splits-headers-height: 1.5em;
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+  .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
+  .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
 }
 
 .vuecal--blue-theme {
@@ -230,6 +232,8 @@ $splits-headers-height: 1.5em;
   .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
   &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
   .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
+  .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
+  .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
 }
 
 // Rounded cells.
@@ -256,6 +260,8 @@ $splits-headers-height: 1.5em;
     &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #42b983;color: #fff;}
     .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(66, 185, 131, 0.05);}
     &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #42b983;}
+    .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
+    .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
   }
 
   &.vuecal--blue-theme {
@@ -263,5 +269,7 @@ $splits-headers-height: 1.5em;
     &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
     .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(143, 183, 228, 0.1);}
     &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #61a9e0;}
+    .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
+    .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
   }
 }
