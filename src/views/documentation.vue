@@ -3236,12 +3236,13 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 2.24.1] Disable special hours in the all-day bar
   div #[strong Version 2.24.0] Allow toggling day splits
   div #[strong Version 2.23.0] Added #[span.code special-hours] option
   div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
   div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
   div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
-  div.grey--text #[strong Version 2.20.1] Fix wrong week number with startWeekOnSunday
+  div.grey--text #[strong Version 2.20.1] Fix wrong week number with #[span.code startWeekOnSunday]
   div #[strong Version 2.20.0] Added Icelandic language
   div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
   div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
