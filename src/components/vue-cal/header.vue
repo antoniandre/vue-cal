@@ -212,11 +212,11 @@ export default {
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
 
-  // Pulse header buttons when dragging over with an event.
-  // Double classes neeeded to verride color, don't put in the underneath set of rules.
+  // Double classes neeeded to override color, don't put in the underneath set of rules.
   &__arrow.vuecal__arrow--highlighted,
   &__view-btn.vuecal__view-btn--highlighted {background-color: rgba(0, 0, 0, 0.04);}
 
+  // Pulse header buttons when dragging over with an event.
   &__arrow--highlighted,
   &__view-btn--highlighted {
     position: relative;
