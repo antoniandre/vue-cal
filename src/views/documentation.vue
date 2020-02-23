@@ -3202,15 +3202,13 @@
   sshpre(language="css" label="CSS").
     /* Green-theme. */
     .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
-    .vuecal__menu button {border-bottom-color: #fff;color: #fff;}
-    .vuecal__menu button.active {background-color: rgba(255, 255, 255, 0.15);}
     .vuecal__title-bar {background-color: #e4f5ef;}
-    .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-    .vuecal:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
-    .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+    .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+    .vuecal:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(235, 255, 245, 0.4);}
+    .vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
     /* Cells and buttons get highlighted when an event is dragged over it. */
     .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
-    .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
+    .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
     .vuecal__arrow.vuecal__arrow--highlighted,
     .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
 
@@ -3244,16 +3242,34 @@
   div #[strong Version 2.24.0] Drag and drop feature
     highlight-message.mb-2(type="warning")
       ul
-        li.
-          A few CSS classes have been renamed for consistency
+        li
+          h3.mt-0.pt-0 A few CSS classes have been renamed for consistency
+          p.
+            If you use them in your own CSS (or if you have a custom color theme)
+            you might want to update them:#[br]
+          strong Cells
           ul
-            li.
-              the view buttons now have the class #[span.code .vuecal__view-btn],
-              #[span.code .vuecal__view-btn--active] when active,
-              &amp; #[span.code .vuecal__view-btn--highlighted] when dragging over.
-            //- li. about cells?
+            li #[span.code .current] becomes #[span.code .vuecal__cell--current]
+            li #[span.code .today] becomes #[span.code .vuecal__cell--today]
+            li #[span.code .out-of-scope] becomes #[span.code .vuecal__cell--out-of-scope]
+            li #[span.code .before-min] becomes #[span.code .vuecal__cell--before-min]
+            li #[span.code .after-max] becomes #[span.code .vuecal__cell--after-max]
+            li #[span.code .disabled] becomes #[span.code .vuecal__cell--disabled]
+            li #[span.code .selected] becomes #[span.code .vuecal__cell--selected]
+            li #[span.code .vuecal__cell--has-splits] &amp; #[span.code .vuecal__cell--has-events] remain the same
+          strong View selector buttons
+          ul
+            li Added class: #[span.code .vuecal__view-btn]
+            li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
+
+          h3.mt-0 New classes when an event is dragged
+          ul
+            li Over a cell: #[span.code .vuecal__cell--highlighted]
+            li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
+            li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
+            li Event dragging class: #[span.code .vuecal__event-dragging]
         li.
-          If you have a custom color theme, you should add the new CSS rules on these new classes:
+          If you have a custom color theme, these new classes should be added:
           #[span.code .vuecal__view-btn--highlighted],
           #[span.code .vuecal__arrow--highlighted],
           #[span.code .vuecal__cell--highlighted].#[br]
@@ -3748,10 +3764,11 @@ export default {
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:00',
         title: 'Boring event',
-        content: '<i class="v-icon material-icons">block</i><br>I am not deletable and not resizable.',
+        content: '<i class="v-icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
         class: 'blue-event',
         deletable: false,
-        resizable: false
+        resizable: false,
+        draggable: false
       }
     ],
     overlappingEvents: [

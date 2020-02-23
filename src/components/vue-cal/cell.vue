@@ -348,7 +348,7 @@ export default {
     },
     cssClasses () {
       return {
-        'vuecal__cell--current': this.data.current,
+        'vuecal__cell--current': this.data.current, // E.g. Current year in years view.
         'vuecal__cell--today': this.data.today,
         'vuecal__cell--out-of-scope': this.data.outOfScope,
         'vuecal__cell--before-min': this.isDisabled && this.isBeforeMinDate,

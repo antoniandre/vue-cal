@@ -214,12 +214,10 @@ $splits-headers-height: 1.5em;
 //==================================//
 .vuecal--green-theme {
   .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;color: #fff;}
-  .vuecal__menu li {border-bottom-color: #fff;}
-  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title-bar {background-color: #e4f5ef;}
-  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 255, 245, 0.4);}
-  .vuecal__cell.selected:before {border-color: rgba(66, 185, 131, 0.5);}
+  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(235, 255, 245, 0.4);}
+  .vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
   .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
   .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
   .vuecal__arrow.vuecal__arrow--highlighted,
@@ -228,12 +226,10 @@ $splits-headers-height: 1.5em;
 
 .vuecal--blue-theme {
   .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(66, 163, 185, 0.8);color: #fff;}
-  .vuecal__menu li {border-bottom-color: #fff;}
-  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title-bar {background-color: rgba(0, 165, 188, 0.3);}
-  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(235, 253, 255, 0.4);}
-  .vuecal__cell.selected:before {border-color: rgba(115, 191, 204, 0.5);}
+  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) vuecal__cell--selected {background-color: rgba(235, 253, 255, 0.4);}
+  .vuecal__cell--selected:before {border-color: rgba(115, 191, 204, 0.5);}
   .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
   .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
   .vuecal__arrow.vuecal__arrow--highlighted,
@@ -261,18 +257,18 @@ $splits-headers-height: 1.5em;
 
   &.vuecal--green-theme {
     &:not(.vuecal--day-view) .vuecal__cell-content {background-color: #f1faf7;}
-    &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #42b983;color: #fff;}
-    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(66, 185, 131, 0.05);}
-    &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #42b983;}
+    &:not(.vuecal--day-view) .vuecal__cell--today .vuecal__cell-content {background-color: #42b983;color: #fff;}
+    .vuecal--day-view .vuecal__cell--today:before {background-color: rgba(66, 185, 131, 0.05);}
+    &:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content {border-color: #42b983;}
     .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
     .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
   }
 
   &.vuecal--blue-theme {
     &:not(.vuecal--day-view) .vuecal__cell-content {background-color: rgba(100, 182, 255, 0.2);}
-    &:not(.vuecal--day-view) .vuecal__cell.today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
-    .vuecal--day-view .vuecal__cell.today:before {background-color: rgba(143, 183, 228, 0.1);}
-    &:not(.vuecal--day-view) .selected .vuecal__cell-content {border-color: #61a9e0;}
+    &:not(.vuecal--day-view) .vuecal__cell--today .vuecal__cell-content {background-color: #8fb7e4;color: #fff;}
+    .vuecal--day-view .vuecal__cell--today:before {background-color: rgba(143, 183, 228, 0.1);}
+    &:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content {border-color: #61a9e0;}
     .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
     .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
   }
