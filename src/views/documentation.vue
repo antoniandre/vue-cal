@@ -3236,6 +3236,7 @@
     a(href="#release-notes") Release Notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 2.24.2] Fix the all-day bar label cell horizontal alignment
   div.grey--text #[strong Version 2.24.1] Disable special hours in the all-day bar
   div #[strong Version 2.24.0] Allow toggling day splits
   div #[strong Version 2.23.0] Added #[span.code special-hours] option
