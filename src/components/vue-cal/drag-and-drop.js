@@ -20,6 +20,9 @@ export const eventDragStart = (e, event, vuecal) => {
   // Cancel the drag if event has draggable set to false and trying to drag a text selection.
   if (e.target.nodeType === 3) return e.preventDefault()
 
+  e.dataTransfer.setData('text', '...') // Without this the drag will not happen in Firefox.
+  e.dataTransfer.dropEffect = 'move'
+
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
   // Remove delete button if held for too long.
   setTimeout(() => {
@@ -44,7 +47,6 @@ export const eventDragEnd = (e, event, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
   dragAnEvent._eid = null
   event.dragging = false
-  console.log('event drag end')
 
   // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
@@ -57,7 +59,6 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
   if (target === dragOverCell.el || !target.className.includes('vuecal__cell-content')) return false
 
-  console.log('cellDragEnter')
   // Un-highlight the previous cell.
   if (dragOverCell.el) dragOverCell.cell.highlighted = false
 
@@ -98,6 +99,9 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
 }
 
 export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
+  // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
+  e.preventDefault()
+
   const { dragAnEvent } = vuecal.domEvents
 
   // Find the dragged event from its _eid in the view or mutableEvents array.
