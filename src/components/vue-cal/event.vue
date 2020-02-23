@@ -12,8 +12,8 @@
   @click="onClick"
   @dblclick="onDblClick"
   :draggable="vuecal.editableEvents && event.draggable"
-  @dragstart="onDragStart"
-  @dragend="onDragEnd")
+  @dragstart="vuecal.editableEvents && onDragStart($event)"
+  @dragend="vuecal.editableEvents && onDragEnd($event)")
   .vuecal__event-delete(
     v-if="vuecal.editableEvents && event.deletable"
     @click.stop="deleteEvent"
@@ -23,8 +23,8 @@
   .vuecal__event-resize-handle(
     v-if="resizable"
     contenteditable="false"
-    @mousedown.stop="onDragHandleMouseDown"
-    @touchstart.stop="onDragHandleMouseDown")
+    @mousedown.stop.prevent="onDragHandleMouseDown"
+    @touchstart.stop.prevent="onDragHandleMouseDown")
 </template>
 
 <script>
@@ -180,8 +180,8 @@ export default {
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
-        'vuecal__event--ghost': this.event.dragging,
         'vuecal__event--dragging': this.event.dragging,
+        'vuecal__event--static': this.event.draggingStatic,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
         'event-start': this.segment && isFirstDay && !isLastDay,
@@ -246,8 +246,11 @@ export default {
   &--background {z-index: 0;}
   &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
 
-  &--ghost {opacity: 0.01;}
-  &--dragging {border: 1px solid rgba(0, 0, 0, 0.4);}
+  &.vuecal__event--dragging {opacity: 0.7;}
+  &.vuecal__event--static {
+    transition: 0.3s 0.1s opacity !important;
+    opacity: 0;
+  }
 }
 
 .vuecal__event-resize-handle {
