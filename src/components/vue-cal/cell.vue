@@ -25,7 +25,7 @@
       @dragleave="!isDisabled && options.editableEvents && cellDragLeave($event, $data, data.startDate, $parent)"
       @drop="!isDisabled && options.editableEvents && cellDragDrop($event, $data, data.startDate, $parent, splits.length ? split.id : null)")
       .vuecal__special-hours(
-        v-if="isWeekOrDayView && specialHours.from !== null"
+        v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
         :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
       slot(
@@ -425,6 +425,7 @@ export default {
     position: absolute;
     left: 0;
     right: 0;
+    box-sizing: border-box;
   }
 
   &-content {
