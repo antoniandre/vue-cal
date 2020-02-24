@@ -187,14 +187,16 @@
         strong Philosophy:&nbsp;
         | Vue Cal tries to separate logic &amp; styles.#[br]
         | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
-        | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.
+        | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.#[br]#[br]
+        | Vue Cal provides the minimum needed CSS styles, not the nicest one: that makes it highly customizable for all the scenarii
+        | and a breeze to override, you most likely don't need the #[code !important] flag.
 
   v-layout.my-8(align-center)
     v-icon.mr-4(size="50" color="pink lighten-3") favorite
     v-alert.ma-0(dense border="left" text color="pink")
       | If you like Vue Cal, you can
       a.pink--text.ml-2(href="https://www.paypal.me/antoniandre1" target="_blank" style="text-decoration: underline") #[strong Support the project]!
-      div Thank you to all the supporters!
+      div Thank you so much to all the supporters! #[span.headline.ml-1 🙏]
 
   h2.headline.mt-12.pt-12
     a(href="#installation") Installation
@@ -4201,6 +4203,8 @@ $primary: #42b983;
 
 // Examples.
 // =====================================================
+.vuecal__event-title {font-weight: bold;}
+
 .ex--min-max-dates {
   .vuecal__cell--disabled {text-decoration: line-through;}
   .vuecal__cell--before-min {color: #b6d6c7;}
