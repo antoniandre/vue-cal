@@ -10,7 +10,9 @@
 // OK - drop an event that would start before last midnight
 //    - modularize this file
 //    - add javadoc
+//    - Prevent dragging background events
 
+let holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
@@ -152,7 +154,7 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
       vuecal[id]()
       // Keep pressing on previous or next button until user goes away.
       clearInterval(pressPrevOrNextInterval)
-      pressPrevOrNextInterval = setInterval(vuecal[id], 800)
+      pressPrevOrNextInterval = setInterval(vuecal[id], holdOverTimeout)
     }
     else if (id === 'today') {
       clearInterval(pressPrevOrNextInterval)
@@ -164,7 +166,7 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
     }
     else vuecal.switchView(id, null, true)
     viewChanged = true
-  }, 800)
+  }, holdOverTimeout)
 }
 
 export const viewSelectorDragLeave = (e, id, vuecal, headerData) => {

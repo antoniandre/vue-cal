@@ -811,7 +811,7 @@
           title: 'Need to go shopping',
           icon: 'shopping_cart', // Custom attribute.
           content: 'Click to see my shopping list',
-          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocadoes&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
+          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
           class: 'leisure'
         },
         {
@@ -971,15 +971,29 @@
   h4.title
     a(href="#ex--edit-delete-create-events") # Edit, delete &amp; create events
     a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
-  p
-    | The option #[span.code editable-events] Allows editing event title, deleting
-    | (by clicking and holding an event), resizing (by dragging handle) and creating
-    | new event (by clicking and holding a cell).#[br]#[br]
-    | Event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-    em Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation] example.
-    | #[br]#[br]
+  p.mb-2
+    | The #[span.code editable-events] option allows these actions all together:
+  ul
+    li Edit the event title
+    li Resize an event by dragging the resizer handle (not available if no timeline)
+    li Drag &amp; drop an event (not from the editable title and not from the resizer), (not available if no timeline)
+    li Delete an event (by clicking and holding an event)
+    li Create a new event (by clicking and holding a cell)
+      .grey--text Event creation is only possible on a day cell, so not on years &amp; year views.#[br]
+      div Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation] example.
+  p.mt-3
     | Vue Cal emits events on calendar event change, read more about it in the
     | #[a(href="#ex--emitted-events") emitted events] example.
+
+  highlight-message(type="tips")
+    ul
+      li.
+        You can override the #[span.code editable-events] ability in each events with the event
+        attributes #[span.code deletable: false], #[span.code draggable: false] &amp; #[span.code resizable: false].
+      li.
+        By default the delete button only appears at the top of the event with a set height (1.4em).
+        If you want a full-height delete button like in this example, you can apply the CSS class
+        #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1002,16 +1016,74 @@
              :events="events"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
-  highlight-message(type="tips")
-    ul
-      li.
-        You can override the #[span.code editable-events] ability in each events with the event
-        attributes #[span.code deletable: false] &amp; #[span.code resizable: false].
-      li.
-        By default the delete button only appears at the top of the event with a set height (1.4em).
-        If you want a full-height delete button like in this example, you can apply the CSS class
-        #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
-  highlight-message Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
+    a(href="#ex--edit-delete-create-events") # Event drag &amp; drop more in details
+    a#ex--edit-delete-create-events(name="ex--edit-delete-create-events")
+  p.mb-2.
+    You probably tried the events drag &amp; drop in the previous example, but
+    here's what you missed!
+
+  ul
+    li.
+      While you drag an event over the view selector buttons, or the previous and next arrows,
+      or even the today button, they will get into a highlighted state and if you hold over for
+      a few milliseconds they will change the view so you can drop the event you are holding
+      on another date of the calendar.
+    li.
+      If you drop the event outside of the calendar or anywhere it's not possible,
+      it will snap back to its original place and the original view will be restored if it
+      was changed by navigating away.
+    li.
+      If you drag an event over a cell or a split
+      (ref. #[a(href="#ex--splitting-days") splitting days]), the cell/split gets into a
+      highlighted state, showing you where the event would go if you drop it.
+    li.
+      You can drop an event in any cell, but it does not make much sense to drop it into a
+      #[span.code years] or #[span.code year] view for instance, so if you hold over a cell
+      in these views or in #[span.code month] view, it will go to the next available narrower
+      view.
+    li.
+      Dragging an event over the today button will take you to Today's date, and if you're in
+      a #[span.code years] or #[span.code year] view it will also go to the next available
+      narrower view from #[span.code month] downward.
+    li.
+      You can change the highlighted style of the header buttons or cells through the CSS classes:
+      ul
+        li #[span.code .vuecal__view-btn--highlighted]
+        li #[span.code .vuecal__today-btn--highlighted]
+        li #[span.code .vuecal__arrow--highlighted]
+        li #[span.code .vuecal__cell--highlighted]
+        li #[span.code .vuecal__cell-split--highlighted]
+
+  v-card.my-2.ma-auto.main-content
+    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+      selected-date="2018-11-19"
+      today-button
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      editable-events
+      :events="eventsToDrag"
+      hide-weekends
+      :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
+      //- @event-drop="log"
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal selected-date="2018-11-19"
+             :time-from="10 * 60"
+             :time-to="23 * 60"
+             :disable-views="['years', 'year']"
+             hide-view-selector
+             hide-weekends
+             editable-events
+             :events="events"
+             class="vuecal--full-height-delete"&gt;
+    &lt;/vue-cal&gt;
+  sshpre(language="css" label="CSS").
+    .vuecal__event--dragging {
+      background-color: rgba(60, 60, 60, 0.3);
+      border: none;
+    }
 
   //- Example.
   h4.title
@@ -2969,7 +3041,7 @@
       p
         | When #[span.code editableEvents] is set to #[span.code true], allows:
         ul
-          li Dragging events (this feature is coming soon)
+          li Drag and drop events
           li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
           li Deleting events by click and hold an event.
           li Editing events title
@@ -4037,6 +4109,16 @@ export default {
         class: 'leisure'
       }
     ],
+    eventsToDrag: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 16:30',
+        title: 'Surgery',
+        content: '<i class="v-icon material-icons">restaurant</i>',
+        class: 'health',
+        split: 2
+      },
+    ],
     eventsToPop: [
       {
         start: '2018-11-20 14:00',
@@ -4044,7 +4126,7 @@ export default {
         title: 'Need to go shopping',
         icon: 'shopping_cart',
         content: 'Click to see my shopping list',
-        contentFull: 'My shopping list is rather long:<br><ul><li>Avocadoes</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
+        contentFull: 'My shopping list is rather long:<br><ul><li>Avocados</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
         class: 'leisure'
       },
       {
@@ -4203,6 +4285,10 @@ $primary: #42b983;
 
 // Examples.
 // =====================================================
+.vuecal__event--dragging {
+  background-color: rgba(grey, 0.3) !important;
+  border: none !important;
+}
 .vuecal__event-title {font-weight: bold;}
 
 .ex--min-max-dates {
