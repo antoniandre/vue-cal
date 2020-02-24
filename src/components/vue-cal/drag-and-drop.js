@@ -1,13 +1,15 @@
 // @todo:
 // OK - emit an event-drop event
-//    - modularize this file
-//    - add javadoc
 // OK - handle drag and drop and splits / highlight splits separately
 // OK - add split in emitted event
 // OK - check that event.draggable = false prevents dragging
 // OK - check edge and IE
 // OK - also go to narrower view from month view
 // OK - Fix drag image not visible on Safari
+// OK - Support drag over today button
+//    - modularize this file
+//    - add javadoc
+//    - drop an event that would start before last midnight
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -96,8 +98,6 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
     cell.highlighted = false
     dragOverCell = { el: null, cell: null, timeout: null }
   }
-
-  console.log('cellDragLeave')
 }
 
 export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
@@ -150,9 +150,15 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
       vuecal[id]()
       // Keep pressing on previous or next button until user goes away.
       clearInterval(pressPrevOrNextInterval)
-      pressPrevOrNextInterval = setInterval(() => {
-        vuecal[id]()
-      }, 800)
+      pressPrevOrNextInterval = setInterval(vuecal[id], 800)
+    }
+    else if (id === 'today') {
+      clearInterval(pressPrevOrNextInterval)
+      let viewId
+      if (vuecal.view.id.includes('year')) {
+        viewId = Object.entries(vuecal.views).find(([vid, obj]) => obj.enabled && !vid.includes('year'))[0]
+      }
+      vuecal.switchView(viewId || vuecal.view.id, new Date(new Date().setHours(0, 0, 0, 0)), true)
     }
     else vuecal.switchView(id, null, true)
     viewChanged = true

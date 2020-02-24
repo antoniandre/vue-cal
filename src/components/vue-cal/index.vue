@@ -8,10 +8,14 @@
     :switch-to-narrower-view="switchToNarrowerView")
     template(v-slot:arrow-prev)
       slot(name="arrow-prev")
+        | &nbsp;
         i.angle
+        | &nbsp;
     template(v-slot:arrow-next)
       slot(name="arrow-next")
+        | &nbsp;
         i.angle
+        | &nbsp;
     template(v-slot:today-button)
       slot(name="today-button")
         span.default {{ texts.today }}

@@ -2,6 +2,7 @@
 //- This is an isolated test view. Just for testing purpose.
 vue-cal.vuecal--blue-theme(
   :selected-date="selectedDate"
+  today-button
   :events="events"
   editable-events
   @event-drop="log"

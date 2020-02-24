@@ -14,29 +14,35 @@
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
-      :aria-label="`Previous ${viewProps.view.id}`"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
       @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'previous', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'previous', $parent, $data)")
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'previous', $parent, $data)"
+      :aria-label="`Previous ${viewProps.view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       //- Best way to disable transition is to convert it to simple div tag.
       component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
         component(
           :is="!!broaderView ? 'button' : 'span'"
-          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
           :key="`${viewProps.view.id}${viewProps.view.startDate.toString()}`"
-          @click="switchToBroaderView")
+          @click="switchToBroaderView"
+          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false")
           slot(name="title")
-    button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
+    button.vuecal__today-btn(
+      v-if="options.todayButton"
+      :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
+      @click="goToToday"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'today', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'today', $parent, $data)"
+      aria-label="Today")
       slot(name="today-button")
     button.vuecal__arrow.vuecal__arrow--next(
-      :aria-label="`Next ${viewProps.view.id}`"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
       @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'next', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'next', $parent, $data)")
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'next', $parent, $data)"
+      :aria-label="`Next ${viewProps.view.id}`")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
@@ -166,6 +172,7 @@ export default {
   &__title {
     position: relative;
     justify-content: center;
+
     button {
       cursor: pointer;
       background: none;
@@ -197,6 +204,8 @@ export default {
     z-index: 1;
     background: none;
     border: none;
+    // Non-breakable spaces are added around the default angle icon to make it larger.
+    white-space: nowrap;
 
     &--prev {margin-left: 0.6em;}
     &--next {margin-right: 0.6em;}
@@ -212,14 +221,12 @@ export default {
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
 
-  // Double classes neeeded to override color, don't put in the underneath set of rules.
-  &__arrow.vuecal__arrow--highlighted,
-  &__view-btn.vuecal__view-btn--highlighted {background-color: rgba(0, 0, 0, 0.04);}
-
   // Pulse header buttons when dragging over with an event.
   &__arrow--highlighted,
+  &__today-btn--highlighted,
   &__view-btn--highlighted {
     position: relative;
+    background-color: rgba(0, 0, 0, 0.04);
 
     // Prevent event bubbling on hover and move.
     * {pointer-events: none;}
@@ -231,6 +238,7 @@ export default {
       position: absolute;
       top: 50%;
       left: 50%;
+      pointer-events: none;
     }
 
     &:before {
@@ -266,10 +274,11 @@ export default {
 // Media queries.
 //==================================//
 @media screen and(max-width: 450px) {
-  .vuecal__menu li {padding-left: 0.3em;padding-right: 0.3em;}
+  .vuecal__title {font-size: 0.9em;}
+  .vuecal__view-btn {padding-left: 0.6em;padding-right: 0.6em;}
 }
 
 @media screen and(max-width: 350px) {
-  .vuecal__menu li {font-size: 1.1em;}
+  .vuecal__view-btn {font-size: 1.1em;}
 }
 </style>
