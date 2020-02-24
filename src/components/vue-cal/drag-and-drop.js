@@ -7,9 +7,9 @@
 // OK - also go to narrower view from month view
 // OK - Fix drag image not visible on Safari
 // OK - Support drag over today button
+// OK - drop an event that would start before last midnight
 //    - modularize this file
 //    - add javadoc
-//    - drop an event that would start before last midnight
 
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -104,24 +104,26 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
   e.preventDefault()
 
-  const { dragAnEvent } = vuecal.domEvents
+  const { view, domEvents: { dragAnEvent }, mutableEvents, minutesAtCursor } = vuecal
 
   // Find the dragged event from its _eid in the view or mutableEvents array.
-  let event = vuecal.view.events.find(e => e._eid === dragAnEvent._eid)
+  let event = view.events.find(e => e._eid === dragAnEvent._eid)
   const eventInView = !!event
-  if (!event) event = (vuecal.mutableEvents.find(e => e._eid === dragAnEvent._eid) || {})
+  if (!event) event = mutableEvents.find(e => e._eid === dragAnEvent._eid) || {}
 
   // Modify the event start and end date.
-  const oldDate = event.startDate
-  const oldSplit = event.split
+  const { startDate: oldDate, split: oldSplit } = event
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
-  const startTimeMinutes = vuecal.minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt
+  // Force the start of the event at previous midnight minimum.
+  const startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt, 0)
   event.startTimeMinutes = startTimeMinutes
-  event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
   event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
-  event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   event.start = `${event.startDate.format()} ${event.startDate.formatTime()}`
+  // Force the end of the event at next midnight maximum.
+  event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
+  event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   event.end = `${event.endDate.format()} ${event.endDate.formatTime()}`
+
   event.dragging = false
   if (split || split === 0) event.split = split
   if (!eventInView) vuecal.addEventsToView([event])
