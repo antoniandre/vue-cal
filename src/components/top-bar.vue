@@ -1,5 +1,5 @@
 <template lang="pug">
-  v-app-bar.top-bar.elevation-0(absolute :class="{ scrolled: offsetTop > 104 }")
+  v-app-bar.top-bar.elevation-0(absolute dense :class="{ scrolled: offsetTop > 104 }")
     v-toolbar-title.top-bar__title
       span.top-bar__title-line
       span.top-bar__title-line
