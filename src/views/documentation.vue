@@ -374,9 +374,9 @@
     }
 
   sshpre(language="css" label="CSS").
-    .vuecal__cell.disabled {text-decoration: line-through;}
-    .vuecal__cell.disabled.before-min {color: #b6d6c7;}
-    .vuecal__cell.disabled.after-max {color: #008b8b;}
+    .vuecal__cell--disabled {text-decoration: line-through;}
+    .vuecal__cell--before-min {color: #b6d6c7;}
+    .vuecal__cell--after-max {color: #008b8b;}
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
@@ -4193,19 +4193,18 @@ $primary: #42b983;
 // Yellow theme.
 .vuecal--yellow-theme {
   .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);color: #fff;}
-  .vuecal__menu li.active {background-color: rgba(255, 255, 255, 0.15);}
   .vuecal__title-bar {background-color: rgba(255, 236, 202, 0.5);}
-  .vuecal__cell.today, .vuecal__cell.current {background-color: rgba(240, 240, 255, 0.4);}
-  &:not(.vuecal--day-view) .vuecal__cell.selected {background-color: rgba(255, 236, 202, 0.4);}
-  .vuecal__cell.selected:before {border-color: rgba(235, 216, 182, 0.5);}
+  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(255, 236, 202, 0.4);}
+  .vuecal__cell--selected:before {border-color: rgba(235, 216, 182, 0.5);}
 }
 
 // Examples.
 // =====================================================
 .ex--min-max-dates {
-  .disabled {text-decoration: line-through;}
-  .before-min {color: #b6d6c7;}
-  .after-max {color: #008b8b;}
+  .vuecal__cell--disabled {text-decoration: line-through;}
+  .vuecal__cell--before-min {color: #b6d6c7;}
+  .vuecal__cell--after-max {color: #008b8b;}
 }
 
 .ex--special-hours {
