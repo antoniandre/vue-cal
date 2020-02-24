@@ -411,7 +411,7 @@ export default {
   .vuecal__cells.day-view & {flex: 1;}
   .vuecal--overflow-x.vuecal--day-view & {width: auto;}
 
-  .vuecal--click-to-navigate & {cursor: pointer;}
+  .vuecal--click-to-navigate &:not(&--disabled) {cursor: pointer;}
   .vuecal--view-with-time &,
   .vuecal--week-view.vuecal--no-time &,
   .vuecal--day-view.vuecal--no-time & {display: block;}
