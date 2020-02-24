@@ -3764,7 +3764,7 @@ export default {
       ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
         start: '2018-11-20 14:00',
-        end: '2018-11-20 17:00',
+        end: '2018-11-20 17:30',
         title: 'Boring event',
         content: '<i class="v-icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
         class: 'blue-event',
