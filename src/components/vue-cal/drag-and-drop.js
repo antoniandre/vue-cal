@@ -8,9 +8,10 @@
 // OK - Fix drag image not visible on Safari
 // OK - Support drag over today button
 // OK - drop an event that would start before last midnight
+// OK - Prevent dragging background events
+// OK - Allow dragging timeless events
 //    - modularize this file
 //    - add javadoc
-//    - Prevent dragging background events
 
 let holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null

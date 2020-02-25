@@ -11,9 +11,9 @@
   @mousedown.stop="onMouseDown"
   @click="onClick"
   @dblclick="onDblClick"
-  :draggable="vuecal.editableEvents && event.draggable"
-  @dragstart="vuecal.editableEvents && onDragStart($event)"
-  @dragend="vuecal.editableEvents && onDragEnd($event)")
+  :draggable="vuecal.editableEvents && event.draggable && !event.background"
+  @dragstart="vuecal.editableEvents && event.draggable && !event.background && onDragStart($event)"
+  @dragend="vuecal.editableEvents && event.draggable && !event.background && onDragEnd($event)")
   .vuecal__event-delete(
     v-if="vuecal.editableEvents && event.deletable"
     @click.stop="deleteEvent"
