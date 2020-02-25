@@ -116,11 +116,13 @@ export default {
 
     focusEvent () {
       const { focusAnEvent } = this.domEvents
+      const onFocus = focusAnEvent._eid
+
+      if (onFocus === this.event._eid) return
 
       this.vuecal.emitWithEvent('event-focus', this.event)
 
       // Unfocus previous event if any.
-      const onFocus = focusAnEvent._eid
       if (onFocus && onFocus !== this.event._eid) {
         const event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
         if (event) event.focused = false
