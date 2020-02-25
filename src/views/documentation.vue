@@ -4349,7 +4349,7 @@ $primary: #42b983;
 
 .ex--all-day-events {
   .vuecal__cell-content {
-    align-self: flex-start;
+    justify-content: flex-start;
   }
 
   .vuecal__cell-date {
