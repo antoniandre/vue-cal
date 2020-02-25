@@ -1059,6 +1059,14 @@
         li #[span.code .vuecal__arrow--highlighted]
         li #[span.code .vuecal__cell--highlighted]
         li #[span.code .vuecal__cell-split--highlighted]
+    li
+      | When dropping an event into a cell, an #[span.code event-drop] event is emitted returning an object containing:
+      ul
+        li #[span.code event], the calendar event object that was dropped
+        li #[span.code oldDate], the Javascript Date the event was starting from
+        li #[span.code newDate], the Javascript Date the event is now starting from
+        li #[span.code oldSplit] only if splitting days, the id of the split the event came from
+        li #[span.code newSplit] only if splitting days, the id of the split the event is dropped into
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1070,7 +1078,6 @@
       :events="eventsToDrag"
       hide-weekends
       :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
-      //- @event-drop="log"
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
@@ -1973,7 +1980,7 @@
   p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
     v-layout(wrap align-center)
-      div.grey--text //&nbsp;
+      .grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
       v-spacer
@@ -1983,8 +1990,9 @@
       v-btn.ma-1.my-0.mr-0.ml-2(color="primary" outlined small @click="logMouseEvents = !logMouseEvents")
         v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
-    div.scrollable
-      div.mt-2.pt-2(v-for="(l, i) in logs" :key="i" :style="i && 'border-top: 1px solid #ddd'")
+    .scrollable
+      .mt-1(v-for="(l, i) in reversedLogs" :key="i")
+        .v-divider.mb-1.grey.lighten-2(v-if="i")
         strong.mr-1 {{ l.name }}:
         span {{ l.args }}
   v-card.mt-6.mb-2.ma-auto.main-content
@@ -2009,6 +2017,7 @@
       @event-title-change="logEvents('event-title-change', $event)"
       @event-content-change="logEvents('event-content-change', $event)"
       @event-duration-change="logEvents('event-duration-change', $event)"
+      @event-drop="logEvents('event-drop', $event)"
       @event-create="logEvents('event-create', $event)"
       @event-delete="logEvents('event-delete', $event)")
 
@@ -2033,6 +2042,7 @@
              @event-title-change="logEvents('event-title-change', $event)"
              @event-content-change="logEvents('event-content-change', $event)"
              @event-duration-change="logEvents('event-duration-change', $event)"
+             @event-drop="logEvents('event-drop', $event)"
              @event-create="logEvents('event-create', $event)"
              @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
@@ -4121,8 +4131,8 @@ export default {
     ],
     eventsToDrag: [
       {
-        start: '2018-11-20 14:00',
-        end: '2018-11-20 16:30',
+        start: '2018-11-21 14:00',
+        end: '2018-11-21 16:30',
         title: 'Surgery',
         content: '<i class="v-icon material-icons">restaurant</i>',
         class: 'health',
@@ -4154,10 +4164,9 @@ export default {
 
   methods: {
     logEvents (emittedEventName, params) {
-      if (!this.logMouseEvents && ['event-mouse-enter', 'event-mouse-leave'].includes(emittedEventName)) {
-        return
-      }
-      this.logs.unshift({ name: emittedEventName, args: JSON.stringify(params) })
+      if (!this.logMouseEvents && emittedEventName.includes('event-mouse')) return
+
+      this.logs.push({ name: emittedEventName, args: JSON.stringify(params) })
     },
     clearEventsLog () {
       this.logs = []
@@ -4207,6 +4216,9 @@ export default {
   },
 
   computed: {
+    reversedLogs () {
+      return this.logs.slice(0).reverse()
+    },
     nowFormatted () {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
     },
