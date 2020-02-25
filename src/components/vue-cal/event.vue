@@ -8,7 +8,7 @@
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @touchstart.stop="onTouchStart"
-  @mousedown.stop="onMouseDown"
+  @mousedown="onMouseDown /* Don't stop mousedown propagation & trigger cell mousedown */"
   @click="onClick"
   @dblclick="onDblClick")
   .vuecal__event-delete(
