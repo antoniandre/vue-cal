@@ -31,7 +31,7 @@
         v-list.text-no-wrap(dense allow-overflow)
           v-list-item.heading(href="#ex--basic" v-scroll-to="'#ex--basic'")
             v-icon(small).mr-2 done
-            | BASIC
+            | BASIC &amp; VIEW OPTIONS
           v-list-item(href="#ex--basic" v-scroll-to="'#ex--basic'") Basic, hide weekends
           v-list-item(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-item(href="#ex--disable-views" v-scroll-to="'#ex--disable-views'") Disable views, default view
@@ -60,7 +60,12 @@
           v-list-item(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
           v-list-item(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
           v-list-item(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-          v-list-item(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
+          v-list-item(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'")
+            | Edit, delete &amp; create events
+            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
+          v-list-item(href="#ex--drag-and-drop-in-details" v-scroll-to="'#ex--drag-and-drop-in-details'")
+            | Drag &amp; drop in details
+            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
