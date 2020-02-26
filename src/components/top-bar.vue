@@ -16,13 +16,13 @@
             span Doc
         v-list.text-no-wrap(dense)
           v-list-item(href="#installation" v-scroll-to="'#installation'") Installation
-          v-list-item(href="#how-to-use" v-scroll-to="'#how-to-use'") How To Use
+          v-list-item(href="#how-to-use" v-scroll-to="'#how-to-use'") How to use
           v-list-item(href="#api" v-scroll-to="'#api'") API
           v-list-item(href="#date-prototypes" v-scroll-to="'#date-prototypes'")
-            | #[span.code.mr-2 Date] Prototypes
+            | #[span.code.mr-2 Date] prototypes
             v-chip.xsmall.ml-2(small color="primary" outlined) NEW
-          v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS Notes
-          v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release Notes
+          v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS notes
+          v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release notes
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")
         template(v-slot:activator="{ on }")
           v-btn(text color="secondary" v-on="on")
