@@ -150,13 +150,14 @@ export default {
       this.timeAtCursor = new Date(this.data.startDate)
       this.timeAtCursor.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
+      const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target)
       // Unfocus an event if any is focused and clicking on cell outside of an event.
-      if (!this.isDOMElementAnEvent(DOMEvent.target) && focusAnEvent._eid) {
+      if (!mouseDownOnEvent && focusAnEvent._eid) {
         (this.$parent.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (this.options.editableEvents && this.options.cellClickHold &&
+      if (this.options.editableEvents && this.options.cellClickHold && !mouseDownOnEvent &&
         ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
