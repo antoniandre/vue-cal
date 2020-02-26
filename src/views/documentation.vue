@@ -4152,7 +4152,7 @@ export default {
         content: '<i class="v-icon material-icons">restaurant</i>',
         class: 'health',
         split: 2
-      },
+      }
     ],
     eventsToPop: [
       {

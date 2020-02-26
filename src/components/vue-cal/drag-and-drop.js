@@ -13,7 +13,7 @@
 //    - modularize this file
 //    - add javadoc
 
-let holdOverTimeout = 800 // How long we should hold over an element before it reacts.
+const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
 let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
