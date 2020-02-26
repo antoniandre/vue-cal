@@ -1066,13 +1066,7 @@
         li #[span.code .vuecal__cell--highlighted]
         li #[span.code .vuecal__cell-split--highlighted]
     li
-      | When dropping an event into a cell, an #[span.code event-drop] event is emitted returning an object containing:
-      ul
-        li #[span.code event], the calendar event object that was dropped
-        li #[span.code oldDate], the Javascript Date the event was starting from
-        li #[span.code newDate], the Javascript Date the event is now starting from
-        li #[span.code oldSplit] only if splitting days, the id of the split the event came from
-        li #[span.code newSplit] only if splitting days, the id of the split the event is dropped into
+      | When dropping an event into a cell, #[a(href="#ex--emitted-events") an #[span.code event-drop] event is emitted]:
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1961,7 +1955,9 @@
       (cells before and after the current month) are also returned in the array.
 
   h4.mt-2 Events-related
-  p.mb-0 In all events, properties #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects:
+  p.mb-0.
+    In all the following emitted events, the calendar event being modified is returned.#[br]
+    Note that in the event, #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects.
   ul
     li #[span.code event-focus]
     li #[span.code event-mouse-enter]
@@ -1970,30 +1966,41 @@
     li #[span.code event-delete]
     li #[span.code event-change]
     li #[span.code event-title-change]
-    li #[span.code event-content-change]
+    //- li #[span.code event-content-change]
     li #[span.code event-duration-change] &nbsp;#[span.code.grey--text // Only fired at the end of event resizing.]
+    li
+      span.code event-drop#[br]
+      | The #[span.code event-drop] has a different return, as it contains more information:
+      ul
+        li #[span.code event], the calendar event object that was dropped
+        li #[span.code oldDate], the Javascript Date the event was starting from
+        li #[span.code newDate], the Javascript Date the event is now starting from
+        li #[span.code oldSplit] only if splitting days, the id of the split the event came from
+        li #[span.code newSplit] only if splitting days, the id of the split the event is dropped into
+
   highlight-message(type="tips")
     ul
       li.
         The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
-        #[span.code event-title-change], #[span.code event-content-change],
+        #[span.code event-title-change], #[span.code event-drop],
         #[span.code event-duration-change]. So you have the choice to listen to
         #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
       li.mt-3.
         To help you manipulate an event's date, vue-cal returns native #[span.code Date]
         objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
         So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
-  p.mb-0 Watch the list of emitted events (latest on top) as you play with Vue Cal:
+
+  p.mb-0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
     v-layout(wrap align-center)
       .grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
       v-spacer
-      v-btn.ma-1.ma-0(color="primary" outlined small @click="clearEventsLog")
+      v-btn(color="primary" outlined small @click="clearEventsLog")
         v-icon(small).mr-1 clear
         | Clear log
-      v-btn.ma-1.my-0.mr-0.ml-2(color="primary" outlined small @click="logMouseEvents = !logMouseEvents")
+      v-btn.ml-2(color="primary" outlined small @click="logMouseEvents = !logMouseEvents")
         v-icon(small).mr-1 {{ logMouseEvents ? 'remove' : 'add' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
     .scrollable
