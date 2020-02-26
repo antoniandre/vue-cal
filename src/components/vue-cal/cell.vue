@@ -45,8 +45,8 @@
           :overlaps="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
           :event-position="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
           :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
-          template(v-slot:event-renderer="{ event, view }")
-            slot(name="event-renderer" :view="view" :event="event")
+          template(v-slot:event="{ event, view }")
+            slot(name="event" :view="view" :event="event")
     .vuecal__now-line(
       v-if="timelineVisible"
       :style="`top: ${todaysTimePosition}px`"

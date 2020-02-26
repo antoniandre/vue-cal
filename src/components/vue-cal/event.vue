@@ -18,7 +18,7 @@
     v-if="vuecal.editableEvents && event.deletable"
     @click.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
-  slot(name="event-renderer" :event="event" :view="vuecal.view.id")
+  slot(name="event" :event="event" :view="vuecal.view.id")
   //- Force contenteditable="false" for new events without content.
   .vuecal__event-resize-handle(
     v-if="resizable"

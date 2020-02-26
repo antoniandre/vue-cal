@@ -2259,7 +2259,7 @@
       li #[span.code cell-content]
       li #[span.code no-event]
       li #[span.code events-count]
-      li #[span.code event-renderer]
+      li #[span.code event]
 
   //- Example.
   h4.title
@@ -2603,7 +2603,7 @@
       :time-to="19 * 60"
       hide-weekends
       :events="eventsToPop")
-      template(v-slot:event-renderer="{ event, view }")
+      template(v-slot:event="{ event, view }")
         v-icon.mt-2(color="white" x-large) {{ event.icon }}
         .vuecal__event-title.mb-6(v-html="event.title")
         small.vuecal__event-time
@@ -2618,7 +2618,7 @@
              :time-to="19 * 60"
              hide-weekends
              :events="events"&gt;
-      &lt;template v-slot:event-renderer="{ event, view }"&gt;
+      &lt;template v-slot:event="{ event, view }"&gt;
         &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
 
         &lt;div class="vuecal__event-title" v-html="event.title" /&gt;
@@ -3334,17 +3334,20 @@
 
   div #[strong Version 3.0]
     highlight-message.mb-0(type="success")
-      h3.mt-0 With the arrival of the drag &amp; drop feature, Vue Cal is entering a new era!
+      h3.mt-0.pt-0 With the arrival of the drag &amp; drop feature, Vue Cal is entering a new era!
       p.
-        Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar on Vue.js, 100% designed for Vue,
-        and still with no dependency.#[br]
+        Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
+        on Vue.js, 100% designed for Vue, and still with no dependency!#[br]
 
     highlight-message.mb-6(type="warning")
       ul
         li
           h3.mt-0.pt-0 The drag &amp; drop is not yet available on touch screens
         li
-          h3.mt-3.pt-0 A few CSS classes have been renamed for consistency
+          h3.mt-3.pt-0 Renamed slot
+          p The #[span.code event-renderer] slot is renamed into #[span.code event]
+        li
+          h3.mt-3.pt-0 Renamed CSS classes
           p.
             If you use them in your own CSS (or if you have a custom color theme)
             you might want to update them:#[br]

@@ -44,8 +44,8 @@
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
               :cell-splits="hasSplits && daySplits || []")
-              template(v-slot:event-renderer="{ event, view }")
-                slot(name="event-renderer" :view="view" :event="event")
+              template(v-slot:event="{ event, view }")
+                slot(name="event" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
                     v-if="editableEvents && event.title"
                     contenteditable
@@ -108,8 +108,8 @@
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
                       .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                         slot(name="no-event") {{ texts.noEvent }}
-                  template(v-slot:event-renderer="{ event, view }")
-                    slot(name="event-renderer" :view="view" :event="event")
+                  template(v-slot:event="{ event, view }")
+                    slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
                         v-if="editableEvents && event.title"
                         contenteditable
