@@ -12,6 +12,7 @@
 // OK - Allow dragging timeless events
 //    - modularize this file
 //    - add javadoc
+//    - Fix event deletion
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null

@@ -1035,9 +1035,9 @@
       while dragged over, the previous and next buttons will keep changing the view until you go
       away from the button.
     li.
-      If you drop the event outside of the calendar or anywhere it's not possible,
-      it will snap back to its original place and the original view will be restored if it
-      was changed by navigating away.
+      Dragging an event over the today button will take you to Today's date, and if you're in
+      a #[span.code years] or #[span.code year] view it will also go to the next available
+      narrower view from #[span.code month] downward.
     li.
       If you drag an event over a cell or a split
       (ref. #[a(href="#ex--splitting-days") splitting days]), the cell/split gets into a
@@ -1048,9 +1048,15 @@
       in these views or in #[span.code month] view, it will go to the next available narrower
       view so you can at least see a day cell.
     li.
-      Dragging an event over the today button will take you to Today's date, and if you're in
-      a #[span.code years] or #[span.code year] view it will also go to the next available
-      narrower view from #[span.code month] downward.
+      If you drop the event outside of the calendar or anywhere it's not possible,
+      it will snap back to its original place and the original view will be restored if it
+      was changed by navigating away.
+    li.
+      If you drop the event in a cell and it would start before midnight (00:00), it is placed at midnight,
+      keeping its duration.
+    li.
+      If you drop the event in a cell and it would end after midnight (24:00), its duration will be truncated
+      to end at midnight (24:00).
     li
       | You can change the highlighted style of the header buttons or cells through these CSS classes:
       ul
@@ -3213,10 +3219,10 @@
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
     li.mt-3
       code.mr-2 .isToday()
-      | Returns true if the date is Today.
+      | Returns #[span.code true] if the date is Today.
     li.mt-3
       code.mr-2 .isLeapYear()
-      | Returns true if the date is in a leap year.
+      | Returns #[span.code true] if the date is in a leap year.
 
   h3.mt-4 And because everyone needs a Date/time formatting function...
   p.
@@ -3285,7 +3291,8 @@
   h3.mt-12 # Color themes &amp; rounded theme
   p.
     Currently 2 color themes (green &amp; blue) are available, in addition to the standard grey theme.#[br]
-    You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme] or  #[span.code vuecal--blue-theme].
+    You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme]
+    or #[span.code vuecal--blue-theme].
   p.
     If you want another color theme, you can define your own easily.#[br]
     This is what a standard color theme looks like.
@@ -3307,7 +3314,8 @@
 
   p
     strong Rounded theme#[br]
-    | You can use the rounded cells theme like in the Example #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
+    | You can use the rounded cells theme like in the Example
+    | #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
     | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
 
   h3.mt-12 # Responsiveness &amp; media queries
