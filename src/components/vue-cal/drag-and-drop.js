@@ -1,5 +1,5 @@
 // @todo:
-// OK - emit an event-drop event
+// OK - emit the `event-drop` & `event-change` events on event drop
 // OK - handle drag and drop and splits / highlight splits separately
 // OK - add split in emitted event
 // OK - check that event.draggable = false prevents dragging
@@ -12,7 +12,8 @@
 // OK - Allow dragging timeless events
 //    - modularize this file
 //    - add javadoc
-//    - Fix event deletion
+// OK - Fix event deletion
+// OK - Only trigger view change if it changed
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
@@ -40,6 +41,8 @@ export const eventDragStart = (e, event, vuecal) => {
   dragAnEvent._eid = event._eid
   event.dragging = true
   event.draggingStatic = true
+
+  viewChanged = false
   viewBeforeDrag = { id: vuecal.view.id, date: vuecal.view.startDate }
 
   const { minutes } = vuecal.minutesAtCursor(e)
@@ -143,6 +146,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     ...((split || split === 0) && { oldSplit, newSplit: split })
   }
   vuecal.$emit('event-drop', params)
+  vuecal.$emit('event-change', params.event)
 }
 
 // On drag enter on a view button or on prev & next buttons.

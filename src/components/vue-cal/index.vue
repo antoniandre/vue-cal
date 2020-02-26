@@ -623,8 +623,8 @@ export default {
           mutableEvent.end = event.end
           mutableEvent.endDate = event.endDate
 
-          this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
+          this.emitWithEvent('event-change', event)
         }
 
         if (event) event.resizing = false
@@ -708,8 +708,8 @@ export default {
 
       event.title = e.target.innerHTML
 
-      this.emitWithEvent('event-change', event)
       this.emitWithEvent('event-title-change', event)
+      this.emitWithEvent('event-change', event)
     },
 
     /**
