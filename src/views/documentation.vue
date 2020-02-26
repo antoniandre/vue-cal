@@ -3282,7 +3282,7 @@
     a#css-notes(name="css-notes")
   p You can easily change the calendar design with CSS.
 
-  h3.mt-12 # Color &amp; rounded Themes
+  h3.mt-12 # Color themes &amp; rounded theme
   p.
     Currently 2 color themes (green &amp; blue) are available, in addition to the standard grey theme.#[br]
     You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme] or  #[span.code vuecal--blue-theme].
@@ -3306,11 +3306,11 @@
     .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
 
   p
-    strong Rounded Theme#[br]
+    strong Rounded theme#[br]
     | You can use the rounded cells theme like in the Example #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
     | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
 
-  h3.mt-12 # Responsiveness &amp; Media Queries
+  h3.mt-12 # Responsiveness &amp; media queries
   p.
     This calendar is fully responsive.#[br]
     To help you in making the calendar always look perfect,
@@ -3322,21 +3322,29 @@
     Additionally, you can use the options #[span.code small] &amp; #[span.code xsmall]
     to truncate week days at any size.
 
-  h3.mt-12 # Disabled Text Selection
+  h3.mt-12 # Disabled text selection
   p.
     By default the selection is disabled in the whole calendar except in the events.
     you can override this by CSS.
 
   //- Release notes.
   h2.headline.mt-12.pt-12.mb-4
-    a(href="#release-notes") Release Notes
+    a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 2.25.0] Drag &amp; drop feature
-    highlight-message.mb-2(type="warning")
+  div #[strong Version 3.0]
+    highlight-message.mb-0(type="success")
+      h3.mt-0 With the arrival of the drag &amp; drop feature, Vue Cal is entering a new era!
+      p.
+        Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar on Vue.js, 100% designed for Vue,
+        and still with no dependency.#[br]
+
+    highlight-message.mb-6(type="warning")
       ul
         li
-          h3.mt-0.pt-0 A few CSS classes have been renamed for consistency
+          h3.mt-0.pt-0 The drag &amp; drop is not yet available on touch screens
+        li
+          h3.mt-3.pt-0 A few CSS classes have been renamed for consistency
           p.
             If you use them in your own CSS (or if you have a custom color theme)
             you might want to update them:#[br]
@@ -3355,19 +3363,21 @@
             li Added class: #[span.code .vuecal__view-btn]
             li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
 
-        li.
+        li
           h3.mt-0 New CSS classes when an event is dragged
           ul
             li Over a cell: #[span.code .vuecal__cell--highlighted]
             li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
             li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
             li Event dragging class: #[span.code .vuecal__event-dragging]
-        li.
-          If you have a custom color theme, these new classes should be added:
-          #[span.code .vuecal__view-btn--highlighted],
-          #[span.code .vuecal__arrow--highlighted],
-          #[span.code .vuecal__cell--highlighted].#[br]
-          Refer to the #[a(href="#css-notes") CSS Notes].
+        li
+          h3.mt-0 Updated color theme
+          p.
+            If you have a custom color theme, these new classes should be added:
+            #[span.code .vuecal__view-btn--highlighted],
+            #[span.code .vuecal__arrow--highlighted],
+            #[span.code .vuecal__cell--highlighted].#[br]
+            Refer to the #[a(href="#css-notes") CSS Notes].
 
   div.grey--text #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
   div.grey--text #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
