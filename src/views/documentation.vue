@@ -3349,7 +3349,7 @@
 
   div #[strong Version 3.0]
     highlight-message.mb-0(type="success")
-      h3.mt-0.pt-0 With the arrival of the drag &amp; drop feature, Vue Cal is entering a new era!
+      h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
       p.
         Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
         on Vue.js, 100% designed for Vue, and still with no dependency!#[br]
