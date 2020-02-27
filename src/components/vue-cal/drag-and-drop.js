@@ -10,10 +10,10 @@
 // OK - drop an event that would start before last midnight
 // OK - Prevent dragging background events
 // OK - Allow dragging timeless events
-//    - modularize this file
-//    - add javadoc
 // OK - Fix event deletion
 // OK - Only trigger view change if it changed
+//    - add javadoc
+//    - modularize this file
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
@@ -23,6 +23,14 @@ let viewChanged = false
 let cancelViewChange = true
 let dragOverCell = { el: null, cell: null, timeout: null }
 
+/**
+ * On event drag start, only possible if editableEvent is true.
+ * /!\ This is using the native HTML5 drag & drop, not supported on touch devices.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const eventDragStart = (e, event, vuecal) => {
   // Cancel the drag if event has draggable set to false and trying to drag a text selection.
   if (e.target.nodeType === 3) return e.preventDefault()
@@ -55,6 +63,13 @@ export const eventDragStart = (e, event, vuecal) => {
   cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
 }
 
+/**
+ * eventDragEnd.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const eventDragEnd = (e, event, vuecal) => {
   const { dragAnEvent } = vuecal.domEvents
   dragAnEvent._eid = null
@@ -65,6 +80,13 @@ export const eventDragEnd = (e, event, vuecal) => {
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
 }
 
+/**
+ * cellDragEnter.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   const target = e.currentTarget
 
@@ -85,6 +107,13 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
 }
 
 // When starting to drag event on the same cell it's in.
+/**
+ * cellDragOver.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const cellDragOver = (e, cell, cellDate, vuecal, split) => {
   e.preventDefault()
   cell.highlighted = true
@@ -92,6 +121,13 @@ export const cellDragOver = (e, cell, cellDate, vuecal, split) => {
 }
 
 // Warning: cell dragleave event happens AFTER another cell dragenter!
+/**
+ * cellDragLeave.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   e.preventDefault()
 
@@ -109,6 +145,13 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   }
 }
 
+/**
+ * cellDragDrop.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
   e.preventDefault()
@@ -152,6 +195,13 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
 }
 
 // On drag enter on a view button or on prev & next buttons.
+/**
+ * viewSelectorDragEnter.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
 
@@ -177,6 +227,13 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
   }, holdOverTimeout)
 }
 
+/**
+ * viewSelectorDragLeave.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 export const viewSelectorDragLeave = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
 
