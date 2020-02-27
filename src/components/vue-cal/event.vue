@@ -253,7 +253,7 @@ export default {
   &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
 
   &.vuecal__event--dragging {opacity: 0.7;}
-  &.vuecal__event--static {opacity: 0;}
+  &.vuecal__event--static {opacity: 0;transition: opacity 0.1s;}
 }
 
 // Firefox sets a half opacity already, so don't dim the element being dragged.
