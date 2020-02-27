@@ -27,6 +27,9 @@ export const eventDefaults = {
   deleting: false,
   resizable: true,
   resizing: false,
+  draggable: true,
+  dragging: false,
+  draggingStatic: false, // Controls the CSS class of the static clone while dragging.
   focused: false,
   top: 0,
   height: 0,
@@ -403,6 +406,12 @@ export const getOverlapsStreak = (event, cellOverlaps = {}) => {
  */
 export const updateEventPosition = (event, vuecal) => {
   const { startTimeMinutes, endTimeMinutes } = event
+
+  // if (event.dragging) {
+  //   event.top = event.dragging.y
+  //   event.left = event.dragging.x
+  //   return
+  // }
 
   // Top of event.
   let minutesFromTop = startTimeMinutes - vuecal.timeFrom

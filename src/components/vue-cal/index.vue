@@ -8,10 +8,14 @@
     :switch-to-narrower-view="switchToNarrowerView")
     template(v-slot:arrow-prev)
       slot(name="arrow-prev")
+        | &nbsp;
         i.angle
+        | &nbsp;
     template(v-slot:arrow-next)
       slot(name="arrow-next")
+        | &nbsp;
         i.angle
+        | &nbsp;
     template(v-slot:today-button)
       slot(name="today-button")
         span.default {{ texts.today }}
@@ -40,8 +44,8 @@
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
               :cell-splits="hasSplits && daySplits || []")
-              template(v-slot:event-renderer="{ event, view }")
-                slot(name="event-renderer" :view="view" :event="event")
+              template(v-slot:event="{ event, view }")
+                slot(name="event" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
                     v-if="editableEvents && event.title"
                     contenteditable
@@ -104,8 +108,8 @@
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
                       .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
                         slot(name="no-event") {{ texts.noEvent }}
-                  template(v-slot:event-renderer="{ event, view }")
-                    slot(name="event-renderer" :view="view" :event="event")
+                  template(v-slot:event="{ event, view }")
+                    slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
                         v-if="editableEvents && event.title"
                         contenteditable
@@ -183,6 +187,7 @@ export default {
     selectedDate: { type: [String, Date], default: '' },
     showAllDayEvents: { type: [Boolean, String], default: false },
     showWeekNumbers: { type: [Boolean, String], default: false },
+    snapToTime: { type: Number, default: 0 },
     small: { type: Boolean, default: false },
     specialHours: { type: Object, default: () => ({}) },
     splitDays: { type: Array, default: () => [] },
@@ -239,7 +244,8 @@ export default {
         endCell: null
       },
       dragAnEvent: {
-        _eid: null // Only one at a time.
+        _eid: null, // Only one at a time.
+        cursorGrabAt: 0 // The cursor position (in minutes) in the event.
       },
       focusAnEvent: {
         _eid: null // Only one at a time.
@@ -290,15 +296,18 @@ export default {
     /**
      * On click/dblclick of a cell go to a narrower view if available.
      * E.g. Click on month cell takes you to week view if not hidden, otherwise on day view if not hidden.
+     *
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to the selected date,
+     *                             If also empty fallbacks to the current view start date.
      */
-    switchToNarrowerView () {
+    switchToNarrowerView (date = null) {
       this.transitionDirection = 'right'
 
       let views = Object.keys(this.views)
       views = views.slice(views.indexOf(this.view.id) + 1)
       const view = views.find(v => this.views[v].enabled)
 
-      if (view) this.switchView(view)
+      if (view) this.switchView(view, date)
     },
 
     /**
@@ -306,8 +315,8 @@ export default {
      * If a date is given, it will be selected and if the view does not contain it, it will go to that date.
      *
      * @param {String} view the view to go to. Among `years`, `year`, `month`, `week`, `day`.
-     * @param {String | Date} date A starting date for the view, if none, fallbacks to selected date
-     *                            If also empty fallbacks to the current view start date.
+     * @param {String | Date} date A starting date for the view, if none, fallbacks to the selected date,
+     *                             If also empty fallbacks to the current view start date.
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
     switchView (view, date = null, fromViewSelector = false) {
@@ -539,52 +548,61 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseMove (e) {
-      const { resizeAnEvent } = this.domEvents
-      if (resizeAnEvent._eid === null) return
+      const { resizeAnEvent, dragAnEvent } = this.domEvents
+      if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
       e.preventDefault()
-      const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-      const { minutes, cursorCoords } = this.minutesAtCursor(e)
-      const segment = event.segments && event.segments[resizeAnEvent.segment]
 
-      // Don't allow time above 24 hours.
-      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, minutesInADay)
-      // Prevent reducing event duration to less than 1 min so it does not disappear.
-      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+      if (resizeAnEvent._eid) {
+        const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+        const { minutes, cursorCoords } = this.minutesAtCursor(e)
+        const segment = event.segments && event.segments[resizeAnEvent.segment]
 
-      if (segment) segment.endTimeMinutes = event.endTimeMinutes
+        // Don't allow time above 24 hours.
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, minutesInADay)
+        // Prevent reducing event duration to less than 1 min so it does not disappear.
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
 
-      event.endDate.setHours(
-        0,
-        event.endTimeMinutes,
-        event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
-        0
-      )
-      event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
-
-      // Resize events horizontally if resize-x is enabled (add/remove segments).
-      if (this.resizeX && this.view.id === 'week') {
-        event.daysCount = countDays(event.startDate, event.endDate)
-        const cells = this.$refs.cells
-        const cellWidth = cells.offsetWidth / cells.childElementCount
-        const endCell = Math.floor(cursorCoords.x / cellWidth)
-
-        if (!resizeAnEvent.startCell) {
-          resizeAnEvent.startCell = endCell - (event.daysCount - 1)
+        // On resize, snap to time every X minutes if the option is on.
+        if (this.snapToTime) {
+          const plusHalfSnapTime = (event.endTimeMinutes + this.snapToTime / 2)
+          event.endTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
         }
-        if (resizeAnEvent.endCell !== endCell) {
-          resizeAnEvent.endCell = endCell
 
-          const endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
-          const newDaysCount = countDays(event.startDate, endDate)
+        if (segment) segment.endTimeMinutes = event.endTimeMinutes
 
-          if (newDaysCount !== event.daysCount) {
-            // Check that all segments are up to date.
-            let lastSegmentFormattedDate = null
-            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
-            else lastSegmentFormattedDate = removeEventSegment(event)
-            resizeAnEvent.segment = lastSegmentFormattedDate
-            event.endTimeMinutes += 0.001 // Force updating the current event.
+        event.endDate.setHours(
+          0,
+          event.endTimeMinutes,
+          event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
+          0
+        )
+        event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
+
+        // Resize events horizontally if resize-x is enabled (add/remove segments).
+        if (this.resizeX && this.view.id === 'week') {
+          event.daysCount = countDays(event.startDate, event.endDate)
+          const cells = this.$refs.cells
+          const cellWidth = cells.offsetWidth / cells.childElementCount
+          const endCell = Math.floor(cursorCoords.x / cellWidth)
+
+          if (!resizeAnEvent.startCell) {
+            resizeAnEvent.startCell = endCell - (event.daysCount - 1)
+          }
+          if (resizeAnEvent.endCell !== endCell) {
+            resizeAnEvent.endCell = endCell
+
+            const endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
+            const newDaysCount = countDays(event.startDate, endDate)
+
+            if (newDaysCount !== event.daysCount) {
+              // Check that all segments are up to date.
+              let lastSegmentFormattedDate = null
+              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
+              else lastSegmentFormattedDate = removeEventSegment(event)
+              resizeAnEvent.segment = lastSegmentFormattedDate
+              event.endTimeMinutes += 0.001 // Force updating the current event.
+            }
           }
         }
       }
@@ -612,8 +630,8 @@ export default {
           mutableEvent.end = event.end
           mutableEvent.endDate = event.endDate
 
-          this.emitWithEvent('event-change', event)
           this.emitWithEvent('event-duration-change', event)
+          this.emitWithEvent('event-change', event)
         }
 
         if (event) event.resizing = false
@@ -697,8 +715,8 @@ export default {
 
       event.title = e.target.innerHTML
 
-      this.emitWithEvent('event-change', event)
       this.emitWithEvent('event-title-change', event)
+      this.emitWithEvent('event-change', event)
     },
 
     /**
@@ -837,8 +855,9 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'classes', 'split', 'segments',
-        'deletable', 'deleting', 'resizable', 'resizing', 'focused'
+        'height', 'top', 'classes', 'segments',
+        'deletable', 'deleting', 'resizable', 'resizing',
+        'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })
 
@@ -1333,7 +1352,8 @@ export default {
         'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--dragging-event': this.domEvents.resizeAnEvent.endTimeMinutes,
+        'vuecal--resizing-event': this.domEvents.resizeAnEvent.endTimeMinutes,
+        'vuecal--dragging-event': this.domEvents.dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
       }

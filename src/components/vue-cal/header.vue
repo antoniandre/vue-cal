@@ -1,27 +1,48 @@
 <template lang="pug">
 .vuecal__header
-  .vuecal__flex.vuecal__menu(v-if="!options.hideViewSelector" role="tablist" aria-label="Calendar views navigation")
-    button(
+  .vuecal__flex.vuecal__menu(
+    v-if="!options.hideViewSelector"
+    role="tablist"
+    aria-label="Calendar views navigation")
+    button.vuecal__view-btn(
       v-if="v.enabled"
-      :class="{ active: viewProps.view.id === id }"
+      :class="{ 'vuecal__view-btn--active': viewProps.view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, id, $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, id, $parent, $data)"
       @click="$parent.switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
-    button.vuecal__arrow.vuecal__arrow--prev(:aria-label="`Previous ${viewProps.view.id}`" @click="previous")
+    button.vuecal__arrow.vuecal__arrow--prev(
+      :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
+      @click="previous"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'previous', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'previous', $parent, $data)"
+      :aria-label="`Previous ${viewProps.view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
       //- Best way to disable transition is to convert it to simple div tag.
       component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
         component(
           :is="!!broaderView ? 'button' : 'span'"
-          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false"
           :key="`${viewProps.view.id}${viewProps.view.startDate.toString()}`"
-          @click="switchToBroaderView")
+          @click="switchToBroaderView"
+          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false")
           slot(name="title")
-    button.vuecal__today-btn(v-if="options.todayButton" aria-label="Today" @click="goToToday")
+    button.vuecal__today-btn(
+      v-if="options.todayButton"
+      :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
+      @click="goToToday"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'today', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'today', $parent, $data)"
+      aria-label="Today")
       slot(name="today-button")
-    button.vuecal__arrow.vuecal__arrow--next(:aria-label="`Next ${viewProps.view.id}`" @click="next")
+    button.vuecal__arrow.vuecal__arrow--next(
+      :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
+      @click="next"
+      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'next', $parent, $data)"
+      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'next', $parent, $data)"
+      :aria-label="`Next ${viewProps.view.id}`")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
@@ -41,6 +62,7 @@
 
 <script>
 import WeekdaysHeadings from './weekdays-headings'
+import { viewSelectorDragEnter, viewSelectorDragLeave } from './drag-and-drop'
 
 export default {
   components: { WeekdaysHeadings },
@@ -52,6 +74,10 @@ export default {
     weekDays: { type: Array, default: () => [] },
     switchToNarrowerView: { type: Function, default: () => {} }
   },
+
+  data: () => ({
+    highlightedControl: null
+  }),
 
   methods: {
     previous () {
@@ -71,7 +97,10 @@ export default {
       this.transitionDirection = 'left'
 
       if (this.broaderView) this.$parent.switchView(this.broaderView)
-    }
+    },
+
+    viewSelectorDragEnter,
+    viewSelectorDragLeave
   },
 
   computed: {
@@ -97,10 +126,8 @@ export default {
 <style lang="scss">
 .vuecal {
   &__header button {
-    background: none;
-    border: none;
     outline: none;
-    font: inherit;
+    font-family: inherit;
   }
 
   &__menu {
@@ -109,19 +136,21 @@ export default {
     list-style-type: none;
     justify-content: center;
     background-color: rgba(0, 0, 0, 0.02);
+  }
 
-    button {
-      padding: 0.3em 1em;
-      height: 2.2em;
-      font-size: 1.3em;
-      border-bottom: 0 solid currentColor;
-      cursor: pointer;
-      color: inherit;
-      box-sizing: border-box;
-      transition: 0.2s;
-    }
+  &__view-btn {
+    background: none;
+    border: none;
+    padding: 0.3em 1em;
+    height: 2.2em;
+    font-size: 1.3em;
+    border-bottom: 0 solid currentColor;
+    cursor: pointer;
+    color: inherit;
+    box-sizing: border-box;
+    transition: 0.2s;
 
-    button.active {
+    &--active {
       border-bottom-width: 2px;
       background: rgba(255, 255, 255, 0.15);
     }
@@ -143,7 +172,12 @@ export default {
   &__title {
     position: relative;
     justify-content: center;
-    button {cursor: pointer;}
+
+    button {
+      cursor: pointer;
+      background: none;
+      border: none;
+    }
     button.slide-fade--left-leave-active,
     button.slide-fade--right-leave-active {width: 100%;}
   }
@@ -153,6 +187,8 @@ export default {
     align-items: center;
     display: flex;
     font-size: 0.8em;
+    background: none;
+    border: none;
 
     span.default {
       font-size: 0.8em;
@@ -166,9 +202,13 @@ export default {
     cursor: pointer;
     position: relative;
     z-index: 1;
+    background: none;
+    border: none;
+    // Non-breakable spaces are added around the default angle icon to make it larger.
+    white-space: nowrap;
 
-    &--prev {padding-left: 0.6em;}
-    &--next {padding-right: 0.6em;}
+    &--prev {margin-left: 0.6em;}
+    &--next {margin-right: 0.6em;}
 
     i.angle {
       display: inline-block;
@@ -180,15 +220,65 @@ export default {
 
     &--prev i.angle {border-width: 2px 0 0 2px;}
   }
+
+  // Pulse header buttons when dragging over with an event.
+  &__arrow--highlighted,
+  &__today-btn--highlighted,
+  &__view-btn--highlighted {
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.04);
+
+    // Prevent event bubbling on hover and move.
+    * {pointer-events: none;}
+
+    &:before, &:after {
+      content: '';
+      background-color: inherit;
+      animation: sonar 0.8s infinite ease-out;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      pointer-events: none;
+    }
+
+    &:before {
+      width: 3em;
+      height: 3em;
+      border-radius: 3em;
+      margin-top: -1.5em;
+      margin-left: -1.5em;
+    }
+
+    &:after {
+      animation-duration: 1.5s;
+      animation-delay: 0.1s;
+      width: 2.6em;
+      height: 2.6em;
+      border-radius: 2.6em;
+      margin-top: -1.3em;
+      margin-left: -1.3em;
+    }
+  }
+}
+
+// Animations.
+//==================================//
+@keyframes sonar {
+  0%, 20% {opacity: 1;}
+  100% {
+    transform: scale(2.5);
+    opacity: 0;
+  }
 }
 
 // Media queries.
 //==================================//
 @media screen and(max-width: 450px) {
-  .vuecal__menu li {padding-left: 0.3em;padding-right: 0.3em;}
+  .vuecal__title {font-size: 0.9em;}
+  .vuecal__view-btn {padding-left: 0.6em;padding-right: 0.6em;}
 }
 
 @media screen and(max-width: 350px) {
-  .vuecal__menu li {font-size: 1.1em;}
+  .vuecal__view-btn {font-size: 1.1em;}
 }
 </style>
