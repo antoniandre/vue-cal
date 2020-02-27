@@ -563,6 +563,12 @@ export default {
         // Prevent reducing event duration to less than 1 min so it does not disappear.
         event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
 
+        // On resize, snap to time every X minutes if the option is on.
+        if (this.snapToTime) {
+          const plusHalfSnapTime = (event.endTimeMinutes + this.snapToTime / 2)
+          event.endTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
+        }
+
         if (segment) segment.endTimeMinutes = event.endTimeMinutes
 
         event.endDate.setHours(
