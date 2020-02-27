@@ -182,9 +182,11 @@ export default {
         'vuecal__event--background': this.event.background,
         'vuecal__event--deletable': this.event.deleting,
         'vuecal__event--all-day': this.event.allDay,
-        'vuecal__event--dragging': this.event.dragging,
-        // Sometimes when dragging fast the static class would get stuck and events stays invisible.
-        // If dragging is false disable the static class as well.
+        // Only apply the dragging class on the event copy that is being dragged.
+        'vuecal__event--dragging': !this.event.draggingStatic && this.event.dragging,
+        // Only apply the static class on the event original that remains static while a copy is being dragged.
+        // Sometimes when dragging fast the static class would get stuck and events stays invisible,
+        // So if dragging is false disable the static class as well.
         'vuecal__event--static': this.event.dragging && this.event.draggingStatic,
         // Multiple days events.
         'vuecal__event--multiple-days': !!this.segment,
@@ -251,15 +253,12 @@ export default {
   &--focus, &:focus {box-shadow: 1px 1px 6px rgba(0,0,0,0.2);z-index: 3;outline: none;}
 
   &.vuecal__event--dragging {opacity: 0.7;}
-  &.vuecal__event--static {
-    transition: 0.3s 0.1s opacity !important;
-    opacity: 0;
-  }
+  &.vuecal__event--static {opacity: 0;}
 }
 
 // Firefox sets a half opacity already, so don't dim the element being dragged.
 @-moz-document url-prefix() {
-  .vuecal__event--dragging:not(.vuecal__event--static) {opacity: 1;}
+  .vuecal__event.vuecal__event--dragging {opacity: 1;}
 }
 
 .vuecal__event-resize-handle {

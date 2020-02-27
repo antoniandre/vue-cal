@@ -395,8 +395,10 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  transition: 0.15s ease-in-out background-color;
+  transition: 0.2s ease-in-out background-color;
 
+  // Cell modifiers.
+  // -------------------------------------------------
   .vuecal__cells.month-view &,
   .vuecal__cells.week-view & {
     width: 14.2857%;
@@ -422,28 +424,6 @@ export default {
     display: flex;
   }
 
-  .vuecal__special-hours {
-    position: absolute;
-    left: 0;
-    right: 0;
-    box-sizing: border-box;
-  }
-
-  &-content {
-    position: relative;
-    height: 100%;
-    outline: none;
-  }
-
-  &-split {
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    height: 100%;
-    position: relative;
-    transition: 0.15s ease-in-out background-color;
-  }
-
   &:before {
     content: '';
     position: absolute;
@@ -466,16 +446,41 @@ export default {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
 
-    // .vuecal--day-view &:before {background: none;border: 1px solid rgba(235, 255, 245, 0.4);}
     .vuecal--day-view & {background: none;}
   }
 
   &--out-of-scope {color: #ccc;}
   &--disabled {color: #ccc;cursor: not-allowed;}
-  // Cell gets highlighted when dragging an event over it.
-  &--highlighted:not(.vuecal__cell--has-splits), &-split--highlighted {
+
+  // Cells/splits get highlighted when dragging an event over it.
+  &--highlighted:not(.vuecal__cell--has-splits), &-split.vuecal__cell-split--highlighted {
     background-color: rgba(0, 0, 0, 0.04);
+    // Drag over feedback must be fast. Then it can fade away with longer duration.
+    transition-duration: 5ms;
   }
+  // -------------------------------------------------
+
+  &-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    outline: none;
+
+    .vuecal--years-view &,
+    .vuecal--year-view &,
+    .vuecal--month-view & {justify-content: center;}
+  }
+
+  &-split {
+    display: flex;
+    flex-grow: 1;
+    flex-direction: column;
+    height: 100%;
+    position: relative;
+    transition: 0.2s ease-in-out background-color;
+  }
+
+  &-events {width: 100%;}
 
   &-events-count {
     position: absolute;
@@ -493,15 +498,12 @@ export default {
     box-sizing: border-box;
   }
 
-  &-content {
-    width: 100%;
-
-    .vuecal--years-view &,
-    .vuecal--year-view &,
-    .vuecal--month-view & {justify-content: center;}
+  .vuecal__special-hours {
+    position: absolute;
+    left: 0;
+    right: 0;
+    box-sizing: border-box;
   }
-
-  &-events {width: 100%;}
 }
 
 .vuecal--overflow-x.vuecal--week-view .vuecal__cell, .vuecal__cell-split {
