@@ -129,20 +129,29 @@
       v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
         v-icon.mr-1(size="20") check
         | Optional week number
+      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+        v-icon.mr-1(size="20") check
+        | Date prototypes
 
     .mb-2 Current backlog
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
-      | Date prototypes
+      | Business hours
     v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
       v-icon.mr-1(size="20") check
-      | Business hours
-    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
-      v-icon.mr-1(size="20") timer
-      | Drag events
+      | Resize events snap to time
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
+      | Drag events snap to time
+    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
+      v-icon.mr-1(size="20") check
+      | Drag &amp; drop events
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
       | Recurring events
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
+      | Drag &amp; drop events on touch devices
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
@@ -152,12 +161,6 @@
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       | Improve multiple day events Month view
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Resize events snap to time
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Drag events snap to time
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       | Prevent event intersect. on drag/resize
@@ -186,10 +189,11 @@
           strong Important Notes: Always check the #[a(href="#release-notes") Release Notes] when you upgrade!
         strong Philosophy:&nbsp;
         | Vue Cal tries to separate logic &amp; styles.#[br]
-        | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
-        | what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.#[br]#[br]
-        | Vue Cal provides the minimum needed CSS styles, not the nicest one: that makes it highly customizable for all the scenarii
-        | and a breeze to override, you most likely don't need the #[code !important] flag.
+        .body-2.
+          For performance, simplified logic, readability, structure &amp; maintenance of your own code,
+          what can be done via CSS should be done via CSS. CSS classes will help you style your events, cells, splits, etc.#[br]#[br]
+          Vue Cal provides the minimum needed CSS styles, not the nicest one: that makes it highly customizable for all the scenarii
+          and a breeze to override, you most likely don't need the #[code !important] flag.
 
   v-layout.my-8(align-center)
     v-icon.mr-4(size="50" color="pink lighten-3") favorite
@@ -1087,19 +1091,21 @@
       today-button
       :time-from="10 * 60"
       :time-to="23 * 60"
+      hide-weekends
+      :snap-to-time="15"
       editable-events
       :events="eventsToDrag"
-      hide-weekends
       :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
+             today-button
              :time-from="10 * 60"
              :time-to="23 * 60"
-             :disable-views="['years', 'year']"
-             hide-view-selector
              hide-weekends
+             :snap-to-time="15"
              editable-events
              :events="events"
+             :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   sshpre(language="css" label="CSS").
