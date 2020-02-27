@@ -6,6 +6,7 @@ vue-cal.vuecal--blue-theme(
   :events="events"
   editable-events
   @event-drop="log"
+  :snap-to-time="20"
   :split-days="[{ id: 1, label: 'doctor 1' }, { id: 2, label: 'doctor 2' }]"
   style="min-height: 400px;max-height: 65vh")
 </template>

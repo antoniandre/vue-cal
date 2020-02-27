@@ -187,6 +187,7 @@ export default {
     selectedDate: { type: [String, Date], default: '' },
     showAllDayEvents: { type: [Boolean, String], default: false },
     showWeekNumbers: { type: [Boolean, String], default: false },
+    snapToTime: { type: Number, default: 0 },
     small: { type: Boolean, default: false },
     specialHours: { type: Object, default: () => ({}) },
     splitDays: { type: Array, default: () => [] },

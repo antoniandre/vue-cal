@@ -12,8 +12,9 @@
 // OK - Allow dragging timeless events
 // OK - Fix event deletion
 // OK - Only trigger view change if it changed
-//    - add javadoc
+// OK - Add option to snap to time on event drop
 //    - modularize this file
+//    - add javadoc
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
@@ -156,7 +157,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
   e.preventDefault()
 
-  const { view, domEvents: { dragAnEvent }, mutableEvents, minutesAtCursor } = vuecal
+  const { view, domEvents: { dragAnEvent }, mutableEvents, minutesAtCursor, snapToTime } = vuecal
 
   // Find the dragged event from its _eid in the view or mutableEvents array.
   let event = view.events.find(e => e._eid === dragAnEvent._eid)
@@ -167,7 +168,14 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   const { startDate: oldDate, split: oldSplit } = event
   const eventDuration = event.endTimeMinutes - event.startTimeMinutes
   // Force the start of the event at previous midnight minimum.
-  const startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt, 0)
+  let startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt, 0)
+
+  // On drop, snap to time every X minutes if the option is on.
+  if (snapToTime) {
+    const plusHalfSnapTime = (startTimeMinutes + snapToTime / 2)
+    startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % snapToTime)
+  }
+
   event.startTimeMinutes = startTimeMinutes
   event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
   event.start = `${event.startDate.format()} ${event.startDate.formatTime()}`
