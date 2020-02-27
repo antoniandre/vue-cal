@@ -1,10 +1,10 @@
 <template lang="pug">
 .documentation
   .text-center.todo(style="margin: 0 auto 7em;max-width: 900px")
-    h2.title.mt-12.mb-2.todo To do...
-    p.mb-2 Here is my ongoing to do list.
+    h2.title.todo To do...
+    p.mb-4 Here is my ongoing to do list.
 
-    div Earlier
+    div.mb-n5 Earlier
     div(style="transform: scale(0.85);opacity: 0.8")
       v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
         v-icon.mr-1(size="20") check
@@ -1057,15 +1057,15 @@
       it will snap back to its original place and the original view will be restored if it
       was changed by navigating away.
     li.
-      If you drop the event in a cell and it would start before midnight (00:00), it is placed at midnight,
-      keeping its duration.
+      If you drop the event in a cell and it would start before midnight (00:00), it is placed at
+      midnight, keeping its duration.
     li.
-      If you drop the event in a cell and it would end after midnight (24:00), its duration will be truncated
-      to end at midnight (24:00).
+      If you drop the event in a cell and it would end after midnight (24:00), its duration will
+      be truncated to end at midnight (24:00).
     li.
       By default, when you drop the event it will start exactly where you dropped it,
-      but if you prefer you can use the #[span.code snapToTime] option to dictate where it should snap to
-      (refer to #[span.code snapToTime] in the #[a(href="#api") API section]).#[br]
+      but if you prefer you can use the #[span.code snapToTime] option to dictate where it should
+       snap to (refer to #[span.code snapToTime] in the #[a(href="#api") API section]).#[br]
       If you wonder why it does not visually represent the snapping, it's not possible to do it with
       the native HTML5 drag &amp; drop.
 
@@ -1077,13 +1077,18 @@
         li #[span.code .vuecal__arrow--highlighted]
         li #[span.code .vuecal__cell--highlighted]
         li #[span.code .vuecal__cell-split--highlighted]
-    li You can change the style of the event being dragged through the #[span.code .vuecal__event--dragging] CSS class.
     li.
-      While dragging, a copy of the original event is made and that's what you drag (native HTML5 drag &amp; drop behavior). The original event receive the
-      #[span.code .vuecal__event--static] CSS class which hides it with opacity: 0.#[br]
+      You can change the style of the event being dragged through the
+      #[span.code .vuecal__event--dragging] CSS class.
+    li.
+      While dragging, a copy of the original event is made and that's what you drag
+      (native HTML5 drag &amp; drop behavior). The original event receive the
+      #[span.code .vuecal__event--static] CSS class which hides it with #[span.code opacity: 0].#[br]
       You can use that class to give it a different style.
+    li.
+      When dropping an event into a cell, #[a(href="#ex--emitted-events") an #[span.code event-drop] event is emitted].
     li
-      | When dropping an event into a cell, #[a(href="#ex--emitted-events") an #[span.code event-drop] event is emitted]:
+      strong Drag &amp; drop is only available on single day events for now.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -3374,7 +3379,9 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
-  div #[strong Version 3.0]
+  div
+    strong Version 3.0
+    v-chip.ml-2.px-2(small outlined color="error") ALPHA VERSION
     highlight-message.mb-0.py-4(type="success" no-icon)
       h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
       p.mb-0.
