@@ -395,7 +395,7 @@ export default {
   justify-content: center;
   align-items: center;
   text-align: center;
-  transition: 0.2s ease-in-out background-color;
+  transition: 0.15s ease-in-out background-color;
 
   // Cell modifiers.
   // -------------------------------------------------
@@ -477,7 +477,7 @@ export default {
     flex-direction: column;
     height: 100%;
     position: relative;
-    transition: 0.2s ease-in-out background-color;
+    transition: 0.15s ease-in-out background-color;
   }
 
   &-events {width: 100%;}
