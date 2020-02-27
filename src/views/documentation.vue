@@ -1020,10 +1020,11 @@
   //- Example.
   h4.title
     a(href="#ex--drag-and-drop-in-details") # Event drag &amp; drop in details
+    v-chip.ml-3.px-2(color="error" small outlined) Not available on touch devices for now
     a#ex--drag-and-drop-in-details(name="ex--drag-and-drop-in-details")
   p.mb-2.
     You probably tried the events drag &amp; drop in the previous example, but here's what
-    you missed!
+    you missed! Quite a few things!
 
   ul
     li.
@@ -1065,6 +1066,11 @@
         li #[span.code .vuecal__arrow--highlighted]
         li #[span.code .vuecal__cell--highlighted]
         li #[span.code .vuecal__cell-split--highlighted]
+    li You can change the style of the event being dragged through the #[span.code .vuecal__event--dragging] CSS class.
+    li.
+      While dragging, a copy of the original event is made and that's what you drag (native HTML5 drag &amp; drop behavior). The original event receive the
+      #[span.code .vuecal__event--static] CSS class which hides it with opacity: 0.#[br]
+      You can use that class to give it a different style.
     li
       | When dropping an event into a cell, #[a(href="#ex--emitted-events") an #[span.code event-drop] event is emitted]:
 
@@ -3348,16 +3354,17 @@
     a#release-notes(name="release-notes")
 
   div #[strong Version 3.0]
-    highlight-message.mb-0(type="success")
+    highlight-message.mb-0.py-4(type="success" no-icon)
       h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
-      p.
+      p.mb-0.
         Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
         on Vue.js, 100% designed for Vue, and still with no dependency!#[br]
 
     highlight-message.mb-6(type="warning")
       ul
         li
-          h3.mt-0.pt-0 The drag &amp; drop is not yet available on touch screens
+          h3.mt-0.pt-0 Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not available on touch screens
+          p Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
         li
           h3.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
