@@ -13,8 +13,8 @@
 // OK - Fix event deletion
 // OK - Only trigger view change if it changed
 // OK - Add option to snap to time on event drop
-//    - modularize this file
-//    - add javadoc
+// OK - add javadoc
+//    - modularize this file?
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
@@ -65,7 +65,7 @@ export const eventDragStart = (e, event, vuecal) => {
 }
 
 /**
- * eventDragEnd.
+ * On event drag end, when releasing the event.
  *
  * @param {Object} e The associated DOM event.
  * @param {Object} event The event being dragged.
@@ -82,10 +82,13 @@ export const eventDragEnd = (e, event, vuecal) => {
 }
 
 /**
- * cellDragEnter.
+ * On cell/split enter with a dragging event.
+ * Highlight the cell, and if on `years`, `year`, `month` view,
+ * set a timer to go deeper on drag hold over this cell.
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {Object} cell The cell component's $data.
+ * @param {Date} cellDate The hovered cell starting date.
  * @param {Object} vuecal The instance of Vue Cal component.
  */
 export const cellDragEnter = (e, cell, cellDate, vuecal) => {
@@ -107,13 +110,16 @@ export const cellDragEnter = (e, cell, cellDate, vuecal) => {
   }
 }
 
-// When starting to drag event on the same cell it's in.
 /**
- * cellDragOver.
+ * On cell/split drag over, highlight the cell being hovered,
+ * Useful when starting to drag event on the same cell/split it's in.
+ * Warning: This is fired repeatedly as long as you stay over this cell/split.
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {Object} cell The cell component's $data.
+ * @param {Date} cellDate The hovered cell starting date.
  * @param {Object} vuecal The instance of Vue Cal component.
+ * @param {Number|String} split The optional split being hovered if any.
  */
 export const cellDragOver = (e, cell, cellDate, vuecal, split) => {
   e.preventDefault()
@@ -121,12 +127,14 @@ export const cellDragOver = (e, cell, cellDate, vuecal, split) => {
   if (split || split === 0) cell.highlightedSplit = split
 }
 
-// Warning: cell dragleave event happens AFTER another cell dragenter!
 /**
- * cellDragLeave.
+ * When event drag leaves a cell/split.
+ * Remove the cell/split highlighted state.
+ * Warning: cell dragleave event happens AFTER another cell dragenter!
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {Object} cell The cell component's $data.
+ * @param {Date} cellDate The hovered cell starting date.
  * @param {Object} vuecal The instance of Vue Cal component.
  */
 export const cellDragLeave = (e, cell, cellDate, vuecal) => {
@@ -147,11 +155,15 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
 }
 
 /**
- * cellDragDrop.
+ * On successful event drop into a cell/split.
+ * Change the event start and end time and remove the event dragging state
+ * and cell/split highlighted state.
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {Object} cell The cell component's $data.
+ * @param {Date} cellDate The hovered cell starting date.
  * @param {Object} vuecal The instance of Vue Cal component.
+ * @param {Number|String} split The optional split being dropped into, if any.
  */
 export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
@@ -202,13 +214,15 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   vuecal.$emit('event-change', params.event)
 }
 
-// On drag enter on a view button or on prev & next buttons.
 /**
- * viewSelectorDragEnter.
+ * On drag enter on a view button or on today, prev & next buttons.
+ * Sets a highlighted state on the hovered button, and go to requested view.
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {String} id The id of the header element being hovered. One of:
+ *                    previous, next, today, years, year, month, week, day.
  * @param {Object} vuecal The instance of Vue Cal component.
+ * @param {Object} headerData The header component's $data.
  */
 export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
@@ -236,11 +250,15 @@ export const viewSelectorDragEnter = (e, id, vuecal, headerData) => {
 }
 
 /**
- * viewSelectorDragLeave.
+ * On drag leave on a view button or on today, prev & next buttons.
+ * Removes the highlighted state on the hovered button, and cancel the timer to
+ * go to the requested view.
  *
  * @param {Object} e The associated DOM event.
- * @param {Object} event The event being dragged.
+ * @param {String} id The id of the header element being hovered. One of:
+ *                    previous, next, today, years, year, month, week, day.
  * @param {Object} vuecal The instance of Vue Cal component.
+ * @param {Object} headerData The header component's $data.
  */
 export const viewSelectorDragLeave = (e, id, vuecal, headerData) => {
   if (e.currentTarget.contains(e.relatedTarget)) return
