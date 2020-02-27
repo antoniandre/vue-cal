@@ -31,7 +31,7 @@ export const eventDragStart = (e, event, vuecal) => {
   e.dataTransfer.dropEffect = 'move'
 
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
-  // Remove delete button if held for too long.
+  // Cancel any delete on dragStart (if held for too long). Don't drag an event with a visible delete button.
   setTimeout(() => {
     clickHoldAnEvent._eid = null
     clearTimeout(clickHoldAnEvent.timeoutId)
@@ -40,7 +40,9 @@ export const eventDragStart = (e, event, vuecal) => {
 
   dragAnEvent._eid = event._eid
   event.dragging = true
-  event.draggingStatic = true
+  // Controls the CSS class of the static event that remains while a copy is being dragged.
+  // Thanks to this class, the event being dragged can have a different style.
+  setTimeout(() => (event.draggingStatic = true), 0)
 
   viewChanged = false
   viewBeforeDrag = { id: vuecal.view.id, date: vuecal.view.startDate }
