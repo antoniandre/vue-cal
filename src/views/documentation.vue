@@ -1058,6 +1058,13 @@
     li.
       If you drop the event in a cell and it would end after midnight (24:00), its duration will be truncated
       to end at midnight (24:00).
+    li.
+      By default, when you drop the event it will start exactly where you dropped it,
+      but if you prefer you can use the #[span.code snapToTime] option to dictate where it should snap to
+      (refer to #[span.code snapToTime] in the #[a(href="#api") API section]).#[br]
+      If you wonder why it does not visually represent the snapping, it's not possible to do it with
+      the native HTML5 drag &amp; drop.
+
     li
       | You can change the highlighted style of the header buttons or cells through these CSS classes:
       ul
@@ -2729,6 +2736,7 @@
     events:                 [Array],           default: []
     editableEvents:         [Boolean],         default: false
     resizeX:                [Boolean],         default: false
+    snapToTime:             [Number],          default: null
     eventsOnMonthView:      [Boolean, String], default: false
     eventsCountOnYearView:  [Boolean],         default: false
     onEventClick:           [Function],        default: null
@@ -3089,6 +3097,13 @@
         When set to #[span.code true], allows resizing an event across multiple days.#[br]
         Resizing on the X axis is only available on #[span.code week] view.
     li
+      code.mr-2 snapToTime
+      span.code [Number], default: 0
+      p.
+        Accepts a number of minutes from 0 to 60 to snap a dropped event or an event end time while resizing.#[br]
+        For instance, if you set a #[span.code snapToTime] of 15 min, dropping the event at a start of 10:05,
+        it will snap to 10:00, and if you drop it at 10:11 it will snap to 10:15.
+    li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
       p.
@@ -3365,6 +3380,9 @@
         li
           h3.mt-0.pt-0 Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not available on touch screens
           p Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
+        li
+          h3.mt-3.pt-0 The drag &amp; drop features comes along with a #[span.code snapToTime] option on event drop and event resize
+          p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].#[br]
         li
           h3.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
