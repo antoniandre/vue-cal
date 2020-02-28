@@ -3435,7 +3435,6 @@
             #[span.code .vuecal__cell--highlighted].#[br]
             Refer to the #[a(href="#css-notes") CSS Notes].
 
-  div.grey--text #[strong Version 2.24.5] Prevent event creation when click &amp; holding an event (caused by 2.24.4)
   div.grey--text #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
   div.grey--text #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
   div.grey--text #[strong Version 2.24.1] Disable special hours in the all-day bar
