@@ -82,6 +82,11 @@ export default {
     },
 
     onTouchStart (e) {
+      // Prevent the text selection prompt on touch device if editable events - unless on title.
+      // So the delete button will show up nicely without the text prompt.
+      if (this.vuecal.editableEvents && !e.target.className.includes('vuecal__event-title')) {
+        e.returnValue = false
+      }
       this.onMouseDown(e, true)
     },
 
@@ -296,6 +301,7 @@ export default {
   cursor: pointer;
   transform: translateY(-110%);
   transition: 0.3s;
+  .vuecal__event & {user-select: none;}
 
   .vuecal--full-height-delete & {
     height: auto;
