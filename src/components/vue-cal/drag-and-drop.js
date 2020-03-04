@@ -149,8 +149,8 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
   // and a new timer is started.
   if (dragOverCell.cell === cell) {
     clearTimeout(dragOverCell.timeout)
-    cell.highlighted = false
     dragOverCell = { el: null, cell: null, timeout: null }
+    cell.highlighted = false
   }
 }
 
@@ -168,6 +168,9 @@ export const cellDragLeave = (e, cell, cellDate, vuecal) => {
 export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
   e.preventDefault()
+
+  clearTimeout(dragOverCell.timeout)
+  dragOverCell = { el: null, cell: null, timeout: null }
 
   const { view, domEvents: { dragAnEvent }, mutableEvents, minutesAtCursor, snapToTime } = vuecal
 
