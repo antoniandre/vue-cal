@@ -33,7 +33,7 @@ export const eventDefaults = {
   focused: false,
   top: 0,
   height: 0,
-  classes: []
+  class: ''
 }
 
 /**

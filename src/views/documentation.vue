@@ -1153,7 +1153,7 @@
             :cell-click-hold="false"
             editable-events
             :events="events"
-            @cell-dblclick="$refs.vuecal3.createEvent($event, { title: 'New Event', classes: ['blue-event'] })")
+            @cell-dblclick="$refs.vuecal3.createEvent($event, { title: 'New Event', class: 'blue-event' })")
         sshpre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;vue-cal
             ref="vuecal"
@@ -1170,7 +1170,7 @@
             :events="events"
             @cell-dblclick="$refs.vuecal.createEvent(
               $event,
-              { title: 'New Event', classes: ['blue-event'] }
+              { title: 'New Event', class: 'blue-event' }
             )"&gt;
           &lt;/vue-cal&gt;
       p You may then want to disable the default event creation on cell click &amp; hold by setting #[span.code :cell-click-hold="false"]
@@ -1310,7 +1310,7 @@
               &lt;v-select
                 :items="eventsCssClasses"
                 placeholder="Event CSS Class"
-                @change="selectedEvent.classes = [$event]"/&gt;
+                @change="selectedEvent.class = $event"/&gt;
               &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
             &lt;/v-layout&gt;
             &lt;v-layout&gt;
@@ -3434,6 +3434,14 @@
             #[span.code .vuecal__arrow--highlighted],
             #[span.code .vuecal__cell--highlighted].#[br]
             Refer to the #[a(href="#css-notes") CSS Notes].
+        li
+          h3.mt-0 Other changes
+          ul
+            li.
+              The internal event #[span.code classes] property is replaced with
+              #[span.code class] like in the external event definition. Now you can
+              keep updating the #[span.code class] property from your component methods
+              called from Vue Cal fired events.
 
   div.grey--text #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
   div.grey--text #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
@@ -3741,13 +3749,13 @@
     v-card
       v-card-title.pa-2.primary.white--text
         v-text-field.ma-0.pa-0(v-model="selectedEvent.title" placeholder="Event Title" hide-details color="white")
-      v-card-text
-        v-textarea.ma-0.pa-0(v-model="selectedEvent.content" placeholder="Event Content" hide-details)
+      v-card-text.pa-2
+        v-textarea.pa-0(v-model="selectedEvent.content" placeholder="Event Content" rows="3" hide-details)
         v-layout.justify-space-between
           v-select.flex.shrink(
             :items="eventsCssClasses"
             placeholder="Event CSS Class"
-            @change="selectedEvent.classes = [$event]"
+            @change="selectedEvent.class = $event"
             hide-details
             style="max-width: 170px")
           v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")

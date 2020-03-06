@@ -181,7 +181,7 @@ export default {
       const { isFirstDay, isLastDay } = this.segment || {}
 
       return {
-        [this.event.classes.join(' ')]: true,
+        [this.event.class]: true,
         'vuecal__event--focus': this.event.focused,
         'vuecal__event--resizing': this.event.resizing,
         'vuecal__event--background': this.event.background,

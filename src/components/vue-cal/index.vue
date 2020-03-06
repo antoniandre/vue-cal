@@ -791,7 +791,7 @@ export default {
           endDate,
           endTimeMinutes,
           daysCount: multipleDays ? countDays(startDate, endDate) : 1,
-          classes: (event.class || '').split(' ')
+          class: event.class
         }, event)
 
         this.mutableEvents.push(event)
@@ -855,7 +855,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'classes', 'segments',
+        'height', 'top', 'segments',
         'deletable', 'deleting', 'resizable', 'resizing',
         'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
