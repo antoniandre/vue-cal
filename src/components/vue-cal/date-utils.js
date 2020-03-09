@@ -83,7 +83,7 @@ const initDatePrototypes = function () {
 
   // eslint-disable-next-line
   Date.prototype.formatTime = function (format = 'HH:mm') {
-    return formatTime(this.getHours() * 60 + this.getMinutes(), format, Date.texts)
+    return formatTime(dateToMinutes(this), format, Date.texts)
   }
 }
 

@@ -55,6 +55,7 @@
 </template>
 
 <script>
+import { dateToMinutes } from './date-utils'
 import { selectCell, keyPressEnterCell } from './cell-utils'
 import { updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
 import { cellDragOver, cellDragEnter, cellDragLeave, cellDragDrop } from './drag-and-drop'
@@ -215,7 +216,7 @@ export default {
 
   computed: {
     nowInMinutes () {
-      return this.$parent.now.getHours() * 60 + this.$parent.now.getMinutes()
+      return dateToMinutes(this.$parent.now)
     },
     isBeforeMinDate () {
       return this.minTimestamp !== null && this.minTimestamp > this.data.endDate.getTime()
@@ -370,14 +371,13 @@ export default {
     timelineVisible () {
       if (!this.data.today || !this.options.time || this.allDay || !this.isWeekOrDayView) return
 
-      return (this.$parent.now.getHours() * 60 + this.$parent.now.getMinutes()) <= this.options.timeTo
+      return this.nowInMinutes <= this.options.timeTo
     },
     todaysTimePosition () {
       // Skip the Maths if not relevant.
       if (!this.data.today || !this.options.time) return
 
-      const startTimeMinutes = this.$parent.now.getHours() * 60 + this.$parent.now.getMinutes()
-      const minutesFromTop = startTimeMinutes - this.options.timeFrom
+      const minutesFromTop = this.nowInMinutes - this.options.timeFrom
       return Math.round(minutesFromTop * this.timeScale)
     },
     timeScale () {
