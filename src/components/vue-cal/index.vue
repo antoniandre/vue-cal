@@ -127,7 +127,7 @@
 </template>
 
 <script>
-import { updateDateTexts, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, stringToDate, countDays } from './date-utils'
+import { updateDateTexts, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, formatTimeLite, stringToDate, countDays, dateToMinutes } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -577,7 +577,7 @@ export default {
           event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
           0
         )
-        event.end = formatDateLite(event.endDate) + ' ' + formatTime(event.endTimeMinutes)
+        event.end = `${formatDateLite(event.endDate)} ${formatTimeLite(event.endDate)}`
 
         // Resize events horizontally if resize-x is enabled (add/remove segments).
         if (this.resizeX && this.view.id === 'week') {
@@ -733,42 +733,32 @@ export default {
       // Populate missing keys: start, startDate, startTimeMinutes, end, endDate, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // `event.start` accepts a formatted string - `event.startDate` accepts a Date object.
-        let startDate, startDateF, startTime, hoursStart, minutesStart
-        if (event.start) {
-          // eslint-disable-next-line
-          !([startDateF, startTime = ''] = event.start.split(' '))
-          // eslint-disable-next-line
-          !([hoursStart, minutesStart] = startTime.split(':'))
-          startDate = stringToDate(event.start)
-        }
-        else if (event.startDate && event.startDate instanceof Date) {
-          startDateF = formatDateLite(event.startDate)
-          hoursStart = event.startDate.getHours()
-          minutesStart = event.startDate.getMinutes()
+        // `event.startDate` accepts a Date object, and `event.start` accepts a formatted string.
+        let startDate, startDateF
+        if (event.startDate && event.startDate instanceof Date) {
           startDate = event.startDate
+          startDateF = formatDateLite(event.startDate)
         }
-        const startTimeMinutes = parseInt(hoursStart) * 60 + parseInt(minutesStart)
-        const start = event.start || startDateF + ' ' + formatTime(startTimeMinutes)
+        else if (event.start) {
+          startDate = stringToDate(event.start)
+          startDateF = event.start.split(' ')[0] // Isolate date without time.
+        }
+        const startTimeMinutes = dateToMinutes(startDate)
+        const start = event.start || `${startDateF} ${formatTimeLite(startDate)}`
 
-        // `event.end` accepts a formatted string - `event.endDate` accepts a Date object.
-        let endDate, endDateF, endTime, hoursEnd, minutesEnd
-        if (event.end) {
-          // eslint-disable-next-line
-          !([endDateF, endTime = ''] = event.end.split(' '))
-          // eslint-disable-next-line
-          !([hoursEnd, minutesEnd] = endTime.split(':'))
-          endDate = stringToDate(event.end)
-        }
-        else if (event.endDate && event.endDate instanceof Date) {
-          endDateF = formatDateLite(event.endDate)
-          hoursEnd = event.endDate.getHours()
-          minutesEnd = event.endDate.getMinutes()
+        // `event.endDate` accepts a Date object, and`event.end` accepts a formatted string.
+        let endDate, endDateF
+        if (event.endDate && event.endDate instanceof Date) {
           endDate = event.endDate
+          endDateF = formatDateLite(event.endDate)
+        }
+        else if (event.end) {
+          endDate = stringToDate(event.end)
+          endDateF = event.end.split(' ')[0] // Isolate date without time.
         }
 
-        let endTimeMinutes = parseInt(hoursEnd) * 60 + parseInt(minutesEnd)
-        const end = event.end || endDateF + ' ' + formatTime(endTimeMinutes)
+        let endTimeMinutes = dateToMinutes(endDate)
+        const end = event.end || `${endDateF} ${formatTimeLite(endDate)}`
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {

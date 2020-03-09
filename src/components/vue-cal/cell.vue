@@ -51,7 +51,7 @@
       v-if="timelineVisible"
       :style="`top: ${todaysTimePosition}px`"
       :key="options.transitions ? `${view}-now-line` : 'now-line'"
-      :title="$parent.formatTime(nowInMinutes)")
+      :title="$parent.now.formatTime()")
 </template>
 
 <script>

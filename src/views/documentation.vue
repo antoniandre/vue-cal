@@ -1232,10 +1232,8 @@
             } else if (dateTime) alert('Wrong date format.')
         }
       highlight-message(type="warning").
-        Note that you can also override the default end date (2 hours duration),
-        by setting the property #[span.code end], but for internal Vue Cal calculations
-        #[strong you will also need to set the property #[span.code endTimeMinutes]].#[br]
-        E.g. #[span.code { end: '2018-11-20 14:00', endTimeMinutes: 14 * 60 }].
+        Note that you can also override the default event duration of 2 hours
+        by setting the event #[span.code duration] property in minutes (Integer).
 
     li.mt-12
       h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
@@ -3437,6 +3435,8 @@
         li
           h3.mt-0 Other changes
           ul
+            li When creating an event with a given startDate or endDate, automatically add the required startTimeMinutes/endTimeMinutes.
+            li When creating an event, you can now provide a #[span.code duration] property (in minutes).
             li.
               The internal event #[span.code classes] property is replaced with
               #[span.code class] like in the external event definition. Now you can

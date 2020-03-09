@@ -83,6 +83,7 @@ const initDatePrototypes = function () {
 
   // eslint-disable-next-line
   Date.prototype.formatTime = function (format = 'HH:mm') {
+    if (format === 'HH:mm') return formatTimeLite(this)
     return formatTime(dateToMinutes(this), format, Date.texts)
   }
 }
@@ -177,7 +178,14 @@ const hydrateTimeObject = (date, texts) => {
   return timeObject
 }
 
-// Time in minutes.
+/**
+ * Formats a time to the given format and returns the formatted string.
+ *
+ * @param {Number} time in minutes.
+ * @param {String} format the wanted format.
+ * @param {Object} texts the vue-cal localized texts object.
+ * @return {String} the formatted time.
+ */
 export const formatTime = (time, format = 'HH:mm', texts) => {
   timeObject = {} // Reinit the time object on each function call.
   const timeObj = hydrateTimeObject(time, texts)
@@ -189,12 +197,24 @@ export const formatTime = (time, format = 'HH:mm', texts) => {
 }
 
 /**
+ * Formats a time to 'HH:mm' from a Date and returns the formatted string.
+ *
+ * @param {Date} date a JavaScript Date object to format.
+ * @return {String} the formatted time.
+ */
+export const formatTimeLite = date => {
+  const h = date.getHours()
+  const m = date.getMinutes()
+  return `${(h < 10 ? '0' : '') + h}:${(m < 10 ? '0' : '') + m}`
+}
+
+/**
  * Formats a date/time to the given format and returns the formatted string.
  *
  * @param {Date} date a JavaScript Date object to format.
  * @param {String} format the wanted format.
  * @param {Object} texts the vue-cal localized texts object.
- * @return {String} the formatted string.
+ * @return {String} the formatted date.
  */
 export const formatDate = (date, format = 'YYYY-MM-DD', texts) => {
   if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
