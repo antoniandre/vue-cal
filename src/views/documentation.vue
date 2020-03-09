@@ -1153,7 +1153,7 @@
             :cell-click-hold="false"
             editable-events
             :events="events"
-            @cell-dblclick="$refs.vuecal3.createEvent($event, { title: 'New Event', class: 'blue-event' })")
+            @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
         sshpre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;vue-cal
             ref="vuecal"
@@ -1170,6 +1170,7 @@
             :events="events"
             @cell-dblclick="$refs.vuecal.createEvent(
               $event,
+              120,
               { title: 'New Event', class: 'blue-event' }
             )"&gt;
           &lt;/vue-cal&gt;
@@ -1226,15 +1227,13 @@
               this.$refs.vuecal.createEvent(
                 // Formatted start date and time or JavaScript Date object.
                 dateTime,
+                // Event duration in minutes (Integer).
+                120,
                 // Custom event props (optional).
                 { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' }
               )
             } else if (dateTime) alert('Wrong date format.')
         }
-      highlight-message(type="tips").
-        You can also override the default event duration of 2 hours
-        by setting the event #[span.code duration] property in minutes (Integer).
-        #[strong This property is only used on event creation].
 
     li.mt-12
       h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
@@ -3437,8 +3436,10 @@
         li
           h3.mt-0 Other changes
           ul
-            li When creating an event with a given startDate or endDate, automatically add the required startTimeMinutes/endTimeMinutes.
-            li When creating an event, you can now provide a #[span.code duration] property (in minutes).
+            li When creating an event with a given endDate, automatically add the required endTimeMinutes.
+            li.
+              Vue Cal's createEvent() function now accepts a duration parameter to easily override
+              the default 2 hours. (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
             li.
               The internal event #[span.code classes] property is replaced with
               #[span.code class] like in the external event definition. Now you can
@@ -4282,7 +4283,7 @@ export default {
     customEventCreation () {
       const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '2018-11-20 13:15')
       if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-        this.$refs.vuecal.createEvent(dateTime, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
+        this.$refs.vuecal.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
       }
       else if (dateTime) alert('Wrong date format.')
     },
@@ -4355,19 +4356,9 @@ $primary: #42b983;
 
   h4 {margin: 70px 0 8px;}
   h3 + h4 {margin-top: 20px;}
-
   h4 a {color: inherit !important;}
 
-  .todo .v-chip__content {
-    padding: 0 3px;
-  }
-
-  .flame {
-    max-width: 90px;
-    opacity: 0.6;
-    color: rgb(254, 247, 176);
-    text-shadow: 1px 0 0 #fd0, -1px 0 0 #fd0, 0 1px 0 #fd0, 0 -1px 0 #fd0;
-  }
+  .todo .v-chip__content {padding: 0 3px;}
 
   .api-options {list-style-type: none;}
   .api-options > li {margin-top: 2em;}
@@ -4389,6 +4380,7 @@ $primary: #42b983;
   background-color: rgba(grey, 0.3) !important;
   border: none !important;
 }
+
 .vuecal__event-title {font-weight: bold;}
 
 .ex--min-max-dates {
