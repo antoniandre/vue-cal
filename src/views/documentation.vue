@@ -148,7 +148,13 @@
       | Drag &amp; drop events
     v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
       v-icon.mr-1(size="20") timer
+      | Drop external events into Vue Cal
+    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
+      v-icon.mr-1(size="20") timer
       | Recurring events
+    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
+      v-icon.mr-1(size="20") access_time
+      | Drag &amp; drop multiple day events
     v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
       v-icon.mr-1(size="20") access_time
       | Drag &amp; drop events on touch devices
@@ -3381,25 +3387,42 @@
   div
     strong Version 3.0
     v-chip.ml-2.px-2(small outlined color="error") ALPHA VERSION
-    highlight-message.mb-0.py-4(type="success" no-icon)
-      h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
-      p.mb-0.
-        Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
-        on Vue.js, 100% designed for Vue, and still with no dependency!#[br]
+    h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
+    p.mb-0.
+      Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
+      on Vue.js, 100% designed for Vue, and still with no dependency!
+    highlight-message.mb-0(type="warning")
+      h3.mt-0.pt-0 Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not available on touch screens
+      p Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
 
-    highlight-message.mb-6(type="warning")
+    highlight-message.mb-6(type="success")
+      h3.mt-0.pt-0 New Features
       ul
         li
-          h3.mt-0.pt-0 Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not available on touch screens
-          p Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
+          h4.mt-2.pt-0 Drag &amp; drop
         li
-          h3.mt-3.pt-0 The drag &amp; drop features comes along with a #[span.code snapToTime] option on event drop and event resize
+          h4.mt-0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
+        li
+          h4.mt-0 #[span.code snapToTime] option on event drop and event resize
           p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].#[br]
+      h3.mt-0.mb-2 Big changes
+      ul
+        li.
+          Vue Cal's createEvent() function now accepts a duration parameter to easily override
+          the default 2 hours. (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+        li.
+          The internal event #[span.code classes] property is replaced with
+          #[span.code class] like in the external event definition. Now you can
+          keep updating the #[span.code class] property from your component methods
+          called from Vue Cal fired events.
         li
-          h3.mt-3.pt-0 Renamed slot
+          h4.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
+      h3.mt-0.mb-2 Other noticeable changes
+      ul
+        li When creating an event with a given endDate, automatically add the required endTimeMinutes.
         li
-          h3.mt-3.pt-0 Renamed CSS classes
+          h4.mt-3.pt-0 Renamed CSS classes
           p.
             If you use them in your own CSS (or if you have a custom color theme)
             you might want to update them:#[br]
@@ -3419,32 +3442,20 @@
             li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
 
         li
-          h3.mt-0 New CSS classes when an event is dragged
+          h4.mt-0 New CSS classes when an event is dragged
           ul
             li Over a cell: #[span.code .vuecal__cell--highlighted]
             li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
             li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
             li Event dragging class: #[span.code .vuecal__event-dragging]
         li
-          h3.mt-0 Updated color theme
+          h4.mt-0 Updated color theme
           p.
             If you have a custom color theme, these new classes should be added:
             #[span.code .vuecal__view-btn--highlighted],
             #[span.code .vuecal__arrow--highlighted],
             #[span.code .vuecal__cell--highlighted].#[br]
             Refer to the #[a(href="#css-notes") CSS Notes].
-        li
-          h3.mt-0 Other changes
-          ul
-            li When creating an event with a given endDate, automatically add the required endTimeMinutes.
-            li.
-              Vue Cal's createEvent() function now accepts a duration parameter to easily override
-              the default 2 hours. (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
-            li.
-              The internal event #[span.code classes] property is replaced with
-              #[span.code class] like in the external event definition. Now you can
-              keep updating the #[span.code class] property from your component methods
-              called from Vue Cal fired events.
 
   div.grey--text #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
   div.grey--text #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
