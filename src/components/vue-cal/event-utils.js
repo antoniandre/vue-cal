@@ -41,21 +41,21 @@ export const eventDefaults = {
  * event attributes through the eventOptions object.
  *
  * @param {Date | String} dateTime The date and time of the new event start.
+ * @param {Number} duration the event duration in minutes.
  * @param {Object} eventOptions some options to override the `eventDefaults` - optional.
  * @param {Object} vuecal the vuecal main component, to access needed methods, props, etc.
  */
-export const createAnEvent = (dateTime, eventOptions, vuecal) => {
+export const createAnEvent = (dateTime, duration, eventOptions, vuecal) => {
   if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
   if (!(dateTime instanceof Date)) return false
 
   const startTimeMinutes = dateToMinutes(dateTime)
-  const duration = eventOptions.duration * 1 || defaultEventDuration * 60
+  duration = duration * 1 || defaultEventDuration * 60
   const endTimeMinutes = startTimeMinutes + duration
   const start = formatDateLite(dateTime) + (vuecal.time ? ` ${formatTimeLite(dateTime)}` : '')
   const end = formatDateLite(dateTime) + (vuecal.time ? ` ${formatTimeLite(dateTime.addMinutes(duration))}` : '')
 
-  // Automatically add the required startTimeMinutes/endTimeMinutes when passing a date.
-  if (eventOptions.startDate) eventOptions.startTimeMinutes = dateToMinutes(eventOptions.startDate)
+  // Automatically add the required endTimeMinutes when passing an endDate.
   if (eventOptions.endDate) eventOptions.endTimeMinutes = dateToMinutes(eventOptions.endDate)
 
   const event = {

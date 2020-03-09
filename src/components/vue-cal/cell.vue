@@ -57,7 +57,7 @@
 <script>
 import { dateToMinutes } from './date-utils'
 import { selectCell, keyPressEnterCell } from './cell-utils'
-import { updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
+import { createAnEvent, updateEventPosition, checkCellOverlappingEvents, eventInRange } from './event-utils'
 import { cellDragOver, cellDragEnter, cellDragLeave, cellDragDrop } from './drag-and-drop'
 import Event from './event'
 
@@ -171,7 +171,7 @@ export default {
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
-            this.$parent.createEvent(this.timeAtCursor, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+            createAnEvent(this.timeAtCursor, null, clickHoldACell.split ? { split: clickHoldACell.split } : {}, this.$parent)
           }
         }, clickHoldACell.timeout)
       }

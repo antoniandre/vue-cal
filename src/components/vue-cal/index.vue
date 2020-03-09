@@ -826,12 +826,13 @@ export default {
      * Notes: Event duration is by default 2 hours. You can override the event end through eventOptions.
      *
      * @param {String | Date} dateTime date & time at which the event will start.
+     * @param {Number} duration the event duration in minutes.
      * @param {Object} eventOptions an object of options to override the event creation defaults.
      *                              (can be any key allowed in an event object)
      * @return {Object} the created event.
      */
-    createEvent (dateTime, eventOptions = {}) {
-      return createAnEvent(dateTime, eventOptions, this)
+    createEvent (dateTime, duration, eventOptions = {}) {
+      return createAnEvent(dateTime, duration, eventOptions, this)
     },
 
     /**
