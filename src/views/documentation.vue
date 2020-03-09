@@ -1227,13 +1227,14 @@
                 // Formatted start date and time or JavaScript Date object.
                 dateTime,
                 // Custom event props (optional).
-                { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] }
+                { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' }
               )
             } else if (dateTime) alert('Wrong date format.')
         }
-      highlight-message(type="warning").
-        Note that you can also override the default event duration of 2 hours
+      highlight-message(type="tips").
+        You can also override the default event duration of 2 hours
         by setting the event #[span.code duration] property in minutes (Integer).
+        #[strong This property is only used on event creation].
 
     li.mt-12
       h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
@@ -1308,7 +1309,8 @@
               &lt;v-select
                 :items="eventsCssClasses"
                 placeholder="Event CSS Class"
-                @change="selectedEvent.class = $event"/&gt;
+                @change="selectedEvent.class = $event"
+                :value="selectedEvent.class"/&gt;
               &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
             &lt;/v-layout&gt;
             &lt;v-layout&gt;
@@ -3756,10 +3758,11 @@
             :items="eventsCssClasses"
             placeholder="Event CSS Class"
             @change="selectedEvent.class = $event"
+            :value="selectedEvent.class"
             hide-details
             style="max-width: 170px")
-          v-switch.flex.shrink(v-model="selectedEvent.background" label="background Event" color="primary")
-        v-layout
+          v-switch.flex.shrink(v-model="selectedEvent.background" label="Background Event" color="primary")
+        v-layout.mt-2
           v-spacer
           v-btn.ma-1(small @click="cancelEventCreation()") Cancel
           v-btn.ma-1(small color="primary" @click="closeCreationDialog()") Save
@@ -4279,7 +4282,7 @@ export default {
     customEventCreation () {
       const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '2018-11-20 13:15')
       if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-        this.$refs.vuecal.createEvent(dateTime, { title: 'New Event', content: 'yay! 🎉', classes: ['leisure'] })
+        this.$refs.vuecal.createEvent(dateTime, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
       }
       else if (dateTime) alert('Wrong date format.')
     },
