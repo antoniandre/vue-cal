@@ -259,6 +259,14 @@ export const stringToDate = date => {
 }
 
 /**
+ * Simply takes a Date and returns the associated time in minutes (sum of hours + minutes).
+ *
+ * @param {Date} date the JavaScript Date to extract minutes from.
+ * @return {Number} the number of minutes (total of hours plus minutes).
+ */
+export const dateToMinutes = date => date.getHours() * 60 + date.getMinutes()
+
+/**
  * Count the number of days this date range spans onto.
  * E.g. countDays(2019-11-02 18:00, 2019-11-03 02:00) = 2
  *
