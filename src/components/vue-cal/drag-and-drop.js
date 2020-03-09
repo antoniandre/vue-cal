@@ -16,6 +16,8 @@
 // OK - add javadoc
 //    - modularize this file?
 
+import { createAnEvent } from './event-utils'
+
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -36,7 +38,9 @@ export const eventDragStart = (e, event, vuecal) => {
   // Cancel the drag if event has draggable set to false and trying to drag a text selection.
   if (e.target.nodeType === 3) return e.preventDefault()
 
-  e.dataTransfer.setData('text', '...') // Without this the drag will not happen in Firefox.
+  // Transfer the event's data to the receiver (when successfully drag & dropping out of Vue Cal).
+  // Notice: in Firefox the drag is prevented if there is no dataTransfer.setData().
+  e.dataTransfer.setData('event', JSON.stringify(event))
   e.dataTransfer.dropEffect = 'move'
 
   const { clickHoldAnEvent, dragAnEvent } = vuecal.domEvents
@@ -175,13 +179,25 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   const { view, domEvents: { dragAnEvent }, mutableEvents, minutesAtCursor, snapToTime } = vuecal
 
   // Find the dragged event from its _eid in the view or mutableEvents array.
+  // If dragging the event to another day, the event is not in the view array but in the
+  // mutableEvents one.
   let event = view.events.find(e => e._eid === dragAnEvent._eid)
-  const eventInView = !!event
-  if (!event) event = mutableEvents.find(e => e._eid === dragAnEvent._eid) || {}
+  let eventInView = !!event
+  if (!event) event = mutableEvents.find(e => e._eid === dragAnEvent._eid) || null
+
+  let eventDuration
+  // If the event is still not found, it means that we are accepting a new event into Vue Cal.
+  if (!event) {
+    const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
+    const { startDate, endDate, duration, ...cleanTransferData } = transferData
+    eventDuration = duration * 1
+    event = createAnEvent(cellDate, duration, { ...cleanTransferData, split }, vuecal)
+    eventInView = true // createAnEvent adds the event to the view.
+  }
 
   // Modify the event start and end date.
   const { startDate: oldDate, split: oldSplit } = event
-  const eventDuration = event.endTimeMinutes - event.startTimeMinutes
+  if (!eventDuration) eventDuration = event.endTimeMinutes - event.startTimeMinutes
   // Force the start of the event at previous midnight minimum.
   let startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt, 0)
 
