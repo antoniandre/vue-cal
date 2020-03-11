@@ -15,7 +15,7 @@
 // OK - Add option to snap to time on event drop
 // OK - add javadoc
 //    - modularize this file?
-//    - Add option to add or move an event from a cal to another
+//    - Add option to copy or move an event from a cal to another
 
 import { createAnEvent } from './event-utils'
 
@@ -186,10 +186,10 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   let eventInView = !!event
   if (!event) event = mutableEvents.find(e => e._eid === dragAnEvent._eid) || null
 
-  let eventDuration
+  let eventDuration, transferData
   // If the event is still not found, it means that we are accepting a new event into Vue Cal.
   if (!event) {
-    const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
+    transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
     // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and drop
     // to another calendar then back in original place.
     const { _eid, startDate, endDate, duration, ...cleanTransferData } = transferData
@@ -230,7 +230,8 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     event: vuecal.cleanupEvent(event),
     oldDate,
     newDate: event.startDate,
-    ...((split || split === 0) && { oldSplit, newSplit: split })
+    ...((split || split === 0) && { oldSplit, newSplit: split }),
+    ...(transferData && { externalEvent: transferData }) // if external event.
   }
   vuecal.$emit('event-drop', params)
   vuecal.$emit('event-change', params.event)
