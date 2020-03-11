@@ -4397,10 +4397,11 @@ export default {
     onEventDragStart (e, draggable) {
       e.dataTransfer.setData('event', JSON.stringify(draggable))
     },
-    onEventDrop ({ event, externalEvent }) {
-      const extEventToDeletePos = this.draggables.findIndex(item => item.id === externalEvent.id)
-      console.log(externalEvent, extEventToDeletePos)
-      if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
+    onEventDrop ({ event, originalEvent, external }) {
+      if (external) {
+        const extEventToDeletePos = this.draggables.findIndex(item => item.id === originalEvent.id)
+        if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
+      }
     }
   },
 

@@ -20,7 +20,7 @@ div
       :selected-date="selectedDate"
       :events="events"
       editable-events
-      @event-drop="log")
+      @event-drop="onEventDrop")
     vue-cal.ml-1.vuecal--green-theme(
       small
       hide-view-selector
@@ -31,7 +31,7 @@ div
       :selected-date="selectedDate"
       :events="events"
       editable-events
-      @event-drop="log")
+      @event-drop="onEventDrop")
 </template>
 
 <script>
@@ -44,22 +44,19 @@ export default {
     selectedDate: now,
     draggables: [
       {
-        startDate: now.addDays(1),
-        endDate: now.addDays(1).addHours(1),
+        id: 1,
         title: 'Ext. Event 1',
         content: 'content 1',
         duration: 60
       },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
+        id: 2,
         title: 'Ext. Event 2',
         content: 'content 2',
         duration: 30
       },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
+        id: 3,
         title: 'Ext. Event 3',
         content: 'content 3'
       }
@@ -89,6 +86,12 @@ export default {
     },
     onDragStart (e, draggable) {
       e.dataTransfer.setData('event', JSON.stringify(draggable))
+    },
+    onEventDrop ({ event, originalEvent, external }) {
+      if (external) {
+        const extEventToDeletePos = this.draggables.findIndex(item => item.id === originalEvent.id)
+        if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
+      }
     }
   }
 }
