@@ -954,6 +954,7 @@ export default {
     },
 
     /**
+     * Updates the localized texts in use in the Date prototypes. (E.g. new Date().format())
      * Callable from outside of Vue Cal.
      */
     updateDateTexts () {
@@ -988,7 +989,7 @@ export default {
   created () {
     this.loadLocale(this.locale)
 
-    updateDateTexts(this.texts)
+    this.updateDateTexts()
 
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
