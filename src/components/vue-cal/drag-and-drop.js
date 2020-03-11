@@ -197,7 +197,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
   let eventDuration
   // If the event is still not found, it means that we are accepting a new event into Vue Cal.
-  if (!event) {
+  if (!event && draggingEvent.fromVueCal !== vuecal._uid) {
     // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
     // dropping to another calendar then back to the original place.
     const { _eid, startDate, endDate, duration, ...cleanTransferData } = transferData
@@ -240,8 +240,8 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     oldDate,
     newDate: event.startDate,
     ...((split || split === 0) && { oldSplit, newSplit: split }),
-    ...(transferData && { originalEvent: transferData }), // if external event.
-    external: !draggingEvent.fromVueCal
+    originalEvent: transferData,
+    external: !draggingEvent.fromVueCal // If external event, not coming from any Vue Cal.
   }
   vuecal.$emit('event-drop', params)
   vuecal.$emit('event-change', params.event)
