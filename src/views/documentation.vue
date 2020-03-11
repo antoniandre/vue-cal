@@ -1120,11 +1120,83 @@
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   sshpre(language="css" label="CSS").
-    .vuecal__event--dragging {
-      background-color: rgba(60, 60, 60, 0.3);
-      border: none;
-    }
+    .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
+  //- Example.
+  h4.title
+    a(href="#ex--external-events-drag-and-drop") # External events drag &amp; drop
+    v-chip.ml-3.px-2(color="error" small outlined) Not available on touch devices for now
+    a#external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
+  p.mb-2.
+    You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
+    It is also possible to move an event from one calendar to another.#[br]#[br]
+    In your external event, you can set a #[span.code duration] property: it will be used to represent the duration of the event on Vue Cal when it has no date.#[br]
+    If the #[span.code duration] is missing, the default will be 2 hours.
+
+  v-layout.mt-4(wrap)
+    div.mr-2
+      .external-event(
+        v-for="(item, i) in draggables"
+        :key="i"
+        draggable="true"
+        @dragstart="onEventDragStart($event, item)")
+          strong.mr-2 {{ item.title }}
+          | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+    vue-cal.mr-1.flex.external-events-drag-and-drop.vuecal--blue-theme(
+      small
+      hide-view-selector
+      hide-weekends
+      :disable-views=['years', 'year', 'month', 'day']
+      :time-from="9 * 60"
+      :time-to="16 * 60"
+      editable-events
+      @event-drop="onEventDrop($event)")
+    vue-cal.ml-1.flex.external-events-drag-and-drop.vuecal--green-theme(
+      small
+      hide-view-selector
+      hide-weekends
+      :disable-views=['years', 'year', 'month', 'day']
+      :time-from="9 * 60"
+      :time-to="16 * 60"
+      editable-events
+      @event-drop="onEventDrop($event)")
+
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;div class="external-event"
+         v-for="(item, i) in draggables"
+         :key="i"
+         draggable="true"
+         @dragstart="onEventDragStart($event, item)"&gt;
+         &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
+         ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
+    &lt;/div&gt;
+  sshpre(language="js" label="Javascript - Vue Component").
+    export default {
+      data: () => ({
+        draggables: [
+          {
+            title: 'Ext. Event 1',
+            content: 'content 1',
+            duration: 60
+          },
+          {
+            title: 'Ext. Event 2',
+            content: 'content 2',
+            duration: 30
+          },
+          {
+            title: 'Ext. Event 3',
+            content: 'content 3'
+          }
+        ]
+      }),
+      methods: {
+        onEventDragStart (e, draggable) {
+          // Passing the event's data to Vue Cal through the DataTransfer object.
+          e.dataTransfer.setData('event', JSON.stringify(draggable))
+        }
+      }
+    }
   //- Example.
   h4.title
     a(href="#ex--more-advanced-event-creation") # More advanced event creation
@@ -4249,6 +4321,22 @@ export default {
         class: 'sport'
       }
     ],
+    draggables: [
+      {
+        title: 'Ext. Event 1',
+        content: 'content 1',
+        duration: 60
+      },
+      {
+        title: 'Ext. Event 2',
+        content: 'content 2',
+        duration: 30
+      },
+      {
+        title: 'Ext. Event 3',
+        content: 'content 3'
+      }
+    ],
     deleteEventFunction: null
   }),
 
@@ -4302,6 +4390,12 @@ export default {
       // In Vue Cal documentation Chinese texts are loaded last.
       // Override Date texts with english for prototype formatting functions.
       setTimeout(this.$refs.vuecal.updateDateTexts, 3000)
+    },
+    onEventDragStart (e, draggable) {
+      e.dataTransfer.setData('event', JSON.stringify(draggable))
+    },
+    onEventDrop (event) {
+      console.log(event)
     }
   },
 
@@ -4313,12 +4407,7 @@ export default {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
     },
     currentDateFormatted () {
-      const y = this.now.getFullYear()
-      const m = this.now.getMonth()
-      const d = this.now.getDate()
-      const h = this.now.getHours()
-      const min = this.now.getMinutes()
-      return `${y}-${(m < 10 ? '0' : '') + m}-${(d < 10 ? '0' : '') + d} ${(h < 10 ? '0' : '') + h}:${(min < 10 ? '0' : '') + min}`
+      return `${this.now.format()} ${this.now.formatTime()}`
     },
     minDate () {
       return new Date().subtractDays(15)
@@ -4429,6 +4518,21 @@ $primary: #42b983;
 
   .vuecal__no-event {padding-top: 3em;}
 }
+
+// External events drag and drop example.
+.external-events-drag-and-drop {
+  flex-basis: 0 !important;
+  min-width: 285px;
+}
+.external-events-drag-and-drop .vuecal__event, .external-event {
+  background-color: rgba(160, 220, 255, 0.5);
+  border: 1px solid rgba(0, 100, 150, 0.15);
+  padding: 0.2em 0.4em;
+  cursor: move;
+  cursor: grab;
+}
+
+.external-event {margin-bottom: 0.5em;width: 13em;}
 
 // Today-current-time example.
 .ex--today-current-time {

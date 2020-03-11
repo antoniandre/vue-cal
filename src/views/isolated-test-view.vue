@@ -9,28 +9,26 @@ div
       strong.mr-2 {{ item.title }}
       | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
 
-  v-layout(style="min-height: 400px;max-height: 65vh")
-    vue-cal.vuecal--blue-theme(
+  v-layout(style="height: 350px")
+    vue-cal.mr-1.vuecal--blue-theme(
       small
       hide-view-selector
       hide-weekends
       :disable-views=['years', 'year', 'month', 'day']
-      :time-from="8 * 60"
+      :time-from="9 * 60"
       :time-to="18 * 60"
       :selected-date="selectedDate"
-      today-button
       :events="events"
       editable-events
       @event-drop="log")
-    vue-cal.vuecal--green-theme(
+    vue-cal.ml-1.vuecal--green-theme(
       small
       hide-view-selector
       hide-weekends
       :disable-views=['years', 'year', 'month', 'day']
-      :time-from="8 * 60"
+      :time-from="9 * 60"
       :time-to="18 * 60"
       :selected-date="selectedDate"
-      today-button
       :events="events"
       editable-events
       @event-drop="log")
