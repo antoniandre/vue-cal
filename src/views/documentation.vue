@@ -1126,7 +1126,7 @@
   h4.title
     a(href="#ex--external-events-drag-and-drop") # External events drag &amp; drop
     v-chip.ml-3.px-2(color="error" small outlined) Not available on touch devices for now
-    a#external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
+    a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
   p.mb-2.
     You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
     It is also possible to move an event from one calendar to another.#[br]#[br]

@@ -66,6 +66,9 @@
           v-list-item(href="#ex--drag-and-drop-in-details" v-scroll-to="'#ex--drag-and-drop-in-details'")
             | Drag &amp; drop in details
             v-chip.xsmall.ml-2(small color="primary" outlined) NEW
+          v-list-item(href="#ex--external-events-drag-and-drop" v-scroll-to="'#ex--external-events-drag-and-drop'")
+            | External events drag &amp; drop
+            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
