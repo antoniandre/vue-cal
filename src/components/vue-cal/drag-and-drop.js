@@ -212,23 +212,22 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     eventInView = true // createAnEvent adds the event to the view.
   }
 
-  // If cursorGrabAt is still null when dropping, it means it was an external event.
-  if (dragging.cursorGrabAt === null) {
-    debugger
-    // let pixelsAdjustment = 0
-    // // When click and drag an event the cursor can be anywhere in the event,
-    // // when dropping the event, we need to subtract the cursor position in the event.
-    const cursorCoords = vuecal.getPosition(e)
-    cursorCoords.y += e.dataTransfer.getData('cursor-grab-at') * 1
-    const minutes = Math.round(cursorCoords.y * vuecal.timeStep / parseInt(vuecal.timeCellHeight) + vuecal.timeFrom)
-    dragging.cursorGrabAt = minutes - event.startTimeMinutes
-  }
-
   // Modify the event start and end date.
   const { startDate: oldDate, split: oldSplit } = event
   if (!eventDuration) eventDuration = event.endTimeMinutes - event.startTimeMinutes
   // Force the start of the event at previous midnight minimum.
-  let startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragging.cursorGrabAt, 0)
+  let startTimeMinutes
+  // If cursorGrabAt is still null when dropping, it means it was an external event.
+  if (dragging.cursorGrabAt === null) {
+    // When click and drag an event the cursor can be anywhere in the event,
+    // when dropping the event, we need to subtract the cursor position in the event.
+    const { getPosition, timeStep, timeCellHeight, timeFrom } = vuecal
+    let { y } = getPosition(e)
+    y -= e.dataTransfer.getData('cursor-grab-at') * 1
+    const minutes = Math.round(y * timeStep / parseInt(timeCellHeight) + timeFrom)
+    startTimeMinutes = minutes - event.startTimeMinutes
+  }
+  else startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragging.cursorGrabAt, 0)
 
   // On drop, snap to time every X minutes if the option is on.
   if (snapToTime) {
