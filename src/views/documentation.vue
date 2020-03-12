@@ -1149,7 +1149,8 @@
         draggable="true"
         @dragstart="onEventDragStart($event, item)")
           strong.mr-2 {{ item.title }}
-          | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+          span ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+          div {{ item.content }}
     vue-cal.mr-1.flex.external-events-drag-and-drop.vuecal--blue-theme(
       small
       hide-view-selector
@@ -1178,6 +1179,7 @@
          @dragstart="onEventDragStart($event, item)"&gt;
          &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
          ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
+      &lt;div&gt;{{ '\{\{ item.content \}\}' }}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;vue-cal small
@@ -4576,7 +4578,13 @@ $primary: #42b983;
   cursor: grab;
 }
 
-.external-event {margin-bottom: 0.5em;width: 13em;}
+.external-event {
+  margin-bottom: 0.5em;
+  width: 12.5em;
+  * {pointer-events: none;}
+
+  span {color: #777;font-size: 0.9em;}
+}
 
 // Today-current-time example.
 .ex--today-current-time {
