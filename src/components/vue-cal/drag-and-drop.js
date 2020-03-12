@@ -15,8 +15,7 @@
 // OK - Add option to snap to time on event drop
 // OK - add javadoc
 //    - modularize this file?
-//    - Add option to copy or move an event from a cal to another
-//    - Event removed when drop outside of all the cals
+//    - Add option to copy or move an event from a cal to another?
 
 import { createAnEvent, deleteAnEvent } from './event-utils'
 
@@ -33,8 +32,13 @@ const dragging = {
   toVueCal: null
 }
 
-// When click and drag an event the cursor can be anywhere in the event,
-// when dropping the event, we need to subtract the cursor position in the event.
+/**
+ * When click and drag an event the cursor can be anywhere in the event,
+ * when dropping the event, we need to subtract the cursor position in the event.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 const getEventStart = (e, vuecal) => {
   const { getPosition, timeStep, timeCellHeight, timeFrom } = vuecal
   let { y } = getPosition(e)
@@ -42,7 +46,15 @@ const getEventStart = (e, vuecal) => {
   return Math.round(y * timeStep / parseInt(timeCellHeight) + timeFrom)
 }
 
-// Modify the event start and end date on drop.
+/**
+ * On drop, update the event start and end date directly into the event.
+ *
+ * @param {Object} e The associated DOM event.
+ * @param {Object} event The event being dragged.
+ * @param {Object} transferData The transfer data from the HTML5 dragging event.
+ * @param {Date} cellDate The hovered cell starting date.
+ * @param {Object} vuecal The instance of Vue Cal component.
+ */
 const updateEventStartEnd = (e, event, transferData, cellDate, vuecal) => {
   // If no duration calculate it from event.endTimeMinutes - event.startTimeMinutes
   // before we modify the start and end.
