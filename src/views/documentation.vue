@@ -211,7 +211,7 @@
   h2.headline.mt-12.pt-12
     a(href="#installation") Installation
     a#installation(name="installation")
-  strong.black--text Vue.js 2.6.1 or later is required.
+  strong.black--text Vue.js 2.6.7 or later is required.
   p.mt-2 You have 2 options: using NPM or #[span.code &lt;script&gt;] tag.
   h3.mt-8 Via NPM
   sshpre.mt-2(language="shell" label="Shell") npm i --S vue-cal
