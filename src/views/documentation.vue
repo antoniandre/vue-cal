@@ -1221,6 +1221,7 @@
         onEventDragStart (e, draggable) {
           // Passing the event's data to Vue Cal through the DataTransfer object.
           e.dataTransfer.setData('event', JSON.stringify(draggable))
+          e.dataTransfer.setData('cursor-grab-at', e.offsetY)
         },
         // The 3 parameters are destructured from the passed $event in @event-drop="onEventDrop".
         // `event` is the final event as Vue Cal understands it.
@@ -4436,6 +4437,7 @@ export default {
     },
     onEventDragStart (e, draggable) {
       e.dataTransfer.setData('event', JSON.stringify(draggable))
+      e.dataTransfer.setData('cursor-grab-at', e.offsetY)
     },
     onEventDrop ({ event, originalEvent, external }) {
       if (external) {
