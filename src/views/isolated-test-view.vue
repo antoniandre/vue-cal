@@ -1,16 +1,16 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div
-  .external-event(
-    v-for="(item, i) in draggables"
-    :key="i"
-    draggable="true"
-    @dragstart="onDragStart($event, item)")
-      strong.mr-2 {{ item.title }}
-      | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
-
   v-layout(style="height: 350px")
-    vue-cal.mr-1.vuecal--blue-theme(
+    div
+      .external-event(
+        v-for="(item, i) in draggables"
+        :key="i"
+        draggable="true"
+        @dragstart="onDragStart($event, item)")
+          strong.mr-2 {{ item.title }}
+          | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+    vue-cal.ml-2.mr-1.vuecal--blue-theme(
       small
       hide-view-selector
       hide-weekends
@@ -86,6 +86,7 @@ export default {
     },
     onDragStart (e, draggable) {
       e.dataTransfer.setData('event', JSON.stringify(draggable))
+      e.dataTransfer.setData('cursor-grab-at', e.offsetY)
     },
     onEventDrop ({ event, originalEvent, external }) {
       if (external) {
@@ -98,6 +99,7 @@ export default {
 </script>
 
 <style lang="scss">
+.vuecal {flex-basis: 0 !important;}
 .vuecal__event {
   background-color: rgba(160, 220, 255, 0.5);
   border: 1px solid rgba(0, 100, 150, 0.15);
@@ -107,7 +109,7 @@ export default {
   background-color: rgba(160, 220, 255, 0.5);
   border: 1px solid rgba(0, 100, 150, 0.15);
   width: 13em;
-  margin: 0.3em 0;
+  margin-bottom: 0.5em;
   padding: 0.2em 0.4em;
 }
 

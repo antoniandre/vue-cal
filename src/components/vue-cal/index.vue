@@ -244,8 +244,7 @@ export default {
         endCell: null
       },
       dragAnEvent: {
-        _eid: null, // Only one at a time.
-        cursorGrabAt: 0 // The cursor position (in minutes) in the event.
+        _eid: null // Only one at a time.
       },
       focusAnEvent: {
         _eid: null // Only one at a time.

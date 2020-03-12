@@ -26,7 +26,12 @@ let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
 let viewChanged = false
 let cancelViewChange = true
 let dragOverCell = { el: null, cell: null, timeout: null }
-const draggingEvent = { fromVueCal: null, toVueCal: null }
+const dragging = {
+  fromVueCal: null,
+  toVueCal: null,
+  // When grabbing the event, cursor position from the top of event (in minutes).
+  cursorGrabAt: null
+}
 
 /**
  * On event drag start, only possible if editableEvent is true.
@@ -53,7 +58,7 @@ export const eventDragStart = (e, event, vuecal) => {
     event.deleting = false
   }, 0)
 
-  draggingEvent.fromVueCal = vuecal._uid
+  dragging.fromVueCal = vuecal._uid
   dragAnEvent._eid = event._eid
   event.dragging = true
   // Controls the CSS class of the static event that remains while a copy is being dragged.
@@ -66,7 +71,7 @@ export const eventDragStart = (e, event, vuecal) => {
   const { minutes } = vuecal.minutesAtCursor(e)
   // When click and drag an event the cursor can be anywhere in the event,
   // when later dropping the event, we need to subtract the cursor position in the event.
-  dragAnEvent.cursorGrabAt = minutes - event.startTimeMinutes
+  dragging.cursorGrabAt = minutes - event.startTimeMinutes
 
   cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
 }
@@ -86,9 +91,10 @@ export const eventDragEnd = (e, event, vuecal) => {
 
   // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
   // event from the first one.
-  if (draggingEvent.fromVueCal !== draggingEvent.toVueCal) deleteAnEvent(event, vuecal)
-  draggingEvent.fromVueCal = null
-  draggingEvent.toVueCal = null
+  if (dragging.fromVueCal !== dragging.toVueCal) deleteAnEvent(event, vuecal)
+  dragging.fromVueCal = null
+  dragging.toVueCal = null
+  dragging.cursorGrabAt = null
 
   // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
   if (viewChanged && cancelViewChange && viewBeforeDrag.id) vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
@@ -197,7 +203,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
   let eventDuration
   // If the event is still not found, it means that we are accepting a new event into Vue Cal.
-  if (!event && draggingEvent.fromVueCal !== vuecal._uid) {
+  if (!event && dragging.fromVueCal !== vuecal._uid) {
     // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
     // dropping to another calendar then back to the original place.
     const { _eid, startDate, endDate, duration, ...cleanTransferData } = transferData
@@ -206,11 +212,23 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     eventInView = true // createAnEvent adds the event to the view.
   }
 
+  // If cursorGrabAt is still null when dropping, it means it was an external event.
+  if (dragging.cursorGrabAt === null) {
+    debugger
+    // let pixelsAdjustment = 0
+    // // When click and drag an event the cursor can be anywhere in the event,
+    // // when dropping the event, we need to subtract the cursor position in the event.
+    const cursorCoords = vuecal.getPosition(e)
+    cursorCoords.y += e.dataTransfer.getData('cursor-grab-at') * 1
+    const minutes = Math.round(cursorCoords.y * vuecal.timeStep / parseInt(vuecal.timeCellHeight) + vuecal.timeFrom)
+    dragging.cursorGrabAt = minutes - event.startTimeMinutes
+  }
+
   // Modify the event start and end date.
   const { startDate: oldDate, split: oldSplit } = event
   if (!eventDuration) eventDuration = event.endTimeMinutes - event.startTimeMinutes
   // Force the start of the event at previous midnight minimum.
-  let startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragAnEvent.cursorGrabAt, 0)
+  let startTimeMinutes = Math.max(minutesAtCursor(e).minutes - dragging.cursorGrabAt, 0)
 
   // On drop, snap to time every X minutes if the option is on.
   if (snapToTime) {
@@ -233,7 +251,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
   cell.highlighted = false
   cell.highlightedSplit = null
   cancelViewChange = false
-  draggingEvent.toVueCal = vuecal._uid
+  dragging.toVueCal = vuecal._uid
 
   const params = {
     event: vuecal.cleanupEvent(event),
@@ -241,7 +259,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     newDate: event.startDate,
     ...((split || split === 0) && { oldSplit, newSplit: split }),
     originalEvent: transferData,
-    external: !draggingEvent.fromVueCal // If external event, not coming from any Vue Cal.
+    external: !dragging.fromVueCal // If external event, not coming from any Vue Cal.
   }
   vuecal.$emit('event-drop', params)
   vuecal.$emit('event-change', params.event)
