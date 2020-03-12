@@ -244,7 +244,8 @@ export default {
         endCell: null
       },
       dragAnEvent: {
-        _eid: null // Only one at a time.
+        // Only one at a time, only needed for vuecal dragging-event class.
+        _eid: null
       },
       focusAnEvent: {
         _eid: null // Only one at a time.

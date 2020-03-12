@@ -4581,7 +4581,6 @@ $primary: #42b983;
 .external-event {
   margin-bottom: 0.5em;
   width: 12.5em;
-  * {pointer-events: none;}
 
   span {color: #777;font-size: 0.9em;}
 }
