@@ -1151,12 +1151,12 @@ export default {
     // Prepare the special hours object once for all at root level and not in cell.
     specialDayHours () {
       return Array(7).fill('').map((cell, i) => {
-        const specialHours = this.specialHours[i + 1] || {}
+        const { from, to, class: Class } = this.specialHours[i + 1] || {}
         return {
           day: i + 1,
-          from: specialHours.from * 1 || null,
-          to: specialHours.to * 1 || null,
-          class: specialHours.class || ''
+          from: ![null, undefined].includes(from) ? from * 1 : null,
+          to: ![null, undefined].includes(to) ? to * 1 : null,
+          class: Class || ''
         }
       })
     },
