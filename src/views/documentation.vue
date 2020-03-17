@@ -2863,7 +2863,7 @@
     splitDays:              [Array],           default: []
     stickySplitLabels:      [Boolean],         default: false
     events:                 [Array],           default: []
-    editableEvents:         [Boolean],         default: false
+    editableEvents:         [Boolean, Object], default: false
     resizeX:                [Boolean],         default: false
     snapToTime:             [Number],          default: null
     eventsOnMonthView:      [Boolean, String], default: false
@@ -3094,7 +3094,7 @@
       span.code [Boolean], default: true
       p.
         Allows you to disable the default event creation on cell click &amp; hold which only
-        happens if #[span.code editableEvents] is set to #[span.code true].
+        happens if #[span.code editableEvents.create] is set to #[span.code true].
     li
       code.mr-2 time
       span.code [Boolean], default: true
@@ -3210,15 +3210,22 @@
         instead of in-cell.
     li
       code.mr-2 editableEvents
-      span.code [Boolean], default: false
+      span.code [Boolean, Object], default: false
       p
-        | When #[span.code editableEvents] is set to #[span.code true], allows:
+        | When #[span.code editableEvents] is set to #[span.code true], it allows:
         ul
-          li Drag and drop events
+          li Dragging and dropping events
           li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
           li Deleting events by click and hold an event.
           li Editing events title
-      highlight-message You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
+      highlight-message
+        ul
+          li
+            | You can set more accurately which edition you want to allow by passing an object.#[br]
+            | For instance, this object will allow all the above editions except the drag &amp; drop:
+            div.code.black--text { title: true, drag: false, resize: true, delete: true, create: true }
+          li.
+            You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
     li
       code.mr-2 resizeX
       span.code [Boolean], default: false
@@ -3517,7 +3524,10 @@
           h4.mt-0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
         li
           h4.mt-0 #[span.code snapToTime] option on event drop and event resize
-          p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].#[br]
+          p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].
+        li
+          h4.mt-0 The #[span.code editableEvents] option now also accept an object to precisely allow specific edition
+          p Refer to the #[span.code editableEvents] option in the #[a(href="#api") API section].
       h3.mt-0.mb-2 Big changes
       ul
         li.
