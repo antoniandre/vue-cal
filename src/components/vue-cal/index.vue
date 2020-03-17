@@ -2,6 +2,7 @@
 .vuecal__flex.vuecal(column :class="cssClasses" ref="vuecal" :lang="locale")
   vuecal-header(
     :options="$props"
+    :edit-events="editEvents"
     :view-props="{ views, view, weekDaysInHeader }"
     :week-days="weekDays"
     :day-splits="daySplits"
@@ -39,6 +40,7 @@
               v-for="(cell, i) in viewCells"
               :key="i"
               :options="$props"
+              :edit-events="editEvents"
               :data="cell"
               :all-day="true"
               :min-timestamp="minTimestamp"
@@ -47,7 +49,7 @@
               template(v-slot:event="{ event, view }")
                 slot(name="event" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
-                    v-if="editableEvents && event.title"
+                    v-if="editEvents.title && event.title"
                     contenteditable
                     @blur="onEventTitleBlur($event, event)"
                     v-html="event.title")
@@ -95,6 +97,7 @@
                   v-for="(cell, i) in viewCells"
                   :key="i"
                   :options="$props"
+                  :edit-events="editEvents"
                   :data="cell"
                   :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
                   :min-timestamp="minTimestamp"
@@ -111,7 +114,7 @@
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
-                        v-if="editableEvents && event.title"
+                        v-if="editEvents.title && event.title"
                         contenteditable
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
@@ -164,7 +167,7 @@ export default {
     dblclickToNavigate: { type: Boolean, default: true },
     defaultView: { type: String, default: 'week' },
     disableViews: { type: Array, default: () => [] },
-    editableEvents: { type: Boolean, default: false },
+    editableEvents: { type: [Boolean, Object], default: false },
     events: { type: Array, default: () => [] },
     eventsCountOnYearView: { type: Boolean, default: false },
     eventsOnMonthView: { type: [Boolean, String], default: false },
@@ -1012,11 +1015,11 @@ export default {
   mounted () {
     const hasTouch = 'ontouchstart' in window
 
-    if (this.editableEvents) {
+    if (this.editEvents.resize || this.editEvents.drag) {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
-      window.addEventListener('keyup', this.onKeyUp)
     }
+    if (this.editEvents.title) window.addEventListener('keyup', this.onKeyUp)
 
     // Disable context menu on touch devices on the whole vue-cal instance.
     if (hasTouch) {
@@ -1057,6 +1060,25 @@ export default {
   },
 
   computed: {
+    editEvents () {
+      if (this.editableEvents && typeof this.editableEvents === 'object') {
+        return {
+          title: !!this.editableEvents.title,
+          drag: !!this.editableEvents.drag,
+          resize: !!this.editableEvents.resize,
+          create: !!this.editableEvents.create,
+          delete: !!this.editableEvents.delete
+        }
+      }
+
+      return {
+        title: !!this.editableEvents,
+        drag: !!this.editableEvents,
+        resize: !!this.editableEvents,
+        create: !!this.editableEvents,
+        delete: !!this.editableEvents
+      }
+    },
     views () {
       return {
         years: { label: this.texts.years, enabled: !this.disableViews.includes('years') },

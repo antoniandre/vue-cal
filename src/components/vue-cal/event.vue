@@ -11,11 +11,11 @@
   @mousedown="onMouseDown($event) /* Don't stop mousedown propagation & trigger cell mousedown */"
   @click="onClick"
   @dblclick="onDblClick"
-  :draggable="vuecal.editableEvents && event.draggable && !event.background"
-  @dragstart="vuecal.editableEvents && event.draggable && !event.background && onDragStart($event)"
-  @dragend="vuecal.editableEvents && event.draggable && !event.background && onDragEnd($event)")
+  :draggable="vuecal.editEvents.drag && event.draggable && !event.background"
+  @dragstart="vuecal.editEvents.drag && event.draggable && !event.background && onDragStart($event)"
+  @dragend="vuecal.editEvents.drag && event.draggable && !event.background && onDragEnd($event)")
   .vuecal__event-delete(
-    v-if="vuecal.editableEvents && event.deletable"
+    v-if="vuecal.editEvents.delete && event.deletable"
     @click.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
   slot(name="event" :event="event" :view="vuecal.view.id")
@@ -61,7 +61,7 @@ export default {
       clickHoldAnEvent._eid = null // Reinit click hold on each click.
 
       // Show event delete button.
-      if (this.vuecal.editableEvents) {
+      if (this.vuecal.editEvents.delete && this.event.deletable) {
         clickHoldAnEvent.timeoutId = setTimeout(() => {
           if (!resizeAnEvent._eid && !dragAnEvent._eid) {
             clickHoldAnEvent._eid = this.event._eid
@@ -84,7 +84,7 @@ export default {
     onTouchStart (e) {
       // Prevent the text selection prompt on touch device if editable events - unless on title.
       // So the delete button will show up nicely without the text prompt.
-      if (this.vuecal.editableEvents && !e.target.className.includes('vuecal__event-title')) {
+      if (this.vuecal.editEvents.drag && !e.target.className.includes('vuecal__event-title')) {
         e.returnValue = false
       }
       this.onMouseDown(e, true)
@@ -205,8 +205,9 @@ export default {
       return (this.event.segments && this.event.segments[this.cellFormattedDate]) || null
     },
     resizable () {
-      return (this.vuecal.editableEvents && this.event.resizable && this.vuecal.time && this.event.endTimeMinutes && !this.allDay &&
-        (!this.segment || (this.segment && this.segment.isLastDay)) && this.vuecal.view.id !== 'month')
+      const { view, editEvents, time } = this.vuecal
+      return (editEvents.resize && this.event.resizable && time && this.event.endTimeMinutes && !this.allDay &&
+        (!this.segment || (this.segment && this.segment.isLastDay)) && view.id !== 'month')
     },
     domEvents: {
       get () {

@@ -8,16 +8,16 @@
       v-if="v.enabled"
       :class="{ 'vuecal__view-btn--active': viewProps.view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
-      @dragenter="options.editableEvents && viewSelectorDragEnter($event, id, $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, id, $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, id, $parent, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, id, $parent, $data)"
       @click="$parent.switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
-      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'previous', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'previous', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'previous', $parent, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'previous', $parent, $data)"
       :aria-label="`Previous ${viewProps.view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
@@ -33,15 +33,15 @@
       v-if="options.todayButton"
       :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
       @click="goToToday"
-      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'today', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'today', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'today', $parent, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'today', $parent, $data)"
       aria-label="Today")
       slot(name="today-button")
     button.vuecal__arrow.vuecal__arrow--next(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
-      @dragenter="options.editableEvents && viewSelectorDragEnter($event, 'next', $parent, $data)"
-      @dragleave="options.editableEvents && viewSelectorDragLeave($event, 'next', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'next', $parent, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'next', $parent, $data)"
       :aria-label="`Next ${viewProps.view.id}`")
       slot(name="arrow-next")
   weekdays-headings(
@@ -69,6 +69,7 @@ export default {
   props: {
     // Vuecal main component options (props).
     options: { type: Object, default: () => ({}) },
+    editEvents: { type: Object, required: true },
     daySplits: { type: Array, default: () => [] },
     viewProps: { type: Object, default: () => ({}) },
     weekDays: { type: Array, default: () => [] },

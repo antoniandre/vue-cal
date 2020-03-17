@@ -20,10 +20,10 @@
       @click="!isDisabled && selectCell($event)"
       @dblclick="!isDisabled && onCellDblClick($event)"
       @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-      @dragenter="!isDisabled && options.editableEvents && cellDragEnter($event, $data, data.startDate, $parent)"
-      @dragover="!isDisabled && options.editableEvents && cellDragOver($event, $data, data.startDate, $parent, splits.length ? split.id : null)"
-      @dragleave="!isDisabled && options.editableEvents && cellDragLeave($event, $data, data.startDate, $parent)"
-      @drop="!isDisabled && options.editableEvents && cellDragDrop($event, $data, data.startDate, $parent, splits.length ? split.id : null)")
+      @dragenter="!isDisabled && editEvents.drag && cellDragEnter($event, $data, data.startDate, $parent)"
+      @dragover="!isDisabled && editEvents.drag && cellDragOver($event, $data, data.startDate, $parent, splits.length ? split.id : null)"
+      @dragleave="!isDisabled && editEvents.drag && cellDragLeave($event, $data, data.startDate, $parent)"
+      @drop="!isDisabled && editEvents.drag && cellDragDrop($event, $data, data.startDate, $parent, splits.length ? split.id : null)")
       .vuecal__special-hours(
         v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
         :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
@@ -66,6 +66,7 @@ export default {
   props: {
     // Vue-cal main component options (props).
     options: { type: Object, default: () => ({}) },
+    editEvents: { type: Object, required: true },
     data: { type: Object, required: true },
     cellSplits: { type: Array, default: () => [] },
     minTimestamp: { type: [Number, null], default: null },
@@ -165,7 +166,7 @@ export default {
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (this.options.editableEvents && this.options.cellClickHold && !mouseDownOnEvent &&
+      if (this.editEvents.create && this.options.cellClickHold && !mouseDownOnEvent &&
         ['month', 'week', 'day'].includes(this.view)) {
         clickHoldACell.cellId = `${this.$parent._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
