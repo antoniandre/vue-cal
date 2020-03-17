@@ -127,6 +127,9 @@
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
                   slot(v-slot:no-event) {{ texts.noEvent }}
+    //- Used in alignWithScrollbar() to realign weekdays headings.
+    .vuecal__scrollbar-check(v-if="!ready")
+      div
 </template>
 
 <script>
@@ -966,24 +969,24 @@ export default {
 
     /**
      * On Windows devices, the .vuecal__bg's vertical scrollbar takes space and pushes the content.
-     * This function will also push the all-day bar to have it properly aligned.
+     * This function will also push the weekdays-headings and all-day bar to have them properly aligned.
      * The calculated style will be placed in the docment head in a style tag so it's only done once
      * (the scrollbar width never changes).
      * Ref. https://github.com/antoniandre/vue-cal/issues/221
      */
-    alignAllDayBar () {
+    alignWithScrollbar () {
       // If already done from another instance, exit.
-      if (document.getElementById('align-all-day-bar')) return
+      if (document.getElementById('vuecal-align-with-scrollbar')) return
 
-      const bg = this.$refs.vuecal.getElementsByClassName('vuecal__bg')[0]
+      const bg = this.$refs.vuecal.getElementsByClassName('vuecal__scrollbar-check')[0]
       const scrollbarWidth = bg.offsetWidth - bg.children[0].offsetWidth
 
       // Only add a style tag once and if a scrollbar width is detected.
       if (scrollbarWidth) {
         const style = document.createElement('style')
-        style.id = 'align-all-day-bar'
+        style.id = 'vuecal-align-with-scrollbar'
         style.type = 'text/css'
-        style.innerHTML = `.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
+        style.innerHTML = `.vuecal__weekdays-headings,.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
         document.head.appendChild(style)
       }
     }
@@ -1030,7 +1033,7 @@ export default {
     }
 
     // https://github.com/antoniandre/vue-cal/issues/221
-    if (this.showAllDayEvents) this.alignAllDayBar()
+    this.alignWithScrollbar()
 
     // Emit the `ready` event with useful parameters.
     const startDate = this.view.startDate

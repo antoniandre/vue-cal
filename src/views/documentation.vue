@@ -1797,37 +1797,9 @@
       #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
       #[span.code 'short'], to display only the event title.
 
-  highlight-message
-    ul
-      li
-        | Notice that on Windows machines, and on devices where the scrollbar takes some space and
-        | pushes the calendar main content (#[span.code week] and #[span.code day] views), the
-        | all-day bar is added some padding right to align well with the main content.
-        | This is done once, in the #[span.code mounted] hook.#[br]
-        | If your Vue Cal does not start in the #[span.code week] or #[span.code day] view, the
-        | realignment of the all-day bar will not happen, you can trigger it:
-        .layout(:class="{ column: $vuetify.breakpoint.sm }")
-          sshpre.mt-3.mb-0.flex.fill-height(
-            language="html-vue"
-            :class="{ 'mr-2': !$vuetify.breakpoint.sm }").
-            &lt;vue-cal
-              ref="vuecal"
-              show-all-day-events
-              @view-change="!aligned &amp;&amp; alignAllDayBar()" /&gt;
-          sshpre.mt-3.flex.fill-height(language="js").
-            data: () => ({
-              aligned: false
-            }),
-            methods: {
-              alignAllDayBar () {
-                this.$nextTick(this.$refs.vuecal.alignAllDayBar)
-                this.aligned = true
-              }
-            }
-
-      li.
-        Multiple-day events feature will be improved in a future version to display across
-        multiple cells in the all day bar.
+  highlight-message.
+    Multiple-day events feature will be improved in a future version to display across
+    multiple cells in the all day bar.
 
   v-btn.ma-1(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
     span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
@@ -3496,6 +3468,13 @@
 
   h3.mt-12 # Disabled text selection
   p.
+    Notice that on Windows machines, and on devices where the scrollbar takes some space and
+    pushes the calendar main content (#[span.code week] and #[span.code day] views), the
+    weekdays headings and the all-day bar get an added padding right to align well with the main content.#[br]
+    This is done once, in the #[span.code mounted] hook.
+
+  h3.mt-12 # Disabled text selection
+  p.
     By default the selection is disabled in the whole calendar except in the events.
     you can override this by CSS.
 
@@ -3510,10 +3489,12 @@
     h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
     p.mb-0.
       Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
-      on Vue.js, 100% designed for Vue, and still with no dependency!
+      on Vue.js, 100% designed for Vue, and still no dependency!
     highlight-message.mb-0(type="warning")
-      h3.mt-0.pt-0 Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not available on touch screens
-      p Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
+      h3.mt-0.pt-0.
+        Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not
+        available on touch screens
+      p.mb-0 Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
 
     highlight-message.mb-6(type="success")
       h3.mt-0.pt-0 New Features
@@ -3532,7 +3513,8 @@
       ul
         li.
           Vue Cal's createEvent() function now accepts a duration parameter to easily override
-          the default 2 hours. (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+          the default 2 hours.
+          (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
         li.
           The internal event #[span.code classes] property is replaced with
           #[span.code class] like in the external event definition. Now you can
@@ -3541,9 +3523,20 @@
         li
           h4.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
+
       h3.mt-0.mb-2 Other noticeable changes
       ul
-        li When creating an event with a given endDate, automatically add the required endTimeMinutes.
+        li.
+          When creating an event with a given #[span.code endDate], the required
+          #[span.code endTimeMinutes] is automatically add.
+        li
+          h4.mt-3.pt-0 You don't need to call #[span.code alignAllDayBar()] anymore
+          p.
+            Previously, in some cases you would need to call this function to realign the
+            all-day bar with the scrollbar when the scrollbar is fixed (E.g. on Windows).#[br]
+            Now the function (renamed to #[span.code alignWithScrollbar]) is triggered automatically
+            and in all the cases, once, in mounted.#[br]
+            It will now also align the weekdays headings if needed.
         li
           h4.mt-3.pt-0 Renamed CSS classes
           p.

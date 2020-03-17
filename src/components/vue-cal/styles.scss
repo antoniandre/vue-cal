@@ -130,6 +130,19 @@ $splits-headers-height: 1.5em;
     }
   }
 
+  &__scrollbar-check {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    overflow: scroll;
+    visibility: hidden;
+    z-index: -1;
+
+    & div {height: 120%;}
+  }
+
   &__time-column {
     width: $time-column-width;
     height: 100%;
