@@ -135,7 +135,7 @@ export const eventDragEnd = (e, event, vuecal) => {
 
   // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
   // event from the first one.
-  let { fromVueCal, toVueCal } = dragging
+  const { fromVueCal, toVueCal } = dragging
   if (toVueCal && fromVueCal !== toVueCal) deleteAnEvent(event, vuecal)
   dragging.fromVueCal = null
   dragging.toVueCal = null

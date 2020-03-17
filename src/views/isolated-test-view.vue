@@ -14,7 +14,7 @@ div
       small
       hide-view-selector
       hide-weekends
-      :disable-views=['years', 'year', 'month', 'day']
+      :disable-views="['years', 'year', 'month', 'day']"
       :time-from="9 * 60"
       :time-to="18 * 60"
       :selected-date="selectedDate"
@@ -25,7 +25,7 @@ div
       small
       hide-view-selector
       hide-weekends
-      :disable-views=['years', 'year', 'month', 'day']
+      :disable-views="['years', 'year', 'month', 'day']"
       :time-from="9 * 60"
       :time-to="18 * 60"
       :selected-date="selectedDate"
