@@ -113,6 +113,7 @@ export default {
         start: (this.segment || this.event).start,
         split: this.event.split || null,
         segment: !!this.segment && this.segment.start,
+        originalEndDate: this.event.endDate,
         originalEndTimeMinutes: this.event.endTimeMinutes
       })
 

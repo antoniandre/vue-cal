@@ -245,7 +245,8 @@ export default {
         split: null,
         segment: null,
         originalEndTimeMinutes: 0,
-        endTimeMinutes: 0,
+        originalEndDate: null,
+        endDate: null,
         startCell: null,
         endCell: null
       },
@@ -629,15 +630,26 @@ export default {
       if (resizeAnEvent._eid) {
         this.domEvents.cancelClickEventCreation = true
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
-        if (event && event.endTimeMinutes !== resizeAnEvent.originalEndTimeMinutes) {
-          // Store modified event back in mutable events.
+        const { originalEndDate } = resizeAnEvent
+
+        // When resizing the endTime changes but the day may change too when resizing horizontally.
+        // So compare timestamps instead of only endTimeMinutes.
+        if (event && event.endDate.getTime() !== originalEndDate.getTime()) {
+          // Update the modified event in the mutable events array.
           const mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
           mutableEvent.endTimeMinutes = event.endTimeMinutes
           mutableEvent.end = event.end
           mutableEvent.endDate = event.endDate
 
-          this.emitWithEvent('event-duration-change', event)
-          this.emitWithEvent('event-change', event)
+          const cleanEvent = this.cleanupEvent(event)
+          const originalEvent = {
+            ...this.cleanupEvent(event),
+            endDate: originalEndDate,
+            end: `${originalEndDate.format()} ${originalEndDate.formatTime()}`,
+            endTimeMinutes: event.originalEndTimeMinutes
+          }
+          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEndDate })
+          this.$emit('event-change', { event: cleanEvent, originalEvent })
         }
 
         if (event) event.resizing = false
@@ -646,6 +658,7 @@ export default {
         resizeAnEvent.split = null
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
+        resizeAnEvent.originalEndDate = null
         resizeAnEvent.endTimeMinutes = null
         resizeAnEvent.startCell = null
         resizeAnEvent.endCell = null

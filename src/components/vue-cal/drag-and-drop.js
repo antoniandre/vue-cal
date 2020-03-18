@@ -277,7 +277,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     oldDate,
     newDate: event.startDate,
     ...((split || split === 0) && { oldSplit, newSplit: split }),
-    originalEvent: transferData,
+    originalEvent: vuecal.cleanupEvent(transferData),
     external: !dragging.fromVueCal // If external event, not coming from any Vue Cal.
   }
   vuecal.$emit('event-drop', params)
