@@ -2030,13 +2030,13 @@
     Here is the list of emitted events:
   h4.mt-2 View-related
   ul
-    li #[span.code ready]
-    li #[span.code view-change]
-    li #[span.code cell-click] - returns a JS native #[span.code Date] object
-    li #[span.code cell-dblclick] - returns a JS native #[span.code Date] object
-    li #[span.code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
-    li #[span.code cell-keypress-enter] - returns a JS native #[span.code Date] object
-    li #[span.code cell-focus] - returns a JS native #[span.code Date] object
+    li #[code ready]
+    li #[code view-change]
+    li #[code cell-click] - returns a JS native #[span.code Date] object
+    li #[code cell-dblclick] - returns a JS native #[span.code Date] object
+    li #[code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
+    li #[code cell-keypress-enter] - returns a JS native #[span.code Date] object
+    li #[code cell-focus] - returns a JS native #[span.code Date] object
   highlight-message(type="tips")
     ul
       li.
@@ -2069,40 +2069,53 @@
       (cells before and after the current month) are also returned in the array.
 
   h4.mt-2 Events-related
-  p.mb-0.
-    In all the following emitted events, the calendar event being modified is returned.#[br]
-    Note that in the event, #[span.code startDate] &amp; #[span.code endDate] are JS native #[span.code Date] objects.
   ul
-    li #[span.code event-focus]
-    li #[span.code event-mouse-enter]
-    li #[span.code event-mouse-leave]
-    li #[span.code event-create]
-    li #[span.code event-delete]
-    li #[span.code event-change]
-    li #[span.code event-title-change]
-    //- li #[span.code event-content-change]
-    li #[span.code event-duration-change] &nbsp;#[span.code.grey--text // Only fired at the end of event resizing.]
-    li
-      span.code event-drop#[br]
-      | The #[span.code event-drop] has a different return, as it contains more information:
+    li.mt-3 #[code.mr-1 event-focus] - returns the associated calendar event object.
+    li.mt-3 #[code.mr-1 event-mouse-enter] - returns the associated calendar event object.
+    li.mt-3 #[code.mr-1 event-mouse-leave] - returns the associated calendar event object.
+    li.mt-3 #[code.mr-1 event-create] - returns the associated calendar event object.
+    li.mt-3 #[code.mr-1 event-delete] - returns the associated calendar event object.
+    li.mt-2 #[code event-title-change] - returns an object containing:
       ul
         li #[span.code event], the calendar event object that was dropped
-        li #[span.code oldDate], the Javascript Date the event was starting from
+        li #[span.code oldTitle], the title of the event before it was edited
+
+    //- li #[span.code event-content-change]
+    li.mt-2
+      code.mr-1 event-duration-change
+      span.grey--text (only fired at the end of the event resizing)
+      | #[br]Returns an object containing:
+      ul
+        li #[span.code event], the calendar event object that was resized
+        li #[span.code oldDate], the Javascript Date the event was ending at before resize
+    li.mt-2
+      code.mr-1 event-drop
+      | - returns an object containing:
+      ul
+        li #[span.code event], the calendar event object that was dropped
+        li #[span.code oldDate], the Javascript Date the event was starting from before drag
         li #[span.code newDate], the Javascript Date the event is now starting from
         li #[span.code oldSplit] only if splitting days, the id of the split the event came from
         li #[span.code newSplit] only if splitting days, the id of the split the event is dropped into
+    li.mt-3 #[code.mr-1 event-change] - returns an object containing:
+      ul
+        li #[span.code event], the calendar event object that was changed
+        li.
+          #[span.code originalEvent], the same calendar event before the change
+          (#[span.code null] when creating event)
 
   highlight-message(type="tips")
     ul
       li.
         The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
         #[span.code event-title-change], #[span.code event-drop],
-        #[span.code event-duration-change]. So you have the choice to listen to
+        #[span.code event-duration-change] and #[span.code event-create]. So you have the choice to listen to
         #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
       li.mt-3.
-        To help you manipulate an event's date, vue-cal returns native #[span.code Date]
+        To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
         objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
-        So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].
+        So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].#[br]
+        You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
   p.mb-0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
@@ -3512,14 +3525,21 @@
       h3.mt-0.mb-2 Big changes
       ul
         li.
-          Vue Cal's createEvent() function now accepts a duration parameter to easily override
+          The #[span.code event-change] emitted event now returns an object containing the
+          #[span.code event] and the #[span.code originalEvent].
+        li.
+          the #[span.code event-title-change] and #[span.code event-duration-change] events now return an object
+          containing the #[span.code event] and the #[span.code oldTitle] or #[span.code oldDate].
+        li.
+          Vue Cal's #[span.code createEvent()] function now accepts a duration parameter to easily override
           the default 2 hours.
           (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
         li.
           The internal event #[span.code classes] property is replaced with
-          #[span.code class] like in the external event definition. Now you can
-          keep updating the #[span.code class] property from your component methods
-          called from Vue Cal fired events.
+          #[span.code class] like in the external event definition. This means you can now
+          update the #[span.code class] property seemlessly like the initial event definition.
+          (From your component methods called from Vue Cal fired events or from #[span.code onEventCreate])
+
         li
           h4.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
