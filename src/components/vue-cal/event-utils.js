@@ -92,7 +92,7 @@ export const createAnEvent = (dateTime, duration, eventOptions, vuecal) => {
   vuecal.addEventsToView([event])
 
   vuecal.emitWithEvent('event-create', event)
-  vuecal.emitWithEvent('event-change', event)
+  vuecal.$emit('event-change', { event: vuecal.cleanupEvent(event), originalEvent: null })
 
   return event
 }
