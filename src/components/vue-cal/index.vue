@@ -732,7 +732,7 @@ export default {
       // If no change cancel action.
       if (event.title === e.target.innerHTML) return
 
-      const cleanEvent = vuecal.cleanupEvent(event)
+      const cleanEvent = this.cleanupEvent(event)
       const oldTitle = event.title
       event.title = e.target.innerHTML
 
