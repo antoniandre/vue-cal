@@ -6,173 +6,65 @@
 
     div.mb-n5 Earlier
     div(style="transform: scale(0.85);opacity: 0.8")
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | default active view
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Enable / disable views
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Hide / show weekends
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Add timeline w/ timerange &amp; increment
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Add timeline
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | time format 12/24 h
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Support for i18n
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Split days
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Support events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Background events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Overlap events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Keep only default style in CSS
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Allow custom arrows
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Default active date
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Double tap on touch devices
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        strong 1st NPM Release!
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Built-in themes
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Resize events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Delete events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Emit DOM events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Event indicator on month view
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Custom time format
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Highlight current time
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Show events on month view
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | sync 2 vue-cal instances
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Add CSS transitions
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Multiple day events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Custom events rendering
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Custom callback on event click
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Option to start week on Sunday
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | All day events in top bar
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Custom cell rendering
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Events count on year(s) views
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Create new event
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | min &amp; max dates
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Today button
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Externalize locales
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Support more simultaneous events
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Sticky day splits labels
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Hide particular weekdays
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Optional week number
-      v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-        v-icon.mr-1(size="20") check
-        | Date prototypes
+      todo-list-item default active view
+      todo-list-item Enable / disable views
+      todo-list-item Hide / show weekends
+      todo-list-item Add timeline w/ timerange &amp; increment
+      todo-list-item Add timeline
+      todo-list-item time format 12/24 h
+      todo-list-item Support for i18n
+      todo-list-item Split days
+      todo-list-item Support events
+      todo-list-item Background events
+      todo-list-item Overlap events
+      todo-list-item Keep only default style in CSS
+      todo-list-item Allow custom arrows
+      todo-list-item Default active date
+      todo-list-item Double tap on touch devices
+      todo-list-item 1st NPM Release!
+      todo-list-item Built-in themes
+      todo-list-item Resize events
+      todo-list-item Delete events
+      todo-list-item Emit DOM events
+      todo-list-item Event indicator on month view
+      todo-list-item Custom time format
+      todo-list-item Highlight current time
+      todo-list-item Show events on month view
+      todo-list-item sync 2 vue-cal instances
+      todo-list-item Add CSS transitions
+      todo-list-item Multiple day events
+      todo-list-item Custom events rendering
+      todo-list-item Custom callback on event click
+      todo-list-item Option to start week on Sunday
+      todo-list-item All day events in top bar
+      todo-list-item Custom cell rendering
+      todo-list-item Events count on year(s) views
+      todo-list-item Create new event
+      todo-list-item min &amp; max dates
+      todo-list-item Today button
+      todo-list-item Externalize locales
+      todo-list-item Support more simultaneous events
+      todo-list-item Sticky day splits labels
+      todo-list-item Hide particular weekdays
+      todo-list-item Optional week number
+      todo-list-item Date prototypes
 
     .mb-2 Current backlog
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Business hours
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Resize events snap to time
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Drag events snap to time
-    v-chip.ma-1.pl-0.pr-1(color="green" outlined small)
-      v-icon.mr-1(size="20") check
-      | Drag &amp; drop events
-    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
-      v-icon.mr-1(size="20") timer
-      | Drop external events into Vue Cal
-    v-chip.ma-1.pl-0.pr-1(color="amber darken-1" outlined small)
-      v-icon.mr-1(size="20") timer
-      | Recurring events
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Drag &amp; drop multiple day events
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Drag &amp; drop events on touch devices
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
+    todo-list-item Business hours
+    todo-list-item Drag &amp; drop events
+    todo-list-item Resize events snap to time
+    todo-list-item Drag events snap to time
+    todo-list-item Drop external events into Vue Cal
+    todo-list-item(status="doing") Recurring events
+    todo-list-item(status="todo") Drag &amp; drop multiple day events
+    todo-list-item(status="todo") Drag &amp; drop events on touch devices
+    todo-list-item(status="todo")
       a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
+    todo-list-item(status="todo")
       a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Improve multiple day events Month view
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Prevent event intersect. on drag/resize
-    v-chip.ma-1.pl-0.pr-1(color="deep-orange" outlined small)
-      v-icon.mr-1(size="20") access_time
-      | Horizontal timeline
+    todo-list-item(status="todo") Improve multiple day events Month view
+    todo-list-item(status="todo") Prevent event intersect. on drag/resize
+    todo-list-item(status="todo") Horizontal timeline
     //- TODO:
       General
       - do all the @todo in the codebase
@@ -3920,7 +3812,8 @@
 import VueCal from '@/components/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import highlightMessage from '@/components/highlight-message'
+import HighlightMessage from '@/components/highlight-message'
+import TodoListItem from '@/components/todo-list-item'
 
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
@@ -4009,7 +3902,7 @@ const events = [
 ]
 
 export default {
-  components: { VueCal, Sshpre, highlightMessage },
+  components: { VueCal, Sshpre, HighlightMessage, TodoListItem },
   data: () => ({
     localesList: [
       { code: 'ar', label: 'Arabic' },
