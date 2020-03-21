@@ -40,7 +40,7 @@ export default {
     overlaps: { type: Array, default: () => [] },
     eventPosition: { type: Number, default: 0 },
     overlapsStreak: { type: Number, default: 0 },
-    allDay: { type: Boolean, default: false }
+    allDay: { type: Boolean, default: false } // Is the event displayed in the all-day bar.
   },
 
   methods: {
@@ -207,7 +207,7 @@ export default {
     },
     resizable () {
       const { view, editEvents, time } = this.vuecal
-      return (editEvents.resize && this.event.resizable && time && this.event.endTimeMinutes && !this.allDay &&
+      return (editEvents.resize && this.event.resizable && time && !this.allDay &&
         (!this.segment || (this.segment && this.segment.isLastDay)) && view.id !== 'month')
     },
     domEvents: {

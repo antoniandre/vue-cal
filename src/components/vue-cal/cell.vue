@@ -1,57 +1,57 @@
 <template lang="pug">
-  transition-group.vuecal__cell(
-    :class="cssClasses"
-    :name="`slide-fade--${transitionDirection}`"
-    tag="div"
-    :appear="options.transitions"
-    :style="cellStyles")
-    .vuecal__flex.vuecal__cell-content(
-      v-for="(split, i) in (splits.length ? splits : 1)"
-      :key="options.transitions ? `${view}-${data.content}-${i}` : i"
-      :class="splits.length && `vuecal__cell-split ${split.class}${highlightedSplit === split.id ? ' vuecal__cell-split--highlighted' : ''}`"
-      :data-split="splits.length ? split.id : false"
-      column
-      tabindex="0"
-      :aria-label="data.content"
-      @focus="onCellFocus($event)"
-      @keypress.enter="onCellkeyPressEnter($event)"
-      @touchstart="!isDisabled && onCellTouchStart($event, splits.length ? split.id : null)"
-      @mousedown="!isDisabled && onCellMouseDown($event, splits.length ? split.id : null)"
-      @click="!isDisabled && selectCell($event)"
-      @dblclick="!isDisabled && onCellDblClick($event)"
-      @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-      @dragenter="!isDisabled && editEvents.drag && cellDragEnter($event, $data, data.startDate, $parent)"
-      @dragover="!isDisabled && editEvents.drag && cellDragOver($event, $data, data.startDate, $parent, splits.length ? split.id : null)"
-      @dragleave="!isDisabled && editEvents.drag && cellDragLeave($event, $data, data.startDate, $parent)"
-      @drop="!isDisabled && editEvents.drag && cellDragDrop($event, $data, data.startDate, $parent, splits.length ? split.id : null)")
-      .vuecal__special-hours(
-        v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
-        :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
-        :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
-      slot(
-        name="cell-content"
-        :events="events"
-        :select-cell="$event => selectCell($event, true)"
-        :split="splits.length ? split : false")
-      .vuecal__cell-events(
-        v-if="eventsCount && (isWeekOrDayView || (view === 'month' && options.eventsOnMonthView))")
-        event(
-          v-for="(event, j) in (splits.length ? split.events : events)" :key="j"
-          :vuecal="$parent"
-          :cell-formatted-date="data.formattedDate"
-          :event="event"
-          :all-day="allDay"
-          :cell-events="splits.length ? split.events : events"
-          :overlaps="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
-          :event-position="((splits.length ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
-          :overlaps-streak="splits.length ? split.overlapsStreak : cellOverlapsStreak")
-          template(v-slot:event="{ event, view }")
-            slot(name="event" :view="view" :event="event")
-    .vuecal__now-line(
-      v-if="timelineVisible"
-      :style="`top: ${todaysTimePosition}px`"
-      :key="options.transitions ? `${view}-now-line` : 'now-line'"
-      :title="$parent.now.formatTime()")
+transition-group.vuecal__cell(
+  :class="cssClasses"
+  :name="`slide-fade--${transitionDirection}`"
+  tag="div"
+  :appear="options.transitions"
+  :style="cellStyles")
+  .vuecal__flex.vuecal__cell-content(
+    v-for="(split, i) in (splitsCount ? splits : 1)"
+    :key="options.transitions ? `${view}-${data.content}-${i}` : i"
+    :class="splitsCount && `vuecal__cell-split ${split.class}${highlightedSplit === split.id ? ' vuecal__cell-split--highlighted' : ''}`"
+    :data-split="splitsCount ? split.id : false"
+    column
+    tabindex="0"
+    :aria-label="data.content"
+    @focus="onCellFocus($event)"
+    @keypress.enter="onCellkeyPressEnter($event)"
+    @touchstart="!isDisabled && onCellTouchStart($event, splitsCount ? split.id : null)"
+    @mousedown="!isDisabled && onCellMouseDown($event, splitsCount ? split.id : null)"
+    @click="!isDisabled && selectCell($event)"
+    @dblclick="!isDisabled && onCellDblClick($event)"
+    @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
+    @dragenter="!isDisabled && editEvents.drag && cellDragEnter($event, $data, data.startDate, $parent)"
+    @dragover="!isDisabled && editEvents.drag && cellDragOver($event, $data, data.startDate, $parent, splitsCount ? split.id : null)"
+    @dragleave="!isDisabled && editEvents.drag && cellDragLeave($event, $data, data.startDate, $parent)"
+    @drop="!isDisabled && editEvents.drag && cellDragDrop($event, $data, data.startDate, $parent, splitsCount ? split.id : null)")
+    .vuecal__special-hours(
+      v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
+      :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
+      :style="`height: ${specialHours.height}px;top: ${specialHours.top}px`")
+    slot(
+      name="cell-content"
+      :events="events"
+      :select-cell="$event => selectCell($event, true)"
+      :split="splitsCount ? split : false")
+    .vuecal__cell-events(
+      v-if="eventsCount && (isWeekOrDayView || (view === 'month' && options.eventsOnMonthView))")
+      event(
+        v-for="(event, j) in (splitsCount ? split.events : events)" :key="j"
+        :vuecal="$parent"
+        :cell-formatted-date="data.formattedDate"
+        :event="event"
+        :all-day="allDay"
+        :cell-events="splitsCount ? split.events : events"
+        :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
+        :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
+        :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak")
+        template(v-slot:event="{ event, view }")
+          slot(name="event" :view="view" :event="event")
+  .vuecal__now-line(
+    v-if="timelineVisible"
+    :style="`top: ${todaysTimePosition}px`"
+    :key="options.transitions ? `${view}-now-line` : 'now-line'"
+    :title="$parent.now.formatTime()")
 </template>
 
 <script>
@@ -93,7 +93,7 @@ export default {
     },
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
-      if (this.options.time && this.eventsCount && !this.splits.length) {
+      if (this.options.time && this.eventsCount && !this.splitsCount) {
         if (this.eventsCount === 1) {
           this.cellOverlaps = []
           this.cellOverlapsStreak = 1
@@ -111,7 +111,7 @@ export default {
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
-      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
       selectCell(force, this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
@@ -121,7 +121,7 @@ export default {
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell keypress when emitting event.
-      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
       keyPressEnterCell(this.$parent, this.timeAtCursor, split)
       this.timeAtCursor = null
@@ -137,7 +137,7 @@ export default {
         this.isSelected = this.data.startDate
 
         // If splitting days, also return the clicked split on cell focus when emitting event.
-        const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+        const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
         // Cell-focus event returns the cell start date (at midnight) if triggered from tab key,
         // or cursor coords time if clicked.
@@ -188,7 +188,7 @@ export default {
       date.setMinutes(this.$parent.minutesAtCursor(DOMEvent).minutes)
 
       // If splitting days, also return the clicked split on cell dblclick when emitting event.
-      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
       this.$parent.$emit('cell-dblclick', split ? { date, split } : date)
 
@@ -204,7 +204,7 @@ export default {
       date.setMinutes(minutes)
 
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
-      const split = this.splits.length ? this.getSplitAtCursor(DOMEvent) : null
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
       this.$parent.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     },
@@ -349,6 +349,9 @@ export default {
         }
       })
     },
+    splitsCount () {
+      return this.splits.length
+    },
     cssClasses () {
       return {
         'vuecal__cell--current': this.data.current, // E.g. Current year in years view.
@@ -359,7 +362,7 @@ export default {
         'vuecal__cell--disabled': this.isDisabled,
         'vuecal__cell--selected': this.isSelected,
         'vuecal__cell--highlighted': this.highlighted,
-        'vuecal__cell--has-splits': this.splits.length,
+        'vuecal__cell--has-splits': this.splitsCount,
         'vuecal__cell--has-events': this.eventsCount
       }
     },

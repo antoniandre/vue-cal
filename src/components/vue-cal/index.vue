@@ -5,6 +5,7 @@
     :edit-events="editEvents"
     :view-props="{ views, view, weekDaysInHeader }"
     :week-days="weekDays"
+    :has-splits="hasSplits"
     :day-splits="daySplits"
     :switch-to-narrower-view="switchToNarrowerView")
     template(v-slot:arrow-prev)
@@ -119,9 +120,9 @@
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-                      .vuecal__event-time(v-if="time && !event.allDay && (event.startTimeMinutes || event.endTimeMinutes) && !(view === 'month' && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
-                        | {{ formatTime(event.startTimeMinutes) }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ formatTime(event.endTimeMinutes) }}
+                      .vuecal__event-time(v-if="time && !event.allDay && !(view === 'month' && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
+                        | {{ event.startDate.formatTime() }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endDate.formatTime() }}
                         small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
@@ -135,9 +136,11 @@
 <script>
 import { updateDateTexts, getPreviousFirstDayOfWeek, formatDate, formatDateLite, formatTime, formatTimeLite, stringToDate, countDays, dateToMinutes } from './date-utils'
 import { eventDefaults, createAnEvent, createEventSegments, addEventSegment, removeEventSegment, eventInRange } from './event-utils'
+
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
 import Cell from './cell'
+
 import './styles.scss'
 
 const minutesInADay = 24 * 60 // Don't do the maths every time.
@@ -212,9 +215,9 @@ export default {
     xsmall: { type: Boolean, default: false }
   },
   data: () => ({
+    ready: false, // Is vue-cal ready.
     // Make texts reactive before a locale is loaded.
     texts: { ...textsDefaults },
-    ready: false, // Is vue-cal ready.
 
     // At any time this object will be filled with current view, visible events and selected date.
     view: {

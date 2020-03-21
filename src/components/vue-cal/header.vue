@@ -56,7 +56,7 @@
 
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
-    .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && $parent.hasSplits && options.stickySplitLabels && !options.minSplitWidth")
+    .vuecal__flex.vuecal__split-days-headers(v-if="viewProps.view.id === 'day' && hasSplits && options.stickySplitLabels && !options.minSplitWidth")
       .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
@@ -70,6 +70,7 @@ export default {
     // Vuecal main component options (props).
     options: { type: Object, default: () => ({}) },
     editEvents: { type: Object, required: true },
+    hasSplits: { type: [Boolean, Number], default: false },
     daySplits: { type: Array, default: () => [] },
     viewProps: { type: Object, default: () => ({}) },
     weekDays: { type: Array, default: () => [] },
