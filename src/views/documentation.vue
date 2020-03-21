@@ -1537,7 +1537,6 @@
     a#ex--overlapping-events(name="ex--overlapping-events")
   p.
     Overlapping, editable &amp; deletable events.#[br]
-    Overlapping now supports more than 3 simultaneous events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
   v-layout.mb-3(align-center)
@@ -2393,7 +2392,7 @@
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
   p.
     In the following example, we only count the events which have the custom
-    #[span.code leisure] CSS class.
+    #[span.code leisure] CSS class (orange color).
 
   v-card.my-2.ma-auto.main-content(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--custom-events-count(
@@ -2448,7 +2447,7 @@
   sshpre(language="css" label="CSS").
     .vuecal__cell-events-count {background: transparent;}
     .vuecal__cell-events-count span {
-      background: #42b983;
+      background: #fd9c42;
       height: 100%;
       min-width: 12px;
       padding: 0 3px;
@@ -2548,7 +2547,7 @@
         span(v-else-if="view.id === 'year'") {{ view.startDate.format('YYYY') }}
         span(v-else-if="view.id === 'month'") {{ view.startDate.format('MMMM YYYY') }}
         span(v-else-if="view.id === 'week'") w{{ view.startDate.getWeek() }} ({{ view.startDate.format('MMM YYYY') }})
-        span(v-else-if="view.id === 'day'") {{ view.startDate.format('dddd D MMMM YY') }}
+        span(v-else-if="view.id === 'day'") {{ view.startDate.format('dddd D MMMM (YYYY)') }}
         | &nbsp;🎉
       template(v-slot:cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
@@ -2569,7 +2568,7 @@
         &lt;span v-else-if="view.id === 'year'"&gt;{{ "\{\{ view.startDate.format('YYYY') \}\}" }}&lt;/span&gt;
         &lt;span v-else-if="view.id === 'month'"&gt;{{ "\{\{ view.startDate.format('MMMM YYYY') \}\}" }}&lt;/span&gt;
         &lt;span v-else-if="view.id === 'week'"&gt;w{{ "\{\{ view.startDate.getWeek() \}\} (\{\{ view.startDate.format('MMM YYYY') \}\}" }})&lt;/span&gt;
-        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.startDate.format('dddd D MMMM YY') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.startDate.format('dddd D MMMM (YYYY)') \}\}" }}&lt;/span&gt;
         🎉
       &lt;/template&gt;
 
@@ -4534,7 +4533,7 @@ $primary: #42b983;
 
 .ex--custom-events-count {
   .vuecal__cell-events-count span {
-    background: $primary;
+    background-color: #fd9c42;
     height: 100%;
     min-width: 12px;
     padding: 0 3px;
