@@ -1,3 +1,9 @@
+/**
+ * Waiting for VS Code to support JavaScript private fields.
+ * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_fields
+ * Meantime keep `_` for private.
+ */
+
 let now, todayDate, todayF, self
 let _dateObject = {}
 let _timeObject = {}
@@ -21,7 +27,6 @@ export default class DateUtils {
     // Add prototypes ASAP.
     if (Date && !Date.prototype.addDays) this._initDatePrototypes()
   }
-
 
   _initDatePrototypes () {
     Date.texts = { weekDays: Array(7).fill(''), months: Array(12).fill('') }
