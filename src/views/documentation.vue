@@ -237,8 +237,8 @@
     time range of selectable cells. All the cells before and after are still visible but
     will be disabled and not selectable.#[br]
     You can still navigate through them with arrows.#[br]
-    In this example, the minimum date is set to 15 days behind and the maximum date to
-    15 days ahead.#[br]
+    In this example, the minimum date is set to 10 days behind and the maximum date to
+    10 days ahead.#[br]
   highlight-message(type="tips")
     strong.ml-2 Notes:
     ul
@@ -270,10 +270,10 @@
     // Using Vue Cal Date Prototypes.
     computed: {
       minDate () {
-        return new Date().subtractDays(15)
+        return new Date().subtractDays(10)
       },
       maxDate () {
-        return new Date().addDays(15)
+        return new Date().addDays(10)
       }
     }
 
@@ -4373,10 +4373,10 @@ export default {
       return `${this.now.format()} ${this.now.formatTime()}`
     },
     minDate () {
-      return new Date().subtractDays(15)
+      return new Date().subtractDays(10)
     },
     maxDate () {
-      return new Date().addDays(15)
+      return new Date().addDays(10)
     },
     specialHours: () => Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
   },
