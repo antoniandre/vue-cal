@@ -14,7 +14,7 @@
 // OK - Only trigger view change if it changed
 // OK - Add option to snap to time on event drop
 // OK - add javadoc
-//    - modularize this file?
+// OK - modularize this file
 //    - Add option to copy or move an event from a cal to another?
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.

@@ -28,10 +28,8 @@
 </template>
 
 <script>
-import { eventDragStart, eventDragEnd } from './drag-and-drop'
-
 export default {
-  inject: ['vuecal', 'utils'],
+  inject: ['vuecal', 'utils', 'modules'],
   props: {
     cellFormattedDate: { type: String, default: '' },
     event: { type: Object, default: () => ({}) },
@@ -98,11 +96,11 @@ export default {
     },
 
     onDragStart (e) {
-      eventDragStart(e, this.event, this.vuecal)
+      this.dnd && this.dnd.eventDragStart(e, this.event, this.vuecal)
     },
 
     onDragEnd (e) {
-      eventDragEnd(e, this.event, this.vuecal)
+      this.dnd && this.dnd.eventDragEnd(e, this.event, this.vuecal)
     },
 
     onDragHandleMouseDown () {
@@ -216,6 +214,12 @@ export default {
       set (object) {
         this.vuecal.domEvents = object
       }
+    },
+    // Drag & drop module.
+    dnd () {
+      const dnd = this.modules.dnd
+      if (!dnd) console.warn('Vue Cal: Missing drag & drop module.')
+      return dnd
     }
   }
 }

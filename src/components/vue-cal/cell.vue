@@ -20,10 +20,10 @@ transition-group.vuecal__cell(
     @click="!isDisabled && selectCell($event)"
     @dblclick="!isDisabled && onCellDblClick($event)"
     @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-    @dragenter="!isDisabled && editEvents.drag && cellDragEnter($event, $data, data.startDate, vuecal)"
-    @dragover="!isDisabled && editEvents.drag && cellDragOver($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)"
-    @dragleave="!isDisabled && editEvents.drag && cellDragLeave($event, $data, data.startDate, vuecal)"
-    @drop="!isDisabled && editEvents.drag && cellDragDrop($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)")
+    @dragenter="!isDisabled && editEvents.drag && dnd && dnd.cellDragEnter($event, $data, data.startDate, vuecal)"
+    @dragover="!isDisabled && editEvents.drag && dnd && dnd.cellDragOver($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)"
+    @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate, vuecal)"
+    @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)")
     .vuecal__special-hours(
       v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
       :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
@@ -54,11 +54,10 @@ transition-group.vuecal__cell(
 </template>
 
 <script>
-import { cellDragOver, cellDragEnter, cellDragLeave, cellDragDrop } from './drag-and-drop'
 import Event from './event'
 
 export default {
-  inject: ['vuecal', 'utils'],
+  inject: ['vuecal', 'utils', 'modules'],
   components: { Event },
   props: {
     // Vue-cal main component options (props).
@@ -204,15 +203,16 @@ export default {
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
       this.vuecal.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
-    },
-
-    cellDragOver,
-    cellDragEnter,
-    cellDragLeave,
-    cellDragDrop
+    }
   },
 
   computed: {
+    // Drag & drop module.
+    dnd () {
+      const dnd = this.modules.dnd
+      if (!dnd) console.warn('Vue Cal: Missing drag & drop module.')
+      return dnd
+    },
     nowInMinutes () {
       return this.utils.date.dateToMinutes(this.vuecal.now)
     },

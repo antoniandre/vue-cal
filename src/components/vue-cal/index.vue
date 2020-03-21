@@ -331,7 +331,8 @@ export default {
      * Only import drag and drop module on demand to keep a small library weight.
      */
     loadDragAndDrop () {
-      import('./drag-and-drop').then(response => (modules.dnd = response))
+      import(/* webpackChunkName: "drag-and-drop" */ './drag-and-drop')
+        .then(response => (modules.dnd = response))
     },
 
     /**
