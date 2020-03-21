@@ -1,4 +1,6 @@
 /**
+ * Events Utils.
+ *
  * Waiting for VS Code to support JavaScript private fields.
  * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_fields
  * Meantime keep `_` for private.

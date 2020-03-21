@@ -8,16 +8,16 @@
       v-if="v.enabled"
       :class="{ 'vuecal__view-btn--active': viewProps.view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
-      @dragenter="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragEnter($event, id, vuecal, $data)"
-      @dragleave="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragLeave($event, id, vuecal, $data)"
+      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, id, $data)"
+      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, id, $data)"
       @click="switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
-      @dragenter="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragEnter($event, 'previous', vuecal, $data)"
-      @dragleave="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragLeave($event, 'previous', vuecal, $data)"
+      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'previous', $data)"
+      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, 'previous', $data)"
       :aria-label="`Previous ${viewProps.view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
@@ -33,15 +33,15 @@
       v-if="options.todayButton"
       :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
       @click="goToToday"
-      @dragenter="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragEnter($event, 'today', vuecal, $data)"
-      @dragleave="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragLeave($event, 'today', vuecal, $data)"
+      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'today', $data)"
+      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, 'today', $data)"
       aria-label="Today")
       slot(name="today-button")
     button.vuecal__arrow.vuecal__arrow--next(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
-      @dragenter="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragEnter($event, 'next', vuecal, $data)"
-      @dragleave="editEvents.drag && modules.dnd && modules.dnd.viewSelectorDragLeave($event, 'next', vuecal, $data)"
+      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'next', $data)"
+      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, 'next', $data)"
       :aria-label="`Next ${viewProps.view.id}`")
       slot(name="arrow-next")
   weekdays-headings(
@@ -109,6 +109,10 @@ export default {
       views.reverse()
 
       return views.find(v => this.viewProps.views[v].enabled)
+    },
+    // Drag & drop module.
+    dnd () {
+      return this.modules.dnd
     }
   }
 }

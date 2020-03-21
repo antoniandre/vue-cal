@@ -23,8 +23,8 @@
   .vuecal__event-resize-handle(
     v-if="resizable"
     contenteditable="false"
-    @mousedown.stop.prevent="onDragHandleMouseDown"
-    @touchstart.stop.prevent="onDragHandleMouseDown")
+    @mousedown.stop.prevent="onResizeHandleMouseDown"
+    @touchstart.stop.prevent="onResizeHandleMouseDown")
 </template>
 
 <script>
@@ -96,14 +96,14 @@ export default {
     },
 
     onDragStart (e) {
-      this.dnd && this.dnd.eventDragStart(e, this.event, this.vuecal)
+      this.dnd && this.dnd.eventDragStart(e, this.event)
     },
 
     onDragEnd (e) {
-      this.dnd && this.dnd.eventDragEnd(e, this.event, this.vuecal)
+      this.dnd && this.dnd.eventDragEnd(e, this.event)
     },
 
-    onDragHandleMouseDown () {
+    onResizeHandleMouseDown () {
       this.domEvents.dragAnEvent._eid = null
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
         _eid: this.event._eid,
@@ -217,9 +217,7 @@ export default {
     },
     // Drag & drop module.
     dnd () {
-      const dnd = this.modules.dnd
-      if (!dnd) console.warn('Vue Cal: Missing drag & drop module.')
-      return dnd
+      return this.modules.dnd
     }
   }
 }

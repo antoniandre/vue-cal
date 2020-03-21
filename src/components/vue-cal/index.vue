@@ -134,9 +134,9 @@
 
 <script>
 import Vue from 'vue'
-import DateUtils from './date-utils'
-import CellUtils from './cell-utils'
-import EventUtils from './event-utils'
+import DateUtils from './utils/date'
+import CellUtils from './utils/cell'
+import EventUtils from './utils/event'
 
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
@@ -331,8 +331,12 @@ export default {
      * Only import drag and drop module on demand to keep a small library weight.
      */
     loadDragAndDrop () {
-      import(/* webpackChunkName: "drag-and-drop" */ './drag-and-drop')
-        .then(response => (modules.dnd = response))
+      import(/* webpackChunkName: "drag-and-drop" */ './modules/drag-and-drop')
+        .then(response => {
+          const DragAndDrop = response.default
+          modules.dnd = new DragAndDrop(this)
+        })
+        .catch(() => console.warn('Vue Cal: Missing drag & drop module.'))
     },
 
     /**

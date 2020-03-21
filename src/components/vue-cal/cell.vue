@@ -20,10 +20,10 @@ transition-group.vuecal__cell(
     @click="!isDisabled && selectCell($event)"
     @dblclick="!isDisabled && onCellDblClick($event)"
     @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
-    @dragenter="!isDisabled && editEvents.drag && dnd && dnd.cellDragEnter($event, $data, data.startDate, vuecal)"
-    @dragover="!isDisabled && editEvents.drag && dnd && dnd.cellDragOver($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)"
-    @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate, vuecal)"
-    @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, vuecal, splitsCount ? split.id : null)")
+    @dragenter="!isDisabled && editEvents.drag && dnd && dnd.cellDragEnter($event, $data, data.startDate)"
+    @dragover="!isDisabled && editEvents.drag && dnd && dnd.cellDragOver($event, $data, data.startDate, splitsCount ? split.id : null)"
+    @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate)"
+    @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, splitsCount ? split.id : null)")
     .vuecal__special-hours(
       v-if="isWeekOrDayView && !allDay && specialHours.from !== null"
       :class="`vuecal__special-hours--day${specialHours.day} ${specialHours.class}`"
@@ -209,9 +209,7 @@ export default {
   computed: {
     // Drag & drop module.
     dnd () {
-      const dnd = this.modules.dnd
-      if (!dnd) console.warn('Vue Cal: Missing drag & drop module.')
-      return dnd
+      return this.modules.dnd
     },
     nowInMinutes () {
       return this.utils.date.dateToMinutes(this.vuecal.now)
