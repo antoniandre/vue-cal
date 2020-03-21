@@ -28,13 +28,12 @@
 </template>
 
 <script>
-import { deleteAnEvent } from './event-utils'
 import { eventDragStart, eventDragEnd } from './drag-and-drop'
 
 export default {
+  inject: ['vuecal', 'utils'],
   props: {
     cellFormattedDate: { type: String, default: '' },
-    vuecal: { type: Object, default: () => ({}) },
     event: { type: Object, default: () => ({}) },
     cellEvents: { type: Array, default: () => [] },
     overlaps: { type: Array, default: () => [] },
@@ -124,7 +123,7 @@ export default {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
 
-      deleteAnEvent(this.event, this.vuecal)
+      this.utils.event.deleteAnEvent(this.event)
     },
 
     touchDeleteEvent (event) {

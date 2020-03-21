@@ -8,16 +8,16 @@
       v-if="v.enabled"
       :class="{ 'vuecal__view-btn--active': viewProps.view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
-      @dragenter="editEvents.drag && viewSelectorDragEnter($event, id, $parent, $data)"
-      @dragleave="editEvents.drag && viewSelectorDragLeave($event, id, $parent, $data)"
-      @click="$parent.switchView(id, null, true)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, id, vuecal, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, id, vuecal, $data)"
+      @click="switchView(id, null, true)"
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
-      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'previous', $parent, $data)"
-      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'previous', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'previous', vuecal, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'previous', vuecal, $data)"
       :aria-label="`Previous ${viewProps.view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
@@ -33,20 +33,20 @@
       v-if="options.todayButton"
       :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
       @click="goToToday"
-      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'today', $parent, $data)"
-      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'today', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'today', vuecal, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'today', vuecal, $data)"
       aria-label="Today")
       slot(name="today-button")
     button.vuecal__arrow.vuecal__arrow--next(
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
-      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'next', $parent, $data)"
-      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'next', $parent, $data)"
+      @dragenter="editEvents.drag && viewSelectorDragEnter($event, 'next', vuecal, $data)"
+      @dragleave="editEvents.drag && viewSelectorDragLeave($event, 'next', vuecal, $data)"
       :aria-label="`Next ${viewProps.view.id}`")
       slot(name="arrow-next")
   weekdays-headings(
     v-if="viewProps.weekDaysInHeader"
-    :vuecal="$parent"
+    :vuecal="vuecal"
     :view="viewProps.view"
     :week-days="weekDays"
     :transition-direction="transitionDirection"
@@ -65,6 +65,7 @@ import WeekdaysHeadings from './weekdays-headings'
 import { viewSelectorDragEnter, viewSelectorDragLeave } from './drag-and-drop'
 
 export default {
+  inject: ['vuecal', 'previous', 'next', 'switchView', 'updateSelectedDate'],
   components: { WeekdaysHeadings },
   props: {
     // Vuecal main component options (props).
@@ -82,23 +83,15 @@ export default {
   }),
 
   methods: {
-    previous () {
-      this.$parent.previousNext(false)
-    },
-
-    next () {
-      this.$parent.previousNext()
-    },
-
     goToToday () {
       // Last midnight.
-      this.$parent.updateSelectedDate(new Date(new Date().setHours(0, 0, 0, 0)))
+      this.updateSelectedDate(new Date(new Date().setHours(0, 0, 0, 0)))
     },
 
     switchToBroaderView () {
       this.transitionDirection = 'left'
 
-      if (this.broaderView) this.$parent.switchView(this.broaderView)
+      if (this.broaderView) this.switchView(this.broaderView)
     },
 
     viewSelectorDragEnter,
@@ -108,10 +101,10 @@ export default {
   computed: {
     transitionDirection: {
       get () {
-        return this.$parent.transitionDirection
+        return this.vuecal.transitionDirection
       },
       set (direction) {
-        this.$parent.transitionDirection = direction
+        this.vuecal.transitionDirection = direction
       }
     },
     broaderView () {

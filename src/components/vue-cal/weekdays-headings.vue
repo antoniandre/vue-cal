@@ -25,11 +25,9 @@
 </template>
 
 <script>
-import { selectCell } from './cell-utils'
-
 export default {
+  inject: ['vuecal', 'utils'],
   props: {
-    vuecal: { type: Object, default: () => ({}) },
     view: { type: Object, default: () => ({}) },
     transitionDirection: { type: String, default: 'right' },
     weekDays: { type: Array, default: () => [] },
@@ -39,8 +37,8 @@ export default {
   methods: {
     selectCell (date, DOMEvent) {
       date = new Date(date)
-      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
-      selectCell(false, this.vuecal, date, DOMEvent)
+      date.setMinutes(this.utils.cell.minutesAtCursor(DOMEvent).minutes)
+      this.utils.cell.selectCell(false, date, DOMEvent)
     },
     cleanupHeading: heading => ({
       label: heading.full,

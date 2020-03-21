@@ -17,8 +17,6 @@
 //    - modularize this file?
 //    - Add option to copy or move an event from a cal to another?
 
-import { createAnEvent, deleteAnEvent } from './event-utils'
-
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -40,8 +38,8 @@ const dragging = {
  * @param {Object} vuecal The instance of Vue Cal component.
  */
 const getEventStart = (e, vuecal) => {
-  const { getPosition, timeStep, timeCellHeight, timeFrom } = vuecal
-  let { y } = getPosition(e)
+  const { timeStep, timeCellHeight, timeFrom } = vuecal
+  let { y } = vuecal.utils.cell.getPosition(e)
   y -= e.dataTransfer.getData('cursor-grab-at') * 1
   return Math.round(y * timeStep / parseInt(timeCellHeight) + timeFrom)
 }
@@ -136,7 +134,7 @@ export const eventDragEnd = (e, event, vuecal) => {
   // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
   // event from the first one.
   const { fromVueCal, toVueCal } = dragging
-  if (toVueCal && fromVueCal !== toVueCal) deleteAnEvent(event, vuecal)
+  if (toVueCal && fromVueCal !== toVueCal) vuecal.utils.event.deleteAnEvent(event, vuecal)
   dragging.fromVueCal = null
   dragging.toVueCal = null
 
@@ -245,7 +243,7 @@ export const cellDragDrop = (e, cell, cellDate, vuecal, split) => {
     // dropping to another calendar then back to the original place.
     const { _eid, startDate, endDate, duration, ...cleanTransferData } = transferData
     // Note: createAnEvent adds the event to the view.
-    event = createAnEvent(cellDate, duration, { ...cleanTransferData, split }, vuecal)
+    event = vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split }, vuecal)
   }
   else {
     // Find the dragged event from its _eid in the view or mutableEvents array.
