@@ -133,6 +133,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import DateUtils from './date-utils'
 import CellUtils from './cell-utils'
 import EventUtils from './event-utils'
@@ -164,6 +165,10 @@ const textsDefaults = {
   pm: 'pm'
 }
 
+// Modules are shared down to children through Vue provide/inject mechanism.
+// It needs to stay reactive as modules are loaded conditionally.
+const modules = Vue.observable({ dnd: null })
+
 export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
@@ -172,6 +177,7 @@ export default {
     return {
       vuecal: this,
       utils: this.utils,
+      modules,
       // Methods.
       previous: this.previous,
       next: this.next,
@@ -319,6 +325,13 @@ export default {
             this.utils.date.updateDateTexts(this.texts)
           })
       }
+    },
+
+    /**
+     * Only import drag and drop module on demand to keep a small library weight.
+     */
+    loadDragAndDrop () {
+      import('./drag-and-drop').then(response => (modules.dnd = response))
     },
 
     /**
@@ -1004,8 +1017,9 @@ export default {
     this.utils.event = new EventUtils(this, this.utils.date)
 
     this.loadLocale(this.locale)
-
     this.updateDateTexts()
+
+    if (this.editEvents.drag) this.loadDragAndDrop()
 
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
