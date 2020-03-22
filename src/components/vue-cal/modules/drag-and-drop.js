@@ -133,10 +133,9 @@ export const DragAndDrop = class {
   /**
    * On event drag end, when releasing the event.
    *
-   * @param {Object} e The associated DOM event.
    * @param {Object} event The event being dragged.
    */
-  eventDragEnd (e, event) {
+  eventDragEnd (event) {
     this._vuecal.domEvents.dragAnEvent._eid = null
     dragging._eid = null
     event.dragging = false
@@ -290,6 +289,11 @@ export const DragAndDrop = class {
     }
     this._vuecal.$emit('event-drop', params)
     this._vuecal.$emit('event-change', { event: params.event, originalEvent: params.originalEvent })
+
+    // Sometimes the event dragend does not trigger (?!), so manually trigger it if it didn't.
+    setTimeout(() => {
+      if (dragging._eid) this.eventDragEnd(event)
+    }, 300)
   }
 
   /**
