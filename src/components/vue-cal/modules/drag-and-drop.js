@@ -38,7 +38,7 @@ const dragging = {
   toVueCal: null
 }
 
-export default class DragAndDrop {
+export const DragAndDrop = class {
   _vuecal
 
   constructor (vuecal) {

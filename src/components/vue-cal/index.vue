@@ -133,7 +133,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import DateUtils from './utils/date'
 import CellUtils from './utils/cell'
 import EventUtils from './utils/event'
@@ -165,10 +164,6 @@ const textsDefaults = {
   pm: 'pm'
 }
 
-// Modules are shared down to children through Vue provide/inject mechanism.
-// It needs to stay reactive as modules are loaded conditionally.
-const modules = Vue.observable({ dnd: null })
-
 export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
@@ -177,7 +172,7 @@ export default {
     return {
       vuecal: this,
       utils: this.utils,
-      modules,
+      modules: this.modules,
       // Methods.
       previous: this.previous,
       next: this.next,
@@ -237,6 +232,12 @@ export default {
     ready: false, // Is vue-cal ready.
     // Make texts reactive before a locale is loaded.
     texts: { ...textsDefaults },
+    utils: {
+      date: dateUtils,
+      cell: null,
+      event: null
+    },
+    modules: { dnd: null },
 
     // At any time this object will be filled with current view, visible events and selected date.
     view: {
@@ -302,12 +303,7 @@ export default {
     // An array of mutable events updated each time given external events array changes.
     mutableEvents: [],
     // Transition when switching view. left when going toward the past, right when going toward future.
-    transitionDirection: 'right',
-    utils: {
-      date: dateUtils,
-      cell: null,
-      event: null
-    }
+    transitionDirection: 'right'
   }),
 
   methods: {
@@ -333,8 +329,8 @@ export default {
     loadDragAndDrop () {
       import(/* webpackChunkName: "drag-and-drop" */ './modules/drag-and-drop')
         .then(response => {
-          const DragAndDrop = response.default
-          modules.dnd = new DragAndDrop(this)
+          const { DragAndDrop } = response
+          this.modules.dnd = new DragAndDrop(this)
         })
         .catch(() => console.warn('Vue Cal: Missing drag & drop module.'))
     },
