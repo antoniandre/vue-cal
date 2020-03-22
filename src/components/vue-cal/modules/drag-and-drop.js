@@ -241,7 +241,7 @@ export const DragAndDrop = class {
     dragOverCell = { el: null, cell: null, timeout: null }
 
     const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
-    let event
+    let event, addToView
 
     // If the event is not coming from this Vue Cal it means that we are accepting a new event.
     // So create the event in this Vue Cal.
@@ -260,12 +260,16 @@ export const DragAndDrop = class {
 
       if (!event) {
         event = this._vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
-        this._vuecal.addEventsToView([event])
+        addToView = true
       }
     }
 
     const { startDate: oldDate, split: oldSplit } = event
     this._updateEventStartEnd(e, event, transferData, cellDate)
+
+    // Only add the event to view after the start and end are modified otherwise
+    // it would be filtered out from the function if not in range.
+    if (addToView) this._vuecal.addEventsToView([event])
 
     event.dragging = false
     if (split || split === 0) event.split = split
