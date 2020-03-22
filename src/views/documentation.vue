@@ -390,7 +390,7 @@
   sshpre(language="js" label="Javascript").
     // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
-    import 'vue-cal/dist/i18n/{{locale}}.js'
+    import 'vue-cal/dist/i18n/{{ locale }}.js'
     import 'vue-cal/dist/vuecal.css'
 
   h3.title
@@ -928,6 +928,14 @@
     You probably tried the events drag &amp; drop in the previous example, but here's what
     you missed! Quite a few things!
 
+  highlight-message
+    ul
+      li.
+        Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
+        separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
+      li
+        strong Drag &amp; drop is only available on single day events for now.
+  h5 Dragging over header
   ul
     li.
       While you drag an event over the view selector buttons, or the previous and next arrows,
@@ -941,6 +949,8 @@
       Dragging an event over the today button will take you to Today's date, and if you're in
       a #[span.code years] or #[span.code year] view it will also go to the next available
       narrower view from #[span.code month] downward.
+  h5 Dragging over a cell
+  ul
     li.
       If you drag an event over a cell or a split
       (ref. #[a(href="#ex--splitting-days") splitting days]), the cell/split gets into a
@@ -950,6 +960,8 @@
       #[span.code years] or #[span.code year] view, if you hold over a cell
       in these views or in #[span.code month] view, it will go to the next available narrower
       view so you can at least see a day cell.
+  h5 Dropping the event into a cell or somewhere not allowed
+  ul
     li.
       If you drop the event outside of the calendar or anywhere it's not possible,
       it will snap back to its original place and the original view will be restored if it
@@ -964,9 +976,15 @@
       By default, when you drop the event it will start exactly where you dropped it,
       but if you prefer you can use the #[span.code snapToTime] option to dictate where it should
        snap to (refer to #[span.code snapToTime] in the #[a(href="#api") API section]).#[br]
-      If you wonder why it does not visually represent the snapping, it's not possible to do it with
+      If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
       the native HTML5 drag &amp; drop.
-
+  h5 Emitted events
+  ul
+    li
+      | When dropping an event into a cell, the
+      a.ml-1(href="#ex--emitted-events") #[span.code event-drop] and #[span.code event-change] events are emitted.
+  h5 CSS styles
+  ul
     li
       | You can change the highlighted style of the header buttons or cells through these CSS classes:
       ul
@@ -983,10 +1001,6 @@
       (native HTML5 drag &amp; drop behavior). The original event receive the
       #[span.code .vuecal__event--static] CSS class which hides it with #[span.code opacity: 0].#[br]
       You can use that class to give it a different style.
-    li.
-      When dropping an event into a cell, #[a(href="#ex--emitted-events") an #[span.code event-drop] event is emitted].
-    li
-      strong Drag &amp; drop is only available on single day events for now.
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1364,6 +1378,8 @@
     Updating the duration by dragging or changing the title will also update on all the days.#[br]
     Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
     the option #[span.code resize-x].
+  strong Drag &amp; drop is not available on multiple day events for now.
+
   highlight-message(type="tips").
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
@@ -3404,7 +3420,11 @@
       h3.mt-0.pt-0 New Features
       ul
         li
-          h4.mt-2.pt-0 Drag &amp; drop
+          h4.mt-2.pt-0 Events drag &amp; drop
+          p.
+            Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
+            separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
+
         li
           h4.mt-0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
         li
@@ -4420,6 +4440,7 @@ $primary: #42b983;
   h4 {margin: 70px 0 8px;}
   h3 + h4 {margin-top: 20px;}
   h4 a {color: inherit !important;}
+  h5 {font-size: 1.1em;color: #555;margin-top: 0.5em;}
 
   .todo .v-chip__content {padding: 0 3px;}
 
