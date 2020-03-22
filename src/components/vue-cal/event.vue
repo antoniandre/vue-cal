@@ -11,9 +11,9 @@
   @mousedown="onMouseDown($event) /* Don't stop mousedown propagation & trigger cell mousedown */"
   @click="onClick"
   @dblclick="onDblClick"
-  :draggable="vuecal.editEvents.drag && event.draggable && !event.background"
-  @dragstart="vuecal.editEvents.drag && event.draggable && !event.background && onDragStart($event)"
-  @dragend="vuecal.editEvents.drag && event.draggable && !event.background && onDragEnd($event)")
+  :draggable="draggable"
+  @dragstart="draggable && onDragStart($event)"
+  @dragend="draggable && onDragEnd()")
   .vuecal__event-delete(
     v-if="vuecal.editEvents.delete && event.deletable"
     @click.stop="deleteEvent"
@@ -99,8 +99,8 @@ export default {
       this.dnd && this.dnd.eventDragStart(e, this.event)
     },
 
-    onDragEnd (e) {
-      this.dnd && this.dnd.eventDragEnd(e, this.event)
+    onDragEnd () {
+      this.dnd && this.dnd.eventDragEnd(this.event)
     },
 
     onResizeHandleMouseDown () {
@@ -201,6 +201,10 @@ export default {
     // When multiple-day events, a segment is a portion of event spanning on 1 day.
     segment () {
       return (this.event.segments && this.event.segments[this.cellFormattedDate]) || null
+    },
+    draggable () {
+      const { draggable, background, daysCount } = this.event
+      return this.vuecal.editEvents.drag && draggable && !background && daysCount === 1
     },
     resizable () {
       const { view, editEvents, time } = this.vuecal
