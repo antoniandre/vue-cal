@@ -3435,6 +3435,15 @@
           p Refer to the #[span.code editableEvents] option in the #[a(href="#api") API section].
       h3.mt-0.mb-2 Big changes
       ul
+        li.error--text
+          strong In the coming version 3.1:
+          p.
+            Now that Vue Cal has Date prototypes and it is so easy to format a date,
+            the event properties #[span.code startDate] and #[span.code endDate] will be removed
+            and the start and end of event will be exlusively defined through #[span.code start]
+            and #[span.code end]. It will accept both a String and a Javascript Date.#[br]
+            Vue Cal will always return the Date object and not the string, even if you defined it
+            as a string.
         li.
           The #[span.code event-change] emitted event now returns an object containing the
           #[span.code event] and the #[span.code originalEvent].
@@ -3454,6 +3463,11 @@
         li
           h4.mt-3.pt-0 Renamed slot
           p The #[span.code event-renderer] slot is renamed into #[span.code event]
+        li
+          h4.mt-3.pt-0 Huge code refactoring
+          p.
+            Introducing Vue dependency injections, Utils classes, and a couple of improvements on
+            event resize.
 
       h3.mt-0.mb-2 Other noticeable changes
       ul
