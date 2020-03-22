@@ -36,8 +36,9 @@ export default {
 
   methods: {
     selectCell (date, DOMEvent) {
-      date = new Date(date)
-      date.setMinutes(this.utils.cell.minutesAtCursor(DOMEvent).minutes)
+      if (date.getTime() !== this.vuecal.view.selectedDate.getTime()) {
+        this.vuecal.view.selectedDate = date
+      }
       this.utils.cell.selectCell(false, date, DOMEvent)
     },
     cleanupHeading: heading => ({
