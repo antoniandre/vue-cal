@@ -26,9 +26,8 @@
 
 <script>
 export default {
-  inject: ['vuecal', 'utils'],
+  inject: ['vuecal', 'utils', 'view'],
   props: {
-    view: { type: Object, default: () => ({}) },
     transitionDirection: { type: String, default: 'right' },
     weekDays: { type: Array, default: () => [] },
     switchToNarrowerView: { type: Function, default: () => {} }
@@ -36,8 +35,8 @@ export default {
 
   methods: {
     selectCell (date, DOMEvent) {
-      if (date.getTime() !== this.vuecal.view.selectedDate.getTime()) {
-        this.vuecal.view.selectedDate = date
+      if (date.getTime() !== this.view.selectedDate.getTime()) {
+        this.view.selectedDate = date
       }
       this.utils.cell.selectCell(false, date, DOMEvent)
     },

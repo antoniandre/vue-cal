@@ -7,7 +7,7 @@ transition-group.vuecal__cell(
   :style="cellStyles")
   .vuecal__flex.vuecal__cell-content(
     v-for="(split, i) in (splitsCount ? splits : 1)"
-    :key="options.transitions ? `${view}-${data.content}-${i}` : i"
+    :key="options.transitions ? `${view.id}-${data.content}-${i}` : i"
     :class="splitsCount && `vuecal__cell-split ${split.class}${highlightedSplit === split.id ? ' vuecal__cell-split--highlighted' : ''}`"
     :data-split="splitsCount ? split.id : false"
     column
@@ -34,7 +34,7 @@ transition-group.vuecal__cell(
       :select-cell="$event => selectCell($event, true)"
       :split="splitsCount ? split : false")
     .vuecal__cell-events(
-      v-if="eventsCount && (isWeekOrDayView || (view === 'month' && options.eventsOnMonthView))")
+      v-if="eventsCount && (isWeekOrDayView || (view.id === 'month' && options.eventsOnMonthView))")
       event(
         v-for="(event, j) in (splitsCount ? split.events : events)" :key="j"
         :cell-formatted-date="data.formattedDate"
@@ -49,7 +49,7 @@ transition-group.vuecal__cell(
   .vuecal__now-line(
     v-if="timelineVisible"
     :style="`top: ${todaysTimePosition}px`"
-    :key="options.transitions ? `${view}-now-line` : 'now-line'"
+    :key="options.transitions ? `${view.id}-now-line` : 'now-line'"
     :title="vuecal.now.formatTime()")
 </template>
 
@@ -57,7 +57,7 @@ transition-group.vuecal__cell(
 import Event from './event'
 
 export default {
-  inject: ['vuecal', 'utils', 'modules'],
+  inject: ['vuecal', 'utils', 'modules', 'view', 'domEvents'],
   components: { Event },
   props: {
     // Vue-cal main component options (props).
@@ -158,12 +158,12 @@ export default {
       const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target)
       // Unfocus an event if any is focused and clicking on cell outside of an event.
       if (!mouseDownOnEvent && focusAnEvent._eid) {
-        (this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
+        (this.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
       if (this.editEvents.create && this.options.cellClickHold && !mouseDownOnEvent &&
-        ['month', 'week', 'day'].includes(this.view)) {
+        ['month', 'week', 'day'].includes(this.view.id)) {
         clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
@@ -228,12 +228,12 @@ export default {
     isSelected: {
       get () {
         let selected = false
-        const { selectedDate } = this.vuecal.view
+        const { selectedDate } = this.view
 
-        if (this.view === 'years') {
+        if (this.view.id === 'years') {
           selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
         }
-        else if (this.view === 'year') {
+        else if (this.view.id === 'year') {
           selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
             selectedDate.getMonth() === this.data.startDate.getMonth())
         }
@@ -242,26 +242,12 @@ export default {
         return selected
       },
       set (date) {
-        this.vuecal.view.selectedDate = date
+        this.view.selectedDate = date
       }
-    },
-    domEvents: {
-      get () {
-        return this.vuecal.domEvents
-      },
-      set (object) {
-        this.vuecal.domEvents = object
-      }
-    },
-    texts () {
-      return this.vuecal.texts
-    },
-    view () {
-      return this.vuecal.view.id
     },
     // Cache result for performance.
     isWeekOrDayView () {
-      return ['week', 'day'].includes(this.view)
+      return ['week', 'day'].includes(this.view.id)
     },
     transitionDirection () {
       return this.vuecal.transitionDirection
@@ -281,19 +267,19 @@ export default {
       let events = []
 
       // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
-      if (!(['years', 'year'].includes(this.view) && !this.options.eventsCountOnYearView)) {
+      if (!(['years', 'year'].includes(this.view.id) && !this.options.eventsCountOnYearView)) {
         // Means that when vuecal.view.events changes all the cells will be looking up new value. :/
         // Also clone array to prevent modifying original.
-        events = this.vuecal.view.events.slice(0)
+        events = this.view.events.slice(0)
 
-        if (this.view === 'month') {
-          events.push(...this.vuecal.view.outOfScopeEvents)
+        if (this.view.id === 'month') {
+          events.push(...this.view.outOfScopeEvents)
         }
 
         // Only keep events in cell time range.
         events = events.filter(e => this.utils.event.eventInRange(e, cellStart, cellEnd))
 
-        if (this.options.showAllDayEvents && this.view !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
+        if (this.options.showAllDayEvents && this.view.id !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
         // From events in view, filter the ones that are out of `time-from`-`time-to` range in this cell.
         if (this.options.time && this.isWeekOrDayView && !this.allDay) {

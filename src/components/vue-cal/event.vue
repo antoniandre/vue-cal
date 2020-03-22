@@ -18,7 +18,7 @@
     v-if="vuecal.editEvents.delete && event.deletable"
     @click.stop="deleteEvent"
     @touchstart.stop="touchDeleteEvent") {{ vuecal.texts.deleteEvent }}
-  slot(name="event" :event="event" :view="vuecal.view.id")
+  slot(name="event" :event="event" :view="view.id")
   //- Force contenteditable="false" for new events without content.
   .vuecal__event-resize-handle(
     v-if="resizable"
@@ -29,7 +29,7 @@
 
 <script>
 export default {
-  inject: ['vuecal', 'utils', 'modules'],
+  inject: ['vuecal', 'utils', 'modules', 'view', 'domEvents'],
   props: {
     cellFormattedDate: { type: String, default: '' },
     event: { type: Object, default: () => ({}) },
@@ -142,7 +142,7 @@ export default {
 
       // Unfocus previous event if any.
       if (onFocus && onFocus !== this.event._eid) {
-        const event = this.vuecal.view.events.find(e => e._eid === focusAnEvent._eid)
+        const event = this.view.events.find(e => e._eid === focusAnEvent._eid)
         if (event) event.focused = false
       }
 
@@ -157,7 +157,7 @@ export default {
   computed: {
     // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
     eventStyles () {
-      if (this.event.allDay || !this.vuecal.time || !this.event.endTimeMinutes || this.vuecal.view.id === 'month' || this.allDay) return {}
+      if (this.event.allDay || !this.vuecal.time || !this.event.endTimeMinutes || this.view.id === 'month' || this.allDay) return {}
       let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
       let left = (100 / (this.overlaps.length + 1)) * this.eventPosition
 
@@ -207,17 +207,9 @@ export default {
       return this.vuecal.editEvents.drag && draggable && !background && daysCount === 1
     },
     resizable () {
-      const { view, editEvents, time } = this.vuecal
+      const { editEvents, time } = this.vuecal
       return (editEvents.resize && this.event.resizable && time && !this.allDay &&
-        (!this.segment || (this.segment && this.segment.isLastDay)) && view.id !== 'month')
-    },
-    domEvents: {
-      get () {
-        return this.vuecal.domEvents
-      },
-      set (object) {
-        this.vuecal.domEvents = object
-      }
+        (!this.segment || (this.segment && this.segment.isLastDay)) && this.view.id !== 'month')
     },
     // Drag & drop module.
     dnd () {

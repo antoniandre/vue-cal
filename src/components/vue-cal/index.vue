@@ -3,7 +3,7 @@
   vuecal-header(
     :options="$props"
     :edit-events="editEvents"
-    :view-props="{ views, view, weekDaysInHeader }"
+    :view-props="{ views, weekDaysInHeader }"
     :week-days="weekDays"
     :has-splits="hasSplits"
     :day-splits="daySplits"
@@ -78,7 +78,6 @@
               weekdays-headings(
                 v-if="(minCellWidth || (hasSplits && minSplitWidth)) && view.id === 'week'"
                 :transition-direction="transitionDirection"
-                :view="view"
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
@@ -177,7 +176,10 @@ export default {
       previous: this.previous,
       next: this.next,
       switchView: this.switchView,
-      updateSelectedDate: this.updateSelectedDate
+      updateSelectedDate: this.updateSelectedDate,
+      // Objects.
+      view: this.view,
+      domEvents: this.domEvents
     }
   },
   props: {
