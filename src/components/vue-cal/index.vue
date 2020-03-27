@@ -44,6 +44,7 @@
               :edit-events="editEvents"
               :data="cell"
               :all-day="true"
+              :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
               :cell-splits="hasSplits && daySplits || []")
