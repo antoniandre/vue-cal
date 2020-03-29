@@ -189,6 +189,7 @@ export default {
     clickToNavigate: { type: Boolean, default: false },
     dblclickToNavigate: { type: Boolean, default: true },
     defaultView: { type: String, default: 'week' },
+    activeView: { type: String, default: 'week' },
     disableViews: { type: Array, default: () => [] },
     editableEvents: { type: [Boolean, Object], default: false },
     events: { type: Array, default: () => [] },
@@ -370,6 +371,7 @@ export default {
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
+      this.$emit('update:activeView', view)
       this.view.events = []
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
@@ -1419,6 +1421,9 @@ export default {
     },
     selectedDate (date) {
       this.updateSelectedDate(date)
+    },
+    activeView (newVal) {
+      this.switchView(newVal)
     }
   }
 }
