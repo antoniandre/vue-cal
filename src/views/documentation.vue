@@ -1824,7 +1824,7 @@
         v-icon.mr-2 {{ splitsExample.splitDays[1].hide ? 'add' : 'remove' }}
         | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
-  v-card.my-2.ma-auto.main-content
+  v-card.my-2.ma-auto(style="height: 600px")
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
