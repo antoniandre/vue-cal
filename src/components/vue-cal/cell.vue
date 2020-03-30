@@ -401,8 +401,8 @@ export default {
 
   .vuecal--click-to-navigate &:not(&--disabled) {cursor: pointer;}
   .vuecal--view-with-time &,
-  .vuecal--week-view.vuecal--no-time &,
-  .vuecal--day-view.vuecal--no-time & {display: block;}
+  .vuecal--week-view.vuecal--no-time &:not(.vuecal__cell--has-splits),
+  .vuecal--day-view.vuecal--no-time &:not(.vuecal__cell--has-splits) {display: block;}
 
   &.vuecal__cell--has-splits {
     flex-direction: row;
