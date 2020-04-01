@@ -640,8 +640,8 @@
       start: '2018-11-16 10:30',
       end: '2018-11-16 11:30',
       // You can also define event dates with Javascript Date objects:
-      // startDate: new Date(2018, 11 - 1, 16, 10, 30),
-      // endDate: new Date(2018, 11 - 1, 16, 11, 30),
+      // start: new Date(2018, 11 - 1, 16, 10, 30),
+      // end: new Date(2018, 11 - 1, 16, 11, 30),
       title: 'Doctor appointment',
       content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
       class: 'health'
@@ -686,17 +686,14 @@
           &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
           &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
           &lt;v-spacer/&gt;
-          &lt;strong&gt;{{ "\{\{ selectedEvent.startDate && selectedEvent.startDate.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
+          &lt;strong&gt;{{ "\{\{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
         &lt;/v-card-title&gt;
         &lt;v-card-text&gt;
           &lt;p v-html="selectedEvent.contentFull"/&gt;
           &lt;strong&gt;Event details:&lt;/strong&gt;
           &lt;ul&gt;
-            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.startDate && selectedEvent.startDate.formatTime() \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.endDate && selectedEvent.endDate.formatTime() \}\}' }}&lt;/li&gt;
-            &lt;!-- You can also manipulate the `start` &amp; `end` formatted strings.
-            &lt;li&gt;Event starts at: {{ '\{\{ (selectedEvent.start || \'\').substring(11) \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ (selectedEvent.end || \'\').substring(11) \}\}' }}&lt;/li&gt; --&gt;
+            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.start && selectedEvent.start.formatTime() \}\}' }}&lt;/li&gt;
+            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.end && selectedEvent.end.formatTime() \}\}' }}&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/v-card-text&gt;
       &lt;/v-card&gt;
@@ -2020,8 +2017,8 @@
         #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
       li.mt-3.
         To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
-        objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
-        So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].#[br]
+        objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
+        So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
         You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
   p.mb-0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
@@ -2655,10 +2652,10 @@
         .vuecal__event-title.mb-6(v-html="event.title")
         small.vuecal__event-time
           strong.mr-1 Event start:
-          span {{ event.startDate.formatTime('h O\'clock') }}
+          span {{ event.start.formatTime('h O\'clock') }}
           br
           strong.mr-1 Event end:
-          span {{ event.endDate.formatTime('h O\'clock') }}
+          span {{ event.end.formatTime('h O\'clock') }}
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -2677,16 +2674,11 @@
 
         &lt;small class="vuecal__event-time"&gt;
           &lt;!-- Using Vue Cal injected Date prototypes --&gt;
-          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.startDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
-          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.endDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
+          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
+          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
-
-  highlight-message.my-2(type="tips").
-    The #[a(href="#date-prototypes") #[span.code formatTime()] Date prototype] will help you format time easily,
-    but if you prefer you could also extract the time from the formatted date:
-    e.g. #[span.code event.start.substring(11)]
 
   sshpre(language="js" label="Javascript").
     events: [
@@ -3180,8 +3172,8 @@
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
             // Instead of formatted dates, you can also provide Javascript Date objects:
-            // startDate: new Date(2018, 11 - 1, 19, 12, 0),
-            // endDate: new Date(2018, 11 - 1, 19, 14, 0),
+            // start: new Date(2018, 11 - 1, 19, 12, 0),
+            // end: new Date(2018, 11 - 1, 19, 14, 0),
             title: {String}, // Optional.
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
@@ -3231,7 +3223,7 @@
             You can set an event end at #[span.code 24:00] or #[span.code 00:00] (for the next midnight),
             #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
             of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
-            When returned from emitted events, this event #[span.code endDate] will contain a date ending at #[span.code 23:59:59].
+            When returned from emitted events, this event #[span.code end] will contain a date ending at #[span.code 23:59:59].
 
   h2.headline.mt-12.pt-12
     a(href="#date-prototypes") #[strong.code Date] Prototypes
@@ -3812,13 +3804,13 @@
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
         span.headline.text-uppercase {{ selectedEvent.title }}
         v-spacer
-        strong {{ selectedEvent.startDate && selectedEvent.startDate.format('DD/MM/YYYY') }}
+        strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
       v-card-text.py-4
         p(v-html="selectedEvent.contentFull")
         strong Event details:
         ul
-          li Event starts at: {{ selectedEvent.startDate && selectedEvent.startDate.formatTime() }}
-          li Event ends at: {{ selectedEvent.endDate && selectedEvent.endDate.formatTime() }}
+          li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
+          li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
 
   v-dialog(v-model="showEventCreationDialog" :persistent="true" max-width="420")
     v-card
