@@ -301,8 +301,6 @@ export default {
             // So they behave as background events if not in allDay slot.
             // @todo: Do we want this or not?
             const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
-
-            if ((event.startTimeMinutes || event.endTimeMinutes) && !event.allDay) this.utils.event.updateEventPosition(eventToUpdate)
           })
 
           // Sort events in chronological order.

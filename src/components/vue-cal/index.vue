@@ -120,8 +120,8 @@
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="time && !event.allDay && !(view === 'month' && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
-                        | {{ event.startDate.formatTime() }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endDate.formatTime() }}
+                        | {{ event.start.formatTime() }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.end.formatTime() }}
                         small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
@@ -271,8 +271,8 @@ export default {
         split: null,
         segment: null,
         originalEndTimeMinutes: 0,
-        originalEndDate: null,
-        endDate: null,
+        originalEnd: null,
+        end: null,
         startCell: null,
         endCell: null
       },
@@ -523,7 +523,12 @@ export default {
      * @param {Array} events
      */
     addEventsToView (events = []) {
-      const { eventInRange, createEventSegments } = this.utils.event
+      // Destructuring assignment from the line bellow loses the `this` context.
+      // Then vuecal is not accessible from the event utils function.
+      // const { eventInRange, createEventSegments } = this.utils.event
+      const eventInRange = () => this.utils.event.eventInRange
+      const createEventSegments = () => this.utils.event.createEventSegments
+
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
@@ -543,7 +548,7 @@ export default {
       // If we don't display the event on month view (eventsOnMonthView = false) then don't create segments.
       if (['month', 'week', 'day'].includes(id) && !(id === 'month' && !this.eventsOnMonthView)) {
         filteredEvents = filteredEvents.map(e => {
-          return e.daysCount > 1 ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
+          return e.daysCount > 1 ? this.utils.event.createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
         })
       }
 
@@ -607,9 +612,10 @@ export default {
         const segment = event.segments && event.segments[resizeAnEvent.segment]
 
         // Don't allow time above 24 hours.
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, minutesInADay)
+        let newEndTimeMins = Math.min(minutes, minutesInADay)
         // Prevent reducing event duration to less than 1 min so it does not disappear.
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+        newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
 
         // On resize, snap to time every X minutes if the option is on.
         if (this.snapToTime) {
@@ -619,36 +625,34 @@ export default {
 
         if (segment) segment.endTimeMinutes = event.endTimeMinutes
 
-        event.endDate.setHours(
+        event.end.setHours(
           0,
           event.endTimeMinutes,
           event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
           0
         )
-        event.end = `${formatDateLite(event.endDate)} ${formatTimeLite(event.endDate)}`
 
         // Resize events horizontally if resize-x is enabled (add/remove segments).
         if (this.resizeX && this.view.id === 'week') {
-          event.daysCount = countDays(event.startDate, event.endDate)
+          event.daysCount = countDays(event.start, event.end)
           const cells = this.$refs.cells
           const cellWidth = cells.offsetWidth / cells.childElementCount
           const endCell = Math.floor(cursorCoords.x / cellWidth)
 
-          if (!resizeAnEvent.startCell) {
+          if (resizeAnEvent.startCell === null) {
             resizeAnEvent.startCell = endCell - (event.daysCount - 1)
           }
           if (resizeAnEvent.endCell !== endCell) {
             resizeAnEvent.endCell = endCell
 
-            const endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
-            const newDaysCount = countDays(event.startDate, endDate)
+            const newEnd = event.start.addDays(endCell - resizeAnEvent.startCell)
+            const newDaysCount = Math.max(countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
 
             if (newDaysCount !== event.daysCount) {
-              const { addEventSegment, removeEventSegment } = this.utils.event
               // Check that all segments are up to date.
               let lastSegmentFormattedDate = null
-              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
-              else lastSegmentFormattedDate = removeEventSegment(event)
+              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = this.utils.event.addEventSegment(event)
+              else lastSegmentFormattedDate = this.utils.event.removeEventSegment(event)
               resizeAnEvent.segment = lastSegmentFormattedDate
               event.endTimeMinutes += 0.001 // Force updating the current event.
             }
@@ -672,25 +676,23 @@ export default {
       if (resizeAnEvent._eid) {
         this.domEvents.cancelClickEventCreation = true
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
-        const { originalEndDate } = resizeAnEvent
+        const { originalEnd } = resizeAnEvent
 
         // When resizing the endTime changes but the day may change too when resizing horizontally.
         // So compare timestamps instead of only endTimeMinutes.
-        if (event && event.endDate.getTime() !== originalEndDate.getTime()) {
+        if (event && event.end.getTime() !== originalEnd.getTime()) {
           // Update the modified event in the mutable events array.
           const mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
           mutableEvent.endTimeMinutes = event.endTimeMinutes
           mutableEvent.end = event.end
-          mutableEvent.endDate = event.endDate
 
           const cleanEvent = this.cleanupEvent(event)
           const originalEvent = {
             ...this.cleanupEvent(event),
-            endDate: originalEndDate,
-            end: `${originalEndDate.format()} ${originalEndDate.formatTime()}`,
+            end: originalEnd,
             endTimeMinutes: event.originalEndTimeMinutes
           }
-          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEndDate })
+          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd })
           this.$emit('event-change', { event: cleanEvent, originalEvent })
         }
 
@@ -700,7 +702,7 @@ export default {
         resizeAnEvent.split = null
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
-        resizeAnEvent.originalEndDate = null
+        resizeAnEvent.originalEnd = null
         resizeAnEvent.endTimeMinutes = null
         resizeAnEvent.startCell = null
         resizeAnEvent.endCell = null
@@ -794,59 +796,39 @@ export default {
       this.mutableEvents = []
 
       // For each event of the `events` prop, prepare the event for vue-cal:
-      // Populate missing keys: start, startDate, startTimeMinutes, end, endDate, endTimeMinutes, daysCount.
+      // Populate missing keys: start, startDate, startTimeMinutes, end, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // `event.startDate` accepts a Date object, and `event.start` accepts a formatted string.
-        let startDate, startDateF
-        if (event.startDate && event.startDate instanceof Date) {
-          startDate = event.startDate
-          startDateF = formatDateLite(event.startDate)
-        }
-        else if (event.start) {
-          startDate = stringToDate(event.start)
-          startDateF = event.start.split(' ')[0] // Isolate date without time.
-        }
-        const startTimeMinutes = dateToMinutes(startDate)
-        const start = event.start || `${startDateF} ${formatTimeLite(startDate)}`
+        // `event.start` accepts a Date object, or a formatted string, always keep Date.
+        const start = typeof event.start === 'string' ? stringToDate(event.start) : event.start
+        const startDateF = formatDateLite(start)
+        const startTimeMinutes = dateToMinutes(start)
 
-        // `event.endDate` accepts a Date object, and`event.end` accepts a formatted string.
-        let endDate, endDateF
-        if (event.endDate && event.endDate instanceof Date) {
-          endDate = event.endDate
-          endDateF = formatDateLite(event.endDate)
-        }
-        else if (event.end) {
-          endDate = stringToDate(event.end)
-          endDateF = event.end.split(' ')[0] // Isolate date without time.
-        }
-
-        let endTimeMinutes = dateToMinutes(endDate)
-        const end = event.end || `${endDateF} ${formatTimeLite(endDate)}`
+        // `event.end` accepts a Date object or a formatted string, always keep Date.
+        const end = typeof event.end === 'string' ? stringToDate(event.end) : event.end
+        let endDateF = formatDateLite(end)
+        let endTimeMinutes = dateToMinutes(end)
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
-          endDate.setSeconds(-1) // End at 23:59:59.
-          endDateF = formatDateLite(endDate)
+          end.setSeconds(-1) // End at 23:59:59.
+          endDateF = formatDateLite(end)
           endTimeMinutes = minutesInADay
         }
 
         const multipleDays = startDateF !== endDateF
 
-        event = Object.assign({
-          ...this.utils.event.eventDefaults,
+        event = Object.assign({ ...this.utils.event.eventDefaults }, event, {
           // Keep the event ids scoped to this calendar instance.
           _eid: `${this._uid}_${this.eventIdIncrement++}`,
           segments: multipleDays ? {} : null,
           start,
-          startDate,
           startTimeMinutes,
           end,
-          endDate,
           endTimeMinutes,
-          daysCount: multipleDays ? countDays(startDate, endDate) : 1,
+          daysCount: multipleDays ? countDays(start, end) : 1,
           class: event.class
-        }, event)
+        })
 
         this.mutableEvents.push(event)
       })
@@ -888,8 +870,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'segments',
-        'deletable', 'deleting', 'resizable', 'resizing',
+        'segments', 'deletable', 'deleting', 'resizable', 'resizing',
         'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })
