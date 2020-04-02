@@ -377,8 +377,9 @@ export default {
 
       if (!date) {
         date = this.view.selectedDate || this.view.startDate
-        if (view === 'week') date = this.utils.date.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
       }
+
+      if (view === 'week') date = this.utils.date.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
 
       switch (view) {
         case 'years': {
