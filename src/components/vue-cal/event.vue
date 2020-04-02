@@ -162,13 +162,13 @@ export default {
 
       // Top of event.
       let minutesFromTop = startTimeMinutes - this.vuecal.timeFrom
-      let top = Math.max(Math.round(minutesFromTop * this.vuecal.timeCellHeight / this.vuecal.timeStep), 0)
+      const top = Math.max(Math.round(minutesFromTop * this.vuecal.timeCellHeight / this.vuecal.timeStep), 0)
 
       // Bottom of event.
       minutesFromTop = Math.min(endTimeMinutes, this.vuecal.timeTo) - this.vuecal.timeFrom
       const bottom = Math.round(minutesFromTop * this.vuecal.timeCellHeight / this.vuecal.timeStep)
 
-      let height = Math.max(bottom - top, 5) // Min height is 5px.
+      const height = Math.max(bottom - top, 5) // Min height is 5px.
 
       return { top, height }
     },

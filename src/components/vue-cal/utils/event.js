@@ -11,7 +11,7 @@ import Vue from 'vue'
 const defaultEventDuration = 2 // In hours.
 const minutesInADay = 24 * 60 // Don't do the maths every time.
 
-let formatDateLite, stringToDate, formatTimeLite, countDays, datesInSameTimeStep, dateToMinutes
+let formatDateLite, stringToDate, countDays, datesInSameTimeStep, dateToMinutes
 
 // Event overlaps: only for the current view, recreated on view change.
 let _cellOverlaps, _comparisonArray
@@ -51,10 +51,11 @@ export default class EventUtils {
   constructor (vuecal, dateUtils) {
     this._vuecal = vuecal;
 
+    // Destructuring Date Utils class method is ok even if losing the `this` context.
+    // It is agnostic of any context.
     ({
       formatDateLite,
       stringToDate,
-      formatTimeLite,
       countDays,
       datesInSameTimeStep,
       dateToMinutes

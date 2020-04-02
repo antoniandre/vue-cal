@@ -601,7 +601,9 @@ export default {
       const { resizeAnEvent, dragAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
-      const { formatDateLite, formatTimeLite, countDays } = this.utils.date
+      // Destructuring class method loses the `this` context.
+      // const { formatDateLite, countDays } = this.utils.date
+      const { date: ud, event: ue } = this.utils
 
       e.preventDefault()
 
@@ -633,7 +635,7 @@ export default {
 
         // Resize events horizontally if resize-x is enabled (add/remove segments).
         if (this.resizeX && this.view.id === 'week') {
-          event.daysCount = countDays(event.start, event.end)
+          event.daysCount = ud.countDays(event.start, event.end)
           const cells = this.$refs.cells
           const cellWidth = cells.offsetWidth / cells.childElementCount
           const endCell = Math.floor(cursorCoords.x / cellWidth)
@@ -645,13 +647,13 @@ export default {
             resizeAnEvent.endCell = endCell
 
             const newEnd = event.start.addDays(endCell - resizeAnEvent.startCell)
-            const newDaysCount = Math.max(countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
+            const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
 
             if (newDaysCount !== event.daysCount) {
               // Check that all segments are up to date.
               let lastSegmentFormattedDate = null
-              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = this.utils.event.addEventSegment(event)
-              else lastSegmentFormattedDate = this.utils.event.removeEventSegment(event)
+              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = ue.addEventSegment(event)
+              else lastSegmentFormattedDate = ue.removeEventSegment(event)
               resizeAnEvent.segment = lastSegmentFormattedDate
               event.endTimeMinutes += 0.001 // Force updating the current event.
             }
@@ -791,7 +793,9 @@ export default {
      *        items to the array. (Cannot mutate props)
      */
     updateMutableEvents () {
-      const { formatDateLite, formatTimeLite, stringToDate, dateToMinutes, countDays } = this.utils.date
+      // Destructuring class method loses the `this` context.
+      // const { formatDateLite, stringToDate, dateToMinutes, countDays } = this.utils.date
+      const ud = this.utils.date
       this.mutableEvents = []
 
       // For each event of the `events` prop, prepare the event for vue-cal:
@@ -799,19 +803,19 @@ export default {
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
         // `event.start` accepts a Date object, or a formatted string, always keep Date.
-        const start = typeof event.start === 'string' ? stringToDate(event.start) : event.start
-        const startDateF = formatDateLite(start)
-        const startTimeMinutes = dateToMinutes(start)
+        const start = typeof event.start === 'string' ? ud.stringToDate(event.start) : event.start
+        const startDateF = ud.formatDateLite(start)
+        const startTimeMinutes = ud.dateToMinutes(start)
 
         // `event.end` accepts a Date object or a formatted string, always keep Date.
-        const end = typeof event.end === 'string' ? stringToDate(event.end) : event.end
-        let endDateF = formatDateLite(end)
-        let endTimeMinutes = dateToMinutes(end)
+        const end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
+        let endDateF = ud.formatDateLite(end)
+        let endTimeMinutes = ud.dateToMinutes(end)
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
           end.setSeconds(-1) // End at 23:59:59.
-          endDateF = formatDateLite(end)
+          endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
         }
 
@@ -825,7 +829,7 @@ export default {
           startTimeMinutes,
           end,
           endTimeMinutes,
-          daysCount: multipleDays ? countDays(start, end) : 1,
+          daysCount: multipleDays ? ud.countDays(start, end) : 1,
           class: event.class
         })
 
