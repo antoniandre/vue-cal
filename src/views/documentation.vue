@@ -3241,27 +3241,27 @@
     li.mt-3
       code.mr-2 .addDays(days)
       | Adds days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `days` is an integer.
+      | `#[span.code days]` is an integer.
     li.mt-3
       code.mr-2 .subtractDays(days)
       | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `days` is an integer.
+      | `#[span.code days]` is an integer.
     li.mt-3
       code.mr-2 .addHours(hours)
       | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `hours` is an integer.
+      | `#[span.code hours]` is an integer.
     li.mt-3
       code.mr-2 .subtractHours(hours)
       | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `hours` is an integer.
+      | `#[span.code hours]` is an integer.
     li.mt-3
       code.mr-2 .addMinutes(minutes)
       | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `minutes` is an integer.
+      | `#[span.code minutes]` is an integer.
     li.mt-3
       code.mr-2 .subtractMinutes(minutes)
       | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `minutes` is an integer.
+      | `#[span.code minutes]` is an integer.
     li.mt-3
       code.mr-2 .getWeek()
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
@@ -3400,8 +3400,9 @@
     highlight-message(type="warning").
       The event properties #[span.code startDate] and #[span.code endDate] have been merged into
       #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
-      #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string.]
-    | Fixed multiple day events resizing x and y axis.
+      #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
+      but Vue Cal offers Date prototype functions to easily format the date how you want.
+    | Fixed multiple day events resizing on x and y axis.
   div.mt-4
     strong Version 3.0
     h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
