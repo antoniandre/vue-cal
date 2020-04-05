@@ -50,7 +50,7 @@ transition-group.vuecal__cell(
     v-if="timelineVisible"
     :style="`top: ${todaysTimePosition}px`"
     :key="options.transitions ? `${view.id}-now-line` : 'now-line'"
-    :title="vuecal.now.formatTime()")
+    :title="utils.date.formatTime(vuecal.now)")
 </template>
 
 <script>
