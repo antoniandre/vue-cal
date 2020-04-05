@@ -671,6 +671,8 @@ export default {
             }
           }
         }
+
+        this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
       }
     },
 
