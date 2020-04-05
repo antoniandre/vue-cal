@@ -389,11 +389,7 @@ export default {
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
       this.view.lastCellDate = null // For month view, if filling cells after current month.
 
-      if (!date) {
-        date = this.view.selectedDate || this.view.startDate
-      }
-
-      if (view === 'week') date = ud.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
+      if (!date) date = this.view.selectedDate || this.view.startDate
 
       switch (view) {
         case 'years': {
@@ -450,6 +446,7 @@ export default {
           break
         }
         case 'week': {
+          date = ud.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
           const weekDaysCount = this.hideWeekends ? 5 : 7
           this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? ud.addDays(date, 1) : date
           this.view.startDate.setHours(0, 0, 0, 0)
