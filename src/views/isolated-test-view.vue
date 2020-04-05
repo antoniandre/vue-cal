@@ -1,37 +1,12 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div
-  v-layout(style="height: 350px")
-    div
-      .external-event(
-        v-for="(item, i) in draggables"
-        :key="i"
-        draggable="true"
-        @dragstart="onDragStart($event, item)")
-          strong.mr-2 {{ item.title }}
-          | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
-    vue-cal.ml-2.mr-1.vuecal--blue-theme(
-      small
-      hide-view-selector
-      hide-weekends
-      :disable-views="['years', 'year', 'month', 'day']"
-      :time-from="9 * 60"
-      :time-to="18 * 60"
-      :selected-date="selectedDate"
-      :events="events"
-      editable-events
-      @event-drop="onEventDrop")
-    vue-cal.ml-1.vuecal--green-theme(
-      small
-      hide-view-selector
-      hide-weekends
-      :disable-views="['years', 'year', 'month', 'day']"
-      :time-from="9 * 60"
-      :time-to="18 * 60"
-      :selected-date="selectedDate"
-      :events="events"
-      editable-events
-      @event-drop="onEventDrop")
+  vue-cal.ml-2.mr-1.vuecal--blue-theme(
+    :disable-views="['years', 'year', 'month', 'day']"
+    :selected-date="selectedDate"
+    :events="events"
+    editable-events
+    @event-drop="onEventDrop")
 </template>
 
 <script>
@@ -62,20 +37,20 @@ export default {
       }
     ],
     events: [
-      // {
-      //   startDate: now.subtractDays(1),
-      //   endDate: now.addDays(1),
-      //   title: 'Event'
-      // },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
+        start: now.subtractDays(1),
+        end: now.addDays(1),
         title: 'Event'
       },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
-        title: 'Event'
+        start: new Date(new Date(now).setHours(1, 0, 0)),
+        end: new Date(new Date(now).setHours(4, 0, 0)),
+        title: 'Event 1'
+      },
+      {
+        start: new Date(new Date(now).setHours(3, 0, 0)),
+        end: new Date(new Date(now).setHours(5, 0, 0)),
+        title: 'Event 2'
       }
     ]
   }),
@@ -99,18 +74,10 @@ export default {
 </script>
 
 <style lang="scss">
-.vuecal {flex-basis: 0 !important;}
+.vuecal {max-height: 65vh;}
 .vuecal__event {
   background-color: rgba(160, 220, 255, 0.5);
   border: 1px solid rgba(0, 100, 150, 0.15);
-}
-
-.external-event {
-  background-color: rgba(160, 220, 255, 0.5);
-  border: 1px solid rgba(0, 100, 150, 0.15);
-  width: 13em;
-  margin-bottom: 0.5em;
-  padding: 0.2em 0.4em;
 }
 
 .v-application--wrap {min-height: 0;}

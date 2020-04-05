@@ -2157,18 +2157,6 @@
         p.
           Will return the time (in minutes) at the cursor position when a DOM event occurs.
           `e` is the DOM event.
-      li
-        code formatDate(date, format = 'YYYY-MM-DD')
-        p.
-          Will return a string with formatted date (and time if given) using the loaded locale.#[br]
-          For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
-          in the #[a(href="#api") API section].
-      li
-        code formatTime(time, format = 'HH:mm' | 'h:mm{am}' if `twelve-hour`)
-        p.
-          Will return a string with formatted time using the loaded locale.#[br]
-          For the formatting syntax, refer to the
-          #[a(href="#time-format") #[span.code timeFormat] option] in the API section.
 
     strong Useful #[span.code Date] prototypes
     p.
