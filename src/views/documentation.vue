@@ -48,9 +48,9 @@
       todo-list-item Hide particular weekdays
       todo-list-item Optional week number
       todo-list-item Date prototypes
+      todo-list-item Business hours
 
     .mb-2 Current backlog
-    todo-list-item Business hours
     todo-list-item Drag &amp; drop events
     todo-list-item Resize events snap to time
     todo-list-item Drag events snap to time

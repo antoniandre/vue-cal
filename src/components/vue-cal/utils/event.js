@@ -49,7 +49,7 @@ export default class EventUtils {
   }
 
   constructor (vuecal, dateUtils) {
-    this._vuecal = vuecal;
+    this._vuecal = vuecal
     ud = dateUtils
   }
 
