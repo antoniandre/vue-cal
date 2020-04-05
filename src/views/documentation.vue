@@ -2743,6 +2743,7 @@
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
     onEventCreate:          [Function],        default: null
+    disableDatePrototypes:  [Boolean],         default: false
 
   ul.pl-0.api-options
     li
@@ -3212,6 +3213,12 @@
             #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
             of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
             When returned from emitted events, this event #[span.code end] will contain a date ending at #[span.code 23:59:59].
+    li
+      code.mr-2 disableDatePrototypes
+      span.code [Boolean], default: false
+      p.
+        If you really don't want the Date prototypes to be added, you can disable them with this option.#[br]
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 
   h2.headline.mt-12.pt-12
     a(href="#date-prototypes") #[strong.code Date] Prototypes
@@ -3318,6 +3325,10 @@
       li.mt-4.
         The Date functions are added when Vue Cal loads, you can always check if you have it before you use it:#[br]
         #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
+      li.mt-4.
+        If you really don't want the Date prototypes to be added, you can disable them with this option:
+        #[span.code.black--text disable-date-prototypes].#[br]
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 
   h2.headline.mt-12.pt-12
     a(href="#css-notes") CSS Notes
@@ -3390,7 +3401,9 @@
       #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
       #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
       but Vue Cal offers Date prototype functions to easily format the date how you want.
-    | Fixed multiple day events resizing on x and y axis.
+    ul
+      li Fixed multiple day events resizing on x and y axis.
+      li Allow disabling Date prototypes
   div.mt-4
     strong Version 3.0
     h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
