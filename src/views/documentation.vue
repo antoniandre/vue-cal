@@ -1993,6 +1993,17 @@
         li #[span.code event], the calendar event object that was resized
         li #[span.code oldDate], the Javascript Date the event was ending at before resize
     li.mt-2
+      code.mr-1 event-resizing
+      span.grey--text Fired repeatedly while resizing
+      | #[br]For performance while dragging, returns a lighter object containing:
+      ul
+        li #[span.code _eid], the calendar event internal id.
+        li #[span.code end], the calendar event new end Date.
+        li #[span.code endTimeMinutes], the calendar event new end time in minutes.
+      highlight-message(type="warning").
+        You should only listen to this event if you have no choice. In most of cases you should
+        listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
+    li.mt-2
       code.mr-1 event-drop
       | - returns an object containing:
       ul
@@ -3404,6 +3415,7 @@
     ul
       li Fixed multiple day events resizing on x and y axis.
       li Allow disabling Date prototypes
+      li Emit an #[span.code event-resizing] repeatedly while resizing an event
   div.mt-4
     strong Version 3.0
     h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
