@@ -6,25 +6,6 @@
  * Meantime keep `_` for private.
  */
 
-// @todo:
-// OK - emit the `event-drop` & `event-change` events on event drop
-// OK - handle drag and drop and splits / highlight splits separately
-// OK - add split in emitted event
-// OK - check that event.draggable = false prevents dragging
-// OK - check edge and IE
-// OK - also go to narrower view from month view
-// OK - Fix drag image not visible on Safari
-// OK - Support drag over today button
-// OK - drop an event that would start before last midnight
-// OK - Prevent dragging background events
-// OK - Allow dragging timeless events
-// OK - Fix event deletion
-// OK - Only trigger view change if it changed
-// OK - Add option to snap to time on event drop
-// OK - add javadoc
-// OK - modularize this file
-//    - Add option to copy or move an event from a cal to another?
-
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -201,9 +182,8 @@ export const DragAndDrop = class {
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
-   * @param {Date} cellDate The hovered cell starting date.
    */
-  cellDragLeave (e, cell, cellDate) {
+  cellDragLeave (e, cell) {
     e.preventDefault()
 
     if (e.currentTarget.contains(e.relatedTarget)) return
