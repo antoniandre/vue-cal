@@ -888,7 +888,8 @@
     ul
       li.
         You can override the #[span.code editable-events] ability in each events with the event
-        attributes #[span.code deletable: false], #[span.code draggable: false] &amp; #[span.code resizable: false].
+        attributes #[span.code titleEditable: false], #[span.code deletable: false],
+        #[span.code draggable: false] &amp; #[span.code resizable: false].
       li.
         By default the delete button only appears at the top of the event with a set height (1.4em).
         If you want a full-height delete button like in this example, you can apply the CSS class
@@ -3405,6 +3406,7 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
   div
     strong Version 3.1.0
     highlight-message(type="warning").
