@@ -2,15 +2,71 @@
 //- This is an isolated test view. Just for testing purpose.
 div
   vue-cal.ml-2.mr-1.vuecal--blue-theme(
-    :disable-views="['years', 'year', 'month', 'day']"
-    :selected-date="selectedDate"
+    selected-date="2019-10-29"
     :events="events"
     editable-events
-    @event-drop="onEventDrop")
+    :disable-views="['years', 'year']"
+    :time-from="8 * 60"
+    :time-to="17 * 60"
+    hide-weekends
+    @ready="fetchEvents"
+    @view-change="fetchEvents")
 </template>
 
 <script>
 import VueCal from '@/components/vue-cal'
+
+// Simulating 3 arrays of events coming from an API,
+// one array for week 44, one for week 45, one for week 46 (week partinioning for convenience).
+// If view changes to month view, return all the events of the 3 weeks.
+const events = {
+  44: [
+    {
+      title: 'Event 1',
+      start: '2019-10-28 10:00',
+      end: '2019-10-28 12:00'
+    },
+    {
+      title: 'Event 2',
+      start: '2019-10-28 11:00',
+      end: '2019-10-28 12:30'
+    }
+  ],
+  45: [
+    {
+      title: 'Event 3',
+      start: '2019-11-05 10:00',
+      end: '2019-11-05 12:00'
+    },
+    {
+      title: 'Event 4',
+      start: '2019-11-06 11:00',
+      end: '2019-11-06 12:30'
+    }
+  ],
+  46: [
+    {
+      title: 'Event 5',
+      start: '2019-11-13 10:00',
+      end: '2019-11-13 12:00'
+    },
+    {
+      title: 'Event 6',
+      start: '2019-11-13 11:00',
+      end: '2019-11-13 12:30'
+    },
+    {
+      title: 'Event 7',
+      start: '2019-11-15 10:00',
+      end: '2019-11-15 12:00'
+    },
+    {
+      title: 'Event 8',
+      start: '2019-11-15 11:00',
+      end: '2019-11-15 12:30'
+    }
+  ]
+}
 
 const now = new Date()
 export default {
@@ -37,6 +93,29 @@ export default {
   }),
 
   methods: {
+    fetchEvents ({ view, startDate, endDate, week }) {
+      console.log('Fetching events', { view, startDate, endDate, week })
+
+      // Do an ajax call here with the given startDate & endDate.
+      // Your API should return an array of events for this date range.
+      // Here we pretend an API call with a Promise and the setTimeout simulates the payload time.
+      new Promise((resolve, reject) => { setTimeout(resolve, 400) })
+        .then(() => {
+          switch (view) {
+            case 'week':
+              // If week view return the current week from API.
+              this.events = events[week]
+              break
+            case 'month':
+            case 'day':
+              // If `month` or `day` view, return all the events from API.
+              // (But your API should rather return events only for the given date range)
+              this.events = [...events[44], ...events[45], ...events[46]]
+              break
+          }
+        })
+    },
+
     log (params) {
       console.log(params)
     },
