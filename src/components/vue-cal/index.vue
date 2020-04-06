@@ -51,7 +51,7 @@
               template(v-slot:event="{ event, view }")
                 slot(name="event" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
-                    v-if="editEvents.title && event.title"
+                    v-if="editEvents.title && event.title && event.titleEditable"
                     contenteditable
                     @blur="onEventTitleBlur($event, event)"
                     v-html="event.title")
@@ -114,7 +114,7 @@
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
-                        v-if="editEvents.title && event.title"
+                        v-if="editEvents.title && event.title && event.titleEditable"
                         contenteditable
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
@@ -885,7 +885,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'segments', 'deletable', 'deleting', 'resizable', 'resizing',
+        'segments', 'deletable', 'deleting', 'titleEditable', 'resizable', 'resizing',
         'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })

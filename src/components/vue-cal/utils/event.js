@@ -39,6 +39,7 @@ export default class EventUtils {
     daysCount: 1,
     deletable: true,
     deleting: false,
+    titleEditable: true,
     resizable: true,
     resizing: false,
     draggable: true,
