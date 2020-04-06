@@ -17,25 +17,6 @@ export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
-    draggables: [
-      {
-        id: 1,
-        title: 'Ext. Event 1',
-        content: 'content 1',
-        duration: 60
-      },
-      {
-        id: 2,
-        title: 'Ext. Event 2',
-        content: 'content 2',
-        duration: 30
-      },
-      {
-        id: 3,
-        title: 'Ext. Event 3',
-        content: 'content 3'
-      }
-    ],
     events: [
       {
         start: now.subtractDays(1),
