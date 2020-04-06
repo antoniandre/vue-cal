@@ -240,25 +240,31 @@ export const DragAndDrop = class {
     const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
     let event, addToView
 
-    // If the event is not coming from this Vue Cal it means that we are accepting a new event.
-    // So create the event in this Vue Cal.
-    if (dragging.fromVueCal !== this._vuecal._uid) {
+    // Helper method to create a new event from transfer data
+    const createDraggedEvent = () => {
       // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
       // dropping to another calendar then back to the original place.
       const { _eid, start, end, duration, ...cleanTransferData } = transferData
       // Note: createAnEvent adds the event to the view.
       event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split })
     }
-    else {
-      // Find the dragged event from its _eid in the view or mutableEvents array.
+
+    // If the event is not coming from this Vue Cal it means that we are accepting a new event.
+    // So create the event in this Vue Cal.
+    if (dragging.fromVueCal !== this._vuecal._uid) {
+      createDraggedEvent()
+    }
+    if (!event) {
+      // Find the dragged event from its _eid in the view array.
       // If dragging the event to another day, the event is not in the view array but in the
       // mutableEvents one.
       event = this._vuecal.view.events.find(evt => evt._eid === dragging._eid)
-
-      if (!event) {
-        event = this._vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
-        addToView = true
-      }
+    }
+    if (!event) {
+      // Find the dragged event from its _eid in the mutable events array
+      // or create a new one if it's not found.
+      event = this._vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
+      event ? addToView = true : createDraggedEvent()
     }
 
     const { start: oldDate, split: oldSplit } = event
