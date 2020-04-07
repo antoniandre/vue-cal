@@ -387,7 +387,7 @@
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale" /&gt;
   highlight-message(type="warning") Don't forget to import the locale file you want as follows:
-  sshpre(language="js" label="Javascript").
+  sshpre(language="js" label="Javascript" reactive).
     // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/i18n/{{ locale }}.js'
