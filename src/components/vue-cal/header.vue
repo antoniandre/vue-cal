@@ -102,11 +102,8 @@ export default {
       }
     },
     broaderView () {
-      let views = Object.keys(this.viewProps.views)
-      views = views.slice(0, views.indexOf(this.view.id))
-      views.reverse()
-
-      return views.find(v => this.viewProps.views[v].enabled)
+      const { enabledViews } = this.vuecal
+      return enabledViews[enabledViews.indexOf(this.view.id) - 1]
     },
     // Drag & drop module.
     dnd () {

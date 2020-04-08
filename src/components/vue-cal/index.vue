@@ -194,7 +194,6 @@ export default {
     cellContextmenu: { type: Boolean, default: false },
     clickToNavigate: { type: Boolean, default: false },
     dblclickToNavigate: { type: Boolean, default: true },
-    defaultView: { type: String, default: 'week' },
     disableDatePrototypes: { type: Boolean, default: false },
     disableViews: { type: Array, default: () => [] },
     editableEvents: { type: [Boolean, Object], default: false },
@@ -360,11 +359,7 @@ export default {
      */
     switchToNarrowerView (date = null) {
       this.transitionDirection = 'right'
-
-      let views = Object.keys(this.views)
-      views = views.slice(views.indexOf(this.view.id) + 1)
-      const view = views.find(v => this.views[v].enabled)
-
+      const view = this.enabledViews[this.enabledViews.indexOf(this.view.id) + 1]
       if (view) this.switchView(view, date)
     },
 
@@ -381,7 +376,7 @@ export default {
       const ud = this.utils.date
 
       if (this.transitions && fromViewSelector) {
-        const views = Object.keys(this.views)
+        const views = this.enabledViews
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
@@ -1014,11 +1009,11 @@ export default {
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
-    this.view.id = this.defaultView
+    this.view.id = this.activeView
     if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
       this.view.selectedDate = new Date()
-      this.switchView(this.defaultView)
+      this.switchView(this.activeView)
     }
 
     // Timers are expensive, this should only trigger on demand.
@@ -1105,6 +1100,9 @@ export default {
         week: { label: this.texts.week, enabled: !this.disableViews.includes('week') },
         day: { label: this.texts.day, enabled: !this.disableViews.includes('day') }
       }
+    },
+    enabledViews () {
+      return Object.keys(this.views).filter(view => this.views[view].enabled)
     },
     hasTimeColumn () {
       return this.time && ['week', 'day'].includes(this.view.id)

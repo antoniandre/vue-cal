@@ -309,7 +309,8 @@ export const DragAndDrop = class {
         clearInterval(pressPrevOrNextInterval)
         let viewId
         if (this._vuecal.view.id.includes('year')) {
-          viewId = Object.entries(this._vuecal.views).find(([vid, obj]) => obj.enabled && !vid.includes('year'))[0]
+          // If hovering today from a year or years view go to narrower view from month view.
+          viewId = this._vuecal.enabledViews.filter(view => !view.includes('year'))[0]
         }
         this._vuecal.switchView(viewId || this._vuecal.view.id, new Date(new Date().setHours(0, 0, 0, 0)), true)
       }
