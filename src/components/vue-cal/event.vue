@@ -35,6 +35,8 @@ export default {
     event: { type: Object, default: () => ({}) },
     cellEvents: { type: Array, default: () => [] },
     overlaps: { type: Array, default: () => [] },
+    // If multiple simultaneous events, the events are placed from left to right from the
+    // one starting first to the last. (See utils/event.js > checkCellOverlappingEvents)
     eventPosition: { type: Number, default: 0 },
     overlapsStreak: { type: Number, default: 0 },
     allDay: { type: Boolean, default: false } // Is the event displayed in the all-day bar.
@@ -109,8 +111,8 @@ export default {
         _eid: this.event._eid,
         start: (this.segment || this.event).start,
         split: this.event.split || null,
-        segment: !!this.segment && this.segment.start,
-        originalEndDate: new Date((this.segment || this.event).endDate),
+        segment: !!this.segment && this.utils.date.formatDateLite(this.segment.start),
+        originalEnd: new Date((this.segment || this.event).end),
         originalEndTimeMinutes: this.event.endTimeMinutes
       })
 
@@ -155,7 +157,22 @@ export default {
   },
 
   computed: {
-    // Don't rely on global variables otherwise whenever it would change all the events would be redrawn.
+    eventDimensions () {
+      const { startTimeMinutes, endTimeMinutes } = this.segment || this.event
+
+      // Top of event.
+      let minutesFromTop = startTimeMinutes - this.vuecal.timeFrom
+      const top = Math.max(Math.round(minutesFromTop * this.vuecal.timeCellHeight / this.vuecal.timeStep), 0)
+
+      // Bottom of event.
+      minutesFromTop = Math.min(endTimeMinutes, this.vuecal.timeTo) - this.vuecal.timeFrom
+      const bottom = Math.round(minutesFromTop * this.vuecal.timeCellHeight / this.vuecal.timeStep)
+
+      const height = Math.max(bottom - top, 5) // Min height is 5px.
+
+      return { top, height }
+    },
+
     eventStyles () {
       if (this.event.allDay || !this.vuecal.time || !this.event.endTimeMinutes || this.view.id === 'month' || this.allDay) return {}
       let width = 100 / Math.min(this.overlaps.length + 1, this.overlapsStreak)
@@ -166,9 +183,11 @@ export default {
         left = ((100 - this.vuecal.minEventWidth) / this.overlaps.length) * this.eventPosition
       }
 
+      const { top, height } = this.eventDimensions
+
       return {
-        top: `${(this.segment || this.event).top}px`,
-        height: `${(this.segment || this.event).height}px`,
+        top: `${top}px`,
+        height: `${height}px`,
         width: `${width}%`,
         left: (this.event.left && `${this.event.left}px`) || `${left}%`
       }
@@ -179,7 +198,7 @@ export default {
       const { isFirstDay, isLastDay } = this.segment || {}
 
       return {
-        [this.event.class]: true,
+        [this.event.class]: !!this.event.class,
         'vuecal__event--focus': this.event.focused,
         'vuecal__event--resizing': this.event.resizing,
         'vuecal__event--background': this.event.background,
@@ -230,6 +249,9 @@ export default {
   z-index: 1;
   transition: box-shadow 0.3s, left 0.3s, width 0.3s;
   overflow: hidden;// For sliding delete button.
+
+  // If nothing is shown inside, still make the event visible.
+  .vuecal--no-time & {min-height: 8px;}
 
   .vuecal:not(.vuecal--dragging-event) &:hover {z-index: 2;}
 

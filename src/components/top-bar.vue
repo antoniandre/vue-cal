@@ -20,7 +20,6 @@
           v-list-item(href="#api" v-scroll-to="'#api'") API
           v-list-item(href="#date-prototypes" v-scroll-to="'#date-prototypes'")
             | #[span.code.mr-2 Date] prototypes
-            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#css-notes" v-scroll-to="'#css-notes'") CSS notes
           v-list-item(href="#release-notes" v-scroll-to="'#release-notes'") Release notes
       v-menu(offset-y open-on-hover left attach transition="slide-y-transition")

@@ -1,86 +1,121 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div
-  v-layout(style="height: 350px")
-    div
-      .external-event(
-        v-for="(item, i) in draggables"
-        :key="i"
-        draggable="true"
-        @dragstart="onDragStart($event, item)")
-          strong.mr-2 {{ item.title }}
-          | ({{ item.duration ? `${item.duration} min` : 'no duration' }})
-    vue-cal.ml-2.mr-1.vuecal--blue-theme(
-      small
-      hide-view-selector
-      hide-weekends
-      :disable-views="['years', 'year', 'month', 'day']"
-      :time-from="9 * 60"
-      :time-to="18 * 60"
-      :selected-date="selectedDate"
-      :events="events"
-      editable-events
-      @event-drop="onEventDrop")
-    vue-cal.ml-1.vuecal--green-theme(
-      small
-      hide-view-selector
-      hide-weekends
-      :disable-views="['years', 'year', 'month', 'day']"
-      :time-from="9 * 60"
-      :time-to="18 * 60"
-      :selected-date="selectedDate"
-      :events="events"
-      editable-events
-      @event-drop="onEventDrop")
+  vue-cal.ml-2.mr-1.vuecal--blue-theme(
+    selected-date="2019-10-29"
+    :events="events"
+    editable-events
+    :disable-views="['years', 'year']"
+    :time-from="8 * 60"
+    :time-to="17 * 60"
+    hide-weekends
+    @ready="fetchEvents"
+    @view-change="fetchEvents")
 </template>
 
 <script>
 import VueCal from '@/components/vue-cal'
+
+// Simulating 3 arrays of events coming from an API,
+// one array for week 44, one for week 45, one for week 46 (week partinioning for convenience).
+// If view changes to month view, return all the events of the 3 weeks.
+const events = {
+  44: [
+    {
+      title: 'Event 1',
+      start: '2019-10-28 10:00',
+      end: '2019-10-28 12:00'
+    },
+    {
+      title: 'Event 2',
+      start: '2019-10-28 11:00',
+      end: '2019-10-28 12:30'
+    }
+  ],
+  45: [
+    {
+      title: 'Event 3',
+      start: '2019-11-05 10:00',
+      end: '2019-11-05 12:00'
+    },
+    {
+      title: 'Event 4',
+      start: '2019-11-06 11:00',
+      end: '2019-11-06 12:30'
+    }
+  ],
+  46: [
+    {
+      title: 'Event 5',
+      start: '2019-11-13 10:00',
+      end: '2019-11-13 12:00'
+    },
+    {
+      title: 'Event 6',
+      start: '2019-11-13 11:00',
+      end: '2019-11-13 12:30'
+    },
+    {
+      title: 'Event 7',
+      start: '2019-11-15 10:00',
+      end: '2019-11-15 12:00'
+    },
+    {
+      title: 'Event 8',
+      start: '2019-11-15 11:00',
+      end: '2019-11-15 12:30'
+    }
+  ]
+}
 
 const now = new Date()
 export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
-    draggables: [
-      {
-        id: 1,
-        title: 'Ext. Event 1',
-        content: 'content 1',
-        duration: 60
-      },
-      {
-        id: 2,
-        title: 'Ext. Event 2',
-        content: 'content 2',
-        duration: 30
-      },
-      {
-        id: 3,
-        title: 'Ext. Event 3',
-        content: 'content 3'
-      }
-    ],
     events: [
-      // {
-      //   startDate: now.subtractDays(1),
-      //   endDate: now.addDays(1),
-      //   title: 'Event'
-      // },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
+        start: now.subtractDays(1),
+        end: now.addDays(1),
         title: 'Event'
       },
       {
-        startDate: new Date(new Date(now).setHours(1, 0, 0)),
-        endDate: new Date(new Date(now).setHours(3, 0, 0)),
-        title: 'Event'
+        start: new Date(new Date(now).setHours(1, 0, 0)),
+        end: new Date(new Date(now).setHours(4, 0, 0)),
+        title: 'Event 1'
+      },
+      {
+        start: new Date(new Date(now).setHours(3, 0, 0)),
+        end: new Date(new Date(now).setHours(5, 0, 0)),
+        title: 'Event 2'
       }
     ]
   }),
 
   methods: {
+    fetchEvents ({ view, startDate, endDate, week }) {
+      console.log('Fetching events', { view, startDate, endDate, week })
+
+      // Do an ajax call here with the given startDate & endDate.
+      // Your API should return an array of events for this date range.
+      // Here we pretend an API call with a Promise and the setTimeout simulates the payload time.
+      new Promise((resolve, reject) => { setTimeout(resolve, 400) })
+        .then(() => {
+          switch (view) {
+            case 'week':
+              // If week view return the current week from API.
+              this.events = events[week]
+              break
+            case 'month':
+            case 'day':
+              // If `month` or `day` view, return all the events from API.
+              // (But your API should rather return events only for the given date range)
+              this.events = [...events[44], ...events[45], ...events[46]]
+              break
+          }
+        })
+    },
+
     log (params) {
       console.log(params)
     },
@@ -99,18 +134,10 @@ export default {
 </script>
 
 <style lang="scss">
-.vuecal {flex-basis: 0 !important;}
+.vuecal {max-height: 65vh;}
 .vuecal__event {
   background-color: rgba(160, 220, 255, 0.5);
   border: 1px solid rgba(0, 100, 150, 0.15);
-}
-
-.external-event {
-  background-color: rgba(160, 220, 255, 0.5);
-  border: 1px solid rgba(0, 100, 150, 0.15);
-  width: 13em;
-  margin-bottom: 0.5em;
-  padding: 0.2em 0.4em;
 }
 
 .v-application--wrap {min-height: 0;}

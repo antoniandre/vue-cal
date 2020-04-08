@@ -48,9 +48,9 @@
       todo-list-item Hide particular weekdays
       todo-list-item Optional week number
       todo-list-item Date prototypes
+      todo-list-item Business hours
 
     .mb-2 Current backlog
-    todo-list-item Business hours
     todo-list-item Drag &amp; drop events
     todo-list-item Resize events snap to time
     todo-list-item Drag events snap to time
@@ -387,7 +387,7 @@
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
     &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale" /&gt;
   highlight-message(type="warning") Don't forget to import the locale file you want as follows:
-  sshpre(language="js" label="Javascript").
+  sshpre(language="js" label="Javascript" reactive).
     // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/i18n/{{ locale }}.js'
@@ -640,8 +640,8 @@
       start: '2018-11-16 10:30',
       end: '2018-11-16 11:30',
       // You can also define event dates with Javascript Date objects:
-      // startDate: new Date(2018, 11 - 1, 16, 10, 30),
-      // endDate: new Date(2018, 11 - 1, 16, 11, 30),
+      // start: new Date(2018, 11 - 1, 16, 10, 30),
+      // end: new Date(2018, 11 - 1, 16, 11, 30),
       title: 'Doctor appointment',
       content: '&lt;i class="v-icon material-icons"&gt;local_hospital&lt;/i&gt;',
       class: 'health'
@@ -686,17 +686,14 @@
           &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
           &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
           &lt;v-spacer/&gt;
-          &lt;strong&gt;{{ "\{\{ selectedEvent.startDate && selectedEvent.startDate.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
+          &lt;strong&gt;{{ "\{\{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
         &lt;/v-card-title&gt;
         &lt;v-card-text&gt;
           &lt;p v-html="selectedEvent.contentFull"/&gt;
           &lt;strong&gt;Event details:&lt;/strong&gt;
           &lt;ul&gt;
-            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.startDate && selectedEvent.startDate.formatTime() \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.endDate && selectedEvent.endDate.formatTime() \}\}' }}&lt;/li&gt;
-            &lt;!-- You can also manipulate the `start` &amp; `end` formatted strings.
-            &lt;li&gt;Event starts at: {{ '\{\{ (selectedEvent.start || \'\').substring(11) \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ (selectedEvent.end || \'\').substring(11) \}\}' }}&lt;/li&gt; --&gt;
+            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.start && selectedEvent.start.formatTime() \}\}' }}&lt;/li&gt;
+            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.end && selectedEvent.end.formatTime() \}\}' }}&lt;/li&gt;
           &lt;/ul&gt;
         &lt;/v-card-text&gt;
       &lt;/v-card&gt;
@@ -891,7 +888,8 @@
     ul
       li.
         You can override the #[span.code editable-events] ability in each events with the event
-        attributes #[span.code deletable: false], #[span.code draggable: false] &amp; #[span.code resizable: false].
+        attributes #[span.code titleEditable: false], #[span.code deletable: false],
+        #[span.code draggable: false] &amp; #[span.code resizable: false].
       li.
         By default the delete button only appears at the top of the event with a set height (1.4em).
         If you want a full-height delete button like in this example, you can apply the CSS class
@@ -1824,7 +1822,7 @@
         v-icon.mr-2 {{ splitsExample.splitDays[1].hide ? 'add' : 'remove' }}
         | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
-  v-card.my-2.ma-auto.main-content
+  v-card.my-2.ma-auto(style="height: 600px")
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
@@ -1996,6 +1994,17 @@
         li #[span.code event], the calendar event object that was resized
         li #[span.code oldDate], the Javascript Date the event was ending at before resize
     li.mt-2
+      code.mr-1 event-resizing
+      span.grey--text Fired repeatedly while resizing
+      | #[br]For performance while dragging, returns a lighter object containing:
+      ul
+        li #[span.code _eid], the calendar event internal id.
+        li #[span.code end], the calendar event new end Date.
+        li #[span.code endTimeMinutes], the calendar event new end time in minutes.
+      highlight-message(type="warning").
+        You should only listen to this event if you have no choice. In most of cases you should
+        listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
+    li.mt-2
       code.mr-1 event-drop
       | - returns an object containing:
       ul
@@ -2020,8 +2029,8 @@
         #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
       li.mt-3.
         To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
-        objects in the event properties #[span.code startDate] &amp; #[span.code endDate].#[br]
-        So for instance, you can easily access the day of the week of an event with #[span.code event.startDate.getDay()].#[br]
+        objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
+        So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
         You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
   p.mb-0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
@@ -2160,18 +2169,6 @@
         p.
           Will return the time (in minutes) at the cursor position when a DOM event occurs.
           `e` is the DOM event.
-      li
-        code formatDate(date, format = 'YYYY-MM-DD')
-        p.
-          Will return a string with formatted date (and time if given) using the loaded locale.#[br]
-          For the formatting syntax, refer to the #[span.code locale] &amp; #[span.code timeFormat]
-          in the #[a(href="#api") API section].
-      li
-        code formatTime(time, format = 'HH:mm' | 'h:mm{am}' if `twelve-hour`)
-        p.
-          Will return a string with formatted time using the loaded locale.#[br]
-          For the formatting syntax, refer to the
-          #[a(href="#time-format") #[span.code timeFormat] option] in the API section.
 
     strong Useful #[span.code Date] prototypes
     p.
@@ -2655,10 +2652,10 @@
         .vuecal__event-title.mb-6(v-html="event.title")
         small.vuecal__event-time
           strong.mr-1 Event start:
-          span {{ event.startDate.formatTime('h O\'clock') }}
+          span {{ event.start.formatTime('h O\'clock') }}
           br
           strong.mr-1 Event end:
-          span {{ event.endDate.formatTime('h O\'clock') }}
+          span {{ event.end.formatTime('h O\'clock') }}
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
@@ -2677,16 +2674,11 @@
 
         &lt;small class="vuecal__event-time"&gt;
           &lt;!-- Using Vue Cal injected Date prototypes --&gt;
-          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.startDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
-          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.endDate.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
+          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
+          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
-
-  highlight-message.my-2(type="tips").
-    The #[a(href="#date-prototypes") #[span.code formatTime()] Date prototype] will help you format time easily,
-    but if you prefer you could also extract the time from the formatted date:
-    e.g. #[span.code event.start.substring(11)]
 
   sshpre(language="js" label="Javascript").
     events: [
@@ -2763,6 +2755,7 @@
     onEventClick:           [Function],        default: null
     onEventDblclick:        [Function],        default: null
     onEventCreate:          [Function],        default: null
+    disableDatePrototypes:  [Boolean],         default: false
 
   ul.pl-0.api-options
     li
@@ -3180,8 +3173,8 @@
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
             // Instead of formatted dates, you can also provide Javascript Date objects:
-            // startDate: new Date(2018, 11 - 1, 19, 12, 0),
-            // endDate: new Date(2018, 11 - 1, 19, 14, 0),
+            // start: new Date(2018, 11 - 1, 19, 12, 0),
+            // end: new Date(2018, 11 - 1, 19, 14, 0),
             title: {String}, // Optional.
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
@@ -3231,7 +3224,13 @@
             You can set an event end at #[span.code 24:00] or #[span.code 00:00] (for the next midnight),
             #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
             of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
-            When returned from emitted events, this event #[span.code endDate] will contain a date ending at #[span.code 23:59:59].
+            When returned from emitted events, this event #[span.code end] will contain a date ending at #[span.code 23:59:59].
+    li
+      code.mr-2 disableDatePrototypes
+      span.code [Boolean], default: false
+      p.
+        If you really don't want the Date prototypes to be added, you can disable them with this option.#[br]
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 
   h2.headline.mt-12.pt-12
     a(href="#date-prototypes") #[strong.code Date] Prototypes
@@ -3249,27 +3248,27 @@
     li.mt-3
       code.mr-2 .addDays(days)
       | Adds days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `days` is an integer.
+      | `#[span.code days]` is an integer.
     li.mt-3
       code.mr-2 .subtractDays(days)
       | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `days` is an integer.
+      | `#[span.code days]` is an integer.
     li.mt-3
       code.mr-2 .addHours(hours)
       | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `hours` is an integer.
+      | `#[span.code hours]` is an integer.
     li.mt-3
       code.mr-2 .subtractHours(hours)
       | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `hours` is an integer.
+      | `#[span.code hours]` is an integer.
     li.mt-3
       code.mr-2 .addMinutes(minutes)
       | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `minutes` is an integer.
+      | `#[span.code minutes]` is an integer.
     li.mt-3
       code.mr-2 .subtractMinutes(minutes)
       | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-      | `minutes` is an integer.
+      | `#[span.code minutes]` is an integer.
     li.mt-3
       code.mr-2 .getWeek()
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
@@ -3338,6 +3337,10 @@
       li.mt-4.
         The Date functions are added when Vue Cal loads, you can always check if you have it before you use it:#[br]
         #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
+      li.mt-4.
+        If you really don't want the Date prototypes to be added, you can disable them with this option:
+        #[span.code.black--text disable-date-prototypes].#[br]
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 
   h2.headline.mt-12.pt-12
     a(href="#css-notes") CSS Notes
@@ -3403,9 +3406,20 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
   div
+    strong Version 3.1.0
+    highlight-message(type="warning").
+      The event properties #[span.code startDate] and #[span.code endDate] have been merged into
+      #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
+      #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
+      but Vue Cal offers Date prototype functions to easily format the date how you want.
+    ul
+      li Fixed multiple day events resizing on x and y axis.
+      li Allow disabling Date prototypes
+      li Emit an #[span.code event-resizing] repeatedly while resizing an event
+  div.mt-4
     strong Version 3.0
-    v-chip.ml-2.px-2(small outlined color="error") ALPHA VERSION
     h3.mt-0.pt-0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
     p.mb-0.
       Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
@@ -3568,95 +3582,6 @@
   div #[strong Version 2.3.0] Added Turkish language
   div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
   div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
-  div #[strong Version 2.0.0]
-    highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
-    highlight-message(type="success")
-      h3.mt-0.pt-0 New features
-      ul
-        li
-          | Added an option to hide particular days of the week
-          em.grey--text.ml-1 (ref. #[span.code hideWeekdays] in the #[a(href="#api") API] section)
-        li
-          | Added new emitted event #[span.code cell-dblclick]
-          em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
-        li
-          | Added ability to resize horizontally
-          em.grey--text.ml-1 (ref. #[span.code resizeX] in the #[a(href="#api") API] section)
-        li
-          | Added ability to create events on cell single/double click
-          em.grey--text.ml-1 (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
-        li
-          | Added function to get minutes at cursor (on click of a cell)
-          em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
-        li
-          | Now support displaying more than 3 overlapping events!
-        li
-          | Events start &amp; end can now also be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
-          em.grey--text.ml-1 (ref. #[span.code events] in the #[a(href="#api") API] section)
-        li
-          | Added an option to display day splits labels in the header
-          em.grey--text.ml-1 (ref. #[span.code stickySplitLabels] in the #[a(href="#api") API] section)
-        li
-          | Added #[span.code deletable], #[span.code resizable] attributes on events to override globals
-          em.grey--text.ml-1 (ref. #[a(href="#ex--edit-delete-create-events") Edit, delete &amp; create events] example)
-        li.
-          Vue Cal is now more accessible (WAI-ARIA). You can now navigate through the calendar with the keyboard.#[br]
-          Select or focus a cell or an event with the #[kbd tab] key.#[br]
-          Pressing #[kbd enter] on a cell will go to a narrower view if any, and pressing
-          #[kbd enter] on an event will act like a click.
-
-      h3.mt-3 Big changes
-      ul
-        li New scoped slots syntax #[em.grey--text.ml-1 (internal change - requires Vue 2.6+)]
-        li the #[span.code no-event-overlaps] option is now useless and removed
-        li.
-          Externalize all locales from main library
-          #[em.grey--text.ml-1 (ref. #[a(href="#ex--internationalization") Internationalization] example)]#[br]
-          Now, only the locale you need will be loaded on demand (as a separate request).#[br]
-          This will ensure Vue Cal keeps its file size as light as possible.
-        li.
-          If you have a custom color theme, you need to edit #[span.code .vuecal__menu li] to
-          #[span.code .vuecal__menu button]. #[em.grey--text.ml-1 (ref. #[a(href="#css-notes") CSS Notes])].#[br]
-          This is for accessibility purpose.
-
-      h3.mt-3 Other noticeable changes
-      ul
-        li #[span.code event-duration-change] is now only fired after resizing an event
-        li Added a resizing class on events being resized
-        li A click on a cell (outside of events) removes the focus state of event
-        li Cancel event deletion with escape key
-        li Focus a multiple day event highlights all the segments
-        li Calculate event segments within current view only (great performance gain on long events)
-        li Improve rendering performances on event resizing
-        li Improve resizing events logic
-        li Week view returned date range (through emitted events) takes #[span.code hideWeekends] in consideration
-        li.
-          Renamed the option #[span.code dblClickToNavigate] to #[span.code dblclickToNavigate]
-          for consistency.
-        li.
-          Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
-          #[span.code twelve-hour] and the corresponding css class to
-          #[span.code .vuecal--twelve-hour].
-        li Fix bug: allow date selection before the Epoch time!
-        li Fix bug: days count calculation when multiple-day event crosses a daylight saving change
-        li.
-          On month view, out of scope events returned by emitted events don't include
-          events that are already in the events array of the current month.
-          (may happen with multiple-day events)
-        li
-          | Internal events structure has changed:
-          ul
-            li Refactored multiple day events &amp; save 'segments' inside events
-            li.
-              #[span.code startDate]/#[span.code endDate] previously containing strings are now Date Objects.#[br]
-              If you want formatted strings, use #[span.code start]/#[span.code end] instead
-            li.
-              #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
-              use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
-            li.
-              Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
-            li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
-
   v-layout.my-12(align-center)
     v-btn.ml-n5.primary--text(rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       v-icon.mr-2 {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
@@ -3664,6 +3589,95 @@
     v-divider.primary
   v-slide-y-transition
     div(v-if="seeOldReleaseNotes")
+      div #[strong Version 2.0.0]
+        highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
+        highlight-message(type="success")
+          h3.mt-0.pt-0 New features
+          ul
+            li
+              | Added an option to hide particular days of the week
+              em.grey--text.ml-1 (ref. #[span.code hideWeekdays] in the #[a(href="#api") API] section)
+            li
+              | Added new emitted event #[span.code cell-dblclick]
+              em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
+            li
+              | Added ability to resize horizontally
+              em.grey--text.ml-1 (ref. #[span.code resizeX] in the #[a(href="#api") API] section)
+            li
+              | Added ability to create events on cell single/double click
+              em.grey--text.ml-1 (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+            li
+              | Added function to get minutes at cursor (on click of a cell)
+              em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
+            li
+              | Now support displaying more than 3 overlapping events!
+            li
+              | Events start &amp; end can now also be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
+              em.grey--text.ml-1 (ref. #[span.code events] in the #[a(href="#api") API] section)
+            li
+              | Added an option to display day splits labels in the header
+              em.grey--text.ml-1 (ref. #[span.code stickySplitLabels] in the #[a(href="#api") API] section)
+            li
+              | Added #[span.code deletable], #[span.code resizable] attributes on events to override globals
+              em.grey--text.ml-1 (ref. #[a(href="#ex--edit-delete-create-events") Edit, delete &amp; create events] example)
+            li.
+              Vue Cal is now more accessible (WAI-ARIA). You can now navigate through the calendar with the keyboard.#[br]
+              Select or focus a cell or an event with the #[kbd tab] key.#[br]
+              Pressing #[kbd enter] on a cell will go to a narrower view if any, and pressing
+              #[kbd enter] on an event will act like a click.
+
+          h3.mt-3 Big changes
+          ul
+            li New scoped slots syntax #[em.grey--text.ml-1 (internal change - requires Vue 2.6+)]
+            li the #[span.code no-event-overlaps] option is now useless and removed
+            li.
+              Externalize all locales from main library
+              #[em.grey--text.ml-1 (ref. #[a(href="#ex--internationalization") Internationalization] example)]#[br]
+              Now, only the locale you need will be loaded on demand (as a separate request).#[br]
+              This will ensure Vue Cal keeps its file size as light as possible.
+            li.
+              If you have a custom color theme, you need to edit #[span.code .vuecal__menu li] to
+              #[span.code .vuecal__menu button]. #[em.grey--text.ml-1 (ref. #[a(href="#css-notes") CSS Notes])].#[br]
+              This is for accessibility purpose.
+
+          h3.mt-3 Other noticeable changes
+          ul
+            li #[span.code event-duration-change] is now only fired after resizing an event
+            li Added a resizing class on events being resized
+            li A click on a cell (outside of events) removes the focus state of event
+            li Cancel event deletion with escape key
+            li Focus a multiple day event highlights all the segments
+            li Calculate event segments within current view only (great performance gain on long events)
+            li Improve rendering performances on event resizing
+            li Improve resizing events logic
+            li Week view returned date range (through emitted events) takes #[span.code hideWeekends] in consideration
+            li.
+              Renamed the option #[span.code dblClickToNavigate] to #[span.code dblclickToNavigate]
+              for consistency.
+            li.
+              Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
+              #[span.code twelve-hour] and the corresponding css class to
+              #[span.code .vuecal--twelve-hour].
+            li Fix bug: allow date selection before the Epoch time!
+            li Fix bug: days count calculation when multiple-day event crosses a daylight saving change
+            li.
+              On month view, out of scope events returned by emitted events don't include
+              events that are already in the events array of the current month.
+              (may happen with multiple-day events)
+            li
+              | Internal events structure has changed:
+              ul
+                li Refactored multiple day events &amp; save 'segments' inside events
+                li.
+                  #[span.code startDate]/#[span.code endDate] previously containing strings are now Date Objects.#[br]
+                  If you want formatted strings, use #[span.code start]/#[span.code end] instead
+                li.
+                  #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
+                  use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
+                li.
+                  Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
+                li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
+
       div #[strong Version 1.63.0] Added Japanese language
       div #[strong Version 1.62.0] Added Arabic &amp; Farsi languages
       div #[strong Version 1.61.0] Added Traditional Chinese language
@@ -3812,13 +3826,13 @@
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
         span.headline.text-uppercase {{ selectedEvent.title }}
         v-spacer
-        strong {{ selectedEvent.startDate && selectedEvent.startDate.format('DD/MM/YYYY') }}
+        strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
       v-card-text.py-4
         p(v-html="selectedEvent.contentFull")
         strong Event details:
         ul
-          li Event starts at: {{ selectedEvent.startDate && selectedEvent.startDate.formatTime() }}
-          li Event ends at: {{ selectedEvent.endDate && selectedEvent.endDate.formatTime() }}
+          li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
+          li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
 
   v-dialog(v-model="showEventCreationDialog" :persistent="true" max-width="420")
     v-card

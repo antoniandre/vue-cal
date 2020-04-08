@@ -11,7 +11,7 @@ import Vue from 'vue'
 const defaultEventDuration = 2 // In hours.
 const minutesInADay = 24 * 60 // Don't do the maths every time.
 
-let formatDateLite, stringToDate, formatTimeLite, countDays, datesInSameTimeStep, dateToMinutes
+let ud
 
 // Event overlaps: only for the current view, recreated on view change.
 let _cellOverlaps, _comparisonArray
@@ -26,11 +26,9 @@ export default class EventUtils {
 
   eventDefaults = {
     _eid: null,
-    start: '', // Externally given formatted date & time.
-    startDate: '', // Date object.
+    start: '', // Externally given formatted date & time or Date object.
     startTimeMinutes: 0,
-    end: '', // Externally given formatted date & time.
-    endDate: '', // Date object.
+    end: '', // Externally given formatted date & time or Date object.
     endTimeMinutes: 0,
     title: '',
     content: '',
@@ -41,28 +39,19 @@ export default class EventUtils {
     daysCount: 1,
     deletable: true,
     deleting: false,
+    titleEditable: true,
     resizable: true,
     resizing: false,
     draggable: true,
     dragging: false,
     draggingStatic: false, // Controls the CSS class of the static clone while dragging.
     focused: false,
-    top: 0,
-    height: 0,
     class: ''
   }
 
   constructor (vuecal, dateUtils) {
-    this._vuecal = vuecal;
-
-    ({
-      formatDateLite,
-      stringToDate,
-      formatTimeLite,
-      countDays,
-      datesInSameTimeStep,
-      dateToMinutes
-    } = dateUtils)
+    this._vuecal = vuecal
+    ud = dateUtils
   }
 
   /**
@@ -74,26 +63,26 @@ export default class EventUtils {
    * @param {Object} eventOptions some options to override the `eventDefaults` - optional.
    */
   createAnEvent (dateTime, duration, eventOptions) {
-    if (typeof dateTime === 'string') dateTime = stringToDate(dateTime)
+    if (typeof dateTime === 'string') dateTime = ud.stringToDate(dateTime)
     if (!(dateTime instanceof Date)) return false
 
-    const startTimeMinutes = dateToMinutes(dateTime)
+    const startTimeMinutes = ud.dateToMinutes(dateTime)
     duration = duration * 1 || defaultEventDuration * 60
     const endTimeMinutes = startTimeMinutes + duration
-    const start = formatDateLite(dateTime) + (this._vuecal.time ? ` ${formatTimeLite(dateTime)}` : '')
-    const end = formatDateLite(dateTime) + (this._vuecal.time ? ` ${formatTimeLite(dateTime.addMinutes(duration))}` : '')
+    const end = ud.addMinutes(new Date(dateTime), duration)
 
-    // Automatically add the required endTimeMinutes when passing an endDate.
-    if (eventOptions.endDate) eventOptions.endTimeMinutes = dateToMinutes(eventOptions.endDate)
+    // Automatically add the required endTimeMinutes when passing an end.
+    if (eventOptions.end) {
+      if (typeof eventOptions.end === 'string') eventOptions.end = ud.stringToDate(eventOptions.end)
+      eventOptions.endTimeMinutes = ud.dateToMinutes(eventOptions.end)
+    }
 
     const event = {
       ...this.eventDefaults,
       _eid: `${this._vuecal._uid}_${this._vuecal.eventIdIncrement++}`,
-      start,
-      startDate: dateTime,
+      start: dateTime,
       startTimeMinutes,
       end,
-      endDate: stringToDate(end),
       endTimeMinutes,
       segments: null,
       ...eventOptions
@@ -107,8 +96,8 @@ export default class EventUtils {
     }
 
     // Check if event is a multiple day event and update days count.
-    if (event.start.substr(0, 10) !== event.end.substr(0, 10)) {
-      event.daysCount = countDays(event.startDate, event.endDate)
+    if (event.startDateF !== event.endDateF) {
+      event.daysCount = ud.countDays(event.start, event.end)
     }
 
     // Add event to the mutableEvents array.
@@ -131,22 +120,21 @@ export default class EventUtils {
    * @param {Object} e the multiple-day event to add segment in.
    */
   addEventSegment (e) {
+    // If event was previously single-day, event.segments = null,
+    // so first create the first segment (first day).
     if (!e.segments) {
       Vue.set(e, 'segments', {})
-      e.segments[e.start.substr(0, 10)] = {
-        startDate: e.startDate,
-        start: e.start.substr(0, 10),
+      Vue.set(e.segments, ud.formatDateLite(e.start), {
+        start: e.start,
         startTimeMinutes: e.startTimeMinutes,
         endTimeMinutes: minutesInADay,
         isFirstDay: true,
-        isLastDay: false,
-        height: 0,
-        top: 0
-      }
+        isLastDay: false
+      })
     }
 
-    // Modify the last segment - which is no more the last one.
-    const previousSegment = e.segments[formatDateLite(e.endDate)]
+    // Modify the last segment - which will not stay the last one after this function.
+    const previousSegment = e.segments[ud.formatDateLite(e.end)]
     // previousSegment might not exist when dragging too fast, prevent errors.
     if (previousSegment) {
       previousSegment.isLastDay = false
@@ -158,24 +146,19 @@ export default class EventUtils {
     }
 
     // Create the new last segment.
-    const startDate = e.endDate.addDays(1)
-    const endDate = new Date(startDate)
-    const formattedDate = formatDateLite(startDate)
-    startDate.setHours(0, 0, 0, 0)
-    e.segments[formattedDate] = {
-      startDate,
-      start: formattedDate,
+    const start = ud.addDays(e.end, 1)
+    const formattedDate = ud.formatDateLite(start)
+    start.setHours(0, 0, 0, 0)
+    Vue.set(e.segments, formattedDate, {
+      start,
       startTimeMinutes: 0,
       endTimeMinutes: e.endTimeMinutes,
       isFirstDay: false,
-      isLastDay: true,
-      height: 0,
-      top: 0
-    }
+      isLastDay: true
+    })
 
+    e.end = ud.addMinutes(start, e.endTimeMinutes)
     e.daysCount = Object.keys(e.segments).length
-    e.endDate = endDate
-    e.end = `${formattedDate} ${formatTimeLite(e.endDate)}`
 
     return formattedDate
   }
@@ -187,14 +170,14 @@ export default class EventUtils {
    */
   removeEventSegment (e) {
     let segmentsCount = Object.keys(e.segments).length
-    if (segmentsCount <= 1) return e.end.substr(0, 10)
+    if (segmentsCount <= 1) return ud.formatDateLite(e.end)
 
     // Remove the last segment.
-    delete e.segments[e.end.substr(0, 10)]
+    Vue.delete(e.segments, ud.formatDateLite(e.end))
     segmentsCount--
 
-    const endDate = e.endDate.subtractDays(1)
-    const formattedDate = formatDateLite(endDate)
+    const end = ud.subtractDays(e.end, 1)
+    const formattedDate = ud.formatDateLite(end)
     const previousSegment = e.segments[formattedDate]
 
     // If no more segments, reset the segments attribute to null.
@@ -212,8 +195,7 @@ export default class EventUtils {
     }
 
     e.daysCount = segmentsCount || 1
-    e.endDate = endDate
-    e.end = `${formattedDate} ${formatTimeLite(e.endDate)}`
+    e.end = end
 
     return formattedDate
   }
@@ -231,14 +213,14 @@ export default class EventUtils {
   createEventSegments (e, viewStartDate, viewEndDate) {
     const viewStartTimestamp = viewStartDate.getTime()
     const viewEndTimestamp = viewEndDate.getTime()
-    let eventStart = e.startDate.getTime()
-    let eventEnd = e.endDate.getTime()
+    let eventStart = e.start.getTime()
+    let eventEnd = e.end.getTime()
     let repeatedEventStartFound = false
     let timestamp, end, eventStartAtMidnight
 
     // @todo: I don't think we still need that:
     // Removing 1 sec when ending at 00:00, so that we don't create a segment for nothing on last day.
-    if (!e.endDate.getHours() && !e.endDate.getMinutes()) eventEnd -= 1000
+    if (!e.end.getHours() && !e.end.getMinutes()) eventEnd -= 1000
 
     Vue.set(e, 'segments', {})
 
@@ -255,7 +237,7 @@ export default class EventUtils {
       timestamp = viewStartTimestamp
       end = Math.min(
         viewEndTimestamp,
-        e.repeat.until ? stringToDate(e.repeat.until).getTime() : viewEndTimestamp
+        e.repeat.until ? ud.stringToDate(e.repeat.until).getTime() : viewEndTimestamp
       )
     }
 
@@ -264,12 +246,12 @@ export default class EventUtils {
       // Be careful not to simply add 24 hours!
       // In case of DLS, that would cause the event to never end and browser to hang.
       // So use `addDays(1)` instead.
-      const nextMidnight = (new Date(timestamp).addDays(1)).setHours(0, 0, 0, 0)
-      let isFirstDay, isLastDay, startDate, formattedDate
+      const nextMidnight = ud.addDays(new Date(timestamp), 1).setHours(0, 0, 0, 0)
+      let isFirstDay, isLastDay, start, formattedDate
 
       if (e.repeat) {
         const tmpDate = new Date(timestamp)
-        const tmpDateFormatted = formatDateLite(tmpDate)
+        const tmpDateFormatted = ud.formatDateLite(tmpDate)
         // If the current day in loop is a known date of the repeated event (in `e.occurrences`),
         // then we found the first day of the event repetition, now update the `eventStart` and
         // the end of the loop at current day + event days count.
@@ -284,9 +266,9 @@ export default class EventUtils {
         }
 
         isFirstDay = timestamp === eventStartAtMidnight
-        isLastDay = tmpDateFormatted === formatDateLite(new Date(eventEnd))
-        startDate = isFirstDay ? new Date(eventStart) : new Date(timestamp)
-        formattedDate = formatDateLite(startDate)
+        isLastDay = tmpDateFormatted === ud.formatDateLite(new Date(eventEnd))
+        start = new Date(isFirstDay ? eventStart : timestamp)
+        formattedDate = ud.formatDateLite(start)
         // We want to find any potential other repetition of event in same range.
         if (isLastDay) repeatedEventStartFound = false
       }
@@ -294,21 +276,18 @@ export default class EventUtils {
         createSegment = true
         isFirstDay = timestamp === eventStart
         isLastDay = end === eventEnd && nextMidnight > end
-        startDate = isFirstDay ? e.startDate : new Date(timestamp)
-        formattedDate = isFirstDay ? e.start.substr(0, 10) : formatDateLite(startDate)
+        start = isFirstDay ? e.start : new Date(timestamp)
+        formattedDate = ud.formatDateLite(isFirstDay ? e.start : start)
       }
 
       if (createSegment) {
-        e.segments[formattedDate] = {
-          startDate,
-          start: formattedDate,
+        Vue.set(e.segments, formattedDate, {
+          start,
           startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
           endTimeMinutes: isLastDay ? e.endTimeMinutes : minutesInADay,
           isFirstDay,
-          isLastDay,
-          height: 0,
-          top: 0
-        }
+          isLastDay
+        })
       }
 
       timestamp = nextMidnight
@@ -353,8 +332,8 @@ export default class EventUtils {
       _comparisonArray.forEach(e2 => {
         if (!_cellOverlaps[e2._eid]) Vue.set(_cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
 
-        const eventIsInRange = this.eventInRange(e2, e.startDate, e.endDate)
-        const eventsInSameTimeStep = options.overlapsPerTimeStep ? datesInSameTimeStep(e.startDate, e2.startDate, options.timeStep) : 1
+        const eventIsInRange = this.eventInRange(e2, e.start, e.end)
+        const eventsInSameTimeStep = options.overlapsPerTimeStep ? ud.datesInSameTimeStep(e.start, e2.start, options.timeStep) : 1
         // Add to the overlaps array if overlapping.
         if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventIsInRange && eventsInSameTimeStep) {
           _cellOverlaps[e._eid].overlaps.push(e2._eid)
@@ -425,26 +404,6 @@ export default class EventUtils {
   }
 
   /**
-   * Update the event top and height CSS properties of each event as long as vuecal.time is true.
-   *
-   * @param {Object} event The event to update position (top & height) of.
-   */
-  updateEventPosition (event) {
-    const { startTimeMinutes, endTimeMinutes } = event
-
-    // Top of event.
-    let minutesFromTop = startTimeMinutes - this._vuecal.timeFrom
-    const top = Math.round(minutesFromTop * this._vuecal.timeCellHeight / this._vuecal.timeStep)
-
-    // Bottom of event.
-    minutesFromTop = Math.min(endTimeMinutes, this._vuecal.timeTo) - this._vuecal.timeFrom
-    const bottom = Math.round(minutesFromTop * this._vuecal.timeCellHeight / this._vuecal.timeStep)
-
-    event.top = Math.max(top, 0)
-    event.height = Math.max(bottom - event.top, 5) // Min height is 5px.
-  }
-
-  /**
    * Tells whether an event is in a given date range, even partially.
    *
    * @param {Object} event The event to test.
@@ -454,15 +413,16 @@ export default class EventUtils {
    */
   eventInRange (event, start, end) {
     // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
-    if (event.allDay || event.start.indexOf(':') === -1) {
+    if (event.allDay || !this._vuecal.time) {
       // Get the date and discard the time if any, then check it's within the date range.
-      const eventStart = new Date(event.startDate).setHours(0, 0, 0, 0)
+      const eventStart = new Date(event.start).setHours(0, 0, 0, 0)
       return (eventStart >= new Date(start).setHours(0, 0, 0, 0) &&
         eventStart <= new Date(end).setHours(0, 0, 0, 0))
     }
 
-    const startTimestamp = event.startDate.getTime()
-    const endTimestamp = event.endDate.getTime()
+    if (typeof event.start === 'string' || !event.start) debugger
+    const startTimestamp = event.start.getTime()
+    const endTimestamp = event.end.getTime()
     return startTimestamp < end.getTime() && endTimestamp > start.getTime()
   }
 }

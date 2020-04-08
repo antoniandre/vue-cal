@@ -53,7 +53,7 @@ export default {
 
       let todayFound = false
       const headings = this.weekDays.map((cell, i) => {
-        const date = this.view.startDate.addDays(i)
+        const date = this.utils.date.addDays(this.view.startDate, i)
 
         return {
           hide: cell.hide,
@@ -67,7 +67,7 @@ export default {
           ...(this.view.id === 'week' ? {
             dayOfMonth: date.getDate(),
             date,
-            today: !todayFound && date.isToday() && !todayFound++
+            today: !todayFound && this.utils.date.isToday(date) && !todayFound++
           } : {})
         }
       })

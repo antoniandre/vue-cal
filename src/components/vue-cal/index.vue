@@ -35,8 +35,8 @@
           .vuecal__flex.vuecal__cells(
             :class="`${view.id}-view`"
             grow
-            :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
-            :column="!!minCellWidth || !!minSplitWidth")
+            :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
+            :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
               :key="i"
@@ -51,7 +51,7 @@
               template(v-slot:event="{ event, view }")
                 slot(name="event" :view="view" :event="event")
                   .vuecal__event-title.vuecal__event-title--edit(
-                    v-if="editEvents.title && event.title"
+                    v-if="editEvents.title && event.title && event.titleEditable"
                     contenteditable
                     @blur="onEventTitleBlur($event, event)"
                     v-html="event.title")
@@ -73,8 +73,8 @@
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
               grow
-              :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
-              :column="!!minCellWidth || !!minSplitWidth")
+              :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
+              :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
               //- Only for minCellWidth or minSplitWidth on week view.
               weekdays-headings(
                 v-if="(minCellWidth || (hasSplits && minSplitWidth)) && view.id === 'week'"
@@ -91,7 +91,7 @@
               .vuecal__flex(
                 ref="cells"
                 grow
-                :wrap="(!minCellWidth && !minSplitWidth) || view.id !== 'week'"
+                :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
@@ -114,14 +114,14 @@
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
-                        v-if="editEvents.title && event.title"
+                        v-if="editEvents.title && event.title && event.titleEditable"
                         contenteditable
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="time && !event.allDay && !(view === 'month' && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
-                        | {{ event.startDate.formatTime() }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ event.endDate.formatTime() }}
+                        | {{ utils.date.formatTime(event.start) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ utils.date.formatTime(event.end) }}
                         small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
@@ -143,7 +143,6 @@ import Cell from './cell'
 
 import './styles.scss'
 
-const dateUtils = new DateUtils()
 const minutesInADay = 24 * 60 // Don't do the maths every time.
 const textsDefaults = {
   weekDays: Array(7).fill(''),
@@ -163,6 +162,12 @@ const textsDefaults = {
   am: 'am',
   pm: 'pm'
 }
+
+// Only 1 instance of DateUtils for all the instances of Vue Cal, created when first importing the Vue Cal lib.
+// The dateUtils does not need to be dependent of Vue Cal instance, it only needs localized texts when ready.
+// This becomes a problem when showing multiple instances of Vue Cal with different locales like in the
+// documentation page. So the texts are overridable through a the `updateDateTexts` function.
+const dateUtils = new DateUtils(textsDefaults) // Do this ASAP for date prototypes.
 
 export default {
   name: 'vue-cal',
@@ -184,12 +189,13 @@ export default {
     }
   },
   props: {
+    activeView: { type: String, default: 'week' },
     cellClickHold: { type: Boolean, default: true },
     cellContextmenu: { type: Boolean, default: false },
     clickToNavigate: { type: Boolean, default: false },
     dblclickToNavigate: { type: Boolean, default: true },
     defaultView: { type: String, default: 'week' },
-    activeView: { type: String, default: 'week' },
+    disableDatePrototypes: { type: Boolean, default: false },
     disableViews: { type: Array, default: () => [] },
     editableEvents: { type: [Boolean, Object], default: false },
     events: { type: Array, default: () => [] },
@@ -232,83 +238,89 @@ export default {
     watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     xsmall: { type: Boolean, default: false }
   },
-  data: () => ({
-    ready: false, // Is vue-cal ready.
-    // Make texts reactive before a locale is loaded.
-    texts: { ...textsDefaults },
-    utils: {
-      date: dateUtils,
-      cell: null,
-      event: null
-    },
-    modules: { dnd: null },
+  data () {
+    return {
+      ready: false, // Is vue-cal ready.
+      // Make texts reactive before a locale is loaded.
+      texts: { ...textsDefaults },
+      utils: {
+        // Remove prototypes ASAP if the user wants so.
+        date: (this.disableDatePrototypes ? dateUtils.removePrototypes() : false) || dateUtils,
+        cell: null,
+        // Note: Destructuring class method loses the `this` context and Vue Cal becomes inaccessible
+        // from the event utils function. Don't do:
+        // const { eventInRange, createEventSegments } = this.utils.event
+        event: null
+      },
+      modules: { dnd: null },
 
-    // At any time this object will be filled with current view, visible events and selected date.
-    view: {
-      id: '',
-      title: '',
-      startDate: null,
-      endDate: null,
-      firstCellDate: null,
-      lastCellDate: null,
-      selectedDate: null,
-      // All the events are stored in the mutableEvents array, but subset of visible ones are passed
-      // Into the current view for fast lookup and manipulation.
-      events: []
-    },
-    eventIdIncrement: 1, // Internal unique id.
-    // Preset at now date on load, but updated every minute if watchRealTime,
-    // or updated at least on each cells rerender, in order to keep Today's date accurate.
-    now: new Date(),
-    // Useful when watchRealTime = true, 2 timeouts: 1 to snap to round minutes, then 1 every minute.
-    timeTickerIds: [null, null],
-
-    // All the possible events/cells interractions:
-    // e.g. focus, click, click & hold, resize, drag & drop (coming).
-    domEvents: {
-      resizeAnEvent: {
-        _eid: null, // Only one at a time.
-        start: null,
-        split: null,
-        segment: null,
-        originalEndTimeMinutes: 0,
-        originalEndDate: null,
+      // At any time this object will be filled with current view, visible events and selected date.
+      view: {
+        id: '',
+        title: '',
+        startDate: null,
         endDate: null,
-        startCell: null,
-        endCell: null
+        firstCellDate: null,
+        lastCellDate: null,
+        selectedDate: null,
+        // All the events are stored in the mutableEvents array, but subset of visible ones are passed
+        // Into the current view for fast lookup and manipulation.
+        events: []
       },
-      dragAnEvent: {
-        // Only one at a time, only needed for vuecal dragging-event class.
-        _eid: null
+      eventIdIncrement: 1, // Internal unique id.
+      // Preset at now date on load, but updated every minute if watchRealTime,
+      // or updated at least on each cells rerender, in order to keep Today's date accurate.
+      now: new Date(),
+      // Useful when watchRealTime = true, 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+      timeTickerIds: [null, null],
+
+      // All the possible events/cells interractions:
+      // e.g. focus, click, click & hold, resize, drag & drop (coming).
+      domEvents: {
+        resizeAnEvent: {
+          _eid: null, // Only one at a time.
+          start: null,
+          split: null,
+          segment: null,
+          originalEndTimeMinutes: 0,
+          originalEnd: null,
+          end: null,
+          startCell: null,
+          endCell: null
+        },
+        dragAnEvent: {
+          // Only one at a time, only needed for vuecal dragging-event class.
+          _eid: null
+        },
+        focusAnEvent: {
+          _eid: null // Only one at a time.
+        },
+        clickHoldAnEvent: {
+          _eid: null, // Only one at a time.
+          timeout: 1200, // Hold for 1.2s to delete an event.
+          timeoutId: null
+        },
+        dblTapACell: {
+          taps: 0,
+          timeout: 500 // Allowed latency between first and second click.
+        },
+        clickHoldACell: {
+          cellId: null,
+          split: null,
+          timeout: 1200, // Hold for 1.2s to create an event.
+          timeoutId: null
+        },
+        // A single click can trigger event creation if the user decides so.
+        // But prevent this to happen on click & hold, on event click and on resize event.
+        cancelClickEventCreation: false
       },
-      focusAnEvent: {
-        _eid: null // Only one at a time.
-      },
-      clickHoldAnEvent: {
-        _eid: null, // Only one at a time.
-        timeout: 1200, // Hold for 1.2s to delete an event.
-        timeoutId: null
-      },
-      dblTapACell: {
-        taps: 0,
-        timeout: 500 // Allowed latency between first and second click.
-      },
-      clickHoldACell: {
-        cellId: null,
-        split: null,
-        timeout: 1200, // Hold for 1.2s to create an event.
-        timeoutId: null
-      },
-      // A single click can trigger event creation if the user decides so.
-      // But prevent this to happen on click & hold, on event click and on resize event.
-      cancelClickEventCreation: false
-    },
-    // The events source of truth.
-    // An array of mutable events updated each time given external events array changes.
-    mutableEvents: [],
-    // Transition when switching view. left when going toward the past, right when going toward future.
-    transitionDirection: 'right'
-  }),
+      // The events source of truth.
+      // An array of mutable events updated each time given external events array changes.
+      mutableEvents: [],
+      // Transition when switching view. left when going toward the past, right when going toward future.
+      transitionDirection: 'right'
+    }
+  },
 
   methods: {
     /**
@@ -322,7 +334,7 @@ export default {
         import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ `./i18n/${locale}`)
           .then(response => {
             this.texts = Object.assign({}, textsDefaults, response.default)
-            this.utils.date.updateDateTexts(this.texts)
+            this.utils.date.updateTexts(this.texts)
           })
       }
     },
@@ -366,6 +378,8 @@ export default {
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
     switchView (view, date = null, fromViewSelector = false) {
+      const ud = this.utils.date
+
       if (this.transitions && fromViewSelector) {
         const views = Object.keys(this.views)
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
@@ -377,10 +391,7 @@ export default {
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
       this.view.lastCellDate = null // For month view, if filling cells after current month.
 
-      if (!date) {
-        date = this.view.selectedDate || this.view.startDate
-        if (view === 'week') date = this.utils.date.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
-      }
+      if (!date) date = this.view.selectedDate || this.view.startDate
 
       switch (view) {
         case 'years': {
@@ -404,43 +415,44 @@ export default {
           // If the first day of the month is not a FirstDayOfWeek (Monday or Sunday), prepend missing days to the days array.
           let startDate = new Date(this.view.startDate)
           if (startDate.getDay() !== (this.startWeekOnSunday ? 0 : 1)) {
-            startDate = this.utils.date.getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
+            startDate = ud.getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)
           }
 
           // Used in viewCells computed array & returned in emitted events.
           this.view.firstCellDate = startDate
-          this.view.lastCellDate = startDate.addDays(41)
+          this.view.lastCellDate = ud.addDays(startDate, 41)
           this.view.lastCellDate.setHours(23, 59, 59, 0)
 
           if (this.hideWeekends) {
             // Remove first weekend from firstCellDate if hide-weekends.
             if ([0, 6].includes(this.view.firstCellDate.getDay())) {
               const daysToAdd = this.view.firstCellDate.getDay() === 6 && !this.startWeekOnSunday ? 2 : 1
-              this.view.firstCellDate = this.view.firstCellDate.addDays(daysToAdd)
+              this.view.firstCellDate = ud.addDays(this.view.firstCellDate, daysToAdd)
             }
             // Remove first weekend from startDate if hide-weekends.
             if ([0, 6].includes(this.view.startDate.getDay())) {
               const daysToAdd = this.view.startDate.getDay() === 6 ? 2 : 1
-              this.view.startDate = this.view.startDate.addDays(daysToAdd)
+              this.view.startDate = ud.addDays(this.view.startDate, daysToAdd)
             }
             // Remove last weekend from lastCellDate if hide-weekends.
             if ([0, 6].includes(this.view.lastCellDate.getDay())) {
               const daysToSubtract = this.view.lastCellDate.getDay() === 0 && !this.startWeekOnSunday ? 2 : 1
-              this.view.lastCellDate = this.view.lastCellDate.subtractDays(daysToSubtract)
+              this.view.lastCellDate = ud.subtractDays(this.view.lastCellDate, daysToSubtract)
             }
             // Remove last weekend from endDate if hide-weekends.
             if ([0, 6].includes(this.view.endDate.getDay())) {
               const daysToSubtract = this.view.endDate.getDay() === 0 ? 2 : 1
-              this.view.endDate = this.view.endDate.subtractDays(daysToSubtract)
+              this.view.endDate = ud.subtractDays(this.view.endDate, daysToSubtract)
             }
           }
           break
         }
         case 'week': {
+          date = ud.getPreviousFirstDayOfWeek(date, this.startWeekOnSunday)
           const weekDaysCount = this.hideWeekends ? 5 : 7
-          this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? date.addDays(1) : date
+          this.view.startDate = this.hideWeekends && this.startWeekOnSunday ? ud.addDays(date, 1) : date
           this.view.startDate.setHours(0, 0, 0, 0)
-          this.view.endDate = date.addDays(weekDaysCount)
+          this.view.endDate = ud.addDays(date, weekDaysCount)
           this.view.endDate.setSeconds(-1) // End at 23:59:59.
           break
         }
@@ -467,7 +479,7 @@ export default {
             outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
           events: this.view.events.map(this.cleanupEvent),
-          ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
+          ...(this.view.id === 'week' ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
         }
         this.$emit('view-change', params)
       }
@@ -493,6 +505,7 @@ export default {
      * @param {Boolean} next
      */
     previousNext (next = true) {
+      const ud = this.utils.date
       this.transitionDirection = next ? 'right' : 'left'
       const modifier = next ? 1 : -1
       let firstCellDate = null
@@ -509,7 +522,7 @@ export default {
           firstCellDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1 * modifier, 1)
           break
         case 'week':
-          firstCellDate = this.utils.date.getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday)[next ? 'addDays' : 'subtractDays'](7)
+          firstCellDate = ud[next ? 'addDays' : 'subtractDays'](ud.getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday), 7)
           break
         case 'day':
           firstCellDate = startDate[next ? 'addDays' : 'subtractDays'](1)
@@ -525,7 +538,8 @@ export default {
      * @param {Array} events
      */
     addEventsToView (events = []) {
-      const { eventInRange, createEventSegments } = this.utils.event
+      const ue = this.utils.event
+
       const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
       // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
@@ -539,13 +553,13 @@ export default {
 
       // First remove the events that are not in view.
       // Keep the unfiltered array of events for outOfScopeEvents bellow.
-      let filteredEvents = events.filter(e => eventInRange(e, startDate, endDate))
+      let filteredEvents = events.filter(e => ue.eventInRange(e, startDate, endDate))
 
       // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
       // If we don't display the event on month view (eventsOnMonthView = false) then don't create segments.
       if (['month', 'week', 'day'].includes(id) && !(id === 'month' && !this.eventsOnMonthView)) {
         filteredEvents = filteredEvents.map(e => {
-          return e.daysCount > 1 ? createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
+          return e.daysCount > 1 ? ue.createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
         })
       }
 
@@ -555,7 +569,7 @@ export default {
         // Save out of scope events into the view object separated from the array of in-scope events.
         this.view.outOfScopeEvents = []
         events.forEach(e => {
-          if (eventInRange(e, firstCellDate, startDate) || eventInRange(e, endDate, lastCellDate)) {
+          if (ue.eventInRange(e, firstCellDate, startDate) || ue.eventInRange(e, endDate, lastCellDate)) {
             // Only add events to the view.outOfScopeEvents array if not already in view.events
             // (multiple-day events case).
             if (!this.view.events.some(e2 => e2._eid === e._eid)) this.view.outOfScopeEvents.push(e)
@@ -599,7 +613,9 @@ export default {
       const { resizeAnEvent, dragAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
-      const { formatDateLite, formatTimeLite, countDays } = this.utils.date
+      // Destructuring class method loses the `this` context.
+      // const { formatDateLite, countDays } = this.utils.date
+      const { date: ud, event: ue } = this.utils
 
       e.preventDefault()
 
@@ -609,9 +625,10 @@ export default {
         const segment = event.segments && event.segments[resizeAnEvent.segment]
 
         // Don't allow time above 24 hours.
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.min(minutes, minutesInADay)
+        let newEndTimeMins = Math.min(minutes, minutesInADay)
         // Prevent reducing event duration to less than 1 min so it does not disappear.
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = Math.max(event.endTimeMinutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+        newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
 
         // On resize, snap to time every X minutes if the option is on.
         if (this.snapToTime) {
@@ -621,41 +638,41 @@ export default {
 
         if (segment) segment.endTimeMinutes = event.endTimeMinutes
 
-        event.endDate.setHours(
+        event.end.setHours(
           0,
           event.endTimeMinutes,
           event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
           0
         )
-        event.end = `${formatDateLite(event.endDate)} ${formatTimeLite(event.endDate)}`
 
         // Resize events horizontally if resize-x is enabled (add/remove segments).
         if (this.resizeX && this.view.id === 'week') {
-          event.daysCount = countDays(event.startDate, event.endDate)
+          event.daysCount = ud.countDays(event.start, event.end)
           const cells = this.$refs.cells
           const cellWidth = cells.offsetWidth / cells.childElementCount
           const endCell = Math.floor(cursorCoords.x / cellWidth)
 
-          if (!resizeAnEvent.startCell) {
+          if (resizeAnEvent.startCell === null) {
             resizeAnEvent.startCell = endCell - (event.daysCount - 1)
           }
           if (resizeAnEvent.endCell !== endCell) {
             resizeAnEvent.endCell = endCell
 
-            const endDate = event.startDate.addDays(endCell - resizeAnEvent.startCell)
-            const newDaysCount = countDays(event.startDate, endDate)
+            const newEnd = ud.addDays(event.start, endCell - resizeAnEvent.startCell)
+            const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
 
             if (newDaysCount !== event.daysCount) {
-              const { addEventSegment, removeEventSegment } = this.utils.event
               // Check that all segments are up to date.
               let lastSegmentFormattedDate = null
-              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = addEventSegment(event)
-              else lastSegmentFormattedDate = removeEventSegment(event)
+              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = ue.addEventSegment(event)
+              else lastSegmentFormattedDate = ue.removeEventSegment(event)
               resizeAnEvent.segment = lastSegmentFormattedDate
               event.endTimeMinutes += 0.001 // Force updating the current event.
             }
           }
         }
+
+        this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
       }
     },
 
@@ -674,25 +691,23 @@ export default {
       if (resizeAnEvent._eid) {
         this.domEvents.cancelClickEventCreation = true
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
-        const { originalEndDate } = resizeAnEvent
+        const { originalEnd } = resizeAnEvent
 
         // When resizing the endTime changes but the day may change too when resizing horizontally.
         // So compare timestamps instead of only endTimeMinutes.
-        if (event && event.endDate.getTime() !== originalEndDate.getTime()) {
+        if (event && event.end.getTime() !== originalEnd.getTime()) {
           // Update the modified event in the mutable events array.
           const mutableEvent = this.mutableEvents.find(e => e._eid === resizeAnEvent._eid)
           mutableEvent.endTimeMinutes = event.endTimeMinutes
           mutableEvent.end = event.end
-          mutableEvent.endDate = event.endDate
 
           const cleanEvent = this.cleanupEvent(event)
           const originalEvent = {
             ...this.cleanupEvent(event),
-            endDate: originalEndDate,
-            end: `${originalEndDate.format()} ${originalEndDate.formatTime()}`,
+            end: originalEnd,
             endTimeMinutes: event.originalEndTimeMinutes
           }
-          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEndDate })
+          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd })
           this.$emit('event-change', { event: cleanEvent, originalEvent })
         }
 
@@ -702,7 +717,7 @@ export default {
         resizeAnEvent.split = null
         resizeAnEvent.segment = null
         resizeAnEvent.originalEndTimeMinutes = null
-        resizeAnEvent.originalEndDate = null
+        resizeAnEvent.originalEnd = null
         resizeAnEvent.endTimeMinutes = null
         resizeAnEvent.startCell = null
         resizeAnEvent.endCell = null
@@ -792,63 +807,45 @@ export default {
      *        items to the array. (Cannot mutate props)
      */
     updateMutableEvents () {
-      const { formatDateLite, formatTimeLite, stringToDate, dateToMinutes, countDays } = this.utils.date
+      // Destructuring class method loses the `this` context.
+      // const { formatDateLite, stringToDate, dateToMinutes, countDays } = this.utils.date
+      const ud = this.utils.date
       this.mutableEvents = []
 
       // For each event of the `events` prop, prepare the event for vue-cal:
-      // Populate missing keys: start, startDate, startTimeMinutes, end, endDate, endTimeMinutes, daysCount.
+      // Populate missing keys: start, startDate, startTimeMinutes, end, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // `event.startDate` accepts a Date object, and `event.start` accepts a formatted string.
-        let startDate, startDateF
-        if (event.startDate && event.startDate instanceof Date) {
-          startDate = event.startDate
-          startDateF = formatDateLite(event.startDate)
-        }
-        else if (event.start) {
-          startDate = stringToDate(event.start)
-          startDateF = event.start.split(' ')[0] // Isolate date without time.
-        }
-        const startTimeMinutes = dateToMinutes(startDate)
-        const start = event.start || `${startDateF} ${formatTimeLite(startDate)}`
+        // `event.start` accepts a Date object, or a formatted string, always keep Date.
+        const start = typeof event.start === 'string' ? ud.stringToDate(event.start) : event.start
+        const startDateF = ud.formatDateLite(start)
+        const startTimeMinutes = ud.dateToMinutes(start)
 
-        // `event.endDate` accepts a Date object, and`event.end` accepts a formatted string.
-        let endDate, endDateF
-        if (event.endDate && event.endDate instanceof Date) {
-          endDate = event.endDate
-          endDateF = formatDateLite(event.endDate)
-        }
-        else if (event.end) {
-          endDate = stringToDate(event.end)
-          endDateF = event.end.split(' ')[0] // Isolate date without time.
-        }
-
-        let endTimeMinutes = dateToMinutes(endDate)
-        const end = event.end || `${endDateF} ${formatTimeLite(endDate)}`
+        // `event.end` accepts a Date object or a formatted string, always keep Date.
+        const end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
+        let endDateF = ud.formatDateLite(end)
+        let endTimeMinutes = ud.dateToMinutes(end)
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
-          endDate.setSeconds(-1) // End at 23:59:59.
-          endDateF = formatDateLite(endDate)
+          end.setSeconds(-1) // End at 23:59:59.
+          endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
         }
 
         const multipleDays = startDateF !== endDateF
 
-        event = Object.assign({
-          ...this.utils.event.eventDefaults,
+        event = Object.assign({ ...this.utils.event.eventDefaults }, event, {
           // Keep the event ids scoped to this calendar instance.
           _eid: `${this._uid}_${this.eventIdIncrement++}`,
           segments: multipleDays ? {} : null,
           start,
-          startDate,
           startTimeMinutes,
           end,
-          endDate,
           endTimeMinutes,
-          daysCount: multipleDays ? countDays(startDate, endDate) : 1,
+          daysCount: multipleDays ? ud.countDays(start, end) : 1,
           class: event.class
-        }, event)
+        })
 
         this.mutableEvents.push(event)
       })
@@ -876,7 +873,7 @@ export default {
      * @return {Object} the created event.
      */
     createEvent (dateTime, duration, eventOptions = {}) {
-      return this.utils.event.createAnEvent(dateTime, duration, eventOptions, this)
+      return this.utils.event.createAnEvent(dateTime, duration, eventOptions)
     },
 
     /**
@@ -890,8 +887,7 @@ export default {
       // Delete vue-cal specific props instead of returning a set of props so user
       // can place whatever they want inside an event and see it returned.
       const discardProps = [
-        'height', 'top', 'segments',
-        'deletable', 'deleting', 'resizable', 'resizing',
+        'segments', 'deletable', 'deleting', 'titleEditable', 'resizable', 'resizing',
         'draggable', 'dragging', 'draggingStatic', 'focused'
       ]
       discardProps.forEach(prop => { if (prop in event) delete event[prop] })
@@ -939,18 +935,6 @@ export default {
     },
 
     /**
-     * Formats a time and returns the formatted string.
-     * Shorthand function, to avoid passing the common format.
-     *
-     * @param {Number} time the time to format in minutes.
-     * @param {String} format the wanted format.
-     * @return {String} the formatted time.
-     */
-    formatTime (time, format) {
-      return this.utils.date.formatTime(time, format || this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm'), this.texts)
-    },
-
-    /**
      * Double checks the week number is correct. Read bellow to understand!
      * this is a wrapper around the `getWeek()` function for performance:
      * As this is called multiple times from the template and cannot be in computed since there is
@@ -964,12 +948,13 @@ export default {
      * @param {Number} weekFromFirstCell Number from 0 to 6.
      */
     getWeekNumber (weekFromFirstCell) {
+      const ud = this.utils.date
       const firstCellWeekNumber = this.firstCellDateWeekNumber
       const currentWeekNumber = firstCellWeekNumber + weekFromFirstCell
       const modifier = this.startWeekOnSunday ? 1 : 0
 
       if (currentWeekNumber > 52) {
-        return this.view.firstCellDate.addDays(7 * weekFromFirstCell + modifier).getWeek()
+        return ud.getWeek(ud.addDays(this.view.firstCellDate, 7 * weekFromFirstCell + modifier))
       }
       else return currentWeekNumber
     },
@@ -990,7 +975,7 @@ export default {
      * Callable from outside of Vue Cal.
      */
     updateDateTexts () {
-      this.utils.date.updateDateTexts(this.texts)
+      this.utils.date.updateTexts(this.texts)
     },
 
     /**
@@ -1023,7 +1008,6 @@ export default {
     this.utils.event = new EventUtils(this, this.utils.date)
 
     this.loadLocale(this.locale)
-    this.updateDateTexts()
 
     if (this.editEvents.drag) this.loadDragAndDrop()
 
@@ -1046,6 +1030,7 @@ export default {
   },
 
   mounted () {
+    const ud = this.utils.date
     const hasTouch = 'ontouchstart' in window
 
     if (this.editEvents.resize || this.editEvents.drag) {
@@ -1073,7 +1058,7 @@ export default {
       endDate: this.view.endDate,
       ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
       events: this.view.events.map(this.cleanupEvent),
-      ...(this.view.id === 'week' ? { week: this.startWeekOnSunday ? startDate.addDays(1).getWeek() : startDate.getWeek() } : {})
+      ...(this.view.id === 'week' ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
     }
 
     this.$emit('ready', params)
@@ -1128,8 +1113,9 @@ export default {
       return this.view.id === 'month' && this.eventsOnMonthView === 'short'
     },
     firstCellDateWeekNumber () {
+      const ud = this.utils.date
       const date = this.view.firstCellDate
-      return this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()
+      return ud.getWeek(this.startWeekOnSunday ? ud.addDays(date, 1) : date)
     },
     // For week & day views.
     timeCells () {
@@ -1138,7 +1124,7 @@ export default {
         timeCells.push({
           hours: Math.floor(i / 60),
           minutes: i % 60,
-          label: this.formatTime(i),
+          label: this.utils.date.formatTime(i, this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')),
           value: i
         })
       }
@@ -1190,7 +1176,10 @@ export default {
       return weekDays
     },
     weekDaysInHeader () {
-      return this.view.id === 'month' || (this.view.id === 'week' && !this.minCellWidth && !this.minSplitWidth)
+      return (
+        this.view.id === 'month' ||
+        // hasSplits check is important here in case the user toggles the splits but keep minSplitWidth.
+        (this.view.id === 'week' && !this.minCellWidth && !(this.hasSplits && this.minSplitWidth)))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
@@ -1208,6 +1197,7 @@ export default {
       })
     },
     viewTitle () {
+      const ud = this.utils.date
       let title = ''
       const date = this.view.startDate
       const year = date.getFullYear()
@@ -1244,7 +1234,7 @@ export default {
               else formattedMonthYear = `${m1} ${y1} - ${m2} ${y2}`
             }
           }
-          title = `${this.texts.week} ${this.startWeekOnSunday ? date.addDays(1).getWeek() : date.getWeek()} (${formattedMonthYear})`
+          title = `${this.texts.week} ${ud.getWeek(this.startWeekOnSunday ? ud.addDays(date, 1) : date)} (${formattedMonthYear})`
           break
         }
         case 'day': {
@@ -1256,6 +1246,7 @@ export default {
       return title
     },
     viewCells () {
+      const ud = this.utils.date
       let cells = []
       let fromYear = null
       let todayFound = false
@@ -1277,7 +1268,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.utils.date.formatDateLite(startDate),
+              formattedDate: ud.formatDateLite(startDate),
               endDate,
               content: fromYear + i,
               current: fromYear + i === now.getFullYear()
@@ -1294,7 +1285,7 @@ export default {
 
             return {
               startDate,
-              formattedDate: this.utils.date.formatDateLite(startDate),
+              formattedDate: ud.formatDateLite(startDate),
               endDate,
               content: this.xsmall ? this.months[i].label.substr(0, 3) : this.months[i].label,
               current: i === now.getMonth() && fromYear === now.getFullYear()
@@ -1309,15 +1300,15 @@ export default {
 
           // Create 42 cells (6 rows x 7 days) and populate them with days.
           cells = Array.apply(null, Array(42)).map((cell, i) => {
-            const startDate = firstCellDate.addDays(i)
+            const startDate = ud.addDays(firstCellDate, i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
             // To increase performance skip checking isToday if today already found.
-            const isToday = !todayFound && startDate.isToday() && !todayFound++
+            const isToday = !todayFound && ud.isToday(startDate) && !todayFound++
 
             return {
               startDate,
-              formattedDate: this.utils.date.formatDateLite(startDate),
+              formattedDate: ud.formatDateLite(startDate),
               endDate,
               content: startDate.getDate(),
               today: isToday,
@@ -1342,17 +1333,17 @@ export default {
           const weekDays = this.weekDays
 
           cells = weekDays.map((cell, i) => {
-            const startDate = firstDayOfWeek.addDays(i)
+            const startDate = ud.addDays(firstDayOfWeek, i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
             const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
 
             return {
               startDate,
-              formattedDate: this.utils.date.formatDateLite(startDate),
+              formattedDate: ud.formatDateLite(startDate),
               endDate,
               // To increase performance skip checking isToday if today already found.
-              today: !todayFound && startDate.isToday() && !todayFound++,
+              today: !todayFound && ud.isToday(startDate) && !todayFound++,
               specialHours: this.specialDayHours[dayOfWeek]
             }
           }).filter((cell, i) => !weekDays[i].hide)
@@ -1366,9 +1357,9 @@ export default {
 
           cells = [{
             startDate,
-            formattedDate: this.utils.date.formatDateLite(startDate),
+            formattedDate: ud.formatDateLite(startDate),
             endDate,
-            today: startDate.isToday(),
+            today: ud.isToday(startDate),
             specialHours: this.specialDayHours[dayOfWeek]
           }]
           break

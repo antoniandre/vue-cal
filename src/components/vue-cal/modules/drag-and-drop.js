@@ -6,25 +6,6 @@
  * Meantime keep `_` for private.
  */
 
-// @todo:
-// OK - emit the `event-drop` & `event-change` events on event drop
-// OK - handle drag and drop and splits / highlight splits separately
-// OK - add split in emitted event
-// OK - check that event.draggable = false prevents dragging
-// OK - check edge and IE
-// OK - also go to narrower view from month view
-// OK - Fix drag image not visible on Safari
-// OK - Support drag over today button
-// OK - drop an event that would start before last midnight
-// OK - Prevent dragging background events
-// OK - Allow dragging timeless events
-// OK - Fix event deletion
-// OK - Only trigger view change if it changed
-// OK - Add option to snap to time on event drop
-// OK - add javadoc
-// OK - modularize this file
-//    - Add option to copy or move an event from a cal to another?
-
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
@@ -81,12 +62,10 @@ export const DragAndDrop = class {
     }
 
     event.startTimeMinutes = startTimeMinutes
-    event.startDate = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
-    event.start = `${event.startDate.format()} ${event.startDate.formatTime()}`
+    event.start = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
     // Force the end of the event at next midnight maximum.
     event.endTimeMinutes = Math.min(startTimeMinutes + eventDuration, 24 * 60)
-    event.endDate = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
-    event.end = `${event.endDate.format()} ${event.endDate.formatTime()}`
+    event.end = new Date(new Date(cellDate).setMinutes(event.endTimeMinutes))
   }
 
   /**
@@ -203,9 +182,8 @@ export const DragAndDrop = class {
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
-   * @param {Date} cellDate The hovered cell starting date.
    */
-  cellDragLeave (e, cell, cellDate) {
+  cellDragLeave (e, cell) {
     e.preventDefault()
 
     if (e.currentTarget.contains(e.relatedTarget)) return
@@ -247,7 +225,7 @@ export const DragAndDrop = class {
     if (dragging.fromVueCal !== this._vuecal._uid) {
       // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
       // dropping to another calendar then back to the original place.
-      const { _eid, startDate, endDate, duration, ...cleanTransferData } = transferData
+      const { _eid, start, end, duration, ...cleanTransferData } = transferData
       // Note: createAnEvent adds the event to the view.
       event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split })
     }
@@ -259,11 +237,21 @@ export const DragAndDrop = class {
 
       if (!event) {
         event = this._vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
-        addToView = true
+        addToView = !!event
+      }
+
+      // Case where events are fetched from the backend and removed from the array when not in the view.
+      // So it won't be found in the mutableEvents array.
+      if (!event) {
+        const duration = transferData.endTimeMinutes - transferData.startTimeMinutes
+        // Pass exactly the same event as it was before the view change (same _eid as well) except dates.
+        const { start, end, ...cleanTransferData } = transferData
+        event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split })
+        // Note: createAnEvent adds the event to the view.
       }
     }
 
-    const { startDate: oldDate, split: oldSplit } = event
+    const { start: oldDate, split: oldSplit } = event
     this._updateEventStartEnd(e, event, transferData, cellDate)
 
     // Only add the event to view after the start and end are modified otherwise
@@ -282,7 +270,7 @@ export const DragAndDrop = class {
     const params = {
       event: this._vuecal.cleanupEvent(event),
       oldDate,
-      newDate: event.startDate,
+      newDate: event.start,
       ...((split || split === 0) && { oldSplit, newSplit: split }),
       originalEvent: this._vuecal.cleanupEvent(transferData),
       external: !dragging.fromVueCal // If external event, not coming from any Vue Cal.

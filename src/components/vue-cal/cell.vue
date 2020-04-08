@@ -50,7 +50,7 @@ transition-group.vuecal__cell(
     v-if="timelineVisible"
     :style="`top: ${todaysTimePosition}px`"
     :key="options.transitions ? `${view.id}-now-line` : 'now-line'"
-    :title="vuecal.now.formatTime()")
+    :title="utils.date.formatTime(vuecal.now)")
 </template>
 
 <script>
@@ -296,15 +296,6 @@ export default {
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
         if (this.options.time && this.isWeekOrDayView && !(this.options.showAllDayEvents && this.allDay)) {
-          events.forEach(event => {
-            // all-day events are positionned via css: top-0 & bottom-0.
-            // So they behave as background events if not in allDay slot.
-            // @todo: Do we want this or not?
-            const eventToUpdate = (event.segments && event.segments[this.data.formattedDate]) || event
-
-            if ((event.startTimeMinutes || event.endTimeMinutes) && !event.allDay) this.utils.event.updateEventPosition(eventToUpdate)
-          })
-
           // Sort events in chronological order.
           events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
@@ -401,8 +392,8 @@ export default {
 
   .vuecal--click-to-navigate &:not(&--disabled) {cursor: pointer;}
   .vuecal--view-with-time &,
-  .vuecal--week-view.vuecal--no-time &,
-  .vuecal--day-view.vuecal--no-time & {display: block;}
+  .vuecal--week-view.vuecal--no-time &:not(.vuecal__cell--has-splits),
+  .vuecal--day-view.vuecal--no-time &:not(.vuecal__cell--has-splits) {display: block;}
 
   &.vuecal__cell--has-splits {
     flex-direction: row;

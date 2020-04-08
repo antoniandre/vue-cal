@@ -114,7 +114,7 @@ $splits-headers-height: 1.5em;
   &--no-time &__bg {
     display: flex;
     flex: 1 1 auto;
-    overflow: visible;
+    overflow: auto;
   }
 
   &__week-numbers {
