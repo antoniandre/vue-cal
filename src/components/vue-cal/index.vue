@@ -189,6 +189,7 @@ export default {
     }
   },
   props: {
+    activeView: { type: String, default: 'week' },
     cellClickHold: { type: Boolean, default: true },
     cellContextmenu: { type: Boolean, default: false },
     clickToNavigate: { type: Boolean, default: false },
@@ -384,6 +385,7 @@ export default {
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
+      this.$emit('update:activeView', view)
       this.view.events = []
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
@@ -1410,6 +1412,9 @@ export default {
     },
     selectedDate (date) {
       this.updateSelectedDate(date)
+    },
+    activeView (newVal) {
+      this.switchView(newVal)
     }
   }
 }
