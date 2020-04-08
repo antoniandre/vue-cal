@@ -1,14 +1,19 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
-div
+div.test-view
+  div.text-center
+    v-btn.ma-1(small @click="view = 'month'" color="primary" depressed :outlined="view !== 'month'") month view
+    v-btn.ma-1(small @click="view = 'week'" color="primary" depressed :outlined="view !== 'week'") week view
+    v-btn.ma-1(small @click="view = 'day'" color="primary" depressed :outlined="view !== 'day'") day view
   vue-cal.ml-2.mr-1.vuecal--blue-theme(
     selected-date="2019-10-29"
     :events="events"
+    :active-view.sync="view"
     editable-events
-    :disable-views="['years', 'year']"
     :time-from="8 * 60"
     :time-to="17 * 60"
     hide-weekends
+    today-button
     @ready="fetchEvents"
     @view-change="fetchEvents")
 </template>
@@ -73,6 +78,7 @@ export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
+    view: 'year',
     events: [
       {
         start: now.subtractDays(1),
@@ -134,12 +140,21 @@ export default {
 </script>
 
 <style lang="scss">
-.vuecal {max-height: 65vh;}
+.vuecal {}
 .vuecal__event {
   background-color: rgba(160, 220, 255, 0.5);
   border: 1px solid rgba(0, 100, 150, 0.15);
 }
 
-.v-application--wrap {min-height: 0;}
+// Global.
+html, body, #app, .v-application--wrap, .container {height: 100%;}
+#app {padding-top: 2em;}
+.v-application--wrap {min-height: 0;padding-top: 7em;}
+.test-view {
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+}
 footer {display: none !important;}
 </style>
