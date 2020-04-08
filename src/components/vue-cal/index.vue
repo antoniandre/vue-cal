@@ -374,13 +374,15 @@ export default {
      */
     switchView (view, date = null, fromViewSelector = false) {
       const ud = this.utils.date
+      // This is user to prevent firing the custom event twice when syncing activeView.
+      const viewDateBeforeChange = this.view.startDate && this.view.startDate.getTime()
 
       if (this.transitions && fromViewSelector) {
+        if (this.view.id === view) return
         const views = this.enabledViews
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
-      this.$emit('update:activeView', view)
       this.view.events = []
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
@@ -461,6 +463,13 @@ export default {
       }
 
       this.addEventsToView()
+
+      // Prevent firing the `view-change` event twice (if using .sync).
+      const viewDate = this.view.startDate && this.view.startDate.getTime()
+      if (this.view.id === view && viewDate === viewDateBeforeChange) return
+
+      // Emit events to outside of Vue Cal and update the activeView (if using .sync).
+      this.$emit('update:activeView', view)
 
       if (this.ready) {
         const startDate = this.view.startDate
