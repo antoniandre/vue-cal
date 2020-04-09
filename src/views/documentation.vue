@@ -197,13 +197,13 @@
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
-    vue-cal.vuecal--green-theme(hide-view-selector :time="false" default-view="month" xsmall)
+    vue-cal.vuecal--green-theme(hide-view-selector :time="false" active-view="month" xsmall)
       template(v-slot:arrow-prev)
         v-icon arrow_back
       template(v-slot:arrow-next)
         v-icon arrow_forward
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal hide-view-selector :time="false" default-view="month" xsmall&gt;
+    &lt;vue-cal hide-view-selector :time="false" active-view="month" xsmall&gt;
       &lt;i v-slot:arrow-prev aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
       &lt;i v-slot:arrow-next aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
     &lt;/vue-cal&gt;
@@ -219,14 +219,14 @@
     to disable.#[br]
     The views are not only hidden from the menu bar, they are totally disabled,
     even when navigating from cells and title bar clicks.#[br]#[br]
-    By default all the views are visible and the default view is #[span.code week].
+    By default all the views are visible and the default active view is the #[span.code week] view.
   v-card.mx-auto.main-content(style="height: 350px")
     vue-cal.vuecal--green-theme.ex--disable-views(
       :time="false"
-      default-view="month"
+      active-view="month"
       :disable-views="['years', 'year', 'week']")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :time="false" default-view="month" :disable-views="['years', 'year', 'week']" /&gt;
+    &lt;vue-cal :time="false" active-view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
   //- Example.
   h4.title
@@ -252,7 +252,7 @@
       hide-view-selector
       click-to-navigate
       :time="false"
-      default-view="month"
+      active-view="month"
       :min-date="minDate"
       :max-date="maxDate")
   sshpre(language="html-vue" label="Vue Template").
@@ -261,7 +261,7 @@
       hide-view-selector
       click-to-navigate
       :time="false"
-      default-view="month"
+      active-view="month"
       :min-date="minDate"
       :max-date="maxDate"&gt;
     &lt;/vue-cal&gt;
@@ -300,21 +300,21 @@
         xsmall
         hide-view-selector
         :time="false"
-        default-view="month"
+        active-view="month"
         :disable-views="['week']")
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
         :time="false"
-        default-view="month"
+        active-view="month"
         :disable-views="['week']")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
              xsmall
              hide-view-selector
              :time="false"
-             default-view="month"
+             active-view="month"
              :disable-views="['week']"&gt;
     &lt;/vue-cal&gt;
   highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
@@ -380,12 +380,12 @@
     vue-cal.vuecal--green-theme(
       :time="false"
       small
-      default-view="year"
+      active-view="year"
       :locale="locale"
       @ready="overrideDateTexts")
   sshpre(language="html-vue" label="Vue Template").
     &lt;v-select :items="localesList" v-model="locale"&gt;&lt;/v-select&gt;
-    &lt;vue-cal hide-view-selector :time="false" small default-view="year" :locale="locale" /&gt;
+    &lt;vue-cal hide-view-selector :time="false" small active-view="year" :locale="locale" /&gt;
   highlight-message(type="warning") Don't forget to import the locale file you want as follows:
   sshpre(language="js" label="Javascript" reactive).
     // In your Vue.js component import the locale file in your component:
@@ -472,11 +472,11 @@
     vue-cal.vuecal--green-theme.ex--today-current-time(
       xsmall
       :time-cell-height="26"
-      default-view="day"
+      active-view="day"
       :disable-views="['years', 'year', 'month']"
       @ready="scrollToCurrentTime('.ex--today-current-time')")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal xsmall default-view="day" :disable-views="['years', 'year', 'month']" /&gt;
+    &lt;vue-cal xsmall active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
   //- Example.
   h4.title
@@ -503,7 +503,7 @@
         :disable-views="['years']"
         :time="false"
         today-button
-        default-view="month"
+        active-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     v-card.my-2.main-content(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
@@ -513,7 +513,7 @@
         :disable-views="['years']"
         :time="false"
         today-button
-        default-view="month"
+        active-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
         template(v-slot:today-button)
           v-tooltip(bottom)
@@ -528,7 +528,7 @@
              :disable-views="['years']"
              :time="false"
              today-button
-             default-view="month"
+             active-view="month"
              :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
       &lt;template v-slot:today-button&gt;
@@ -777,7 +777,7 @@
         selected-date="2018-11-19"
         xsmall
         :time-from="10 * 60"
-        default-view="month"
+        active-view="month"
         :disable-views="['day']"
         events-count-on-year-view
         :events="events")
@@ -789,7 +789,7 @@
         :time-from="10 * 60"
         :disable-views="['day']"
         events-count-on-year-view
-        default-view="month"
+        active-view="month"
         :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
@@ -797,7 +797,7 @@
              :time-from="10 * 60"
              :disable-views="['day']"
              events-count-on-year-view
-             default-view="month"
+             active-view="month"
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -839,7 +839,7 @@
       selected-date="2018-11-19"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
-      default-view="month"
+      active-view="month"
       hide-weekends
       events-on-month-view="short"
       :events="events"
@@ -848,7 +848,7 @@
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
              :disable-views="['years', 'year']"
-             default-view="month"
+             active-view="month"
              hide-weekends
              events-on-month-view="short"
              :events="events"
@@ -1777,17 +1777,17 @@
     br
     br
     | By default the body of the calendar will fit the container.#[br]
-    | But with the options #[span.code.black--text min-cell-width] or #[span.code.black--text min-split-width], you can increase the calendar
+    | But with the options #[span.code min-cell-width] or #[span.code min-split-width], you can increase the calendar
     | body width and it will become scrollable horizontally.
     ul
       li #[span.code min-cell-width.black--text] will only be activated on week view, since there is only 1 cell in day view.
-      li If both #[span.code.black--text min-cell-width] and #[span.code.black--text min-split-width] are set, #[span.code.black--text min-split-width] will be used.
+      li If both #[span.code min-cell-width] and #[span.code min-split-width] are set, #[span.code min-split-width] will be used.
 
-    | #[br]You can also use the option #[span.code.black--text sticky-split-labels] to place the split labels in the header.#[br]#[br]
+    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header.#[br]#[br]
 
-    | You can toggle the splits thanks to the #[span.code.black--text hide] property of each split in #[span.code splitDays].#[br]#[br]
+    | You can toggle the splits thanks to the #[span.code hide] property of each split in #[span.code splitDays].#[br]#[br]
 
-    | Refer to the #[span.code min-cell-width.black--text], #[span.code.black--text min-split-width] and #[span.code.black--text splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
+    | Refer to the #[span.code min-cell-width.black--text], #[span.code min-split-width] and #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
 
     v-layout(align-center)
       v-btn.px-2.mr-2(
@@ -2110,14 +2110,27 @@
   p.
     You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
     This example shows how to control the Previous, Next and Today functions and the view selections
-    from external buttons.
+    from external buttons.#[br]
+    One important thing to notice is that using the #[span.code .sync] keyword on #[span.code active-view]
+    keeps it updated when Vue Cal changes the view internally. For instance when you click the title to go
+    to a broader view.
 
   v-layout.my-2.mx-auto(align-center style="max-width: 500px")
-    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('day')") Day
-    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('week')") Week
-    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('month')") Month
-    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('year')") Year
-    v-btn.mx-1.flex(small color="primary darken-1" @click="$refs.vuecal4.switchView('years')") Years
+    v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'day'")
+      v-icon.ml-n2.mr-1(small v-if="activeView === 'day'") check
+      | Day
+    v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'week'")
+      v-icon.ml-n2.mr-1(small v-if="activeView === 'week'") check
+      | Week
+    v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'month'")
+      v-icon.ml-n2.mr-1(small v-if="activeView === 'month'") check
+      | Month
+    v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'year'")
+      v-icon.ml-n2.mr-1(small v-if="activeView === 'year'") check
+      | Year
+    v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'years'")
+      v-icon.ml-n2.mr-1(small v-if="activeView === 'years'") check
+      | Years
 
   v-layout.mt-2.mb-6.mx-auto(justify-center style="max-width: 500px")
     v-btn.mx-1.flex(small color="primary lighten-1" @click="$refs.vuecal4.previous()")
@@ -2134,16 +2147,17 @@
     vue-cal.vuecal--green-theme(
       small
       ref="vuecal4"
+      :active-view.sync="activeView"
       :time="false"
       hide-view-selector
       :selected-date="selectedDate"
       style="max-width: 500px;height: 260px")
   sshpre(language="html-vue" label="Vue Template").
-    &lt;button @click="$refs.vuecal.switchView('day')"&gt;Day&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.switchView('week')"&gt;Week&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.switchView('month')"&gt;Month&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.switchView('year')"&gt;Year&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.switchView('years')"&gt;Years&lt;/button&gt;
+    &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
+    &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
+    &lt;button @click="activeView = 'month'"&gt;Month&lt;/button&gt;
+    &lt;button @click="activeView = 'year'"&gt;Year&lt;/button&gt;
+    &lt;button @click="activeView = 'years'"&gt;Years&lt;/button&gt;
     &lt;br /&gt;
     &lt;button @click="$refs.vuecal.previous()"&gt;Previous&lt;/button&gt;
     &lt;button @click="$refs.vuecal.switchView('day', new Date())"&gt;Today&lt;/button&gt;
@@ -2151,6 +2165,7 @@
 
     &lt;vue-cal small
       ref="vuecal"
+      :active-view.sync="activeView"
       :time="false"
       hide-view-selector
       :selected-date="selectedDate"&gt;
@@ -2162,7 +2177,7 @@
     | you can also call other useful Vue Cal methods.
     ul
       li
-        code #[span.code switchToNarrowerView()]
+        code switchToNarrowerView()
         p Will drilldown the current view on selected date if there is a narrower view available.
       li
         code minutesAtCursor(e)
@@ -2190,7 +2205,7 @@
       small
       :time="false"
       hide-view-selector
-      default-view="week"
+      active-view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       style="max-width: 360px;height: 260px")
@@ -2198,7 +2213,7 @@
       xsmall
       :time="false"
       hide-view-selector
-      default-view="month"
+      active-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
       @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
@@ -2206,7 +2221,7 @@
     &lt;vue-cal small
       :time="false"
       hide-view-selector
-      default-view="week"
+      active-view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       class="vuecal--blue-theme"
@@ -2215,7 +2230,7 @@
     &lt;vue-cal xsmall
       :time="false"
       hide-view-selector
-      default-view="month"
+      active-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
       @cell-focus="selectedDate = $event"
       class="vuecal--blue-theme vuecal--rounded-theme"
@@ -2327,7 +2342,7 @@
     v-card.my-4.mr-2.flex(style="width: 360px;height: 360px;max-width: 100%")
       vue-cal.ex--scroll-to-time.vuecal--green-theme(
         small
-        default-view="day"
+        active-view="day"
         :disable-views="['years', 'year', 'month', 'week']"
         hide-view-selector
         :time-cell-height="timeCellHeight"
@@ -2365,7 +2380,7 @@
       :time-from="5 * 60"
       :time-step="15"
       :time-cell-height="18"
-      default-view="day"
+      active-view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
       template(v-slot:time-cell="{ hours, minutes }")
@@ -2380,7 +2395,7 @@
              :time-from="5 * 60"
              :time-step="15"
              :time-cell-height="18"
-             default-view="day"
+             active-view="day"
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
       &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
@@ -2413,7 +2428,7 @@
       xsmall
       :time-from="10 * 60"
       :time-step="2 * 60"
-      default-view="month"
+      active-view="month"
       :disable-views="['day']"
       events-count-on-year-view
       :events="events")
@@ -2426,7 +2441,7 @@
              :time-from="10 * 60"
              :time-step="2 * 60"
              :disable-views="['day']"
-             default-view="month"
+             active-view="month"
              events-count-on-year-view
              :events="events"&gt;
         &lt;template v-slot:events-count="{ events, view }"&gt;
@@ -2552,7 +2567,7 @@
     vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :dblclick-to-navigate="false"
-      default-view="month"
+      active-view="month"
       :events="events")
       template(v-slot:title="{ title, view }")
         | 🎉&nbsp;
@@ -2570,7 +2585,7 @@
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false"
              :dblclick-to-navigate="false"
-             default-view="month"
+             active-view="month"
              :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
@@ -2710,52 +2725,52 @@
     Don't forget that in HTML the #[span.code camelCase] is not correct and you should use
     the #[span.code kebab-case].
   sshpre.mt-2(language="js").
-    locale:                 [String],          default: 'en'
-    hideViewSelector:       [Boolean],         default: false
-    hideTitleBar:           [Boolean],         default: false
-    hideBody:               [Boolean],         default: false
-    hideWeekends:           [Boolean],         default: false
-    hideWeekdays:           [Array],           default: []
-    disableViews:           [Array],           default: []
-    defaultView:            [String],          default: 'week'
-    todayButton:            [Boolean],         default: false
-    showAllDayEvents:       [Boolean, String], default: false
-    showWeekNumbers:        [Boolean, String], default: false
-    selectedDate:           [String, Date],    default: ''
-    minDate:                [String, Date],    default: ''
-    maxDate:                [String, Date],    default: ''
-    specialHours:           [Object],          default: {}
-    startWeekOnSunday:      [Boolean],         default: false
-    small:                  [Boolean],         default: false
-    xsmall:                 [Boolean],         default: false
-    transitions:            [Boolean],         default: true
+    activeView:             [String],          default: 'week'
+    cellClickHold:          [Boolean],         default: true
     clickToNavigate:        [Boolean],         default: false
     dblclickToNavigate:     [Boolean],         default: true
-    cellClickHold:          [Boolean],         default: true
-    time:                   [Boolean],         default: true
-    timeFrom:               [Number],          default: 0 // In minutes.
-    timeTo:                 [Number],          default: 24 * 60 // In minutes.
-    timeStep:               [Number],          default: 30 // In minutes.
-    timeCellHeight:         [Number],          default: 40 // In pixels.
-    twelveHour:             [Boolean],         default: false
-    timeFormat:             [String],          default: ''
-    watchRealTime:          [Boolean],         default: false
-    minEventWidth:          [Number],          default: 0 // In percent.
-    overlapsPerTimeStep:    [Boolean],         default: false
-    minCellWidth:           [Number],          default: 0 // In pixels.
-    minSplitWidth:          [Number],          default: 0 // In pixels.
-    splitDays:              [Array],           default: []
-    stickySplitLabels:      [Boolean],         default: false
-    events:                 [Array],           default: []
-    editableEvents:         [Boolean, Object], default: false
-    resizeX:                [Boolean],         default: false
-    snapToTime:             [Number],          default: null
-    eventsOnMonthView:      [Boolean, String], default: false
-    eventsCountOnYearView:  [Boolean],         default: false
-    onEventClick:           [Function],        default: null
-    onEventDblclick:        [Function],        default: null
-    onEventCreate:          [Function],        default: null
     disableDatePrototypes:  [Boolean],         default: false
+    disableViews:           [Array],           default: []
+    editableEvents:         [Boolean, Object], default: false
+    events:                 [Array],           default: []
+    eventsCountOnYearView:  [Boolean],         default: false
+    eventsOnMonthView:      [Boolean, String], default: false
+    hideBody:               [Boolean],         default: false
+    hideTitleBar:           [Boolean],         default: false
+    hideViewSelector:       [Boolean],         default: false
+    hideWeekdays:           [Array],           default: []
+    hideWeekends:           [Boolean],         default: false
+    locale:                 [String],          default: 'en'
+    maxDate:                [String, Date],    default: ''
+    minCellWidth:           [Number],          default: 0 // In pixels.
+    minDate:                [String, Date],    default: ''
+    minEventWidth:          [Number],          default: 0 // In percent.
+    minSplitWidth:          [Number],          default: 0 // In pixels.
+    onEventClick:           [Function],        default: null
+    onEventCreate:          [Function],        default: null
+    onEventDblclick:        [Function],        default: null
+    overlapsPerTimeStep:    [Boolean],         default: false
+    resizeX:                [Boolean],         default: false
+    selectedDate:           [String, Date],    default: ''
+    showAllDayEvents:       [Boolean, String], default: false
+    showWeekNumbers:        [Boolean, String], default: false
+    small:                  [Boolean],         default: false
+    snapToTime:             [Number],          default: null
+    specialHours:           [Object],          default: {}
+    splitDays:              [Array],           default: []
+    startWeekOnSunday:      [Boolean],         default: false
+    stickySplitLabels:      [Boolean],         default: false
+    time:                   [Boolean],         default: true
+    timeCellHeight:         [Number],          default: 40 // In pixels.
+    timeFormat:             [String],          default: ''
+    timeFrom:               [Number],          default: 0 // In minutes.
+    timeStep:               [Number],          default: 30 // In minutes.
+    timeTo:                 [Number],          default: 24 * 60 // In minutes.
+    todayButton:            [Boolean],         default: false
+    transitions:            [Boolean],         default: true
+    twelveHour:             [Boolean],         default: false
+    xsmall:                 [Boolean],         default: false
+    watchRealTime:          [Boolean],         default: false
 
   ul.pl-0.api-options
     li
@@ -2842,10 +2857,11 @@
         Note that the navigation between views via cells click or title click won't
         break and will only navigate to views you have allowed.
     li
-      code.mr-2 defaultView
+      code.mr-2 activeView
       span.code [String], default: 'week'
       p.
-        Allows you to set a default view, for the first time you load the calendar.#[br]
+        Allows you to set a default active view, for the first time you load the calendar.#[br]
+        Then control the active view from outside of Vue Cal.#[br]
         Accepts one of 'years', 'year', 'month', 'week', 'day'.
     li
       code.mr-2 todayButton
@@ -2890,7 +2906,7 @@
         Accepts a formatted string or plain JS Date object.#[br]
         Set a selected date, for the first time you load the calendar.#[br]
         This day will be highlighted and the first view will naturally show this date.#[br]
-        E.g. setting a date in year 2000 with a defaultView of week, will show you that week of year 2000.#[br]#[br]
+        E.g. setting a date in year 2000 with a activeView of week, will show you that week of year 2000.#[br]#[br]
         Updating the #[span.code selectedDate] programmatically after the first calendar load,
         will update the view if needed to show this date.#[br]Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
       highlight-message(type="warning").
@@ -3300,7 +3316,7 @@
         li #[strong.code.black--text DD]: date of the month with leading zero. (01-31) #[span.grey--text.ml-2 E.g. `01`]
         li #[strong.code.black--text D]: date of the month without leading zero. (1-31) #[span.grey--text.ml-2 E.g. `1`]
         li.
-          #[strong.code.black--text S]: (usually with surrounding #[span.code.black--text `{ }`]) only in English,
+          #[strong.code.black--text S]: (usually with surrounding #[span.code `{ }`]) only in English,
           will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
         li #[strong.code.black--text dddd]: day of the week in full. #[span.grey--text.ml-2 E.g. `Monday`]
         li #[strong.code.black--text ddd]: 3 first letters of the day of the week. #[span.grey--text.ml-2 E.g. `Mon`]
@@ -3325,21 +3341,21 @@
         li #[strong.code.black--text h]: Hours without leading zero, 12-hour format. #[span.grey--text.ml-2 E.g. `8`]
         li #[strong.code.black--text mm]: Minutes with leading zero. #[span.grey--text.ml-2 E.g. `08`]
         li #[strong.code.black--text m]: Minutes without leading zero. #[span.grey--text.ml-2 E.g. `8`]
-        li #[strong.code.black--text am]: (usually with surrounding #[span.code.black--text `{ }`]) am or pm (also localized if any)
+        li #[strong.code.black--text am]: (usually with surrounding #[span.code `{ }`]) am or pm (also localized if any)
 
   highlight-message.my-4(type="tips")
     ul
       li.
         To separate 2 keywords or a keyword and another text not from this list without adding spaces or
-        any separation, you can use the delimiters #[span.code.black--text `{ }`].#[br]
+        any separation, you can use the delimiters #[span.code `{ }`].#[br]
         For instance #[span.code `new Date().format('YYYY{MM}DD')`] (or even #[span.code `{YYYY}{MM}{DD}`]) will produce:
         "#[span.code {{ nowFormatted }}]".
       li.mt-4.
         The Date functions are added when Vue Cal loads, you can always check if you have it before you use it:#[br]
-        #[span.code.black--text Date.prototype.format &amp;&amp; new Date().format()]
+        #[span.code Date.prototype.format &amp;&amp; new Date().format()]
       li.mt-4.
         If you really don't want the Date prototypes to be added, you can disable them with this option:
-        #[span.code.black--text disable-date-prototypes].#[br]
+        #[span.code disable-date-prototypes].#[br]
         Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 
   h2.headline.mt-12.pt-12
@@ -3406,7 +3422,11 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
-  div.grey--text #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
+  div
+    strong.mr-2 Version 3.2
+    | The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
+    | Refer to the #[a(href="#ex--external-controls") external controls] example.
+  div.mt-2.grey--text #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
   div
     strong Version 3.1.0
     highlight-message(type="warning").
@@ -4019,6 +4039,7 @@ export default {
     selectedEvent: {},
     eventsCssClasses: ['leisure', 'sport', 'health'],
     selectedDate: null,
+    activeView: 'week',
     logMouseEvents: false,
     editableEvents: [
       ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
@@ -4475,6 +4496,9 @@ $primary: #42b983;
   .api-options {list-style-type: none;}
   .api-options > li {margin-top: 2em;}
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
+
+  .code {font-family: monospace, sans-serif;}
+  span.code {color: black;}
 }
 
 // Yellow theme.

@@ -45,9 +45,7 @@
             v-icon(small).mr-2 access_time
             | TIMELINE, BUSINESS HOURS &amp; TODAY
           v-list-item(href="#ex--timeline" v-scroll-to="'#ex--timeline'") Timeline
-          v-list-item(href="#ex--special-hours" v-scroll-to="'#ex--special-hours'")
-            | Business Hours
-            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
+          v-list-item(href="#ex--special-hours" v-scroll-to="'#ex--special-hours'") Business Hours
           v-list-item(href="#ex--today-current-time" v-scroll-to="'#ex--today-current-time'") Today's current time
           v-list-item(href="#ex--adding-a-today-button" v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
 
@@ -84,7 +82,9 @@
           v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'")
             | Vue Cal emitted events
             v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
-          v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'") External controls &amp; use of Vue Cal methods
+          v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'")
+            | External controls &amp; use of Vue Cal methods
+            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
           v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-item(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
 

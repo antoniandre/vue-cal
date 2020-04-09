@@ -79,10 +79,6 @@ a {
   }
 }
 
-.code {
-  font-family: monospace, sans-serif;
-}
-
 .v-card {box-shadow: none;}
 
 .v-footer {
