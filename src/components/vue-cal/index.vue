@@ -95,6 +95,7 @@
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
+                  :class="cellClass(cell)"
                   :key="i"
                   :options="$props"
                   :edit-events="editEvents"
@@ -1004,6 +1005,33 @@ export default {
         style.innerHTML = `.vuecal__weekdays-headings,.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
         document.head.appendChild(style)
       }
+    },
+
+    cellClass (cell) {
+      let cssClass = ''
+      switch (this.view.id) {
+        case 'years': {
+          cssClass = `vuecal-cell-${this.view.id}-${cell.startDate.getYear()}`
+          break
+        }
+        case 'year': {
+          cssClass = `vuecal-cell-${this.view.id}-${cell.startDate.getMonth()}`
+          break
+        }
+        case 'month': {
+          cssClass = `vuecal-cell-${this.view.id}-${cell.startDate.getDay()}`
+          break
+        }
+        case 'week': {
+          cssClass = `vuecal-cell-${this.view.id}-${cell.startDate.getDay()}`
+          break
+        }
+        case 'day': {
+          cssClass = `vuecal-cell-${this.view.id}-${cell.startDate.getDay()}`
+          break
+        }
+      }
+      return cssClass
     }
   },
 
