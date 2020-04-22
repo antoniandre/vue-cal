@@ -408,7 +408,7 @@ export default {
     left: 0;
     right: -1px;
     bottom: -1px;
-    border: 1px solid #ddd;
+    border: 1px solid rgba(196, 196, 196, 0.25);
   }
   .vuecal--overflow-x.vuecal--day-view &:before {bottom: 0;}
 
