@@ -1326,8 +1326,7 @@ export default {
 
           if (this.hideWeekends || this.hideWeekdays.length) {
             cells = cells.filter(cell => {
-              let day = cell.startDate.getDay()
-              if (!day) day = 7 // Put Sunday at position 7 instead of 0.
+              const day = cell.startDate.getDay() || 7 // Put Sunday at position 7 instead of 0.
 
               return !((this.hideWeekends && day >= 6) ||
               (this.hideWeekdays.length && this.hideWeekdays.includes(day)))
@@ -1344,7 +1343,7 @@ export default {
             const startDate = ud.addDays(firstDayOfWeek, i)
             const endDate = new Date(startDate)
             endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
-            const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
+            const dayOfWeek = (startDate.getDay() || 7) - 1 // Day of the week from 0 to 6 with 6 = Sunday.
 
             return {
               startDate,
@@ -1361,7 +1360,7 @@ export default {
           const startDate = this.view.startDate
           const endDate = new Date(this.view.startDate)
           endDate.setHours(23, 59, 59, 0) // End at 23:59:59.
-          const dayOfWeek = (startDate.getDay() - 1 + 7) % 7 // Day of the week from 0 to 6 with 6 = Sunday.
+          const dayOfWeek = (startDate.getDay() || 7) - 1 // Day of the week from 0 to 6 with 6 = Sunday.
 
           cells = [{
             startDate,
