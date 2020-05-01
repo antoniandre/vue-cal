@@ -17,9 +17,9 @@ transition-group.vuecal__cell(
     @keypress.enter="onCellkeyPressEnter($event)"
     @touchstart="!isDisabled && onCellTouchStart($event, splitsCount ? split.id : null)"
     @mousedown="!isDisabled && onCellMouseDown($event, splitsCount ? split.id : null)"
-    @mousemove="!isDisabled && mouseOver($event, splitsCount ? split.id : null)"
+    @mousemove="!isDisabled && onMouseMove($event, splitsCount ? split.id : null)"
+    @mouseup="!isDisabled && onMouseUp($event)"
     @click="!isDisabled && selectCell($event)"
-    @mouseup="!isDisabled && mouseUp($event)"
     @dblclick="!isDisabled && onCellDblClick($event)"
     @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
     @dragenter="!isDisabled && editEvents.drag && dnd && dnd.cellDragEnter($event, $data, data.startDate)"
@@ -45,7 +45,7 @@ transition-group.vuecal__cell(
         :cell-events="splitsCount ? split.events : events"
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
-        :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak" @mousemove="!isDisabled && mouseOver($event, splitsCount ? split.id : null)")
+        :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak" @mousemove="!isDisabled && onMouseMove($event, splitsCount ? split.id : null)")
         
         template(v-slot:event="{ event, view }")
           slot(name="event" :view="view" :event="event")
@@ -71,7 +71,8 @@ export default {
     minTimestamp: { type: [Number, null], default: null },
     maxTimestamp: { type: [Number, null], default: null },
     cellWidth: { type: [Number, Boolean], default: false },
-    allDay: { type: Boolean, default: false }
+    allDay: { type: Boolean, default: false },
+    eventCreateWithDrag: { tpye: Boolean, default: true }
   },
 
   data: () => ({
@@ -86,8 +87,8 @@ export default {
       dragType: "end",
       mouseTimes: { down: null, up: null, move: null },
       createdEvent: null,
-      createdEventWithMouseDown: false,
-    },
+      createdEventWithMouseDown: false
+    }
   }),
 
   methods: {
@@ -129,7 +130,11 @@ export default {
       this.utils.cell.selectCell(force, this.timeAtCursor, split);
       this.timeAtCursor = null;
     },
-    mouseUp(DOMEvent, force = false) {
+    onMouseUp(DOMEvent, force = false) {
+      // If prohibited, doesn't work
+      if (!this.eventCreateWithDrag) {
+        return;
+      }
       if (!this.isSelected) this.onCellFocus(DOMEvent);
 
       // If splitting days, also return the clicked split on cell click when emitting event.
@@ -140,11 +145,15 @@ export default {
       this.newDragCreatEvent.createdEvent.draggable = true;
       this.newDragCreatEvent.createdEventWithMouseDown = false;
     },
-    mouseOver(DOMEvent, force = false) {
+    onMouseMove(DOMEvent, force = false) {
       if (!this.newDragCreatEvent.mouseDown) {
         return;
       }
 
+      // If prohibited, doesn't work
+      if (!this.eventCreateWithDrag) {
+        return;
+      }
       if (!this.isSelected) this.onCellFocus(DOMEvent);
 
       this.timeAtCursor = new Date(this.data.startDate);
@@ -161,10 +170,18 @@ export default {
       const { clickHoldACell, focusAnEvent } = this.domEvents;
 
       // If didn't create before then create an event
-      if (this.newDragCreatEvent.mouseTimes.down != null && !this.newDragCreatEvent.createdEventWithMouseDown) {
+      if (
+        this.newDragCreatEvent.mouseTimes.down != null &&
+        !this.newDragCreatEvent.createdEventWithMouseDown
+      ) {
         this.newDragCreatEvent.createdEvent = this.utils.event.createAnEvent(
           this.newDragCreatEvent.mouseTimes.down,
-          Math.floor((this.newDragCreatEvent.mouseTimes.move - this.newDragCreatEvent.mouseTimes.down) / 1000 / 60),
+          Math.floor(
+            (this.newDragCreatEvent.mouseTimes.move -
+              this.newDragCreatEvent.mouseTimes.down) /
+              1000 /
+              60
+          ),
           clickHoldACell.split ? { split: clickHoldACell.split } : {}
         );
         this.newDragCreatEvent.createdEvent.draggable = false;
@@ -177,7 +194,10 @@ export default {
         typeof this.newDragCreatEvent.createdEvent == "object"
       ) {
         // set dragType
-        if (this.newDragCreatEvent.mouseTimes.down < this.newDragCreatEvent.mouseTimes.move) {
+        if (
+          this.newDragCreatEvent.mouseTimes.down <
+          this.newDragCreatEvent.mouseTimes.move
+        ) {
           this.newDragCreatEvent.dragType = "end";
         } else {
           this.newDragCreatEvent.dragType = "start";
@@ -241,9 +261,6 @@ export default {
     },
 
     onCellMouseDown(DOMEvent, split = null, touch = false) {
-      // Set the mousedown
-      this.newDragCreatEvent.mouseDown = true;
-
       // Prevent a double mouse down on touch devices.
       if ("ontouchstart" in window && !touch) return false;
 
@@ -258,15 +275,19 @@ export default {
         this.vuecal.minutesAtCursor(DOMEvent).minutes
       );
 
-      // Save the time at mouseDown
-      this.newDragCreatEvent.mouseTimes.down = this.timeAtCursor;
-
       const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target);
       // Unfocus an event if any is focused and clicking on cell outside of an event.
       if (!mouseDownOnEvent && focusAnEvent._eid) {
         (
           this.view.events.find(e => e._eid === focusAnEvent._eid) || {}
         ).focused = false;
+      }
+
+      // Set the mousedown if not on event
+      if (!mouseDownOnEvent) {
+        this.newDragCreatEvent.mouseDown = true;
+        // Save the time at mouseDown
+        this.newDragCreatEvent.mouseTimes.down = this.timeAtCursor;
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
