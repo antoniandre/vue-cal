@@ -103,6 +103,7 @@
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
                   :eventCreateWithDrag="eventCreateWithDrag"
+                  :eventCreateWithDragInterval="eventCreateWithDragInterval"
                   :cell-splits="hasSplits && daySplits || []")
                   template(v-slot:cell-content="{ events, split, selectCell }")
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
@@ -203,6 +204,17 @@ export default {
     disableViews: { type: Array, default: () => [] },
     editableEvents: { type: [Boolean, Object], default: false },
     eventCreateWithDrag: { type: Boolean, default: true },
+    eventCreateWithDragInterval: {
+      type: Number,
+      validator: value => {
+        if (60 % value == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      default: 1
+    },
     events: { type: Array, default: () => [] },
     eventsCountOnYearView: { type: Boolean, default: false },
     eventsOnMonthView: { type: [Boolean, String], default: false },

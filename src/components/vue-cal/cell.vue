@@ -72,7 +72,18 @@ export default {
     maxTimestamp: { type: [Number, null], default: null },
     cellWidth: { type: [Number, Boolean], default: false },
     allDay: { type: Boolean, default: false },
-    eventCreateWithDrag: { tpye: Boolean, default: true }
+    eventCreateWithDrag: { tpye: Boolean, default: true },
+    eventCreateWithDragInterval: {
+      type: Number,
+      validator: value => {
+        if (60 % value == 0) {
+          return true;
+        } else {
+          return false;
+        }
+      },
+      default: 1
+    }
   },
 
   data: () => ({
@@ -143,6 +154,7 @@ export default {
       this.timeAtCursor = null;
       this.newDragCreatEvent.mouseDown = false;
       this.newDragCreatEvent.createdEvent.draggable = true;
+      this.newDragCreatEvent.createdEvent.class = "";
       this.newDragCreatEvent.createdEventWithMouseDown = false;
     },
     onMouseMove(DOMEvent, force = false) {
@@ -166,6 +178,12 @@ export default {
 
       // Set the time from timeposition
       this.newDragCreatEvent.mouseTimes.move = this.timeAtCursor;
+      // Set the move to the closest intervaled number
+      this.newDragCreatEvent.mouseTimes.move.setMinutes(
+        Math.floor(
+          this.timeAtCursor.getMinutes() / this.eventCreateWithDragInterval
+        ) * this.eventCreateWithDragInterval
+      );
 
       const { clickHoldACell, focusAnEvent } = this.domEvents;
 
@@ -185,6 +203,7 @@ export default {
           clickHoldACell.split ? { split: clickHoldACell.split } : {}
         );
         this.newDragCreatEvent.createdEvent.draggable = false;
+        this.newDragCreatEvent.createdEvent.class = "temp";
         this.newDragCreatEvent.createdEventWithMouseDown = true;
       }
       // if created before, change the length of event
@@ -288,6 +307,13 @@ export default {
         this.newDragCreatEvent.mouseDown = true;
         // Save the time at mouseDown
         this.newDragCreatEvent.mouseTimes.down = this.timeAtCursor;
+
+        // Set the down to the closest intervaled number
+        this.newDragCreatEvent.mouseTimes.down.setMinutes(
+          Math.floor(
+            this.timeAtCursor.getMinutes() / this.eventCreateWithDragInterval
+          ) * this.eventCreateWithDragInterval
+        );
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
