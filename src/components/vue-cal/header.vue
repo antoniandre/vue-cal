@@ -5,6 +5,7 @@
     role="tablist"
     aria-label="Calendar views navigation")
     button.vuecal__view-btn(
+      type="button"
       v-if="v.enabled"
       :class="{ 'vuecal__view-btn--active': view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
       v-for="(v, id) in viewProps.views"
@@ -14,6 +15,7 @@
       :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
+      type="button"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'previous' }"
       @click="previous"
       @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'previous', $data)"
@@ -24,12 +26,14 @@
       //- Best way to disable transition is to convert it to simple div tag.
       component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
         component(
+          type="button"
           :is="!!broaderView ? 'button' : 'span'"
           :key="`${view.id}${view.startDate.toString()}`"
           @click="switchToBroaderView"
           :aria-label="!!broaderView ? `Go to ${broaderView} view` : false")
           slot(name="title")
     button.vuecal__today-btn(
+      type="button"
       v-if="options.todayButton"
       :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
       @click="goToToday"
@@ -38,6 +42,7 @@
       aria-label="Today")
       slot(name="today-button")
     button.vuecal__arrow.vuecal__arrow--next(
+      type="button"
       :class="{ 'vuecal__arrow--highlighted': highlightedControl === 'next' }"
       @click="next"
       @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'next', $data)"
