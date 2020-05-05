@@ -795,12 +795,12 @@ export default {
       // If no change cancel action.
       if (event.title === e.target.innerHTML) return
 
-      const cleanEvent = this.cleanupEvent(event)
       const oldTitle = event.title
       event.title = e.target.innerHTML
+      const cleanEvent = this.cleanupEvent(event)
 
       this.$emit('event-title-change', { event: cleanEvent, oldTitle })
-      this.$emit('event-change', { event: cleanEvent, originalEvent: { cleanEvent, title: oldTitle } })
+      this.$emit('event-change', { event: cleanEvent, originalEvent: { ...cleanEvent, title: oldTitle } })
     },
 
     /**
