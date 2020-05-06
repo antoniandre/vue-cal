@@ -293,17 +293,6 @@ export default {
 </script>
 
 <style lang="scss">
-// During creation
-.temp {
-  background: repeating-linear-gradient(
-    135deg,
-    rgba(0, 0, 0, 0),
-    rgba(0, 0, 0, 0) 10px,
-    rgba(0, 0, 0, 0.05) 10px,
-    rgba(0, 0, 0, 0.03) 20px
-  );
-  border: 2px solid black !important;
-}
 .vuecal__event {
   color: #666;
   background-color: rgba(248, 248, 248, 0.8);

@@ -180,7 +180,7 @@ export default {
         // Save the default draggable value
         this.newDragCreateEvent.wasItDraggable = this.newDragCreateEvent.createdEvent.draggable;
         this.newDragCreateEvent.createdEvent.draggable = false;
-        this.newDragCreateEvent.createdEvent.class = "temp";
+        this.newDragCreateEvent.createdEvent.class += "dragCreateEventClass";
         this.newDragCreateEvent.createdEventWithMouseDown = true;
       }
       // if created before, change the length of event
@@ -243,7 +243,8 @@ export default {
       this.newDragCreateEvent.mouseDown = false;
       // Set the default draggable value
       this.newDragCreateEvent.createdEvent.draggable = this.newDragCreateEvent.wasItDraggable;
-      this.newDragCreateEvent.createdEvent.class = "";
+      // Remove the class
+      this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace('dragCreateEventClass','')
       this.newDragCreateEvent.createdEventWithMouseDown = false;
     },
     onCellkeyPressEnter(DOMEvent) {
