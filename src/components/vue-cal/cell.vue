@@ -244,8 +244,15 @@ export default {
       // Set the default draggable value
       this.newDragCreateEvent.createdEvent.draggable = this.newDragCreateEvent.wasItDraggable;
       // Remove the class
-      this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace('dragCreateEventClass','')
+      this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace(
+        "dragCreateEventClass",
+        ""
+      );
       this.newDragCreateEvent.createdEventWithMouseDown = false;
+      this.vuecal.$emit(
+        "onEventCreateDrag",
+        this.newDragCreateEvent.createdEvent
+      );
     },
     onCellkeyPressEnter(DOMEvent) {
       if (!this.isSelected) this.onCellFocus(DOMEvent);

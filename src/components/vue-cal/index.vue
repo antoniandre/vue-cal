@@ -219,6 +219,7 @@ export default {
     minSplitWidth: { type: Number, default: 0 },
     onEventClick: { type: [Function, null], default: null },
     onEventCreate: { type: [Function, null], default: null },
+    onEventCreateDrag: { type: [Function, null], default: null },
     onEventDblclick: { type: [Function, null], default: null },
     overlapsPerTimeStep: { type: Boolean, default: false },
     resizeX: { type: Boolean, default: false },
