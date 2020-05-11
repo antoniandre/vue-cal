@@ -65,8 +65,8 @@
             .vuecal__time-column(v-if="hasTimeColumn")
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
-                  span.line
-                  span.label {{ cell.label }}
+                  span.vuecal__time-cell-line
+                  span.vuecal__time-cell-label {{ cell.label }}
             .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
               .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
                 slot(name="week-number-cell" :week="getWeekNumber(i - 1)") {{ getWeekNumber(i - 1) }}
@@ -795,12 +795,12 @@ export default {
       // If no change cancel action.
       if (event.title === e.target.innerHTML) return
 
-      const cleanEvent = this.cleanupEvent(event)
       const oldTitle = event.title
       event.title = e.target.innerHTML
+      const cleanEvent = this.cleanupEvent(event)
 
       this.$emit('event-title-change', { event: cleanEvent, oldTitle })
-      this.$emit('event-change', { event: cleanEvent, originalEvent: { cleanEvent, title: oldTitle } })
+      this.$emit('event-change', { event: cleanEvent, originalEvent: { ...cleanEvent, title: oldTitle } })
     },
 
     /**

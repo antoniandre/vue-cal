@@ -168,14 +168,14 @@ $splits-headers-height: 1.5em;
       text-align: right;
       padding-right: 2px;
       font-size: 0.9em;
+    }
 
-      .line:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        right: 0;
-        border-top: 1px solid rgba(196, 196, 196, 0.3);
-      }
+    .vuecal__time-cell-line:before {
+      content: '';
+      position: absolute;
+      left: 0;
+      right: 0;
+      border-top: 1px solid rgba(196, 196, 196, 0.3);
     }
   }
 
