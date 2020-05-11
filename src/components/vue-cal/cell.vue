@@ -17,13 +17,8 @@ transition-group.vuecal__cell(
     @keypress.enter="onCellkeyPressEnter($event)"
     @touchstart="!isDisabled && onCellTouchStart($event, splitsCount ? split.id : null)"
     @mousedown="!isDisabled && onCellMouseDown($event, splitsCount ? split.id : null)"
-<<<<<<< Updated upstream
     @mousemove="!isDisabled && onMouseMove($event, splitsCount ? split.id : null)"
     @mouseup="!isDisabled && onMouseUp($event)"
-=======
-    @mousemove="!isDisabled && onCellMouseMove($event, splitsCount ? split.id : null)"
-    @mouseup="!isDisabled && onCellMouseUp($event)"
->>>>>>> Stashed changes
     @click="!isDisabled && selectCell($event)"
     @dblclick="!isDisabled && onCellDblClick($event)"
     @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
@@ -51,7 +46,7 @@ transition-group.vuecal__cell(
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
         :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak" @mousemove="!isDisabled && onMouseMove($event, splitsCount ? split.id : null)")
-        
+
         template(v-slot:event="{ event, view }")
           slot(name="event" :view="view" :event="event")
   .vuecal__now-line(
@@ -62,10 +57,10 @@ transition-group.vuecal__cell(
 </template>
 
 <script>
-import Event from "./event";
+import Event from './event'
 
 export default {
-  inject: ["vuecal", "utils", "modules", "view", "domEvents"],
+  inject: ['vuecal', 'utils', 'modules', 'view', 'domEvents'],
   components: { Event },
   props: {
     // Vue-cal main component options (props).
@@ -88,14 +83,8 @@ export default {
     timeAtCursor: null,
     highlighted: false, // On event drag over.
     highlightedSplit: null,
-<<<<<<< Updated upstream
-    newDragCreateEvent: {
-      dragType: "end",
-=======
-    // Data for drageventcreation
     newDragCreateEvent: {
       dragType: 'end',
->>>>>>> Stashed changes
       mouseTimes: { down: null, up: null, move: null },
       createdEvent: null,
       createdEventWithMouseDown: false,
@@ -104,289 +93,53 @@ export default {
   }),
 
   methods: {
-    getSplitAtCursor(DOMEvent) {
+    getSplitAtCursor (DOMEvent) {
       const split =
-        (DOMEvent.target.classList.contains("vuecal__cell-split") &&
+        (DOMEvent.target.classList.contains('vuecal__cell-split') &&
           DOMEvent.target) ||
-        this.vuecal.findAncestor(DOMEvent.target, "vuecal__cell-split");
-      return (split && split.attributes["data-split"].value) || null;
+        this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+      return (split && split.attributes['data-split'].value) || null
     },
-    checkCellOverlappingEvents() {
+    checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
       if (this.options.time && this.eventsCount && !this.splitsCount) {
         if (this.eventsCount === 1) {
-          this.cellOverlaps = [];
-          this.cellOverlapsStreak = 1;
+          this.cellOverlaps = []
+          this.cellOverlapsStreak = 1
         }
         // If only 1 event remains re-init the overlaps.
-        else
+        else {
           [
             this.cellOverlaps,
             this.cellOverlapsStreak
           ] = this.utils.event.checkCellOverlappingEvents(
             this.events,
             this.options
-          );
+          )
+        }
       }
     },
 
-    isDOMElementAnEvent(el) {
-      return this.vuecal.isDOMElementAnEvent(el);
+    isDOMElementAnEvent (el) {
+      return this.vuecal.isDOMElementAnEvent(el)
     },
 
-    selectCell(DOMEvent, force = false) {
-      if (!this.isSelected) this.onCellFocus(DOMEvent);
+    selectCell (DOMEvent, force = false) {
+      if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
-      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
-      this.utils.cell.selectCell(force, this.timeAtCursor, split);
-      this.timeAtCursor = null;
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
+      this.utils.cell.selectCell(force, this.timeAtCursor, split)
+      this.timeAtCursor = null
     },
 
-    onMouseMove(DOMEvent, force = false) {
-      if (!this.newDragCreateEvent.mouseDown) {
-        return;
-      }
-
-      // If prohibited, doesn't work
-      if (!this.eventCreateWithDrag) {
-        return;
-      }
-      if (!this.isSelected) this.onCellFocus(DOMEvent);
-
-      this.timeAtCursor = new Date(this.data.startDate);
-      this.timeAtCursor.setMinutes(
-        this.vuecal.minutesAtCursor(DOMEvent).minutes
-      );
-
-      // Set the time from timeposition
-      this.newDragCreateEvent.mouseTimes.move = this.timeAtCursor;
-      // Set the move to the closest intervaled number (snapToTime)
-      let timeMinutes =
-        this.newDragCreateEvent.mouseTimes.move.getTime() / 1000 / 60;
-      if (this.vuecal.snapToTime) {
-        let plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2;
-        timeMinutes =
-          plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime);
-      }
-      this.newDragCreateEvent.mouseTimes.move.setTime(timeMinutes * 1000 * 60);
-      const { clickHoldACell, focusAnEvent } = this.domEvents;
-
-      // If didn't create before then create an event
-      if (
-        this.newDragCreateEvent.mouseTimes.down != null &&
-        !this.newDragCreateEvent.createdEventWithMouseDown
-      ) {
-        this.newDragCreateEvent.createdEvent = this.utils.event.createAnEvent(
-          this.newDragCreateEvent.mouseTimes.down,
-          Math.floor(
-            (this.newDragCreateEvent.mouseTimes.move -
-              this.newDragCreateEvent.mouseTimes.down) /
-              1000 /
-              60
-          ),
-          clickHoldACell.split ? { split: clickHoldACell.split } : {}
-        );
-
-        // Save the default draggable value
-        this.newDragCreateEvent.wasItDraggable = this.newDragCreateEvent.createdEvent.draggable;
-        this.newDragCreateEvent.createdEvent.draggable = false;
-        this.newDragCreateEvent.createdEvent.class += "dragCreateEventClass";
-        this.newDragCreateEvent.createdEventWithMouseDown = true;
-      }
-      // if created before, change the length of event
-      if (
-        this.newDragCreateEvent.mouseTimes.down != null &&
-        this.newDragCreateEvent.createdEventWithMouseDown &&
-        typeof this.newDragCreateEvent.createdEvent == "object"
-      ) {
-        // set dragType
-        if (
-          this.newDragCreateEvent.mouseTimes.down <
-          this.newDragCreateEvent.mouseTimes.move
-        ) {
-          this.newDragCreateEvent.dragType = "end";
-        } else {
-          this.newDragCreateEvent.dragType = "start";
-        }
-
-        // Change event start or end
-        if (this.newDragCreateEvent.dragType == "end") {
-          // Create start is the click start
-          this.newDragCreateEvent.createdEvent.start = this.newDragCreateEvent.mouseTimes.down;
-          this.newDragCreateEvent.createdEvent.startTimeMinutes =
-            this.newDragCreateEvent.createdEvent.start.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.start.getMinutes();
-          // Set event end time
-          this.newDragCreateEvent.createdEvent.end = this.newDragCreateEvent.mouseTimes.move;
-          this.newDragCreateEvent.createdEvent.endTimeMinutes =
-            this.newDragCreateEvent.createdEvent.end.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.end.getMinutes();
-        } else if (this.newDragCreateEvent.dragType == "start") {
-          // Set event end to click start
-          this.newDragCreateEvent.createdEvent.end = this.newDragCreateEvent.mouseTimes.down;
-          this.newDragCreateEvent.createdEvent.endTimeMinutes =
-            this.newDragCreateEvent.createdEvent.end.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.end.getMinutes();
-          // set event start time
-          this.newDragCreateEvent.createdEvent.start = this.newDragCreateEvent.mouseTimes.move;
-          this.newDragCreateEvent.createdEvent.startTimeMinutes =
-            this.newDragCreateEvent.createdEvent.start.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.start.getMinutes();
-        }
-      }
-
-      this.timeAtCursor = null;
-    },
-
-    // End of drag
-    onMouseUp(DOMEvent, force = false) {
-      // If prohibited, doesn't work
-      if (!this.eventCreateWithDrag) {
-        return;
-      }
-      if (!this.isSelected) this.onCellFocus(DOMEvent);
-
-      // If splitting days, also return the clicked split on cell click when emitting event.
-      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
-      this.utils.cell.selectCell(force, this.timeAtCursor, split);
-      this.timeAtCursor = null;
-      this.newDragCreateEvent.mouseDown = false;
-      // Set the default draggable value
-      this.newDragCreateEvent.createdEvent.draggable = this.newDragCreateEvent.wasItDraggable;
-      // Remove the class
-      this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace(
-        "dragCreateEventClass",
-        ""
-      );
-      this.newDragCreateEvent.createdEventWithMouseDown = false;
-      this.vuecal.$emit(
-        "onEventCreateDrag",
-        this.newDragCreateEvent.createdEvent
-      );
-    },
-    onCellkeyPressEnter(DOMEvent) {
-      if (!this.isSelected) this.onCellFocus(DOMEvent);
-
-      // If splitting days, also return the clicked split on cell keypress when emitting event.
-      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
-
-      this.utils.cell.keyPressEnterCell(this.timeAtCursor, split);
-      this.timeAtCursor = null;
-    },
-
-    /**
-     * On cell focus, from tab key or from click, emit the cell-focus event with
-     * the date of the cell start when focusing from tab or the date & time at cursor
-     * if click/touch.
-     */
-    onCellFocus(DOMEvent) {
-      if (!this.isSelected) {
-        this.isSelected = this.data.startDate;
-
-        // If splitting days, also return the clicked split on cell focus when emitting event.
-        const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
-
-        // Cell-focus event returns the cell start date (at midnight) if triggered from tab key,
-        // or cursor coords time if clicked.
-        const date = this.timeAtCursor || this.data.startDate;
-        this.vuecal.$emit("cell-focus", split ? { date, split } : date);
-      }
-    },
-
-    onCellMouseDown(DOMEvent, split = null, touch = false) {
-      // Prevent a double mouse down on touch devices.
-      if ("ontouchstart" in window && !touch) return false;
-
-      const { clickHoldACell, focusAnEvent } = this.domEvents;
-      // Reinit the click trigger on each mousedown.
-      // In some cases we explicitly set this flag to prevent the click event to trigger,
-      // and cancel event creation.
-      this.domEvents.cancelClickEventCreation = false;
-
-      this.timeAtCursor = new Date(this.data.startDate);
-      this.timeAtCursor.setMinutes(
-        this.vuecal.minutesAtCursor(DOMEvent).minutes
-      );
-
-      const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target);
-      // Unfocus an event if any is focused and clicking on cell outside of an event.
-      if (!mouseDownOnEvent && focusAnEvent._eid) {
-        (
-          this.view.events.find(e => e._eid === focusAnEvent._eid) || {}
-        ).focused = false;
-      }
-
-      // Set the mousedown if not on event
-      if (!mouseDownOnEvent) {
-        this.newDragCreateEvent.mouseDown = true;
-        // Save the time at mouseDown
-        this.newDragCreateEvent.mouseTimes.down = this.timeAtCursor;
-
-        // Set the down to the closest intervaled number
-        let timeMinutes = this.timeAtCursor.getTime() / 1000 / 60;
-        if (this.vuecal.snapToTime) {
-          let plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2;
-          timeMinutes =
-            plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime);
-        }
-        this.newDragCreateEvent.mouseTimes.down.setTime(
-          timeMinutes * 1000 * 60
-        );
-      }
-
-      // Set the mousedown if not on event
-      if (!mouseDownOnEvent) {
-        this.newDragCreateEvent.mouseDown = true
-        // Save the time at mouseDown
-        this.newDragCreateEvent.mouseTimes.down = this.timeAtCursor
-
-        // Set the down to the closest intervaled number
-        let timeMinutes = this.timeAtCursor.getTime() / 1000 / 60
-        if (this.vuecal.snapToTime) {
-          const plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2
-          timeMinutes =
-            plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
-        }
-        this.newDragCreateEvent.mouseTimes.down.setTime(
-          timeMinutes * 1000 * 60
-        )
-      }
-
-      // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (
-        this.editEvents.create &&
-        this.options.cellClickHold &&
-        !mouseDownOnEvent &&
-        ["month", "week", "day"].includes(this.view.id)
-      ) {
-        clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`;
-        clickHoldACell.split = split;
-        clickHoldACell.timeoutId = setTimeout(() => {
-          if (
-            clickHoldACell.cellId &&
-            !this.domEvents.cancelClickEventCreation
-          ) {
-            this.utils.event.createAnEvent(
-              this.timeAtCursor,
-              null,
-              clickHoldACell.split ? { split: clickHoldACell.split } : {}
-            );
-          }
-        }, clickHoldACell.timeout);
-      }
-    },
-
-<<<<<<< Updated upstream
-    onCellTouchStart(DOMEvent, split = null) {
-=======
-    onCellMouseMove (DOMEvent, force = false) {
+    onMouseMove (DOMEvent, force = false) {
       if (!this.newDragCreateEvent.mouseDown) {
         return
       }
 
       // If prohibited, doesn't work
-      if (!this.vuecal.eventCreateWithDrag) {
+      if (!this.eventCreateWithDrag) {
         return
       }
       if (!this.isSelected) this.onCellFocus(DOMEvent)
@@ -428,7 +181,7 @@ export default {
         // Save the default draggable value
         this.newDragCreateEvent.wasItDraggable = this.newDragCreateEvent.createdEvent.draggable
         this.newDragCreateEvent.createdEvent.draggable = false
-        this.newDragCreateEvent.createdEvent.class += 'vuecal__event-drag-create'
+        this.newDragCreateEvent.createdEvent.class += 'dragCreateEventClass'
         this.newDragCreateEvent.createdEventWithMouseDown = true
       }
       // if created before, change the length of event
@@ -479,9 +232,9 @@ export default {
     },
 
     // End of drag
-    onCellMouseUp (DOMEvent, force = false) {
+    onMouseUp (DOMEvent, force = false) {
       // If prohibited, doesn't work
-      if (!this.vuecal.eventCreateWithDrag) {
+      if (!this.eventCreateWithDrag) {
         return
       }
       if (!this.isSelected) this.onCellFocus(DOMEvent)
@@ -495,7 +248,7 @@ export default {
       this.newDragCreateEvent.createdEvent.draggable = this.newDragCreateEvent.wasItDraggable
       // Remove the class
       this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace(
-        'vuecal__event-drag-create',
+        'dragCreateEventClass',
         ''
       )
       this.newDragCreateEvent.createdEventWithMouseDown = false
@@ -504,156 +257,248 @@ export default {
         this.newDragCreateEvent.createdEvent
       )
     },
+    onCellkeyPressEnter (DOMEvent) {
+      if (!this.isSelected) this.onCellFocus(DOMEvent)
+
+      // If splitting days, also return the clicked split on cell keypress when emitting event.
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
+
+      this.utils.cell.keyPressEnterCell(this.timeAtCursor, split)
+      this.timeAtCursor = null
+    },
+
+    /**
+     * On cell focus, from tab key or from click, emit the cell-focus event with
+     * the date of the cell start when focusing from tab or the date & time at cursor
+     * if click/touch.
+     */
+    onCellFocus (DOMEvent) {
+      if (!this.isSelected) {
+        this.isSelected = this.data.startDate
+
+        // If splitting days, also return the clicked split on cell focus when emitting event.
+        const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
+
+        // Cell-focus event returns the cell start date (at midnight) if triggered from tab key,
+        // or cursor coords time if clicked.
+        const date = this.timeAtCursor || this.data.startDate
+        this.vuecal.$emit('cell-focus', split ? { date, split } : date)
+      }
+    },
+
+    onCellMouseDown (DOMEvent, split = null, touch = false) {
+      // Prevent a double mouse down on touch devices.
+      if ('ontouchstart' in window && !touch) return false
+
+      const { clickHoldACell, focusAnEvent } = this.domEvents
+      // Reinit the click trigger on each mousedown.
+      // In some cases we explicitly set this flag to prevent the click event to trigger,
+      // and cancel event creation.
+      this.domEvents.cancelClickEventCreation = false
+
+      this.timeAtCursor = new Date(this.data.startDate)
+      this.timeAtCursor.setMinutes(
+        this.vuecal.minutesAtCursor(DOMEvent).minutes
+      )
+
+      const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target)
+      // Unfocus an event if any is focused and clicking on cell outside of an event.
+      if (!mouseDownOnEvent && focusAnEvent._eid) {
+        (
+          this.view.events.find(e => e._eid === focusAnEvent._eid) || {}
+        ).focused = false
+      }
+
+      // Set the mousedown if not on event
+      if (!mouseDownOnEvent) {
+        this.newDragCreateEvent.mouseDown = true
+        // Save the time at mouseDown
+        this.newDragCreateEvent.mouseTimes.down = this.timeAtCursor
+
+        // Set the down to the closest intervaled number
+        let timeMinutes = this.timeAtCursor.getTime() / 1000 / 60
+        if (this.vuecal.snapToTime) {
+          const plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2
+          timeMinutes =
+            plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
+        }
+        this.newDragCreateEvent.mouseTimes.down.setTime(
+          timeMinutes * 1000 * 60
+        )
+      }
+
+      // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
+      if (
+        this.editEvents.create &&
+        this.options.cellClickHold &&
+        !mouseDownOnEvent &&
+        ['month', 'week', 'day'].includes(this.view.id)
+      ) {
+        clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
+        clickHoldACell.split = split
+        clickHoldACell.timeoutId = setTimeout(() => {
+          if (
+            clickHoldACell.cellId &&
+            !this.domEvents.cancelClickEventCreation
+          ) {
+            this.utils.event.createAnEvent(
+              this.timeAtCursor,
+              null,
+              clickHoldACell.split ? { split: clickHoldACell.split } : {}
+            )
+          }
+        }, clickHoldACell.timeout)
+      }
+    },
 
     onCellTouchStart (DOMEvent, split = null) {
->>>>>>> Stashed changes
       // If not mousedown on an event.
-      this.onCellMouseDown(DOMEvent, split, true);
+      this.onCellMouseDown(DOMEvent, split, true)
     },
 
-    onCellDblClick(DOMEvent) {
-      const date = new Date(this.data.startDate);
-      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes);
+    onCellDblClick (DOMEvent) {
+      const date = new Date(this.data.startDate)
+      date.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
 
       // If splitting days, also return the clicked split on cell dblclick when emitting event.
-      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-      this.vuecal.$emit("cell-dblclick", split ? { date, split } : date);
+      this.vuecal.$emit('cell-dblclick', split ? { date, split } : date)
 
-      if (this.options.dblclickToNavigate) this.vuecal.switchToNarrowerView();
+      if (this.options.dblclickToNavigate) this.vuecal.switchToNarrowerView()
     },
 
-    onCellContextMenu(DOMEvent) {
-      DOMEvent.stopPropagation();
-      DOMEvent.preventDefault();
+    onCellContextMenu (DOMEvent) {
+      DOMEvent.stopPropagation()
+      DOMEvent.preventDefault()
 
-      const date = new Date(this.data.startDate);
-      const { cursorCoords, minutes } = this.vuecal.minutesAtCursor(DOMEvent);
-      date.setMinutes(minutes);
+      const date = new Date(this.data.startDate)
+      const { cursorCoords, minutes } = this.vuecal.minutesAtCursor(DOMEvent)
+      date.setMinutes(minutes)
 
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
-      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null;
+      const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-      this.vuecal.$emit("cell-contextmenu", {
+      this.vuecal.$emit('cell-contextmenu', {
         date,
         ...cursorCoords,
         ...(split || {})
-      });
+      })
     }
   },
 
   computed: {
     // Drag & drop module.
-    dnd() {
-      return this.modules.dnd;
+    dnd () {
+      return this.modules.dnd
     },
-    nowInMinutes() {
-      return this.utils.date.dateToMinutes(this.vuecal.now);
+    nowInMinutes () {
+      return this.utils.date.dateToMinutes(this.vuecal.now)
     },
-    isBeforeMinDate() {
+    isBeforeMinDate () {
       return (
         this.minTimestamp !== null &&
         this.minTimestamp > this.data.endDate.getTime()
-      );
+      )
     },
-    isAfterMaxDate() {
+    isAfterMaxDate () {
       return (
         this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()
-      );
+      )
     },
     // Is the current cell disabled or not.
-    isDisabled() {
-      return this.isBeforeMinDate || this.isAfterMaxDate;
+    isDisabled () {
+      return this.isBeforeMinDate || this.isAfterMaxDate
     },
     // Is the current cell selected or not.
     isSelected: {
-      get() {
-        let selected = false;
-        const { selectedDate } = this.view;
+      get () {
+        let selected = false
+        const { selectedDate } = this.view
 
-        if (this.view.id === "years") {
+        if (this.view.id === 'years') {
           selected =
-            selectedDate.getFullYear() === this.data.startDate.getFullYear();
-        } else if (this.view.id === "year") {
+            selectedDate.getFullYear() === this.data.startDate.getFullYear()
+        }
+        else if (this.view.id === 'year') {
           selected =
             selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
-            selectedDate.getMonth() === this.data.startDate.getMonth();
-        } else
-          selected = selectedDate.getTime() === this.data.startDate.getTime();
+            selectedDate.getMonth() === this.data.startDate.getMonth()
+        }
+        else { selected = selectedDate.getTime() === this.data.startDate.getTime() }
 
-        return selected;
+        return selected
       },
-      set(date) {
-        this.view.selectedDate = date;
+      set (date) {
+        this.view.selectedDate = date
       }
     },
     // Cache result for performance.
-    isWeekOrDayView() {
-      return ["week", "day"].includes(this.view.id);
+    isWeekOrDayView () {
+      return ['week', 'day'].includes(this.view.id)
     },
-    transitionDirection() {
-      return this.vuecal.transitionDirection;
+    transitionDirection () {
+      return this.vuecal.transitionDirection
     },
-    specialHours() {
-      let { from, to } = this.data.specialHours;
-      from = Math.max(from, this.options.timeFrom);
-      to = Math.min(to, this.options.timeTo);
+    specialHours () {
+      let { from, to } = this.data.specialHours
+      from = Math.max(from, this.options.timeFrom)
+      to = Math.min(to, this.options.timeTo)
       return {
         ...this.data.specialHours,
         height: (to - from) * this.timeScale,
         top: (from - this.options.timeFrom) * this.timeScale
-      };
+      }
     },
-    events() {
-      const { startDate: cellStart, endDate: cellEnd } = this.data;
-      let events = [];
+    events () {
+      const { startDate: cellStart, endDate: cellEnd } = this.data
+      let events = []
 
       // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
       if (
         !(
-          ["years", "year"].includes(this.view.id) &&
+          ['years', 'year'].includes(this.view.id) &&
           !this.options.eventsCountOnYearView
         )
       ) {
         // Means that when vuecal.view.events changes all the cells will be looking up new value. :/
         // Also clone array to prevent modifying original.
-        events = this.view.events.slice(0);
+        events = this.view.events.slice(0)
 
-        if (this.view.id === "month") {
-          events.push(...this.view.outOfScopeEvents);
+        if (this.view.id === 'month') {
+          events.push(...this.view.outOfScopeEvents)
         }
 
         // Only keep events in cell time range.
         events = events.filter(e =>
           this.utils.event.eventInRange(e, cellStart, cellEnd)
-        );
+        )
 
-        if (this.options.showAllDayEvents && this.view.id !== "month")
-          events = events.filter(e => !!e.allDay === this.allDay);
+        if (this.options.showAllDayEvents && this.view.id !== 'month') { events = events.filter(e => !!e.allDay === this.allDay) }
 
         // From events in view, filter the ones that are out of `time-from`-`time-to` range in this cell.
         if (this.options.time && this.isWeekOrDayView && !this.allDay) {
-          const { timeFrom, timeTo } = this.options;
+          const { timeFrom, timeTo } = this.options
 
           events = events.filter(e => {
             const segment =
-              (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {};
+              (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
             const singleDayInRange =
               e.daysCount === 1 &&
               e.startTimeMinutes < timeTo &&
-              e.endTimeMinutes > timeFrom;
+              e.endTimeMinutes > timeFrom
             const multipleDayInRange =
               e.daysCount > 1 &&
               segment.startTimeMinutes < timeTo &&
-              segment.endTimeMinutes > timeFrom;
-            const recurrMultDayInRange = false; // e.daysCount > 1 && e.repeat && recurringEventInRange(e, cellStart, cellEnd)
+              segment.endTimeMinutes > timeFrom
+            const recurrMultDayInRange = false // e.daysCount > 1 && e.repeat && recurringEventInRange(e, cellStart, cellEnd)
             return (
               e.allDay ||
               singleDayInRange ||
               multipleDayInRange ||
               recurrMultDayInRange
-            );
-          });
+            )
+          })
         }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
@@ -663,81 +508,79 @@ export default {
           !(this.options.showAllDayEvents && this.allDay)
         ) {
           // Sort events in chronological order.
-          events.sort((a, b) => (a.start < b.start ? -1 : 1));
+          events.sort((a, b) => (a.start < b.start ? -1 : 1))
         }
 
         // If splits, checkCellOverlappingEvents() is called from within computed splits.
-        if (!this.cellSplits.length)
-          this.$nextTick(this.checkCellOverlappingEvents);
+        if (!this.cellSplits.length) { this.$nextTick(this.checkCellOverlappingEvents) }
       }
 
-      return events;
+      return events
     },
-    eventsCount() {
-      return this.events.length;
+    eventsCount () {
+      return this.events.length
     },
-    splits() {
+    splits () {
       return this.cellSplits.map((item, i) => {
-        const events = this.events.filter(e => e.split === item.id);
+        const events = this.events.filter(e => e.split === item.id)
         const [overlaps, streak] = this.utils.event.checkCellOverlappingEvents(
           events.filter(e => !e.background && !e.allDay),
           this.options
-        );
+        )
         return {
           ...item,
           overlaps,
           overlapsStreak: streak,
           events
-        };
-      });
+        }
+      })
     },
-    splitsCount() {
-      return this.splits.length;
+    splitsCount () {
+      return this.splits.length
     },
-    cssClasses() {
+    cssClasses () {
       return {
         [this.data.class]: !!this.data.class,
-        "vuecal__cell--current": this.data.current, // E.g. Current year in years view.
-        "vuecal__cell--today": this.data.today,
-        "vuecal__cell--out-of-scope": this.data.outOfScope,
-        "vuecal__cell--before-min": this.isDisabled && this.isBeforeMinDate,
-        "vuecal__cell--after-max": this.isDisabled && this.isAfterMaxDate,
-        "vuecal__cell--disabled": this.isDisabled,
-        "vuecal__cell--selected": this.isSelected,
-        "vuecal__cell--highlighted": this.highlighted,
-        "vuecal__cell--has-splits": this.splitsCount,
-        "vuecal__cell--has-events": this.eventsCount
-      };
+        'vuecal__cell--current': this.data.current, // E.g. Current year in years view.
+        'vuecal__cell--today': this.data.today,
+        'vuecal__cell--out-of-scope': this.data.outOfScope,
+        'vuecal__cell--before-min': this.isDisabled && this.isBeforeMinDate,
+        'vuecal__cell--after-max': this.isDisabled && this.isAfterMaxDate,
+        'vuecal__cell--disabled': this.isDisabled,
+        'vuecal__cell--selected': this.isSelected,
+        'vuecal__cell--highlighted': this.highlighted,
+        'vuecal__cell--has-splits': this.splitsCount,
+        'vuecal__cell--has-events': this.eventsCount
+      }
     },
-    cellStyles() {
+    cellStyles () {
       return {
         // cellWidth is only applied when hiding weekdays on month and week views.
         ...(this.cellWidth ? { width: `${this.cellWidth}%` } : {})
-      };
+      }
     },
-    timelineVisible() {
+    timelineVisible () {
       if (
         !this.data.today ||
         !this.options.time ||
         this.allDay ||
         !this.isWeekOrDayView
-      )
-        return;
+      ) { return }
 
-      return this.nowInMinutes <= this.options.timeTo;
+      return this.nowInMinutes <= this.options.timeTo
     },
-    todaysTimePosition() {
+    todaysTimePosition () {
       // Skip the Maths if not relevant.
-      if (!this.data.today || !this.options.time) return;
+      if (!this.data.today || !this.options.time) return
 
-      const minutesFromTop = this.nowInMinutes - this.options.timeFrom;
-      return Math.round(minutesFromTop * this.timeScale);
+      const minutesFromTop = this.nowInMinutes - this.options.timeFrom
+      return Math.round(minutesFromTop * this.timeScale)
     },
-    timeScale() {
-      return this.options.timeCellHeight / this.options.timeStep;
+    timeScale () {
+      return this.options.timeCellHeight / this.options.timeStep
     }
   }
-};
+}
 </script>
 
 <style lang="scss">
