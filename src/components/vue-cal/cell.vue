@@ -45,7 +45,7 @@ transition-group.vuecal__cell(
         :cell-events="splitsCount ? split.events : events"
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
-        :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak" @mousemove="!isDisabled && onMouseMove($event, splitsCount ? split.id : null)")
+        :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak")
 
         template(v-slot:event="{ event, view }")
           slot(name="event" :view="view" :event="event")
@@ -94,9 +94,7 @@ export default {
 
   methods: {
     getSplitAtCursor (DOMEvent) {
-      const split =
-        (DOMEvent.target.classList.contains('vuecal__cell-split') &&
-          DOMEvent.target) ||
+      const split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
         this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
       return (split && split.attributes['data-split'].value) || null
     },
@@ -108,15 +106,7 @@ export default {
           this.cellOverlapsStreak = 1
         }
         // If only 1 event remains re-init the overlaps.
-        else {
-          [
-            this.cellOverlaps,
-            this.cellOverlapsStreak
-          ] = this.utils.event.checkCellOverlappingEvents(
-            this.events,
-            this.options
-          )
-        }
+        else [this.cellOverlaps, this.cellOverlapsStreak] = this.utils.event.checkCellOverlappingEvents(this.events, this.options)
       }
     },
 
@@ -297,16 +287,12 @@ export default {
       this.domEvents.cancelClickEventCreation = false
 
       this.timeAtCursor = new Date(this.data.startDate)
-      this.timeAtCursor.setMinutes(
-        this.vuecal.minutesAtCursor(DOMEvent).minutes
-      )
+      this.timeAtCursor.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
 
       const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target)
       // Unfocus an event if any is focused and clicking on cell outside of an event.
       if (!mouseDownOnEvent && focusAnEvent._eid) {
-        (
-          this.view.events.find(e => e._eid === focusAnEvent._eid) || {}
-        ).focused = false
+        (this.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
       }
 
       // Set the mousedown if not on event
@@ -328,24 +314,13 @@ export default {
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (
-        this.editEvents.create &&
-        this.options.cellClickHold &&
-        !mouseDownOnEvent &&
-        ['month', 'week', 'day'].includes(this.view.id)
-      ) {
+      if (this.editEvents.create && this.options.cellClickHold && !mouseDownOnEvent &&
+        ['month', 'week', 'day'].includes(this.view.id)) {
         clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
-          if (
-            clickHoldACell.cellId &&
-            !this.domEvents.cancelClickEventCreation
-          ) {
-            this.utils.event.createAnEvent(
-              this.timeAtCursor,
-              null,
-              clickHoldACell.split ? { split: clickHoldACell.split } : {}
-            )
+          if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
+            this.utils.event.createAnEvent(this.timeAtCursor, null, clickHoldACell.split ? { split: clickHoldACell.split } : {})
           }
         }, clickHoldACell.timeout)
       }
@@ -379,11 +354,7 @@ export default {
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-      this.vuecal.$emit('cell-contextmenu', {
-        date,
-        ...cursorCoords,
-        ...(split || {})
-      })
+      this.vuecal.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
     }
   },
 
@@ -396,15 +367,10 @@ export default {
       return this.utils.date.dateToMinutes(this.vuecal.now)
     },
     isBeforeMinDate () {
-      return (
-        this.minTimestamp !== null &&
-        this.minTimestamp > this.data.endDate.getTime()
-      )
+      return this.minTimestamp !== null && this.minTimestamp > this.data.endDate.getTime()
     },
     isAfterMaxDate () {
-      return (
-        this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()
-      )
+      return this.maxTimestamp && this.maxTimestamp < this.data.startDate.getTime()
     },
     // Is the current cell disabled or not.
     isDisabled () {
@@ -417,15 +383,13 @@ export default {
         const { selectedDate } = this.view
 
         if (this.view.id === 'years') {
-          selected =
-            selectedDate.getFullYear() === this.data.startDate.getFullYear()
+          selected = selectedDate.getFullYear() === this.data.startDate.getFullYear()
         }
         else if (this.view.id === 'year') {
-          selected =
-            selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
-            selectedDate.getMonth() === this.data.startDate.getMonth()
+          selected = (selectedDate.getFullYear() === this.data.startDate.getFullYear() &&
+            selectedDate.getMonth() === this.data.startDate.getMonth())
         }
-        else { selected = selectedDate.getTime() === this.data.startDate.getTime() }
+        else selected = selectedDate.getTime() === this.data.startDate.getTime()
 
         return selected
       },
@@ -455,12 +419,7 @@ export default {
       let events = []
 
       // Calculate events on month/week/day views or years/year if eventsCountOnYearView.
-      if (
-        !(
-          ['years', 'year'].includes(this.view.id) &&
-          !this.options.eventsCountOnYearView
-        )
-      ) {
+      if (!(['years', 'year'].includes(this.view.id) && !this.options.eventsCountOnYearView)) {
         // Means that when vuecal.view.events changes all the cells will be looking up new value. :/
         // Also clone array to prevent modifying original.
         events = this.view.events.slice(0)
@@ -470,49 +429,31 @@ export default {
         }
 
         // Only keep events in cell time range.
-        events = events.filter(e =>
-          this.utils.event.eventInRange(e, cellStart, cellEnd)
-        )
+        events = events.filter(e => this.utils.event.eventInRange(e, cellStart, cellEnd))
 
-        if (this.options.showAllDayEvents && this.view.id !== 'month') { events = events.filter(e => !!e.allDay === this.allDay) }
+        if (this.options.showAllDayEvents && this.view.id !== 'month') events = events.filter(e => !!e.allDay === this.allDay)
 
         // From events in view, filter the ones that are out of `time-from`-`time-to` range in this cell.
         if (this.options.time && this.isWeekOrDayView && !this.allDay) {
           const { timeFrom, timeTo } = this.options
 
           events = events.filter(e => {
-            const segment =
-              (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
-            const singleDayInRange =
-              e.daysCount === 1 &&
-              e.startTimeMinutes < timeTo &&
-              e.endTimeMinutes > timeFrom
-            const multipleDayInRange =
-              e.daysCount > 1 &&
-              segment.startTimeMinutes < timeTo &&
-              segment.endTimeMinutes > timeFrom
+            const segment = (e.daysCount > 1 && e.segments[this.data.formattedDate]) || {}
+            const singleDayInRange = e.daysCount === 1 && e.startTimeMinutes < timeTo && e.endTimeMinutes > timeFrom
+            const multipleDayInRange = e.daysCount > 1 && (segment.startTimeMinutes < timeTo && segment.endTimeMinutes > timeFrom)
             const recurrMultDayInRange = false // e.daysCount > 1 && e.repeat && recurringEventInRange(e, cellStart, cellEnd)
-            return (
-              e.allDay ||
-              singleDayInRange ||
-              multipleDayInRange ||
-              recurrMultDayInRange
-            )
+            return (e.allDay || singleDayInRange || multipleDayInRange || recurrMultDayInRange)
           })
         }
 
         // Position events with time in the timeline when there is a timeline and not in allDay slot.
-        if (
-          this.options.time &&
-          this.isWeekOrDayView &&
-          !(this.options.showAllDayEvents && this.allDay)
-        ) {
+        if (this.options.time && this.isWeekOrDayView && !(this.options.showAllDayEvents && this.allDay)) {
           // Sort events in chronological order.
-          events.sort((a, b) => (a.start < b.start ? -1 : 1))
+          events.sort((a, b) => a.start < b.start ? -1 : 1)
         }
 
         // If splits, checkCellOverlappingEvents() is called from within computed splits.
-        if (!this.cellSplits.length) { this.$nextTick(this.checkCellOverlappingEvents) }
+        if (!this.cellSplits.length) this.$nextTick(this.checkCellOverlappingEvents)
       }
 
       return events
@@ -523,10 +464,7 @@ export default {
     splits () {
       return this.cellSplits.map((item, i) => {
         const events = this.events.filter(e => e.split === item.id)
-        const [overlaps, streak] = this.utils.event.checkCellOverlappingEvents(
-          events.filter(e => !e.background && !e.allDay),
-          this.options
-        )
+        const [overlaps, streak] = this.utils.event.checkCellOverlappingEvents(events.filter(e => !e.background && !e.allDay), this.options)
         return {
           ...item,
           overlaps,
@@ -560,12 +498,7 @@ export default {
       }
     },
     timelineVisible () {
-      if (
-        !this.data.today ||
-        !this.options.time ||
-        this.allDay ||
-        !this.isWeekOrDayView
-      ) { return }
+      if (!this.data.today || !this.options.time || this.allDay || !this.isWeekOrDayView) return
 
       return this.nowInMinutes <= this.options.timeTo
     },
@@ -592,48 +525,30 @@ export default {
   align-items: center;
   text-align: center;
   transition: 0.15s ease-in-out background-color;
-
   // Cell modifiers.
   // -------------------------------------------------
   .vuecal__cells.month-view &,
   .vuecal__cells.week-view & {
     width: 14.2857%;
   }
-
   .vuecal--hide-weekends .vuecal__cells.month-view &,
   .vuecal--hide-weekends .vuecal__cells.week-view & {
     width: 20%;
   }
-
-  .vuecal__cells.years-view & {
-    width: 20%;
-  }
-  .vuecal__cells.year-view & {
-    width: 33.33%;
-  }
-  .vuecal__cells.day-view & {
-    flex: 1;
-  }
-  .vuecal--overflow-x.vuecal--day-view & {
-    width: auto;
-  }
-
-  .vuecal--click-to-navigate &:not(&--disabled) {
-    cursor: pointer;
-  }
+  .vuecal__cells.years-view & {width: 20%;}
+  .vuecal__cells.year-view & {width: 33.33%;}
+  .vuecal__cells.day-view & {flex: 1;}
+  .vuecal--overflow-x.vuecal--day-view & {width: auto;}
+  .vuecal--click-to-navigate &:not(&--disabled) {cursor: pointer;}
   .vuecal--view-with-time &,
   .vuecal--week-view.vuecal--no-time &:not(.vuecal__cell--has-splits),
-  .vuecal--day-view.vuecal--no-time &:not(.vuecal__cell--has-splits) {
-    display: block;
-  }
-
+  .vuecal--day-view.vuecal--no-time &:not(.vuecal__cell--has-splits) {display: block;}
   &.vuecal__cell--has-splits {
     flex-direction: row;
     display: flex;
   }
-
   &:before {
-    content: "";
+    content: '';
     position: absolute;
     z-index: 0;
     top: 0;
@@ -642,55 +557,35 @@ export default {
     bottom: -1px;
     border: 1px solid rgba(196, 196, 196, 0.25);
   }
-  .vuecal--overflow-x.vuecal--day-view &:before {
-    bottom: 0;
-  }
-
+  .vuecal--overflow-x.vuecal--day-view &:before {bottom: 0;}
   &--today,
   &--current {
     background-color: rgba(240, 240, 255, 0.4);
     z-index: 1;
   }
-
   &--selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
-
-    .vuecal--day-view & {
-      background: none;
-    }
+    .vuecal--day-view & {background: none;}
   }
-
-  &--out-of-scope {
-    color: #ccc;
-  }
-  &--disabled {
-    color: #ccc;
-    cursor: not-allowed;
-  }
-
+  &--out-of-scope {color: #ccc;}
+  &--disabled {color: #ccc;cursor: not-allowed;}
   // Cells/splits get highlighted when dragging an event over it.
-  &--highlighted:not(.vuecal__cell--has-splits),
-  &-split.vuecal__cell-split--highlighted {
+  &--highlighted:not(.vuecal__cell--has-splits), &-split.vuecal__cell-split--highlighted {
     background-color: rgba(0, 0, 0, 0.04);
     // Drag over feedback must be fast. Then it can fade away with longer duration.
     transition-duration: 5ms;
   }
   // -------------------------------------------------
-
   &-content {
     position: relative;
     width: 100%;
     height: 100%;
     outline: none;
-
     .vuecal--years-view &,
     .vuecal--year-view &,
-    .vuecal--month-view & {
-      justify-content: center;
-    }
+    .vuecal--month-view & {justify-content: center;}
   }
-
   &-split {
     display: flex;
     flex-grow: 1;
@@ -699,11 +594,7 @@ export default {
     position: relative;
     transition: 0.15s ease-in-out background-color;
   }
-
-  &-events {
-    width: 100%;
-  }
-
+  &-events {width: 100%;}
   &-events-count {
     position: absolute;
     left: 50%;
@@ -719,7 +610,6 @@ export default {
     font-size: 10px;
     box-sizing: border-box;
   }
-
   .vuecal__special-hours {
     position: absolute;
     left: 0;
@@ -727,23 +617,16 @@ export default {
     box-sizing: border-box;
   }
 }
-
-.vuecal--overflow-x.vuecal--week-view .vuecal__cell,
-.vuecal__cell-split {
+.vuecal--overflow-x.vuecal--week-view .vuecal__cell, .vuecal__cell-split {
   overflow: hidden;
 }
-
 .vuecal__no-event {
   padding-top: 1em;
   color: #aaa;
   justify-self: flex-start;
   margin-bottom: auto; // Vertical align top within flex column and align center.
 }
-
-.vuecal__all-day .vuecal__no-event {
-  display: none;
-}
-
+.vuecal__all-day .vuecal__no-event {display: none;}
 .vuecal__now-line {
   position: absolute;
   left: 0;
@@ -753,7 +636,6 @@ export default {
   border-top: 1px solid currentColor;
   opacity: 0.6;
   z-index: 1;
-
   &:before {
     content: "";
     position: absolute;
