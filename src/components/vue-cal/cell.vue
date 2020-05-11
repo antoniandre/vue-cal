@@ -46,7 +46,6 @@ transition-group.vuecal__cell(
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
         :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak")
-
         template(v-slot:event="{ event, view }")
           slot(name="event" :view="view" :event="event")
   .vuecal__now-line(
@@ -71,8 +70,7 @@ export default {
     minTimestamp: { type: [Number, null], default: null },
     maxTimestamp: { type: [Number, null], default: null },
     cellWidth: { type: [Number, Boolean], default: false },
-    allDay: { type: Boolean, default: false },
-    eventCreateWithDrag: { tpye: Boolean, default: true }
+    allDay: { type: Boolean, default: false }
   },
 
   data: () => ({
@@ -119,6 +117,7 @@ export default {
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
+
       this.utils.cell.selectCell(force, this.timeAtCursor, split)
       this.timeAtCursor = null
     },
@@ -129,7 +128,7 @@ export default {
       }
 
       // If prohibited, doesn't work
-      if (!this.eventCreateWithDrag) {
+      if (!this.vuecal.eventCreateWithDrag) {
         return
       }
       if (!this.isSelected) this.onCellFocus(DOMEvent)
@@ -224,7 +223,7 @@ export default {
     // End of drag
     onMouseUp (DOMEvent, force = false) {
       // If prohibited, doesn't work
-      if (!this.eventCreateWithDrag) {
+      if (!this.vuecal.eventCreateWithDrag) {
         return
       }
       if (!this.isSelected) this.onCellFocus(DOMEvent)
@@ -525,28 +524,34 @@ export default {
   align-items: center;
   text-align: center;
   transition: 0.15s ease-in-out background-color;
+
   // Cell modifiers.
   // -------------------------------------------------
   .vuecal__cells.month-view &,
   .vuecal__cells.week-view & {
     width: 14.2857%;
   }
+
   .vuecal--hide-weekends .vuecal__cells.month-view &,
   .vuecal--hide-weekends .vuecal__cells.week-view & {
     width: 20%;
   }
+
   .vuecal__cells.years-view & {width: 20%;}
   .vuecal__cells.year-view & {width: 33.33%;}
   .vuecal__cells.day-view & {flex: 1;}
   .vuecal--overflow-x.vuecal--day-view & {width: auto;}
+
   .vuecal--click-to-navigate &:not(&--disabled) {cursor: pointer;}
   .vuecal--view-with-time &,
   .vuecal--week-view.vuecal--no-time &:not(.vuecal__cell--has-splits),
   .vuecal--day-view.vuecal--no-time &:not(.vuecal__cell--has-splits) {display: block;}
+
   &.vuecal__cell--has-splits {
     flex-direction: row;
     display: flex;
   }
+
   &:before {
     content: '';
     position: absolute;
@@ -558,16 +563,20 @@ export default {
     border: 1px solid rgba(196, 196, 196, 0.25);
   }
   .vuecal--overflow-x.vuecal--day-view &:before {bottom: 0;}
+
   &--today,
   &--current {
     background-color: rgba(240, 240, 255, 0.4);
     z-index: 1;
   }
+
   &--selected {
     background-color: rgba(235, 255, 245, 0.4);
     z-index: 2;
+
     .vuecal--day-view & {background: none;}
   }
+
   &--out-of-scope {color: #ccc;}
   &--disabled {color: #ccc;cursor: not-allowed;}
   // Cells/splits get highlighted when dragging an event over it.
@@ -577,15 +586,18 @@ export default {
     transition-duration: 5ms;
   }
   // -------------------------------------------------
+
   &-content {
     position: relative;
     width: 100%;
     height: 100%;
     outline: none;
+
     .vuecal--years-view &,
     .vuecal--year-view &,
     .vuecal--month-view & {justify-content: center;}
   }
+
   &-split {
     display: flex;
     flex-grow: 1;
@@ -594,7 +606,9 @@ export default {
     position: relative;
     transition: 0.15s ease-in-out background-color;
   }
+
   &-events {width: 100%;}
+
   &-events-count {
     position: absolute;
     left: 50%;
@@ -610,6 +624,7 @@ export default {
     font-size: 10px;
     box-sizing: border-box;
   }
+
   .vuecal__special-hours {
     position: absolute;
     left: 0;
@@ -617,16 +632,20 @@ export default {
     box-sizing: border-box;
   }
 }
+
 .vuecal--overflow-x.vuecal--week-view .vuecal__cell, .vuecal__cell-split {
   overflow: hidden;
 }
+
 .vuecal__no-event {
   padding-top: 1em;
   color: #aaa;
   justify-self: flex-start;
   margin-bottom: auto; // Vertical align top within flex column and align center.
 }
+
 .vuecal__all-day .vuecal__no-event {display: none;}
+
 .vuecal__now-line {
   position: absolute;
   left: 0;
@@ -636,6 +655,7 @@ export default {
   border-top: 1px solid currentColor;
   opacity: 0.6;
   z-index: 1;
+
   &:before {
     content: "";
     position: absolute;
