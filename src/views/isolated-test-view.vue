@@ -15,7 +15,8 @@ div.test-view
     hide-weekends
     today-button
     @ready="fetchEvents"
-    @view-change="fetchEvents")
+    @view-change="fetchEvents"
+    :on-event-click="log")
 </template>
 
 <script>
@@ -78,7 +79,7 @@ export default {
   components: { VueCal },
   data: () => ({
     selectedDate: now,
-    view: 'year',
+    view: 'week',
     events: [
       {
         start: now.subtractDays(1),
@@ -122,8 +123,8 @@ export default {
         })
     },
 
-    log (params) {
-      console.log(params)
+    log (...params) {
+      console.log(...params)
     },
     onDragStart (e, draggable) {
       e.dataTransfer.setData('event', JSON.stringify(draggable))

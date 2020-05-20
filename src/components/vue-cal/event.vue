@@ -4,12 +4,12 @@
   :style="eventStyles"
   tabindex="0"
   @focus="focusEvent"
-  @keypress.enter.stop="onClick"
+  @keypress.enter.stop="onEnterKeypress"
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @touchstart.stop="onTouchStart"
   @mousedown="onMouseDown($event) /* Don't stop mousedown propagation & trigger cell mousedown */"
-  @click="onClick"
+  @mouseup="onMouseUp"
   @dblclick="onDblClick"
   :draggable="draggable"
   @dragstart="draggable && onDragStart($event)"
@@ -70,6 +70,22 @@ export default {
       }
     },
 
+    // WARNING: there is another global mouseup (on whole document) in index.vue,
+    // That catches everything. You may need to put what you want to put here there
+    // so that will work when you mouseup anywhere in document.
+    onMouseUp (e) {
+      // This only needs to be call on mouseup of this event so it constitutes a click
+      // (mousedown + mouseup).
+      const { _eid, originalEndTimeMinutes, endTimeMinutes } = this.domEvents.resizeAnEvent
+      // If end time is different than original, consider as resized.
+      const wasResizing = _eid && endTimeMinutes && endTimeMinutes !== originalEndTimeMinutes
+
+      // Call the onEventClick function if exists and not dragging handle.
+      if (typeof this.vuecal.onEventClick === 'function' && !wasResizing) {
+        return this.vuecal.onEventClick(this.event, e)
+      }
+    },
+
     onMouseEnter (e) {
       e.preventDefault()
       this.vuecal.emitWithEvent('event-mouse-enter', this.event)
@@ -89,7 +105,7 @@ export default {
       this.onMouseDown(e, true)
     },
 
-    onClick (e) {
+    onEnterKeypress (e) {
       if (typeof this.vuecal.onEventClick === 'function') return this.vuecal.onEventClick(this.event, e)
     },
 
@@ -106,6 +122,8 @@ export default {
     },
 
     onResizeHandleMouseDown () {
+      this.focusEvent()
+
       this.domEvents.dragAnEvent._eid = null
       this.domEvents.resizeAnEvent = Object.assign(this.domEvents.resizeAnEvent, {
         _eid: this.event._eid,
@@ -136,20 +154,20 @@ export default {
 
     focusEvent () {
       const { focusAnEvent } = this.domEvents
-      const onFocus = focusAnEvent._eid
+      const focusedEvent = focusAnEvent._eid
 
-      if (onFocus === this.event._eid) return
-
-      this.vuecal.emitWithEvent('event-focus', this.event)
-
+      // If event is already focus cancel refocusing.
+      if (focusedEvent === this.event._eid) return
       // Unfocus previous event if any.
-      if (onFocus && onFocus !== this.event._eid) {
-        const event = this.view.events.find(e => e._eid === focusAnEvent._eid)
+      else if (focusedEvent) {
+        const event = this.view.events.find(e => e._eid === focusedEvent)
         if (event) event.focused = false
       }
 
       // Cancel delete on previous event if any.
       this.vuecal.cancelDelete()
+
+      this.vuecal.emitWithEvent('event-focus', this.event)
 
       focusAnEvent._eid = this.event._eid
       this.event.focused = true
