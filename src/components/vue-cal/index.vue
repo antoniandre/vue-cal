@@ -690,9 +690,10 @@ export default {
      */
     onMouseUp (e) {
       const { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      const { _eid: wasResizing } = resizeAnEvent
 
       // On event resize end, emit event if duration has changed.
-      if (resizeAnEvent._eid) {
+      if (wasResizing) {
         this.domEvents.cancelClickEventCreation = true
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
         const { originalEnd } = resizeAnEvent
@@ -730,7 +731,7 @@ export default {
       if (this.isDOMElementAnEvent(e.target)) this.domEvents.cancelClickEventCreation = true
 
       // If not mouse up on an event, unfocus any event except if just dragged.
-      else if (!resizeAnEvent._eid) this.unfocusEvent()
+      else if (!wasResizing) this.unfocusEvent()
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout is initiated in onMouseDown() in event component.
