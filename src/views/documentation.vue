@@ -3422,6 +3422,7 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
   div
     strong.mr-2 Version 3.2
     | The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
