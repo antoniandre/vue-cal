@@ -109,7 +109,7 @@
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
                       .vuecal__cell-events-count(v-if="((isMonthView && !eventsOnMonthView) || (isYearsOrYearView && eventsCountOnYearView)) && events.length")
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
-                      .vuecal__no-event(v-if="!events.length && isWeekOrDayView")
+                      .vuecal__no-event(v-if="!cellOrSplitHasEvents(events, split) && isWeekOrDayView")
                         slot(name="no-event") {{ texts.noEvent }}
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
@@ -1006,6 +1006,18 @@ export default {
         style.innerHTML = `.vuecal__weekdays-headings,.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
         document.head.appendChild(style)
       }
+    },
+
+    /**
+     * Tells wether there are events in the given cell or split and returns a Boolean.
+     * This function simplifies the template.
+     *
+     * @param {Array} events The cell events.
+     * @param {Object|Boolean} split The current split object if any or false.
+     * @return {Boolean} true if there are events, false otherwise.
+     */
+    cellOrSplitHasEvents (events, split = null) {
+      return events.length && ((!split && events.length) || (split && events.some(e => e.split === split.id)))
     }
   },
 
