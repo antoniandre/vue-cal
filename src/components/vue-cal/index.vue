@@ -35,7 +35,7 @@
           .vuecal__flex.vuecal__cells(
             :class="`${view.id}-view`"
             grow
-            :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
+            :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
             :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
             vuecal-cell(
               v-for="(cell, i) in viewCells"
@@ -44,7 +44,7 @@
               :edit-events="editEvents"
               :data="cell"
               :all-day="true"
-              :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
+              :cell-width="hideWeekdays.length && (isWeekView || isMonthView) && cellWidth"
               :min-timestamp="minTimestamp"
               :max-timestamp="maxTimestamp"
               :cell-splits="hasSplits && daySplits || []")
@@ -67,17 +67,17 @@
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.vuecal__time-cell-line
                   span.vuecal__time-cell-label {{ cell.label }}
-            .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && view.id === 'month'" column)
+            .vuecal__flex.vuecal__week-numbers(v-if="showWeekNumbers && isMonthView" column)
               .vuecal__flex.vuecal__week-number-cell(v-for="i in 6" :key="i" grow)
                 slot(name="week-number-cell" :week="getWeekNumber(i - 1)") {{ getWeekNumber(i - 1) }}
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
               grow
-              :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
+              :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
               :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
               //- Only for minCellWidth or minSplitWidth on week view.
               weekdays-headings(
-                v-if="(minCellWidth || (hasSplits && minSplitWidth)) && view.id === 'week'"
+                v-if="(minCellWidth || (hasSplits && minSplitWidth)) && isWeekView"
                 :transition-direction="transitionDirection"
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
@@ -91,7 +91,7 @@
               .vuecal__flex(
                 ref="cells"
                 grow
-                :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || view.id !== 'week'"
+                :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
@@ -99,7 +99,7 @@
                   :options="$props"
                   :edit-events="editEvents"
                   :data="cell"
-                  :cell-width="hideWeekdays.length && ['month', 'week'].includes(view.id) && cellWidth"
+                  :cell-width="hideWeekdays.length && (isWeekView || isMonthView) && cellWidth"
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
                   :cell-splits="hasSplits && daySplits || []")
@@ -107,9 +107,9 @@
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split && !stickySplitLabels" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
-                      .vuecal__cell-events-count(v-if="((view.id === 'month' && !eventsOnMonthView) || (['years', 'year'].includes(view.id) && eventsCountOnYearView)) && events.length")
+                      .vuecal__cell-events-count(v-if="((isMonthView && !eventsOnMonthView) || (isYearsOrYearView && eventsCountOnYearView)) && events.length")
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
-                      .vuecal__no-event(v-if="!events.length && ['week', 'day'].includes(view.id)")
+                      .vuecal__no-event(v-if="!events.length && isWeekOrDayView")
                         slot(name="no-event") {{ texts.noEvent }}
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
@@ -119,12 +119,12 @@
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-                      .vuecal__event-time(v-if="time && !event.allDay && !(view === 'month' && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
+                      .vuecal__event-time(v-if="time && !event.allDay && !(isMonthView && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
                         | {{ utils.date.formatTime(event.start) }}
                         span(v-if="event.endTimeMinutes") &nbsp;- {{ utils.date.formatTime(event.end) }}
                         small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
-                        v-if="event.content && !(view === 'month' && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
+                        v-if="event.content && !(isMonthView && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
                   slot(v-slot:no-event) {{ texts.noEvent }}
     //- Used in alignWithScrollbar() to realign weekdays headings.
@@ -478,13 +478,13 @@ export default {
           view,
           startDate,
           endDate: this.view.endDate,
-          ...(this.view.id === 'month' ? {
+          ...(this.isMonthView ? {
             firstCellDate: this.view.firstCellDate,
             lastCellDate: this.view.lastCellDate,
             outOfScopeEvents: this.view.outOfScopeEvents.map(this.cleanupEvent)
           } : {}),
           events: this.view.events.map(this.cleanupEvent),
-          ...(this.view.id === 'week' ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
+          ...(this.isWeekView ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
         }
         this.$emit('view-change', params)
       }
@@ -545,7 +545,7 @@ export default {
     addEventsToView (events = []) {
       const ue = this.utils.event
 
-      const { id, startDate, endDate, firstCellDate, lastCellDate } = this.view
+      const { startDate, endDate, firstCellDate, lastCellDate } = this.view
       // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
       // @todo: remove the code that explicitely updates this.mutableEvents (e.g on event resize).
@@ -554,7 +554,7 @@ export default {
 
       // In no event or if on years/year view and eventsCountOnYearView is false
       // then don't add events to view.
-      if (!events || (['years', 'year'].includes(id) && !this.eventsCountOnYearView)) return
+      if (!events || (this.isYearsOrYearView && !this.eventsCountOnYearView)) return
 
       // First remove the events that are not in view.
       // Keep the unfiltered array of events for outOfScopeEvents bellow.
@@ -562,7 +562,7 @@ export default {
 
       // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
       // If we don't display the event on month view (eventsOnMonthView = false) then don't create segments.
-      if (['month', 'week', 'day'].includes(id) && !(id === 'month' && !this.eventsOnMonthView)) {
+      if (!this.isYearsOrYearView && !(this.isMonthView && !this.eventsOnMonthView)) {
         filteredEvents = filteredEvents.map(e => {
           return e.daysCount > 1 ? ue.createEventSegments(e, firstCellDate || startDate, lastCellDate || endDate) : e
         })
@@ -570,7 +570,7 @@ export default {
 
       this.view.events.push(...filteredEvents)
 
-      if (id === 'month') {
+      if (this.isMonthView) {
         // Save out of scope events into the view object separated from the array of in-scope events.
         this.view.outOfScopeEvents = []
         events.forEach(e => {
@@ -651,7 +651,7 @@ export default {
         )
 
         // Resize events horizontally if resize-x is enabled (add/remove segments).
-        if (this.resizeX && this.view.id === 'week') {
+        if (this.resizeX && this.isWeekView) {
           event.daysCount = ud.countDays(event.start, event.end)
           const cells = this.$refs.cells
           const cellWidth = cells.offsetWidth / cells.childElementCount
@@ -1062,9 +1062,9 @@ export default {
       view: this.view.id,
       startDate,
       endDate: this.view.endDate,
-      ...(this.view.id === 'month' ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
+      ...(this.isMonthView ? { firstCellDate: this.view.firstCellDate, lastCellDate: this.view.lastCellDate } : {}),
       events: this.view.events.map(this.cleanupEvent),
-      ...(this.view.id === 'week' ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
+      ...(this.isWeekView ? { week: ud.getWeek(this.startWeekOnSunday ? ud.addDays(startDate, 1) : startDate) } : {})
     }
 
     this.$emit('ready', params)
@@ -1116,10 +1116,10 @@ export default {
       return Object.keys(this.views).filter(view => this.views[view].enabled)
     },
     hasTimeColumn () {
-      return this.time && ['week', 'day'].includes(this.view.id)
+      return this.time && this.isWeekOrDayView
     },
     isShortMonthView () {
-      return this.view.id === 'month' && this.eventsOnMonthView === 'short'
+      return this.isMonthView && this.eventsOnMonthView === 'short'
     },
     firstCellDateWeekNumber () {
       const ud = this.utils.date
@@ -1149,13 +1149,13 @@ export default {
     },
     // Whether the current view has days splits.
     hasSplits () {
-      return this.daySplits.length && ['week', 'day'].includes(this.view.id)
+      return this.daySplits.length && this.isWeekOrDayView
     },
     contentMinWidth () {
       let minWidth = null
 
       if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.daySplits.length
-      else if (this.minCellWidth && this.view.id === 'week') minWidth = this.visibleDaysCount * this.minCellWidth
+      else if (this.minCellWidth && this.isWeekView) minWidth = this.visibleDaysCount * this.minCellWidth
 
       return minWidth
     },
@@ -1186,9 +1186,9 @@ export default {
     },
     weekDaysInHeader () {
       return (
-        this.view.id === 'month' ||
+        this.isMonthView ||
         // hasSplits check is important here in case the user toggles the splits but keep minSplitWidth.
-        (this.view.id === 'week' && !this.minCellWidth && !(this.hasSplits && this.minSplitWidth)))
+        (this.isWeekView && !this.minCellWidth && !(this.hasSplits && this.minSplitWidth)))
     },
     months () {
       return this.texts.months.map(month => ({ label: month }))
@@ -1378,7 +1378,7 @@ export default {
     },
     // Only when hiding weekdays on month and week views.
     visibleDaysCount () {
-      if (this.view.id === 'day') return 1
+      if (this.isDayView) return 1
       return 7 - this.weekDays.reduce((total, day) => total + day.hide, 0)
     },
     cellWidth () {
@@ -1390,20 +1390,41 @@ export default {
         [`vuecal--${this.locale}`]: this.locale,
         'vuecal--no-time': !this.time,
         'vuecal--view-with-time': this.hasTimeColumn,
-        'vuecal--week-numbers': this.showWeekNumbers && this.view.id === 'month',
+        'vuecal--week-numbers': this.showWeekNumbers && this.isMonthView,
         'vuecal--twelve-hour': this.twelveHour,
         'vuecal--click-to-navigate': this.clickToNavigate,
         'vuecal--hide-weekends': this.hideWeekends,
         'vuecal--split-days': this.hasSplits,
         'vuecal--sticky-split-labels': this.hasSplits && this.stickySplitLabels,
-        'vuecal--overflow-x': (this.minCellWidth && this.view.id === 'week') || (this.hasSplits && this.minSplitWidth),
+        'vuecal--overflow-x': (this.minCellWidth && this.isWeekView) || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--resizing-event': this.domEvents.resizeAnEvent.endTimeMinutes,
         'vuecal--dragging-event': this.domEvents.dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
-        'vuecal--short-events': this.view.id === 'month' && this.eventsOnMonthView === 'short'
+        'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short'
       }
+    },
+    isYearsOrYearView () {
+      return ['years', 'year'].includes(this.view.id)
+    },
+    isYearsView () {
+      return this.view.id === 'years'
+    },
+    isYearView () {
+      return this.view.id === 'year'
+    },
+    isMonthView () {
+      return this.view.id === 'month'
+    },
+    isWeekOrDayView () {
+      return ['week', 'day'].includes(this.view.id)
+    },
+    isWeekView () {
+      return this.view.id === 'week'
+    },
+    isDayView () {
+      return this.view.id === 'day'
     }
   },
 
