@@ -3422,6 +3422,7 @@
     a(href="#release-notes") Release notes
     a#release-notes(name="release-notes")
 
+  div.grey--text #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week] &amp; #[span.code day] views
   div.grey--text #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
   div
     strong.mr-2 Version 3.2

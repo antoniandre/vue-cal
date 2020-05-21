@@ -383,6 +383,7 @@ export default {
         this.transitionDirection = views.indexOf(this.view.id) > views.indexOf(view) ? 'left' : 'right'
       }
 
+      const oldView = this.view.id
       this.view.events = []
       this.view.id = view
       this.view.firstCellDate = null // For month view, if filling cells before 1st of month.
@@ -466,7 +467,7 @@ export default {
 
       // Prevent firing the `view-change` event twice (if using .sync).
       const viewDate = this.view.startDate && this.view.startDate.getTime()
-      if (this.view.id === view && viewDate === viewDateBeforeChange) return
+      if (oldView === view && viewDate === viewDateBeforeChange) return
 
       // Emit events to outside of Vue Cal and update the activeView (if using .sync).
       this.$emit('update:activeView', view)
