@@ -70,20 +70,11 @@ export default {
       }
     },
 
-    // WARNING: there is another global mouseup (on whole document) in index.vue,
-    // That catches everything. You may need to put what you want to put here there
-    // so that will work when you mouseup anywhere in document.
-    onMouseUp (e) {
-      // This only needs to be call on mouseup of this event so it constitutes a click
-      // (mousedown + mouseup).
-      const { _eid, originalEndTimeMinutes, endTimeMinutes } = this.domEvents.resizeAnEvent
-      // If end time is different than original, consider as resized.
-      const wasResizing = _eid && endTimeMinutes && endTimeMinutes !== originalEndTimeMinutes
-
-      // Call the onEventClick function if exists and not dragging handle.
-      if (typeof this.vuecal.onEventClick === 'function' && !wasResizing) {
-        return this.vuecal.onEventClick(this.event, e)
-      }
+    onMouseUp () {
+      // The mouseup handler is global (on whole document) in index.vue.
+      // It handles the mouseup on cell, events and everything.
+      // If you need a mouseup on event, put it in the centralized handler to avoid
+      // confusion, and to mix well with other cases.
     },
 
     onMouseEnter (e) {

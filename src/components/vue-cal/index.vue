@@ -692,14 +692,20 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseUp (e) {
-      const { resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      const { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      const { _eid: isClickHoldingEvent } = clickHoldAnEvent
       const { _eid: wasResizing } = resizeAnEvent
+      let hasResized = false
+      const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
+
+      if (mouseUpOnEvent) this.domEvents.cancelClickEventCreation = true
 
       // On event resize end, emit event if duration has changed.
       if (wasResizing) {
-        this.domEvents.cancelClickEventCreation = true
+        const { originalEnd, originalEndTimeMinutes, endTimeMinutes } = resizeAnEvent
         const event = this.view.events.find(e => e._eid === resizeAnEvent._eid)
-        const { originalEnd } = resizeAnEvent
+        // If end time is different than original, consider as resized.
+        hasResized = endTimeMinutes && endTimeMinutes !== originalEndTimeMinutes
 
         // When resizing the endTime changes but the day may change too when resizing horizontally.
         // So compare timestamps instead of only endTimeMinutes.
@@ -731,14 +737,12 @@ export default {
         resizeAnEvent.endCell = null
       }
 
-      if (this.isDOMElementAnEvent(e.target)) this.domEvents.cancelClickEventCreation = true
-
       // If not mouse up on an event, unfocus any event except if just dragged.
-      else if (!wasResizing) this.unfocusEvent()
+      if (!mouseUpOnEvent && !wasResizing) this.unfocusEvent()
 
       // Prevent showing delete button if click and hold was not long enough.
       // Click & hold timeout is initiated in onMouseDown() in event component.
-      if (clickHoldAnEvent.timeoutId && !clickHoldAnEvent._eid) {
+      if (clickHoldAnEvent.timeoutId && !isClickHoldingEvent) {
         clearTimeout(clickHoldAnEvent.timeoutId)
         clickHoldAnEvent.timeoutId = null
       }
@@ -747,6 +751,12 @@ export default {
       if (clickHoldACell.timeoutId) {
         clearTimeout(clickHoldACell.timeoutId)
         clickHoldACell.timeoutId = null
+      }
+
+      // Call the onEventClick function if exists and not dragging handle and not deleting event.
+      if (mouseUpOnEvent && !hasResized && !isClickHoldingEvent && typeof this.onEventClick === 'function') {
+        const event = this.view.events.find(e => e._eid === focusAnEvent._eid)
+        return this.onEventClick(event, e)
       }
     },
 
