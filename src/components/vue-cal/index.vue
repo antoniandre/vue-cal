@@ -294,6 +294,14 @@ export default {
           // Only one at a time, only needed for vuecal dragging-event class.
           _eid: null
         },
+        dragToCreateAnEvent: {
+          dragType: 'end',
+          started: false,
+          mouseTimes: { down: null, up: null, move: null },
+          createdEvent: null,
+          createdEventWithMouseDown: false,
+          wasItDraggable: false
+        },
         focusAnEvent: {
           _eid: null // Only one at a time.
         },
@@ -621,7 +629,7 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseMove (e) {
-      const { resizeAnEvent, dragAnEvent } = this.domEvents
+      const { resizeAnEvent, dragAnEvent, dragToCreateAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
 
       // Destructuring class method loses the `this` context.
@@ -684,6 +692,10 @@ export default {
         }
 
         this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
+      }
+
+      else if (this.eventCreateWithDrag && dragToCreateAnEvent) {
+        // @todo: move the event creation from drag here (currently in cell).
       }
     },
 

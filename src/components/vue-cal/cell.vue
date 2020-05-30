@@ -80,14 +80,7 @@ export default {
     // where there is no cursor coords.
     timeAtCursor: null,
     highlighted: false, // On event drag over.
-    highlightedSplit: null,
-    newDragCreateEvent: {
-      dragType: 'end',
-      mouseTimes: { down: null, up: null, move: null },
-      createdEvent: null,
-      createdEventWithMouseDown: false,
-      wasItDraggable: false
-    }
+    highlightedSplit: null
   }),
 
   methods: {
@@ -123,97 +116,80 @@ export default {
     },
 
     onMouseMove (DOMEvent, force = false) {
-      if (!this.newDragCreateEvent.mouseDown) {
-        return
-      }
+      const { dragToCreateAnEvent } = this.domEvents
+      if (!this.options.eventCreateWithDrag || !dragToCreateAnEvent.started) return
 
-      // If prohibited, doesn't work
-      if (!this.vuecal.eventCreateWithDrag) {
-        return
-      }
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       this.timeAtCursor = new Date(this.data.startDate)
-      this.timeAtCursor.setMinutes(
-        this.vuecal.minutesAtCursor(DOMEvent).minutes
-      )
+      this.timeAtCursor.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
 
-      // Set the time from timeposition
-      this.newDragCreateEvent.mouseTimes.move = this.timeAtCursor
-      // Set the move to the closest intervaled number (snapToTime)
-      let timeMinutes =
-        this.newDragCreateEvent.mouseTimes.move.getTime() / 1000 / 60
+      // Set the time from timeposition.
+      dragToCreateAnEvent.mouseTimes.move = this.timeAtCursor
+      // Set the move to the closest intervaled number (snapToTime).
+      let timeMinutes = dragToCreateAnEvent.mouseTimes.move.getTime() / 1000 / 60
       if (this.vuecal.snapToTime) {
         const plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2
-        timeMinutes =
-          plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
+        timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
       }
-      this.newDragCreateEvent.mouseTimes.move.setTime(timeMinutes * 1000 * 60)
+      dragToCreateAnEvent.mouseTimes.move.setTime(timeMinutes * 1000 * 60)
       const { clickHoldACell } = this.domEvents
 
-      // If didn't create before then create an event
+      // If didn't create before then create an event.
       if (
-        this.newDragCreateEvent.mouseTimes.down != null &&
-        !this.newDragCreateEvent.createdEventWithMouseDown
+        dragToCreateAnEvent.mouseTimes.down != null &&
+        !dragToCreateAnEvent.createdEventWithMouseDown
       ) {
-        this.newDragCreateEvent.createdEvent = this.utils.event.createAnEvent(
-          this.newDragCreateEvent.mouseTimes.down,
-          Math.floor(
-            (this.newDragCreateEvent.mouseTimes.move -
-              this.newDragCreateEvent.mouseTimes.down) /
-              1000 /
-              60
-          ),
+        dragToCreateAnEvent.createdEvent = this.utils.event.createAnEvent(
+          dragToCreateAnEvent.mouseTimes.down,
+          ~~((dragToCreateAnEvent.mouseTimes.move - dragToCreateAnEvent.mouseTimes.down) / (1000 * 60)),
           clickHoldACell.split ? { split: clickHoldACell.split } : {}
         )
 
-        // Save the default draggable value
-        this.newDragCreateEvent.wasItDraggable = this.newDragCreateEvent.createdEvent.draggable
-        this.newDragCreateEvent.createdEvent.draggable = false
-        this.newDragCreateEvent.createdEvent.class += 'dragCreateEventClass'
-        this.newDragCreateEvent.createdEventWithMouseDown = true
+        // Save the default draggable value.
+        dragToCreateAnEvent.wasItDraggable = dragToCreateAnEvent.createdEvent.draggable
+        dragToCreateAnEvent.createdEvent.draggable = false
+        dragToCreateAnEvent.createdEvent.class += 'dragToCreateAnEventClass'
+        dragToCreateAnEvent.createdEventWithMouseDown = true
       }
-      // if created before, change the length of event
+      // If created before, change the length of event.
       if (
-        this.newDragCreateEvent.mouseTimes.down != null &&
-        this.newDragCreateEvent.createdEventWithMouseDown &&
-        typeof this.newDragCreateEvent.createdEvent === 'object'
+        dragToCreateAnEvent.mouseTimes.down != null &&
+        dragToCreateAnEvent.createdEventWithMouseDown &&
+        typeof dragToCreateAnEvent.createdEvent === 'object'
       ) {
         // set dragType
-        if (
-          this.newDragCreateEvent.mouseTimes.down <
-          this.newDragCreateEvent.mouseTimes.move
-        ) {
-          this.newDragCreateEvent.dragType = 'end'
+        if (dragToCreateAnEvent.mouseTimes.down < dragToCreateAnEvent.mouseTimes.move) {
+          dragToCreateAnEvent.dragType = 'end'
         }
         else {
-          this.newDragCreateEvent.dragType = 'start'
+          dragToCreateAnEvent.dragType = 'start'
         }
 
         // Change event start or end
-        if (this.newDragCreateEvent.dragType === 'end') {
+        if (dragToCreateAnEvent.dragType === 'end') {
           // Create start is the click start
-          this.newDragCreateEvent.createdEvent.start = this.newDragCreateEvent.mouseTimes.down
-          this.newDragCreateEvent.createdEvent.startTimeMinutes =
-            this.newDragCreateEvent.createdEvent.start.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.start.getMinutes()
+          dragToCreateAnEvent.createdEvent.start = dragToCreateAnEvent.mouseTimes.down
+          dragToCreateAnEvent.createdEvent.startTimeMinutes =
+            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.start.getMinutes()
           // Set event end time
-          this.newDragCreateEvent.createdEvent.end = this.newDragCreateEvent.mouseTimes.move
-          this.newDragCreateEvent.createdEvent.endTimeMinutes =
-            this.newDragCreateEvent.createdEvent.end.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.end.getMinutes()
+          dragToCreateAnEvent.createdEvent.end = dragToCreateAnEvent.mouseTimes.move
+          dragToCreateAnEvent.createdEvent.endTimeMinutes =
+            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.end.getMinutes()
         }
-        else if (this.newDragCreateEvent.dragType === 'start') {
+        else if (dragToCreateAnEvent.dragType === 'start') {
           // Set event end to click start
-          this.newDragCreateEvent.createdEvent.end = this.newDragCreateEvent.mouseTimes.down
-          this.newDragCreateEvent.createdEvent.endTimeMinutes =
-            this.newDragCreateEvent.createdEvent.end.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.end.getMinutes()
+          dragToCreateAnEvent.createdEvent.end = dragToCreateAnEvent.mouseTimes.down
+          dragToCreateAnEvent.createdEvent.endTimeMinutes =
+            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.end.getMinutes()
           // set event start time
-          this.newDragCreateEvent.createdEvent.start = this.newDragCreateEvent.mouseTimes.move
-          this.newDragCreateEvent.createdEvent.startTimeMinutes =
-            this.newDragCreateEvent.createdEvent.start.getHours() * 60 +
-            this.newDragCreateEvent.createdEvent.start.getMinutes()
+          dragToCreateAnEvent.createdEvent.start = dragToCreateAnEvent.mouseTimes.move
+          dragToCreateAnEvent.createdEvent.startTimeMinutes =
+            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.start.getMinutes()
         }
       }
 
@@ -222,30 +198,31 @@ export default {
 
     // End of drag
     onMouseUp (DOMEvent, force = false) {
+      const { dragToCreateAnEvent } = this.domEvents
       // If prohibited, doesn't work
-      if (!this.vuecal.eventCreateWithDrag) {
-        return
-      }
+      if (!this.options.eventCreateWithDrag) return
+
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       // If splitting days, also return the clicked split on cell click when emitting event.
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
       this.utils.cell.selectCell(force, this.timeAtCursor, split)
       this.timeAtCursor = null
-      this.newDragCreateEvent.mouseDown = false
+      dragToCreateAnEvent.started = false
       // Set the default draggable value
-      this.newDragCreateEvent.createdEvent.draggable = this.newDragCreateEvent.wasItDraggable
+      dragToCreateAnEvent.createdEvent.draggable = dragToCreateAnEvent.wasItDraggable
       // Remove the class
-      this.newDragCreateEvent.createdEvent.class = this.newDragCreateEvent.createdEvent.class.replace(
-        'dragCreateEventClass',
+      dragToCreateAnEvent.createdEvent.class = dragToCreateAnEvent.createdEvent.class.replace(
+        'dragToCreateAnEventClass',
         ''
       )
-      this.newDragCreateEvent.createdEventWithMouseDown = false
+      dragToCreateAnEvent.createdEventWithMouseDown = false
       this.vuecal.$emit(
         'onEventCreateDrag',
-        this.newDragCreateEvent.createdEvent
+        dragToCreateAnEvent.createdEvent
       )
     },
+
     onCellkeyPressEnter (DOMEvent) {
       if (!this.isSelected) this.onCellFocus(DOMEvent)
 
@@ -296,41 +273,50 @@ export default {
         (this.view.events.find(e => e._eid === focusAnEvent._eid) || {}).focused = false
       }
 
-      // Set the mousedown if not on event
-      if (!mouseDownOnEvent) {
-        this.newDragCreateEvent.mouseDown = true
-        // Save the time at mouseDown
-        this.newDragCreateEvent.mouseTimes.down = this.timeAtCursor
+      // Only if event creation is allowed and mousedown is on a cell (not on event).
+      if (this.editEvents.create && !mouseDownOnEvent) this.setUpEventCreation()
+    },
 
-        // Set the down to the closest intervaled number
-        let timeMinutes = this.timeAtCursor.getTime() / 1000 / 60
+    setUpEventCreation () {
+      // If eventCreateWithDrag is true, start the event creation from dragging.
+      // Only on week and day views, does not make sense on month view.
+      if (this.options.eventCreateWithDrag && ['week', 'day'].includes(this.view.id)) {
+        const { dragToCreateAnEvent } = this.domEvents
+        dragToCreateAnEvent.started = true
+        // Save the time at mouseDown.
+        dragToCreateAnEvent.mouseTimes.down = this.timeAtCursor
+
+        let timeMinutes = this.timeAtCursor.getTime() / (1000 * 60)
+        // if snapToTime, Set the `mouseTimes.down` to the closest intervaled number.
         if (this.vuecal.snapToTime) {
           const plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2
-          timeMinutes =
-            plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
+          timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
         }
-        this.newDragCreateEvent.mouseTimes.down.setTime(
-          timeMinutes * 1000 * 60
-        )
+        dragToCreateAnEvent.mouseTimes.down.setTime(timeMinutes * 1000 * 60)
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.
-      if (this.editEvents.create && this.options.cellClickHold && !mouseDownOnEvent &&
-        ['month', 'week', 'day'].includes(this.view.id)) {
-        clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
-        clickHoldACell.split = split
-        clickHoldACell.timeoutId = setTimeout(() => {
-          if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
-            const { _eid } = this.utils.event.createAnEvent(
-              this.timeAtCursor,
-              null,
-              clickHoldACell.split ? { split: clickHoldACell.split } : {}
-            )
-
-            clickHoldACell.eventCreated = _eid
-          }
-        }, clickHoldACell.timeout)
+      else if (this.options.cellClickHold && ['month', 'week', 'day'].includes(this.view.id)) {
+        this.setUpCellHoldTimer()
       }
+    },
+
+    // When click & holding a cell, and if allowed, set a timeout to create an event (can be cancelled).
+    setUpCellHoldTimer () {
+      const { clickHoldACell } = this.domEvents
+      clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
+      clickHoldACell.split = split
+      clickHoldACell.timeoutId = setTimeout(() => {
+        if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
+          const { _eid } = this.utils.event.createAnEvent(
+            this.timeAtCursor,
+            null,
+            clickHoldACell.split ? { split: clickHoldACell.split } : {}
+          )
+
+          clickHoldACell.eventCreated = _eid
+        }
+      }, clickHoldACell.timeout)
     },
 
     onCellTouchStart (DOMEvent, split = null) {
