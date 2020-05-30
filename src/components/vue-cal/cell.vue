@@ -151,6 +151,8 @@ export default {
       // In some cases we explicitly set this flag to prevent the click event to trigger,
       // and cancel event creation.
       this.domEvents.cancelClickEventCreation = false
+      // Also reinit this var on each mousedown.
+      this.domEvents.clickHoldACell.eventCreated = false
 
       this.timeAtCursor = new Date(this.data.startDate)
       this.timeAtCursor.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
@@ -168,7 +170,13 @@ export default {
         clickHoldACell.split = split
         clickHoldACell.timeoutId = setTimeout(() => {
           if (clickHoldACell.cellId && !this.domEvents.cancelClickEventCreation) {
-            this.utils.event.createAnEvent(this.timeAtCursor, null, clickHoldACell.split ? { split: clickHoldACell.split } : {})
+            const { _eid } = this.utils.event.createAnEvent(
+              this.timeAtCursor,
+              null,
+              clickHoldACell.split ? { split: clickHoldACell.split } : {}
+            )
+
+            clickHoldACell.eventCreated = _eid
           }
         }, clickHoldACell.timeout)
       }
