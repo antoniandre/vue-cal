@@ -295,8 +295,9 @@ export default {
           _eid: null
         },
         dragToCreateAnEvent: {
-          dragType: 'end',
+          draggingEnd: 'end', // Are we dragging from the bottom end or top end.
           started: false,
+          startDate: null, // The cell date where we start the drag.
           mouseTimes: { down: null, up: null, move: null },
           createdEvent: null,
           createdEventWithMouseDown: false,
@@ -630,7 +631,7 @@ export default {
      */
     onMouseMove (e) {
       const { resizeAnEvent, dragAnEvent, dragToCreateAnEvent } = this.domEvents
-      if (resizeAnEvent._eid === null && dragAnEvent._eid === null) return
+      if (resizeAnEvent._eid === null && dragAnEvent._eid === null && !dragToCreateAnEvent.started) return
 
       // Destructuring class method loses the `this` context.
       // const { formatDateLite, countDays } = this.utils.date
@@ -638,65 +639,9 @@ export default {
 
       e.preventDefault()
 
-      if (resizeAnEvent._eid) {
-        const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
-        const { minutes, cursorCoords } = this.minutesAtCursor(e)
-        const segment = event.segments && event.segments[resizeAnEvent.segment]
+      if (resizeAnEvent._eid) this.eventResizing(e)
 
-        // Don't allow time above 24 hours.
-        let newEndTimeMins = Math.min(minutes, minutesInADay)
-        // Prevent reducing event duration to less than 1 min so it does not disappear.
-        newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
-        event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
-
-        // On resize, snap to time every X minutes if the option is on.
-        if (this.snapToTime) {
-          const plusHalfSnapTime = (event.endTimeMinutes + this.snapToTime / 2)
-          event.endTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
-        }
-
-        if (segment) segment.endTimeMinutes = event.endTimeMinutes
-
-        event.end.setHours(
-          0,
-          event.endTimeMinutes,
-          event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
-          0
-        )
-
-        // Resize events horizontally if resize-x is enabled (add/remove segments).
-        if (this.resizeX && this.isWeekView) {
-          event.daysCount = ud.countDays(event.start, event.end)
-          const cells = this.$refs.cells
-          const cellWidth = cells.offsetWidth / cells.childElementCount
-          const endCell = Math.floor(cursorCoords.x / cellWidth)
-
-          if (resizeAnEvent.startCell === null) {
-            resizeAnEvent.startCell = endCell - (event.daysCount - 1)
-          }
-          if (resizeAnEvent.endCell !== endCell) {
-            resizeAnEvent.endCell = endCell
-
-            const newEnd = ud.addDays(event.start, endCell - resizeAnEvent.startCell)
-            const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
-
-            if (newDaysCount !== event.daysCount) {
-              // Check that all segments are up to date.
-              let lastSegmentFormattedDate = null
-              if (newDaysCount > event.daysCount) lastSegmentFormattedDate = ue.addEventSegment(event)
-              else lastSegmentFormattedDate = ue.removeEventSegment(event)
-              resizeAnEvent.segment = lastSegmentFormattedDate
-              event.endTimeMinutes += 0.001 // Force updating the current event.
-            }
-          }
-        }
-
-        this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
-      }
-
-      else if (this.eventCreateWithDrag && dragToCreateAnEvent) {
-        // @todo: move the event creation from drag here (currently in cell).
-      }
+      else if (this.eventCreateWithDrag && dragToCreateAnEvent.started) this.eventDragCreation(e)
     },
 
     /**
@@ -786,6 +731,142 @@ export default {
      */
     onKeyUp (e) {
       if (e.keyCode === 27) this.cancelDelete() // Escape key.
+    },
+
+    /**
+     * On mousemove while resising an event.
+     */
+    eventResizing (e) {
+      const { resizeAnEvent } = this.domEvents
+      const event = this.view.events.find(e => e._eid === resizeAnEvent._eid) || { segments: {} }
+      const { minutes, cursorCoords } = this.minutesAtCursor(e)
+      const segment = event.segments && event.segments[resizeAnEvent.segment]
+
+      // Don't allow time above 24 hours.
+      let newEndTimeMins = Math.min(minutes, minutesInADay)
+      // Prevent reducing event duration to less than 1 min so it does not disappear.
+      newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+      event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
+
+      // On resize, snap to time every X minutes if the option is on.
+      if (this.snapToTime) {
+        const plusHalfSnapTime = (event.endTimeMinutes + this.snapToTime / 2)
+        event.endTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
+      }
+
+      if (segment) segment.endTimeMinutes = event.endTimeMinutes
+
+      event.end.setHours(
+        0,
+        event.endTimeMinutes,
+        event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
+        0
+      )
+
+      // Resize events horizontally if resize-x is enabled (add/remove segments).
+      if (this.resizeX && this.isWeekView) {
+        event.daysCount = ud.countDays(event.start, event.end)
+        const cells = this.$refs.cells
+        const cellWidth = cells.offsetWidth / cells.childElementCount
+        const endCell = Math.floor(cursorCoords.x / cellWidth)
+
+        if (resizeAnEvent.startCell === null) resizeAnEvent.startCell = endCell - (event.daysCount - 1)
+        if (resizeAnEvent.endCell !== endCell) {
+          resizeAnEvent.endCell = endCell
+
+          const newEnd = ud.addDays(event.start, endCell - resizeAnEvent.startCell)
+          const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
+
+          if (newDaysCount !== event.daysCount) {
+            // Check that all segments are up to date.
+            let lastSegmentFormattedDate = null
+            if (newDaysCount > event.daysCount) lastSegmentFormattedDate = ue.addEventSegment(event)
+            else lastSegmentFormattedDate = ue.removeEventSegment(event)
+            resizeAnEvent.segment = lastSegmentFormattedDate
+            event.endTimeMinutes += 0.001 // Force updating the current event.
+          }
+        }
+      }
+
+      this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
+    },
+
+    /**
+     * On mousemove while dragging to create an event.
+     */
+    eventDragCreation (e) {
+      const { dragToCreateAnEvent } = this.domEvents
+
+      // if (!this.isSelected) this.onCellFocus(e)
+
+      this.timeAtCursor = new Date(dragToCreateAnEvent.startDate)
+      this.timeAtCursor.setMinutes(this.minutesAtCursor(e).minutes)
+
+      // Set the time from timeposition.
+      dragToCreateAnEvent.mouseTimes.move = this.timeAtCursor
+      let timeMinutes = dragToCreateAnEvent.mouseTimes.move.getTime() / (1000 * 60)
+      // If snapToTime, set the `mouseTimes.move` to the closest intervaled number.
+      if (this.snapToTime) {
+        const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
+        timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
+      }
+      dragToCreateAnEvent.mouseTimes.move.setTime(timeMinutes * 1000 * 60)
+
+      const { mouseTimes } = dragToCreateAnEvent
+
+      // If didn't create before then create an event.
+      if (mouseTimes.down != null && !dragToCreateAnEvent.createdEventWithMouseDown) {
+        const { clickHoldACell } = this.domEvents
+        this.domEvents.dragToCreateAnEvent.createdEvent = this.utils.event.createAnEvent(
+          mouseTimes.down,
+          ~~((mouseTimes.move - mouseTimes.down) / (1000 * 60)),
+          clickHoldACell.split ? { split: clickHoldACell.split } : {}
+        )
+
+        // Save the default draggable value.
+        this.domEvents.dragToCreateAnEvent.wasItDraggable = dragToCreateAnEvent.createdEvent.draggable
+        this.domEvents.dragToCreateAnEvent.createdEvent.draggable = false
+        this.domEvents.dragToCreateAnEvent.createdEvent.class += 'dragToCreateAnEventClass'
+        this.domEvents.dragToCreateAnEvent.createdEventWithMouseDown = true
+      }
+      // If created before, change the length of event.
+      if (
+        mouseTimes.down != null &&
+        dragToCreateAnEvent.createdEventWithMouseDown &&
+        typeof dragToCreateAnEvent.createdEvent === 'object'
+      ) {
+        // set draggingEnd.
+        const draggingEnd = mouseTimes.down < mouseTimes.move ? 'end' : 'start'
+        dragToCreateAnEvent.draggingEnd = draggingEnd
+
+        // Change event start or end.
+        if (draggingEnd === 'end') {
+          // Create start is the click start.
+          dragToCreateAnEvent.createdEvent.start = mouseTimes.down
+          dragToCreateAnEvent.createdEvent.startTimeMinutes =
+            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.start.getMinutes()
+          // Set event end time.
+          dragToCreateAnEvent.createdEvent.end = mouseTimes.move
+          dragToCreateAnEvent.createdEvent.endTimeMinutes =
+            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.end.getMinutes()
+        }
+        else if (draggingEnd === 'start') {
+          // Set event end to click start.
+          dragToCreateAnEvent.createdEvent.end = mouseTimes.down
+          dragToCreateAnEvent.createdEvent.endTimeMinutes =
+            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.end.getMinutes()
+          // set event start time.
+          dragToCreateAnEvent.createdEvent.start = mouseTimes.move
+          dragToCreateAnEvent.createdEvent.startTimeMinutes =
+            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
+            dragToCreateAnEvent.createdEvent.start.getMinutes()
+        }
+      }
+
+      this.timeAtCursor = null
     },
 
     /**
