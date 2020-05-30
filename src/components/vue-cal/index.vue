@@ -1509,6 +1509,7 @@ export default {
       return 100 / this.visibleDaysCount
     },
     cssClasses () {
+      const { resizeAnEvent, dragAnEvent, dragToCreateAnEvent } = this.domEvents
       return {
         [`vuecal--${this.view.id}-view`]: true,
         [`vuecal--${this.locale}`]: this.locale,
@@ -1523,8 +1524,9 @@ export default {
         'vuecal--overflow-x': (this.minCellWidth && this.isWeekView) || (this.hasSplits && this.minSplitWidth),
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
-        'vuecal--resizing-event': this.domEvents.resizeAnEvent.endTimeMinutes,
-        'vuecal--dragging-event': this.domEvents.dragAnEvent._eid,
+        'vuecal--resizing-event': resizeAnEvent._eid,
+        'vuecal--drag-creating-event': dragToCreateAnEvent.started,
+        'vuecal--dragging-event': dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short'
       }
