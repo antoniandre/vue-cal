@@ -695,7 +695,7 @@ export default {
      */
     onMouseUp (e) {
       const { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
-      const { _eid: isClickHoldingEvent } = clickHoldAnEvent
+      const { _eid: isClickHoldingEvent } = clickHoldAnEvent
       const { _eid: wasResizing } = resizeAnEvent
       let hasResized = false
       const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
