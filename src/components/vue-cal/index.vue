@@ -183,6 +183,7 @@ export default {
       next: this.next,
       switchView: this.switchView,
       updateSelectedDate: this.updateSelectedDate,
+      editEvents: this.editEvents,
       // Objects.
       view: this.view,
       domEvents: this.domEvents
@@ -309,7 +310,8 @@ export default {
           cellId: null,
           split: null,
           timeout: 1200, // Hold for 1.2s to create an event.
-          timeoutId: null
+          timeoutId: null,
+          eventCreated: false
         },
         // A single click can trigger event creation if the user decides so.
         // But prevent this to happen on click & hold, on event click and on resize event.
@@ -695,12 +697,15 @@ export default {
      */
     onMouseUp (e) {
       const { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
-      const { _eid: isClickHoldingEvent } = clickHoldAnEvent
+      const { _eid: isClickHoldingEvent } = clickHoldAnEvent
       const { _eid: wasResizing } = resizeAnEvent
       let hasResized = false
       const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
 
       if (mouseUpOnEvent) this.domEvents.cancelClickEventCreation = true
+
+      // Skip the rest if an event was created successfully.
+      if (clickHoldACell.eventCreated) return
 
       // On event resize end, emit event if duration has changed.
       if (wasResizing) {
