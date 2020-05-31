@@ -294,13 +294,10 @@ export default {
           // Only one at a time, only needed for vuecal dragging-event class.
           _eid: null
         },
-        dragToCreateAnEvent: {
-          started: false,
-          startDate: null, // The cell date where we start the drag.
+        dragCreateAnEvent: {
+          start: null, // The cell date where we start the drag.
           split: null,
-          mouseTimes: { down: null, up: null, move: null },
-          event: null,
-          wasItDraggable: false
+          event: null
         },
         focusAnEvent: {
           _eid: null // Only one at a time.
@@ -629,8 +626,8 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseMove (e) {
-      const { resizeAnEvent, dragAnEvent, dragToCreateAnEvent } = this.domEvents
-      if (resizeAnEvent._eid === null && dragAnEvent._eid === null && !dragToCreateAnEvent.started) return
+      const { resizeAnEvent, dragAnEvent, dragCreateAnEvent } = this.domEvents
+      if (resizeAnEvent._eid === null && dragAnEvent._eid === null && !dragCreateAnEvent.start) return
 
       // Destructuring class method loses the `this` context.
       // const { formatDateLite, countDays } = this.utils.date
@@ -640,7 +637,7 @@ export default {
 
       if (resizeAnEvent._eid) this.eventResizing(e)
 
-      else if (this.eventCreateWithDrag && dragToCreateAnEvent.started) this.eventDragCreation(e)
+      else if (this.eventCreateWithDrag && dragCreateAnEvent.start) this.eventDragCreation(e)
     },
 
     /**
@@ -652,10 +649,17 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     onMouseUp (e) {
-      const { focusAnEvent, resizeAnEvent, clickHoldAnEvent, clickHoldACell } = this.domEvents
+      const {
+        focusAnEvent,
+        resizeAnEvent,
+        clickHoldAnEvent,
+        clickHoldACell,
+        dragCreateAnEvent
+      } = this.domEvents
       const { _eid: isClickHoldingEvent } = clickHoldAnEvent
       const { _eid: wasResizing } = resizeAnEvent
       let hasResized = false
+      const { event: dragCreatedEvent } = dragCreateAnEvent
       const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
 
       if (mouseUpOnEvent) this.domEvents.cancelClickEventCreation = true
@@ -698,6 +702,16 @@ export default {
         resizeAnEvent.endTimeMinutes = null
         resizeAnEvent.startCell = null
         resizeAnEvent.endCell = null
+      }
+
+      else if (dragCreatedEvent) {
+        this.emitWithEvent('onEventCreateDrag', dragCreatedEvent)
+
+        // End the drag creation process.
+        dragCreateAnEvent.start = null
+        dragCreateAnEvent.split = null
+        dragCreateAnEvent.event.resizing = false // Remove the CSS resizing class.
+        dragCreateAnEvent.event = null
       }
 
       // If not mouse up on an event, unfocus any event except if just dragged.
@@ -789,6 +803,7 @@ export default {
         }
       }
 
+      // Emit event while resizing. This has to be fast.
       this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
     },
 
@@ -798,10 +813,10 @@ export default {
      * @param {Object} e the native DOM event object.
      */
     eventDragCreation (e) {
-      const { dragToCreateAnEvent } = this.domEvents
-      const { mouseTimes, startDate, split } = dragToCreateAnEvent
+      const { dragCreateAnEvent } = this.domEvents
+      const { start, split } = dragCreateAnEvent
 
-      const timeAtCursor = new Date(startDate)
+      const timeAtCursor = new Date(start)
       timeAtCursor.setHours(0, this.minutesAtCursor(e).minutes, 0, 0)
 
       // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
@@ -809,28 +824,24 @@ export default {
         let timeMinutes = timeAtCursor.getTime() / (1000 * 60)
         const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
         timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
-        timeAtCursor.setTime(timeMinutes * 1000 * 60)
+        timeAtCursor.setHours(0, timeMinutes * 1000 * 60, 0, 0)
       }
 
       // Create an event once, on the first pixel move.
-      if (!dragToCreateAnEvent.event) {
+      if (!dragCreateAnEvent.event) {
         // Start the event with 3 min duration, this will change as we are dragging.
-        dragToCreateAnEvent.event = this.utils.event.createAnEvent(startDate, 1, { split })
-
-        // Save the default draggable value.
-        dragToCreateAnEvent.wasItDraggable = dragToCreateAnEvent.event.draggable
-        dragToCreateAnEvent.event.draggable = false
-        dragToCreateAnEvent.event.resizing = true
+        dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
+        dragCreateAnEvent.event.resizing = true // Trigger the CSS class.
       }
 
       // If the event already exists change its start and end.
       else {
         // If dragging the bottom of the event.
-        const dragFromBottom = startDate < timeAtCursor
-        const { event } = dragToCreateAnEvent
+        const dragFromBottom = start < timeAtCursor
+        const { event } = dragCreateAnEvent
 
-        event.start = dragFromBottom ? startDate : timeAtCursor
-        event.end = dragFromBottom ? timeAtCursor : startDate
+        event.start = dragFromBottom ? start : timeAtCursor
+        event.end = dragFromBottom ? timeAtCursor : start
         event.startTimeMinutes = event.start.getHours() * 60 + event.start.getMinutes()
         event.endTimeMinutes = event.end.getHours() * 60 + event.end.getMinutes()
       }
@@ -1476,7 +1487,7 @@ export default {
       return 100 / this.visibleDaysCount
     },
     cssClasses () {
-      const { resizeAnEvent, dragAnEvent, dragToCreateAnEvent } = this.domEvents
+      const { resizeAnEvent, dragAnEvent, dragCreateAnEvent } = this.domEvents
       return {
         [`vuecal--${this.view.id}-view`]: true,
         [`vuecal--${this.locale}`]: this.locale,
@@ -1492,7 +1503,7 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--resizing-event': resizeAnEvent._eid,
-        'vuecal--drag-creating-event': dragToCreateAnEvent.started,
+        'vuecal--drag-creating-event': dragCreateAnEvent.start,
         'vuecal--dragging-event': dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short'
