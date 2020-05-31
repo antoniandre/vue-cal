@@ -628,10 +628,6 @@ export default {
       const { resizeAnEvent, dragAnEvent, dragCreateAnEvent } = this.domEvents
       if (resizeAnEvent._eid === null && dragAnEvent._eid === null && !dragCreateAnEvent.start) return
 
-      // Destructuring class method loses the `this` context.
-      // const { formatDateLite, countDays } = this.utils.date
-      const { date: ud, event: ue } = this.utils
-
       e.preventDefault()
 
       if (resizeAnEvent._eid) this.eventResizing(e)
@@ -757,6 +753,10 @@ export default {
       const { minutes, cursorCoords } = this.minutesAtCursor(e)
       const segment = event.segments && event.segments[resizeAnEvent.segment]
 
+      // Destructuring class method loses the `this` context.
+      // const { formatDateLite, countDays } = this.utils.date
+      const { date: ud, event: ue } = this.utils
+
       // Prevent reducing event duration to less than 1 min so it does not disappear.
       const newEndTimeMins = Math.max(minutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
@@ -784,7 +784,8 @@ export default {
           resizeAnEvent.endCell = endCell
 
           const newEnd = ud.addDays(event.start, endCell - resizeAnEvent.startCell)
-          const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1) // Don't accept 0 and negative values.
+          // Don't accept 0 and negative values.
+          const newDaysCount = Math.max(ud.countDays(event.start, newEnd), 1)
 
           if (newDaysCount !== event.daysCount) {
             // Check that all segments are up to date.
@@ -797,7 +798,7 @@ export default {
         }
       }
 
-      // Emit event while resizing. This has to be fast.
+      // Emit event while resizing, so it has to be fast.
       this.$emit('event-resizing', { _eid: event._eid, end: event.end, endTimeMinutes: event.endTimeMinutes })
     },
 
