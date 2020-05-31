@@ -6,6 +6,8 @@
  * Meantime keep `_` for private.
  */
 
+const minutesInADay = 24 * 60
+
 export default class CellUtils {
   _vuecal = null
 
@@ -71,6 +73,7 @@ export default class CellUtils {
 
   /**
    * Get the number of minutes from the top to the mouse cursor.
+   * Returns a constrained time between 0 and 24 * 60.
    *
    * @param {Object} e the native DOM event object.
    * @return {Object} containing { minutes: {Number}, cursorCoords: { x: {Number}, y: {Number} } }
@@ -78,13 +81,14 @@ export default class CellUtils {
   minutesAtCursor = e => {
     let minutes = 0
     let cursorCoords = { x: 0, y: 0 }
+    const { timeStep, timeCellHeight, timeFrom } = this._vuecal.$props
 
     if (typeof e === 'number') minutes = e
     else if (typeof e === 'object') {
       cursorCoords = this.getPosition(e)
-      minutes = Math.round(cursorCoords.y * this._vuecal.$props.timeStep / parseInt(this._vuecal.$props.timeCellHeight) + this._vuecal.$props.timeFrom)
+      minutes = Math.round(cursorCoords.y * timeStep / parseInt(timeCellHeight) + timeFrom)
     }
 
-    return { minutes, cursorCoords }
+    return { minutes: Math.max(Math.min(minutes, minutesInADay), 0), cursorCoords }
   }
 }

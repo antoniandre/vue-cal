@@ -757,13 +757,12 @@ export default {
       const { minutes, cursorCoords } = this.minutesAtCursor(e)
       const segment = event.segments && event.segments[resizeAnEvent.segment]
 
-      // Don't allow time above 24 hours.
-      let newEndTimeMins = Math.min(minutes, minutesInADay)
+      let newEndTimeMins = minutes
       // Prevent reducing event duration to less than 1 min so it does not disappear.
       newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
 
-      // On resize, snap to time every X minutes if the option is on.
+      // On resize, snap to time (e.g. 0, 15, 30, 45) if the option is on.
       if (this.snapToTime) {
         const plusHalfSnapTime = (event.endTimeMinutes + this.snapToTime / 2)
         event.endTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
@@ -771,12 +770,8 @@ export default {
 
       if (segment) segment.endTimeMinutes = event.endTimeMinutes
 
-      event.end.setHours(
-        0,
-        event.endTimeMinutes,
-        event.endTimeMinutes === minutesInADay ? -1 : 0, // Remove 1 second if time is 24:00.
-        0
-      )
+      // Remove 1 second if time is 24:00.
+      event.end.setHours(0, event.endTimeMinutes, event.endTimeMinutes === minutesInADay ? -1 : 0, 0)
 
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.isWeekView) {
@@ -817,7 +812,9 @@ export default {
       const { start, split } = dragCreateAnEvent
 
       const timeAtCursor = new Date(start)
-      timeAtCursor.setHours(0, this.minutesAtCursor(e).minutes, 0, 0)
+      const { minutes } = this.minutesAtCursor(e)
+      // Remove 1 second if time is 24:00.
+      timeAtCursor.setHours(0, minutes, minutes === minutesInADay ? -1 : 0, 0)
 
       // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
       if (this.snapToTime) {
