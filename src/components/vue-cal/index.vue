@@ -197,8 +197,8 @@ export default {
     dblclickToNavigate: { type: Boolean, default: true },
     disableDatePrototypes: { type: Boolean, default: false },
     disableViews: { type: Array, default: () => [] },
+    dragToCreateEvent: { type: Boolean, default: true },
     editableEvents: { type: [Boolean, Object], default: false },
-    eventCreateWithDrag: { type: Boolean, default: true },
     events: { type: Array, default: () => [] },
     eventsCountOnYearView: { type: Boolean, default: false },
     eventsOnMonthView: { type: [Boolean, String], default: false },
@@ -215,7 +215,6 @@ export default {
     minSplitWidth: { type: Number, default: 0 },
     onEventClick: { type: [Function, null], default: null },
     onEventCreate: { type: [Function, null], default: null },
-    onEventCreateDrag: { type: [Function, null], default: null },
     onEventDblclick: { type: [Function, null], default: null },
     overlapsPerTimeStep: { type: Boolean, default: false },
     resizeX: { type: Boolean, default: false },
@@ -637,7 +636,7 @@ export default {
 
       if (resizeAnEvent._eid) this.eventResizing(e)
 
-      else if (this.eventCreateWithDrag && dragCreateAnEvent.start) this.eventDragCreation(e)
+      else if (this.dragToCreateEvent && dragCreateAnEvent.start) this.eventDragCreation(e)
     },
 
     /**
@@ -705,8 +704,6 @@ export default {
       }
 
       else if (dragCreatedEvent) {
-        this.emitWithEvent('onEventCreateDrag', dragCreatedEvent)
-
         // End the drag creation process.
         dragCreateAnEvent.start = null
         dragCreateAnEvent.split = null
@@ -823,7 +820,6 @@ export default {
         if (!dragCreateAnEvent.event) {
           dragCreateAnEvent.start = null
           dragCreateAnEvent.split = null
-          dragCreateAnEvent.event.resizing = false // Remove the CSS resizing class.
           dragCreateAnEvent.event = null
           return
         }

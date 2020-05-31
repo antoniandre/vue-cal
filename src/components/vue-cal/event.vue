@@ -75,7 +75,8 @@ export default {
       // (initialized in index.vue on mounted). It handles the mouseup on cell, events, and everything.
       // If you need a mouseup on event, put it in the centralized handler to avoid confusion, and to
       // mix well with other cases.
-      // This case here is only when not editable, to not call the bigger vuecal mouseup method.
+
+      // This case is only when events are not editable, to avoid calling the bigger vuecal mouseup handler.
       if (!this.editEvents.resize && !this.editEvents.drag && typeof this.vuecal.onEventClick === 'function') {
         return this.vuecal.onEventClick(this.event, e)
       }

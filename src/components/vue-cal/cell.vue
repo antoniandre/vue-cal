@@ -168,9 +168,9 @@ export default {
     },
 
     setUpEventCreation (DOMEvent) {
-      // If eventCreateWithDrag is true, start the event creation from dragging.
-      // Only on week and day views, does not make sense on month view.
-      if (this.options.eventCreateWithDrag && ['week', 'day'].includes(this.view.id)) {
+      // If dragToCreateEvent is true, start the event creation from dragging
+      // only on week and day views (doesn't make sense on month view).
+      if (this.options.dragToCreateEvent && ['week', 'day'].includes(this.view.id)) {
         const { dragCreateAnEvent } = this.domEvents
         // Save the time at cursor on initial mousedown.
         dragCreateAnEvent.start = this.timeAtCursor
