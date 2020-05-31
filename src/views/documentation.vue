@@ -2384,7 +2384,7 @@
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
       template(v-slot:time-cell="{ hours, minutes }")
-        .line(:class="{ hours: !minutes }")
+        .vuecal__time-cell-line(:class="{ hours: !minutes }")
           strong.primary--text(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
           span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt-6(type="tips").
@@ -2399,7 +2399,7 @@
              :disable-views="['years', 'year', 'month']"
              hide-weekends&gt;
       &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
-        &lt;div :class="{ line: true, hours: !minutes }"&gt;
+        &lt;div :class="{ 'vuecal__time-cell-line': true, hours: !minutes }"&gt;
           &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
           &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
         &lt;/div&gt;
@@ -2407,7 +2407,7 @@
     &lt;/vue-cal&gt;
 
   sshpre.mt-6(language="css" label="CSS").
-    .vuecal__time-cell .hours.line:before {border-color: #42b983;}
+    .vuecal__time-cell-line.hours:before {border-color: #42b983;}
 
   //- Example.
   h4.title
@@ -4251,7 +4251,7 @@ $primary: #42b983;
 }
 .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
-.vuecal__time-cell .hours.line:before {border-color: $primary;}
+.vuecal__time-cell-line.hours:before {border-color: $primary;}
 
 .ex--multiple-day-events .vuecal__event {
   border-radius: 5px;
