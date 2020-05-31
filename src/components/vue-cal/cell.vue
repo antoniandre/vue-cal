@@ -165,7 +165,7 @@ export default {
       }
 
       // Only if event creation is allowed and mousedown is on a cell (not on event).
-      if (this.editEvents.create && !mouseDownOnEvent) this.setUpEventCreation()
+      if (this.editEvents.create && !mouseDownOnEvent) this.setUpEventCreation(DOMEvent)
     },
 
     // End of drag.
@@ -180,39 +180,46 @@ export default {
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
       this.utils.cell.selectCell(force, this.timeAtCursor, split)
       this.timeAtCursor = null
-      dragToCreateAnEvent.started = false
       // Set the default draggable value
-      dragToCreateAnEvent.createdEvent.draggable = dragToCreateAnEvent.wasItDraggable
+      dragToCreateAnEvent.event.draggable = dragToCreateAnEvent.wasItDraggable
       // Remove the class
-      dragToCreateAnEvent.createdEvent.class = dragToCreateAnEvent.createdEvent.class.replace(
+      dragToCreateAnEvent.event.class = dragToCreateAnEvent.event.class.replace(
         'dragToCreateAnEventClass',
         ''
       )
-      dragToCreateAnEvent.createdEventWithMouseDown = false
-      this.vuecal.$emit(
-        'onEventCreateDrag',
-        dragToCreateAnEvent.createdEvent
-      )
+
+      this.vuecal.$emit('onEventCreateDrag', dragToCreateAnEvent.event)
+
+      // End the drag creation process.
+      dragToCreateAnEvent.started = false
+      dragToCreateAnEvent.split = null
+      dragToCreateAnEvent.startDate = null
+      dragToCreateAnEvent.event = null
     },
 
-    setUpEventCreation () {
+    setUpEventCreation (DOMEvent) {
       // If eventCreateWithDrag is true, start the event creation from dragging.
       // Only on week and day views, does not make sense on month view.
       if (this.options.eventCreateWithDrag && ['week', 'day'].includes(this.view.id)) {
         const { dragToCreateAnEvent } = this.domEvents
         dragToCreateAnEvent.started = true
-        dragToCreateAnEvent.startDate = this.data.startDate
+        // Save the time at cursor on initial mousedown.
+        dragToCreateAnEvent.startDate = this.timeAtCursor
+        // dragToCreateAnEvent.mouseTimes.down = this.timeAtCursor
 
-        // Save the time at mouseDown.
-        dragToCreateAnEvent.mouseTimes.down = this.timeAtCursor
+        // If splitting days, store the clicked split to create an event in it from the global
+        // mousemove handler in index.vue.
+        dragToCreateAnEvent.split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-        let timeMinutes = this.timeAtCursor.getTime() / (1000 * 60)
         // if snapToTime, Set the `mouseTimes.down` to the closest intervaled number.
-        if (this.vuecal.snapToTime) {
-          const plusHalfSnapTime = timeMinutes + this.vuecal.snapToTime / 2
-          timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.vuecal.snapToTime)
+        if (this.options.snapToTime) {
+          let timeMinutes = this.timeAtCursor.getTime() / (1000 * 60)
+          const plusHalfSnapTime = timeMinutes + this.options.snapToTime / 2
+          timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.options.snapToTime)
+
+          // dragToCreateAnEvent.mouseTimes.down.setTime(timeMinutes * 1000 * 60)
+          dragToCreateAnEvent.startDate.setTime(timeMinutes * 1000 * 60)
         }
-        dragToCreateAnEvent.mouseTimes.down.setTime(timeMinutes * 1000 * 60)
       }
 
       // If the cellClickHold option is true and not mousedown on an event, click & hold to create an event.

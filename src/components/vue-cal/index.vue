@@ -295,12 +295,11 @@ export default {
           _eid: null
         },
         dragToCreateAnEvent: {
-          draggingEnd: 'end', // Are we dragging from the bottom end or top end.
           started: false,
           startDate: null, // The cell date where we start the drag.
+          split: null,
           mouseTimes: { down: null, up: null, move: null },
-          createdEvent: null,
-          createdEventWithMouseDown: false,
+          event: null,
           wasItDraggable: false
         },
         focusAnEvent: {
@@ -735,6 +734,8 @@ export default {
 
     /**
      * On mousemove while resising an event.
+     *
+     * @param {Object} e the native DOM event object.
      */
     eventResizing (e) {
       const { resizeAnEvent } = this.domEvents
@@ -793,80 +794,46 @@ export default {
 
     /**
      * On mousemove while dragging to create an event.
+     *
+     * @param {Object} e the native DOM event object.
      */
     eventDragCreation (e) {
       const { dragToCreateAnEvent } = this.domEvents
+      const { mouseTimes, startDate, split } = dragToCreateAnEvent
 
-      // if (!this.isSelected) this.onCellFocus(e)
+      const timeAtCursor = new Date(startDate)
+      timeAtCursor.setHours(0, this.minutesAtCursor(e).minutes, 0, 0)
 
-      this.timeAtCursor = new Date(dragToCreateAnEvent.startDate)
-      this.timeAtCursor.setMinutes(this.minutesAtCursor(e).minutes)
-
-      // Set the time from timeposition.
-      dragToCreateAnEvent.mouseTimes.move = this.timeAtCursor
-      let timeMinutes = dragToCreateAnEvent.mouseTimes.move.getTime() / (1000 * 60)
-      // If snapToTime, set the `mouseTimes.move` to the closest intervaled number.
+      // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
       if (this.snapToTime) {
+        let timeMinutes = timeAtCursor.getTime() / (1000 * 60)
         const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
         timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
+        timeAtCursor.setTime(timeMinutes * 1000 * 60)
       }
-      dragToCreateAnEvent.mouseTimes.move.setTime(timeMinutes * 1000 * 60)
 
-      const { mouseTimes } = dragToCreateAnEvent
-
-      // If didn't create before then create an event.
-      if (mouseTimes.down != null && !dragToCreateAnEvent.createdEventWithMouseDown) {
-        const { clickHoldACell } = this.domEvents
-        this.domEvents.dragToCreateAnEvent.createdEvent = this.utils.event.createAnEvent(
-          mouseTimes.down,
-          ~~((mouseTimes.move - mouseTimes.down) / (1000 * 60)),
-          clickHoldACell.split ? { split: clickHoldACell.split } : {}
-        )
+      // Create an event once, on the first pixel move.
+      if (!dragToCreateAnEvent.event) {
+        // Start the event with 3 min duration, this will change as we are dragging.
+        dragToCreateAnEvent.event = this.utils.event.createAnEvent(startDate, 1, { split })
 
         // Save the default draggable value.
-        this.domEvents.dragToCreateAnEvent.wasItDraggable = dragToCreateAnEvent.createdEvent.draggable
-        this.domEvents.dragToCreateAnEvent.createdEvent.draggable = false
-        this.domEvents.dragToCreateAnEvent.createdEvent.class += 'dragToCreateAnEventClass'
-        this.domEvents.dragToCreateAnEvent.createdEventWithMouseDown = true
-      }
-      // If created before, change the length of event.
-      if (
-        mouseTimes.down != null &&
-        dragToCreateAnEvent.createdEventWithMouseDown &&
-        typeof dragToCreateAnEvent.createdEvent === 'object'
-      ) {
-        // set draggingEnd.
-        const draggingEnd = mouseTimes.down < mouseTimes.move ? 'end' : 'start'
-        dragToCreateAnEvent.draggingEnd = draggingEnd
-
-        // Change event start or end.
-        if (draggingEnd === 'end') {
-          // Create start is the click start.
-          dragToCreateAnEvent.createdEvent.start = mouseTimes.down
-          dragToCreateAnEvent.createdEvent.startTimeMinutes =
-            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
-            dragToCreateAnEvent.createdEvent.start.getMinutes()
-          // Set event end time.
-          dragToCreateAnEvent.createdEvent.end = mouseTimes.move
-          dragToCreateAnEvent.createdEvent.endTimeMinutes =
-            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
-            dragToCreateAnEvent.createdEvent.end.getMinutes()
-        }
-        else if (draggingEnd === 'start') {
-          // Set event end to click start.
-          dragToCreateAnEvent.createdEvent.end = mouseTimes.down
-          dragToCreateAnEvent.createdEvent.endTimeMinutes =
-            dragToCreateAnEvent.createdEvent.end.getHours() * 60 +
-            dragToCreateAnEvent.createdEvent.end.getMinutes()
-          // set event start time.
-          dragToCreateAnEvent.createdEvent.start = mouseTimes.move
-          dragToCreateAnEvent.createdEvent.startTimeMinutes =
-            dragToCreateAnEvent.createdEvent.start.getHours() * 60 +
-            dragToCreateAnEvent.createdEvent.start.getMinutes()
-        }
+        dragToCreateAnEvent.wasItDraggable = dragToCreateAnEvent.event.draggable
+        dragToCreateAnEvent.event.draggable = false
+        dragToCreateAnEvent.event.resizing = true
       }
 
-      this.timeAtCursor = null
+      // If the event already exists change its start and end.
+      else {
+        // If dragging the bottom of the event.
+        const dragFromBottom = startDate < timeAtCursor
+        const { event } = dragToCreateAnEvent
+
+        event.start = dragFromBottom ? startDate : timeAtCursor
+        event.end = dragFromBottom ? timeAtCursor : startDate
+        event.startTimeMinutes = event.start.getHours() * 60 + event.start.getMinutes()
+        event.endTimeMinutes = event.end.getHours() * 60 + event.end.getMinutes()
+      }
     },
 
     /**
