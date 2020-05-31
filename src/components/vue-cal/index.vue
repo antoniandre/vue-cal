@@ -700,6 +700,8 @@ export default {
       }
 
       else if (dragCreatedEvent) {
+        this.emitWithEvent('event-drag-create', dragCreatedEvent)
+
         // End the drag creation process.
         dragCreateAnEvent.start = null
         dragCreateAnEvent.split = null
