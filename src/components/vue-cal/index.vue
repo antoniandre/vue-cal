@@ -730,8 +730,11 @@ export default {
         clickHoldACell.timeoutId = null
       }
 
-      // Call the onEventClick function if exists and not dragging handle and not deleting event.
-      if (mouseUpOnEvent && !hasResized && !isClickHoldingEvent && typeof this.onEventClick === 'function') {
+      // Call the onEventClick function if exists and not dragging handle or deleting event.
+      if (
+        mouseUpOnEvent && !hasResized && !isClickHoldingEvent && !dragCreatedEvent &&
+        typeof this.onEventClick === 'function'
+      ) {
         const event = this.view.events.find(e => e._eid === focusAnEvent._eid)
         return this.onEventClick(event, e)
       }
@@ -757,9 +760,8 @@ export default {
       const { minutes, cursorCoords } = this.minutesAtCursor(e)
       const segment = event.segments && event.segments[resizeAnEvent.segment]
 
-      let newEndTimeMins = minutes
       // Prevent reducing event duration to less than 1 min so it does not disappear.
-      newEndTimeMins = Math.max(newEndTimeMins, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
+      const newEndTimeMins = Math.max(minutes, this.timeFrom + 1, (segment || event).startTimeMinutes + 1)
       event.endTimeMinutes = resizeAnEvent.endTimeMinutes = newEndTimeMins
 
       // On resize, snap to time (e.g. 0, 15, 30, 45) if the option is on.
@@ -811,28 +813,39 @@ export default {
       const { dragCreateAnEvent } = this.domEvents
       const { start, split } = dragCreateAnEvent
 
-      const timeAtCursor = new Date(start)
-      const { minutes } = this.minutesAtCursor(e)
-      // Remove 1 second if time is 24:00.
-      timeAtCursor.setHours(0, minutes, minutes === minutesInADay ? -1 : 0, 0)
-
-      // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
-      if (this.snapToTime) {
-        let timeMinutes = timeAtCursor.getTime() / (1000 * 60)
-        const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
-        timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
-        timeAtCursor.setHours(0, timeMinutes * 1000 * 60, 0, 0)
-      }
-
       // Create an event once, on the first pixel move.
       if (!dragCreateAnEvent.event) {
         // Start the event with 3 min duration, this will change as we are dragging.
         dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
+
+        // The event creation can be cancelled if user has a onEventCreate function
+        // (called from createAnEvent()). If cancelled, cancel the dragCreation.
+        if (!dragCreateAnEvent.event) {
+          dragCreateAnEvent.start = null
+          dragCreateAnEvent.split = null
+          dragCreateAnEvent.event.resizing = false // Remove the CSS resizing class.
+          dragCreateAnEvent.event = null
+          return
+        }
+
         dragCreateAnEvent.event.resizing = true // Trigger the CSS class.
       }
 
       // If the event already exists change its start and end.
       else {
+        const timeAtCursor = new Date(start)
+        const { minutes } = this.minutesAtCursor(e)
+        // Remove 1 second if time is 24:00.
+        timeAtCursor.setHours(0, minutes, minutes === minutesInADay ? -1 : 0, 0)
+
+        // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
+        if (this.snapToTime) {
+          let timeMinutes = timeAtCursor.getTime() / (1000 * 60)
+          const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
+          timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
+          timeAtCursor.setHours(0, timeMinutes * 1000 * 60, 0, 0)
+        }
+
         // If dragging the bottom of the event.
         const dragFromBottom = start < timeAtCursor
         const { event } = dragCreateAnEvent
