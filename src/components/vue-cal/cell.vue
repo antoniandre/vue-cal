@@ -83,9 +83,14 @@ export default {
 
   methods: {
     getSplitAtCursor (DOMEvent) {
-      const split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-        this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
-      return (split && split.attributes['data-split'].value) || null
+      let split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
+      this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+      if (split) {
+        split = split.attributes['data-split'].value
+        // Convert to a numeric value if split id is a number.
+        if (parseInt(split).toString() == split) split = parseInt(split)
+      }
+      return split || null
     },
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
