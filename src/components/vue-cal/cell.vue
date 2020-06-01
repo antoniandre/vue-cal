@@ -160,7 +160,8 @@ export default {
       this.domEvents.clickHoldACell.eventCreated = false
 
       this.timeAtCursor = new Date(this.data.startDate)
-      this.timeAtCursor.setMinutes(this.vuecal.minutesAtCursor(DOMEvent).minutes)
+      const { minutes, cursorCoords: { y } } = this.vuecal.minutesAtCursor(DOMEvent)
+      this.timeAtCursor.setMinutes(minutes)
 
       const mouseDownOnEvent = this.isDOMElementAnEvent(DOMEvent.target)
       // Unfocus an event if any is focused and clicking on cell outside of an event.
@@ -169,16 +170,17 @@ export default {
       }
 
       // Only if event creation is allowed and mousedown is on a cell (not on event).
-      if (this.editEvents.create && !mouseDownOnEvent) this.setUpEventCreation(DOMEvent)
+      if (this.editEvents.create && !mouseDownOnEvent) this.setUpEventCreation(DOMEvent, y)
     },
 
-    setUpEventCreation (DOMEvent) {
+    setUpEventCreation (DOMEvent, startCursorY) {
       // If dragToCreateEvent is true, start the event creation from dragging
       // only on week and day views (doesn't make sense on month view).
       if (this.options.dragToCreateEvent && ['week', 'day'].includes(this.view.id)) {
         const { dragCreateAnEvent } = this.domEvents
         // Save the time at cursor on initial mousedown.
         dragCreateAnEvent.start = this.timeAtCursor
+        dragCreateAnEvent.startCursorY = startCursorY
 
         // If splitting days, store the clicked split to create an event in it from the global
         // mousemove handler in index.vue.

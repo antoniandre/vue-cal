@@ -198,6 +198,9 @@ export default {
     disableDatePrototypes: { type: Boolean, default: false },
     disableViews: { type: Array, default: () => [] },
     dragToCreateEvent: { type: Boolean, default: true },
+    // Start a drag creation after dragging a certain amount of pixels.
+    // This prevents drag creation by mistake when you want to navigate.
+    dragToCreateThreshold: { type: Number, default: 15 },
     editableEvents: { type: [Boolean, Object], default: false },
     events: { type: Array, default: () => [] },
     eventsCountOnYearView: { type: Boolean, default: false },
@@ -294,6 +297,7 @@ export default {
           _eid: null
         },
         dragCreateAnEvent: {
+          startCursorY: null,
           start: null, // The cell date where we start the drag.
           split: null,
           event: null
@@ -654,7 +658,7 @@ export default {
       const { _eid: isClickHoldingEvent } = clickHoldAnEvent
       const { _eid: wasResizing } = resizeAnEvent
       let hasResized = false
-      const { event: dragCreatedEvent } = dragCreateAnEvent
+      const { event: dragCreatedEvent, start: dragCreateStarted } = dragCreateAnEvent
       const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
 
       if (mouseUpOnEvent) this.domEvents.cancelClickEventCreation = true
@@ -699,13 +703,16 @@ export default {
         resizeAnEvent.endCell = null
       }
 
-      else if (dragCreatedEvent) {
-        this.emitWithEvent('event-drag-create', dragCreatedEvent)
+      else if (dragCreateStarted) {
+        // The drag create might be started but not completed due to threshold never reached.
+        if (dragCreatedEvent) {
+          this.emitWithEvent('event-drag-create', dragCreatedEvent)
+          dragCreateAnEvent.event.resizing = false // Remove the CSS resizing class.
+        }
 
         // End the drag creation process.
         dragCreateAnEvent.start = null
         dragCreateAnEvent.split = null
-        dragCreateAnEvent.event.resizing = false // Remove the CSS resizing class.
         dragCreateAnEvent.event = null
       }
 
@@ -811,9 +818,14 @@ export default {
      */
     eventDragCreation (e) {
       const { dragCreateAnEvent } = this.domEvents
-      const { start, split } = dragCreateAnEvent
+      const { start, startCursorY, split } = dragCreateAnEvent
+      const timeAtCursor = new Date(start)
+      const { minutes, cursorCoords: { y } } = this.minutesAtCursor(e)
 
-      // Create an event once, on the first pixel move.
+      // Don't show anything until the threshold is reached.
+      if (!dragCreateAnEvent.event && Math.abs(startCursorY - y) < this.dragToCreateThreshold) return
+
+      // Create an event once, on the first pixel move after threshold is reached.
       if (!dragCreateAnEvent.event) {
         // Start the event with 3 min duration, this will change as we are dragging.
         dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
@@ -832,8 +844,6 @@ export default {
 
       // If the event already exists change its start and end.
       else {
-        const timeAtCursor = new Date(start)
-        const { minutes } = this.minutesAtCursor(e)
         // Remove 1 second if time is 24:00.
         timeAtCursor.setHours(0, minutes, minutes === minutesInADay ? -1 : 0, 0)
 
@@ -1512,7 +1522,7 @@ export default {
         'vuecal--small': this.small,
         'vuecal--xsmall': this.xsmall,
         'vuecal--resizing-event': resizeAnEvent._eid,
-        'vuecal--drag-creating-event': dragCreateAnEvent.start,
+        'vuecal--drag-creating-event': dragCreateAnEvent.event,
         'vuecal--dragging-event': dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
         'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short'
