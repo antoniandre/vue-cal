@@ -178,15 +178,16 @@ export default {
       // only on week and day views (doesn't make sense on month view).
       if (this.options.dragToCreateEvent && ['week', 'day'].includes(this.view.id)) {
         const { dragCreateAnEvent } = this.domEvents
-        // Save the time at cursor on initial mousedown.
-        dragCreateAnEvent.start = this.timeAtCursor
         dragCreateAnEvent.startCursorY = startCursorY
 
         // If splitting days, store the clicked split to create an event in it from the global
         // mousemove handler in index.vue.
         dragCreateAnEvent.split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-        // if snapToTime, Set the `mouseTimes.down` to the closest intervaled number.
+        // Save the time at cursor on initial mousedown.
+        dragCreateAnEvent.start = this.timeAtCursor
+
+        // If snapToTime, set the start to the closest intervaled number.
         if (this.options.snapToTime) {
           let timeMinutes = this.timeAtCursor.getTime() / (1000 * 60)
           const plusHalfSnapTime = timeMinutes + this.options.snapToTime / 2
