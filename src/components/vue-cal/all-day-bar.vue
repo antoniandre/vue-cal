@@ -5,8 +5,7 @@
   .vuecal__flex.vuecal__cells(
     :class="`${view.id}-view`"
     grow
-    :wrap="(!options.minCellWidth && !(daySplits && options.minSplitWidth)) || !vuecal.isWeekView"
-    :column="!!options.minCellWidth || !!(daySplits && options.minSplitWidth)")
+    :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
     vuecal-cell(
       v-for="(cell, i) in cells"
       :key="i"
@@ -44,7 +43,14 @@ export default {
     cells: { type: Array, required: true },
     daySplits: { type: Array, default: () => [] },
     shortEvents: { type: Boolean, default: true },
-    allDayText: { type: String, required: true }
+    allDayText: { type: String, required: true },
+    cellOrSplitMinWidth: { type: Number, default: null }
+  },
+
+  computed: {
+    hasCellOrSplitWidth () {
+      return !!(this.options.minCellWidth || (this.daySplits && this.options.minSplitWidth))
+    }
   }
 }
 </script>

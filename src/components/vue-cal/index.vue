@@ -30,12 +30,13 @@
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
       .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
         all-day-bar.vuecal__flex(
-          v-if="showAllDayEvents && hasTimeColumn"
+          v-if="showAllDayEvents && hasTimeColumn && !(hasSplits && minSplitWidth)"
           :options="$props"
           :cells="viewCells"
           :all-day-text="texts.allDay"
           :short-events="showAllDayEvents === 'short'"
-          :day-splits="hasSplits && daySplits || []")
+          :day-splits="hasSplits && daySplits || []"
+          :cell-or-split-min-width="contentMinWidth")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
@@ -60,6 +61,14 @@
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 template(v-slot:weekday-heading="{ heading, view }")
                   slot(name="weekday-heading" :heading="heading" :view="view")
+              all-day-bar.vuecal__flex(
+                v-if="showAllDayEvents && hasTimeColumn && (hasSplits && minSplitWidth)"
+                :options="$props"
+                :cells="viewCells"
+                :all-day-text="texts.allDay"
+                :short-events="showAllDayEvents === 'short'"
+                :day-splits="hasSplits && daySplits || []"
+                :cell-or-split-min-width="contentMinWidth")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
