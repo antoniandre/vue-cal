@@ -1,5 +1,6 @@
 <template lang="pug">
 div
+  div.mb-2 #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
   div.grey--text #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events are not editable or on event creation
   div.grey--text #[strong Version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
   div.grey--text #[strong Version 3.2.6] Display the no-event slot accurately per slot if there are
