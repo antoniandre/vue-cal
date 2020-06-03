@@ -59,7 +59,7 @@
 
   //- Sticky split-days headers on day view only.
   transition(:name="`slide-fade--${transitionDirection}`")
-    .vuecal__flex.vuecal__split-days-headers(v-if="view.id === 'day' && hasSplits && options.stickySplitLabels && !options.minSplitWidth")
+    .vuecal__flex.vuecal__split-days-headers(v-if="showDaySplits")
       .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
 </template>
 
@@ -109,6 +109,9 @@ export default {
     broaderView () {
       const { enabledViews } = this.vuecal
       return enabledViews[enabledViews.indexOf(this.view.id) - 1]
+    },
+    showDaySplits () {
+      return this.view.id === 'day' && this.hasSplits && this.options.stickySplitLabels && !this.options.minSplitWidth
     },
     // Drag & drop module.
     dnd () {

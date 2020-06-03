@@ -80,7 +80,7 @@ $splits-headers-height: 1.5em;
     margin-bottom: -1px;
     flex-shrink: 0;
 
-    > span {
+    &-text {
       width: $time-column-width;
       box-sizing: border-box;
       color: #999;

@@ -1830,12 +1830,10 @@
       :disable-views="['years', 'year']"
       editable-events
       :events="splitEvents"
-      show-week-numbers
       :split-days="splitsExample.splitDays"
       :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
       :min-split-width="splitsExample.minSplitWidth")
-      template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
@@ -2726,6 +2724,7 @@
     the #[span.code kebab-case].
   sshpre.mt-2(language="js").
     activeView:             [String],          default: 'week'
+    allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
     clickToNavigate:        [Boolean],         default: false
     dblclickToNavigate:     [Boolean],         default: true
@@ -2863,6 +2862,16 @@
         Allows you to set a default active view, for the first time you load the calendar.#[br]
         Then control the active view from outside of Vue Cal.#[br]
         Accepts one of 'years', 'year', 'month', 'week', 'day'.
+    li
+      code.mr-2 allDayBarHeight
+      span.code [String, Number], default: '25px'
+      p.
+        When the all day bar is visible and Vue Cal is also scrollable horizontally (due to
+        #[span.code minCellWidth] or day splits with #[span.code minSplitWidth]),
+        the all-day bar must have a fixed height for this particular layout.#[br]
+        Only if these conditions are fulfilled, the height provided through this option will be
+        used. If none is provided the default height will be used.#[br]
+        The height can be any valid CSS height (as a string) or an integer for an amount of pixels.
     li
       code.mr-2 todayButton
       span.code [Boolean], default: false

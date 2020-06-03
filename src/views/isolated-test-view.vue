@@ -5,7 +5,7 @@ div.test-view
     v-btn.ma-1(small @click="view = 'month'" color="primary" depressed :outlined="view !== 'month'") month view
     v-btn.ma-1(small @click="view = 'week'" color="primary" depressed :outlined="view !== 'week'") week view
     v-btn.ma-1(small @click="view = 'day'" color="primary" depressed :outlined="view !== 'day'") day view
-  vue-cal.ml-2.mr-1.vuecal--blue-theme(
+  //- vue-cal.ml-2.mr-1.vuecal--blue-theme(
     selected-date="2019-10-29"
     :time-from="7 * 60"
     :time-to="23 * 60"
@@ -16,6 +16,15 @@ div.test-view
     :active-view.sync="view"
     @view-change="log"
     :on-event-click="log")
+  vue-cal.ml-2.mr-1.vuecal--blue-theme(
+    :time-step="30"
+    show-all-day-events
+    :disable-views="['years', 'year']"
+    editable-events
+    :events="events"
+    :min-split-width="400"
+    :all-day-bar-height="100"
+    sticky-split-labels)
 </template>
 
 <script>
@@ -28,20 +37,30 @@ export default {
     selectedDate: now,
     view: 'week',
     events: [
+      // {
+      //   start: now.subtractDays(1),
+      //   end: now.addDays(1),
+      //   title: 'Event',
+      //   split: 'user1'
+      // },
       {
-        start: now.subtractDays(1),
-        end: now.addDays(1),
-        title: 'Event'
+        start: new Date(new Date(now).setHours(1, 0, 0)),
+        end: new Date(new Date(now).setHours(4, 0, 0)),
+        allDay: true,
+        title: 'Event 1',
+        split: 'user2'
       },
       {
         start: new Date(new Date(now).setHours(1, 0, 0)),
         end: new Date(new Date(now).setHours(4, 0, 0)),
-        title: 'Event 1'
+        title: 'Event 1',
+        split: 'user1'
       },
       {
         start: new Date(new Date(now).setHours(3, 0, 0)),
         end: new Date(new Date(now).setHours(5, 0, 0)),
-        title: 'Event 2'
+        title: 'Event 2',
+        split: 'user2'
       }
     ]
   }),
