@@ -1,6 +1,6 @@
 <template lang="pug">
 transition-group.vuecal__cell(
-  :class="cssClasses"
+  :class="cellClasses"
   :name="`slide-fade--${transitionDirection}`"
   tag="div"
   :appear="options.transitions"
@@ -8,7 +8,7 @@ transition-group.vuecal__cell(
   .vuecal__flex.vuecal__cell-content(
     v-for="(split, i) in (splitsCount ? splits : 1)"
     :key="options.transitions ? `${view.id}-${data.content}-${i}` : i"
-    :class="splitsCount && `vuecal__cell-split ${split.class}${highlightedSplit === split.id ? ' vuecal__cell-split--highlighted' : ''}`"
+    :class="splitsCount && splitClasses(split)"
     :data-split="splitsCount ? split.id : false"
     column
     tabindex="0"
@@ -86,6 +86,13 @@ export default {
       const split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
         this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
       return (split && split.attributes['data-split'].value) || null
+    },
+    splitClasses (split) {
+      return {
+        'vuecal__cell-split': true,
+        'vuecal__cell-split--highlighted': this.highlightedSplit === split.id,
+        [split.class]: !!split.class
+      }
     },
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
@@ -332,7 +339,7 @@ export default {
     splitsCount () {
       return this.splits.length
     },
-    cssClasses () {
+    cellClasses () {
       return {
         [this.data.class]: !!this.data.class,
         'vuecal__cell--current': this.data.current, // E.g. Current year in years view.
@@ -354,9 +361,8 @@ export default {
       }
     },
     timelineVisible () {
-      if (!this.data.today || !this.options.time || this.allDay || !this.isWeekOrDayView) return
-
-      return this.nowInMinutes <= this.options.timeTo
+      const { time, timeTo } = this.options
+      return this.data.today && this.isWeekOrDayView && time && !this.allDay && this.nowInMinutes <= timeTo
     },
     todaysTimePosition () {
       // Skip the Maths if not relevant.
