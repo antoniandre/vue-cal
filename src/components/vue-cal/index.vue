@@ -30,13 +30,13 @@
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
       .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
         all-day-bar.vuecal__flex(
-          v-if="showAllDayEvents && hasTimeColumn && !(hasSplits && minSplitWidth)"
+          v-if="showAllDayEvents && hasTimeColumn && (!cellOrSplitMinWidth || (isDayView && !minSplitWidth))"
           v-bind="allDayBar")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
               .vuecal__all-day-text(
-                v-if="showAllDayEvents && hasSplits && minSplitWidth"
+                v-if="showAllDayEvents && cellOrSplitMinWidth && !(isDayView && !minSplitWidth)"
                 :style="{ height: allDayBar.height }")
                 span {{ texts.allDay }}
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
@@ -49,29 +49,29 @@
             .vuecal__flex.vuecal__cells(
               :class="`${view.id}-view`"
               grow
-              :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
-              :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
+              :wrap="!cellOrSplitMinWidth || !isWeekView"
+              :column="!!cellOrSplitMinWidth")
               //- Only for minCellWidth or minSplitWidth on week view.
               weekdays-headings(
-                v-if="(minCellWidth || (hasSplits && minSplitWidth)) && isWeekView"
+                v-if="cellOrSplitMinWidth && isWeekView"
                 :transition-direction="transitionDirection"
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
-                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
+                :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 template(v-slot:weekday-heading="{ heading, view }")
                   slot(name="weekday-heading" :heading="heading" :view="view")
-              all-day-bar.vuecal__flex(
-                v-if="showAllDayEvents && hasTimeColumn && (hasSplits && minSplitWidth)"
-                v-bind="allDayBar")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
-                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
+                :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
+              all-day-bar.vuecal__flex(
+                v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
+                v-bind="allDayBar")
 
               .vuecal__flex(
                 ref="cells"
                 grow
-                :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
-                :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
+                :wrap="!cellOrSplitMinWidth || !isWeekView"
+                :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 vuecal-cell(
                   v-for="(cell, i) in viewCells"
                   :key="i"
@@ -1166,7 +1166,7 @@ export default {
       return this.daySplits.length && this.isWeekOrDayView
     },
     // Returns the min cell width or the min split width if any.
-    contentMinWidth () {
+    cellOrSplitMinWidth () {
       let minWidth = null
 
       if (this.hasSplits && this.minSplitWidth) minWidth = this.visibleDaysCount * this.minSplitWidth * this.daySplits.length
@@ -1184,7 +1184,7 @@ export default {
         label: this.texts.allDay,
         shortEvents: this.showAllDayEvents === 'short',
         daySplits: (this.hasSplits && this.daySplits) || [],
-        cellOrSplitMinWidth: this.contentMinWidth,
+        cellOrSplitMinWidth: this.cellOrSplitMinWidth,
         height
       }
     },

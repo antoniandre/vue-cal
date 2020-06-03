@@ -1,6 +1,6 @@
 <template lang="pug">
-.vuecal__flex.vuecal__all-day(:style="daySplits.length && options.minSplitWidth && { height }")
-  .vuecal__all-day-text(v-if="!(daySplits.length && options.minSplitWidth)" style="width: 3em")
+.vuecal__flex.vuecal__all-day(:style="cellOrSplitMinWidth && { height }")
+  .vuecal__all-day-text(v-if="!cellOrSplitMinWidth" style="width: 3em")
     span {{ label }}
   .vuecal__flex.vuecal__cells(
     :class="`${view.id}-view`"
