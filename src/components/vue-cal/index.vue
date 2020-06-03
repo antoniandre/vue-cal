@@ -29,37 +29,13 @@
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
       .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
-        .vuecal__flex.vuecal__all-day(v-if="showAllDayEvents && hasTimeColumn")
-          span(style="width: 3em")
-            span {{ texts.allDay }}
-          .vuecal__flex.vuecal__cells(
-            :class="`${view.id}-view`"
-            grow
-            :wrap="(!minCellWidth && !(hasSplits && minSplitWidth)) || !isWeekView"
-            :column="!!minCellWidth || !!(hasSplits && minSplitWidth)")
-            vuecal-cell(
-              v-for="(cell, i) in viewCells"
-              :key="i"
-              :options="$props"
-              :edit-events="editEvents"
-              :data="cell"
-              :all-day="true"
-              :cell-width="hideWeekdays.length && (isWeekView || isMonthView) && cellWidth"
-              :min-timestamp="minTimestamp"
-              :max-timestamp="maxTimestamp"
-              :cell-splits="hasSplits && daySplits || []")
-              template(v-slot:event="{ event, view }")
-                slot(name="event" :view="view" :event="event")
-                  .vuecal__event-title.vuecal__event-title--edit(
-                    v-if="editEvents.title && event.title && event.titleEditable"
-                    contenteditable
-                    @blur="onEventTitleBlur($event, event)"
-                    v-html="event.title")
-                  .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-                  .vuecal__event-content(
-                    v-if="event.content && showAllDayEvents !== 'short' && !isShortMonthView"
-                    v-html="event.content")
-              slot(slot="no-event" name="no-event")
+        all-day-bar.vuecal__flex(
+          v-if="showAllDayEvents && hasTimeColumn"
+          :options="$props"
+          :cells="viewCells"
+          :all-day-text="texts.allDay"
+          :short-events="showAllDayEvents === 'short'"
+          :day-splits="hasSplits && daySplits || []")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
@@ -139,6 +115,7 @@ import EventUtils from './utils/event'
 
 import Header from './header'
 import WeekdaysHeadings from './weekdays-headings'
+import AllDayBar from './all-day-bar'
 import Cell from './cell'
 
 import './styles.scss'
@@ -171,7 +148,7 @@ const dateUtils = new DateUtils(textsDefaults) // Do this ASAP for date prototyp
 
 export default {
   name: 'vue-cal',
-  components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings },
+  components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings, AllDayBar },
   // By Vue design, passing props loses the reactivity unless it's a method or reactive OBJECT.
   provide: function () {
     return {
