@@ -1830,12 +1830,10 @@
       :disable-views="['years', 'year']"
       editable-events
       :events="splitEvents"
-      show-week-numbers
       :split-days="splitsExample.splitDays"
       :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
       :min-split-width="splitsExample.minSplitWidth")
-      template(v-slot:no-event) Nothing here.
   sshpre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
