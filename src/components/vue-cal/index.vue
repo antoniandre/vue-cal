@@ -31,15 +31,14 @@
       .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
         all-day-bar.vuecal__flex(
           v-if="showAllDayEvents && hasTimeColumn && !(hasSplits && minSplitWidth)"
-          :options="$props"
-          :cells="viewCells"
-          :all-day-text="texts.allDay"
-          :short-events="showAllDayEvents === 'short'"
-          :day-splits="hasSplits && daySplits || []"
-          :cell-or-split-min-width="contentMinWidth")
+          v-bind="allDayBar")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
+              .vuecal__all-day-text(
+                v-if="showAllDayEvents && hasSplits && minSplitWidth"
+                :style="{ height: allDayBar.height }")
+                span {{ texts.allDay }}
               .vuecal__time-cell(v-for="(cell, i) in timeCells" :key="i" :style="`height: ${timeCellHeight}px`")
                 slot(name="time-cell" :hours="cell.hours" :minutes="cell.minutes")
                   span.vuecal__time-cell-line
@@ -63,12 +62,7 @@
                   slot(name="weekday-heading" :heading="heading" :view="view")
               all-day-bar.vuecal__flex(
                 v-if="showAllDayEvents && hasTimeColumn && (hasSplits && minSplitWidth)"
-                :options="$props"
-                :cells="viewCells"
-                :all-day-text="texts.allDay"
-                :short-events="showAllDayEvents === 'short'"
-                :day-splits="hasSplits && daySplits || []"
-                :cell-or-split-min-width="contentMinWidth")
+                v-bind="allDayBar")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="contentMinWidth ? `min-width: ${contentMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
@@ -158,6 +152,7 @@ const dateUtils = new DateUtils(textsDefaults) // Do this ASAP for date prototyp
 export default {
   name: 'vue-cal',
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings, AllDayBar },
+
   // By Vue design, passing props loses the reactivity unless it's a method or reactive OBJECT.
   provide: function () {
     return {
@@ -175,8 +170,11 @@ export default {
       domEvents: this.domEvents
     }
   },
+
   props: {
     activeView: { type: String, default: 'week' },
+    // Only used if there are daySplits with minSplitWidth, to add the same height top spacer on time column.
+    allDayBarHeight: { type: [String, Number], default: '25px' },
     cellClickHold: { type: Boolean, default: true },
     cellContextmenu: { type: Boolean, default: false },
     clickToNavigate: { type: Boolean, default: false },
@@ -224,6 +222,7 @@ export default {
     watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
     xsmall: { type: Boolean, default: false }
   },
+
   data () {
     return {
       ready: false, // Is vue-cal ready.
@@ -1166,6 +1165,7 @@ export default {
     hasSplits () {
       return this.daySplits.length && this.isWeekOrDayView
     },
+    // Returns the min cell width or the min split width if any.
     contentMinWidth () {
       let minWidth = null
 
@@ -1173,6 +1173,20 @@ export default {
       else if (this.minCellWidth && this.isWeekView) minWidth = this.visibleDaysCount * this.minCellWidth
 
       return minWidth
+    },
+    allDayBar () {
+      let height = this.allDayBarHeight || null
+      if (height && !isNaN(height)) height += 'px'
+
+      return {
+        cells: this.viewCells,
+        options: this.$props,
+        label: this.texts.allDay,
+        shortEvents: this.showAllDayEvents === 'short',
+        daySplits: (this.hasSplits && this.daySplits) || [],
+        cellOrSplitMinWidth: this.contentMinWidth,
+        height
+      }
     },
     minTimestamp () {
       let date = null

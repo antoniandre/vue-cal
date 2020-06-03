@@ -1,7 +1,7 @@
 <template lang="pug">
-.vuecal__flex.vuecal__all-day
-  span(style="width: 3em")
-    span {{ allDayText }}
+.vuecal__flex.vuecal__all-day(:style="daySplits.length && options.minSplitWidth && { height }")
+  .vuecal__all-day-text(v-if="!(daySplits.length && options.minSplitWidth)" style="width: 3em")
+    span {{ label }}
   .vuecal__flex.vuecal__cells(
     :class="`${view.id}-view`"
     grow
@@ -41,15 +41,16 @@ export default {
     // Vue-cal main component options (props).
     options: { type: Object, required: true },
     cells: { type: Array, required: true },
+    label: { type: String, required: true },
     daySplits: { type: Array, default: () => [] },
     shortEvents: { type: Boolean, default: true },
-    allDayText: { type: String, required: true },
+    height: { type: String, default: '' },
     cellOrSplitMinWidth: { type: Number, default: null }
   },
 
   computed: {
     hasCellOrSplitWidth () {
-      return !!(this.options.minCellWidth || (this.daySplits && this.options.minSplitWidth))
+      return !!(this.options.minCellWidth || (this.daySplits.length && this.options.minSplitWidth))
     }
   }
 }
