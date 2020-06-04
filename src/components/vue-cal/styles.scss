@@ -68,6 +68,7 @@ $splits-headers-height: 1.5em;
       flex-grow: 1;
       justify-content: center;
       align-items: center;
+      height: 100%;
     }
 
     .vuecal--day-view.vuecal--overflow-x.vuecal--sticky-split-labels .day-split-header {height: $splits-headers-height;}

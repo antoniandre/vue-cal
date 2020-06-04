@@ -2711,6 +2711,53 @@
       }
     ]
 
+  //- Example.
+  h4.title
+    a(href="#ex--custom-day-split-labels") # Custom day split labels
+    a#ex--custom-day-split-labels(name="ex--custom-day-split-labels")
+  p.mb-6 You can provide a custom split label when a simple label is not enough.
+
+  v-card.my-2.ma-auto.main-content(style="height: 250px")
+    vue-cal.ex--custom-day-split-labels.vuecal--green-theme(
+      :disable-views="['years', 'year', 'month']"
+      active-view="day"
+      :split-days="customDaySplitLabels"
+      :hide-weekdays="[5, 6, 7]"
+      sticky-split-labels)
+      template(v-slot:no-event) &nbsp;
+      template(v-slot:split-label="{ split, view }")
+        v-icon(:color="split.color" size="18") person
+        strong(:style="`color: ${split.color}`") {{ split.label }}
+
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;vue-cal :disable-views="['years', 'year', 'month']"
+             active-view="day"
+             :split-days="daySplits"
+             :hide-weekdays="[5, 6, 7]"
+             sticky-split-labels&gt;
+      &lt;template v-slot:split-label="{ split, view }"&gt;
+        &lt;i class="icon material-icons"&gt;person&lt;/i&gt;
+        &lt;strong :style="`color: ${split.color}`"&gt;{{ '\{\{ split.label \}\}' }}&lt;/strong&gt;
+      &lt;/template&gt;
+    &lt;/vue-cal&gt;
+
+  sshpre(language="js" label="Javascript").
+    // In data.
+    customDaySplitLabels: [
+      { label: 'John', color: 'blue', class: 'split1' },
+      { label: 'Tom', color: 'green', class: 'split2' },
+      { label: 'Kate', color: 'orange', class: 'split3' },
+      { label: 'Jess', color: 'red', class: 'split4' }
+    ]
+
+  sshpre(language="css" label="CSS").
+    .vuecal .day-split-header {font-size: 11px;}
+    .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
+    .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
+    .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
+    .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
+    .vuecal__no-event {display: none;}
+
   //- API
   h2.headline.mt-12.pt-12
     a(href="#api") API
@@ -3633,6 +3680,12 @@ export default {
     selectedDate: null,
     activeView: 'week',
     logMouseEvents: false,
+    customDaySplitLabels: [
+      { label: 'John', color: 'blue', class: 'split1' },
+      { label: 'Tom', color: 'green', class: 'split2' },
+      { label: 'Kate', color: 'orange', class: 'split3' },
+      { label: 'Jess', color: 'red', class: 'split4' }
+    ],
     editableEvents: [
       ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
       {
@@ -4325,5 +4378,14 @@ $primary: #42b983;
   &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
   &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
   &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
+}
+
+// Split day labels example.
+.ex--custom-day-split-labels {
+  .day-split-header {font-size: 11px;}
+  .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
+  .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
+  .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
+  .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
 }
 </style>
