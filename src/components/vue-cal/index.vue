@@ -32,6 +32,17 @@
         all-day-bar.vuecal__flex(
           v-if="showAllDayEvents && hasTimeColumn && (!cellOrSplitMinWidth || (isDayView && !minSplitWidth))"
           v-bind="allDayBar")
+          template(v-slot:event="{ event, view }")
+            slot(name="event" :view="view" :event="event")
+              .vuecal__event-title.vuecal__event-title--edit(
+                v-if="editEvents.title && event.title && event.titleEditable"
+                contenteditable
+                @blur="onEventTitleBlur($event, event)"
+                v-html="event.title")
+              .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+              .vuecal__event-content(
+                v-if="event.content && !shortEvents && !vuecal.isShortMonthView"
+                v-html="event.content")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
@@ -66,7 +77,17 @@
               all-day-bar.vuecal__flex(
                 v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
                 v-bind="allDayBar")
-
+                template(v-slot:event="{ event, view }")
+                  slot(name="event" :view="view" :event="event")
+                    .vuecal__event-title.vuecal__event-title--edit(
+                      v-if="editEvents.title && event.title && event.titleEditable"
+                      contenteditable
+                      @blur="onEventTitleBlur($event, event)"
+                      v-html="event.title")
+                    .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                    .vuecal__event-content(
+                      v-if="event.content && !shortEvents && !vuecal.isShortMonthView"
+                      v-html="event.content")
               .vuecal__flex(
                 ref="cells"
                 grow

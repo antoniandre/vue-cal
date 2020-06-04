@@ -19,16 +19,6 @@
       :cell-splits="daySplits")
       template(v-slot:event="{ event, view }")
         slot(name="event" :view="view" :event="event")
-          .vuecal__event-title.vuecal__event-title--edit(
-            v-if="editEvents.title && event.title && event.titleEditable"
-            contenteditable
-            @blur="onEventTitleBlur($event, event)"
-            v-html="event.title")
-          .vuecal__event-title(v-else-if="event.title" v-html="event.title")
-          .vuecal__event-content(
-            v-if="event.content && !shortEvents && !vuecal.isShortMonthView"
-            v-html="event.content")
-      slot(slot="no-event" name="no-event")
 </template>
 
 <script>
