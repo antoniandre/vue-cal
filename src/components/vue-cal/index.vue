@@ -25,6 +25,8 @@
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
     template(v-slot:weekday-heading="{ heading, view }")
       slot(name="weekday-heading" :heading="heading" :view="view")
+    template(v-slot:split-label="{ split }")
+      slot(name="split-label" :split="split" :view="view.id")
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -71,9 +73,12 @@
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 template(v-slot:weekday-heading="{ heading, view }")
                   slot(name="weekday-heading" :heading="heading" :view="view")
+                template(v-slot:split-label="{ split }")
+                  slot(name="split-label" :split="split" :view="view.id")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
-                .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
+                .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false")
+                  slot(name="split-label" :split="split" :view="view.id") {{ split.label }}
               all-day-bar.vuecal__flex(
                 v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
                 v-bind="allDayBar")
