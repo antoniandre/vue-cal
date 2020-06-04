@@ -25,6 +25,8 @@ div.test-view
     :min-split-width="400"
     :all-day-bar-height="100"
     sticky-split-labels)
+    template(v-slot:event="{ event, view }")
+      strong {{ event.name }}
 </template>
 
 <script>
