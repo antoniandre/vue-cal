@@ -43,7 +43,7 @@
                 v-html="event.title")
               .vuecal__event-title(v-else-if="event.title" v-html="event.title")
               .vuecal__event-content(
-                v-if="event.content && !shortEvents && !vuecal.isShortMonthView"
+                v-if="event.content && !hasShortEvents && !isShortMonthView"
                 v-html="event.content")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
@@ -91,7 +91,7 @@
                       v-html="event.title")
                     .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                     .vuecal__event-content(
-                      v-if="event.content && !shortEvents && !vuecal.isShortMonthView"
+                      v-if="event.content && !hasShortEvents && !isShortMonthView"
                       v-html="event.content")
               .vuecal__flex(
                 ref="cells"
@@ -1191,6 +1191,9 @@ export default {
     hasSplits () {
       return this.daySplits.length && this.isWeekOrDayView
     },
+    hasShortEvents () {
+      return this.showAllDayEvents === 'short'
+    },
     // Returns the min cell width or the min split width if any.
     cellOrSplitMinWidth () {
       let minWidth = null
@@ -1208,7 +1211,7 @@ export default {
         cells: this.viewCells,
         options: this.$props,
         label: this.texts.allDay,
-        shortEvents: this.showAllDayEvents === 'short',
+        shortEvents: this.hasShortEvents,
         daySplits: (this.hasSplits && this.daySplits) || [],
         cellOrSplitMinWidth: this.cellOrSplitMinWidth,
         height
