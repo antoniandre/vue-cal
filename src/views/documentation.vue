@@ -1991,6 +1991,7 @@
       ul
         li #[span.code event], the calendar event object that was resized
         li #[span.code oldDate], the Javascript Date the event was ending at before resize
+        li #[span.code originalEvent], the same calendar event before the change
     li.mt-2
       code.mr-1 event-resizing
       span.grey--text Fired repeatedly while resizing

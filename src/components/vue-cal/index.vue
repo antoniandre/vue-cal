@@ -737,7 +737,7 @@ export default {
             end: originalEnd,
             endTimeMinutes: event.originalEndTimeMinutes
           }
-          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd })
+          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd, originalEvent })
           this.$emit('event-change', { event: cleanEvent, originalEvent })
         }
 
