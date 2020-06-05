@@ -1,10 +1,6 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  div.text-center
-    v-btn.ma-1(small @click="view = 'month'" color="primary" depressed :outlined="view !== 'month'") month view
-    v-btn.ma-1(small @click="view = 'week'" color="primary" depressed :outlined="view !== 'week'") week view
-    v-btn.ma-1(small @click="view = 'day'" color="primary" depressed :outlined="view !== 'day'") day view
   //- vue-cal.ml-2.mr-1.vuecal--blue-theme(
     selected-date="2019-10-29"
     :time-from="7 * 60"
@@ -17,16 +13,13 @@ div.test-view
     @view-change="log"
     :on-event-click="log")
   vue-cal.ml-2.mr-1.vuecal--blue-theme(
-    :time-step="30"
     show-all-day-events
     :disable-views="['years', 'year']"
     editable-events
     :events="events"
     :split-days="daySplits"
-    :all-day-bar-height="100"
+    @event-drag-create="log($event)"
     sticky-split-labels)
-    template(v-slot:event="{ event, view }")
-      strong {{ event.name }}
     template(v-slot:split-label="{ split, view }")
       v-icon(:color="split.color") person
       strong(:style="`color: ${split.color}`") {{ split.label }}
@@ -58,13 +51,13 @@ export default {
       {
         start: new Date(new Date(now).setHours(1, 0, 0)),
         end: new Date(new Date(now).setHours(4, 0, 0)),
-        title: 'Event 1',
+        title: 'Event 2',
         split: 1
       },
       {
         start: new Date(new Date(now).setHours(3, 0, 0)),
         end: new Date(new Date(now).setHours(5, 0, 0)),
-        title: 'Event 2',
+        title: 'Event 3',
         split: 2
       }
     ],
@@ -79,16 +72,6 @@ export default {
   methods: {
     log (...params) {
       console.log(...params)
-    },
-    onDragStart (e, draggable) {
-      e.dataTransfer.setData('event', JSON.stringify(draggable))
-      e.dataTransfer.setData('cursor-grab-at', e.offsetY)
-    },
-    onEventDrop ({ event, originalEvent, external }) {
-      if (external) {
-        const extEventToDeletePos = this.draggables.findIndex(item => item.id === originalEvent.id)
-        if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
-      }
     }
   }
 }
