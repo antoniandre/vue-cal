@@ -88,7 +88,7 @@ export default {
       if (split) {
         split = split.attributes['data-split'].value
         // Convert to a numeric value if split id is a number.
-        if (parseInt(split).toString() == split) split = parseInt(split)
+        if (parseInt(split).toString() === split.toString()) split = parseInt(split)
       }
       return split || null
     },
@@ -164,7 +164,7 @@ export default {
       // and cancel event creation.
       this.domEvents.cancelClickEventCreation = false
       // Also reinit this var on each mousedown.
-      this.domEvents.clickHoldACell.eventCreated = false
+      clickHoldACell.eventCreated = false
 
       this.timeAtCursor = new Date(this.data.startDate)
       const { minutes, cursorCoords: { y } } = this.vuecal.minutesAtCursor(DOMEvent)
@@ -211,7 +211,7 @@ export default {
     },
 
     // When click & holding a cell, and if allowed, set a timeout to create an event (can be cancelled).
-    setUpCellHoldTimer () {
+    setUpCellHoldTimer (split) {
       const { clickHoldACell } = this.domEvents
       clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
       clickHoldACell.split = split
