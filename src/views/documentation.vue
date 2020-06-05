@@ -955,7 +955,7 @@
     There are multiple ways to create an event, let's start with the default one.
 
   .layout.align-center.justify-space-between
-    | Click and drag on a cell to create an event.
+    | Click and drag on a cell to create an event, downwards or upwards.
     v-btn(
       color="primary"
       small
@@ -964,16 +964,54 @@
   v-card.flex.mt-3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
       ref="vuecalCreateEx"
-      small
-      :time-from="10 * 60"
-      :time-to="16 * 60"
-      :disable-views="['years', 'year', 'month', 'day']"
       hide-view-selector
       hide-title-bar
       hide-weekends
+      :time-from="10 * 60"
+      :time-to="16 * 60"
+      :disable-views="['years', 'year', 'month', 'day']"
       :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-      :drag-to-create-threshold="0"
-      :on-event-create="({ event }) => ({ ...event, title: 'New Event', class: 'blue-event' })")
+      :drag-to-create-threshold="0")
+  sshpre.my-2(language="html-vue").
+    &lt;vue-cal
+      hide-view-selector
+      hide-title-bar
+      hide-weekends
+      :time-from="10 * 60"
+      :time-to="16 * 60"
+      :disable-views="['years', 'year', 'month', 'day']"
+      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
+      :drag-to-create-threshold="0"&gt;
+    &lt;/vue-cal&gt;
+
+  p.
+    This event creation method is not very compatible with #[span.code clickToNavigate] as it starts
+    dragging as soon as the mousedown occurs followed by a pixel move.
+  p.
+    For this reason, the #[span.code dragToCreateThreshold] option default is 15 pixels.
+    So if you try to click or double click, it will not create an event.
+  p.mb-1.
+    In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
+    even with an accidental move while double-clicking.
+  p try to double click to go to the day view with both #[span.code dragToCreateThreshold] to 15 and 0.
+  .layout.wrap.align-center.justify-end
+    span.subtitle-1 Current dragToCreateThreshold:
+    span.code.mr-2 {{ dragToCreateThreshold }}
+    v-btn(
+      color="primary"
+      small
+      @click="dragToCreateThreshold = dragToCreateThreshold ? 0 : 15")
+        | Set threshold to
+        span.ml-2 {{ dragToCreateThreshold ? 0 : 15 }}
+  v-card.flex.mt-3(style="height: 280px")
+    vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
+      ref="vuecalCreateEx"
+      :time-from="10 * 60"
+      :time-to="16 * 60"
+      hide-weekends
+      :disable-views="['years', 'year', 'month']"
+      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
+      :drag-to-create-threshold="dragToCreateThreshold")
 
   //- Example.
   h4.title
@@ -1001,12 +1039,12 @@
             ref="vuecal3"
             selected-date="2018-11-19"
             small
-            :time-from="10 * 60"
-            :time-to="16 * 60"
-            :disable-views="['years', 'year', 'month', 'day']"
             hide-view-selector
             hide-title-bar
             hide-weekends
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year', 'month', 'day']"
             :cell-click-hold="false"
             editable-events
             :events="events"
@@ -1016,12 +1054,12 @@
             ref="vuecal"
             selected-date="2018-11-19"
             small
-            :time-from="10 * 60"
-            :time-to="16 * 60"
-            :disable-views="['years', 'year']"
             hide-view-selector
             hide-weekends
             hide-title-bar
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year']"
             :cell-click-hold="false"
             editable-events
             :events="events"
@@ -1229,7 +1267,7 @@
     li.
       Dragging an event over the today button will take you to Today's date, and if you're in
       a #[span.code years] or #[span.code year] view it will also go to the next available
-      narrower view from #[span.code month] downward.
+      narrower view from #[span.code month] downwards.
   h5 Dragging over a cell
   ul
     li.
@@ -3516,7 +3554,7 @@
     This calendar is fully responsive.#[br]
     To help you in making the calendar always look perfect,
     2 media queries (to keep it simple) are in place for small screens.#[br]
-    The media queries operate downward from 550px &amp; 450px, to truncate the text
+    The media queries operate downwards from 550px &amp; 450px, to truncate the text
     of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
 
     If this is not enough for your particular use, you can add your own in your CSS.#[br]
@@ -3744,6 +3782,7 @@ export default {
     selectedDate: null,
     activeView: 'week',
     logMouseEvents: false,
+    dragToCreateThreshold: 15,
     customDaySplitLabels: [
       { label: 'John', color: 'blue', class: 'split1' },
       { label: 'Tom', color: 'green', class: 'split2' },
