@@ -18,6 +18,7 @@ div.test-view
     editable-events
     :events="events"
     :split-days="daySplits"
+    :on-event-create="() => true"
     @event-drag-create="log($event)"
     sticky-split-labels)
     template(v-slot:split-label="{ split, view }")
