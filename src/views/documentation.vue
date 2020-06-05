@@ -954,10 +954,16 @@
     The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
     There are multiple ways to create an event, let's start with the default one.
 
-  P Click and drag on a cell to create an event.
-  v-card.flex.my-2.mr-3(style="height: 280px")
+  .layout.align-center.justify-space-between
+    | Click and drag on a cell to create an event.
+    v-btn(
+      color="primary"
+      small
+      @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
+      | Clear all the events
+  v-card.flex.mt-3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
-      ref="vuecal3"
+      ref="vuecalCreateEx"
       small
       :time-from="10 * 60"
       :time-to="16 * 60"
