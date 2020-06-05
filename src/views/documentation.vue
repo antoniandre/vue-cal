@@ -2312,6 +2312,7 @@
       li #[span.code arrow-next]
       li #[span.code today-button]
       li #[span.code weekday-heading]
+      li #[span.code split-label]
       li #[span.code time-cell]
       li #[span.code week-number-cell]
       li #[span.code cell-content]
