@@ -22,9 +22,14 @@ div.test-view
     :disable-views="['years', 'year']"
     editable-events
     :events="events"
-    :min-split-width="400"
+    :split-days="daySplits"
     :all-day-bar-height="100"
     sticky-split-labels)
+    template(v-slot:event="{ event, view }")
+      strong {{ event.name }}
+    template(v-slot:split-label="{ split, view }")
+      v-icon(:color="split.color") person
+      strong(:style="`color: ${split.color}`") {{ split.label }}
 </template>
 
 <script>
@@ -41,27 +46,33 @@ export default {
       //   start: now.subtractDays(1),
       //   end: now.addDays(1),
       //   title: 'Event',
-      //   split: 'user1'
+      //   split: 1
       // },
       {
         start: new Date(new Date(now).setHours(1, 0, 0)),
         end: new Date(new Date(now).setHours(4, 0, 0)),
         allDay: true,
         title: 'Event 1',
-        split: 'user2'
+        split: 2
       },
       {
         start: new Date(new Date(now).setHours(1, 0, 0)),
         end: new Date(new Date(now).setHours(4, 0, 0)),
         title: 'Event 1',
-        split: 'user1'
+        split: 1
       },
       {
         start: new Date(new Date(now).setHours(3, 0, 0)),
         end: new Date(new Date(now).setHours(5, 0, 0)),
         title: 'Event 2',
-        split: 'user2'
+        split: 2
       }
+    ],
+    daySplits: [
+      { label: 'John', color: 'blue' },
+      { label: 'Tom', color: 'green' },
+      { label: 'Kate', color: 'orange' },
+      { label: 'Jess', color: 'red' }
     ]
   }),
 

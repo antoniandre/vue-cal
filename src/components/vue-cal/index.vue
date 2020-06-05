@@ -25,6 +25,8 @@
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
     template(v-slot:weekday-heading="{ heading, view }")
       slot(name="weekday-heading" :heading="heading" :view="view")
+    template(v-slot:split-label="{ split }")
+      slot(name="split-label" :split="split" :view="view.id")
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
@@ -32,6 +34,17 @@
         all-day-bar.vuecal__flex(
           v-if="showAllDayEvents && hasTimeColumn && (!cellOrSplitMinWidth || (isDayView && !minSplitWidth))"
           v-bind="allDayBar")
+          template(v-slot:event="{ event, view }")
+            slot(name="event" :view="view" :event="event")
+              .vuecal__event-title.vuecal__event-title--edit(
+                v-if="editEvents.title && event.title && event.titleEditable"
+                contenteditable
+                @blur="onEventTitleBlur($event, event)"
+                v-html="event.title")
+              .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+              .vuecal__event-content(
+                v-if="event.content && !hasShortEvents && !isShortMonthView"
+                v-html="event.content")
         .vuecal__bg(:class="{ vuecal__flex: !hasTimeColumn }" column)
           .vuecal__flex(row grow)
             .vuecal__time-column(v-if="hasTimeColumn")
@@ -60,13 +73,26 @@
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 template(v-slot:weekday-heading="{ heading, view }")
                   slot(name="weekday-heading" :heading="heading" :view="view")
+                template(v-slot:split-label="{ split }")
+                  slot(name="split-label" :split="split" :view="view.id")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
-                .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false") {{ split.label }}
+                .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false")
+                  slot(name="split-label" :split="split" :view="view.id") {{ split.label }}
               all-day-bar.vuecal__flex(
                 v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
                 v-bind="allDayBar")
-
+                template(v-slot:event="{ event, view }")
+                  slot(name="event" :view="view" :event="event")
+                    .vuecal__event-title.vuecal__event-title--edit(
+                      v-if="editEvents.title && event.title && event.titleEditable"
+                      contenteditable
+                      @blur="onEventTitleBlur($event, event)"
+                      v-html="event.title")
+                    .vuecal__event-title(v-else-if="event.title" v-html="event.title")
+                    .vuecal__event-content(
+                      v-if="event.content && !hasShortEvents && !isShortMonthView"
+                      v-html="event.content")
               .vuecal__flex(
                 ref="cells"
                 grow
@@ -672,7 +698,7 @@ export default {
             end: originalEnd,
             endTimeMinutes: event.originalEndTimeMinutes
           }
-          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd })
+          this.$emit('event-duration-change', { event: cleanEvent, oldDate: resizeAnEvent.originalEnd, originalEvent })
           this.$emit('event-change', { event: cleanEvent, originalEvent })
         }
 
@@ -1257,6 +1283,9 @@ export default {
     hasSplits () {
       return this.daySplits.length && this.isWeekOrDayView
     },
+    hasShortEvents () {
+      return this.showAllDayEvents === 'short'
+    },
     // Returns the min cell width or the min split width if any.
     cellOrSplitMinWidth () {
       let minWidth = null
@@ -1274,7 +1303,7 @@ export default {
         cells: this.viewCells,
         options: this.$props,
         label: this.texts.allDay,
-        shortEvents: this.showAllDayEvents === 'short',
+        shortEvents: this.hasShortEvents,
         daySplits: (this.hasSplits && this.daySplits) || [],
         cellOrSplitMinWidth: this.cellOrSplitMinWidth,
         height
