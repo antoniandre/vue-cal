@@ -838,7 +838,7 @@ export default {
 
       // Create an event once, on the first pixel move after threshold is reached.
       if (!dragCreateAnEvent.event) {
-        // Start the event with 3 min duration, this will change as we are dragging.
+        // Start the event with a 1 min duration, this will change as we are dragging.
         dragCreateAnEvent.event = this.utils.event.createAnEvent(start, 1, { split })
 
         // The event creation can be cancelled if user has a onEventCreate function
