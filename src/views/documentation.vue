@@ -927,6 +927,23 @@
              :events="events"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
+  sshpre(language="js" label="Javascript").
+    // In data.
+    events: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 17:30',
+        title: 'Boring event',
+        content: '&lt;i class="icon material-icons"&gt;block&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
+        class: 'blue-event',
+        deletable: false,
+        resizable: false,
+        draggable: false
+      },
+      // other events.
+    ]
+  sshpre(language="css" label="CSS").
+    .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
 
   //- Example.
   h4.title
@@ -935,11 +952,11 @@
 
   p.
     The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-    There are multiple ways to create an event, but let's first see the default one.
+    There are multiple ways to create an event, let's start with the default one.
 
   P Click and drag on a cell to create an event.
   v-card.flex.my-2.mr-3(style="height: 280px")
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
       ref="vuecal3"
       small
       :time-from="10 * 60"
@@ -948,7 +965,7 @@
       hide-view-selector
       hide-title-bar
       hide-weekends
-      :editable-events="{ title: true, drag: false, resize: true, delete: true, create: true }"
+      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
       :drag-to-create-threshold="0"
       :on-event-create="({ event }) => ({ ...event, title: 'New Event', class: 'blue-event' })")
 
@@ -3560,6 +3577,8 @@ import 'simple-syntax-highlighter/dist/sshpre.css'
 import HighlightMessage from '@/components/highlight-message'
 import TodoListItem from '@/components/todo-list-item'
 import ReleaseNotes from './release-notes'
+import '@/scss/documentation.scss'
+import '@/scss/examples.scss'
 
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
@@ -4139,292 +4158,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-$primary: #42b983;
-
-.scrollable {
-  height: 250px;
-  overflow-y: scroll;
-  padding-right: 1.8em;
-}
-
-.documentation {
-  h2:not(.todo) {
-    font-size: 27px !important;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 30px;
-    padding-bottom: 8px;
-  }
-
-  h3 {
-    margin-top: 80px;
-    padding: 10px 0 0;
-  }
-
-  h3 a {
-    font-size: 26px;
-    font-weight: normal;
-    color: #888 !important;
-
-    .v-icon {vertical-align: middle;}
-  }
-
-  h4 {margin: 70px 0 8px;}
-  h3 + h4 {margin-top: 20px;}
-  h4 a {color: inherit !important;}
-  h5 {font-size: 1.1em;color: #555;margin-top: 0.5em;}
-
-  .todo .v-chip__content {padding: 0 3px;}
-
-  .api-options {list-style-type: none;}
-  .api-options > li {margin-top: 2em;}
-  .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
-
-  .code {font-family: monospace, sans-serif;}
-  span.code {color: black;}
-}
-
-// Yellow theme.
-.vuecal--yellow-theme {
-  .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);color: #fff;}
-  .vuecal__title-bar {background-color: rgba(255, 236, 202, 0.5);}
-  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
-  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(255, 236, 202, 0.4);}
-  .vuecal__cell--selected:before {border-color: rgba(235, 216, 182, 0.5);}
-}
-
-// Examples.
-// =====================================================
-.vuecal__event--dragging {
-  background-color: rgba(grey, 0.3) !important;
-  border: none !important;
-}
-
-.vuecal__event-title {font-weight: bold;}
-
-.ex--min-max-dates {
-  .vuecal__cell--disabled {text-decoration: line-through;}
-  .vuecal__cell--before-min {color: #b6d6c7;}
-  .vuecal__cell--after-max {color: #008b8b;}
-}
-
-.ex--special-hours {
-  .business-hours {
-    background-color: rgba(255, 255, 0, 0.2);
-    border: solid rgba(255, 210, 0, 0.6);
-    border-width: 2px 0;
-  }
-}
-
-// Custom vue-cal title & "no event" text example.
-.ex--custom-title-and-cells {
-  .vuecal__cell-events-count {margin-top: -2px;}
-
-  .vuecal__cell .clickable {display: block;}
-
-  .vuecal__cell .clickable.month {
-    position: absolute;
-    top: 0;
-    right: 0;
-    color: $primary;
-    font-size: 1.2em;
-    padding: 0 4px;
-    text-decoration: underline;
-    display: inline-block;
-  }
-
-  .vuecal__cell .vuecal__cell-content {height: 100%;}
-
-  .vuecal__no-event {padding-top: 3em;}
-}
-
-// External events drag and drop example.
-.external-events-drag-and-drop {
-  flex-basis: 0 !important;
-  min-width: 285px;
-}
-.external-events-drag-and-drop .vuecal__event, .external-event {
-  background-color: rgba(160, 220, 255, 0.5);
-  border: 1px solid rgba(0, 100, 150, 0.15);
-  padding: 0.2em 0.4em;
-  cursor: move;
-  cursor: grab;
-}
-
-.external-event {
-  margin-bottom: 0.5em;
-  width: 12.5em;
-
-  span {color: #777;font-size: 0.9em;}
-}
-
-// Today-current-time example.
-.ex--today-current-time {
-  .vuecal__now-line {color: #06c;}
-}
-
-// Events on month view example.
-.event-indicator--dash .vuecal__cell-events-count {
-  width: 18px;
-  height: 2px;
-  color: transparent;
-}
-
-.event-indicator--dot .vuecal__cell-events-count {
-  width: 4px;
-  min-width: 0;
-  height: 4px;
-  padding: 0;
-  color: transparent;
-}
-
-.ex--events-indicators {
-  .vuecal__cell-events-count span {
-    background: $primary;
-    height: 100%;
-    border-radius: 12px;
-    display: block;
-  }
-}
-
-.ex--custom-events-count {
-  .vuecal__cell-events-count span {
-    background-color: #fd9c42;
-    height: 100%;
-    min-width: 12px;
-    padding: 0 3px;
-    border-radius: 12px;
-    display: block;
-  }
-  .vuecal__cell-events-count {background: transparent;}
-}
-
-.ex--events-on-month-view.vuecal--month-view {
-  .vuecal__cell {height: 80px;}
-
-  .vuecal__cell-content {
-    justify-content: flex-start;
-    height: 100%;
-    align-items: flex-end;
-  }
-
-  .vuecal__cell-date {padding: 3px 4px;}
-}
-
-.event-indicator--cell .vuecal__cell--has-events {background-color: #fffacd;}
-.event-indicator--cell .vuecal__cell-events-count {display: none;}
-
-.vuecal--month-view .vuecal__no-event {display: none;}
-
-// Today button example.
-.ex--adding-a-today-button {
-  .today-button {
-    // font-size: 0.7em;
-    min-width: 0;
-    height: auto;
-    padding: 1px 8px;
-  }
-  .v-btn--floating.v-btn--small {width: 26px;height: 26px;background-color: transparent !important;}
-}
-
-// Split days example.
-.vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
-.vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
-.vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-.vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-.vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-.vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
-
-.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
-.vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
-.vuecal__event.pink-event {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
-.vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
-.vuecal__event.yellow-event {background-color: rgba(255, 200, 90, 0.75);border: 1px solid #ffc356;}
-
-.vuecal__event.lunch {
-  background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
-  color: #999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
-
-.vuecal__time-cell-line.hours:before {border-color: $primary;}
-
-.ex--multiple-day-events .vuecal__event {
-  border-radius: 5px;
-
-  &.sport {
-    background-color: rgba(255, 185, 185, 0.8);
-    border: none;
-    border-left: 3px solid rgba(230, 55, 55, 0.3);
-    color: #c55656;
-  }
-  &.leisure {
-    background-color: rgba(255, 202, 154, 0.8);
-    border: none;
-    border-left: 3px solid rgba(250, 118, 36, 0.3);
-    color: #b57335;
-  }
-  &.health {
-    background-color: rgba(200, 248, 233, 0.8);
-    border: none;
-    border-left: 3px solid rgba(99, 186, 139, 0.4);
-    color: #219671;
-  }
-
-  &.event-start {border-radius: 5px 5px 0 0;}
-  &.event-middle {border-radius: 0;}
-  &.event-end {border-radius: 0 0 5px 5px;}
-  &.drink-water {font-size: 0.85em;line-height: 1;padding-top: 0.2em;}
-}
-
-.ex--open-dialog-on-event-click {
-  .vuecal__event {cursor: pointer;}
-
-  .vuecal__event-title {
-    font-size: 1.2em;
-    font-weight: bold;
-    margin: 4px 0 8px;
-  }
-
-  .vuecal__event-time {
-    display: inline-block;
-    margin-bottom: 12px;
-    padding-bottom: 12px;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-  }
-
-  .vuecal__event-content {
-    font-style: italic;
-  }
-}
-
-.ex--all-day-events {
-  .vuecal__cell-content {
-    justify-content: flex-start;
-  }
-
-  .vuecal__cell-date {
-    text-align: right;
-    padding: 4px;
-  }
-
-  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.pink-event,
-  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
-  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
-  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
-}
-
-// Split day labels example.
-.ex--custom-day-split-labels {
-  .day-split-header {font-size: 11px;}
-  .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
-  .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
-  .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
-  .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
-}
-</style>
