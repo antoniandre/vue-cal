@@ -884,7 +884,7 @@
     li Delete an event (by clicking and holding an event)
     li.
       Create a new event (by clicking and dragging on a cell or clicking and holding on a cell)#[br]
-      Learn more about event creation in the #[a(href="#ex--more-advanced-event-creation") more advanced event creation]
+      Learn more about event creation in the #[a(href="#ex---create-events") create events]
       example.
 
   div.mt-4
@@ -1015,11 +1015,11 @@
 
   //- Example.
   h4.title
-    a(href="#ex--more-advanced-event-creation") # More advanced event creation
-    a#ex--more-advanced-event-creation(name="ex--more-advanced-event-creation")
+    a(href="#ex--other-event-creation-methods") # Other event creation methods
+    a#ex--other-event-creation-methods(name="ex--other-event-creation-methods")
 
   p.
-    There are 3 ways to create an event: on cell click &amp; hold (default), on cell single/double click,
+    There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
     or programmatically.
   highlight-message Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
   p Let's see the 3 cases in order of complexity:
@@ -1046,6 +1046,7 @@
             :time-to="16 * 60"
             :disable-views="['years', 'year', 'month', 'day']"
             :cell-click-hold="false"
+            :drag-to-create-event="false"
             editable-events
             :events="events"
             @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
@@ -1061,6 +1062,7 @@
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
             :cell-click-hold="false"
+            :drag-to-create-event="false"
             editable-events
             :events="events"
             @cell-dblclick="$refs.vuecal.createEvent(
@@ -1093,6 +1095,8 @@
             hide-title-bar
             hide-weekends
             editable-events
+            :cell-click-hold="false"
+            :drag-to-create-event="false"
             :events="events")
         sshpre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;button @click="customEventCreation"&gt;
@@ -1109,6 +1113,8 @@
                    hide-title-bar
                    hide-weekends
                    editable-events
+                   :cell-click-hold="false"
+                   :drag-to-create-event="false"
                    :events="events"&gt;
           &lt;/vue-cal&gt;
       p Then you can give custom event attributes as you wish:
@@ -1161,7 +1167,7 @@
         }
 
       p.
-        In this example, we are adding a dialog box to the default simple click &amp; hold.#[br]
+        In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
         The dialog box will allow you to set all the event attributes.
       v-layout(wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
@@ -1176,6 +1182,7 @@
             hide-weekends
             editable-events
             :events="events"
+            :drag-to-create-event="false"
             :on-event-create="onEventCreate")
         sshpre.my-2.caption(language="html-vue").
           &lt;vue-cal selected-date="2018-11-19"
@@ -1188,6 +1195,7 @@
                    hide-title-bar
                    editable-events
                    :events="events"
+                   :drag-to-create-event="false"
                    :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
     sshpre(language="html-vue" label="Vue Template - dialog box").
@@ -1237,6 +1245,20 @@
           this.selectedEvent = {}
         }
       }
+    p With the same method, you can add a dialog at the end of event drag-creation.
+    v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+      vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+        selected-date="2018-11-19"
+        small
+        :time-from="10 * 60"
+        :time-to="16 * 60"
+        :disable-views="['years', 'year']"
+        hide-view-selector
+        hide-title-bar
+        hide-weekends
+        editable-events
+        :events="events"
+        @event-drag-create="onEventCreate")
 
   //- Example.
   h4.title
