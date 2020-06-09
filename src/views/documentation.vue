@@ -955,11 +955,23 @@
     There are multiple ways to create an event, let's start with the default one.#[br]#[br]
     You may also want to observe the emitted events in the
     #[a(href="#ex--emitted-events") emitted events example].
-  .layout.align-center.justify-space-between
-    | Click and drag on a cell to create an event, downwards or upwards.
+  .layout.align-center.wrap
+    p.
+      Click and drag on a cell to create an event, downwards or upwards.#[br]
+      With the #[span.code snapToTime] option, you can make sure the event starts and end at specific
+      intervals of minutes.#[br]
+      E.g. #[span.code :snap-to-time="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.
+    .spacer
+    v-btn.mr-1(
+      color="primary"
+      small
+      :outlined="!snapToTime15"
+      @click="snapToTime15 = !snapToTime15")
+      | Snap to time: 15min
     v-btn(
       color="primary"
       small
+      outlined
       @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
       | Clear all the events
   v-card.flex.mt-3(style="height: 280px")
@@ -970,6 +982,7 @@
       hide-weekends
       :time-from="10 * 60"
       :time-to="16 * 60"
+      :snap-to-time="snapToTime15 ? 15 : 0"
       :disable-views="['years', 'year', 'month', 'day']"
       :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
       :drag-to-create-threshold="0")
@@ -1006,7 +1019,6 @@
         span.ml-2 {{ dragToCreateThreshold ? 0 : 15 }}
   v-card.flex.mt-3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
-      ref="vuecalCreateEx"
       :time-from="10 * 60"
       :time-to="16 * 60"
       hide-weekends
@@ -1236,7 +1248,7 @@
         }
       }
 
-    p With the same method, you can add a dialog at the end of event drag-creation.
+    p With the same method, you can open a dialog at the end of the event drag-creation.
     v-card.flex.my-2.mr-3.main-content(style="height: 280px")
       vue-cal.vuecal--green-theme.vuecal--full-height-delete(
         small
@@ -3832,6 +3844,7 @@ export default {
     selectedDate: null,
     activeView: 'week',
     logMouseEvents: false,
+    snapToTime15: false,
     dragToCreateThreshold: 15,
     customDaySplitLabels: [
       { label: 'John', color: 'blue', class: 'split1' },
@@ -4168,6 +4181,10 @@ export default {
   }),
 
   methods: {
+    log (...params) {
+      console.log(...params)
+
+    },
     logEvents (emittedEventName, params) {
       if (!this.logMouseEvents && emittedEventName.includes('event-mouse')) return
 
