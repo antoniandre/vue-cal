@@ -952,8 +952,9 @@
 
   p.
     The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-    There are multiple ways to create an event, let's start with the default one.
-
+    There are multiple ways to create an event, let's start with the default one.#[br]#[br]
+    You may also want to observe the emitted events in the
+    #[a(href="#ex--emitted-events") emitted events example].
   .layout.align-center.justify-space-between
     | Click and drag on a cell to create an event, downwards or upwards.
     v-btn(
@@ -1162,8 +1163,8 @@
         In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
         The dialog box will allow you to set all the event attributes.
       v-layout(wrap)
-        v-card.flex.my-2.mr-3.main-content(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+        v-card.flex.my-2.mr-3(style="height: 280px")
+          vue-cal.flex.vuecal--green-theme.vuecal--full-height-delete(
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -1174,17 +1175,18 @@
             editable-events
             :drag-to-create-event="false"
             :on-event-create="onEventCreate")
-        sshpre.my-2.caption(language="html-vue").
-          &lt;vue-cal small
-                   :time-from="10 * 60"
-                   :time-to="16 * 60"
-                   :disable-views="['years', 'year']"
-                   hide-view-selector
-                   hide-weekends
-                   hide-title-bar
-                   editable-events
-                   :drag-to-create-event="false"
-                   :on-event-create="onEventCreate"&gt;
+        sshpre.my-2(language="html-vue" style="font-size: 0.8em").
+          &lt;vue-cal
+              small
+              :time-from="10 * 60"
+              :time-to="16 * 60"
+              :disable-views="['years', 'year']"
+              hide-view-selector
+              hide-title-bar
+              hide-weekends
+              editable-events
+              :drag-to-create-event="false"
+              :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
     sshpre(language="html-vue" label="Vue Template - dialog box").
       &lt;!-- Using Vuetify --&gt;
@@ -1233,6 +1235,7 @@
           this.selectedEvent = {}
         }
       }
+
     p With the same method, you can add a dialog at the end of event drag-creation.
     v-card.flex.my-2.mr-3.main-content(style="height: 280px")
       vue-cal.vuecal--green-theme.vuecal--full-height-delete(
@@ -1245,7 +1248,39 @@
         hide-weekends
         editable-events
         :on-event-create="onEventDragStartCreate"
-        @event-drag-create="onEventDragCreate")
+        @event-drag-create="showEventCreationDialog = true")
+    p.
+      This example uses the same dialog box and #[span.code cancelEventCreation] &amp;
+      #[span.code closeCreationDialog] functions as the previous example.#[br]
+      Note that #[span.code event-drag-create] gets fired on mouseup of the drag-create,
+      whereas #[span.code onEventCreate] gets called as soon as the event appears on screen, while dragging.
+    sshpre(language="html-vue" label="Vue Template").
+      &lt;vue-cal small
+                :time-from="10 * 60"
+                :time-to="16 * 60"
+                :disable-views="['years', 'year']"
+                hide-view-selector
+                hide-title-bar
+                hide-weekends
+                editable-events
+                :on-event-create="onEventCreate"
+                @event-drag-create="showEventCreationDialog = true"&gt;
+      &lt;/vue-cal&gt;
+    sshpre(language="js" label="Javascript").
+      data: () => ({
+        selectedEvent: null,
+        showEventCreationDialog: false
+      }),
+      methods: {
+        // Called when drag-create threshold is reached (when the event appears on screen),
+        // but before releasing the drag; so, it should not open the dialog box yet.
+        onEventCreate (event, deleteEventFunction) {
+          this.selectedEvent = event
+          this.deleteEventFunction = deleteEventFunction
+
+          return event
+        }
+      }
 
   //- Example.
   h4.title
@@ -1256,7 +1291,7 @@
     In addition to the obvious event dragging itself, there are quite a few things that are good
     to know about the drag &amp; drop.
 
-  highlight-message
+  highlight-message(type="warning")
     ul
       li.
         Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
@@ -1814,9 +1849,9 @@
     multiple cells in the all day bar.
 
   v-btn.ma-1(small color="primary" @click="showAllDayEvents = (showAllDayEvents + 1) % 3")
-    span.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
+    span.white--text.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
   v-btn.ma-1(small color="primary" @click="shortEventsOnMonthView = !shortEventsOnMonthView")
-    span.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
+    span.white--text.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   v-card.my-2.ma-auto.main-content
     vue-cal.vuecal--green-theme.ex--all-day-events(
@@ -2084,6 +2119,10 @@
     li.mt-3 #[code.mr-1 event-mouse-enter] - returns the associated calendar event object.
     li.mt-3 #[code.mr-1 event-mouse-leave] - returns the associated calendar event object.
     li.mt-3 #[code.mr-1 event-create] - returns the associated calendar event object.
+    li.mt-3
+      code.mr-1 event-drag-create
+      span.grey--text (only fired on mouseup after the event drag creation)
+      p Returns the associated calendar event object.
     li.mt-3 #[code.mr-1 event-delete] - returns the associated calendar event object.
     li.mt-2 #[code event-title-change] - returns an object containing:
       ul
@@ -2181,6 +2220,7 @@
       @event-duration-change="logEvents('event-duration-change', $event)"
       @event-drop="logEvents('event-drop', $event)"
       @event-create="logEvents('event-create', $event)"
+      @event-drag-create="logEvents('event-drag-create', $event)"
       @event-delete="logEvents('event-delete', $event)")
 
   sshpre(language="html-vue" label="Vue Template").
@@ -2206,6 +2246,7 @@
              @event-duration-change="logEvents('event-duration-change', $event)"
              @event-drop="logEvents('event-drop', $event)"
              @event-create="logEvents('event-create', $event)"
+             @event-drag-create="logEvents('event-drag-create', $event)"
              @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
 
@@ -4151,7 +4192,7 @@ export default {
       e.stopPropagation()
     },
     cancelEventCreation () {
-      this.closeCreationDialog()
+      this.closeCreationDialog();
       (this.deleteEventFunction || this.deleteDragEventFunction)()
     },
     closeCreationDialog () {
@@ -4170,10 +4211,6 @@ export default {
       this.deleteEventFunction = deleteEventFunction
 
       return event
-    },
-    // After the drag.
-    onEventDragCreate (event, deleteEventFunction) {
-      this.showEventCreationDialog = true
     },
     customEventCreation () {
       let today = new Date(new Date().setHours(13, 15))
