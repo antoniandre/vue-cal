@@ -955,12 +955,13 @@
     There are multiple ways to create an event, let's start with the default one.#[br]#[br]
     You may also want to observe the emitted events in the
     #[a(href="#ex--emitted-events") emitted events example].
+  highlight-message.
+    With the #[span.code snapToTime] option, you can make sure the event starts and end at specific
+    intervals of minutes.#[br]
+    E.g. #[span.code :snap-to-time="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.#[br]
+    This option also applies on event resizing after the drag-creation.
   .layout.align-center.wrap
-    p.
-      Click and drag on a cell to create an event, downwards or upwards.#[br]
-      With the #[span.code snapToTime] option, you can make sure the event starts and end at specific
-      intervals of minutes.#[br]
-      E.g. #[span.code :snap-to-time="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.
+    | Click and drag on a cell to create an event, downwards or upwards.
     .spacer
     v-btn.mr-1(
       color="primary"
@@ -1249,7 +1250,7 @@
       }
 
     p With the same method, you can open a dialog at the end of the event drag-creation.
-    v-card.flex.my-2.mr-3.main-content(style="height: 280px")
+    v-card.my-2(style="height: 280px")
       vue-cal.vuecal--green-theme.vuecal--full-height-delete(
         small
         :time-from="10 * 60"
