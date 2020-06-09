@@ -1037,7 +1037,6 @@
         v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
-            selected-date="2018-11-19"
             small
             hide-view-selector
             hide-title-bar
@@ -1048,12 +1047,10 @@
             :cell-click-hold="false"
             :drag-to-create-event="false"
             editable-events
-            :events="events"
             @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
         sshpre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;vue-cal
             ref="vuecal"
-            selected-date="2018-11-19"
             small
             hide-view-selector
             hide-weekends
@@ -1064,7 +1061,6 @@
             :cell-click-hold="false"
             :drag-to-create-event="false"
             editable-events
-            :events="events"
             @cell-dblclick="$refs.vuecal.createEvent(
               $event,
               120,
@@ -1086,7 +1082,6 @@
         v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
-            selected-date="2018-11-19"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -1096,15 +1091,13 @@
             hide-weekends
             editable-events
             :cell-click-hold="false"
-            :drag-to-create-event="false"
-            :events="events")
+            :drag-to-create-event="false")
         sshpre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;button @click="customEventCreation"&gt;
               button
           &lt;/button&gt;
 
           &lt;vue-cal ref="vuecal"
-                   selected-date="2018-11-19"
                    small
                    :time-from="10 * 60"
                    :time-to="16 * 60"
@@ -1114,14 +1107,13 @@
                    hide-weekends
                    editable-events
                    :cell-click-hold="false"
-                   :drag-to-create-event="false"
-                   :events="events"&gt;
+                   :drag-to-create-event="false"&gt;
           &lt;/vue-cal&gt;
       p Then you can give custom event attributes as you wish:
       sshpre.mt-3(language="js" label="Javascript").
         // In methods.
         customEventCreation () {
-            const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '2018-11-20 13:15')
+            const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
 
             // Check if date format is correct before creating event.
             if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
@@ -1137,16 +1129,16 @@
         }
 
     li.mt-12
-      h5.subtitle-1.font-weight-bold Adding a dialog box to the default #[strong cell click &amp; hold] behavior
+      h5.subtitle-1.font-weight-bold Adding a dialog box to the #[strong cell click &amp; hold] behavior
       p.mt-3.
         By default, event will be created with these attributes:
       sshpre.mt-0(language="js" label="Javascript").
         {
-            start: {String}, // (Formatted date) starting from your cursor position in the day cell you clicked.
-            end: {String}, // (Formatted date) Event start + 2 hours
+            start: {Date}, // Starting from the cursor position in the clicked day cell.
+            end: {Date}, // Event start + 2 hours.
             title: '',
             content: '',
-            split /* if any */: {Integer | String} // The current day split id you clicked.
+            split /* if any */: {Integer | String} // The current day split id that was clicked.
         }
 
       p.
@@ -1172,7 +1164,6 @@
       v-layout(wrap)
         v-card.flex.my-2.mr-3.main-content(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-            selected-date="2018-11-19"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -1181,12 +1172,10 @@
             hide-title-bar
             hide-weekends
             editable-events
-            :events="events"
             :drag-to-create-event="false"
             :on-event-create="onEventCreate")
         sshpre.my-2.caption(language="html-vue").
-          &lt;vue-cal selected-date="2018-11-19"
-                   small
+          &lt;vue-cal small
                    :time-from="10 * 60"
                    :time-to="16 * 60"
                    :disable-views="['years', 'year']"
@@ -1194,7 +1183,6 @@
                    hide-weekends
                    hide-title-bar
                    editable-events
-                   :events="events"
                    :drag-to-create-event="false"
                    :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
@@ -1248,7 +1236,6 @@
     p With the same method, you can add a dialog at the end of event drag-creation.
     v-card.flex.my-2.mr-3.main-content(style="height: 280px")
       vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-        selected-date="2018-11-19"
         small
         :time-from="10 * 60"
         :time-to="16 * 60"
@@ -1257,8 +1244,8 @@
         hide-title-bar
         hide-weekends
         editable-events
-        :events="events"
-        @event-drag-create="onEventCreate")
+        :on-event-create="onEventDragStartCreate"
+        @event-drag-create="onEventDragCreate")
 
   //- Example.
   h4.title
@@ -1266,8 +1253,8 @@
     v-chip.ml-3.px-2(color="error" small outlined) Not available on touch devices for now
     a#ex--drag-and-drop(name="ex--drag-and-drop")
   p.mb-2.
-    You probably tried the events drag &amp; drop in the previous example, but here's what
-    you missed! Quite a few things!
+    In addition to the obvious event dragging itself, there are quite a few things that are good
+    to know about the drag &amp; drop.
 
   highlight-message
     ul
@@ -3088,8 +3075,8 @@
         Updating the #[span.code selectedDate] programmatically after the first calendar load,
         will update the view if needed to show this date.#[br]Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
       highlight-message(type="warning").
-        A correct string date format is #[code {{ currentDateFormatted }}] or
-        #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't need the time.
+        A correct string date format is #[code {{ todayFormatted }}] or
+        #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't need the time.
         Only these formats will work as a string. You can also provide a native Javascript Date object.
     li
       code.mr-2 minDate
@@ -3408,8 +3395,8 @@
             The events are internally identified by the key #[span.code `_eid`].
             #[strong This is a reserved keyword.]
           li.mt-2
-            | Correct date formats are #[code {{ currentDateFormatted }}],
-            | or #[code="{{ currentDateFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar,
+            | Correct date formats are #[code {{ todayFormatted }}],
+            | or #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't want any time in the whole calendar,
             | or a JavaScript #[code Date] object. Only these formats will work.#[br]
             strong.
               You can't mix events with time and events without, and you can only remove time if the #[span.code time]
@@ -4135,7 +4122,8 @@ export default {
         content: 'content 3'
       }
     ],
-    deleteEventFunction: null
+    deleteEventFunction: null,
+    deleteDragEventFunction: null
   }),
 
   methods: {
@@ -4164,7 +4152,7 @@ export default {
     },
     cancelEventCreation () {
       this.closeCreationDialog()
-      this.deleteEventFunction()
+      (this.deleteEventFunction || this.deleteDragEventFunction)()
     },
     closeCreationDialog () {
       this.showEventCreationDialog = false
@@ -4177,8 +4165,21 @@ export default {
 
       return event
     },
+    onEventDragStartCreate (event, deleteEventFunction) {
+      this.selectedEvent = event
+      this.deleteEventFunction = deleteEventFunction
+
+      return event
+    },
+    // After the drag.
+    onEventDragCreate (event, deleteEventFunction) {
+      this.showEventCreationDialog = true
+    },
     customEventCreation () {
-      const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '2018-11-20 13:15')
+      let today = new Date(new Date().setHours(13, 15))
+      // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
+      if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
+      const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', today.format('YYYY-MM-DD HH:mm'))
       if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
         this.$refs.vuecal.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
       }
@@ -4208,8 +4209,14 @@ export default {
     nowFormatted () {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
     },
-    currentDateFormatted () {
+    todayFormatted () {
       return `${this.now.format()} ${this.now.formatTime()}`
+    },
+    todayFormattedNotWeekend () {
+      let today = new Date(new Date().setHours(13, 15))
+      // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
+      if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
+      return today.format('YYYY-MM-DD HH:mm')
     },
     minDate () {
       return new Date().subtractDays(10)
