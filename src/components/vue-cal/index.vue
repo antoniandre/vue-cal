@@ -860,10 +860,10 @@ export default {
 
         // If snapToTime, set the `timeAtCursor` to the closest intervaled number.
         if (this.snapToTime) {
-          let timeMinutes = timeAtCursor.getTime() / (1000 * 60)
+          let timeMinutes = timeAtCursor.getHours() * 60 + timeAtCursor.getMinutes()
           const plusHalfSnapTime = timeMinutes + this.snapToTime / 2
           timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.snapToTime)
-          timeAtCursor.setHours(0, timeMinutes * 1000 * 60, 0, 0)
+          timeAtCursor.setHours(0, timeMinutes, 0, 0)
         }
 
         // If dragging the bottom of the event.

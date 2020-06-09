@@ -196,11 +196,11 @@ export default {
 
         // If snapToTime, set the start to the closest intervaled number.
         if (this.options.snapToTime) {
-          let timeMinutes = this.timeAtCursor.getTime() / (1000 * 60)
+          let timeMinutes = this.timeAtCursor.getHours() * 60 + this.timeAtCursor.getMinutes()
           const plusHalfSnapTime = timeMinutes + this.options.snapToTime / 2
           timeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this.options.snapToTime)
 
-          dragCreateAnEvent.start.setHours(0, timeMinutes * 1000 * 60, 0, 0)
+          dragCreateAnEvent.start.setHours(0, timeMinutes, 0, 0)
         }
       }
 
