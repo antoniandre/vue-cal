@@ -3383,8 +3383,9 @@
       span.code [Number], default: 0
       p.
         Accepts a number of minutes from 0 to 60 to snap a dropped event or an event end time while resizing.#[br]
-        For instance, if you set a #[span.code snapToTime] of 15 min, dropping the event at a start of 10:05,
-        it will snap to 10:00, and if you drop it at 10:11 it will snap to 10:15.
+        For instance, with a #[span.code snapToTime] of 15 min, an event dropped at a start of 10:05,
+        will snap to 10:00, and dropped at 10:11 will snap to 10:15.#[br]
+        This option affects event resizing, event drag &amp; dropping, and event drag-creation.
     li
       code.mr-2 eventsOnMonthView
       span.code [Boolean, String], default: false
