@@ -61,6 +61,9 @@
           v-list-item(href="#ex--create-events" v-scroll-to="'#ex--create-events'")
             | Create events
             v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
+          v-list-item(href="#ex--other-event-creation-methods" v-scroll-to="'#ex--other-event-creation-methods'")
+            | Other event creation methods
+            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
           v-list-item(href="#ex--drag-and-drop" v-scroll-to="'#ex--drag-and-drop'")
             | Drag &amp; drop
             v-chip.xsmall.ml-2(small color="primary" outlined) NEW

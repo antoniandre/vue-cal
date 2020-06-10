@@ -868,8 +868,8 @@
 
   //- Example.
   h4.title
-    a(href="#ex--edit-delete-events") # Edit &amp; delete events
-    a#ex--edit-delete-events(name="ex--edit-delete-events")
+    a(href="#ex--edit-and-delete-events") # Edit &amp; delete events
+    a#ex--edit-and-delete-events(name="ex--edit-and-delete-events")
   p.mb-2.
     The #[span.code editable-events] option allows or prevent all these actions when it is set to
     #[span.code true] or #[span.code false]:
@@ -999,10 +999,9 @@
       :drag-to-create-threshold="0"&gt;
     &lt;/vue-cal&gt;
 
-  p.
-    This event creation method is not very compatible with #[span.code clickToNavigate] as it starts
-    dragging as soon as the mousedown occurs followed by a pixel move.
-  p.
+  p.mt-6.
+    This event creation method can cause difficulty when the calendar allows a click on a cell to
+    navigate: a slightly slipping click would create an event instead of navigating.#[br]
     For this reason, the #[span.code dragToCreateThreshold] option default is 15 pixels.
     So if you try to click or double click, it will not create an event.
   p.mb-1.
@@ -2709,7 +2708,7 @@
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
     sshpre.mt-3.mb-1(language="html-vue").
       &lt;div class="vuecal__flex vuecal__cell-content"&gt;
-    sshpre.my-2.ml-5(language="html-vue").
+    sshpre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
       Now this is the part you can customize:
 
       &lt;!-- Will be added if splitting days and split labels are set --&gt;
@@ -2790,7 +2789,7 @@
       &lt;div class="vuecal__event"&gt;
           &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
           &lt;div class="vuecal__event-delete" /&gt;
-    sshpre.my-2.ml-5(language="html-vue").
+    sshpre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
       Now this is the part you can customize:
 
       &lt;!-- Will be added if a title is set --&gt;
@@ -2930,8 +2929,8 @@
     ['years', 'year', 'month', 'week', 'day']
   p.
     Here is the list of all the parameters available and their decription bellow this table.#[br]
-    Don't forget that in HTML the #[span.code camelCase] is not correct and you should use
-    the #[span.code kebab-case].
+    Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
+    instead of the #[span.code camelCase] for consistency.
   sshpre.mt-2(language="js").
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
@@ -2940,6 +2939,8 @@
     dblclickToNavigate:     [Boolean],         default: true
     disableDatePrototypes:  [Boolean],         default: false
     disableViews:           [Array],           default: []
+    dragToCreateEvent:      [Boolean],         default: true
+    dragToCreateThreshold:  [Number],          default: 15
     editableEvents:         [Boolean, Object], default: false
     events:                 [Array],           default: []
     eventsCountOnYearView:  [Boolean],         default: false
@@ -2992,7 +2993,8 @@
         unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
         | Currently available languages are {{ localesList.map(l => l.label).join(', ') }}.#[br]
-        | If you are interested in providing a language support please do a pull request with a json file into the i18n directory.#[br]
+        | If you are interested in providing a language support please do a pull request with a json file
+        | into the i18n directory.#[br]
         | this is what a language json looks like.
 
         sshpre.my-2(language="json").
@@ -3019,8 +3021,9 @@
           #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
       highlight-message(type="tips").
-        Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.#[br]
-        You can read more about it in the # Responsiveness &amp; Media Queries section in the #[a(href="#css-notes") CSS Notes].
+        Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
+        #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
+        #[a(href="#css-notes") CSS Notes].
     li
       code.mr-2 hideViewSelector
       span.code [Boolean], default: false
@@ -3047,7 +3050,8 @@
       p.
         Hide the weekend and shows only Monday to Friday on month view and week view.#[br]
         The weekend are still visible in day view not to break the behavior of the arrows.#[br]
-        Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends is true.
+        Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends
+        is true.
     li
       code.mr-2 hideWeekdays
       span.code [Array], default: []
@@ -3065,6 +3069,24 @@
         Accepted view names are 'years', 'year', 'month', 'week', 'day'.#[br]
         Note that the navigation between views via cells click or title click won't
         break and will only navigate to views you have allowed.
+    li
+      code.mr-2 dragToCreateEvent
+      span.code [Boolean], default: true
+      p.
+        When events are editable and if #[span.code time] and #[span.code dragToCreateEvent] are set to
+        #[span.code true], clicking and dragging on a cell will create an event.#[br]
+        Note: if this option is set to true, it will prevent event creation from cell click &amp; hold.#[br]
+        Refer to the #[a(href="#ex--create-events") Create events] example.
+    li
+      code.mr-2 dragToCreateThreshold
+      span.code [Number], default: 15
+      p.
+        When events are editable and #[span.code time] and #[span.code dragToCreateEvent] are set to
+        #[span.code true], this option controls the minimum dragging distance before an event is created.#[br]
+        This option might be useful when you can navigate with cell click to prevent unwanted event creation in
+        case of slipping cursor while clicking.#[br]
+        With option gets to a positive integer, and you can set it to #[span.code 0] to disable it.
+        Refer to the #[a(href="#ex--create-events") Create events] example.
     li
       code.mr-2 activeView
       span.code [String], default: 'week'
@@ -3112,12 +3134,15 @@
       code.mr-2 showWeekNumbers
       span.code [Boolean], default: false
       p.
-        When set to #[span.code true], the weeks numbers will show in the first column on the #[span.code month] view (only).#[br]
-        You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+        When set to #[span.code true], the weeks numbers will show in the first column on the
+        #[span.code month] view (only).#[br]
+        You can also provide a custom renderer to the weeks numbers cells through the
+        #[span.code week-number-cell] slot.
       highlight-message
         a#there-can-be-53-weeks-in-a-year(name="there-can-be-53-weeks-in-a-year")
         Strong Did you know there can be 53 weeks in the year?#[br]
-        | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year. In this case the week number will be 53 instead of 1.
+        | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year.
+        | In this case the week number will be 53 instead of 1.
     li
       code.mr-2 selectedDate
       span.code [String, Date], default: ''
@@ -3127,7 +3152,8 @@
         This day will be highlighted and the first view will naturally show this date.#[br]
         E.g. setting a date in year 2000 with a activeView of week, will show you that week of year 2000.#[br]#[br]
         Updating the #[span.code selectedDate] programmatically after the first calendar load,
-        will update the view if needed to show this date.#[br]Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
+        will update the view if needed to show this date.#[br]
+        Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
       highlight-message(type="warning").
         A correct string date format is #[code {{ todayFormatted }}] or
         #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't need the time.
@@ -4182,10 +4208,6 @@ export default {
   }),
 
   methods: {
-    log (...params) {
-      console.log(...params)
-
-    },
     logEvents (emittedEventName, params) {
       if (!this.logMouseEvents && emittedEventName.includes('event-mouse')) return
 
