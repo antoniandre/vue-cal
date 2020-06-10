@@ -1,15 +1,26 @@
 <template lang="pug">
 div
-  div.grey--text #[strong Version 3.4.1] Also return the original event from the emitted #[span.code event-duration-change] event
+  div.
+    #[strong Version 3.5.0] Create events with click &amp; drag.
+    Refer to the #[a(href="#ex--create-events") Create events] example.
+  div.grey--text.
+    #[strong Version 3.4.1] Also return the original event from the emitted
+    #[span.code event-duration-change] event
   div.
     #[strong Version 3.4.0] Add a #[span.code split-label] slot for day splits labels.
     Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
   div.grey--text #[strong Version 3.3.1] Add custom event renderer back in all-day bar events
-  div.mb-2 #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
-  div.grey--text #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events are not editable or on event creation
+  div.mb-2.
+    #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day
+    bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
+  div.grey--text.
+    #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events
+    are not editable or on event creation
   div.grey--text #[strong Version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
   div.grey--text #[strong Version 3.2.6] Display the no-event slot accurately per slot if there are
-  div.grey--text #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week] &amp; #[span.code day] views
+  div.grey--text.
+    #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week]
+    &amp; #[span.code day] views
   div.grey--text #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
   div
     strong.mr-2 Version 3.2
@@ -76,7 +87,7 @@ div
         li.
           Vue Cal's #[span.code createEvent()] function now accepts a duration parameter to easily override
           the default 2 hours.
-          (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+          (ref. #[a(href="#ex--create-events") Create events] example)
         li.
           The internal event #[span.code classes] property is replaced with
           #[span.code class] like in the external event definition. This means you can now
@@ -156,7 +167,9 @@ div
       div #[strong Version 2.24.0] Allow toggling day splits
       div #[strong Version 2.23.0] Added #[span.code special-hours] option
       div.grey--text #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
-      div #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours], #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
+      div.
+        #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours],
+        #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
       div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
       div.grey--text #[strong Version 2.20.1] Fix wrong week number with #[span.code startWeekOnSunday]
       div #[strong Version 2.20.0] Added Icelandic language
@@ -179,7 +192,8 @@ div
                 To allow formatting both date and time in the same Date prototype function,
                 the formatting keywords have changed, since the month and minutes keywords were
                 both #[strong.code.black--text mm] but in 2 different functions.#[br]
-                The new formatting keywords are more commonly used, the default format is now #[span.code `YYYY-MM-DD`].#[br]
+                The new formatting keywords are more commonly used, the default format is now
+                #[span.code `YYYY-MM-DD`].#[br]
                 Ref. #[a(href="#date-prototypes") Date prototypes]
 
       div.mt-4 #[strong Version 2.15.0]
@@ -199,7 +213,9 @@ div
       div #[strong Version 2.4.0] Added Korean language
       div #[strong Version 2.3.0] Added Turkish language
       div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
-      div #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick] &amp; #[span.code cell-focus] emitted events
+      div.
+        #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick]
+        &amp; #[span.code cell-focus] emitted events
 
       div #[strong Version 2.0.0]
         highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
@@ -217,7 +233,7 @@ div
               em.grey--text.ml-1 (ref. #[span.code resizeX] in the #[a(href="#api") API] section)
             li
               | Added ability to create events on cell single/double click
-              em.grey--text.ml-1 (ref. #[a(href="#ex--more-advanced-event-creation") More advanced event creation] example)
+              em.grey--text.ml-1 (ref. #[a(href="#ex--create-events") Create events] example)
             li
               | Added function to get minutes at cursor (on click of a cell)
               em.grey--text.ml-1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
@@ -231,7 +247,7 @@ div
               em.grey--text.ml-1 (ref. #[span.code stickySplitLabels] in the #[a(href="#api") API] section)
             li
               | Added #[span.code deletable], #[span.code resizable] attributes on events to override globals
-              em.grey--text.ml-1 (ref. #[a(href="#ex--edit-delete-create-events") Edit, delete &amp; create events] example)
+              em.grey--text.ml-1 (ref. #[a(href="#ex--edit-and-delete-events") Edit &amp; delete events] example)
             li.
               Vue Cal is now more accessible (WAI-ARIA). You can now navigate through the calendar with the keyboard.#[br]
               Select or focus a cell or an event with the #[kbd tab] key.#[br]

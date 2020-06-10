@@ -57,14 +57,16 @@
           v-list-item(href="#ex--open-dialog-on-event-click" v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
           v-list-item(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
           v-list-item(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-          v-list-item(href="#ex--edit-delete-create-events" v-scroll-to="'#ex--edit-delete-create-events'") Edit, delete &amp; create events
-          v-list-item(href="#ex--drag-and-drop-in-details" v-scroll-to="'#ex--drag-and-drop-in-details'")
-            | Drag &amp; drop in details
+          v-list-item(href="#ex--edit-and-delete-events" v-scroll-to="'#ex--edit-and-delete-events'") Edit &amp; delete events
+          v-list-item(href="#ex--create-events" v-scroll-to="'#ex--create-events'")
+            | Create events
+            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
+          v-list-item(href="#ex--drag-and-drop" v-scroll-to="'#ex--drag-and-drop'")
+            | Drag &amp; drop
             v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#ex--external-events-drag-and-drop" v-scroll-to="'#ex--external-events-drag-and-drop'")
             | External events drag &amp; drop
             v-chip.xsmall.ml-2(small color="primary" outlined) NEW
-          v-list-item(href="#ex--more-advanced-event-creation" v-scroll-to="'#ex--more-advanced-event-creation'") More advanced event creation
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
           v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
             | Recurring events
@@ -80,7 +82,6 @@
           v-list-item(href="#ex--emitted-events" v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
           v-list-item(href="#ex--external-controls" v-scroll-to="'#ex--external-controls'")
             | External controls &amp; use of Vue Cal methods
-            //- v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
           v-list-item(href="#ex--sync-two-calendars" v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
           v-list-item(href="#ex--modifying-events-from-outside" v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
 
