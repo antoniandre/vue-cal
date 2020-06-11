@@ -420,7 +420,6 @@ export default class EventUtils {
         eventStart <= new Date(end).setHours(0, 0, 0, 0))
     }
 
-    if (typeof event.start === 'string' || !event.start) debugger
     const startTimestamp = event.start.getTime()
     const endTimestamp = event.end.getTime()
     return startTimestamp < end.getTime() && endTimestamp > start.getTime()

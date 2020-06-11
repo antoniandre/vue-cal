@@ -73,6 +73,7 @@ export default {
 
   methods: {
     log (...params) {
+      // eslint-disable-next-line
       console.log(...params)
     }
   }
