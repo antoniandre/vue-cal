@@ -17,7 +17,7 @@ transition-group.vuecal__cell(
     @keypress.enter="onCellkeyPressEnter($event)"
     @touchstart="!isDisabled && onCellTouchStart($event, splitsCount ? split.id : null)"
     @mousedown="!isDisabled && onCellMouseDown($event, splitsCount ? split.id : null)"
-    @click="!isDisabled && selectCell($event)"
+    @click="!isDisabled && onCellClick($event)"
     @dblclick="!isDisabled && onCellDblClick($event)"
     @contextmenu="!isDisabled && options.cellContextmenu && onCellContextMenu($event)"
     @dragenter="!isDisabled && editEvents.drag && dnd && dnd.cellDragEnter($event, $data, data.startDate)"
@@ -92,6 +92,7 @@ export default {
       }
       return split || null
     },
+
     splitClasses (split) {
       return {
         'vuecal__cell-split': true,
@@ -99,6 +100,7 @@ export default {
         [split.class]: !!split.class
       }
     },
+
     checkCellOverlappingEvents () {
       // If splits, checkCellOverlappingEvents() is called from within computed splits.
       if (this.options.time && this.eventsCount && !this.splitsCount) {
@@ -115,9 +117,10 @@ export default {
       return this.vuecal.isDOMElementAnEvent(el)
     },
 
+    /**
+     * Select a cell and go to narrower view on double click or single click according to vuecalProps option.
+     */
     selectCell (DOMEvent, force = false) {
-      if (!this.isSelected) this.onCellFocus(DOMEvent)
-
       // If splitting days, also return the clicked split on cell click when emitting event.
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
@@ -136,13 +139,13 @@ export default {
     },
 
     /**
-     * On cell focus, from tab key or from click, emit the cell-focus event with
-     * the date of the cell start when focusing from tab or the date & time at cursor
-     * if click/touch.
+     * On cell focus, from tab key or from mousedown, highlight the cell and emit
+     * the cell-focus event with the date of the cell start when focusing from tab or
+     * the date & time at cursor if click/touch.
      */
     onCellFocus (DOMEvent) {
       if (!this.isSelected) {
-        this.isSelected = this.data.startDate
+        this.isSelected = this.data.startDate // Highlight the cell.
 
         // If splitting days, also return the clicked split on cell focus when emitting event.
         const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
@@ -157,6 +160,8 @@ export default {
     onCellMouseDown (DOMEvent, split = null, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
+
+      if (!this.isSelected) this.onCellFocus(DOMEvent)
 
       const { clickHoldACell, focusAnEvent } = this.domEvents
       // Reinit the click trigger on each mousedown.
@@ -231,6 +236,10 @@ export default {
     onCellTouchStart (DOMEvent, split = null) {
       // If not mousedown on an event.
       this.onCellMouseDown(DOMEvent, split, true)
+    },
+
+    onCellClick (DOMEvent) {
+      if (!this.isDOMElementAnEvent(DOMEvent.target)) this.selectCell(DOMEvent)
     },
 
     onCellDblClick (DOMEvent) {
