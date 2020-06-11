@@ -450,7 +450,7 @@ div
 </template>
 
 <script>
-import HighlightMessage from '@/components/highlight-message'
+import HighlightMessage from './components/highlight-message'
 
 export default {
   components: { HighlightMessage },

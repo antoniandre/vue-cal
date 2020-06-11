@@ -20,7 +20,7 @@
 <script>
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
-import TopBar from '@/components/top-bar'
+import TopBar from '@/documentation/components/top-bar'
 
 export default {
   name: 'app',

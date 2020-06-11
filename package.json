@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/components/vue-cal/index.vue --dest ./dist",
+    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/vue-cal/index.vue --dest ./dist",
     "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n ./dist/vuecal.common.drag-and-drop.js ./dist/vuecal.umd.drag-and-drop.js && mv ./dist/vuecal.umd.min.i18n ./dist/i18n && mv ./dist/vuecal.umd.min.drag-and-drop.js ./dist/drag-and-drop.js"
   },
   "main": "./dist/vuecal.common.js",

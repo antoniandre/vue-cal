@@ -20,6 +20,7 @@ div.test-view
     :split-days="daySplits"
     :on-event-create="() => true"
     @event-drag-create="log($event)"
+    :min-split-width="150"
     sticky-split-labels)
     template(v-slot:split-label="{ split, view }")
       v-icon(:color="split.color") person
@@ -27,7 +28,7 @@ div.test-view
 </template>
 
 <script>
-import VueCal from '@/components/vue-cal'
+import VueCal from '@/vue-cal'
 
 const now = new Date()
 export default {
