@@ -1,5 +1,10 @@
 <template lang="pug">
 div
+  div.grey--text.mb-1
+    strong Version 3.5.1
+    ul
+      li Don't fire cell-click when cklicking on an event
+      li Focus and highlight cell on mousedown rather than click
   div.
     #[strong Version 3.5.0] Create events with click &amp; drag.
     Refer to the #[a(href="#ex--create-events") Create events] example.
@@ -10,7 +15,7 @@ div
     #[strong Version 3.4.0] Add a #[span.code split-label] slot for day splits labels.
     Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
   div.grey--text #[strong Version 3.3.1] Add custom event renderer back in all-day bar events
-  div.mb-2.
+  div.
     #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day
     bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
   div.grey--text.
