@@ -8,7 +8,7 @@
   @mouseenter="onMouseEnter"
   @mouseleave="onMouseLeave"
   @touchstart.stop="onTouchStart"
-  @mousedown="onMouseDown($event) /* Don't stop mousedown propagation & trigger cell mousedown */"
+  @mousedown="onMouseDown($event) /* Don't stop mousedown propagation. See in onMouseDown(). */"
   @mouseup="onMouseUp"
   @dblclick="onDblClick"
   :draggable="draggable"
@@ -43,13 +43,17 @@ export default {
   },
 
   methods: {
-    // On an event.
+    /**
+     * On event mousedown.
+     * Do not prevent propagation to trigger cell mousedown which highlights the cell if not highlighted.
+     */
     onMouseDown (e, touch = false) {
       // Prevent a double mouse down on touch devices.
       if ('ontouchstart' in window && !touch) return false
       const { clickHoldAnEvent, focusAnEvent, resizeAnEvent, dragAnEvent } = this.domEvents
 
       // If the delete button is already out and event is on focus then delete event.
+      // Return true so the event-click function (if any) is not called.
       if (focusAnEvent._eid === this.event._eid && clickHoldAnEvent._eid === this.event._eid) {
         return true
       }
@@ -70,12 +74,13 @@ export default {
       }
     },
 
+    /**
+     * WHEN EDITABLE (RESIZE OR DRAG) EVENTS, the mouseup handler is global (on whole document) in index.vue
+     * (initialized in index.vue on mounted). It handles the mouseup on cell, events, and everything.
+     * If you need a mouseup on event, put it in the centralized handler to avoid confusion, and to
+     * mix well with other cases.
+     */
     onMouseUp (e) {
-      // WHEN EDITABLE (RESIZE OR DRAG) EVENTS, the mouseup handler is global (on whole document) in index.vue
-      // (initialized in index.vue on mounted). It handles the mouseup on cell, events, and everything.
-      // If you need a mouseup on event, put it in the centralized handler to avoid confusion, and to
-      // mix well with other cases.
-
       // This case is only when events are not editable, to avoid calling the bigger vuecal mouseup handler.
       if (!this.editEvents.resize && !this.editEvents.drag && typeof this.vuecal.onEventClick === 'function') {
         return this.vuecal.onEventClick(this.event, e)
