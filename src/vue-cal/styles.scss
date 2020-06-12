@@ -258,8 +258,8 @@ $splits-headers-height: 1.5em;
 // Rounded cells.
 .vuecal--rounded-theme {
   .vuecal__weekdays-headings {border: none;}
-  .vuecal__cell, &:not(.vuecal--day-view) .vuecal__cell:before {background: none;border: none;}
-  .vuecal__cell.out-of-scope {opacity: 0.4;}
+  .vuecal__cell, .vuecal__cell:before {background: none;border: none;}
+  .vuecal__cell--out-of-scope {opacity: 0.4;}
   .vuecal__cell-content {
     width: 30px;
     height: 30px;
@@ -291,4 +291,27 @@ $splits-headers-height: 1.5em;
     .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
     .vuecal__cell-split--highlighted {background-color: rgba(0, 165, 188, 0.06);}
   }
+}
+
+.vuecal--date-picker {
+  .vuecal__title-bar {font-size: 1.2em;}
+  .vuecal__heading {height: 2.2em;font-weight: 500;opacity: 0.4;}
+  .vuecal__weekdays-headings {border: none;}
+  .vuecal__body {margin-left: 1px;}
+  .vuecal__cell, .vuecal__cell:before {background: none;border: none;}
+  .vuecal__cell-content {
+    height: 26px;
+    flex-grow: 0;
+    border: 1px solid transparent;
+    border-radius: 25px;
+    transition: background-color 0.2s cubic-bezier(0.39, 0.58, 0.57, 1);
+  }
+  &.vuecal--years-view .vuecal__cell-content {flex: 0;padding: 0 4px;height: 24px;}
+  &.vuecal--year-view .vuecal__cell-content {flex: 0;padding: 0 15px;}
+  &.vuecal--month-view .vuecal__cell-content {width: 26px;}
+
+  &:not(.vuecal--day-view) .vuecal__cell-content:hover {background-color: rgba(0, 0, 0, 0.1);}
+  &:not(.vuecal--day-view) .vuecal__cell--selected .vuecal__cell-content {background-color: #42b982;color: #fff;}
+  &:not(.vuecal--day-view) .vuecal__cell--current .vuecal__cell-content,
+  &:not(.vuecal--day-view) .vuecal__cell--today .vuecal__cell-content {border-color: #42b982;}
 }

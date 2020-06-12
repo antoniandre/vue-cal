@@ -61,7 +61,72 @@ div
 
   //- Example.
   h4.title
-    a(href="#ex--disable-views") # Disable views, default view
+    a(href="#ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
+    a#ex--calendar-themes(name="ex--calendar-themes")
+  p.
+    You can easily change the calendar color theme or use the rounded-cells theme
+    by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
+    E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
+    Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
+  p.
+    Because Vue Cal has the potential out of the box, you can also use it as a date picker.#[br]
+    Apply the css class #[span.code vuecal--date-picker] to have the date picker look bellow.#[br]
+    you can also disable the transitions to have a fast effect.
+
+  v-layout.ma-auto(justify-center wrap)
+    v-card.ma-2.main-content(style="width: 270px;height: 300px")
+      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+        xsmall
+        hide-view-selector
+        :time="false"
+        active-view="month"
+        :disable-views="['week']")
+    v-card.ma-2.main-content(style="width: 270px;height: 300px")
+      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+        xsmall
+        hide-view-selector
+        :time="false"
+        active-view="month"
+        :disable-views="['week']")
+    .layout.column.justify-center.shrink.pl-5
+      v-card.ma-2.main-content(style="width: 210px;height: 230px")
+        vue-cal.vuecal--date-picker(
+          xsmall
+          hide-view-selector
+          :time="false"
+          :transitions="false"
+          active-view="month"
+          :disable-views="['week']")
+      .grey--text.text-center
+        v-icon.pr-1(style="padding-bottom: 2px") keyboard_arrow_up
+        | Date picker like
+  .layout.wrap
+    sshpre.flex.mr-2(language="html-vue" label="Vue Template - Rounded Cell").
+      &lt;vue-cal
+          class="vuecal--rounded-theme vuecal--green-theme"
+          xsmall
+          hide-view-selector
+          :time="false"
+          active-view="month"
+          :disable-views="['week']"
+          style="width: 270px;height: 300px"&gt;
+      &lt;/vue-cal&gt;
+    sshpre.flex(language="html-vue" label="Vue Template - Date Picker").
+      &lt;vue-cal
+          class="vuecal--date-picker"
+          xsmall
+          hide-view-selector
+          :time="false"
+          :transitions="false"
+          active-view="month"
+          :disable-views="['week']"
+          style="width: 210px;height: 230px"&gt;
+      &lt;/vue-cal&gt;
+  highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
+
+  //- Example.
+  h4.title
+    a(href="#ex--disable-views") # Disable views, active view
     a#ex--disable-views(name="ex--disable-views")
   p.
     To hide views, you can use the #[span.code disable-views] option and provide an array of views
@@ -132,41 +197,6 @@ div
     .vuecal__cell--after-max {color: #008b8b;}
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
-
-  //- Example.
-  h4.title
-    a(href="#ex--calendar-themes") # Calendar themes - Rounded cells
-    a#ex--calendar-themes(name="ex--calendar-themes")
-  p.
-    You can easily change the calendar color theme or use the rounded-cells theme
-    by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
-    E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
-    Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
-
-  v-layout.ma-auto(justify-center wrap)
-    v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
-        xsmall
-        hide-view-selector
-        :time="false"
-        active-view="month"
-        :disable-views="['week']")
-    v-card.ma-2.main-content(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
-        xsmall
-        hide-view-selector
-        :time="false"
-        active-view="month"
-        :disable-views="['week']")
-  sshpre(language="html-vue" label="Vue Template").
-    &lt;vue-cal class="vuecal--rounded-theme vuecal--green-theme"
-             xsmall
-             hide-view-selector
-             :time="false"
-             active-view="month"
-             :disable-views="['week']"&gt;
-    &lt;/vue-cal&gt;
-  highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
 
   //- Example.
   h4.title

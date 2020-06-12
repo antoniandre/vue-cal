@@ -488,8 +488,8 @@ export default {
     .vuecal--day-view & {background: none;}
   }
 
-  &--out-of-scope {color: #ccc;}
-  &--disabled {color: #ccc;cursor: not-allowed;}
+  &--out-of-scope {color: rgba(0, 0, 0, 0.25);}
+  &--disabled {color: rgba(0, 0, 0, 0.25);cursor: not-allowed;}
 
   // Cells/splits get highlighted when dragging an event over it.
   &--highlighted:not(.vuecal__cell--has-splits), &-split.vuecal__cell-split--highlighted {
