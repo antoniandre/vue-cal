@@ -26,11 +26,11 @@
       //- Best way to disable transition is to convert it to simple div tag.
       component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
         component(
-          type="button"
-          :is="!!broaderView ? 'button' : 'span'"
+          :type="!!broaderView && 'button'"
+          :is="broaderView ? 'button' : 'span'"
           :key="`${view.id}${view.startDate.toString()}`"
-          @click="switchToBroaderView"
-          :aria-label="!!broaderView ? `Go to ${broaderView} view` : false")
+          @click="!!broaderView && switchToBroaderView()"
+          :aria-label="!!broaderView && `Go to ${broaderView} view`")
           slot(name="title")
     button.vuecal__today-btn(
       type="button"
