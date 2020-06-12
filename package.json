@@ -20,7 +20,7 @@
   ],
   "dependencies": {},
   "devDependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.8.3",
+    "@babel/plugin-proposal-private-methods": "^7.10.1",
     "@vue/cli-plugin-babel": "^4.4.1",
     "@vue/cli-plugin-eslint": "^4.4.1",
     "@vue/cli-plugin-router": "^4.4.1",
@@ -28,8 +28,8 @@
     "@vue/eslint-config-standard": "^5.1.2",
     "babel-eslint": "^10.1.0",
     "core-js": "^3.6.5",
-    "eslint": "^7.1.0",
-    "eslint-plugin-import": "^2.20.2",
+    "eslint": "^7.2.0",
+    "eslint-plugin-import": "^2.21.2",
     "eslint-plugin-node": "^11.1.0",
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-standard": "^4.0.1",
@@ -42,10 +42,10 @@
     "simple-syntax-highlighter": "^1.1.1",
     "vue": "^2.6.11",
     "vue-cli-plugin-vuetify": "^2.0.5",
-    "vue-router": "^3.2.0",
+    "vue-router": "^3.3.2",
     "vue-scrollto": "^2.18.1",
     "vue-template-compiler": "^2.6.11",
-    "vuetify": "^2.2.30"
+    "vuetify": "^2.3.0"
   },
   "keywords": [
     "full calendar",
