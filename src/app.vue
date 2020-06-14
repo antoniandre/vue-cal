@@ -59,7 +59,7 @@ html {font-size: 14px;}
 }
 
 .v-application--wrap {
-  padding-top: 12em;
+  padding-top: 14em;
   overflow-x: hidden;
 }
 
