@@ -1,29 +1,42 @@
 <template lang="pug">
 div
-  .text-center.headline.mb-8
+  .text-center.headline.mb-10
     span.grey--text.darken-1 Go for the date picker...
     span.ml-8.primary--text.text--darken-1 or unleash the full potential!
   .layout.wrap.align-center.justify-center
-    v-card.ma-2.main-content(style="width: 210px;height: 230px")
-      vue-cal.vuecal--date-picker(
+    .mx-2
+      vue-cal.vuecal--date-picker.demo(
         xsmall
+        :selected-date="selectedDate"
         hide-view-selector
         :time="false"
         :transitions="false"
         active-view="month"
-        :disable-views="['week']")
-    v-card.ma-2.main-content(style="width: 700px;height: 450px")
-      vue-cal.vuecal--green-theme.demo.vuecal--full-height-delete(
+        :events="demoExample.events"
+        :disable-views="['week', 'day']"
+        @cell-click="selectedDate = $event"
+        style="width: 210px;height: 230px")
+      .grey--text.code.my-2(style="font-size: 13px") Selected date: '{{ selectedDate.format() }}'
+    .flex.mx-2(style="max-width: 800px")
+      vue-cal.demo.full-cal.vuecal--full-height-delete(
+        hide-weekends
+        :selected-date="selectedDate"
         :time-from="8 * 60"
         :time-to="19 * 60"
         :split-days="demoExample.splits"
-        editable-events
-        hide-weekends
+        sticky-split-labels
+        :editable-events="demoExample.editable"
         :events="demoExample.events"
-        sticky-split-labels)
+        @cell-focus="selectedDate = $event.date"
+        style="height: 450px")
         template(v-slot:split-label="{ split, view }")
-          v-icon(:color="split.color") person
+          v-icon(:color="split.color" size="20") person
           strong(:style="`color: ${split.color}`") {{ split.label }}
+      a.mt-4.layout.justify-end.grey--text.text--lighten-1(
+        href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/main-demo.vue"
+        target="_blank")
+        | View this example source code
+        v-icon.ml-1(small color="grey lighten-1") open_in_new
 </template>
 
 <script>
@@ -31,13 +44,15 @@ import VueCal from '@/vue-cal'
 
 const demoExample = {
   splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
+  editable: { title: false, drag: true, resize: true, create: true, delete: true },
   events: []
 }
 
 export default {
   components: { VueCal },
   data: () => ({
-    demoExample
+    demoExample,
+    selectedDate: new Date()
   }),
 
   computed: {
@@ -46,7 +61,13 @@ export default {
     }
   },
 
+  methods: {
+    cl: (a) => console.log(a)
+  },
+
   created () {
+    this.selectedDate = this.previousFirstDayOfWeek
+
     for (let i = 0; i < 5; i++) {
       const day = this.previousFirstDayOfWeek.addDays(i).format()
 
@@ -59,7 +80,6 @@ export default {
           background: true,
           deletable: false,
           resizable: false,
-          titleEditable: false,
           split: 1
         },
         {
@@ -70,11 +90,57 @@ export default {
           background: true,
           deletable: false,
           resizable: false,
-          titleEditable: false,
           split: 2
         }
       )
     }
+
+    const monday = this.previousFirstDayOfWeek.format()
+    const tuesday = this.previousFirstDayOfWeek.addDays(1).format()
+    const thursday = this.previousFirstDayOfWeek.addDays(3).format()
+    const friday = this.previousFirstDayOfWeek.addDays(4).format()
+    this.demoExample.events.push(
+      {
+        start: `${monday} 15:30`,
+        end: `${monday} 17:30`,
+        title: 'Tennis',
+        content: '<i class="v-icon material-icons mt-1">sports_tennis</i>',
+        resizable: false,
+        split: 1
+      },
+      {
+        start: `${monday} 15:30`,
+        end: `${monday} 17:30`,
+        title: 'Tennis',
+        content: '<i class="v-icon material-icons mt-1">sports_tennis</i>',
+        resizable: false,
+        split: 2
+      },
+      {
+        start: `${tuesday} 08:00`,
+        end: `${tuesday} 10:00`,
+        title: 'Volleyball',
+        content: '<i class="v-icon material-icons mt-1">sports_volleyball</i>',
+        resizable: false,
+        split: 2
+      },
+      {
+        start: `${thursday} 09:00`,
+        end: `${thursday} 11:30`,
+        title: 'Golf',
+        content: '<i class="v-icon material-icons mt-2">golf_course</i>',
+        resizable: false,
+        split: 1
+      },
+      {
+        start: `${friday} 16:45`,
+        end: `${friday} 18:45`,
+        title: 'Movie',
+        content: '<i class="v-icon material-icons mt-1">local_play</i>',
+        resizable: false,
+        split: 2
+      }
+    )
   }
 }
 </script>
@@ -84,13 +150,59 @@ $john: #42b983;
 $kate: #ff7fc8;
 
 .demo {
+  border-radius: 4px;
+
+  // Date picker.
+  &.vuecal--date-picker .vuecal__cell-events-count {
+    width: 4px;
+    height: 4px;
+    min-width: 0;
+    padding: 0;
+    margin-top: 4px;
+    color: transparent;
+    background-color: $john;
+  }
+  &.vuecal--date-picker .vuecal__cell--selected .vuecal__cell-events-count {background-color: #fff;}
+
+  // Both calendars.
+  .vuecal__cell--out-of-scope {color: rgba(0, 0, 0, 0.15);}
+
+  // Full Calendar.
+  // ------------------------------------------------------
+  &.full-cal .vuecal__menu {background-color: transparent;}
+  &.full-cal .vuecal__title-bar {background: rgba(0, 0, 0, 0.03);}
+  .vuecal__view-btn {
+    background: none;
+    padding: 0 10px;
+    margin: 4px 2px;
+    border-radius: 30px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 13px;
+    text-transform: uppercase;
+    border: none;
+    color: inherit;
+
+    &--active {
+      background: rgb(66, 185, 130);
+      color: #fff;
+    }
+  }
+  .weekday-label {opacity: 0.4;font-weight: 500;}
   .vuecal__header .v-icon {color: inherit;}
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
+  &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
+  .vuecal__event-time {
+    margin: 3px 0;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 1.2;
+  }
   // John.
   .vuecal__header .john {color: darken($john, 5);}
   .vuecal__body .john {background-color: rgba($john, 0.08);}
-  .john .vuecal__event {background-color: rgba($john, 0.9);color: #fff;}
+  .john .vuecal__event {background-color: rgba(lighten($john, 5), 0.85);color: #fff;}
   .john .lunch {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
     color: transparentize(darken($john, 10), 0.4);
@@ -99,10 +211,11 @@ $kate: #ff7fc8;
   // Kate.
   .vuecal__header .kate {color: darken($kate, 5);}
   .vuecal__body .kate {background-color: rgba($kate, 0.08);}
-  .kate .vuecal__event {background-color: rgba($kate, 0.9);color: #fff;}
+  .kate .vuecal__event {background-color: rgba(lighten($kate, 5), 0.85);color: #fff;}
   .kate .lunch {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
     color: transparentize(darken($kate, 10), 0.4);
   }
+  // ------------------------------------------------------
 }
 </style>
