@@ -1,6 +1,6 @@
 <template lang="pug">
-v-chip.ma-1.pl-0.pr-1(:color="item.color" outlined small)
-  v-icon.mr-1(size="20") {{ item.icon }}
+v-chip.ma-1.pl-1.todo-item(:color="item.color" outlined small)
+  v-icon(size="18") {{ item.icon }}
   slot
 </template>
 
@@ -22,3 +22,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.todo-item {
+  font-size: 12px;
+  height: 22px;
+
+  .v-icon {margin-right: 2px;}
+}
+</style>
