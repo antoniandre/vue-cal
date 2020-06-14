@@ -1,80 +1,32 @@
 <template lang="pug">
 .documentation
-  .text-center.todo(style="margin: 0 auto 7em;max-width: 900px")
-    h2.title.todo To do...
-    p.mb-4 Here is my ongoing to do list.
+  .text-center.headline.my-8
+    span.grey--text.darken-1 Go for the date picker...
+    span.ml-8.primary--text.text--darken-1 or unleash the full potential!
+  .layout.wrap.align-center.justify-center
+    v-card.ma-2.main-content(style="width: 210px;height: 230px")
+      vue-cal.vuecal--date-picker(
+        xsmall
+        hide-view-selector
+        :time="false"
+        :transitions="false"
+        active-view="month"
+        :disable-views="['week']")
+    v-card.ma-2.main-content(style="width: 700px;height: 450px")
+      vue-cal.vuecal--green-theme.demo.vuecal--full-height-delete(
+        :time-from="8 * 60"
+        :time-to="19 * 60"
+        :split-days="demoExample.splits"
+        editable-events
+        hide-weekends
+        :events="demoExample.events"
+        sticky-split-labels)
+        template(v-slot:split-label="{ split, view }")
+          v-icon(:color="split.color") person
+          strong(:style="`color: ${split.color}`") {{ split.label }}
 
-    div.mb-n5 Earlier
-    div(style="transform: scale(0.85);opacity: 0.8")
-      todo-list-item default active view
-      todo-list-item Enable / disable views
-      todo-list-item Hide / show weekends
-      todo-list-item Add timeline w/ timerange &amp; increment
-      todo-list-item Add timeline
-      todo-list-item time format 12/24 h
-      todo-list-item Support for i18n
-      todo-list-item Split days
-      todo-list-item Support events
-      todo-list-item Background events
-      todo-list-item Overlap events
-      todo-list-item Keep only default style in CSS
-      todo-list-item Allow custom arrows
-      todo-list-item Default active date
-      todo-list-item Double tap on touch devices
-      todo-list-item 1st NPM Release!
-      todo-list-item Built-in themes
-      todo-list-item Resize events
-      todo-list-item Delete events
-      todo-list-item Emit DOM events
-      todo-list-item Event indicator on month view
-      todo-list-item Custom time format
-      todo-list-item Highlight current time
-      todo-list-item Show events on month view
-      todo-list-item sync 2 vue-cal instances
-      todo-list-item Add CSS transitions
-      todo-list-item Multiple day events
-      todo-list-item Custom events rendering
-      todo-list-item Custom callback on event click
-      todo-list-item Option to start week on Sunday
-      todo-list-item All day events in top bar
-      todo-list-item Custom cell rendering
-      todo-list-item Events count on year(s) views
-      todo-list-item Create new event
-      todo-list-item min &amp; max dates
-      todo-list-item Today button
-      todo-list-item Externalize locales
-      todo-list-item Support more simultaneous events
-      todo-list-item Sticky day splits labels
-      todo-list-item Hide particular weekdays
-      todo-list-item Optional week number
-      todo-list-item Date prototypes
-      todo-list-item Business hours
-
-    .mb-2 Current backlog
-    todo-list-item Drag &amp; drop events
-    todo-list-item Resize events snap to time
-    todo-list-item Drag events snap to time
-    todo-list-item Drop external events into Vue Cal
-    todo-list-item(status="doing") Recurring events
-    todo-list-item(status="todo") Drag &amp; drop multiple day events
-    todo-list-item(status="todo") Drag &amp; drop events on touch devices
-    todo-list-item(status="todo")
-      a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
-    todo-list-item(status="todo")
-      a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
-    todo-list-item(status="todo") Improve multiple day events Month view
-    todo-list-item(status="todo") Prevent event intersect. on drag/resize
-    todo-list-item(status="todo") Horizontal timeline
-    //- TODO:
-      General
-      - do all the @todo in the codebase
-      - check overlaps only on the cell that has changed on event create/drag/background change
-      Multiple-day events:
-      - Fix event segments when dragging too fast on x axis.
-      - multiple days on month view like google calendar
-      - if more than 24 hour duration, consider as all-day
-
-  h2.headline.mt-12.mb-8.title Github project &nbsp;&amp;&nbsp; important notes
+  //- Github project.
+  h2.headline.mt-12.pt-12.mb-8.title Github project &nbsp;&amp;&nbsp; important notes
   v-layout.mb-3(align-center)
     v-icon.pl-2.pr-1.mr-4.grey--text.text--lighten-1(x-large) fab fa-github
     a(href="https://github.com/antoniandre/vue-cal" target="_blank") github.com/antoniandre/vue-cal #[v-icon(small color="primary") open_in_new]
@@ -100,6 +52,84 @@
       a.pink--text.ml-2(href="https://www.paypal.me/antoniandre1" target="_blank" style="text-decoration: underline") #[strong Support the project]!
       div Thank you so much to all the supporters! #[span.headline.ml-1 🙏]
 
+  //- To Do list.
+  h2.headline.mt-12.pt-12
+    a(href="#to-do-list") To do...
+    a#to-do-list(name="to-do-list")
+  p.mb-4 Here is my ongoing to do list.
+
+  .layout.wrap.align-center
+    strong.mr-3 Earlier
+    todo-list-item default active view
+    todo-list-item Enable / disable views
+    todo-list-item Hide / show weekends
+    todo-list-item Add timeline w/ timerange &amp; increment
+    todo-list-item Add timeline
+    todo-list-item time format 12/24 h
+    todo-list-item Support for i18n
+    todo-list-item Split days
+    todo-list-item Support events
+    todo-list-item Background events
+    todo-list-item Overlap events
+    todo-list-item Keep only default style in CSS
+    todo-list-item Allow custom arrows
+    todo-list-item Default active date
+    todo-list-item Double tap on touch devices
+    todo-list-item 1st NPM Release!
+    todo-list-item Built-in themes
+    todo-list-item Resize events
+    todo-list-item Delete events
+    todo-list-item Emit DOM events
+    todo-list-item Event indicator on month view
+    todo-list-item Custom time format
+    todo-list-item Highlight current time
+    todo-list-item Show events on month view
+    todo-list-item sync 2 vue-cal instances
+    todo-list-item Add CSS transitions
+    todo-list-item Multiple day events
+    todo-list-item Custom events rendering
+    todo-list-item Custom callback on event click
+    todo-list-item Option to start week on Sunday
+    todo-list-item All day events in top bar
+    todo-list-item Custom cell rendering
+    todo-list-item Events count on year(s) views
+    todo-list-item Create new event
+    todo-list-item min &amp; max dates
+    todo-list-item Today button
+    todo-list-item Externalize locales
+    todo-list-item Support more simultaneous events
+    todo-list-item Sticky day splits labels
+    todo-list-item Hide particular weekdays
+    todo-list-item Optional week number
+    todo-list-item Date prototypes
+    todo-list-item Business hours
+    todo-list-item Drag &amp; drop events
+    todo-list-item Resize events snap to time
+    todo-list-item Drag events snap to time
+    todo-list-item Drop external events into Vue Cal
+
+  .layout.wrap.align-center.mt-4
+    strong.mr-3 Current backlog
+    todo-list-item(status="doing") Recurring events
+    todo-list-item(status="todo") Drag &amp; drop multiple day events
+    todo-list-item(status="todo") Drag &amp; drop events on touch devices
+    todo-list-item(status="todo")
+      a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
+    todo-list-item(status="todo")
+      a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
+    todo-list-item(status="todo") Improve multiple day events Month view
+    todo-list-item(status="todo") Prevent event intersect. on drag/resize
+    todo-list-item(status="todo") Horizontal timeline
+    //- TODO:
+      General
+      - do all the @todo in the codebase
+      - check overlaps only on the cell that has changed on event create/drag/background change
+      Multiple-day events:
+      - Fix event segments when dragging too fast on x axis.
+      - multiple days on month view like google calendar
+      - if more than 24 hour duration, consider as all-day
+
+  //- Installation
   h2.headline.mt-12.pt-12
     a(href="#installation") Installation
     a#installation(name="installation")
@@ -346,6 +376,52 @@ import Api from './api'
 import ReleaseNotes from './release-notes'
 import './scss/index.scss'
 
+const localesList = [
+  { code: 'ar', label: 'Arabic' },
+  { code: 'bn', label: 'Bangla' },
+  { code: 'bs', label: 'Bosnian' },
+  { code: 'bg', label: 'Bulgarian' },
+  { code: 'ca', label: 'Catalan' },
+  { code: 'cs', label: 'Czech' },
+  { code: 'zh-cn', label: 'Chinese (Simplified)' },
+  { code: 'zh-hk', label: 'Chinese (Traditional)' },
+  { code: 'hr', label: 'Croatian' },
+  { code: 'da', label: 'Danish' },
+  { code: 'nl', label: 'Dutch' },
+  { code: 'en', label: 'English' },
+  { code: 'fa', label: 'Farsi' },
+  { code: 'fr', label: 'French' },
+  { code: 'ka', label: 'Georgian' },
+  { code: 'de', label: 'German' },
+  { code: 'el', label: 'Greek' },
+  { code: 'he', label: 'Hebrew' },
+  { code: 'hu', label: 'Hungarian' },
+  { code: 'is', label: 'Icelandic' },
+  { code: 'it', label: 'Italian' },
+  { code: 'id', label: 'Indonesian' },
+  { code: 'ja', label: 'Japanese' },
+  { code: 'ko', label: 'Korean' },
+  { code: 'lt', label: 'Lithuanian' },
+  { code: 'no', label: 'Norwegian' },
+  { code: 'pl', label: 'Polish' },
+  { code: 'pt-br', label: 'Portuguese Brasilian' },
+  { code: 'ro', label: 'Romanian' },
+  { code: 'ru', label: 'Russian' },
+  { code: 'sr', label: 'Serbian' },
+  { code: 'sk', label: 'Slovak' },
+  { code: 'sl', label: 'Slovenian' },
+  { code: 'es', label: 'Spanish' },
+  { code: 'sv', label: 'Swedish' },
+  { code: 'tr', label: 'Turkish' },
+  { code: 'uk', label: 'Ukrainian' },
+  { code: 'vi', label: 'Vietnamese' }
+]
+
+const demoExample = {
+  splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
+  events: []
+}
+
 export default {
   components: {
     VueCal,
@@ -358,52 +434,77 @@ export default {
   },
 
   data: () => ({
-    localesList: [
-      { code: 'ar', label: 'Arabic' },
-      { code: 'bn', label: 'Bangla' },
-      { code: 'bs', label: 'Bosnian' },
-      { code: 'bg', label: 'Bulgarian' },
-      { code: 'ca', label: 'Catalan' },
-      { code: 'cs', label: 'Czech' },
-      { code: 'zh-cn', label: 'Chinese (Simplified)' },
-      { code: 'zh-hk', label: 'Chinese (Traditional)' },
-      { code: 'hr', label: 'Croatian' },
-      { code: 'da', label: 'Danish' },
-      { code: 'nl', label: 'Dutch' },
-      { code: 'en', label: 'English' },
-      { code: 'fa', label: 'Farsi' },
-      { code: 'fr', label: 'French' },
-      { code: 'ka', label: 'Georgian' },
-      { code: 'de', label: 'German' },
-      { code: 'el', label: 'Greek' },
-      { code: 'he', label: 'Hebrew' },
-      { code: 'hu', label: 'Hungarian' },
-      { code: 'is', label: 'Icelandic' },
-      { code: 'it', label: 'Italian' },
-      { code: 'id', label: 'Indonesian' },
-      { code: 'ja', label: 'Japanese' },
-      { code: 'ko', label: 'Korean' },
-      { code: 'lt', label: 'Lithuanian' },
-      { code: 'no', label: 'Norwegian' },
-      { code: 'pl', label: 'Polish' },
-      { code: 'pt-br', label: 'Portuguese Brasilian' },
-      { code: 'ro', label: 'Romanian' },
-      { code: 'ru', label: 'Russian' },
-      { code: 'sr', label: 'Serbian' },
-      { code: 'sk', label: 'Slovak' },
-      { code: 'sl', label: 'Slovenian' },
-      { code: 'es', label: 'Spanish' },
-      { code: 'sv', label: 'Swedish' },
-      { code: 'tr', label: 'Turkish' },
-      { code: 'uk', label: 'Ukrainian' },
-      { code: 'vi', label: 'Vietnamese' }
-    ]
+    localesList,
+    demoExample
   }),
 
   computed: {
     nowFormatted () {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
+    },
+    previousFirstDayOfWeek () {
+      return new Date(new Date().setDate(new Date().getDate() - (new Date().getDay() + 6) % 7))
     }
+  },
+
+  created () {
+    for (let i = 0; i < 5; i++) {
+      const day = this.previousFirstDayOfWeek.addDays(i).format()
+
+      this.demoExample.events.push(
+        {
+          start: `${day} 12:00`,
+          end: `${day} 13:00`,
+          title: 'LUNCH',
+          class: 'lunch',
+          background: true,
+          deletable: false,
+          resizable: false,
+          titleEditable: false,
+          split: 1
+        },
+        {
+          start: `${day} 12:00`,
+          end: `${day} 13:00`,
+          title: 'LUNCH',
+          class: 'lunch',
+          background: true,
+          deletable: false,
+          resizable: false,
+          titleEditable: false,
+          split: 2
+        }
+      )
+    }
+
   }
 }
 </script>
+
+<style lang="scss">
+$john: #42b983;
+$kate: #ff7fc8;
+
+.demo {
+  .vuecal__header .v-icon {color: inherit;}
+  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
+
+  // John.
+  .vuecal__header .john {color: darken($john, 5);}
+  .vuecal__body .john {background-color: rgba($john, 0.08);}
+  .john .vuecal__event {background-color: rgba($john, 0.9);color: #fff;}
+  .john .lunch {
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
+    color: transparentize(darken($john, 10), 0.4);
+  }
+
+  // Kate.
+  .vuecal__header .kate {color: darken($kate, 5);}
+  .vuecal__body .kate {background-color: rgba($kate, 0.08);}
+  .kate .vuecal__event {background-color: rgba($kate, 0.9);color: #fff;}
+  .kate .lunch {
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
+    color: transparentize(darken($kate, 10), 0.4);
+  }
+}
+</style>
