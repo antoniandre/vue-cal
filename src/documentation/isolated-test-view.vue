@@ -15,10 +15,10 @@ div.test-view
   vue-cal.ml-2.mr-1.vuecal--blue-theme(
     show-all-day-events
     :disable-views="['years', 'year']"
-    editable-events
+    :editable-events="{ title: false, drag: false, resize: false, delete: true, create: true }"
     :events="events"
+    :drag-to-create-event="false"
     :split-days="daySplits"
-    :on-event-create="() => true"
     @event-drag-create="log($event)"
     :min-split-width="150"
     sticky-split-labels)
@@ -64,10 +64,8 @@ export default {
       }
     ],
     daySplits: [
-      { label: 'John', color: 'blue' },
       { label: 'Tom', color: 'green' },
-      { label: 'Kate', color: 'orange' },
-      { label: 'Jess', color: 'red' }
+      { label: 'Kate', color: 'pink' }
     ]
   }),
 
