@@ -66,6 +66,7 @@ $splits-headers-height: 1.5em;
     .day-split-header {
       display: flex;
       flex-grow: 1;
+      flex-basis: 0; // Evenly distribute.
       justify-content: center;
       align-items: center;
       height: 100%;
