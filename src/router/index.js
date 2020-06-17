@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Documentation from '@/views/documentation'
+import Documentation from '@/documentation'
 
 Vue.use(VueRouter)
 
@@ -11,7 +11,7 @@ const routes = [
   },
   {
     path: '/test',
-    component: () => import(/* webpackChunkName: "isolated-test-view" */ '@/views/isolated-test-view.vue')
+    component: () => import(/* webpackChunkName: "isolated-test-view" */ '@/documentation/isolated-test-view.vue')
   }
 ]
 

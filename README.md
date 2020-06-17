@@ -23,13 +23,11 @@ ___
 --- | --- | --- | --- | --- | --- |
 Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | Latest ✔ | 10+ ✔ |
 
-
 ___
 
+## Donating
 
-## Donation
-
-If you want to support &amp; boost up the development of this library, you can buy me a beer!
+If you want to support the development of this library, you can buy me a beer!
 
 [![paypal](https://www.paypalobjects.com/en_AU/i/btn/btn_donateCC_LG.gif)](https://www.paypal.me/antoniandre1)
 Thank you!
@@ -38,7 +36,7 @@ ___
 
 ## Contributing
 
-If you have any idea, feel free to fork Vue Cal and submit your changes back to me.
+If you have any idea, feel free to open an issue to discuss a new feature or fork Vue Cal and submit your changes back to me.
 
 ___
 
