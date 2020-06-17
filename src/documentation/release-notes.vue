@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong.mr-1 Version 3.5.4
+    | Add mouseup event listener when deletable but not resizable.
+  div.grey--text.mb-1
     strong Version 3.5.3
     ul
       li Provide the split (if any) to event creation from cell click &amp; hold.
