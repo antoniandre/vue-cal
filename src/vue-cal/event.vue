@@ -75,15 +75,15 @@ export default {
     },
 
     /**
-     * WHEN EDITABLE (RESIZE OR DRAG) EVENTS, the mouseup handler is global (on whole document) in index.vue
-     * (initialized in index.vue on mounted). It handles the mouseup on cell, events, and everything.
-     * If you need a mouseup on event, put it in the centralized handler to avoid confusion, and to
-     * mix well with other cases.
+     * The mouseup handler is global (whole document) and initialized in index.vue on mounted.
+     * It handles the mouseup on cell, events, and everything.
+     * All mouseup on event, should be put there to avoid conflicts with other cases.
      */
     onMouseUp (e) {
-      // This case is only when events are not editable, to avoid calling the bigger vuecal mouseup handler.
-      if (!this.editEvents.resize && !this.editEvents.drag && typeof this.vuecal.onEventClick === 'function') {
-        return this.vuecal.onEventClick(this.event, e)
+      // Don't allow mouseup to be fired on different event than mousedown for the onEventClick function.
+      if (this.domEvents.focusAnEvent._eid === this.event._eid) {
+        // This is used in the global mouseup handler.
+        this.domEvents.focusAnEvent.mousedUp = true
       }
     },
 

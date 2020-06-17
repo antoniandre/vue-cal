@@ -314,7 +314,10 @@ export default {
           event: null
         },
         focusAnEvent: {
-          _eid: null // Only one at a time.
+          _eid: null, // Only one at a time.
+          // Useful to detect a full click (mousedown + mouseup on same event).
+          // E.g. Only call onEventClick function (if any) on full click.
+          mousedUp: false
         },
         clickHoldAnEvent: {
           _eid: null, // Only one at a time.
@@ -671,6 +674,8 @@ export default {
       let hasResized = false
       const { event: dragCreatedEvent, start: dragCreateStarted } = dragCreateAnEvent
       const mouseUpOnEvent = this.isDOMElementAnEvent(e.target)
+      const eventClicked = focusAnEvent.mousedUp // If has mousedown & mouseup on the same event.
+      focusAnEvent.mousedUp = false // Reinit the variable for next mouseup.
 
       if (mouseUpOnEvent) this.domEvents.cancelClickEventCreation = true
 
@@ -743,11 +748,10 @@ export default {
         clickHoldACell.timeoutId = null
       }
 
-      // Call the onEventClick function if exists and not dragging handle or deleting event.
-      if (
-        mouseUpOnEvent && !hasResized && !isClickHoldingEvent && !dragCreatedEvent &&
-        typeof this.onEventClick === 'function'
-      ) {
+      // On event click (mousedown + mouseup on the same event), call the onEventClick function if exists
+      // and if not dragging handle or deleting event.
+      const eventClickHandler = typeof this.onEventClick === 'function'
+      if (eventClicked && !hasResized && !isClickHoldingEvent && !dragCreatedEvent && eventClickHandler) {
         const event = this.view.events.find(e => e._eid === focusAnEvent._eid)
         return this.onEventClick(event, e)
       }
@@ -1171,13 +1175,14 @@ export default {
     const ud = this.utils.date
     const hasTouch = 'ontouchstart' in window
     const { resize, drag, create, delete: deletable, title } = this.editEvents
+    const hasEventClickHandler = this.onEventClick && typeof this.onEventClick === 'function'
 
-    if (resize || drag || (create && this.dragToCreateEvent)) {
-      window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
+    // If event is editable in any way add a mouseup event handler.
+    if (resize || drag || create || deletable || title || hasEventClickHandler) {
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     }
-    else if (deletable) {
-      window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
+    if (resize || drag || (create && this.dragToCreateEvent)) {
+      window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     }
 
     if (title) window.addEventListener('keyup', this.onKeyUp)
