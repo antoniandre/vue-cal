@@ -12,6 +12,7 @@ div.test-view
     :active-view.sync="view"
     @view-change="log"
     :on-event-click="log")
+  p {{ logs }}
   vue-cal.ml-2.mr-1.vuecal--blue-theme(
     show-all-day-events
     :disable-views="['years', 'year']"
@@ -19,7 +20,7 @@ div.test-view
     :events="events"
     :drag-to-create-event="false"
     :split-days="daySplits"
-    @event-drag-create="log($event)"
+    :on-event-click="onEventClick"
     :min-split-width="150"
     sticky-split-labels)
     template(v-slot:split-label="{ split, view }")
@@ -36,6 +37,8 @@ export default {
   data: () => ({
     selectedDate: now,
     view: 'week',
+    logs: [],
+    i: 0,
     events: [
       // {
       //   start: now.subtractDays(1),
@@ -70,9 +73,15 @@ export default {
   }),
 
   methods: {
+    onEventClick (event) {
+      console.log('on event click')
+
+      event.title = 'hey ' + ++this.i
+    },
     log (...params) {
       // eslint-disable-next-line
       console.log(...params)
+      this.logs.push(...params)
     }
   }
 }
