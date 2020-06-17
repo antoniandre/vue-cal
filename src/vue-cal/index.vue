@@ -1170,12 +1170,13 @@ export default {
   mounted () {
     const ud = this.utils.date
     const hasTouch = 'ontouchstart' in window
+    const { resize, drag, create, title } = this.editEvents
 
-    if (this.editEvents.resize || this.editEvents.drag) {
+    if (resize || drag || (create && this.dragToCreateEvent)) {
       window.addEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
       window.addEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)
     }
-    if (this.editEvents.title) window.addEventListener('keyup', this.onKeyUp)
+    if (title) window.addEventListener('keyup', this.onKeyUp)
 
     // Disable context menu on touch devices on the whole vue-cal instance.
     if (hasTouch) {
