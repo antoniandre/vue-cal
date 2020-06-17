@@ -82,9 +82,10 @@ export default {
   }),
 
   methods: {
-    getSplitAtCursor (DOMEvent) {
-      let split = (DOMEvent.target.classList.contains('vuecal__cell-split') && DOMEvent.target) ||
-      this.vuecal.findAncestor(DOMEvent.target, 'vuecal__cell-split')
+    getSplitAtCursor ({ target }) {
+      const targetIsSplit = target.classList.contains('vuecal__cell-split')
+      let split = targetIsSplit ? target : this.vuecal.findAncestor(target, 'vuecal__cell-split')
+
       if (split) {
         split = split.attributes['data-split'].value
         // Convert to a numeric value if split id is a number.
