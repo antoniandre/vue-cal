@@ -1,6 +1,13 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong Version 3.5.2
+    ul
+      li Provide the split (if any) to event creation from cell click &amp; hold.
+      li.
+        Add mousemove &amp; mouseup event handlers if drag-creation is allowed but
+        #[span.code editableEvents.resize] is set to false.
+  div.grey--text.mb-1
     strong Version 3.5.1
     ul
       li Don't fire cell-click when cklicking on an event
