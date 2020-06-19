@@ -37,7 +37,7 @@
           template(v-slot:event="{ event, view }")
             slot(name="event" :view="view" :event="event")
               .vuecal__event-title.vuecal__event-title--edit(
-                v-if="editEvents.title && event.title && event.titleEditable"
+                v-if="editEvents.title && event.titleEditable"
                 contenteditable
                 @blur="onEventTitleBlur($event, event)"
                 v-html="event.title")
@@ -85,7 +85,7 @@
                 template(v-slot:event="{ event, view }")
                   slot(name="event" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
-                      v-if="editEvents.title && event.title && event.titleEditable"
+                      v-if="editEvents.title && event.titleEditable"
                       contenteditable
                       @blur="onEventTitleBlur($event, event)"
                       v-html="event.title")
@@ -119,7 +119,7 @@
                   template(v-slot:event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
-                        v-if="editEvents.title && event.title && event.titleEditable"
+                        v-if="editEvents.title && event.titleEditable"
                         contenteditable
                         @blur="onEventTitleBlur($event, event)"
                         v-html="event.title")
