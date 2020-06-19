@@ -1564,7 +1564,8 @@ export default {
         'vuecal--drag-creating-event': dragCreateAnEvent.event,
         'vuecal--dragging-event': dragAnEvent._eid,
         'vuecal--events-on-month-view': this.eventsOnMonthView,
-        'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short'
+        'vuecal--short-events': this.isMonthView && this.eventsOnMonthView === 'short',
+        'vuecal--has-touch': typeof window !== 'undefined' && 'ontouchstart' in window
       }
     },
     isYearsOrYearView () {
