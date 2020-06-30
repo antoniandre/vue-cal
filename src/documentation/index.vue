@@ -356,6 +356,7 @@ import ReleaseNotes from './release-notes'
 import './scss/index.scss'
 
 const localesList = [
+  { code: 'sq', label: 'Albanian' },
   { code: 'ar', label: 'Arabic' },
   { code: 'bn', label: 'Bangla' },
   { code: 'bs', label: 'Bosnian' },
