@@ -415,9 +415,10 @@ export default class EventUtils {
     // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
     if (event.allDay || !this._vuecal.time) {
       // Get the date and discard the time if any, then check it's within the date range.
-      const eventStart = new Date(event.start).setHours(0, 0, 0, 0)
-      return (eventStart >= new Date(start).setHours(0, 0, 0, 0) &&
-        eventStart <= new Date(end).setHours(0, 0, 0, 0))
+      const startTimestamp = new Date(event.start).setHours(0, 0, 0, 0)
+      const endTimestamp = new Date(event.end).setHours(23, 59, 0, 0)
+      return (endTimestamp >= new Date(start).setHours(0, 0, 0, 0) &&
+      startTimestamp <= new Date(end).setHours(0, 0, 0, 0))
     }
 
     const startTimestamp = event.start.getTime()

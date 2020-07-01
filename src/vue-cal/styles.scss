@@ -11,6 +11,11 @@ $splits-headers-height: 1.5em;
 
   // Disable user selection everywhere except in events.
   * {user-select: none;}
+  // On touch device, disable everywhere except the event title if editable.
+  &--has-touch *:not(.vuecal__event-title--edit) {
+    -webkit-touch-callout: none;
+    user-select: none;
+  }
 
   // General.
   //==================================//
