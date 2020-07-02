@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong.mr-1 Version 3.6.1
+    | Fix timeless events not showing up.
+  div.mb-1
     strong.mr-1 Version 3.6.0
     | Added Albanian language and short days in Russian language
   div.grey--text.mb-1
