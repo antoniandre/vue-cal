@@ -67,8 +67,6 @@ export default {
 
   created () {
     // Place all the events in the real time current week.
-    this.selectedDate = this.previousFirstDayOfWeek
-
     for (let i = 0; i < 5; i++) {
       const day = this.previousFirstDayOfWeek.addDays(i).format()
 
