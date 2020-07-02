@@ -957,7 +957,7 @@ export default {
         let endTimeMinutes = ud.dateToMinutes(end)
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
-        if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
+        if (this.time && !endTimeMinutes || endTimeMinutes === minutesInADay) {
           end.setSeconds(-1) // End at 23:59:59.
           endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
