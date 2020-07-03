@@ -1196,7 +1196,7 @@ export default {
     }
 
     // https://github.com/antoniandre/vue-cal/issues/221
-    this.alignWithScrollbar()
+    if (!this.hideBody) this.alignWithScrollbar()
 
     // Emit the `ready` event with useful parameters.
     const startDate = this.view.startDate
