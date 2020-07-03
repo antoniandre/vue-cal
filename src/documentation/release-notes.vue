@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong.mr-1 Version 3.6.2
+    | Fix all-day events not showing up and fix error when using #[span.code hide-body].
+  div.grey--text.mb-1
     strong.mr-1 Version 3.6.1
     | Fix timeless events not showing up.
   div.mb-1
