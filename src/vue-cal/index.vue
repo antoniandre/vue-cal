@@ -752,7 +752,7 @@ export default {
       // and if not dragging handle or deleting event.
       const eventClickHandler = typeof this.onEventClick === 'function'
       if (eventClicked && !hasResized && !isClickHoldingEvent && !dragCreatedEvent && eventClickHandler) {
-        let event = this.view.events.concat(this.view.outOfScopeEvents).find(e => e._eid === focusAnEvent._eid)
+        let event = this.view.events.find(e => e._eid === focusAnEvent._eid)
         if (event === undefined) event = this.view.outOfScopeEvents.find(e => e._eid === focusAnEvent._eid)
         return this.onEventClick(event, e)
       }
