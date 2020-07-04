@@ -958,7 +958,8 @@ export default {
 
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
-          end.setSeconds(-1) // End at 23:59:59.
+          // This also applies on timeless events, all-day events & multiple-day events.
+          end.setHours(23, 59, 59, 0)
           endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
         }
@@ -1196,7 +1197,7 @@ export default {
     }
 
     // https://github.com/antoniandre/vue-cal/issues/221
-    this.alignWithScrollbar()
+    if (!this.hideBody) this.alignWithScrollbar()
 
     // Emit the `ready` event with useful parameters.
     const startDate = this.view.startDate

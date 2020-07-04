@@ -67,8 +67,6 @@ export default {
 
   created () {
     // Place all the events in the real time current week.
-    this.selectedDate = this.previousFirstDayOfWeek
-
     for (let i = 0; i < 5; i++) {
       const day = this.previousFirstDayOfWeek.addDays(i).format()
 
@@ -190,7 +188,7 @@ $kate: #ff7fc8;
       color: #fff;
     }
   }
-  .weekday-label {opacity: 0.4;font-weight: 500;}
+  &.full-cal .weekday-label {opacity: 0.4;font-weight: 500;}
   .vuecal__header .v-icon {color: inherit;}
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
   &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
