@@ -753,8 +753,10 @@ export default {
       const eventClickHandler = typeof this.onEventClick === 'function'
       if (eventClicked && !hasResized && !isClickHoldingEvent && !dragCreatedEvent && eventClickHandler) {
         let event = this.view.events.find(e => e._eid === focusAnEvent._eid)
-        if (event === undefined) event = this.view.outOfScopeEvents.find(e => e._eid === focusAnEvent._eid)
-        return this.onEventClick(event, e)
+        // If not found, the event may be in the outOfScope array.
+        if (!event && this.isMonthView) event = this.view.outOfScopeEvents.find(e => e._eid === focusAnEvent._eid)
+
+        return event && this.onEventClick(event, e)
       }
     },
 
