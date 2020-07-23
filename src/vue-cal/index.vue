@@ -125,9 +125,10 @@
                         v-html="event.title")
                       .vuecal__event-title(v-else-if="event.title" v-html="event.title")
                       .vuecal__event-time(v-if="time && !event.allDay && !(isMonthView && (event.allDay || showAllDayEvents === 'short')) && !isShortMonthView")
-                        | {{ utils.date.formatTime(event.start) }}
-                        span(v-if="event.endTimeMinutes") &nbsp;- {{ utils.date.formatTime(event.end) }}
-                        small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay") &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
+                        | {{ utils.date.formatTime(event.start, TimeFormat) }}
+                        span(v-if="event.endTimeMinutes") &nbsp;- {{ utils.date.formatTime(event.end, TimeFormat, null, true) }}
+                        small.days-to-end(v-if="event.daysCount > 1 && (event.segments[cell.formattedDate] || {}).isFirstDay")
+                          | &nbsp;+{{ event.daysCount - 1 }}{{ (texts.day[0] || '').toLowerCase() }}
                       .vuecal__event-content(
                         v-if="event.content && !(isMonthView && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
@@ -962,7 +963,8 @@ export default {
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
           // This also applies on timeless events, all-day events & multiple-day events.
-          end.setHours(23, 59, 59, 0)
+          if (!this.time) end.setHours(23, 59, 59, 0) // Sets to the same day at 23.59.59.
+          else end.setSeconds(end.getSeconds() - 1) // Sets to the previous day at 23.59.59.
           endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
         }
@@ -1279,12 +1281,15 @@ export default {
         timeCells.push({
           hours: Math.floor(i / 60),
           minutes: i % 60,
-          label: this.utils.date.formatTime(i, this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')),
+          label: this.utils.date.formatTime(i, this.TimeFormat), // The texts (3rd param) are given on Vue Cal init.
           value: i
         })
       }
 
       return timeCells
+    },
+    TimeFormat () {
+      return this.timeFormat || (this.twelveHour ? 'h:mm{am}' : 'HH:mm')
     },
     // Filter out the day splits that are hidden.
     daySplits () {

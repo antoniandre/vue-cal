@@ -260,19 +260,30 @@ export default class DateUtils {
    * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this._texts.
    *                       This becomes useful when showing multiple instances with different languages,
    *                       like in the documentation page.
+   * @param {Boolean} round if time is 23:59:59, rounds up to 24:00 for formatting only.
    * @return {String} the formatted time.
    */
-  formatTime (date, format = 'HH:mm', texts = null) {
-    if (date instanceof Date && format === 'HH:mm') return this.formatTimeLite(date)
+  formatTime (date, format = 'HH:mm', texts = null, round = false) {
+    let shouldRound = false
+    if (round) {
+      const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
+      if ((h + m + s) === (23 + 59 + 59)) shouldRound = true
+    }
+
+    if (date instanceof Date && format === 'HH:mm') return shouldRound ? '24:00' : this.formatTimeLite(date)
 
     _timeObject = {} // Reinit the time object on each function call.
     if (!texts) texts = this._texts
     const timeObj = this._hydrateTimeObject(date, texts)
 
-    return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
+    const formatted = format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
       const result = timeObj[contents.replace(/\{|\}/g, '')]
       return result !== undefined ? result : contents
     })
+
+    // Round 23:59:59 to 24:00. For 12-hour format there is nothing to replace: as both are 12am.
+    // Also don't return `24:00` straight away as the user format may be different.
+    return shouldRound ? formatted.replace('23:59', '24:00') : formatted
   }
 
   /**
