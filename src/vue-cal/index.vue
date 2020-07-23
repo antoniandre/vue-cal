@@ -558,7 +558,7 @@ export default {
           firstCellDate = ud[next ? 'addDays' : 'subtractDays'](ud.getPreviousFirstDayOfWeek(startDate, this.startWeekOnSunday), 7)
           break
         case 'day':
-          firstCellDate = startDate[next ? 'addDays' : 'subtractDays'](1)
+          firstCellDate = ud[next ? 'addDays' : 'subtractDays'](startDate, 1)
           break
       }
       if (firstCellDate) this.switchView(viewId, firstCellDate)
