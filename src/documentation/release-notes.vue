@@ -1,6 +1,13 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong.mr-1 Version 3.6.4
+    ul
+      li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
+      li When #[span.code time] is #[span.code true], keep 23:59:59 internally, but format string to 24:00.
+      li Fix previous / next navigation on day view when date prototypes are disabled.
+      li Add shortWeekDays to the #[span.code uk] locale.
+  div.grey--text.mb-1
     strong.mr-1 Version 3.6.3
     | Return the correct event on out-of-scope event click on month view.
   div.grey--text.mb-1
