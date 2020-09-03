@@ -6,7 +6,9 @@ div.test-view
     :events="events"
     editable-events
     :split-days="daySplits"
-    sticky-split-labels)
+    sticky-split-labels
+    :on-event-click="() => (clicksCount++)")
+  p clicks: {{clicksCount}}
 </template>
 
 <script>
@@ -17,6 +19,7 @@ const now = new Date()
 export default {
   components: { VueCal },
   data: () => ({
+    clicksCount: 0,
     selectedDate: now,
     view: 'week',
     events: [
