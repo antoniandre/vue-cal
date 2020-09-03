@@ -10,6 +10,8 @@
   @touchstart.stop="onTouchStart"
   @mousedown="onMouseDown($event) /* Don't stop mousedown propagation. See in onMouseDown(). */"
   @mouseup="onMouseUp"
+  @touchend="onMouseUp"
+  @touchmove="onTouchMove"
   @dblclick="onDblClick"
   :draggable="draggable"
   @dragstart="draggable && onDragStart($event)"
@@ -41,6 +43,18 @@ export default {
     overlapsStreak: { type: Number, default: 0 },
     allDay: { type: Boolean, default: false } // Is the event displayed in the all-day bar.
   },
+
+  data: () => ({
+    // Event touch detection with 30px threshold.
+    touch: {
+      dragThreshold: 30, // px.
+      startX: 0,
+      startY: 0,
+      // Detect if the event touch start + touch end was a drag or a tap.
+      // If it was a drag, don't call the event-click handler.
+      dragged: false
+    }
+  }),
 
   methods: {
     /**
@@ -78,13 +92,15 @@ export default {
      * The mouseup handler is global (whole document) and initialized in index.vue on mounted.
      * It handles the mouseup on cell, events, and everything.
      * All mouseup on event, should be put there to avoid conflicts with other cases.
+     * This function is also called on touchend on the event.
      */
     onMouseUp (e) {
       // Don't allow mouseup to be fired on different event than mousedown for the onEventClick function.
-      if (this.domEvents.focusAnEvent._eid === this.event._eid) {
+      if (this.domEvents.focusAnEvent._eid === this.event._eid && !this.touch.dragged) {
         // This is used in the global mouseup handler.
         this.domEvents.focusAnEvent.mousedUp = true
       }
+      this.touch.dragged = false // After the touchend happens, reset the dragged flag.
     },
 
     onMouseEnter (e) {
@@ -97,7 +113,21 @@ export default {
       this.vuecal.emitWithEvent('event-mouse-leave', this.event)
     },
 
+    // Detect if user taps on an event or drags it. If dragging don't fire the event-click handler (if any).
+    onTouchMove (e) {
+      // Skip the maths if there is no event click handler.
+      if (typeof this.vuecal.onEventClick !== 'function') return
+
+      const { clientX, clientY } = e.touches[0]
+      const { startX, startY, dragThreshold } = this.touch
+      if (Math.abs(clientX - startX) > dragThreshold || Math.abs(clientY - startY) > dragThreshold) {
+        this.touch.dragged = true
+      }
+    },
+
     onTouchStart (e) {
+      this.touch.startX = e.touches[0].clientX
+      this.touch.startY = e.touches[0].clientY
       // Prevent the text selection prompt on touch device if editable events - unless on title.
       // So the delete button will show up nicely without the text prompt.
       if (this.vuecal.editEvents.drag && !e.target.className.includes('vuecal__event-title')) {
