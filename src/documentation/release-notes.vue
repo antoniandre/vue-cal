@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.grey--text.mb-1
+    strong.mr-1 Version 3.6.5
+    | Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.
+  div.grey--text.mb-1
     strong.mr-1 Version 3.6.4
     ul
       li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
