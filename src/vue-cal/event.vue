@@ -128,11 +128,6 @@ export default {
     onTouchStart (e) {
       this.touch.startX = e.touches[0].clientX
       this.touch.startY = e.touches[0].clientY
-      // Prevent the text selection prompt on touch device if editable events - unless on title.
-      // So the delete button will show up nicely without the text prompt.
-      if (this.vuecal.editEvents.drag && !e.target.className.includes('vuecal__event-title')) {
-        e.returnValue = false
-      }
       this.onMouseDown(e, true)
     },
 
