@@ -35,6 +35,8 @@
           v-list-item(href="#ex--small-cal" v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
           v-list-item(href="#ex--disable-views" v-scroll-to="'#ex--disable-views'") Disable views, default view
           v-list-item(href="#ex--min-max-dates" v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
+          v-list-item(href="#ex--disable-days" v-scroll-to="'#ex--disable-days'") Disable days
+            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
           v-list-item(href="#ex--calendar-themes" v-scroll-to="'#ex--calendar-themes'") Calendar themes
           v-list-item(href="#ex--hiding-particular-week-days" v-scroll-to="'#ex--hiding-particular-week-days'") Hide particular weekdays &amp; show week numbers
           v-list-item.heading(href="#ex--internationalization" v-scroll-to="'#ex--internationalization'")
@@ -58,22 +60,12 @@
           v-list-item(href="#ex--events-indicators" v-scroll-to="'#ex--events-indicators'") Events indicators
           v-list-item(href="#ex--events-on-month-view" v-scroll-to="'#ex--events-on-month-view'") Display events on month view
           v-list-item(href="#ex--edit-and-delete-events" v-scroll-to="'#ex--edit-and-delete-events'") Edit &amp; delete events
-          v-list-item(href="#ex--create-events" v-scroll-to="'#ex--create-events'")
-            | Create events
-            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
-          v-list-item(href="#ex--other-event-creation-methods" v-scroll-to="'#ex--other-event-creation-methods'")
-            | Other event creation methods
-            v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
-          v-list-item(href="#ex--drag-and-drop" v-scroll-to="'#ex--drag-and-drop'")
-            | Drag &amp; drop
-            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
-          v-list-item(href="#ex--external-events-drag-and-drop" v-scroll-to="'#ex--external-events-drag-and-drop'")
-            | External events drag &amp; drop
-            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
+          v-list-item(href="#ex--create-events" v-scroll-to="'#ex--create-events'") Create events
+          v-list-item(href="#ex--other-event-creation-methods" v-scroll-to="'#ex--other-event-creation-methods'") Other event creation methods
+          v-list-item(href="#ex--drag-and-drop" v-scroll-to="'#ex--drag-and-drop'") Drag &amp; drop
+          v-list-item(href="#ex--external-events-drag-and-drop" v-scroll-to="'#ex--external-events-drag-and-drop'") External events drag &amp; drop
           v-list-item(href="#ex--multiple-day-events" v-scroll-to="'#ex--multiple-day-events'") Multiple day events
-          v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'")
-            | Recurring events
-            v-chip.xsmall.ml-2(small color="red" outlined) DELAYED
+          v-list-item(href="#ex--recurring-events" v-scroll-to="'#ex--recurring-events'") Recurring events
           v-list-item(href="#ex--overlapping-events" v-scroll-to="'#ex--overlapping-events'") Overlapping events
           v-list-item(href="#ex--background-events" v-scroll-to="'#ex--background-events'") Background events
           v-list-item(href="#ex--all-day-events" v-scroll-to="'#ex--all-day-events'") All day events
@@ -97,7 +89,9 @@
           v-list-item(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
           v-list-item(href="#ex--custom-event-rendering" v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
           v-list-item(href="#ex--custom-day-split-labels" v-scroll-to="'#ex--custom-day-split-labels'") Custom day split labels
-            v-chip.xsmall.ml-2(small color="primary" outlined) NEW
+
+          //- v-chip.xsmall.ml-2(small color="primary" outlined) NEW
+          //- v-chip.xsmall.ml-2(small color="blue" outlined) UPDATED
 </template>
 
 <script>
@@ -258,10 +252,19 @@ $lighter-text: #ccc;
     font-size: 1em;
     padding-left: 32px;
 
-    &.heading {padding-left: 8px;margin-top: 8px;color: #888 !important;}
+    &.heading {
+      padding-left: 8px;
+      margin-top: 8px;
+      color: #888 !important;
+    }
   }
 
-  .v-chip.xsmall {height: 16px;line-height: 1;font-size: 0.8em;padding: 0 7px;}
+  .v-chip.xsmall {
+    height: 16px;
+    line-height: 1;
+    font-size: 0.8em;
+    padding: 0 7px;
+  }
 
   .intro {
     position: absolute;

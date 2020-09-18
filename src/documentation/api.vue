@@ -144,7 +144,7 @@ div
     li
       code.mr-2 disableDays
       span.code [Array], default: []
-      p Allows you to provide an array of formatted dates to disable.
+      p Allows you to provide an array of formatted dates (e.g. #[span.code 2020-09-18]) to disable.
     li
       code.mr-2 disableViews
       span.code [Array], default: []

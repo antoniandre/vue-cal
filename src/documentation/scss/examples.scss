@@ -7,6 +7,10 @@ $primary: #42b983;
 
 .vuecal__event-title {font-weight: bold;}
 
+.ex--disable-days {
+  .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
+}
+
 .ex--min-max-dates {
   .vuecal__cell--disabled {text-decoration: line-through;}
   .vuecal__cell--before-min {color: #b6d6c7;}

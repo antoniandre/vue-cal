@@ -200,6 +200,43 @@ div
 
   //- Example.
   h4.title
+    a(href="#ex--disable-days") # Disable days
+    a#ex--disable-days(name="ex--disable-days")
+  p.
+    You can use the #[span.code disable-days] option to provide an array of formatted dates
+    (e.g. #[span.code 2020-09-18]) to disable.#[br]
+  v-card.my-2.ma-auto.main-content(style="width: 250px;height: 260px")
+    vue-cal.vuecal--green-theme.ex--disable-days(
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      active-view="month"
+      :disable-views="['week']"
+      :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
+  sshpre(language="html-vue" label="Vue Template").
+    &lt;!-- Using Vue Cal Date Prototypes subtractDays, format, addDays. --&gt;
+    &lt;vue-cal
+      xsmall
+      hide-view-selector
+      click-to-navigate
+      :time="false"
+      active-view="month"
+      :disable-views="['week']"
+      :disable-days="[
+        new Date().subtractDays(2).format(),
+        new Date().format(),
+        new Date().addDays(2).format()
+      ]"
+    &gt;&lt;/vue-cal&gt;
+
+  sshpre(language="css" label="CSS").
+    .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
+
+  highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title
     a(href="#ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
     a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
   p.
