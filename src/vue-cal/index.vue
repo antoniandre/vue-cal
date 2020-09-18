@@ -208,6 +208,7 @@ export default {
     dblclickToNavigate: { type: Boolean, default: true },
     disableDatePrototypes: { type: Boolean, default: false },
     disableViews: { type: Array, default: () => [] },
+    disableDays: { type: Array, default: () => [] },
     dragToCreateEvent: { type: Boolean, default: true },
     // Start a drag creation after dragging a certain amount of pixels.
     // This prevents drag creation by mistake when you want to navigate.

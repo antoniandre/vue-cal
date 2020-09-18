@@ -289,6 +289,8 @@ export default {
     },
     // Is the current cell disabled or not.
     isDisabled () {
+      const { disableDays } = this.options
+      if (disableDays.length && disableDays.includes(this.data.formattedDate)) return true
       return this.isBeforeMinDate || this.isAfterMaxDate
     },
     // Is the current cell selected or not.
