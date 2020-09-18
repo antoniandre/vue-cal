@@ -113,7 +113,7 @@ export default {
       this.vuecal.emitWithEvent('event-mouse-leave', this.event)
     },
 
-    // Detect if user taps on an event or drags it. If dragging don't fire the event-click handler (if any).
+    // Detect if user taps on an event or drags it. If dragging, don't fire the event-click handler (if any).
     onTouchMove (e) {
       // Skip the maths if there is no event click handler.
       if (typeof this.vuecal.onEventClick !== 'function') return
