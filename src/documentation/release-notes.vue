@@ -1,5 +1,8 @@
 <template lang="pug">
 div
+  div.mb-1
+    strong.mr-1 Version 3.7.0
+    | Add a new #[span.code disable-days] option.
   div.grey--text.mb-1
     strong.mr-1 Version 3.6.5
     | Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.

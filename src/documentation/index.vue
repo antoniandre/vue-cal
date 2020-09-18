@@ -56,7 +56,7 @@
   p.mb-4 Here is my ongoing to do list.
 
   .layout.wrap.align-center
-    strong.mr-3 Earlier
+    strong.mr-3 Done
     todo-list-item default active view
     todo-list-item Enable / disable views
     todo-list-item Hide / show weekends
@@ -103,7 +103,8 @@
     todo-list-item Drag &amp; drop events
     todo-list-item Resize events snap to time
     todo-list-item Drag events snap to time
-    todo-list-item Drop external events into Vue Cal
+    todo-list-item Drag &amp; drop ext. events into Vue Cal
+    todo-list-item Disable days
 
   .layout.wrap.align-center.mt-4
     strong.mr-3 Current backlog
@@ -117,6 +118,7 @@
     todo-list-item(status="todo") Improve multiple day events Month view
     todo-list-item(status="todo") Prevent event intersect. on drag/resize
     todo-list-item(status="todo") Horizontal timeline
+    todo-list-item(status="todo") Support Vue 3
     //- TODO:
       General
       - do all the @todo in the codebase

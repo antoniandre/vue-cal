@@ -17,6 +17,7 @@ div
     clickToNavigate:        [Boolean],         default: false
     dblclickToNavigate:     [Boolean],         default: true
     disableDatePrototypes:  [Boolean],         default: false
+    disableDays:            [Array],           default: []
     disableViews:           [Array],           default: []
     dragToCreateEvent:      [Boolean],         default: true
     dragToCreateThreshold:  [Number],          default: 15
@@ -140,6 +141,10 @@ div
         This option will apply on month &amp; week views.#[br]#[br]
         If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
         #[span.code hideWeekends] in supplement of #[span.code hideWeekdays].
+    li
+      code.mr-2 disableDays
+      span.code [Array], default: []
+      p Allows you to provide an array of formatted dates to disable.
     li
       code.mr-2 disableViews
       span.code [Array], default: []
