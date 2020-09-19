@@ -1,8 +1,8 @@
-import Vue from 'vue'
+const app = createApp({})
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-Vue.use(Vuetify)
+app.use(Vuetify)
 
 export default new Vuetify({
   icons: {

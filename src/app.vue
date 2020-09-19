@@ -1,20 +1,22 @@
 <template lang="pug">
-  v-app(:class="{ ready }" v-scroll="onScroll")
-    v-container
-      top-bar(:offset-top="offsetTop")
-      router-view
+//- Vuetify does not work on Vue 3 yet.
+//- v-app(:class="{ ready }" v-scroll="onScroll")
+  v-container
+    top-bar(:offset-top="offsetTop")
+    router-view
 
-    v-fab-transition
-      v-btn(color="primary" fixed bottom right fab v-show="!goTopHidden" small href="#top")
-        v-icon(color="white" size="26") keyboard_arrow_up
+  v-fab-transition
+    v-btn(color="primary" fixed bottom right fab v-show="!goTopHidden" small href="#top")
+      v-icon(color="white" size="26") keyboard_arrow_up
 
-    v-footer.px-2(color="white")
-      v-layout.mx-auto.container.grey--text.text--darken-1(row wrap align-center justify-center)
-        v-flex.xs12.sm6.text-center.text-sm-left.copyright.
-          Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-        v-flex.xs12.sm6.text-center.text-sm-right.made-with
-          .mb-1 This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]
-          | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].
+  v-footer.px-2(color="white")
+    v-layout.mx-auto.container.grey--text.text--darken-1(row wrap align-center justify-center)
+      v-flex.xs12.sm6.text-center.text-sm-left.copyright.
+        Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
+      v-flex.xs12.sm6.text-center.text-sm-right.made-with
+        .mb-1 This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]
+        | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].
+router-view
 </template>
 
 <script>
