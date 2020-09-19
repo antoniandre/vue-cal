@@ -4,15 +4,15 @@
     v-if="!options.hideViewSelector"
     role="tablist"
     aria-label="Calendar views navigation")
-    button.vuecal__view-btn(
-      type="button"
-      v-if="v.enabled"
-      :class="{ 'vuecal__view-btn--active': view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
-      v-for="(v, id) in viewProps.views"
-      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, id, $data)"
-      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, id, $data)"
-      @click="switchView(id, null, true)"
-      :aria-label="`${v.label} view`") {{ v.label }}
+    template(v-for="(v, id) in viewProps.views")
+      button.vuecal__view-btn(
+        v-if="v.enabled"
+        type="button"
+        :class="{ 'vuecal__view-btn--active': view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
+        @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, id, $data)"
+        @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, id, $data)"
+        @click="switchView(id, null, true)"
+        :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
       type="button"
@@ -54,9 +54,9 @@
     :week-days="weekDays"
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView")
-    template(v-slot:weekday-heading="{ heading, view }")
+    template(#weekday-heading="{ heading, view }")
       slot(name="weekday-heading" :heading="heading" :view="view")
-    template(v-slot:split-label="{ split }")
+    template(#split-label="{ split }")
       slot(name="split-label" :split="split" :view="view")
 
   //- Sticky split-days headers on day view only.

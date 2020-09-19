@@ -17,7 +17,7 @@
       :min-timestamp="options.minTimestamp"
       :max-timestamp="options.maxTimestamp"
       :cell-splits="daySplits")
-      template(v-slot:event="{ event, view }")
+      template(#event="{ event, view }")
         slot(name="event" :view="view" :event="event")
 </template>
 

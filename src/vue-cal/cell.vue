@@ -44,7 +44,7 @@ transition-group.vuecal__cell(
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
         :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak")
-        template(v-slot:event="{ event, view }")
+        template(#event="{ event, view }")
           slot(name="event" :view="view" :event="event")
   .vuecal__now-line(
     v-if="timelineVisible"

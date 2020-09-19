@@ -1,28 +1,27 @@
 <template lang="pug">
 //- weekdays-headings are on week view only.
 .vuecal__flex.vuecal__weekdays-headings
-  .vuecal__flex.vuecal__heading(
-    :class="{ today: heading.today, clickable: cellHeadingsClickable }"
-    v-for="(heading, i) in headings"
-    :key="i"
-    v-if="!heading.hide"
-    :style="weekdayCellStyles"
-    @click="view.id === 'week' && selectCell(heading.date, $event)"
-    @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
-    transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
-      .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
-        .vuecal__flex.weekday-label(grow)
-          slot(name="weekday-heading" :heading="cleanupHeading(heading)" :view="view")
-            //- For small/xsmall option. 3 media queries also truncate weekdays.
-            span.full {{ heading.full }}
-            span.small {{ heading.small }}
-            span.xsmall {{ heading.xsmall }}
-            span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
-        .vuecal__flex.vuecal__split-days-headers(
-          v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
-          grow)
-          .day-split-header(v-for="(split, i) in vuecal.daySplits" :key="i" :class="split.class || false")
-            slot(name="split-label" :split="split" :view="view") {{ split.label }}
+  template(v-for="(heading, i) in headings" :key="i")
+    .vuecal__flex.vuecal__heading(
+      v-if="!heading.hide"
+      :class="{ today: heading.today, clickable: cellHeadingsClickable }"
+      :style="weekdayCellStyles"
+      @click="view.id === 'week' && selectCell(heading.date, $event)"
+      @dblclick="view.id === 'week' && vuecal.dblclickToNavigate && switchToNarrowerView()")
+      transition(:name="`slide-fade--${transitionDirection}`" :appear="vuecal.transitions")
+        .vuecal__flex(column :key="vuecal.transitions ? `${i}-${heading.dayOfMonth}` : false")
+          .vuecal__flex.weekday-label(grow)
+            slot(name="weekday-heading" :heading="cleanupHeading(heading)" :view="view")
+              //- For small/xsmall option. 3 media queries also truncate weekdays.
+              span.full {{ heading.full }}
+              span.small {{ heading.small }}
+              span.xsmall {{ heading.xsmall }}
+              span(v-if="heading.dayOfMonth") &nbsp;{{ heading.dayOfMonth }}
+          .vuecal__flex.vuecal__split-days-headers(
+            v-if="vuecal.hasSplits && vuecal.stickySplitLabels"
+            grow)
+            .day-split-header(v-for="(split, i) in vuecal.daySplits" :key="i" :class="split.class || false")
+              slot(name="split-label" :split="split" :view="view") {{ split.label }}
 </template>
 
 <script>
