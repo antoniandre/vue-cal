@@ -37,16 +37,21 @@
           target="_blank"
           style="width: 50px;color: #497ca2;text-decoration: underline")
           | #[strong Wave UI]
-        | #[br]Star it and share it!
 
   v-layout.my-8(align-center)
     v-icon.mr-4(size="50" color="pink lighten-3") favorite
     v-alert.ma-0(dense border="left" text color="pink" style="width: 100%;max-width: 600px")
       | If you like Vue Cal, you can
-      a.pink--text.ml-2(
+      a.pink--text.mx-2(
         href="https://www.paypal.me/antoniandre1"
         target="_blank"
-        style="text-decoration: underline") #[strong Support the project]!
+        style="text-decoration: underline") #[strong Support the project]
+      | or
+      a.pink--text.ml-2(
+        href="https://github.com/sponsors/antoniandre"
+        target="_blank"
+        style="text-decoration: underline") #[strong Sponsor the author]
+      | !
       div Thank you so much to all the supporters! #[span.headline.ml-1 🙏]
 
   //- To Do list.
