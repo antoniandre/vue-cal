@@ -11,5 +11,5 @@
   "allDay": "Бүх өдөр",
   "deleteEvent": "Устгах",
   "createEvent": "Шинэ тэмдэглэл",
-  "dateFormat": "dddd MMMM D{S}, YYYY"
+  "dateFormat": "dddd D MMMM YYYY"
 }

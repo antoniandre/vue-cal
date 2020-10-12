@@ -408,6 +408,7 @@ const localesList = [
   { code: 'ja', label: 'Japanese' },
   { code: 'ko', label: 'Korean' },
   { code: 'lt', label: 'Lithuanian' },
+  { code: 'mn', label: 'Mongolian' },
   { code: 'no', label: 'Norwegian' },
   { code: 'pl', label: 'Polish' },
   { code: 'pt-br', label: 'Portuguese Brasilian' },
