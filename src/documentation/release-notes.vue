@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.mb-1
+    strong.mr-1 Version 3.8.0
+    | Add Mongolian language.
+  div.mb-1
     strong.mr-1 Version 3.7.0
     | Add a new #[span.code disable-days] option.
   div.grey--text.mb-1
@@ -41,7 +44,7 @@ div
   div.grey--text.mb-1
     strong Version 3.5.1
     ul
-      li Don't fire cell-click when cklicking on an event
+      li Don't fire cell-click when clicking on an event
       li Focus and highlight cell on mousedown rather than click
   div.
     #[strong Version 3.5.0] Create events with click &amp; drag.
