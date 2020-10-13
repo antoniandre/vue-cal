@@ -224,7 +224,7 @@ div
         #[span.code week-number-cell] slot.
       highlight-message
         a#there-can-be-53-weeks-in-a-year(name="there-can-be-53-weeks-in-a-year")
-        Strong Did you know there can be 53 weeks in the year?#[br]
+        strong Did you know there can be 53 weeks in the year?#[br]
         | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year.
         | In this case the week number will be 53 instead of 1.
     li

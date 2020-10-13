@@ -4,7 +4,7 @@ div
     a(href="#examples") Examples
     a#examples(name="examples")
   highlight-message.mt-3(type="success" no-icon)
-    v-layout
+    .layout
       v-icon.ml-1.mr-3(color="green lighten-2") fab fa-codepen
       div
         .title Try it yourself on Codepen. Here is a set of frequent use cases:
@@ -73,7 +73,7 @@ div
     Apply the css class #[span.code vuecal--date-picker] to have the date picker look bellow.#[br]
     you can also disable the transitions to have a fast effect.
 
-  v-layout.ma-auto(justify-center wrap)
+  .layout.ma-auto.justify-center.wrap
     v-card.ma-2.main-content(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
@@ -270,11 +270,11 @@ div
     a(href="#ex--internationalization")
       v-icon.mr-2 translate
       | Internationalization (i18n)
-  v-layout(align-end wrap)
+  .layout.align-end.wrap
     h4.title.mt-6
       a(href="#ex--internationalization") # Internationalization
-    v-spacer
-    v-layout.shrink(align-center)
+    .spacer
+    .layout.shrink.align-center
       v-icon.mr-2(color="primary") translate
       span.mr-2 Current language:
       v-select.pa-0.ma-0.shrink(
@@ -409,7 +409,7 @@ div
     | #[br]You might want to change view as well when going to Today's date, here is an example how:
     a.mx-1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
     v-icon(small color="green lighten-2") fab fa-codepen
-  v-layout(justify-center)
+  .layout.justify-center
     v-card.my-2.mr-3.main-content(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
@@ -685,7 +685,7 @@ div
       v-radio(label="dash" value="dash" color="primary")
       v-radio(label="dot" value="dot" color="primary")
       v-radio(label="cell background" value="cell" color="primary")
-  v-layout.ma-auto(justify-center wrap)
+  .layout.ma-auto.justify-center.wrap
     v-card.ma-2.my-2.main-content(style="width: 300px;height: 360px")
       vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
@@ -961,7 +961,7 @@ div
         #[a(href="#ex--emitted-events") emitted events example]),
         you simply need to call the #[span.code createEvent()] function straight
         away from #[span.code cell-dblclick]:
-      v-layout(wrap)
+      .layout.wrap
         v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
@@ -1001,12 +1001,12 @@ div
       p.my-2.
         To allow an external button to create events, you will need to call the
         vue-cal #[span.code createEvent()] function from a Vue ref.
-      v-layout.mb-3(align-center)
+      .layout.mb-3.align-center
         | This
         v-btn.mx-1(x-small color="primary" @click="customEventCreation") button
         | will prompt you to choose a date and time as the event start.
 
-      v-layout(align-top wrap)
+      .layout.align-top.wrap
         v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
@@ -1089,7 +1089,7 @@ div
       p.
         In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
         The dialog box will allow you to set all the event attributes.
-      v-layout(wrap)
+      .layout.wrap
         v-card.flex.my-2.mr-3(style="height: 280px")
           vue-cal.flex.vuecal--green-theme.vuecal--full-height-delete(
             small
@@ -1337,7 +1337,7 @@ div
       modify the data, you will also have to remove the event from its original data source yourself
       - unless you want to create a copy.#[br]
       Learn how in the example source code bellow.
-  v-layout.mt-4(wrap)
+  .layout.mt-4.wrap
     div.mr-2
       .external-event(
         v-for="(item, i) in draggables"
@@ -1622,7 +1622,7 @@ div
     Overlapping, editable &amp; deletable events.#[br]
     Try to resize &amp; delete events to see the overlapping redrawn.
 
-  v-layout.mb-3(align-center)
+  .layout.mb-3.align-center
     | Optionally you can set a min width (in percent) to the events:
     v-btn.ml-2(small color="primary" @click="minEventWidth = minEventWidth ? 0 : 50")
       v-icon {{ minEventWidth ? 'close' : 'add' }}
@@ -1858,7 +1858,7 @@ div
 
     | Refer to the #[span.code min-cell-width.black--text], #[span.code min-split-width] and #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
 
-    v-layout(align-center)
+    .layout.align-center
       v-btn.px-2.mr-2(
         small
         color="primary"
@@ -2107,11 +2107,11 @@ div
 
   p.mb-0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
   pre.mt-2.ssh-pre.mb-2
-    v-layout(wrap align-center)
+    .layout.wrap.align-center
       .grey--text //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
-      v-spacer
+      .spacer
       v-btn(color="primary" outlined small @click="clearEventsLog")
         v-icon(small).mr-1 clear
         | Clear log
@@ -2189,7 +2189,7 @@ div
     keeps it updated when Vue Cal changes the view internally. For instance when you click the title to go
     to a broader view.
 
-  v-layout.my-2.mx-auto(align-center style="max-width: 500px")
+  .layout.my-2.mx-auto.align-center(style="max-width: 500px")
     v-btn.mx-1.px-2.flex(small color="primary darken-1" @click="activeView = 'day'")
       v-icon.ml-n2.mr-1(small v-if="activeView === 'day'") check
       | Day
@@ -2206,7 +2206,7 @@ div
       v-icon.ml-n2.mr-1(small v-if="activeView === 'years'") check
       | Years
 
-  v-layout.mt-2.mb-6.mx-auto(justify-center style="max-width: 500px")
+  .layout.mt-2.mb-6.mx-auto.justify-center(style="max-width: 500px")
     v-btn.mx-1.flex(small color="primary lighten-1" @click="$refs.vuecal4.previous()")
       v-icon.mr-1 keyboard_arrow_left
       | Previous
@@ -2217,7 +2217,7 @@ div
       | Next
       v-icon.ml-1 keyboard_arrow_right
 
-  v-layout(align-center justify-center)
+  .layout.align-center.justify-center
     vue-cal.vuecal--green-theme(
       small
       ref="vuecal4"
@@ -2274,7 +2274,7 @@ div
     To know more about emitted events refer to the
     #[a(href="#ex--emitted-events") emitted events example].
 
-  v-layout(align-center justify-center)
+  .layout.align-center.justify-center
     vue-cal.vuecal--blue-theme(
       small
       :time="false"
@@ -2413,7 +2413,7 @@ div
   v-btn.mt-2.mr-2(small color="primary" @click="scrollToTop('.ex--scroll-to-time')")
     v-icon vertical_align_top
     | Scroll to top
-  v-layout(wrap)
+  .layout.wrap
     v-card.my-4.mr-2.flex(style="width: 360px;height: 360px;max-width: 100%")
       vue-cal.ex--scroll-to-time.vuecal--green-theme(
         small
@@ -2530,7 +2530,7 @@ div
     Alternatively, you could also use the #[span.code cell-content] slot
     instead of the #[span.code events-count] slot to perform the same task:#[br]
     (Refer to the next example to know more:
-    #[a(href="#ex--custom-title-and-cells" v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells])
+    #[a(href="#ex--custom-title-and-cells") Custom title &amp; cells])
   sshpre.mt-2(language="html-vue" label="Vue Template").
     &lt;template v-slot:cell-content="{ cell, view, events }"&gt;
       &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
@@ -2840,7 +2840,7 @@ div
       v-card-title.primary.white--text.py-2
         v-icon.mr-3(color="white") {{ selectedEvent.icon }}
         span.headline.text-uppercase {{ selectedEvent.title }}
-        v-spacer
+        .spacer
         strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
       v-card-text.py-4
         p(v-html="selectedEvent.contentFull")
@@ -2855,7 +2855,7 @@ div
         v-text-field.ma-0.pa-0(v-model="selectedEvent.title" placeholder="Event Title" hide-details color="white")
       v-card-text.pa-2
         v-textarea.pa-0(v-model="selectedEvent.content" placeholder="Event Content" rows="3" hide-details)
-        v-layout.justify-space-between
+        .layout.justify-space-between
           v-select.flex.shrink(
             :items="eventsCssClasses"
             placeholder="Event CSS Class"
@@ -2864,8 +2864,8 @@ div
             hide-details
             style="max-width: 170px")
           v-switch.flex.shrink(v-model="selectedEvent.background" label="Background Event" color="primary")
-        v-layout.mt-2
-          v-spacer
+        .layout.mt-2
+          .spacer
           v-btn.ma-1(small @click="cancelEventCreation()") Cancel
           v-btn.ma-1(small color="primary" @click="closeCreationDialog()") Save
 </template>
