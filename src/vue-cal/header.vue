@@ -4,7 +4,7 @@
     v-if="!options.hideViewSelector"
     role="tablist"
     aria-label="Calendar views navigation")
-    template(v-for="(v, id) in viewProps.views")
+    template(v-for="(v, id) in viewProps.views" :key="id")
       button.vuecal__view-btn(
         v-if="v.enabled"
         type="button"
