@@ -94,7 +94,7 @@
                       v-if="event.content && !hasShortEvents && !isShortMonthView"
                       v-html="event.content")
               .vuecal__flex(
-                ref="cells"
+                :ref="el => cellsEl = el"
                 grow
                 :wrap="!cellOrSplitMinWidth || !isWeekView"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
@@ -270,8 +270,6 @@ export default {
         event: null
       },
       modules: { dnd: null },
-      // The $refs proxy does not keep the `cells` ref in Vue 3 because of the transition on one of the parents.
-      // @todo: handle this the Vue 3 way.
       cellsEl: null,
 
       // At any time this object will be filled with current view, visible events and selected date.
@@ -807,7 +805,7 @@ export default {
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.isWeekView) {
         event.daysCount = ud.countDays(event.start, event.end)
-        const cells = this.$refs.cells
+        const cells = this.cellsEl
         const cellWidth = cells.offsetWidth / cells.childElementCount
         const endCell = Math.floor(cursorCoords.x / cellWidth)
 
@@ -1186,10 +1184,6 @@ export default {
     const hasTouch = 'ontouchstart' in window
     const { resize, drag, create, delete: deletable, title } = this.editEvents
     const hasEventClickHandler = this.onEventClick && typeof this.onEventClick === 'function'
-
-    // The $refs proxy does not keep the `cells` ref in Vue 3 because of the transition on one of the parents.
-    // @todo: handle this the Vue 3 way.
-    this.cellsEl = this.$refs.cells
 
     // If event is editable in any way add a mouseup event handler.
     if (resize || drag || create || deletable || title || hasEventClickHandler) {
