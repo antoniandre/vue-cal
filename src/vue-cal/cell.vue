@@ -219,7 +219,7 @@ export default {
     // When click & holding a cell, and if allowed, set a timeout to create an event (can be cancelled).
     setUpCellHoldTimer (DOMEvent) {
       const { clickHoldACell } = this.domEvents
-      clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
+      clickHoldACell.cellId = `${this.vuecal._.uid}_${this.data.formattedDate}`
       // If splitting days, store the clicked split to create an event in it from the global
       // mousemove handler in index.vue.
       clickHoldACell.split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null

@@ -77,7 +77,7 @@ export default class EventUtils {
 
     const event = {
       ...this.eventDefaults,
-      _eid: `${this._vuecal._uid}_${this._vuecal.eventIdIncrement++}`,
+      _eid: `${this._vuecal._.uid}_${this._vuecal.eventIdIncrement++}`,
       start: dateTime,
       startTimeMinutes,
       end,

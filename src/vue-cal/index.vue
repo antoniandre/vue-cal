@@ -977,7 +977,7 @@ export default {
 
         event = Object.assign({ ...this.utils.event.eventDefaults }, event, {
           // Keep the event ids scoped to this calendar instance.
-          _eid: `${this._uid}_${this.eventIdIncrement++}`,
+          _eid: `${this._.uid}_${this.eventIdIncrement++}`,
           segments: multipleDays ? {} : null,
           start,
           startTimeMinutes,
