@@ -9,8 +9,15 @@
 ## Installation
 
 ```
-npm i --S vue-cal
+npm i vue-cal
 ```
+
+**Vue 3**
+
+```
+npm i vue-cal@next
+```
+
 ___
 
 ## Demo & Documentation

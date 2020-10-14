@@ -12,6 +12,7 @@
   },
   "main": "./dist/vuecal.common.js",
   "unpkg": "dist/vuecal.umd.min.js",
+  "jsdelivr": "dist/vuecal.umd.min.js",
   "files": [
     "dist",
     "package.json",
@@ -49,10 +50,10 @@
     "vuetify": "^2.3.14"
   },
   "keywords": [
+    "vue calendar",
     "full calendar",
-    "calendar",
-    "vue",
     "vuejs",
+    "vue3",
     "ui"
   ],
   "license": "MIT",
