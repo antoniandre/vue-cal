@@ -378,6 +378,7 @@ export default {
           const { DragAndDrop } = response
           this.modules.dnd = new DragAndDrop(this)
         })
+        // eslint-disable-next-line no-console
         .catch(() => console.warn('Vue Cal: Missing drag & drop module.'))
     },
 
