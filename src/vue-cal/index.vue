@@ -31,7 +31,7 @@
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
     transition(:name="`slide-fade--${transitionDirection}`" :appear="transitions")
       .vuecal__flex(style="min-width: 100%" :key="transitions ? view.id : false" column)
-        all-day-bar.vuecal__flex(
+        all-day-bar(
           v-if="showAllDayEvents && hasTimeColumn && (!cellOrSplitMinWidth || (isDayView && !minSplitWidth))"
           v-bind="allDayBar")
           template(v-slot:event="{ event, view }")
@@ -79,7 +79,7 @@
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
                 .day-split-header(v-for="(split, i) in daySplits" :key="i" :class="split.class || false")
                   slot(name="split-label" :split="split" :view="view.id") {{ split.label }}
-              all-day-bar.vuecal__flex(
+              all-day-bar(
                 v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
                 v-bind="allDayBar")
                 template(v-slot:event="{ event, view }")
@@ -964,7 +964,9 @@ export default {
         // Correct the common practice to end at 00:00 or 24:00 to count a full day.
         if (!endTimeMinutes || endTimeMinutes === minutesInADay) {
           // This also applies on timeless events, all-day events & multiple-day events.
-          if (!this.time) end.setHours(23, 59, 59, 0) // Sets to the same day at 23.59.59.
+          if (!this.time || (typeof event.end === 'string' && event.end.length === 10)) {
+            end.setHours(23, 59, 59, 0) // Sets to the same day at 23.59.59.
+          }
           else end.setSeconds(end.getSeconds() - 1) // Sets to the previous day at 23.59.59.
           endDateF = ud.formatDateLite(end)
           endTimeMinutes = minutesInADay
