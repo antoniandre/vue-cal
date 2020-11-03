@@ -404,6 +404,13 @@ export default {
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
     switchView (view, date = null, fromViewSelector = false) {
+
+      const validViews = ['years', 'year', 'month', 'week', 'day']
+      if (!view || validViews.indexOf(view) === -1) {
+        throw new Error(`Invalid view value, please supply one of the following: ${views.join()}`)
+        return;
+      }
+
       const ud = this.utils.date
       // This is user to prevent firing the custom event twice when syncing activeView.
       const viewDateBeforeChange = this.view.startDate && this.view.startDate.getTime()
