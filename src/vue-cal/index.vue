@@ -980,13 +980,19 @@ export default {
       // Populate missing keys: start, startDate, startTimeMinutes, end, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // `event.start` accepts a Date object, or a formatted string, always keep Date.
+        // `event.start` accepts a Date object, or a formatted string, but always convert to Date.
         const start = typeof event.start === 'string' ? ud.stringToDate(event.start) : event.start
         const startDateF = ud.formatDateLite(start)
         const startTimeMinutes = ud.dateToMinutes(start)
 
-        // `event.end` accepts a Date object or a formatted string, always keep Date.
-        const end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
+        // `event.end` accepts a Date object or a formatted string, but always convert to Date.
+        let end = null
+        // Safari does not convert new Date(YYYY-MM-DD 24:00) to a valid date. #340.
+        if (typeof event.end === 'string' && event.end.includes('24:00')) {
+          end = new Date(event.end.replace(' 24:00', ''))
+          end.setHours(23, 59, 59, 0) // Sets to the same day at 23.59.59.
+        }
+        else end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
         let endDateF = ud.formatDateLite(end)
         let endTimeMinutes = ud.dateToMinutes(end)
 
