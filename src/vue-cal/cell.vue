@@ -269,7 +269,7 @@ export default {
       // If splitting days, also return the clicked split on cell contextmenu when emitting event.
       const split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null
 
-      this.vuecal.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}) })
+      this.vuecal.$emit('cell-contextmenu', { date, ...cursorCoords, ...(split || {}), e: DOMEvent })
     }
   },
 

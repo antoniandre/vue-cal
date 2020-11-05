@@ -1,6 +1,24 @@
 <template lang="pug">
 div
   div.mb-1
+    .title.mb-5 Version 4.0.0: supports and only works on Vue 3.
+
+  div.grey--text.mb-1
+    strong.mr-1 Version 3.8.4
+    | Fix showing events ending at 24:00 on Safari.
+
+  div.grey--text.mb-1
+    strong.mr-1 Version 3.8.3
+    | Return the full original DOM event from #[span.code cell-contextmenu].
+
+  div.grey--text.mb-1
+    strong.mr-1 Version 3.8.2
+    | Add #[span.code active-view] validations and raise warning if incorrect.
+
+  div.grey--text.mb-1
+    strong.mr-1 Version 3.8.1
+    | Fix all-day events when no time information is provided.
+  div.mb-1
     strong.mr-1 Version 3.8.0
     | Add Mongolian language.
   div.mb-1
@@ -203,7 +221,7 @@ div
     v-btn.ml-n5.primary--text(rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       v-icon.mr-2 {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
       strong {{ seeOldReleaseNotes ? 'Hide' : 'See' }} older release notes
-    .divider.primary
+    .v-divider.primary
 
   v-slide-y-transition
     div(v-if="seeOldReleaseNotes")

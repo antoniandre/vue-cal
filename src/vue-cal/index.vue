@@ -170,6 +170,8 @@ const textsDefaults = {
   pm: 'pm'
 }
 
+const validViews = ['years', 'year', 'month', 'week', 'day']
+
 // Only 1 instance of DateUtils for all the instances of Vue Cal, created when first importing the Vue Cal lib.
 // The dateUtils does not need to be dependent of Vue Cal instance, it only needs localized texts when ready.
 // This becomes a problem when showing multiple instances of Vue Cal with different locales like in the
@@ -181,7 +183,7 @@ export default {
   components: { 'vuecal-cell': Cell, 'vuecal-header': Header, WeekdaysHeadings, AllDayBar },
 
   // By Vue design, passing props loses the reactivity unless it's a method or reactive OBJECT.
-  provide: function () {
+  provide () {
     return {
       vuecal: this,
       utils: this.utils,
@@ -383,6 +385,30 @@ export default {
     },
 
     /**
+     * Checks that the given view is in the array of valid views or use 'week' otherwise.
+     * Then check the view is enabled or use the first enabled view instead.
+     * Raises error and warning if needed.
+     *
+     * @param {String} view The view to validate.
+     * @return {String} a valid view.
+     */
+    validateView (view) {
+      if (!validViews.includes(view)) {
+        // eslint-disable-next-line no-console
+        console.error(`Vue Cal: invalid view parameter provided: "${view}".\nA valid view must be one of: ${validViews.join(', ')}.`)
+        view = 'week'
+      }
+
+      if (!this.enabledViews.includes(view)) {
+        // eslint-disable-next-line no-console
+        console.warn(`Vue Cal: the provided view "${view}" is disabled. Using the "${this.enabledViews[0]}" view instead.`)
+        view = this.enabledViews[0]
+      }
+
+      return view
+    },
+
+    /**
      * On click/dblclick of a cell go to a narrower view if available.
      * E.g. Click on month cell takes you to week view if not hidden, otherwise on day view if not hidden.
      *
@@ -405,6 +431,8 @@ export default {
      * @param {Boolean} fromViewSelector to know if the caller is the built-in view selector.
      */
     switchView (view, date = null, fromViewSelector = false) {
+      view = this.validateView(view)
+
       const ud = this.utils.date
       // This is user to prevent firing the custom event twice when syncing activeView.
       const viewDateBeforeChange = this.view.startDate && this.view.startDate.getTime()
@@ -953,13 +981,19 @@ export default {
       // Populate missing keys: start, startDate, startTimeMinutes, end, endTimeMinutes, daysCount.
       // Lots of these variables may look redundant but are here for performance as a cached result of calculation. :)
       this.events.forEach(event => {
-        // `event.start` accepts a Date object, or a formatted string, always keep Date.
+        // `event.start` accepts a Date object, or a formatted string, but always convert to Date.
         const start = typeof event.start === 'string' ? ud.stringToDate(event.start) : event.start
         const startDateF = ud.formatDateLite(start)
         const startTimeMinutes = ud.dateToMinutes(start)
 
-        // `event.end` accepts a Date object or a formatted string, always keep Date.
-        const end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
+        // `event.end` accepts a Date object or a formatted string, but always convert to Date.
+        let end = null
+        // Safari does not convert new Date(YYYY-MM-DD 24:00) to a valid date. #340.
+        if (typeof event.end === 'string' && event.end.includes('24:00')) {
+          end = new Date(event.end.replace(' 24:00', ''))
+          end.setHours(23, 59, 59, 0) // Sets to the same day at 23.59.59.
+        }
+        else end = typeof event.end === 'string' ? ud.stringToDate(event.end) : event.end
         let endDateF = ud.formatDateLite(end)
         let endTimeMinutes = ud.dateToMinutes(end)
 
@@ -1167,11 +1201,11 @@ export default {
     // Init the array of events, then keep listening for changes in watcher.
     this.updateMutableEvents(this.events)
 
-    this.view.id = this.activeView
+    this.view.id = this.currentView
     if (this.selectedDate) this.updateSelectedDate(this.selectedDate)
     else {
       this.view.selectedDate = new Date()
-      this.switchView(this.activeView)
+      this.switchView(this.currentView)
     }
 
     // Timers are expensive, this should only trigger on demand.
@@ -1264,6 +1298,9 @@ export default {
         week: { label: this.texts.week, enabled: !this.disableViews.includes('week') },
         day: { label: this.texts.day, enabled: !this.disableViews.includes('day') }
       }
+    },
+    currentView () {
+      return this.validateView(this.activeView)
     },
     enabledViews () {
       return Object.keys(this.views).filter(view => this.views[view].enabled)

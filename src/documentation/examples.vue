@@ -749,7 +749,7 @@ div
     If #[span.code events-on-month-view] is set to #[span.code true], all the informations are displayed, you can then hide
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  v-card.my-2.ma-auto.main-content
+  v-card.my-2.ma-auto.main-content(style="height: 600px")
     vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -757,8 +757,7 @@ div
       active-view="month"
       hide-weekends
       events-on-month-view="short"
-      :events="events"
-      style="height: 600px")
+      :events="events")
   sshpre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
