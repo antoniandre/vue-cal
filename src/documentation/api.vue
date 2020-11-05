@@ -14,6 +14,7 @@ div
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
+    cellContextmenu:        [Boolean],         default: false
     clickToNavigate:        [Boolean],         default: false
     dblclickToNavigate:     [Boolean],         default: true
     disableDatePrototypes:  [Boolean],         default: false
@@ -325,6 +326,12 @@ div
       p.
         Allows you to disable the default event creation on cell click &amp; hold which only
         happens if #[span.code editableEvents.create] is set to #[span.code true].
+    li
+      code.mr-2 cellContextmenu
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], a right click on a cell will emit the #[span.code cell-contextmenu] event,
+        providing an object containing: the date and time at cursor, the x and y position of cursor, and the full original DOM event.
     li
       code.mr-2 time
       span.code [Boolean], default: true

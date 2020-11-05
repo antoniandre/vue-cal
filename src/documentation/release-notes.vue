@@ -4,6 +4,14 @@ div
     .title.mb-5 Version 4.0.0: supports and only works on Vue 3.
 
   div.grey--text.mb-1
+    strong.mr-1 Version 3.8.3
+    | Return the full original DOM event from #[span.code cell-contextmenu].
+
+  div.grey--text.mb-1
+    strong.mr-1 Version 3.8.2
+    | Add #[span.code active-view] validations and raise warning if incorrect.
+
+  div.grey--text.mb-1
     strong.mr-1 Version 3.8.1
     | Fix all-day events when no time information is provided.
   div.mb-1
