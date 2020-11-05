@@ -4,6 +4,10 @@ div
     .title.mb-5 Version 4.0.0: supports and only works on Vue 3.
 
   div.grey--text.mb-1
+    strong.mr-1 Version 3.8.4
+    | Fix showing events ending at 24:00 on Safari.
+
+  div.grey--text.mb-1
     strong.mr-1 Version 3.8.3
     | Return the full original DOM event from #[span.code cell-contextmenu].
 
