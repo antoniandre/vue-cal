@@ -224,7 +224,7 @@ export default {
     hideViewSelector: { type: Boolean, default: false },
     hideWeekdays: { type: Array, default: () => [] },
     hideWeekends: { type: Boolean, default: false },
-    locale: { type: String, default: 'en' },
+    locale: { type: [String, Object], default: 'en' },
     maxDate: { type: [String, Date], default: '' },
     minCellWidth: { type: Number, default: 0 },
     minDate: { type: [String, Date], default: '' },
@@ -356,9 +356,15 @@ export default {
     /**
      * Only import locale on demand to keep a small library weight.
      *
-     * @param {String} locale the language user whishes to have on vue-cal
+     * @param {String|Object} locale the language user whishes to have on vue-cal.
      */
     loadLocale (locale) {
+      if (typeof this.locale === 'object') {
+        this.texts = Object.assign({}, textsDefaults, locale)
+        this.utils.date.updateTexts(this.texts)
+        return
+      }
+
       if (this.locale === 'en') this.texts = Object.assign({}, textsDefaults, require('./i18n/en.json'))
       else {
         // Template litteral `./i18n/${locale}` still crashes eslint...

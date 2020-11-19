@@ -308,6 +308,14 @@ div
     import 'vue-cal/dist/i18n/{{ locale }}.js'
     import 'vue-cal/dist/vuecal.css'
 
+  h4 Alternative
+  p.
+    If you need full control on the texts, you can alternatively provide an object containing all the
+    texts (start from the locale JSON file matching your language).#[br]
+    Keep in mind this is not the recommended way: texts may be added / modified / removed in the library
+    and your provided custom texts may not work anymore.#[br]
+    Always prefer the standard locales!
+
   h3.title
     a(href="#ex--timeline")
       v-icon.mr-2 access_time
@@ -319,7 +327,8 @@ div
     a#ex--timeline(name="ex--timeline")
   p.
     Timelines are only visible on #[span.code week] and #[span.code day] view.#[br]
-    This example has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default), 24-hour format, and hidden weekends.
+    This example has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default),
+    24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   sshpre(language="html-vue" label="Vue Template").
