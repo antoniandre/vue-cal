@@ -400,13 +400,13 @@ export default {
     validateView (view) {
       if (!validViews.includes(view)) {
         // eslint-disable-next-line no-console
-        console.error(`Vue Cal: invalid view parameter provided: "${view}".\nA valid view must be one of: ${validViews.join(', ')}.`)
+        console.error(`Vue Cal: invalid active-view parameter provided: "${view}".\nA valid view must be one of: ${validViews.join(', ')}.`)
         view = 'week'
       }
 
       if (!this.enabledViews.includes(view)) {
         // eslint-disable-next-line no-console
-        console.warn(`Vue Cal: the provided view "${view}" is disabled. Using the "${this.enabledViews[0]}" view instead.`)
+        console.warn(`Vue Cal: the provided active-view "${view}" is disabled. Using the "${this.enabledViews[0]}" view instead.`)
         view = this.enabledViews[0]
       }
 
