@@ -4,6 +4,10 @@ div
     .title.mb-5 Version 4.0.0: supports and only works on Vue 3.
 
   div.grey--text.mb-1
+    strong.mr-1 Version 3.9.1
+    | Fix: Prevent disabling full month or year when using #[span.code disable-days].
+
+  div.grey--text.mb-1
     strong.mr-1 Version 3.9.0
     | Allow full custom locale.
 
