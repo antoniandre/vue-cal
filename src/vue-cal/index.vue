@@ -1413,12 +1413,12 @@ export default {
     specialDayHours () {
       if (!this.specialHours || !Object.keys(this.specialHours).length) return {}
 
-      const specialDayHours = Array(7).fill([]).map((cell, i) => {
+      return Array(7).fill('').map((cell, i) => {
         let day = this.specialHours[i + 1] || []
         if (!Array.isArray(day)) day = [day]
-        console.log(day, 'here')
-        day.forEach((block, j) => {
-          let { from, to, class: Class } = block
+        cell = []
+
+        day.forEach(({ from, to, class: Class }, j) => {
           cell[j] = {
             day: i + 1,
             from: ![null, undefined].includes(from) ? from * 1 : null,
@@ -1427,16 +1427,7 @@ export default {
           }
         })
         return cell
-        // const { from, to, class: Class } = this.specialHours[i + 1] || {}
-        // return {
-        //   day: i + 1,
-        //   from: ![null, undefined].includes(from) ? from * 1 : null,
-        //   to: ![null, undefined].includes(to) ? to * 1 : null,
-        //   class: Class || ''
-        // }
       })
-      console.log(specialDayHours, this.specialHours)
-      return specialDayHours
     },
     viewTitle () {
       const ud = this.utils.date

@@ -25,10 +25,10 @@ transition-group.vuecal__cell(
     @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate)"
     @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, splitsCount ? split.id : null)")
     template(v-if="isWeekOrDayView && !allDay && specialHours.length")
-    .vuecal__special-hours(
-      v-for="(block, i) in specialHours"
-      :class="`vuecal__special-hours--day${block.day} ${block.class}`"
-      :style="`height: ${block.height}px;top: ${block.top}px`")
+      .vuecal__special-hours(
+        v-for="(block, i) in specialHours"
+        :class="`vuecal__special-hours--day${block.day} ${block.class}`"
+        :style="`height: ${block.height}px;top: ${block.top}px`")
     slot(
       name="cell-content"
       :events="events"
@@ -324,25 +324,17 @@ export default {
       return this.vuecal.transitionDirection
     },
     specialHours () {
-      // console.log(this.data.specialHours)
-      return []
-      // if (Array.isArray(this.data.specialHours)) {
-      //   return this.data.specialHours.map(block => {
-      //     let { from, to } = block
-      //     from = Math.max(from, this.options.timeFrom)
-      //     to = Math.min(to, this.options.timeTo)
-      //   })
-      // }
-      // else {
-      //   let { from, to } = this.data.specialHours
-      //   from = Math.max(from, this.options.timeFrom)
-      //   to = Math.min(to, this.options.timeTo)
-      //   return [{
-      //     ...this.data.specialHours,
-      //     height: (to - from) * this.timeScale,
-      //     top: (from - this.options.timeFrom) * this.timeScale
-      //   }]
-      // }
+      // this.data.specialHours is always an array, but may be empty.
+      return this.data.specialHours.map(block => {
+        let { from, to } = block
+        from = Math.max(from, this.options.timeFrom)
+        to = Math.min(to, this.options.timeTo)
+        return {
+          ...block,
+          height: (to - from) * this.timeScale,
+          top: (from - this.options.timeFrom) * this.timeScale
+        }
+      })
     },
     events () {
       const { startDate: cellStart, endDate: cellEnd } = this.data
