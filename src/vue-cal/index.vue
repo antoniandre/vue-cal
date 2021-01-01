@@ -1409,17 +1409,34 @@ export default {
     months () {
       return this.texts.months.map(month => ({ label: month }))
     },
-    // Prepare the special hours object once for all at root level and not in cell.
+    // Validate and fill up the special hours object once for all at root level and not in cell.
     specialDayHours () {
-      return Array(7).fill('').map((cell, i) => {
-        const { from, to, class: Class } = this.specialHours[i + 1] || {}
-        return {
-          day: i + 1,
-          from: ![null, undefined].includes(from) ? from * 1 : null,
-          to: ![null, undefined].includes(to) ? to * 1 : null,
-          class: Class || ''
-        }
+      if (!this.specialHours || !Object.keys(this.specialHours).length) return {}
+
+      const specialDayHours = Array(7).fill([]).map((cell, i) => {
+        let day = this.specialHours[i + 1] || []
+        if (!Array.isArray(day)) day = [day]
+        console.log(day, 'here')
+        day.forEach((block, j) => {
+          let { from, to, class: Class } = block
+          cell[j] = {
+            day: i + 1,
+            from: ![null, undefined].includes(from) ? from * 1 : null,
+            to: ![null, undefined].includes(to) ? to * 1 : null,
+            class: Class || ''
+          }
+        })
+        return cell
+        // const { from, to, class: Class } = this.specialHours[i + 1] || {}
+        // return {
+        //   day: i + 1,
+        //   from: ![null, undefined].includes(from) ? from * 1 : null,
+        //   to: ![null, undefined].includes(to) ? to * 1 : null,
+        //   class: Class || ''
+        // }
       })
+      console.log(specialDayHours, this.specialHours)
+      return specialDayHours
     },
     viewTitle () {
       const ud = this.utils.date
@@ -1569,7 +1586,7 @@ export default {
               endDate,
               // To increase performance skip checking isToday if today already found.
               today: !todayFound && ud.isToday(startDate) && !todayFound++,
-              specialHours: this.specialDayHours[dayOfWeek]
+              specialHours: this.specialDayHours[dayOfWeek] || []
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break
@@ -1585,7 +1602,7 @@ export default {
             formattedDate: ud.formatDateLite(startDate),
             endDate,
             today: ud.isToday(startDate),
-            specialHours: this.specialDayHours[dayOfWeek]
+            specialHours: this.specialDayHours[dayOfWeek] || []
           }]
           break
         }

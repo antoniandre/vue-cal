@@ -3432,7 +3432,11 @@ export default {
     maxDate () {
       return new Date().addDays(10)
     },
-    specialHours: () => Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
+    specialHours: () => {
+      const array = Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
+      array[1] = [{ from: 12 * 60, to: 14 * 60, class: 'business-hours' }, { from: 15 * 60, to: 18 * 60, class: 'business-hours' }]
+      return array
+    }
   },
 
   created () {
