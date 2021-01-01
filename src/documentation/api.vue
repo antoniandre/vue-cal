@@ -268,10 +268,27 @@ div
         | days you want to highlight.#[br]
         | Each day must contain an object with a #[span.code from] and #[span.code to] properties
         | defining the beginning and the end of the time range #[strong in minutes].#[br]
-        | In addition, you can optionally set a CSS class for each day of the week.#[br]
-        | Example for Wednesday:
-        sshpre.mt-1(language="html-vue" label="Vue Template").
-          :special-hours="{ 3: { from: 8 * 60, to: 20 * 60, class: 'open' } }"
+        | In addition, you can set a CSS class for each day of the week.#[br]
+        | It is also possible to provide an array of special hours for the same day.#[br]#[br]
+
+      p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
+      p
+        span.ml-3 With a single range of special hours:
+        sshpre.mt-1.ml-3(language="js" label="JavaScript").
+          // In the component's data.
+          specialHours: {
+            3: { from: 8 * 60, to: 20 * 60, class: 'open' }
+          }
+        br
+        span.ml-3 With multiple ranges of special hours:
+        sshpre.mt-1.ml-3(language="js" label="JavaScript").
+          // In the component's data.
+          specialHours: {
+            3: [
+              { from: 8 * 60, to: 12 * 60, class: 'open' },
+              { from: 14 * 60, to: 20 * 60, class: 'open' }
+            ]
+          }
 
     li
       code.mr-2 startWeekOnSunday

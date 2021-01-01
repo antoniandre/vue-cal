@@ -359,10 +359,14 @@ div
     const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
     // In your component's data, special hours from Monday to Friday.
+    // Note that you can provide an array of multiple blocks for the same day.
     specialHours: {
       1: dailyHours,
       2: dailyHours,
-      3: dailyHours,
+      3: [
+        { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+        { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+      ],
       4: dailyHours,
       5: dailyHours
     }
@@ -3432,7 +3436,14 @@ export default {
     maxDate () {
       return new Date().addDays(10)
     },
-    specialHours: () => Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
+    specialHours: () => {
+      const array = Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
+      array[3] = [
+        { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+        { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+      ]
+      return array
+    }
   },
 
   created () {

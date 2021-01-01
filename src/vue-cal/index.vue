@@ -401,13 +401,13 @@ export default {
     validateView (view) {
       if (!validViews.includes(view)) {
         // eslint-disable-next-line no-console
-        console.error(`Vue Cal: invalid view parameter provided: "${view}".\nA valid view must be one of: ${validViews.join(', ')}.`)
+        console.error(`Vue Cal: invalid active-view parameter provided: "${view}".\nA valid view must be one of: ${validViews.join(', ')}.`)
         view = 'week'
       }
 
       if (!this.enabledViews.includes(view)) {
         // eslint-disable-next-line no-console
-        console.warn(`Vue Cal: the provided view "${view}" is disabled. Using the "${this.enabledViews[0]}" view instead.`)
+        console.warn(`Vue Cal: the provided active-view "${view}" is disabled. Using the "${this.enabledViews[0]}" view instead.`)
         view = this.enabledViews[0]
       }
 
@@ -1410,16 +1410,24 @@ export default {
     months () {
       return this.texts.months.map(month => ({ label: month }))
     },
-    // Prepare the special hours object once for all at root level and not in cell.
+    // Validate and fill up the special hours object once for all at root level and not in cell.
     specialDayHours () {
+      if (!this.specialHours || !Object.keys(this.specialHours).length) return {}
+
       return Array(7).fill('').map((cell, i) => {
-        const { from, to, class: Class } = this.specialHours[i + 1] || {}
-        return {
-          day: i + 1,
-          from: ![null, undefined].includes(from) ? from * 1 : null,
-          to: ![null, undefined].includes(to) ? to * 1 : null,
-          class: Class || ''
-        }
+        let day = this.specialHours[i + 1] || []
+        if (!Array.isArray(day)) day = [day]
+        cell = []
+
+        day.forEach(({ from, to, class: Class }, j) => {
+          cell[j] = {
+            day: i + 1,
+            from: ![null, undefined].includes(from) ? from * 1 : null,
+            to: ![null, undefined].includes(to) ? to * 1 : null,
+            class: Class || ''
+          }
+        })
+        return cell
       })
     },
     viewTitle () {
@@ -1570,7 +1578,7 @@ export default {
               endDate,
               // To increase performance skip checking isToday if today already found.
               today: !todayFound && ud.isToday(startDate) && !todayFound++,
-              specialHours: this.specialDayHours[dayOfWeek]
+              specialHours: this.specialDayHours[dayOfWeek] || []
             }
           }).filter((cell, i) => !weekDays[i].hide)
           break
@@ -1586,7 +1594,7 @@ export default {
             formattedDate: ud.formatDateLite(startDate),
             endDate,
             today: ud.isToday(startDate),
-            specialHours: this.specialDayHours[dayOfWeek]
+            specialHours: this.specialDayHours[dayOfWeek] || []
           }]
           break
         }
