@@ -4,6 +4,10 @@ div
     .title.mb-5 Version 4.0.0: supports and only works on Vue 3.
 
   div.grey--text.mb-1
+    strong.mr-1 Version 3.10.1
+    | Prevent focusing cells when they are disabled.
+
+  div.mb-1
     strong.mr-1 Version 3.10.0
     | Allow multiple ranges in daily special hours.
 
@@ -11,7 +15,7 @@ div
     strong.mr-1 Version 3.9.1
     | Fix: Prevent disabling full month or year when using #[span.code disable-days].
 
-  div.grey--text.mb-1
+  div.mb-1
     strong.mr-1 Version 3.9.0
     | Allow full custom locale.
 
