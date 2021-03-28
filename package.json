@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "3.10.0",
+  "version": "3.10.1",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "scripts": {
