@@ -19,7 +19,6 @@
     "README.md",
     "LICENSE"
   ],
-  "dependencies": {},
   "devDependencies": {
     "@babel/plugin-proposal-private-methods": "^7.13.0",
     "@fortawesome/fontawesome-free": "^5.15.3",
