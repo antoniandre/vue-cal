@@ -17,10 +17,6 @@ module.exports = {
   productionSourceMap: false,
   lintOnSave: true,
   devServer: {
-    port: 8000,
-    overlay: {
-      errors: false,
-      warnings: false
-    }
+    port: 8000
   }
 }
