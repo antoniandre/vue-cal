@@ -1,6 +1,7 @@
 {
   "weekDays": ["E Hënë","E Martë","E Mërkurë","E Enjte","E Premte","E Shtunë","E Diel"],
-  "months": ["Janar","Shkurt","Mars","Prill","Maj","Qershor","Korrik","Gushtë","Shtator","Tetor","Nëndor","Dhjetor"],
+  "weekDaysShort": ["Hë","Ma","Mr","Enj","Pr","Sh","D"],
+  "months": ["Janar","Shkurt","Mars","Prill","Maj","Qershor","Korrik","Gusht","Shtator","Tetor","Nëntor","Dhjetor"],
   "years": "Vitet",
   "year": "Viti",
   "month": "Muaji",
