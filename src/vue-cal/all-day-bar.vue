@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import Cell from './cell'
+import Cell from './cell.vue'
 
 export default {
   inject: ['vuecal', 'view', 'editEvents'],

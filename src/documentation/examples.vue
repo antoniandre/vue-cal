@@ -2883,10 +2883,10 @@ div
 </template>
 
 <script>
-import VueCal from '@/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message'
+import VueCal from '@/vue-cal/index.vue'
+import HighlightMessage from './components/highlight-message.vue'
 import './scss/examples.scss'
 
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }

@@ -143,10 +143,10 @@
 import DateUtils from './utils/date'
 import CellUtils from './utils/cell'
 import EventUtils from './utils/event'
-import Header from './header'
-import WeekdaysHeadings from './weekdays-headings'
-import AllDayBar from './all-day-bar'
-import Cell from './cell'
+import Header from './header.vue'
+import WeekdaysHeadings from './weekdays-headings.vue'
+import AllDayBar from './all-day-bar.vue'
+import Cell from './cell.vue'
 
 import './styles.scss'
 

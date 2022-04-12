@@ -43,7 +43,7 @@ div
 </template>
 
 <script>
-import VueCal from '@/vue-cal'
+import VueCal from '@/vue-cal/index.vue'
 
 const demoExample = {
   splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],

@@ -716,7 +716,7 @@ div
 <script>
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message'
+import HighlightMessage from './components/highlight-message.vue'
 
 export default {
   components: { Sshpre, HighlightMessage },

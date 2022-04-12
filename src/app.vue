@@ -1,5 +1,4 @@
 <template lang="pug">
-//- Vuetify does not work on Vue 3 yet.
 //- v-app(:class="{ ready }" v-scroll="onScroll")
   v-container
     top-bar(:offset-top="offsetTop")
@@ -22,7 +21,7 @@ router-view
 <script>
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
-import TopBar from '@/documentation/components/top-bar'
+import TopBar from '@/documentation/components/top-bar.vue'
 
 export default {
   name: 'app',

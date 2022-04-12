@@ -55,7 +55,7 @@ transition-group.vuecal__cell(
 </template>
 
 <script>
-import Event from './event'
+import Event from './event.vue'
 
 export default {
   inject: ['vuecal', 'utils', 'modules', 'view', 'domEvents'],

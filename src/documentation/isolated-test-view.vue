@@ -12,7 +12,7 @@ div.test-view
 </template>
 
 <script>
-import VueCal from '@/vue-cal'
+import VueCal from '@/vue-cal/index.vue'
 
 const now = new Date()
 

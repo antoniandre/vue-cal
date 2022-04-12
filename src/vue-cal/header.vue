@@ -66,7 +66,7 @@
 </template>
 
 <script>
-import WeekdaysHeadings from './weekdays-headings'
+import WeekdaysHeadings from './weekdays-headings.vue'
 
 export default {
   inject: ['vuecal', 'previous', 'next', 'switchView', 'updateSelectedDate', 'modules', 'view'],

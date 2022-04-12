@@ -265,15 +265,15 @@
 </template>
 
 <script>
-import VueCal from '@/vue-cal'
 import Sshpre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message'
-import TodoListItem from './components/todo-list-item'
-import MainDemo from './main-demo'
-import Examples from './examples'
-import Api from './api'
-import ReleaseNotes from './release-notes'
+import VueCal from '@/vue-cal/index.vue'
+import HighlightMessage from './components/highlight-message.vue'
+import TodoListItem from './components/todo-list-item.vue'
+import MainDemo from './main-demo.vue'
+import Examples from './examples.vue'
+import Api from './api.vue'
+import ReleaseNotes from './release-notes.vue'
 import './scss/index.scss'
 
 const localesList = [
