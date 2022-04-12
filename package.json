@@ -4,15 +4,24 @@
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/vue-cal/index.vue --dest ./dist",
-    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n ./dist/vuecal.common.drag-and-drop.js ./dist/vuecal.umd.drag-and-drop.js && mv ./dist/vuecal.umd.min.i18n ./dist/i18n && mv ./dist/vuecal.umd.min.drag-and-drop.js ./dist/drag-and-drop.js && rm ./dist/demo.html"
+    "dev": "vite",
+    "build": "vite build --base /vue-cal/",
+    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vue-cal.css",
+    "serve": "vite preview --root docs --base /vue-cal/",
+    "lint": "vite lint"
   },
-  "main": "./dist/vuecal.common.js",
-  "unpkg": "dist/vuecal.umd.min.js",
-  "jsdelivr": "dist/vuecal.umd.min.js",
+  "main": "./dist/vue-cal.umd.js",
+  "unpkg": "dist/vue-cal.umd.js",
+  "jsdelivr": "dist/vue-cal.umd.js",
+  "module": "./dist/vue-cal.es.js",
+  "exports": {
+    "./dist/vue-cal.css": "./dist/vue-cal.css",
+    "./dist/vue-cal.cjs.js": "./dist/vue-cal.cjs.js",
+    ".": {
+      "import": "./dist/vue-cal.es.js",
+      "require": "./dist/vue-cal.umd.js"
+    }
+  },
   "files": [
     "dist",
     "package.json",
@@ -32,7 +41,9 @@
     "rollup-plugin-delete": "^2.0.0",
     "sass": "^1.50.0",
     "simple-syntax-highlighter": "^1.5.0",
+    "vite": "^2.9.1",
     "vite-plugin-pug": "^0.3.1",
+    "vue": "^3.2.32",
     "vue-router": "^4.0.14"
   },
   "keywords": [
