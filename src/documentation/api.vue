@@ -258,7 +258,7 @@ div
         Set a maximum date for the cells to be selectable.#[br]
         By default the cell will be grayed out when out of range but CSS classes let you
         customize this.
-    li.max-widthed
+    li
       code.mr-2 specialHours
       span.code [Object], default: {}
       p
@@ -288,7 +288,7 @@ div
               { from: 8 * 60, to: 12 * 60, class: 'open' },
               { from: 14 * 60, to: 20 * 60, class: 'open' }
             ]
-          }"
+          }
 
     li
       code.mr-2 startWeekOnSunday
