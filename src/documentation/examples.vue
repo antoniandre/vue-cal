@@ -34,7 +34,7 @@ div
     v-btn.ma-1(dark small :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends /&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
@@ -51,7 +51,7 @@ div
         v-icon arrow_back
       template(v-slot:arrow-next)
         v-icon arrow_forward
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal hide-view-selector :time="false" active-view="month" xsmall&gt;
       &lt;i v-slot:arrow-prev aria-hidden="true" class="v-icon material-icons"&gt;arrow_back&lt;/i&gt;
       &lt;i v-slot:arrow-next aria-hidden="true" class="v-icon material-icons"&gt;arrow_forward&lt;/i&gt;
@@ -101,7 +101,7 @@ div
         v-icon.pr-1(style="padding-bottom: 2px") keyboard_arrow_up
         | Date picker like
   .layout.wrap
-    sshpre.flex.mr-2(language="html-vue" label="Vue Template - Rounded Cell").
+    ssh-pre.flex.mr-2(language="html-vue" label="Vue Template - Rounded Cell").
       &lt;vue-cal
           class="vuecal--rounded-theme vuecal--green-theme"
           xsmall
@@ -111,7 +111,7 @@ div
           :disable-views="['week']"
           style="width: 270px;height: 300px"&gt;
       &lt;/vue-cal&gt;
-    sshpre.flex(language="html-vue" label="Vue Template - Date Picker").
+    ssh-pre.flex(language="html-vue" label="Vue Template - Date Picker").
       &lt;vue-cal
           class="vuecal--date-picker"
           xsmall
@@ -139,7 +139,7 @@ div
       :time="false"
       active-view="month"
       :disable-views="['years', 'year', 'week']")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" active-view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
   //- Example.
@@ -169,7 +169,7 @@ div
       active-view="month"
       :min-date="minDate"
       :max-date="maxDate")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal
       xsmall
       hide-view-selector
@@ -180,7 +180,7 @@ div
       :max-date="maxDate"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     // Using Vue Cal Date Prototypes.
     computed: {
       minDate () {
@@ -191,7 +191,7 @@ div
       }
     }
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__cell--disabled {text-decoration: line-through;}
     .vuecal__cell--before-min {color: #b6d6c7;}
     .vuecal__cell--after-max {color: #008b8b;}
@@ -214,7 +214,7 @@ div
       active-view="month"
       :disable-views="['week']"
       :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;!-- Using Vue Cal Date Prototypes subtractDays, format, addDays. --&gt;
     &lt;vue-cal
       xsmall
@@ -230,7 +230,7 @@ div
       ]"
     &gt;&lt;/vue-cal&gt;
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -258,7 +258,7 @@ div
       show-week-numbers
       :hide-weekdays="[2, 3, 5]"
       :disable-views="['years', 'year']")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false"
              show-week-numbers
              :hide-weekdays="[2, 3, 5]"
@@ -299,10 +299,10 @@ div
       active-view="year"
       :locale="locale"
       @ready="overrideDateTexts")
-  sshpre(language="html-vue" label="Vue Template" reactive).
+  ssh-pre(language="html-vue" label="Vue Template" reactive).
     &lt;vue-cal :time="false" small active-view="year" locale="{{ locale }}" /&gt;
   highlight-message(type="warning") Don't forget to import the locale file you want as follows:
-  sshpre(language="js" label="Javascript" reactive).
+  ssh-pre(language="js" label="Javascript" reactive).
     // In your Vue.js component import the locale file in your component:
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/i18n/{{ locale }}.js'
@@ -331,7 +331,7 @@ div
     24-hour format, and hidden weekends.
   v-card.my-2.ma-auto.main-content(style="height: 450px")
     vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
     &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends /&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -352,9 +352,9 @@ div
       :time-to="20 * 60"
       :disable-views="['years', 'year', 'month']"
       :special-hours="specialHours")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time-from="8 * 60" :time-to="20 * 60" :special-hours="specialHours" /&gt;
-  sshpre(language="js" label="JavaScript").
+  ssh-pre(language="js" label="JavaScript").
     // `from` and `to` are expected in minutes.
     const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
@@ -370,7 +370,7 @@ div
       4: dailyHours,
       5: dailyHours
     }
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .business-hours {
       background-color: rgba(255, 255, 0, 0.2);
       border: solid rgba(255, 210, 0, 0.6);
@@ -387,7 +387,7 @@ div
     The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
     You can easily customize the now-line as you wish via CSS.
     Changing the line and arrow color is as easy as:#[br]
-  sshpre.mt-6(language="css" label="CSS").
+  ssh-pre.mt-6(language="css" label="CSS").
     .vuecal__now-line {color: #06c;}
   p.
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
@@ -403,7 +403,7 @@ div
       active-view="day"
       :disable-views="['years', 'year', 'month']"
       @ready="scrollToCurrentTime('.ex--today-current-time')")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal xsmall active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
   //- Example.
@@ -449,7 +449,7 @@ div
               v-btn(x-Programmatically small fab text v-on="on")
                 v-icon(color="primary" size="20") my_location
             span Go to Today's date
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal ref="vuecal"
              xsmall
              hide-weekends
@@ -473,7 +473,7 @@ div
     &lt;/vue-cal&gt;
 
     &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       // Default to next new year eve.
       selectedDate: new Date(new Date().getFullYear(), 11, 31)
@@ -499,7 +499,7 @@ div
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="timelessEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time="false"
              :disable-views="['years', 'year', 'month']"
@@ -507,7 +507,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
@@ -532,7 +532,7 @@ div
           class: 'sport'
         }
       ]
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     /* Different color for different event types. */
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
@@ -554,7 +554,7 @@ div
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="events")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
              :time-to="23 * 60"
@@ -562,7 +562,7 @@ div
              hide-weekends
              :events="events"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     events: [
     {
       start: '2018-11-16 10:30',
@@ -597,7 +597,7 @@ div
       hide-weekends
       :events="eventsToPop"
       :on-event-click="onEventClick")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
              :time-to="19 * 60"
@@ -627,7 +627,7 @@ div
       &lt;/v-card&gt;
     &lt;/v-dialog&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       selectedEvent: {},
       showDialog: false,
@@ -662,7 +662,7 @@ div
       }
     }
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__event {cursor: pointer;}
 
     .vuecal__event-title {
@@ -719,7 +719,7 @@ div
         events-count-on-year-view
         active-view="month"
         :events="events")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              xsmall
              :time-from="10 * 60"
@@ -729,7 +729,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     /* Default indicator is count, but you can override it with one of the following rules. */
 
     /* Dash indicator */
@@ -771,7 +771,7 @@ div
       hide-weekends
       events-on-month-view="short"
       :events="events")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
              :disable-views="['years', 'year']"
@@ -781,7 +781,7 @@ div
              :events="events"
              style="height: 600px"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal--month-view .vuecal__cell {height: 80px;}
 
     .vuecal--month-view .vuecal__cell-content {
@@ -819,7 +819,7 @@ div
       But the #[span.code editable-events] option also accept an object to specifically allow or deny any of the
       previously listed actions.
     div For instance this object only denies the drag action:
-  sshpre.mt-1(language="js").
+  ssh-pre.mt-1(language="js").
     { title: true, drag: false, resize: true, delete: true, create: true }
   highlight-message(type="tips")
     ul
@@ -843,7 +843,7 @@ div
       hide-weekends
       :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
       :events="editableEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
              :time-to="23 * 60"
@@ -854,7 +854,7 @@ div
              :events="events"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     // In data.
     events: [
       {
@@ -869,7 +869,7 @@ div
       },
       // other events.
     ]
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
 
   //- Example.
@@ -914,7 +914,7 @@ div
       :disable-views="['years', 'year', 'month', 'day']"
       :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
       :drag-to-create-threshold="0")
-  sshpre.my-2(language="html-vue").
+  ssh-pre.my-2(language="html-vue").
     &lt;vue-cal
       hide-view-selector
       hide-title-bar
@@ -988,7 +988,7 @@ div
             :drag-to-create-event="false"
             editable-events
             @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
-        sshpre.my-2(language="html-vue" style="font-size: 0.8em").
+        ssh-pre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;vue-cal
             ref="vuecal"
             small
@@ -1032,7 +1032,7 @@ div
             editable-events
             :cell-click-hold="false"
             :drag-to-create-event="false")
-        sshpre.my-2(language="html-vue" style="font-size: 0.8em").
+        ssh-pre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;button @click="customEventCreation"&gt;
               button
           &lt;/button&gt;
@@ -1050,7 +1050,7 @@ div
                    :drag-to-create-event="false"&gt;
           &lt;/vue-cal&gt;
       p Then you can give custom event attributes as you wish:
-      sshpre.mt-3(language="js" label="Javascript").
+      ssh-pre.mt-3(language="js" label="Javascript").
         // In methods.
         customEventCreation () {
             const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
@@ -1072,7 +1072,7 @@ div
       h5.subtitle-1.font-weight-bold Adding a dialog box to the #[strong cell click &amp; hold] behavior
       p.mt-3.
         By default, event will be created with these attributes:
-      sshpre.mt-0(language="js" label="Javascript").
+      ssh-pre.mt-0(language="js" label="Javascript").
         {
             start: {Date}, // Starting from the cursor position in the clicked day cell.
             end: {Date}, // Event start + 2 hours.
@@ -1084,7 +1084,7 @@ div
       p.
         If you want to customize those attributes you can modify the event directly through
         the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
-      sshpre.mt-6(language="js" label="Javascript").
+      ssh-pre.mt-6(language="js" label="Javascript").
         // :on-event-create="onEventCreate", in template.
 
         /**
@@ -1114,7 +1114,7 @@ div
             editable-events
             :drag-to-create-event="false"
             :on-event-create="onEventCreate")
-        sshpre.my-2(language="html-vue" style="font-size: 0.8em").
+        ssh-pre.my-2(language="html-vue" style="font-size: 0.8em").
           &lt;vue-cal
               small
               :time-from="10 * 60"
@@ -1127,7 +1127,7 @@ div
               :drag-to-create-event="false"
               :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
-    sshpre(language="html-vue" label="Vue Template - dialog box").
+    ssh-pre(language="html-vue" label="Vue Template - dialog box").
       &lt;!-- Using Vuetify --&gt;
       &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
         &lt;v-card&gt;
@@ -1151,7 +1151,7 @@ div
           &lt;/v-card-text&gt;
         &lt;/v-card&gt;
 
-    sshpre(language="js" label="Javascript").
+    ssh-pre(language="js" label="Javascript").
       data: () => ({
         selectedEvent: null,
         showEventCreationDialog: false,
@@ -1193,7 +1193,7 @@ div
       #[span.code closeCreationDialog] functions as the previous example.#[br]
       Note that #[span.code event-drag-create] gets fired on mouseup of the drag-create,
       whereas #[span.code onEventCreate] gets called as soon as the event appears on screen, while dragging.
-    sshpre(language="html-vue" label="Vue Template").
+    ssh-pre(language="html-vue" label="Vue Template").
       &lt;vue-cal small
                 :time-from="10 * 60"
                 :time-to="16 * 60"
@@ -1205,7 +1205,7 @@ div
                 :on-event-create="onEventCreate"
                 @event-drag-create="showEventCreationDialog = true"&gt;
       &lt;/vue-cal&gt;
-    sshpre(language="js" label="Javascript").
+    ssh-pre(language="js" label="Javascript").
       data: () => ({
         selectedEvent: null,
         showEventCreationDialog: false
@@ -1315,7 +1315,7 @@ div
       editable-events
       :events="eventsToDrag"
       :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              today-button
              :time-from="10 * 60"
@@ -1327,7 +1327,7 @@ div
              :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
              class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
   //- Example.
@@ -1378,7 +1378,7 @@ div
       editable-events
       @event-drop="onEventDrop")
 
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;!-- Three HTML5 draggable events. --&gt;
     &lt;div class="external-event"
          v-for="(item, i) in draggables"
@@ -1399,7 +1399,7 @@ div
              editable-events
              @event-drop="onEventDrop"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="js" label="Javascript - Vue Component").
+  ssh-pre(language="js" label="Javascript - Vue Component").
     export default {
       data: () => ({
         draggables: [
@@ -1472,7 +1472,7 @@ div
       editable-events
       resize-x
       :events="multipleDayEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-to="23 * 60"
@@ -1483,7 +1483,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
@@ -1527,7 +1527,7 @@ div
     li Every `x` days - by providing a #[span.code every: x] property, with #[span.code x] being an integer.
     li Forever; Or until an expiry date if you provide an #[span.code until: {String | Date}] property.
     li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
-  sshpre(language="js" label="Still to do...").
+  ssh-pre(language="js" label="Still to do...").
     // month view event count => OK.
     // @todo: check years/year views event counts.
     // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
@@ -1541,7 +1541,7 @@ div
     That means, deleting, resizing or editing one of the day will apply to all the other days.
   v-card.my-4.ma-auto.py-12.grey.lighten-5.elevation-1
     .text-center.headline.grey--text Demo coming soon.
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="8 * 60"
              :time-to="23 * 60"
@@ -1552,7 +1552,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
@@ -1660,7 +1660,7 @@ div
       editable-events
       :min-event-width="minEventWidth"
       :events="overlappingEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="10 * 60"
              :time-to="23 * 60"
@@ -1671,7 +1671,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       minEventWidth: 0,
       events: [
@@ -1718,7 +1718,7 @@ div
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="backgroundEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
              :time-to="23 * 60"
@@ -1727,7 +1727,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
@@ -1748,7 +1748,7 @@ div
       ]
     })
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__event.lunch {
       background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
       color: #999;
@@ -1801,7 +1801,7 @@ div
       :show-all-day-events="['short', true, false][showAllDayEvents]"
       :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
       :events="allDayEvents")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
       :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
     &lt;/button&gt;
@@ -1817,7 +1817,7 @@ div
              :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
              :events="events"&gt;
     &lt;/vue-cal&gt;
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     showAllDayEvents: 0,
     shortEventsOnMonthView: false,
     events: [
@@ -1840,7 +1840,7 @@ div
       ...
     ]
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__cell-content {align-self: flex-start;}
     .vuecal__cell-date {text-align: right;padding: 4px;}
 
@@ -1915,7 +1915,7 @@ div
       :sticky-split-labels="splitsExample.stickySplitLabels"
       :min-cell-width="splitsExample.minCellWidth"
       :min-split-width="splitsExample.minSplitWidth")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
     &lt;/button&gt;
@@ -1941,7 +1941,7 @@ div
              :min-split-width="minSplitWidth"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       stickySplitLabels: false,
       minCellWidth: 400,
@@ -1984,7 +1984,7 @@ div
       ]
     })
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     /* You can easily set a different style for each split of your days. */
     .vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
     .vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
@@ -2037,7 +2037,7 @@ div
 
   highlight-message
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
-    sshpre.mt-2(language="js").
+    ssh-pre.mt-2(language="js").
       {
         view: [String],
         startDate: [Date], // View start - JS native Date object.
@@ -2162,7 +2162,7 @@ div
       @event-drag-create="logEvents('event-drag-create', $event)"
       @event-delete="logEvents('event-delete', $event)")
 
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="7 * 60"
              :time-to="23 * 60"
@@ -2238,7 +2238,7 @@ div
       hide-view-selector
       :selected-date="selectedDate"
       style="max-width: 500px;height: 260px")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
     &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
     &lt;button @click="activeView = 'month'"&gt;Month&lt;/button&gt;
@@ -2303,7 +2303,7 @@ div
       :disable-views="['years', 'year', 'week', 'day']"
       @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
       :time="false"
       hide-view-selector
@@ -2323,7 +2323,7 @@ div
       style="max-width: 270px;height: 290px"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       selectedDate: null
     })
@@ -2354,7 +2354,7 @@ div
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="eventsCopy")
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="events.push({
         start: '2018-11-20 12:00',
         end: '2018-11-20 17:00',
@@ -2371,7 +2371,7 @@ div
              :events="events"&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     data: () => ({
       events: [
         {
@@ -2415,7 +2415,7 @@ div
     It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal.
   highlight-message(type="tips")
     | Bear in mind that IE11 needs a polyfill before you can use the scrollTo method on a DOM element, this single line will do.
-    sshpre.mt-2.mb-0.flex(language="js").
+    ssh-pre.mt-2.mb-0.flex(language="js").
       // For IE11. Adds this to your page once (in `created` hook for instance).
       if (!HTMLElement.prototype.scrollTo) HTMLElement.prototype.scrollTo = function ({ top }) { this.scrollTop = top }
 
@@ -2435,12 +2435,12 @@ div
         :time-cell-height="timeCellHeight"
         @ready="scrollToCurrentTime('.ex--scroll-to-time')")
     .flex
-      sshpre.mt-4.flex(language="html-vue" label="Vue Template").
+      ssh-pre.mt-4.flex(language="html-vue" label="Vue Template").
         &lt;vue-cal id="vuecal"
                  :time-cell-height="timeCellHeight"
                  @ready="scrollToCurrentTime"&gt;
         &lt;/vue-cal&gt;
-      sshpre.mt-4.flex(language="js" label="Javascript").
+      ssh-pre.mt-4.flex(language="js" label="Javascript").
         // `timeCellHeight` is set to 26 in the component data.
         scrollToCurrentTime () {
           const calendar = document.querySelector('#vuecal .vuecal__bg')
@@ -2477,7 +2477,7 @@ div
   highlight-message.mt-6(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[v-icon(small color="primary") open_in_new]]
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal small
              :time-from="5 * 60"
              :time-step="15"
@@ -2493,7 +2493,7 @@ div
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
-  sshpre.mt-6(language="css" label="CSS").
+  ssh-pre.mt-6(language="css" label="CSS").
     .vuecal__time-cell-line.hours:before {border-color: #42b983;}
 
   //- Example.
@@ -2522,7 +2522,7 @@ div
       template(v-slot:events-count="{ events, view }")
         span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
 
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              xsmall
              :time-from="10 * 60"
@@ -2543,7 +2543,7 @@ div
     instead of the #[span.code events-count] slot to perform the same task:#[br]
     (Refer to the next example to know more:
     #[a(href="#ex--custom-title-and-cells") Custom title &amp; cells])
-  sshpre.mt-2(language="html-vue" label="Vue Template").
+  ssh-pre.mt-2(language="html-vue" label="Vue Template").
     &lt;template v-slot:cell-content="{ cell, view, events }"&gt;
       &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
       &lt;span class="vuecal__cell-events-count" v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
@@ -2551,7 +2551,7 @@ div
       &lt;/span&gt;
     &lt;/template&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     // In your Vue component.
     methods: {
       customEventsCount: events => {
@@ -2559,7 +2559,7 @@ div
       }
     }
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal__cell-events-count {background: transparent;}
     .vuecal__cell-events-count span {
       background: #fd9c42;
@@ -2589,7 +2589,7 @@ div
       em.ml-2 "Week 2 (January 2019)"
     li
       | #[span.code view], an object containing the active view info.
-      sshpre(language="js").mt-2.mb-3.
+      ssh-pre(language="js").mt-2.mb-3.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
           startDate: {Date}, // JavaScript Date object.
@@ -2611,7 +2611,7 @@ div
     #[span.code v-slot:cell-content="{ cell, view, split, events, goNarrower }"]
   ul
     li #[span.code cell], object containing the cell date.
-      sshpre(language="js").mt-2.mb-2.
+      ssh-pre(language="js").mt-2.mb-2.
         {
           content: {String}, // Pre-formatted cell content if any.
           startDate: {Date}, // JavaScript Date object.
@@ -2620,7 +2620,7 @@ div
           today: {Boolean}
         }
     li #[span.code view], object containing the active view info.
-      sshpre(language="js").mt-2.mb-2.
+      ssh-pre(language="js").mt-2.mb-2.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
           startDate: {Date}, // JavaScript Date object.
@@ -2633,9 +2633,9 @@ div
   highlight-message.my-3(type="info")
     | By default a cell is rendered as follows.#[br]
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
-    sshpre.mt-3.mb-1(language="html-vue").
+    ssh-pre.mt-3.mb-1(language="html-vue").
       &lt;div class="vuecal__flex vuecal__cell-content"&gt;
-    sshpre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
+    ssh-pre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
       Now this is the part you can customize:
 
       &lt;!-- Will be added if splitting days and split labels are set --&gt;
@@ -2646,7 +2646,7 @@ div
       &lt;div class="vuecal__cell-events-count" /&gt;
       &lt;!-- Will be added on week and day view if no event --&gt;
       &lt;div class="vuecal__no-event" /&gt;
-    sshpre.my-1(language="html-vue").
+    ssh-pre.my-1(language="html-vue").
           &lt;div class="vuecal__cell-events" /&gt;
       &lt;/div&gt;
 
@@ -2669,7 +2669,7 @@ div
         .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false"
              :dblclick-to-navigate="false"
              active-view="month"
@@ -2712,11 +2712,11 @@ div
   highlight-message.my-3(type="info")
     | By default an event is rendered as follows.#[br]
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
-    sshpre.mt-3.mb-1(language="html-vue").
+    ssh-pre.mt-3.mb-1(language="html-vue").
       &lt;div class="vuecal__event"&gt;
           &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
           &lt;div class="vuecal__event-delete" /&gt;
-    sshpre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
+    ssh-pre.my-2.ml-5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)").
       Now this is the part you can customize:
 
       &lt;!-- Will be added if a title is set --&gt;
@@ -2729,7 +2729,7 @@ div
 
       &lt;!-- Will be added if a content is set --&gt;
       &lt;div class="vuecal__event-content" /&gt;
-    sshpre.my-1(language="html-vue").
+    ssh-pre.my-1(language="html-vue").
           &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
           &lt;div class="vuecal__event-resize-handle" /&gt;
       &lt;/div&gt;
@@ -2758,7 +2758,7 @@ div
           br
           strong.mr-1 Event end:
           span {{ event.end.formatTime('h O\'clock') }}
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal selected-date="2018-11-19"
              :time-from="9 * 60"
              :time-to="19 * 60"
@@ -2782,7 +2782,7 @@ div
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     events: [
       {
         start: '2018-11-20 14:00',
@@ -2818,7 +2818,7 @@ div
         v-icon(:color="split.color" size="18") person
         strong(:style="`color: ${split.color}`") {{ split.label }}
 
-  sshpre(language="html-vue" label="Vue Template").
+  ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :disable-views="['years', 'year', 'month']"
              active-view="day"
              :split-days="daySplits"
@@ -2830,7 +2830,7 @@ div
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
-  sshpre(language="js" label="Javascript").
+  ssh-pre(language="js" label="Javascript").
     // In data.
     customDaySplitLabels: [
       { label: 'John', color: 'blue', class: 'split1' },
@@ -2839,7 +2839,7 @@ div
       { label: 'Jess', color: 'red', class: 'split4' }
     ]
 
-  sshpre(language="css" label="CSS").
+  ssh-pre(language="css" label="CSS").
     .vuecal .day-split-header {font-size: 11px;}
     .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
     .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
@@ -2883,7 +2883,7 @@ div
 </template>
 
 <script>
-import Sshpre from 'simple-syntax-highlighter'
+import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import VueCal from '@/vue-cal/index.vue'
 import HighlightMessage from './components/highlight-message.vue'
@@ -2976,7 +2976,7 @@ const events = [
 ]
 
 export default {
-  components: { VueCal, Sshpre, HighlightMessage },
+  components: { VueCal, SshPre, HighlightMessage },
 
   props: {
     localesList: { type: Array }

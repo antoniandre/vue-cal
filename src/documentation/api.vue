@@ -4,13 +4,13 @@ div
     a(href="#api") API
     a#api(name="api")
   p Here is the list of all the available views.
-  sshpre.mt-2(language="js").
+  ssh-pre.mt-2(language="js").
     ['years', 'year', 'month', 'week', 'day']
   p.
     Here is the list of all the parameters available and their decription bellow this table.#[br]
     Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
     instead of the #[span.code camelCase] for consistency.
-  sshpre.mt-2(language="js").
+  ssh-pre.mt-2(language="js").
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
@@ -78,7 +78,7 @@ div
         | into the i18n directory.#[br]
         | this is what a language json looks like.
 
-        sshpre.my-2(language="json").
+        ssh-pre.my-2(language="json").
           {
             "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -274,14 +274,14 @@ div
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
         span.ml-3 With a single range of special hours:
-        sshpre.mt-1.ml-3(language="js" label="JavaScript").
+        ssh-pre.mt-1.ml-3(language="js" label="JavaScript").
           // In the component's data.
           specialHours: {
             3: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml-3 With multiple ranges of special hours:
-        sshpre.mt-1.ml-3(language="js" label="JavaScript").
+        ssh-pre.mt-1.ml-3(language="js" label="JavaScript").
           // In the component's data.
           specialHours: {
             3: [
@@ -449,7 +449,7 @@ div
         | Split each day into multiple vertical splits.#[br]
         | Accepts an array of split objects with attributes.#[br]
         | Each split object can have these attributes, they are all optional:
-        sshpre(language="js").
+        ssh-pre(language="js").
           {
             id: {Integer | String}, // All ids must be set if using `hide`.
             class: {String},
@@ -538,7 +538,7 @@ div
         Accepts an array of event objects.#[br]
         This is what an event object must look like:
       p
-        sshpre.mt-2(language="js").
+        ssh-pre.mt-2(language="js").
           {
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
@@ -714,12 +714,12 @@ div
 </template>
 
 <script>
-import Sshpre from 'simple-syntax-highlighter'
+import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import HighlightMessage from './components/highlight-message.vue'
 
 export default {
-  components: { Sshpre, HighlightMessage },
+  components: { SshPre, HighlightMessage },
 
   props: {
     localesList: { type: Array }

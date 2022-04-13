@@ -12,7 +12,7 @@ specifiers:
   eslint: ^8.13.0
   rollup-plugin-delete: ^2.0.0
   sass: ^1.50.0
-  simple-syntax-highlighter: ^1.5.0
+  simple-syntax-highlighter: ^2.2.0
   vite: ^2.9.1
   vite-plugin-pug: ^0.3.1
   vue: ^3.2.32
@@ -30,7 +30,7 @@ devDependencies:
   eslint: 8.13.0
   rollup-plugin-delete: 2.0.0
   sass: 1.50.0
-  simple-syntax-highlighter: 1.5.0
+  simple-syntax-highlighter: 2.2.0
   vite: 2.9.1_sass@1.50.0
   vite-plugin-pug: 0.3.1_vite@2.9.1
   vue: 3.2.32
@@ -1816,8 +1816,8 @@ packages:
     engines: {node: '>=8'}
     dev: true
 
-  /simple-syntax-highlighter/1.5.0:
-    resolution: {integrity: sha512-LeAuBFdclxTKhV1ND58RqroWZ7X8HsDv8RDwt2ErF7Ul5o3mjCv3pNbNw6sn3mCSWeOO6p5Ax/VSuYtFbLq8LQ==}
+  /simple-syntax-highlighter/2.2.0:
+    resolution: {integrity: sha512-clkLXwGR7GmiLm+GypVXD/AnGRlijjHZYet/KCH8bME5RqlguYBZGfemBUAuwjS9WLOqHdpVKi/bA4oYtepaew==}
     dev: true
 
   /slash/3.0.0:
