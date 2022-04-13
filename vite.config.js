@@ -44,13 +44,6 @@ export default defineConfig({
       }
     })
   ], // https://vitejs.dev/config/
-  css: {
-    preprocessorOptions: {
-      scss: {
-        additionalData: '@import "@/vue-cal/scss/variables";@import "@/documentation/scss/variables";'
-      }
-    }
-  },
   resolve: {
     alias: {
       '@': resolve(__dirname, '/src')
