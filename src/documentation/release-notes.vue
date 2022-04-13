@@ -530,7 +530,7 @@ div
 </template>
 
 <script>
-import HighlightMessage from '@/components/highlight-message.vue'
+import HighlightMessage from './components/highlight-message.vue'
 
 export default {
   components: { HighlightMessage },

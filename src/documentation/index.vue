@@ -141,14 +141,14 @@
   strong.black--text Vue.js 2.6.7 or later is required.
   p.mt-2 You have 2 options: using NPM or #[span.code &lt;script&gt;] tag.
   h3.mt-8 Via NPM
-  sshpre.mt-2(language="shell").
+  //- sshpre.mt-2(language="shell").
     npm i vue-cal # Vue 2.x.
 
-  sshpre.mt-2(language="shell").
+  //- sshpre.mt-2(language="shell").
     npm i vue-cal@next # Vue 3.
 
   p.mt-4 Then import the component and use it:
-  sshpre.mt-2(language="js" label="Javascript").
+  //- sshpre.mt-2(language="js" label="Javascript").
     // In your Vue.js component.
     import VueCal from 'vue-cal'
     import 'vue-cal/dist/vuecal.css'
@@ -164,7 +164,7 @@
 
   h3 Via #[span.code &lt;script&gt;] tag
   p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-  sshpre.mt-6(language="html" label="HTML").
+  //- sshpre.mt-6(language="html" label="HTML").
     &lt;head&gt;
       ...
       &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
@@ -172,7 +172,7 @@
       &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
     &lt;/head&gt;
   p Then define the component to use in your template:
-  sshpre.mt-6(language="js" label="Javascript").
+  //- sshpre.mt-6(language="js" label="Javascript").
     // In your Vue.js component.
     export default {
       components: { 'vue-cal': vuecal },
@@ -186,16 +186,16 @@
     p.
       Wait! Before you dive in, make sure you place Vue Cal in a container that #[strong has a set height]! (not auto or initial)#[br]
       By default Vue Cal will take the full width &amp; height of its container if it has a set height.
-    sshpre.mt-2(language="html-vue").
+    //- sshpre.mt-2(language="html-vue").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px" /&gt;
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   //- Examples.
-  examples(:locales-list="localesList")
+  //- examples(:locales-list="localesList")
 
   //- API.
-  api(:locales-list="localesList")
+  //- api(:locales-list="localesList")
 
   //- CSS notes.
   h2.headline.mt-12.pt-12
@@ -214,7 +214,7 @@
     You can copy and change any color to quickly get a nice render.#[br]
     If that is still not doing what you want you can change even more in your own CSS.
 
-  sshpre(language="css" label="CSS").
+  //- sshpre(language="css" label="CSS").
     /* Green-theme. */
     .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
     .vuecal__title-bar {background-color: #e4f5ef;}
