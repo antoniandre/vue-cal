@@ -1,20 +1,26 @@
 <template lang="pug">
-//- v-app(:class="{ ready }" v-scroll="onScroll")
-  v-container
-    top-bar(:offset-top="offsetTop")
-    router-view
+w-app(:class="{ ready }" v-scroll="onScroll")
+  top-bar(:offset-top="offsetTop")
+  router-view
 
-  v-fab-transition
-    v-btn(color="primary" fixed bottom right fab v-show="!goTopHidden" small href="#top")
-      v-icon(color="white" size="26") keyboard_arrow_up
+  w-transition-twist
+    w-button.go-top(
+      v-show="!goTopHidden"
+      bg-color="primary"
+      icon="material-icons keyboard_arrow_up"
+      fixed
+      bottom
+      right
+      round
+      href="'#top'")
 
-  v-footer.px-2(color="white")
-    v-layout.mx-auto.container.grey--text.text--darken-1(row wrap align-center justify-center)
-      v-flex.xs12.sm6.text-center.text-sm-left.copyright.
+  footer.px2
+    w-flex.mx-auto.container.grey-dark1(row wrap align-center justify-center)
+      .xs12.sm6.text-center.smu-text-left.copyright.
         Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-      v-flex.xs12.sm6.text-center.text-sm-right.made-with
-        .mb-1 This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]
-        | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].
+      .xs12.sm6.text-center.smu-text-right.made-with
+        .mb1 This documentation is made with #[w-icon fab fa-vuejs], #[w-icon fab fa-html5], #[w-icon fab fa-css3], #[w-icon fab fa-sass] &amp; #[w-icon.heart favorite]
+        | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
 router-view
 </template>
 
@@ -39,6 +45,16 @@ export default {
       this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
       this.goTopHidden = this.offsetTop < 200
     }
+  },
+  directives: {
+    scroll: {
+      inserted: (el, binding) => {
+        const f = evt => {
+          if (binding.value(evt, el)) window.removeEventListener('scroll', f)
+        }
+        window.addEventListener('scroll', f)
+      }
+    }
   }
 }
 </script>
@@ -59,7 +75,7 @@ html {font-size: 14px;}
   padding-top: 8em;
 }
 
-.v-application--wrap {
+.w-application--wrap {
   padding-top: 14em;
   overflow-x: hidden;
 }
@@ -80,14 +96,14 @@ a {
   }
 }
 
-.v-card {box-shadow: none;}
+.w-card {box-shadow: none;}
 
-.v-footer {
+.footer {
   font-size: 0.9em;
   font-style: italic;
   margin: 3em 0 3.5em;
 
-  .v-icon {
+  .w-icon {
     font-size: 1.2em;
 
     &.heart {transition: 1s ease-out;cursor: pointer;}

@@ -1,6 +1,6 @@
 <template lang="pug">
-v-chip.ma-1.pl-1.todo-item(:color="item.color" outlined small)
-  v-icon(size="18") {{ item.icon }}
+w-tag.ma1.pl1.todo-item(:color="item.color" outline)
+  w-icon(size="18") material-icons {{ item.icon }}
   slot
 </template>
 
@@ -28,6 +28,6 @@ export default {
   font-size: 12px;
   height: 22px;
 
-  .v-icon {margin-right: 2px;}
+  .w-icon {margin-right: 2px;}
 }
 </style>

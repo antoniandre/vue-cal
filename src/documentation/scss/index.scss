@@ -24,7 +24,7 @@ $primary: #42b983;
     font-weight: normal;
     color: #888 !important;
 
-    .v-icon {vertical-align: middle;}
+    .w-icon {vertical-align: middle;}
   }
 
   h4 {margin: 70px 0 8px;}
@@ -32,7 +32,7 @@ $primary: #42b983;
   h4 a {color: inherit !important;}
   h5 {font-size: 1.1em;color: #555;margin-top: 0.5em;}
 
-  .todo .v-chip__content {padding: 0 3px;}
+  .todo .w-tag__content {padding: 0 3px;}
 
   .api-options {list-style-type: none;}
   .api-options > li {margin-top: 2em;}

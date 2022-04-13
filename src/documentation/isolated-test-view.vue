@@ -1,7 +1,7 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  vue-cal.ml-2.mr-1.vuecal--blue-theme(
+  vue-cal.ml2.mr1.vuecal--blue-theme(
     show-all-day-events
     :events="events"
     editable-events
@@ -65,9 +65,9 @@ export default {
 }
 
 // Global.
-html, body, #app, .v-application--wrap, .container {height: 100%;}
+html, body, #app, .w-application--wrap, .container {height: 100%;}
 #app {padding-top: 2em;}
-.v-application--wrap {min-height: 0;padding-top: 7em;}
+.w-application--wrap {min-height: 0;padding-top: 7em;}
 .test-view {
   height: 100%;
   overflow: auto;
