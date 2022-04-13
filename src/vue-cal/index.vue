@@ -358,18 +358,19 @@ export default {
      *
      * @param {String|Object} locale the language user whishes to have on vue-cal.
      */
-    loadLocale (locale) {
+    async loadLocale (locale) {
       if (typeof this.locale === 'object') {
         this.texts = Object.assign({}, textsDefaults, locale)
         this.utils.date.updateTexts(this.texts)
         return
       }
 
-      if (this.locale === 'en') this.texts = Object.assign({}, textsDefaults, require('./i18n/en.json'))
+      if (this.locale === 'en') {
+        const texts = await import('./i18n/en.json')
+        this.texts = Object.assign({}, textsDefaults, texts)
+      }
       else {
-        // Template litteral `./i18n/${locale}` still crashes eslint...
-        // https://github.com/babel/babel-eslint/issues/681#issuecomment-595591823
-        import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ './i18n/' + locale)
+        import(`./i18n/${locale}.json`)
           .then(response => {
             this.texts = Object.assign({}, textsDefaults, response.default)
             this.utils.date.updateTexts(this.texts)
