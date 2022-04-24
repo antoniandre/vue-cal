@@ -64,9 +64,14 @@ a {
 
 // Media queries.
 // --------------------------------------------------------
-@media screen and (max-width: ($page-max-width + 24px)) {
+@media screen and (max-width: ($page-max-width + (2 * $container-padding-md))) {
+  :root {--container-padding: #{$container-padding-md};}
   .page-container {
-    padding-left: 12px;
-    padding-right: 12px;
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
   }
+}
+
+@media screen and (max-width: (500 + (2 * $container-padding-sm))) {
+  :root {--container-padding: #{$container-padding-sm};}
 }
