@@ -1,8 +1,8 @@
 <template lang="pug">
-div
-  .text-center.title1.mb10
-    span.grey-dark1 Go for the date picker...
-    span.ml8.primary-dark1 or unleash the full potential!
+.main-demo
+  .mb10.tagline
+    .title2.grey-dark1 Go for the date picker...
+    .title1.text-right.primary-dark1 or unleash the full potential!
   .w-flex.wrap.align-center.justify-center
     .mx2
       //- Date picker.
@@ -148,6 +148,17 @@ export default {
 <style lang="scss">
 $john: #42b983;
 $kate: #ff7fc8;
+
+.main-demo {
+  font-size: 12px;
+
+  .tagline {
+    max-width: 500px;
+    margin: 0 auto 5rem;
+
+    .title1 {letter-spacing: normal;}
+  }
+}
 
 .demo {
   border-radius: 4px;

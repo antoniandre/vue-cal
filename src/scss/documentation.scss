@@ -4,6 +4,8 @@
     border-bottom: 1px solid #eee;
     margin-bottom: 30px;
     padding-bottom: 8px;
+
+    a {color: inherit;}
   }
 
   h3 {
@@ -30,8 +32,37 @@
   .api-options > li {margin-top: 2em;}
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
 
+  .message-box {
+    width: 100%;
+    max-width: 650px;
+    margin: 0;
+  }
+
   .code {font-family: monospace, sans-serif;}
   span.code {color: black;}
+
+  .important-notes {
+    font-weight: normal;
+    font-size: 15px;
+
+    small {
+      display: block;
+      font-size: 13px;
+      line-height: 19px;
+    }
+  }
+
+  .example {
+    max-width: 800px;
+    height: 650px;
+    overflow: hidden;
+    border-radius: 5px;
+
+    > .w-card__content {
+      padding: 0;
+      height: 100%;
+    }
+  }
 }
 
 // Yellow theme.

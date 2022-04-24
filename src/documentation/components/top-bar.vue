@@ -165,6 +165,8 @@ $lighter-text: #ccc;
   border-bottom: 1px solid transparent;
   transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
   top: 0;
+  left: 0;
+  right: 0;
   box-sizing: content-box;
 
   h1 {height: 100%;}
@@ -263,7 +265,8 @@ $lighter-text: #ccc;
     display: inline-block;
     vertical-align: middle;
     transition: 0.3s ease-in-out;
-    font-size: 32px;
+    font-size: 30px;
+    font-family: Roboto, Tahoma, Geneva, sans-serif;
   }
 
   &__logo-title:after {
@@ -307,15 +310,17 @@ $lighter-text: #ccc;
 
   .intro {
     position: absolute;
-    top: 3.4em;
-    left: 86px;
+    top: 3em;
+    left: 76px;
     color: #999;
     opacity: 1;
     transform: translateY(0em);
     transition: 0.3s .4s ease-in-out, 0s 0s top;
-    font: 12px Roboto, Tahoma, Geneva, sans-serif;
+    font-size: 12px;
+    font-weight: normal;
     border: none;
     text-align: left;
+    white-space: nowrap;
   }
 
   .intro:before {

@@ -32,7 +32,7 @@ div
     | By default the calendar theme is grey to match with most of web pages.#[br]
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
     w-button.ma1(dark :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
-  w-card.my2.maa.main-content(style="height: 450px")
+  .example.my2.mxa(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal :time="false" hide-weekends /&gt;
@@ -45,7 +45,7 @@ div
   p.
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
-  w-card.my2.maa.main-content(style="width: 250px;height: 260px")
+  .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" active-view="month" xsmall)
       template(v-slot:arrow-prev)
         w-icon material-icons arrow_back
@@ -74,14 +74,14 @@ div
     you can also disable the transitions to have a fast effect.
 
   .w-flex.maa.justify-center.wrap
-    w-card.ma2.main-content(style="width: 270px;height: 300px")
+    .example.ma2(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
         xsmall
         hide-view-selector
         :time="false"
         active-view="month"
         :disable-views="['week']")
-    w-card.ma2.main-content(style="width: 270px;height: 300px")
+    .example.ma2(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--green-theme(
         xsmall
         hide-view-selector
@@ -89,7 +89,7 @@ div
         active-view="month"
         :disable-views="['week']")
     .w-flex.column.justify-center.shrink.pl5
-      w-card.ma2.main-content(style="width: 210px;height: 230px")
+      .example.ma2(style="width: 210px;height: 230px")
         vue-cal.vuecal--date-picker(
           xsmall
           hide-view-selector
@@ -134,7 +134,7 @@ div
     The views are not only hidden from the menu bar, they are totally disabled,
     even when navigating from cells and title bar clicks.#[br]#[br]
     By default all the views are visible and the default active view is the #[span.code week] view.
-  w-card.mx-auto.main-content(style="height: 350px")
+  .example.mxa(style="height: 350px")
     vue-cal.vuecal--green-theme.ex--disable-views(
       :time="false"
       active-view="month"
@@ -160,7 +160,7 @@ div
       li.
         2 different CSS class are available on out of range cells: #[span.code .before-min]
         &amp; #[span.code .after-max].
-  w-card.my2.maa.main-content(style="width: 250px;height: 260px")
+  .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme.ex--min-max-dates(
       xsmall
       hide-view-selector
@@ -205,7 +205,7 @@ div
   p.
     You can use the #[span.code disable-days] option to provide an array of formatted dates
     (e.g. #[span.code 2020-09-18]) to disable.#[br]
-  w-card.my2.maa.main-content(style="width: 250px;height: 260px")
+  .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme.ex--disable-days(
       xsmall
       hide-view-selector
@@ -252,7 +252,7 @@ div
   highlight-message.
     Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
-  w-card.mx-auto.main-content(style="height: 350px")
+  .example.mxa(style="height: 350px")
     vue-cal.vuecal--green-theme(
       :time="false"
       show-week-numbers
@@ -292,7 +292,7 @@ div
     Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
     Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
     Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
-  w-card.my2.maa.main-content(style="width: 500px;height: 340px;max-width: 100%")
+  .example.my2.mxa(style="width: 500px;height: 340px;max-width: 100%")
     vue-cal.vuecal--green-theme(
       :time="false"
       small
@@ -329,7 +329,7 @@ div
     Timelines are only visible on #[span.code week] and #[span.code day] view.#[br]
     This example has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default),
     24-hour format, and hidden weekends.
-  w-card.my2.maa.main-content(style="height: 450px")
+  .example.my2.mxa(style="height: 450px")
     vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
@@ -346,7 +346,7 @@ div
   highlight-message.
     Refer to the #[a(href="#api") API] section to read more about the
     #[span.code special-hours] option.
-  w-card.my2.maa.main-content(style="height: 450px")
+  .example.my2.mxa(style="height: 450px")
     vue-cal.vuecal--green-theme.ex--special-hours(
       :time-from="8 * 60"
       :time-to="20 * 60"
@@ -396,7 +396,7 @@ div
   p.
     If you want the now line to keep accurate position even while your calendar is iddle, you can use the option
     #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
-  w-card.my2.maa.main-content(style="width: 360px;height: 360px;max-width: 100%")
+  .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--today-current-time(
       xsmall
       :time-cell-height="26"
@@ -423,7 +423,7 @@ div
     a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
     w-icon(color="green lighten-2") fab fa-codepen
   .w-flex.justify-center
-    w-card.my2.mr3.main-content(style="max-width: 280px;height: 250px")
+    .example.my2.mr3(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
@@ -433,7 +433,7 @@ div
         today-button
         active-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
-    w-card.my2.main-content(style="max-width: 280px;height: 250px")
+    .example.my2(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
         xsmall
@@ -492,7 +492,7 @@ div
     The events have associated dates but no time information.#[br]
     Timeless events cannot be resized as they have no time or duration information.#[br]
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
-  w-card.my2.maa.main-content(style="height: 350px")
+  .example.my2.mxa(style="height: 350px")
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time="false"
@@ -546,7 +546,7 @@ div
     Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
     The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
 
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -588,7 +588,7 @@ div
     li #[span.code event]: the clicked calendar event's object
     li #[span.code e]: the associated javascript DOM event
   highlight-message.mt3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
-  w-card.my2.maa.main-content(style="height: 520px")
+  .example.my2.mxa(style="height: 520px")
     vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -698,7 +698,7 @@ div
       inline
       :items="indicatorStyleOptions")
   .w-flex.maa.justify-center.wrap
-    w-card.ma2.my2.main-content(style="width: 300px;height: 360px")
+    .example.ma2.my2(style="width: 300px;height: 360px")
       vue-cal.vuecal--green-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -708,7 +708,7 @@ div
         :disable-views="['day']"
         events-count-on-year-view
         :events="events")
-    w-card.ma2.my2.main-content(style="width: 300px;height: 360px")
+    .example.ma2.my2(style="width: 300px;height: 360px")
       vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         selected-date="2018-11-19"
@@ -761,7 +761,7 @@ div
     If #[span.code events-on-month-view] is set to #[span.code true], all the informations are displayed, you can then hide
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  w-card.my2.maa.main-content(style="height: 600px")
+  .example.my2.mxa(style="height: 600px")
     vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -832,7 +832,7 @@ div
         #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
 
   p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
-  w-card.my2.maa.main-content(style="height: 599px")
+  .example.my2.mxa(style="height: 599px")
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
@@ -1303,7 +1303,7 @@ div
       #[span.code .vuecal__event--static] CSS class which hides it with #[span.code opacity: 0].#[br]
       You can use that class to give it a different style.
 
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       today-button
@@ -1461,7 +1461,7 @@ div
   highlight-message(type="tips").
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="8 * 60"
@@ -1649,7 +1649,7 @@ div
     #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
     You can achieve this event overlaps grouping with the option #[span.code overlaps-per-time-step].
 
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
@@ -1709,7 +1709,7 @@ div
     They are not affected by other events: they stay in the background occupying the whole cell/split width.#[br]
     Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
@@ -1791,7 +1791,7 @@ div
   w-button.ma1(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
     span.white.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme.ex--all-day-events(
       selected-date="2019-02-11"
       :time-from="7 * 60"
@@ -2134,7 +2134,7 @@ div
         .w-divider.mb1.grey-light2(v-if="i")
         strong.mr1 {{ l.name }}:
         span {{ l.args }}
-  w-card.mt6.mb2.maa.main-content
+  .example.mt6.mb2.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="7 * 60"
@@ -2345,7 +2345,7 @@ div
   p.mb0 Here is the live array of event titles:
   pre {{ eventsCopy.map(e => e.title) }}
 
-  w-card.my2.maa.main-content
+  .example.my2.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -2460,7 +2460,7 @@ div
     #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
-  w-card.my2.maa.main-content(style="width: 360px;height: 360px;max-width: 100%")
+  .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme(
       small
       :time-from="5 * 60"
@@ -2508,7 +2508,7 @@ div
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class (orange color).
 
-  w-card.my2.maa.main-content(style="width: 300px;height: 360px;max-width: 100%")
+  .example.my2.mxa(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--custom-events-count(
       selected-date="2018-11-19"
       xsmall
@@ -2649,7 +2649,7 @@ div
           &lt;div class="vuecal__cell-events" /&gt;
       &lt;/div&gt;
 
-  w-card.my2.maa.main-content(style="height: 400px")
+  .example.my2.mxa(style="height: 400px")
     vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
       :time="false"
       :dblclick-to-navigate="false"
@@ -2741,7 +2741,7 @@ div
     You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
     Note that #[span.code _eid] is a reserved keyword.
 
-  w-card.my2.maa.main-content(style="height: 520px")
+  .example.my2.mxa(style="height: 520px")
     vue-cal.vuecal--green-theme.ex--custom-event-rendering(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -2805,7 +2805,7 @@ div
     a#ex--custom-day-split-labels(name="ex--custom-day-split-labels")
   p.mb6 You can provide a custom split label when a simple label is not enough.
 
-  w-card.my2.maa.main-content(style="height: 250px")
+  .example.my2.mxa(style="height: 250px")
     vue-cal.ex--custom-day-split-labels.vuecal--green-theme(
       :disable-views="['years', 'year', 'month']"
       active-view="day"
@@ -2885,7 +2885,7 @@ import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import VueCal from '@/vue-cal/index.vue'
 import HighlightMessage from './components/highlight-message.vue'
-import './scss/examples.scss'
+import '@/scss/examples.scss'
 
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
