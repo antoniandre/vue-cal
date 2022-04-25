@@ -741,13 +741,14 @@
         active-view="month"
         :events="events")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             xsmall
-             :time-from="10 * 60"
-             :disable-views="['day']"
-             events-count-on-year-view
-             active-view="month"
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      xsmall
+      :time-from="10 * 60"
+      :disable-views="['day']"
+      events-count-on-year-view
+      active-view="month"
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="css" label="CSS").
@@ -793,14 +794,15 @@
       events-on-month-view="short"
       :events="events")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="9 * 60"
-             :disable-views="['years', 'year']"
-             active-view="month"
-             hide-weekends
-             events-on-month-view="short"
-             :events="events"
-             style="height: 600px"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :disable-views="['years', 'year']"
+      active-view="month"
+      hide-weekends
+      events-on-month-view="short"
+      :events="events"
+      style="height: 600px"&gt;
     &lt;/vue-cal&gt;
   ssh-pre(language="css" label="CSS").
     .vuecal--month-view .vuecal__cell {height: 80px;}
@@ -1331,16 +1333,17 @@
       :events="eventsToDrag"
       :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             today-button
-             :time-from="10 * 60"
-             :time-to="23 * 60"
-             hide-weekends
-             :snap-to-time="15"
-             editable-events
-             :events="events"
-             :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
-             class="vuecal--full-height-delete"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      today-button
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      hide-weekends
+      :snap-to-time="15"
+      editable-events
+      :events="events"
+      :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
+      class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   ssh-pre(language="css" label="CSS").
     .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
@@ -1488,14 +1491,15 @@
       resize-x
       :events="multipleDayEvents")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="8 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             editable-events
-             resize-x
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      editable-events
+      resize-x
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -1557,14 +1561,15 @@
   w-card.my4.maa.py12.grey-light5.elevation-1
     .text-center.title1.grey Demo coming soon.
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="8 * 60"
-             :time-to="23 * 60"
-             hide-weekends
-             events-count-on-year-view
-             editable-events
-             show-all-day-events
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      hide-weekends
+      events-count-on-year-view
+      editable-events
+      show-all-day-events
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -1676,14 +1681,15 @@
       :min-event-width="minEventWidth"
       :events="overlappingEvents")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="10 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             editable-events
-             :min-event-width="minEventWidth"
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      editable-events
+      :min-event-width="minEventWidth"
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -1734,12 +1740,13 @@
       hide-weekends
       :events="backgroundEvents")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="7 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="7 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -1936,16 +1943,17 @@
       Show/Hide Dad
     &lt;/button&gt;
 
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="8 * 60"
-             :time-step="30"
-             :disable-views="['years', 'year', 'month']"
-             editable-events
-             :events="events"
-             :split-days="splitDays"
-             :sticky-split-labels="stickySplitLabels"
-             :min-cell-width="minCellWidth"
-             :min-split-width="minSplitWidth"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="8 * 60"
+      :time-step="30"
+      :disable-views="['years', 'year', 'month']"
+      editable-events
+      :events="events"
+      :split-days="splitDays"
+      :sticky-split-labels="stickySplitLabels"
+      :min-cell-width="minCellWidth"
+      :min-split-width="minSplitWidth"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -2170,30 +2178,31 @@
       @event-delete="logEvents('event-delete', $event)")
 
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="7 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year']"
-             hide-weekends
-             editable-events
-             :events="events"
-             cell-contextmenu
-             @ready="logEvents('ready', $event)"
-             @view-change="logEvents('view-change', $event)"
-             @cell-click="logEvents('cell-click', $event)"
-             @cell-dblclick="logEvents('cell-dblclick', $event)"
-             @cell-contextmenu="logEvents('cell-contextmenu', $event)"
-             @cell-focus="logEvents('cell-focus', $event)"
-             @event-focus="logEvents('event-focus', $event)"
-             @event-mouse-enter="logEvents('event-mouse-enter', $event)"
-             @event-mouse-leave="logEvents('event-mouse-leave', $event)"
-             @event-title-change="logEvents('event-title-change', $event)"
-             @event-content-change="logEvents('event-content-change', $event)"
-             @event-duration-change="logEvents('event-duration-change', $event)"
-             @event-drop="logEvents('event-drop', $event)"
-             @event-create="logEvents('event-create', $event)"
-             @event-drag-create="logEvents('event-drag-create', $event)"
-             @event-delete="logEvents('event-delete', $event)"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="7 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year']"
+      hide-weekends
+      editable-events
+      :events="events"
+      cell-contextmenu
+      @ready="logEvents('ready', $event)"
+      @view-change="logEvents('view-change', $event)"
+      @cell-click="logEvents('cell-click', $event)"
+      @cell-dblclick="logEvents('cell-dblclick', $event)"
+      @cell-contextmenu="logEvents('cell-contextmenu', $event)"
+      @cell-focus="logEvents('cell-focus', $event)"
+      @event-focus="logEvents('event-focus', $event)"
+      @event-mouse-enter="logEvents('event-mouse-enter', $event)"
+      @event-mouse-leave="logEvents('event-mouse-leave', $event)"
+      @event-title-change="logEvents('event-title-change', $event)"
+      @event-content-change="logEvents('event-content-change', $event)"
+      @event-duration-change="logEvents('event-duration-change', $event)"
+      @event-drop="logEvents('event-drop', $event)"
+      @event-create="logEvents('event-create', $event)"
+      @event-drag-create="logEvents('event-drag-create', $event)"
+      @event-delete="logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -2311,7 +2320,8 @@
       @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal small
+    &lt;vue-cal
+      small
       :time="false"
       hide-view-selector
       active-view="week"
@@ -2320,7 +2330,8 @@
       class="vuecal--blue-theme"
       style="max-width: 360px;height: 260px"&gt;
     &lt;/vue-cal&gt;
-    &lt;vue-cal xsmall
+    &lt;vue-cal
+      xsmall
       :time="false"
       hide-view-selector
       active-view="month"
@@ -2362,20 +2373,22 @@
       hide-weekends
       :events="eventsCopy")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;button @click="events.push({
+    &lt;button
+      @click="events.push({
         start: '2018-11-20 12:00',
         end: '2018-11-20 17:00',
         title: 'A new event',
         class: 'blue-event'
-    })"&gt;Add an event&lt;/button&gt;
+      })"&gt;Add an event&lt;/button&gt;
     &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="9 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
@@ -2530,19 +2543,20 @@
         span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
 
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             xsmall
-             :time-from="10 * 60"
-             :time-step="2 * 60"
-             :disable-views="['day']"
-             active-view="month"
-             events-count-on-year-view
-             :events="events"&gt;
-        &lt;template v-slot:events-count="{ events, view }"&gt;
-          &lt;span v-if="customEventsCount(events)"&gt;
-            {{ '\{\{ customEventsCount(events) \}\}' }}
-          &lt;/span&gt;
-        &lt;/template&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      xsmall
+      :time-from="10 * 60"
+      :time-step="2 * 60"
+      :disable-views="['day']"
+      active-view="month"
+      events-count-on-year-view
+      :events="events"&gt;
+      &lt;template v-slot:events-count="{ events, view }"&gt;
+        &lt;span v-if="customEventsCount(events)"&gt;
+          {{ '\{\{ customEventsCount(events) \}\}' }}
+        &lt;/span&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   p.
@@ -2766,11 +2780,12 @@
           strong.mr1 Event end:
           span {{ event.end.formatTime('h O\'clock') }}
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="9 * 60"
-             :time-to="19 * 60"
-             hide-weekends
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="19 * 60"
+      hide-weekends
+      :events="events"&gt;
       &lt;template v-slot:event="{ event, view }"&gt;
         &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
 
