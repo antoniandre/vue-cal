@@ -1,5 +1,5 @@
 <template lang="pug">
-w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
+w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
@@ -9,14 +9,14 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
         div.top-bar__logo-title Vue Cal&nbsp;
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
-  .top-bar__items
+  .top-bar__items.fill-height
     w-menu(
       show-on-hover
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
       menu-class="mt0"
-      detach-to=".top-bar__items"
+      append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
         w-button(
@@ -34,13 +34,13 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
         item-route-key="href"
         item-class="pa0")
         template(#item="{ item }")
-        v-list-item(href="#installation" :v-scroll-to="'#installation'") Installation
-        v-list-item(href="#how-to-use" :v-scroll-to="'#how-to-use'") How to use
-        v-list-item(href="#api" :v-scroll-to="'#api'") API
-        v-list-item(href="#date-prototypes" :v-scroll-to="'#date-prototypes'")
-          | #[span.code.mr2 Date] prototypes
-        v-list-item(href="#css-notes" :v-scroll-to="'#css-notes'") CSS notes
-        v-list-item(href="#release-notes" :v-scroll-to="'#release-notes'") Release notes
+          w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
+          .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
+            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+            span(:class="{ 'ml6': !item.icon }") {{ item.label }}
+          span.px6.py2(v-else :class="item.class || null")
+            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+            span(v-html="item.label")
 
     w-menu(
       show-on-hover
@@ -48,7 +48,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
       align-right
       transition="slide-fade-down"
       menu-class="mt0"
-      detach-to=".top-bar__items"
+      append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
         w-button(
@@ -68,77 +68,16 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
         item-class="pa0"
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
         template(#item="{ item }")
-        v-list-item.heading(href="#ex--basic" :v-scroll-to="'#ex--basic'")
-          w-icon.mr2 material-icons done
-          | BASIC &amp; VIEW OPTIONS
-        v-list-item(href="#ex--basic" :v-scroll-to="'#ex--basic'") Basic, hide weekends
-        v-list-item(href="#ex--small-cal" :v-scroll-to="'#ex--small-cal'") Small calendar, no view selector, custom arrows
-        v-list-item(href="#ex--disable-views" :v-scroll-to="'#ex--disable-views'") Disable views, default view
-        v-list-item(href="#ex--min-max-dates" :v-scroll-to="'#ex--min-max-dates'") Min / max dates &amp; single click to navigate
-        v-list-item(href="#ex--disable-days" :v-scroll-to="'#ex--disable-days'") Disable days
-          w-tag.ml2(color="primary" outline) NEW
-        v-list-item(href="#ex--calendar-themes" :v-scroll-to="'#ex--calendar-themes'") Calendar themes
-        v-list-item(href="#ex--hiding-particular-week-days" :v-scroll-to="'#ex--hiding-particular-week-days'") Hide particular weekdays &amp; show week numbers
-        v-list-item.heading(href="#ex--internationalization" :v-scroll-to="'#ex--internationalization'")
-          w-icon.mr2 material-icons translate
-          | INTERNATIONALIZATION (I18N)
-        v-list-item(href="#ex--internationalization" :v-scroll-to="'#ex--internationalization'") Internationalization
-        v-list-item.heading(href="#ex--timeline" :v-scroll-to="'#ex--timeline'")
-          w-icon.mr2 material-icons access_time
-          | TIMELINE, BUSINESS HOURS &amp; TODAY
-        v-list-item(href="#ex--timeline" :v-scroll-to="'#ex--timeline'") Timeline
-        v-list-item(href="#ex--special-hours" :v-scroll-to="'#ex--special-hours'") Business Hours
-        v-list-item(href="#ex--today-current-time" :v-scroll-to="'#ex--today-current-time'") Today's current time
-        v-list-item(href="#ex--adding-a-today-button" :v-scroll-to="'#ex--adding-a-today-button'") Adding a Today button
-
-        v-list-item.heading(href="#ex--timeless-events" :v-scroll-to="'#ex--timeless-events'")
-          w-icon.mr2 material-icons event
-          | EVENTS
-        v-list-item(href="#ex--timeless-events" :v-scroll-to="'#ex--timeless-events'") Timeless events
-        v-list-item(href="#ex--events-with-time" :v-scroll-to="'#ex--events-with-time'") Events with time information
-        v-list-item(href="#ex--open-dialog-on-event-click" :v-scroll-to="'#ex--open-dialog-on-event-click'") Open a dialog box on event click / dblclick
-        v-list-item(href="#ex--events-indicators" :v-scroll-to="'#ex--events-indicators'") Events indicators
-        v-list-item(href="#ex--events-on-month-view" :v-scroll-to="'#ex--events-on-month-view'") Display events on month view
-        v-list-item(href="#ex--edit-and-delete-events" :v-scroll-to="'#ex--edit-and-delete-events'") Edit &amp; delete events
-        v-list-item(href="#ex--create-events" :v-scroll-to="'#ex--create-events'") Create events
-        v-list-item(href="#ex--other-event-creation-methods" :v-scroll-to="'#ex--other-event-creation-methods'") Other event creation methods
-        v-list-item(href="#ex--drag-and-drop" :v-scroll-to="'#ex--drag-and-drop'") Drag &amp; drop
-        v-list-item(href="#ex--external-events-drag-and-drop" :v-scroll-to="'#ex--external-events-drag-and-drop'") External events drag &amp; drop
-        v-list-item(href="#ex--multiple-day-events" :v-scroll-to="'#ex--multiple-day-events'") Multiple day events
-        v-list-item(href="#ex--recurring-events" :v-scroll-to="'#ex--recurring-events'") Recurring events
-        v-list-item(href="#ex--overlapping-events" :v-scroll-to="'#ex--overlapping-events'") Overlapping events
-        v-list-item(href="#ex--background-events" :v-scroll-to="'#ex--background-events'") Background events
-        v-list-item(href="#ex--all-day-events" :v-scroll-to="'#ex--all-day-events'") All day events
-        v-list-item(href="#ex--splitting-days" :v-scroll-to="'#ex--splitting-days'") Splitting days
-
-        v-list-item.heading(href="#ex--emitted-events" :v-scroll-to="'#ex--emitted-events'")
-          w-icon.mr2 material-icons swap_horiz
-          | COMMUNICATING WITH VUE CAL
-        v-list-item(href="#ex--emitted-events" :v-scroll-to="'#ex--emitted-events'") Vue Cal emitted events
-        v-list-item(href="#ex--external-controls" :v-scroll-to="'#ex--external-controls'")
-          | External controls &amp; use of Vue Cal methods
-        v-list-item(href="#ex--sync-two-calendars" :v-scroll-to="'#ex--sync-two-calendars'") Sync two vue-cal instances
-        v-list-item(href="#ex--modifying-events-from-outside" :v-scroll-to="'#ex--modifying-events-from-outside'") Modifying events from outside
-
-        v-list-item.heading(href="#ex--timeline-tweaking" :v-scroll-to="'#ex--timeline-tweaking'")
-          w-icon.mr2 material-icons tune
-          | ADVANCED VUE CAL CUSTOMIZATION
-        v-list-item(href="#ex--scroll-to-time" :v-scroll-to="'#ex--scroll-to-time'") Scroll the view to a particular time
-        v-list-item(href="#ex--timeline-tweaking" :v-scroll-to="'#ex--timeline-tweaking'") Timeline tweaking
-        v-list-item(href="#ex--custom-events-count" :v-scroll-to="'#ex--custom-events-count'") Custom events count
-        v-list-item(href="#ex--custom-title-and-cells" :v-scroll-to="'#ex--custom-title-and-cells'") Custom title &amp; cells
-        v-list-item(href="#ex--custom-event-rendering" :v-scroll-to="'#ex--custom-event-rendering'") Custom event rendering
-        v-list-item(href="#ex--custom-day-split-labels" :v-scroll-to="'#ex--custom-day-split-labels'") Custom day split labels
-
-        //- w-tag.ml2(color="primary" outline) NEW
-        //- w-tag.ml2(color="blue" outline) UPDATED
+          w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
+          .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
+            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+            span(:class="{ 'ml6': !item.icon }") {{ item.label }}
+          span.px6.py2(v-else :class="item.class || null")
+            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+            span(v-html="item.label")
 </template>
 
 <script>
-// import Vue from 'vue'
-// import VueScrollTo from 'vue-scrollto'
-// Vue.use(VueScrollTo)
-
 export default {
   props: {
     offsetTop: { type: Number, default: 0 }
@@ -146,9 +85,66 @@ export default {
 
   data: () => ({
     todayDate: (new Date()).getDate(),
-    docs: [],
-    examples: []
+    docs: [
+      { href: '#installation', label: 'Installation' },
+      { href: '#how-to-use', label: 'How to use' },
+      { href: '#api', label: 'API' },
+      { href: '#date-prototypes', label: 'Date prototypes' },
+      { href: '#css-notes', label: 'CSS notes' },
+      { href: '#release-notes', label: 'Release notes' }
+    ],
+    examples: [
+      { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'material-icons done' },
+      { href: '#ex--basic', label: 'Basic, hide weekends' },
+      { href: '#ex--small-cal', label: 'Small calendar, no view selector, custom arrows' },
+      { href: '#ex--disable-views', label: 'Disable views, default view' },
+      { href: '#ex--min-max-dates', label: 'Min / max dates &amp; single click to navigate' },
+      { href: '#ex--disable-days', label: 'Disable days' },
+      { href: '#ex--calendar-themes', label: 'Calendar themes' },
+      { href: '#ex--hiding-particular-week-days', label: 'Hide particular weekdays &amp; show week numbers' },
+      { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'material-icons translate' },
+      { href: '#ex--internationalization', label: 'Internationalization' },
+      { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'material-icons access_time' },
+      { href: '#ex--timeline', label: 'Timeline' },
+      { href: '#ex--special-hours', label: 'Business Hours' },
+      { href: '#ex--today-current-time', label: 'Today\'s current time' },
+      { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
 
+      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'material-icons e' },
+      { href: '#ex--timeless-events', label: 'Timeless events' },
+      { href: '#ex--events-with-time', label: 'Events with time information' },
+      { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
+      { href: '#ex--events-indicators', label: 'Events indicators' },
+      { href: '#ex--events-on-month-view', label: 'Display events on month view' },
+      { href: '#ex--edit-and-delete-events', label: 'Edit &amp; delete events' },
+      { href: '#ex--create-events', label: 'Create events' },
+      { href: '#ex--other-event-creation-methods', label: 'Other event creation methods' },
+      { href: '#ex--drag-and-drop', label: 'Drag &amp; drop' },
+      { href: '#ex--external-events-drag-and-drop', label: 'External events drag &amp; drop' },
+      { href: '#ex--multiple-day-events', label: 'Multiple day events' },
+      { href: '#ex--recurring-events', label: 'Recurring events' },
+      { href: '#ex--overlapping-events', label: 'Overlapping events' },
+      { href: '#ex--background-events', label: 'Background events' },
+      { href: '#ex--all-day-events', label: 'All day events' },
+      { href: '#ex--splitting-days', label: 'Splitting days' },
+
+      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'material-icons swap_h' },
+      { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
+      { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
+      { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
+      { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
+
+      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED VUE CAL CUSTOMIZATION', icon: 'material-icons ' },
+      { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
+      { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
+      { href: '#ex--custom-events-count', label: 'Custom events count' },
+      { href: '#ex--custom-title-and-cells', label: 'Custom title &amp; cells' },
+      { href: '#ex--custom-event-rendering', label: 'Custom event rendering' },
+      { href: '#ex--custom-day-split-labels', label: 'Custom day split labels' }
+
+      // w-tag.ml2(color="primary" outline) NEW
+      // w-tag.ml2(color="blue" outline) UPDATED
+    ]
   })
 }
 </script>
@@ -228,7 +224,7 @@ $lighter-text: #ccc;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     opacity: 0.8;
-    padding-top: 7px;
+    padding-top: 9px;
     font-family: impact, arial black, arial, sans-serif;
     transition: 0.4s 0.4s ease-in-out;
     transform: translate(3px, 3px) scale(0.9);
@@ -249,7 +245,7 @@ $lighter-text: #ccc;
     &:after {right: 5px;}
 
     .ready & {
-      box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.6);
+      box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
       transform: translate(0, 0);
     }
   }
@@ -266,7 +262,6 @@ $lighter-text: #ccc;
     vertical-align: middle;
     transition: 0.3s ease-in-out;
     font-size: 30px;
-    font-family: Roboto, Tahoma, Geneva, sans-serif;
   }
 
   &__logo-title:after {
@@ -312,7 +307,7 @@ $lighter-text: #ccc;
     position: absolute;
     top: 3em;
     left: 76px;
-    color: #999;
+    color: #888;
     opacity: 1;
     transform: translateY(0em);
     transition: 0.3s .4s ease-in-out, 0s 0s top;
@@ -341,7 +336,13 @@ $lighter-text: #ccc;
     border-bottom-color: $lighter-text !important;
     position: fixed !important;
 
-    & .top-bar__title {width: 100%;}
+    & .top-bar__title {width: 100%;height: 40px;}
+    & .top-bar__logo {
+      width: 32px;
+      height: 30px;
+      font-size: 0.8em;
+      padding-top: 10px;
+    }
     & .top-bar__logo-title {font-size: 0.9em;}
     & .top-bar__logo-title:after {opacity: 0;}
 
