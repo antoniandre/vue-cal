@@ -2,6 +2,7 @@
   ul {
     margin-left: 16px;
 
+    &.w-list {margin-left: 0;}
     &.no-bullet {list-style-type: none;}
   }
 
@@ -31,17 +32,18 @@
     h3 {
       position: relative;
       margin-bottom: 40px;
-      padding-bottom: 12px;
+      padding: 16px 22px;
+      background: rgb(0 189 126 / 5%);
     }
     h3:after {
       content: '';
       position: absolute;
+      top: 0;
       bottom: 0;
       left: 0;
       max-width: 400px;
-      width: 100%;
-      height: 4px;
-      background: linear-gradient(45deg, #00bd7e69, transparent);
+      width: 4px;
+      background: rgba($primary, 0.5);
     }
   }
 
@@ -64,7 +66,13 @@
 
   .code {font-family: monospace, sans-serif;}
   span.code {color: black;}
-  .ssh-pre {font-size: 13px;}
+  .ssh-pre {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.35;
+    &[data-label] {margin-top: 2.5em;}
+  }
 
   .important-notes {
     font-weight: normal;
@@ -106,3 +114,4 @@
 }
 
 .pale-blue {color: #1471b8;}
+.w-app .vuecal-blue--bg {background-color: rgba(66, 163, 185, 0.8);}

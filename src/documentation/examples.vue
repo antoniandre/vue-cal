@@ -49,7 +49,11 @@
     | Double click cell to go to a narrower view and click the title to go to a broader view.#[br]
     | By default the calendar theme is grey to match with most of web pages.#[br]
     | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
-    w-button.ma1(dark :color="example1theme === 'green' ? 'rgba(66, 163, 185, 0.8)' : 'primary'" @click="example1theme = example1theme === 'green' ? 'blue' : 'green'") {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
+    w-button.ma1(
+      :bg-color="example1theme === 'green' ? 'vuecal-blue' : 'primary'"
+      color="white"
+      @click="example1theme = example1theme === 'green' ? 'blue' : 'green'")
+      | {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   .example.my2.mxa(style="height: 450px")
     vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
   ssh-pre(language="html-vue" label="Vue Template").
@@ -388,8 +392,8 @@
     }
   ssh-pre(language="css" label="CSS").
     .business-hours {
-      background-color: rgba(255, 255, 0, 0.2);
-      border: solid rgba(255, 210, 0, 0.6);
+      background-color: rgba(255, 255, 0, 0.15);
+      border: solid rgba(255, 210, 0, 0.3);
       border-width: 2px 0;
     }
 
@@ -570,26 +574,28 @@
       hide-weekends
       :events="events")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="9 * 60"
-             :time-to="23 * 60"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="23 * 60"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      :events="events"&gt;
     &lt;/vue-cal&gt;
   ssh-pre(language="js" label="Javascript").
     events: [
-    {
-      start: '2018-11-16 10:30',
-      end: '2018-11-16 11:30',
-      // You can also define event dates with Javascript Date objects:
-      // start: new Date(2018, 11 - 1, 16, 10, 30),
-      // end: new Date(2018, 11 - 1, 16, 11, 30),
-      title: 'Doctor appointment',
-      content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
-      class: 'health'
-    },
-    ...
+      {
+        start: '2018-11-16 10:30',
+        end: '2018-11-16 11:30',
+        // You can also define event dates with Javascript Date objects:
+        // start: new Date(2018, 11 - 1, 16, 10, 30),
+        // end: new Date(2018, 11 - 1, 16, 11, 30),
+        title: 'Doctor appointment',
+        content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
+        class: 'health'
+      },
+      ...
+    ]
 
   //- Example.
   h4.title2
@@ -613,13 +619,14 @@
       :events="eventsToPop"
       :on-event-click="onEventClick")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time-from="9 * 60"
-             :time-to="19 * 60"
-             :disable-views="['years', 'year']"
-             hide-weekends
-             :events="events"
-             :on-event-click="onEventClick"&gt;
+    &lt;vue-cal
+      selected-date="2018-11-19"
+      :time-from="9 * 60"
+      :time-to="19 * 60"
+      :disable-views="['years', 'year']"
+      hide-weekends
+      :events="events"
+      :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
 
     &lt;!-- Using Vuetify --&gt;
@@ -1137,27 +1144,27 @@
           &lt;/vue-cal&gt;
     ssh-pre(language="html-vue" label="Vue Template - dialog box").
       &lt;!-- Using Vuetify --&gt;
-      &lt;w-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
-        &lt;w-card&gt;
-          &lt;w-card-title&gt;
-            &lt;w-input v-model="selectedEvent.title" placeholder="Event Title"/&gt;
-          &lt;/w-card-title&gt;
-          &lt;w-card-text&gt;
-            &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content"/&gt;
-            &lt;w-flex&gt;
-              &lt;w-select
+      &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
+        &lt;v-card&gt;
+          &lt;v-card-title&gt;
+            &lt;v-input v-model="selectedEvent.title" placeholder="Event Title" /&gt;
+          &lt;/v-card-title&gt;
+          &lt;v-card-text&gt;
+            &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content" /&gt;
+            &lt;v-flex&gt;
+              &lt;v-select
                 :items="eventsCssClasses"
                 placeholder="Event CSS Class"
                 @change="selectedEvent.class = $event"
-                :value="selectedEvent.class"/&gt;
-              &lt;v-switch v-model="selectedEvent.background" label="background Event"/&gt;
-            &lt;/w-flex&gt;
-            &lt;w-flex&gt;
-              &lt;w-button @click="cancelEventCreation()"&gt;Cancel&lt;/w-button&gt;
-              &lt;w-button @click="closeCreationDialog()"&gt;Save&lt;/w-button&gt;
-            &lt;/w-flex&gt;
-          &lt;/w-card-text&gt;
-        &lt;/w-card&gt;
+                :value="selectedEvent.class" /&gt;
+              &lt;v-switch v-model="selectedEvent.background" label="background Event" /&gt;
+            &lt;/v-flex&gt;
+            &lt;v-flex&gt;
+              &lt;v-btn @click="cancelEventCreation()"&gt;Cancel&lt;/v-btn&gt;
+              &lt;v-btn @click="closeCreationDialog()"&gt;Save&lt;/v-btn&gt;
+            &lt;/v-flex&gt;
+          &lt;/v-card-text&gt;
+        &lt;/v-card&gt;
 
     ssh-pre(language="js" label="Javascript").
       data: () => ({
@@ -2861,24 +2868,31 @@
         li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
         li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
 
-  w-dialog(v-model="showEventCreationDialog" persistent width="420")
-    w-card(title-class="pa2 primary--bg white")
-      template(#title)
-        w-input.ma0.pa0(v-model="selectedEvent.title" placeholder="Event Title" color="white")
-      .pa2
-        w-textarea.pa0(v-model="selectedEvent.content" placeholder="Event Content" rows="3")
-        .w-flex.justify-space-between
-          w-select.grow.shrink(
-            :items="eventsCssClasses"
-            placeholder="Event CSS Class"
-            @change="selectedEvent.class = $event"
-            :value="selectedEvent.class"
-            style="max-width: 170px")
-          w-switch.grow.shrink(v-model="selectedEvent.background" label="Background Event")
-        .w-flex.mt2
-          .spacer
-          w-button.ma1(@click="cancelEventCreation()") Cancel
-          w-button.ma1(@click="closeCreationDialog()") Save
+  w-dialog(
+    v-model="showEventCreationDialog"
+    persistent
+    width="420"
+    title-class="primary--bg white px5"
+    content-class="pa5")
+    template(#title)
+      w-input.ma0.pa0(v-model="selectedEvent.title" placeholder="Event Title" color="white")
+    div
+      w-textarea.pa0(v-model="selectedEvent.content" placeholder="Event Content" rows="3")
+      .w-flex.justify-space-between.mt4
+        w-select(
+          :items="eventsCssClasses"
+          placeholder="Event CSS Class"
+          @change="selectedEvent.class = $event"
+          :model-value="selectedEvent.class"
+          style="max-width: 170px")
+        w-switch.no-grow(
+          v-model="selectedEvent.background"
+          label="Background Event"
+          label-color="grey")
+    .w-flex.mt6
+      .spacer
+      w-button.ma1(bg-color="light-grey" @click="cancelEventCreation()") Cancel
+      w-button.ma1(@click="closeCreationDialog()") Save
 </template>
 
 <script>
@@ -3013,7 +3027,7 @@ export default {
     shortEventsOnMonthView: false,
     events,
     selectedEvent: {},
-    eventsCssClasses: ['leisure', 'sport', 'health'],
+    eventsCssClasses: [{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }],
     selectedDate: null,
     activeView: 'week',
     logMouseEvents: false,
