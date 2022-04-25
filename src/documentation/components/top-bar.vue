@@ -4,7 +4,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
     span.top-bar__title-line
     span.top-bar__title-line
     h1.w-flex.primary.px6
-      a.w-flex.align-center.top-bar__logo-link(href="#top" :v-scroll-to="'#top'")
+      a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" :v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         div.top-bar__logo-title Vue Cal&nbsp;
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
@@ -26,7 +26,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           color="secondary"
           height="100%")
           w-icon.mr2(lg) material-icons school
-          span Doc
+          span DOC
 
       w-list.mt0.pa0.sh2.white--bg.bdrs1(
         nav
@@ -60,7 +60,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           :v-scroll-to="'#examples'"
           height="100%")
           w-icon.mr2(lg) material-icons apps
-          span Examples
+          span EXAMPLES
       w-list.mt0.pa0.sh2.white--bg.bdrs1(
         nav
         :items="examples"
@@ -157,8 +157,9 @@ $lighter-text: #ccc;
 .top-bar {
   z-index: 10;
   position: absolute;
-  background: linear-gradient(rgba(255, 255, 255, 0.7));
   border-bottom: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.1);
+  @include backdrop-blur;
   transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
   top: 0;
   left: 0;
@@ -176,7 +177,6 @@ $lighter-text: #ccc;
     height: 100%;
     transition: 0.3s ease-in-out;
     font-size: 1em;
-    background-color: #fff;
   }
 
   &__title-line {
@@ -252,7 +252,6 @@ $lighter-text: #ccc;
 
   &__logo-link {
     display: inline-flex;
-    background-color: rgba(255, 255, 255, 0.7);
     height: 100%;
     font-size: 0.7em;
   }
@@ -280,7 +279,6 @@ $lighter-text: #ccc;
     transition: 0.3s ease-in-out;
     transform: translateX(100%);
     opacity: 0;
-    background-color: rgba(255, 255, 255, 0.7);
   }
 
   .w-menu__content {max-height: 90vh;}
@@ -331,9 +329,10 @@ $lighter-text: #ccc;
     &:hover {opacity: 0.9;}
   }
 
+  // When scrolled: sticky top bar.
   &.scrolled {
     transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
-    border-bottom-color: $lighter-text !important;
+    border-bottom-color: rgba($lighter-text, 0.5) !important;
     position: fixed !important;
 
     & .top-bar__title {width: 100%;height: 40px;}
