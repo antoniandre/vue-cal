@@ -63,7 +63,7 @@ div
     xsmall:                 [Boolean],         default: false
     watchRealTime:          [Boolean],         default: false
 
-  ul.pl0.api-options
+  ul.api-options
     li
       code.mr2 locale
       span.code [String], default: 'en'
@@ -578,7 +578,7 @@ div
             #[span.code true] will show up in a fixed bar (week &amp; day views).
 
       highlight-message(type="warning")
-        p.title.mt0.ml1 Important notes
+        strong Important notes
         ul
           li.
             The events are internally identified by the key #[span.code `_eid`].

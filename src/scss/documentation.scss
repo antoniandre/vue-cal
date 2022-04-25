@@ -2,7 +2,7 @@
   ul {
     margin-left: 16px;
 
-    &.w-list, &.pl0 {margin-left: 0;}
+    &.w-list {margin-left: 0;}
     &.no-bullet {list-style-type: none;}
   }
 
@@ -54,9 +54,14 @@
 
   .todo .w-tag__content {padding: 0 3px;}
 
-  .api-options {list-style-type: none;}
+  .api-options {
+    list-style-type: none;
+    margin: 0;
+  }
   .api-options > li {margin-top: 2em;}
+  .api-options > li > code {font-weight: bold;font-size: 1rem;}
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
+  .api-options > li > ul {margin-left: 2.5em;margin-top: 0.5em;}
 
   .message-box {
     width: 100%;

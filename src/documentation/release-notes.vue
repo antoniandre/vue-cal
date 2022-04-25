@@ -234,10 +234,11 @@ div
 
   //- Older release notes.
   .w-flex.my12.align-center
-    w-button.ml5.primary(rounded text @click="seeOldReleaseNotes = !seeOldReleaseNotes")
+    .w-divider.primary--bg.px3
+    w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
       w-icon.mr2 material-icons {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
-      strong {{ seeOldReleaseNotes ? 'Hide' : 'See' }} older release notes
-    .w-divider.primary
+      strong Older release notes
+    .w-divider.primary--bg.grow
 
   w-transition-expand(y)
     div(v-if="seeOldReleaseNotes")

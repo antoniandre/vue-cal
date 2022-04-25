@@ -437,7 +437,7 @@
   p
     | If you are not satisfied with the position of this button, you can also place it
     | outside of Vue Cal like so:
-    w-button.ma1.today-button(color="primary" outline rounded @click="selectedDate = new Date()") Another Today Button
+    w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
     | #[br]You might want to change view as well when going to Today's date, here is an example how:
     a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
     w-icon(color="green lighten-2") fab fa-codepen

@@ -14,13 +14,13 @@ w-app(:class="{ ready }" v-scroll="onScroll")
       round
       href="'#top'")
 
-  footer.px2
-    w-flex.mx-auto.container.grey-dark1(row wrap align-center justify-center)
-      .xs12.sm6.text-center.smu-text-left.copyright.
-        Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-      .xs12.sm6.text-center.smu-text-right.made-with
-        .mb1 This documentation is made with #[w-icon fab fa-vuejs], #[w-icon fab fa-html5], #[w-icon fab fa-css3], #[w-icon fab fa-sass] &amp; #[w-icon.heart favorite]
-        | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
+  footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
+    .w-divider.fill-width.mb8
+    .xs12.sm6.text-center.smu-text-left.copyright.
+      Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
+    .xs12.sm6.text-center.smu-text-right.made-with
+      .mb1 This documentation is made with #[w-icon fab fa-vuejs], #[w-icon fab fa-html5], #[w-icon fab fa-css3], #[w-icon fab fa-sass] &amp; #[w-icon.heart material-icons favorite]
+      | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
 </template>
 
 <script>
