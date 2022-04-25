@@ -949,7 +949,6 @@
     span.subtitle-1 Current dragToCreateThreshold:
     span.code.mr2 {{ dragToCreateThreshold }}
     w-button(
-      small
       @click="dragToCreateThreshold = dragToCreateThreshold ? 0 : 15")
         | Set threshold to
         span.ml2 {{ dragToCreateThreshold ? 0 : 15 }}
@@ -1881,32 +1880,24 @@
 
     .w-flex.align-center
       w-button.px2.mr2(
-        small
-        color="primary"
         :outline="!splitsExample.minCellWidth"
         @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
         w-icon.mr2 material-icons {{ splitsExample.minCellWidth ? 'close' : 'add' }}
         | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
 
       w-button.px2.mr2(
-        small
-        color="primary"
         :outline="!splitsExample.minSplitWidth"
         @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
         w-icon.mr2 material-icons {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
         | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
 
       w-button.px2.mr2(
-        small
-        color="primary"
         :outline="!splitsExample.stickySplitLabels"
         @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
         w-icon.mr2 material-icons {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
         | Sticky Split Labels
 
       w-button.px2(
-        small
-        color="primary"
         :outline="splitsExample.splitDays[1].hide"
         @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
         w-icon.mr2 material-icons {{ splitsExample.splitDays[1].hide ? 'add' : 'remove' }}
