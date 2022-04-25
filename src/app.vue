@@ -47,7 +47,7 @@ export default {
   },
   directives: {
     scroll: {
-      inserted: (el, binding) => {
+      mounted: (el, binding) => {
         const f = evt => {
           if (binding.value(evt, el)) window.removeEventListener('scroll', f)
         }
