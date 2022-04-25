@@ -29,8 +29,9 @@ export default {
 <style lang="scss">
 .highlight {
   position: relative;
-  margin-top: 5px;
-  padding: 8px 15px;
+  margin-top: 12px;
+  margin-bottom: 12px;
+  padding: 8px 16px 8px 24px;
   border-left: 3px solid;
 
   &--info {

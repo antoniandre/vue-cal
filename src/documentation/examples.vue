@@ -1,6 +1,6 @@
 <template lang="pug">
-div
-  h2.title1.mt12.pt12
+.examples
+  h2.title2.mt12.pt12
     a(href="#examples") Examples
     a#examples(name="examples")
   highlight-message.mt3(type="success" no-icon)
@@ -8,23 +8,41 @@ div
       w-icon.ml1.mr3(color="green lighten-2") fab fa-codepen
       div
         .title Try it yourself on Codepen. Here is a set of frequent use cases:
-        ul
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank") Calendar with custom title],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank") Localized calendar (i18n)],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank") 2 Vue Cal instances to show 2 weeks],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank") 12 Vue Cal instances to show a full year view (slower - not recommended)],
-          li #[a.ml2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end].
+        ul.ml0.no-bullet
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank") Calendar with custom title
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank") Localized calendar (i18n)
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank") 2 Vue Cal instances to show 2 weeks
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank") 12 Vue Cal instances to show a full year view (slower - not recommended)
+          li
+            w-icon(sm) wi-chevron-right
+            a.ml2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end
 
-  h3.title
+  h3
     a(href="#ex--basic")
       w-icon.mr2 material-icons done
       | Basic
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--basic") # Basic with no timeline &amp; hidden weekends
     a#ex--basic(name="ex--basic")
   p
@@ -39,7 +57,7 @@ div
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
     a#ex--small-cal(name="ex--small-cal")
   p.
@@ -60,18 +78,18 @@ div
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
     a#ex--calendar-themes(name="ex--calendar-themes")
   p.
     You can easily change the calendar color theme or use the rounded-cells theme
     by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
-    E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].
+    E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].#[br]
     Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
   p.
     Because Vue Cal has the potential out of the box, you can also use it as a date picker.#[br]
-    Apply the css class #[span.code vuecal--date-picker] to have the date picker look bellow.#[br]
-    you can also disable the transitions to have a fast effect.
+    Apply the css class #[span.code vuecal--date-picker] to have the date picker layout bellow.#[br]
+    you can also disable the transitions to have a faster effect.
 
   .w-flex.maa.justify-center.wrap
     .example.ma2(style="width: 270px;height: 300px")
@@ -88,7 +106,7 @@ div
         :time="false"
         active-view="month"
         :disable-views="['week']")
-    .w-flex.column.justify-center.shrink.pl5
+    .w-flex.column.justify-center.no-grow.pl5
       .example.ma2(style="width: 210px;height: 230px")
         vue-cal.vuecal--date-picker(
           xsmall
@@ -99,7 +117,7 @@ div
           :disable-views="['week']")
       .grey.text-center
         w-icon.pr1(style="padding-bottom: 2px") material-icons keyboard_arrow_up
-        | Date picker like
+        | Date picker layout, no transition
   .w-flex.wrap
     ssh-pre.grow.mr2(language="html-vue" label="Vue Template - Rounded Cell").
       &lt;vue-cal
@@ -125,7 +143,7 @@ div
   highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--disable-views") # Disable views, active view
     a#ex--disable-views(name="ex--disable-views")
   p.
@@ -134,7 +152,7 @@ div
     The views are not only hidden from the menu bar, they are totally disabled,
     even when navigating from cells and title bar clicks.#[br]#[br]
     By default all the views are visible and the default active view is the #[span.code week] view.
-  .example.mxa(style="height: 350px")
+  .example.mxa.mt2(style="height: 350px")
     vue-cal.vuecal--green-theme.ex--disable-views(
       :time="false"
       active-view="month"
@@ -143,7 +161,7 @@ div
     &lt;vue-cal :time="false" active-view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
     a#ex--min-max-dates(name="ex--min-max-dates")
   p.
@@ -152,9 +170,9 @@ div
     will be disabled and not selectable.#[br]
     You can still navigate through them with arrows.#[br]
     In this example, the minimum date is set to 10 days behind and the maximum date to
-    10 days ahead.#[br]
-  highlight-message(type="tips")
-    strong.ml2 Notes:
+    10 days ahead.
+  highlight-message.my4(type="tips")
+    strong Notes
     ul
       li the min and max options accept a formatted string or plain Javascript Date object.
       li.
@@ -199,7 +217,7 @@ div
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--disable-days") # Disable days
     a#ex--disable-days(name="ex--disable-days")
   p.
@@ -236,7 +254,7 @@ div
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
     a#ex--hiding-particular-week-days(name="ex--hiding-particular-week-days")
   p.
@@ -266,24 +284,22 @@ div
     &lt;/vue-cal&gt;
 
   //- Example.
-  h3.title
+  h3
     a(href="#ex--internationalization")
       w-icon.mr2 material-icons translate
       | Internationalization (i18n)
   .w-flex.align-end.wrap
-    h4.title.mt6
+    h4.title2.mt6
       a(href="#ex--internationalization") # Internationalization
     .spacer
-    .w-flex.shrink.align-center
+    .w-flex.no-grow.align-center
       w-icon.mr2(color="primary") material-icons translate
       span.mr2 Current language:
-      //- w-select.pa0.ma0.shrink(
-        :items="localesList"
-        item-value="code"
-        item-text="label"
+      w-select.pa0.ma0.no-grow(
         v-model="locale"
-        single-line
-        style="width: 250px")
+        :items="localesList"
+        item-value-key="code"
+        style="width: 200px")
         template(v-slot:selection="{ item }")
           span.mr2 {{ item.label }}
           w-tag.code.ma0(color="#ddd") {{ item.code }}
@@ -316,13 +332,13 @@ div
     and your provided custom texts may not work anymore.#[br]
     Always prefer the standard locales!
 
-  h3.title
+  h3
     a(href="#ex--timeline")
       w-icon.mr2 material-icons access_time
       | Timeline, business hours &amp; Today
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--timeline") # Timeline
     a#ex--timeline(name="ex--timeline")
   p.
@@ -337,7 +353,7 @@ div
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--special-hours") # Special hours (or business hours)
     a#ex--special-hours(name="ex--special-hours")
   p.
@@ -378,7 +394,7 @@ div
     }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--today-current-time") # Today's current time
     a#ex--today-current-time(name="ex--today-current-time")
   p.mb0.
@@ -387,9 +403,8 @@ div
     The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
     You can easily customize the now-line as you wish via CSS.
     Changing the line and arrow color is as easy as:#[br]
-  ssh-pre.mt6(language="css" label="CSS").
-    .vuecal__now-line {color: #06c;}
-  p.
+  ssh-pre.mt6(language="css" label="CSS") .vuecal__now-line {color: #06c;}
+  p.mt4.
     If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
     This feature has no impact on performance.
 
@@ -407,7 +422,7 @@ div
     &lt;vue-cal xsmall active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--adding-a-today-button") # Adding a Today button
     a#ex--adding-a-today-button(name="ex--adding-a-today-button")
   p.
@@ -415,7 +430,7 @@ div
     a Today button to select Today's date with the option #[span.code today-button].#[br]
     Like navigation arrows, there is also a slot to customize as you want.#[br]
     Bellow are the default Today button on the left and a custom one with icon and tooltip on the right.
-  p.ex--adding-a-today-button
+  p
     | If you are not satisfied with the position of this button, you can also place it
     | outside of Vue Cal like so:
     w-button.ma1.today-button(color="primary" outline rounded @click="selectedDate = new Date()") Another Today Button
@@ -479,13 +494,13 @@ div
       selectedDate: new Date(new Date().getFullYear(), 11, 31)
     })
 
-  h3.title
+  h3
     a(href="#ex--timeless-events")
       w-icon.mr2 material-icons event
       | Events
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--timeless-events") # Timeless events
     a#ex--timeless-events(name="ex--timeless-events")
   p.
@@ -538,7 +553,7 @@ div
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--events-with-time") # Events with time information
     a#ex--events-with-time(name="ex--events-with-time")
   p.
@@ -577,7 +592,7 @@ div
     ...
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--open-dialog-on-event-click") # Open a dialog box on event click / dblclick
     a#ex--open-dialog-on-event-click(name="ex--open-dialog-on-event-click")
   p.mb2.
@@ -683,7 +698,7 @@ div
     }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--events-indicators") # Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views
     a#ex--events-indicators(name="ex--events-indicators")
   p.mb0.
@@ -752,7 +767,7 @@ div
     .vuecal__cell-events-count {display: none;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--events-on-month-view") # Display events on month view
     a#ex--events-on-month-view(name="ex--events-on-month-view")
   p.
@@ -793,7 +808,7 @@ div
     .vuecal--month-view .vuecal__no-event {display: none;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--edit-and-delete-events") # Edit &amp; delete events
     a#ex--edit-and-delete-events(name="ex--edit-and-delete-events")
   p.mb2.
@@ -832,7 +847,7 @@ div
         #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
 
   p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
-  .example.my2.mxa(style="height: 599px")
+  .example.my2.mxa
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       :time-from="10 * 60"
@@ -872,7 +887,7 @@ div
     .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--create-events") # Create events
     a#ex--create-events(name="ex--create-events")
 
@@ -890,18 +905,14 @@ div
     | Click and drag on a cell to create an event, downwards or upwards.
     .spacer
     w-button.mr1(
-      color="primary"
-      small
       :outline="!snapToTime15"
       @click="snapToTime15 = !snapToTime15")
       | Snap to time: 15min
     w-button(
-      color="primary"
-      small
       outline
       @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
       | Clear all the events
-  w-card.grow.mt3(style="height: 280px")
+  .example.mxa.mt3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
       ref="vuecalCreateEx"
       hide-view-selector
@@ -938,12 +949,11 @@ div
     span.subtitle-1 Current dragToCreateThreshold:
     span.code.mr2 {{ dragToCreateThreshold }}
     w-button(
-      color="primary"
       small
       @click="dragToCreateThreshold = dragToCreateThreshold ? 0 : 15")
         | Set threshold to
         span.ml2 {{ dragToCreateThreshold ? 0 : 15 }}
-  w-card.grow.mt3(style="height: 280px")
+  .example.grow.mt3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
       :time-from="10 * 60"
       :time-to="16 * 60"
@@ -953,7 +963,7 @@ div
       :drag-to-create-threshold="dragToCreateThreshold")
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--other-event-creation-methods") # Other event creation methods
     a#ex--other-event-creation-methods(name="ex--other-event-creation-methods")
 
@@ -973,7 +983,7 @@ div
         you simply need to call the #[span.code createEvent()] function straight
         away from #[span.code cell-dblclick]:
       .w-flex.wrap
-        w-card.grow.my2.mr3(style="height: 280px")
+        .example.grow.my2.mr3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal3"
             small
@@ -1018,7 +1028,7 @@ div
         | will prompt you to choose a date and time as the event start.
 
       .w-flex.align-top.wrap
-        w-card.grow.my2.mr3(style="height: 280px")
+        .example.grow.my2.mr3(style="height: 280px")
           vue-cal.vuecal--green-theme.vuecal--full-height-delete(
             ref="vuecal"
             small
@@ -1101,7 +1111,7 @@ div
         In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
         The dialog box will allow you to set all the event attributes.
       .w-flex.wrap
-        w-card.grow.my2.mr3(style="height: 280px")
+        .example.grow.my2.mr3(style="height: 280px")
           vue-cal.grow.vuecal--green-theme.vuecal--full-height-delete(
             small
             :time-from="10 * 60"
@@ -1221,7 +1231,7 @@ div
       }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--drag-and-drop") # Event drag &amp; drop
     w-tag.ml3.px2(color="error" outline) Not available on touch devices for now
     a#ex--drag-and-drop(name="ex--drag-and-drop")
@@ -1330,7 +1340,7 @@ div
     .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--external-events-drag-and-drop") # External events drag &amp; drop
     w-tag.ml3.px2(color="error" outline) Not available on touch devices for now
     a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
@@ -1447,7 +1457,7 @@ div
     }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--multiple-day-events") # Multiple day events
     a#ex--multiple-day-events(name="ex--multiple-day-events")
   p.
@@ -1510,7 +1520,7 @@ div
     })
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--recurring-events")
       | # Recurring events
       w-tag.ml2.white(color="red") Coming soon - Delayed
@@ -1626,7 +1636,7 @@ div
     })
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--overlapping-events") # Overlapping events
     a#ex--overlapping-events(name="ex--overlapping-events")
   p.
@@ -1700,7 +1710,7 @@ div
     })
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--background-events") # Background events
     a#ex--background-events(name="ex--background-events")
   p.
@@ -1758,7 +1768,7 @@ div
     .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--all-day-events") # All day events
     a#ex--all-day-events(name="ex--all-day-events")
 
@@ -1849,7 +1859,7 @@ div
     .vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--splitting-days") # Splitting days &amp; split events
     a#ex--splitting-days(name="ex--splitting-days")
   p.mb6
@@ -1997,13 +2007,13 @@ div
     .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
-  h3.title
+  h3
     a(href="#ex--emitted-events")
       w-icon.mr2(medium) material-icons swap_horiz
       | Communicating with Vue Cal
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--emitted-events") # Vue Cal emitted events
     a#ex--emitted-events(name="ex--emitted-events")
   p.mb0.
@@ -2189,7 +2199,7 @@ div
     &lt;/vue-cal&gt;
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--external-controls") # External controls &amp; use of Vue Cal methods
     a#ex--external-controls(name="ex--external-controls")
   p.
@@ -2276,7 +2286,7 @@ div
       #[a(href="date-prototypes") #[span.code Date] prototypes section].
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--sync-two-calendars") # Sync two vue-cal instances
     a#ex--sync-two-calendars(name="ex--sync-two-calendars")
   p.
@@ -2328,7 +2338,7 @@ div
     })
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
     a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
   highlight-message(type="tips").
@@ -2384,7 +2394,7 @@ div
       ]
     })
 
-  h3.title
+  h3
     a(href="#ex--timeline-tweaking")
       w-icon.mr2 material-icons tune
       | Advanced Vue Cal customization
@@ -2407,7 +2417,7 @@ div
       li #[span.code event]
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--scroll-to-time") # Scroll the view to a particular time
     a#ex--scroll-to-time(name="ex--scroll-to-time")
   p.mb0.
@@ -2452,7 +2462,7 @@ div
         }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--timeline-tweaking") # Timeline tweaking
     a#ex--timeline-tweaking(name="ex--timeline-tweaking")
   p.mb0.
@@ -2496,7 +2506,7 @@ div
     .vuecal__time-cell-line.hours:before {border-color: #42b983;}
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--custom-events-count") # Custom events count
     a#ex--custom-events-count(name="ex--custom-events-count")
 
@@ -2570,7 +2580,7 @@ div
     }
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--custom-title-and-cells") # Custom title &amp; cells
     a#ex--custom-title-and-cells(name="ex--custom-title-and-cells")
   highlight-message(type="tips").
@@ -2700,7 +2710,7 @@ div
     &lt;/vue-cal&gt;
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--custom-event-rendering") # Custom event rendering
     a#ex--custom-event-rendering(name="ex--custom-event-rendering")
   p.mb2 Using Vue.js scoped slots, you can override the events rendering.
@@ -2800,7 +2810,7 @@ div
     ]
 
   //- Example.
-  h4.title
+  h4.title2
     a(href="#ex--custom-day-split-labels") # Custom day split labels
     a#ex--custom-day-split-labels(name="ex--custom-day-split-labels")
   p.mb6 You can provide a custom split label when a simple label is not enough.
@@ -2860,7 +2870,7 @@ div
         li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
         li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
 
-  w-dialog(v-model="showEventCreationDialog" :persistent="true" width="420")
+  w-dialog(v-model="showEventCreationDialog" persistent width="420")
     w-card(title-class="pa2 primary--bg white")
       template(#title)
         w-input.ma0.pa0(v-model="selectedEvent.title" placeholder="Event Title" color="white")

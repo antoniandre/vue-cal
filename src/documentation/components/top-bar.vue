@@ -4,7 +4,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 104 }")
     span.top-bar__title-line
     span.top-bar__title-line
     h1.w-flex.primary.px6
-      a.w-flex.align-center.top-bar__logo-link.shrink(href="#top" :v-scroll-to="'#top'")
+      a.w-flex.align-center.top-bar__logo-link(href="#top" :v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         div.top-bar__logo-title Vue Cal&nbsp;
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
