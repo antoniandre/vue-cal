@@ -355,10 +355,6 @@ export default {
     nowFormatted () {
       return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
     }
-  },
-
-  mounted () {
-    console.log(this)
   }
 }
 </script>

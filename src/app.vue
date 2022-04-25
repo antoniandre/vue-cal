@@ -6,7 +6,6 @@ w-app(:class="{ ready }" v-scroll="onScroll")
   w-transition-twist
     w-button.go-top(
       v-show="!goTopHidden"
-      bg-color="primary"
       icon="material-icons keyboard_arrow_up"
       fixed
       bottom
