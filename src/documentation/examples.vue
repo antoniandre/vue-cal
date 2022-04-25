@@ -92,7 +92,7 @@
     Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
   p.
     Because Vue Cal has the potential out of the box, you can also use it as a date picker.#[br]
-    Apply the css class #[span.code vuecal--date-picker] to have the date picker layout bellow.#[br]
+    Apply the css class #[span.code vuecal--date-picker] to have the date picker layout below.#[br]
     you can also disable the transitions to have a faster effect.
 
   .w-flex.maa.justify-center.wrap
@@ -306,7 +306,7 @@
         style="width: 200px")
         template(v-slot:selection="{ item }")
           span.mr2 {{ item.label }}
-          w-tag.code.ma0(color="#ddd") {{ item.code }}
+          w-tag.code.ma0(bg-color="grey-light5" round) {{ item.code }}
   a#ex--internationalization(name="ex--internationalization")
   p.
     Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
@@ -433,7 +433,7 @@
     By default the selected date is today. But if you get lost in time travel, you can add
     a Today button to select Today's date with the option #[span.code today-button].#[br]
     Like navigation arrows, there is also a slot to customize as you want.#[br]
-    Bellow are the default Today button on the left and a custom one with icon and tooltip on the right.
+    below are the default Today button on the left and a custom one with icon and tooltip on the right.
   p
     | If you are not satisfied with the position of this button, you can also place it
     | outside of Vue Cal like so:
@@ -1193,7 +1193,7 @@
       }
 
     p With the same method, you can open a dialog at the end of the event drag-creation.
-    w-card.my2(style="height: 280px")
+    .example.grow.my2(style="height: 280px")
       vue-cal.vuecal--green-theme.vuecal--full-height-delete(
         small
         :time-from="10 * 60"
@@ -1241,7 +1241,7 @@
   //- Example.
   h4.title2
     a(href="#ex--drag-and-drop") # Event drag &amp; drop
-    w-tag.ml3.px2(color="error" outline) Not available on touch devices for now
+    w-tag.ml3.px2(bg-color="error" outline round) Not available on touch devices for now
     a#ex--drag-and-drop(name="ex--drag-and-drop")
   p.mb2.
     In addition to the obvious event dragging itself, there are quite a few things that are good
@@ -1351,7 +1351,7 @@
   //- Example.
   h4.title2
     a(href="#ex--external-events-drag-and-drop") # External events drag &amp; drop
-    w-tag.ml3.px2(color="error" outline) Not available on touch devices for now
+    w-tag.ml3.px2(bg-color="error" outline round) Not available on touch devices for now
     a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
   p.mb2.
     You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
@@ -1366,7 +1366,7 @@
       the element yourself. Now especially because Vue is data driven and a DOM update does not
       modify the data, you will also have to remove the event from its original data source yourself
       - unless you want to create a copy.#[br]
-      Learn how in the example source code bellow.
+      Learn how in the example source code below.
   .w-flex.mt4.wrap
     div.mr2
       .external-event(
@@ -1533,7 +1533,7 @@
   h4.title2
     a(href="#ex--recurring-events")
       | # Recurring events
-      w-tag.ml2.white(color="red") Coming soon - Delayed
+      w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
     a#ex--recurring-events(name="ex--recurring-events")
   .mt4 #[strong When it will be ready, this is how it will work.]
   .mb2 You can repeat an event:
@@ -1657,7 +1657,7 @@
   .w-flex.mb3.align-center
     | Optionally you can set a min width (in percent) to the events:
     w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
-      w-icon material-icons {{ minEventWidth ? 'close' : 'add' }}
+      w-icon.mr1 material-icons {{ minEventWidth ? 'close' : 'add' }}
       | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
   div(style="min-height: 40px")
     w-transition-expand(y)
@@ -1809,10 +1809,10 @@
     Multiple-day events feature will be improved in a future version to display across
     multiple cells in the all day bar.
 
-  w-button.ma1(@click="showAllDayEvents = (showAllDayEvents + 1) % 3")
-    span.white.code :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
-  w-button.ma1(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
-    span.white.code :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
+  w-button.ma1.code(@click="showAllDayEvents = (showAllDayEvents + 1) % 3")
+    span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
+  w-button.ma1.code(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
+    span.white :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   .example.my2.mxa
     vue-cal.vuecal--green-theme.ex--all-day-events(
@@ -1831,13 +1831,14 @@
       :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
     &lt;/button&gt;
 
-    &lt;vue-cal selected-date="2019-02-11"
-             :time-from="7 * 60"
-             :disable-views="['years', 'year']"
-             hide-weekends
-             :show-all-day-events="['short', true, false][showAllDayEvents]"
-             :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
-             :events="events"&gt;
+    &lt;vue-cal
+      selected-date="2019-02-11"
+      :time-from="7 * 60"
+      :disable-views="['years', 'year']"
+      hide-weekends
+      :show-all-day-events="['short', true, false][showAllDayEvents]"
+      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
+      :events="events"&gt;
     &lt;/vue-cal&gt;
   ssh-pre(language="js" label="Javascript").
     showAllDayEvents: 0,
@@ -1914,10 +1915,10 @@
       w-button.px2(
         :outline="splitsExample.splitDays[1].hide"
         @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
-        w-icon.mr2 material-icons {{ splitsExample.splitDays[1].hide ? 'add' : 'remove' }}
+        w-icon.mr2 material-icons {{ splitsExample.splitDays[1].hide ? 'add' : 'close' }}
         | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
-  w-card.my2.maa(style="height: 600px")
+  .example.grow.my2(style="height: 600px")
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="8 * 60"
@@ -2133,7 +2134,7 @@
         You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
   p.mb0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
-  pre.mt2.ssh-pre.mb2
+  pre.mt2.ssh-pre.mb2.logs-box
     .w-flex.wrap.align-center
       .grey //&nbsp;
         strong event-name:&nbsp;
@@ -2149,7 +2150,7 @@
       .mt1(v-for="(l, i) in reversedLogs" :key="i")
         .w-divider.mb1.grey-light2(v-if="i")
         strong.mr1 {{ l.name }}:
-        span {{ l.args }}
+        span {{ l.args.replace(/,/g, m => ', ').replace(/":(?=["\w\[\{])/g, m => '": ') }}
   .example.mt6.mb2.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
@@ -2217,31 +2218,31 @@
     keeps it updated when Vue Cal changes the view internally. For instance when you click the title to go
     to a broader view.
 
-  .w-flex.my2.mx-auto.align-center(style="max-width: 500px")
-    w-button.mx1.px2.grow(color="primary darken-1" @click="activeView = 'day'")
+  .w-flex.my2.mxa.align-center(style="max-width: 500px")
+    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'day'")
       w-icon.ml2.mr1(v-if="activeView === 'day'") material-icons check
       | Day
-    w-button.mx1.px2.grow(color="primary darken-1" @click="activeView = 'week'")
+    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'week'")
       w-icon.ml2.mr1(v-if="activeView === 'week'") material-icons check
       | Week
-    w-button.mx1.px2.grow(color="primary darken-1" @click="activeView = 'month'")
+    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'month'")
       w-icon.ml2.mr1(v-if="activeView === 'month'") material-icons check
       | Month
-    w-button.mx1.px2.grow(color="primary darken-1" @click="activeView = 'year'")
+    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'year'")
       w-icon.ml2.mr1(v-if="activeView === 'year'") material-icons check
       | Year
-    w-button.mx1.px2.grow(color="primary darken-1" @click="activeView = 'years'")
+    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'years'")
       w-icon.ml2.mr1(v-if="activeView === 'years'") material-icons check
       | Years
 
-  .w-flex.mt2.mb6.mx-auto.justify-center(style="max-width: 500px")
-    w-button.mx1.grow(color="primary lighten-1" @click="$refs.vuecal4.previous()")
+  .w-flex.mt2.mb6.mxa.justify-center(style="max-width: 500px")
+    w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.previous()")
       w-icon.mr1 material-icons keyboard_arrow_left
       | Previous
-    w-button.mx1.grow(color="primary lighten-1" @click="$refs.vuecal4.switchView('day', new Date())")
+    w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.switchView('day', new Date())")
       w-icon.mr1 material-icons my_location
       | Today
-    w-button.mx1.grow(color="primary lighten-1" @click="$refs.vuecal4.next()")
+    w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.next()")
       | Next
       w-icon.ml1 material-icons keyboard_arrow_right
 
@@ -2446,7 +2447,7 @@
     w-icon material-icons vertical_align_top
     | Scroll to top
   .w-flex.wrap
-    w-card.my4.mr2.grow(style="width: 360px;height: 360px;max-width: 100%")
+    .example.my4.mr2.grow(style="width: 360px;height: 360px;max-width: 100%")
       vue-cal.ex--scroll-to-time.vuecal--green-theme(
         small
         active-view="day"
