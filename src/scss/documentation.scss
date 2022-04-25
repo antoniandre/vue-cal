@@ -2,7 +2,7 @@
   ul {
     margin-left: 16px;
 
-    &.w-list {margin-left: 0;}
+    &.w-list, &.pl0 {margin-left: 0;}
     &.no-bullet {list-style-type: none;}
   }
 
