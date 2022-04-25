@@ -7,7 +7,7 @@ div
   ssh-pre.mt2(language="js").
     ['years', 'year', 'month', 'week', 'day']
   p.
-    Here is the list of all the parameters available and their decription bellow this table.#[br]
+    Here is the list of all the parameters available and their description below this table.#[br]
     Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
     instead of the #[span.code camelCase] for consistency.
   ssh-pre.mt2(language="js").
@@ -301,7 +301,7 @@ div
       p.
         When set to #[span.code true], the days of the week headings will be truncated to 3 letters.#[br]
         Does not apply to the title of the day view.#[br]
-        2 media queries are truncating the days of the week bellow 450px,
+        2 media queries are truncating the days of the week below 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
     li
       code.mr2 xsmall
@@ -311,7 +311,7 @@ div
         Does not apply to the title of the day view.#[br]
         In Addition, the whole calendar gets applied a smaller font size of 0.9em,
         and the current view title is also reduced.#[br]
-        2 media queries are truncating the days of the week bellow 450px,
+        2 media queries are truncating the days of the week below 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
     li
       code.mr2 transitions
@@ -423,7 +423,7 @@ div
       p.
         When set to #[span.code true], each event of the same cell will have a width of
         #[span.code 100% / [number of simultaneous events]] only if these events are within the same time step.#[br]
-        Refere to #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].
     li
       code.mr2 minCellWidth
       span.code [Number], default: 0

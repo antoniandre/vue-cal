@@ -16,7 +16,7 @@ let _cellOverlaps, _comparisonArray
 
 // This is an approximation, it will not work with DLS time.
 // const approxDayMilliseconds = minutesInADay * 60 * 1000
-// This is an approximate minimum we can get in a year. Purposely stay bellow 365 but close.
+// This is an approximate minimum we can get in a year. Purposely stay below 365 but close.
 // const minYearMilliseconds = 364 * approxDayMilliseconds // Don't do the maths every time.
 
 export default class EventUtils {
@@ -230,7 +230,7 @@ export default class EventUtils {
     else {
       // Start at the beginning of the range, and end at soonest between `repeat.until` if any or range end.
       // This range will most likely be too large (e.g. whole week) and we need to narrow it
-      // down in the while loop bellow.
+      // down in the while loop below.
       // We must not create unused segments, it would break the render or result in weird behaviors.
       timestamp = viewStartTimestamp
       end = Math.min(

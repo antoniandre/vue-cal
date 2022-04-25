@@ -615,7 +615,7 @@ export default {
       const { startDate, endDate, firstCellDate, lastCellDate } = this.view
       // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
-      // @todo: remove the code that explicitely updates this.mutableEvents (e.g on event resize).
+      // @todo: remove the code that explicitly updates this.mutableEvents (e.g on event resize).
       // as we are already mutating the event from mutableEvents.
       events = events.length ? events : [...this.mutableEvents]
 
@@ -624,7 +624,7 @@ export default {
       if (!events || (this.isYearsOrYearView && !this.eventsCountOnYearView)) return
 
       // First remove the events that are not in view.
-      // Keep the unfiltered array of events for outOfScopeEvents bellow.
+      // Keep the unfiltered array of events for outOfScopeEvents below.
       let filteredEvents = events.filter(e => ue.eventInRange(e, startDate, endDate))
 
       // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
@@ -1117,7 +1117,7 @@ export default {
     },
 
     /**
-     * Double checks the week number is correct. Read bellow to understand!
+     * Double checks the week number is correct. Read below to understand!
      * this is a wrapper around the `getWeek()` function for performance:
      * As this is called multiple times from the template and cannot be in computed since there is
      * a parameter, this wrapper function avoids the `getWeek()` function call 5 times out of 6
