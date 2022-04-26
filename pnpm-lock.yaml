@@ -17,7 +17,7 @@ specifiers:
   vite-plugin-pug: ^0.3.1
   vue: ^3.2.33
   vue-router: ^4.0.14
-  wave-ui: ^2.36.3
+  wave-ui: 2.37.1
 
 devDependencies:
   '@babel/core': 7.17.9
@@ -36,7 +36,7 @@ devDependencies:
   vite-plugin-pug: 0.3.1_vite@2.9.5
   vue: 3.2.33
   vue-router: 4.0.14_vue@3.2.33
-  wave-ui: 2.36.3
+  wave-ui: 2.37.1
 
 packages:
 
@@ -1978,8 +1978,8 @@ packages:
       '@vue/shared': 3.2.33
     dev: true
 
-  /wave-ui/2.36.3:
-    resolution: {integrity: sha512-D/QI1pnXfvPuVaCXyVOixOBul05hf5uMd4sQG2a5zS7aa3sWnFtsupny9ZZT7uuZcBj8Q2fguF1+GbWOFqZfQQ==}
+  /wave-ui/2.37.1:
+    resolution: {integrity: sha512-hsLLPoLwn9enf7njHoz6fQ1PzkEDYWkL8tjD07S+wl/IjlB1DVbq/Jewb0mWsR5HWZHU/q0aOpuSHrmLCzkPqQ==}
     dev: true
 
   /which/2.0.2:
