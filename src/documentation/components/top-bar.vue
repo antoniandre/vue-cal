@@ -37,8 +37,8 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
           .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
             w-icon.mr2(v-if="item.icon") {{ item.icon }}
-            span(:class="{ 'ml6': !item.icon }") {{ item.label }}
-          span.px6.py2(v-else :class="item.class || null")
+            span(v-html="item.label")
+          span.py2(v-else :class="item.class || null")
             w-icon.mr2(v-if="item.icon") {{ item.icon }}
             span(v-html="item.label")
 
@@ -71,7 +71,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
           .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
             w-icon.mr2(v-if="item.icon") {{ item.icon }}
-            span(:class="{ 'ml6': !item.icon }") {{ item.label }}
+            span(:class="{ 'ml6': !item.icon }" v-html="item.label")
           span.px6.py2(v-else :class="item.class || null")
             w-icon.mr2(v-if="item.icon") {{ item.icon }}
             span(v-html="item.label")

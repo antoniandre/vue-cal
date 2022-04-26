@@ -11,7 +11,8 @@ w-app(:class="{ ready }" v-scroll="onScroll")
       bottom
       right
       round
-      href="'#top'")
+      lg
+      route="#top")
 
   footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
     .w-divider.fill-width.mb8
