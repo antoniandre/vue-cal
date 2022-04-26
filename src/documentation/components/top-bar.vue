@@ -3,7 +3,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
-    h1.w-flex.primary.px6
+    h1.w-flex.primary.px5
       a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" :v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         div.top-bar__logo-title Vue Cal&nbsp;
@@ -15,7 +15,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
-      menu-class="mt0"
+      menu-class="mt0 top-menu"
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
@@ -35,19 +35,22 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
         item-class="pa0")
         template(#item="{ item }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
-          .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
-            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+          .w-flex.grow.align-center.px5.py2(
+            v-else-if="item.href"
+            :href="item.href"
+            :v-scroll-to="`${item.href}`")
+            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
-          span.py2(v-else :class="item.class || null")
-            w-icon.mr2(v-if="item.icon") {{ item.icon }}
+          span.py2(v-else)
+            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
 
+      //- show-on-hover
     w-menu(
-      show-on-hover
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
-      menu-class="mt0"
+      menu-class="mt0 top-menu"
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
@@ -69,12 +72,15 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
         template(#item="{ item }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
-          .w-flex.grow.px6.py2(v-else-if="item.href" :href="item.href" :v-scroll-to="`${item.href}`")
-            w-icon.mr2(v-if="item.icon") {{ item.icon }}
-            span(:class="{ 'ml6': !item.icon }" v-html="item.label")
-          span.px6.py2(v-else :class="item.class || null")
-            w-icon.mr2(v-if="item.icon") {{ item.icon }}
-            span(v-html="item.label")
+          .w-flex.grow.align-center.px5.py2(
+            v-else-if="item.href"
+            :href="item.href"
+            :v-scroll-to="`${item.href}`")
+            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
+            span(:class="{ ml8: !item.icon }" v-html="item.label")
+          .w-flex.grow.align-center.px5.py2(v-else)
+            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
+            span(:class="{ ml8: !item.icon }" v-html="item.label")
 </template>
 
 <script>
@@ -110,7 +116,7 @@ export default {
       { href: '#ex--today-current-time', label: 'Today\'s current time' },
       { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
 
-      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'material-icons e' },
+      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'material-icons event' },
       { href: '#ex--timeless-events', label: 'Timeless events' },
       { href: '#ex--events-with-time', label: 'Events with time information' },
       { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
@@ -128,13 +134,13 @@ export default {
       { href: '#ex--all-day-events', label: 'All day events' },
       { href: '#ex--splitting-days', label: 'Splitting days' },
 
-      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'material-icons swap_h' },
+      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'material-icons swap_horiz' },
       { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
       { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
       { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
       { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
 
-      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED VUE CAL CUSTOMIZATION', icon: 'material-icons ' },
+      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'material-icons tune' },
       { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
       { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
       { href: '#ex--custom-events-count', label: 'Custom events count' },
@@ -224,6 +230,7 @@ $lighter-text: #ccc;
     text-align: center;
     color: rgba(255, 255, 255, 0.7);
     opacity: 0.8;
+    margin-top: -2px;
     padding-top: 9px;
     font-family: impact, arial black, arial, sans-serif;
     transition: 0.4s 0.4s ease-in-out;
@@ -358,6 +365,15 @@ $lighter-text: #ccc;
       top: -5em;
     }
   }
+}
+
+.top-menu li {font-size: 15px;}
+.top-menu li .heading {
+  font-size: 14px;
+  color: #999;
+  margin-top: 20px;
+  padding: 8px 0;
+  border-top: 1px solid #eee;
 }
 
 @media screen and (max-width: 600px) {
