@@ -4,14 +4,14 @@ w-app(:class="{ ready }" v-scroll="onScroll")
   router-view
 
   w-transition-twist
-    w-button.go-top(
+    w-button.go-top.ma2(
       v-show="!goTopHidden"
       icon="material-icons keyboard_arrow_up"
       fixed
       bottom
       right
       round
-      lg
+      xl
       route="#top")
 
   footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
@@ -43,7 +43,8 @@ export default {
   methods: {
     onScroll () {
       this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
-      this.goTopHidden = this.offsetTop < 200
+      this.goTopHidden = this.offsetTop < 200 ||
+                         ((document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight) <= 100)
     }
   },
   directives: {

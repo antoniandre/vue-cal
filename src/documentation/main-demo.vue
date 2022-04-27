@@ -4,7 +4,7 @@
     .title2.grey-dark1 Go for the date picker...
     .title1.text-right.primary-dark1 or unleash the full potential!
   .w-flex.wrap.align-center.justify-center
-    .mx2
+    .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
         xsmall

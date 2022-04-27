@@ -6,10 +6,10 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
     h1.w-flex.primary.px5
       a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" :v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
-        div.top-bar__logo-title Vue Cal&nbsp;
+        div.top-bar__logo-title Vue Cal
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
-  .top-bar__items.fill-height
+  .top-bar__items.fill-height.mr3
     w-menu(
       show-on-hover
       hide-on-menu-click
@@ -170,6 +170,7 @@ $lighter-text: #ccc;
   top: 0;
   left: 0;
   right: 0;
+  padding-right: 30px;
   box-sizing: content-box;
 
   h1 {height: 100%;}
@@ -264,17 +265,20 @@ $lighter-text: #ccc;
   }
 
   &__logo-title {
+    position: relative;
     display: inline-block;
     vertical-align: middle;
     transition: 0.3s ease-in-out;
     font-size: 30px;
+    font-weight: 500;
   }
 
   &__logo-title:after {
     content: "*";
     position: absolute;
     top: 0;
-    margin-left: -7px;
+    left: 100%;
+    margin-left: 4px;
     line-height: 1;
     opacity: 1;
     transition: opacity 0.3s ease-in-out;
@@ -349,7 +353,7 @@ $lighter-text: #ccc;
       font-size: 0.8em;
       padding-top: 10px;
     }
-    & .top-bar__logo-title {font-size: 0.9em;}
+    & .top-bar__logo-title {font-size: 0.9em;font-weight: 600;}
     & .top-bar__logo-title:after {opacity: 0;}
 
     & .top-bar__items {

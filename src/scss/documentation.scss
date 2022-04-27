@@ -25,7 +25,7 @@
     font-weight: normal;
     color: #888 !important;
 
-    .w-icon {vertical-align: middle;}
+    .w-icon {vertical-align: middle;margin-bottom: 2px;}
   }
 
   .examples {
@@ -59,7 +59,13 @@
     margin: 0;
   }
   .api-options > li {margin-top: 2em;}
-  .api-options > li > code {font-weight: bold;font-size: 1rem;}
+  .api-options > li > code {
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: #eee;
+  }
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
   .api-options > li > ul {margin-left: 2.5em;margin-top: 0.5em;}
 

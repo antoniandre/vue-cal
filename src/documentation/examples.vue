@@ -713,7 +713,7 @@
     You can use the option #[span.code eventsCountOnYearView] to show the events count on
     #[span.code years] &amp; #[span.code year] views as well.#[br]
     You can customize the events count as you wish via CSS.
-  p.mt3.w-flex.align-center
+  p.my3.w-flex.align-center
     span.mr2 Choose an indicator style:
     w-radios.d-iblock(
       v-model="indicatorStyle"
@@ -784,7 +784,7 @@
     If #[span.code events-on-month-view] is set to #[span.code true], all the informations are displayed, you can then hide
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  .example.my2.mxa(style="height: 600px")
+  .example.my4.mxa(style="height: 600px")
     vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -1241,7 +1241,7 @@
   //- Example.
   h4.title2
     a(href="#ex--drag-and-drop") # Event drag &amp; drop
-    w-tag.ml3.px2(bg-color="error" outline round) Not available on touch devices for now
+    w-tag.ml3.px2(bg-color="error" outline round) NOT ON TOUCH DEVICES
     a#ex--drag-and-drop(name="ex--drag-and-drop")
   p.mb2.
     In addition to the obvious event dragging itself, there are quite a few things that are good
@@ -1321,7 +1321,7 @@
       #[span.code .vuecal__event--static] CSS class which hides it with #[span.code opacity: 0].#[br]
       You can use that class to give it a different style.
 
-  .example.my2.mxa
+  .example.my4.mxa
     vue-cal.vuecal--green-theme.vuecal--full-height-delete(
       selected-date="2018-11-19"
       today-button
@@ -1351,7 +1351,7 @@
   //- Example.
   h4.title2
     a(href="#ex--external-events-drag-and-drop") # External events drag &amp; drop
-    w-tag.ml3.px2(bg-color="error" outline round) Not available on touch devices for now
+    w-tag.ml3.px2(bg-color="error" outline round) NOT ON TOUCH DEVICES
     a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
   p.mb2.
     You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
@@ -1893,26 +1893,26 @@
 
     | Refer to the #[span.code min-cell-width.black], #[span.code min-split-width] and #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
 
-    .w-flex.align-center
-      w-button.px2.mr2(
+    .w-flex.align-center.wrap
+      w-button.px2.mr2.my1(
         :outline="!splitsExample.minCellWidth"
         @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
         w-icon.mr2 material-icons {{ splitsExample.minCellWidth ? 'close' : 'add' }}
         | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
 
-      w-button.px2.mr2(
+      w-button.px2.mr2.my1(
         :outline="!splitsExample.minSplitWidth"
         @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
         w-icon.mr2 material-icons {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
         | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
 
-      w-button.px2.mr2(
+      w-button.px2.mr2.my1(
         :outline="!splitsExample.stickySplitLabels"
         @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
         w-icon.mr2 material-icons {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
         | Sticky Split Labels
 
-      w-button.px2(
+      w-button.px2.my1(
         :outline="splitsExample.splitDays[1].hide"
         @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
         w-icon.mr2 material-icons {{ splitsExample.splitDays[1].hide ? 'add' : 'close' }}
@@ -2351,7 +2351,7 @@
   h4.title2
     a(href="#ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
     a#ex--modifying-events-from-outside(name="ex--modifying-events-from-outside")
-  highlight-message(type="tips").
+  highlight-message.mb4(type="tips").
     It is possible to modify the array of events like adding or removing an event
     after the first load, but be aware that by doing so all the events in Vue Cal
     will be replaced by the new array of events. You may lose your changes if you
@@ -2365,7 +2365,7 @@
   p.mb0 Here is the live array of event titles:
   pre {{ eventsCopy.map(e => e.title) }}
 
-  .example.my2.mxa
+  .example.my4.mxa
     vue-cal.vuecal--green-theme(
       selected-date="2018-11-19"
       :time-from="9 * 60"
@@ -2482,7 +2482,7 @@
     #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
-  .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
+  .example.my4.mxa(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme(
       small
       :time-from="5 * 60"
@@ -2530,7 +2530,7 @@
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class (orange color).
 
-  .example.my2.mxa(style="width: 300px;height: 360px;max-width: 100%")
+  .example.my4.mxa(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--green-theme.ex--custom-events-count(
       selected-date="2018-11-19"
       xsmall
