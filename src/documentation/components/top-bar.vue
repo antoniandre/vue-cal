@@ -4,14 +4,14 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
     span.top-bar__title-line
     span.top-bar__title-line
     h1.w-flex.primary.px5
-      a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" :v-scroll-to="'#top'")
+      a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         div.top-bar__logo-title Vue Cal
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
+    //- a.w-button(href="#top") school
     w-menu(
-      show-on-hover
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
@@ -37,8 +37,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
           .w-flex.grow.align-center.px5.py2(
             v-else-if="item.href"
-            :href="item.href"
-            :v-scroll-to="`${item.href}`")
+            v-scroll-to="`${item.href}`")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
           span.py2(v-else)
@@ -60,7 +59,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           tile
           color="secondary"
           href="#examples"
-          :v-scroll-to="'#examples'"
+          v-scroll-to="'#examples'"
           height="100%")
           w-icon.mr2(lg) material-icons apps
           span EXAMPLES
@@ -74,8 +73,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
           .w-flex.grow.align-center.px5.py2(
             v-else-if="item.href"
-            :href="item.href"
-            :v-scroll-to="`${item.href}`")
+            v-scroll-to="`${item.href}`")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(:class="{ ml8: !item.icon }" v-html="item.label")
           .w-flex.grow.align-center.px5.py2(v-else)
@@ -151,7 +149,17 @@ export default {
       // w-tag.ml2(color="primary" outline) NEW
       // w-tag.ml2(color="blue" outline) UPDATED
     ]
-  })
+  }),
+  directives: {
+    scrollTo: {
+      mounted: (el, binding) => {
+        el.addEventListener('click', () => {
+          const target = binding.value && document.querySelector(binding.value)
+          target.scrollIntoView()
+        })
+      }
+    }
+  }
 }
 </script>
 
