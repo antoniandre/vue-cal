@@ -12,7 +12,7 @@ w-app(:class="{ ready }" v-scroll="onScroll")
       right
       round
       xl
-      route="#top")
+      v-scroll-to="'#top'")
 
   footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
     .w-divider.fill-width.mb8
@@ -76,6 +76,14 @@ export default {
           if (binding.value(evt, el)) window.removeEventListener('scroll', f)
         }
         window.addEventListener('scroll', f)
+      }
+    },
+    scrollTo: {
+      mounted: (el, binding) => {
+        el.addEventListener('click', () => {
+          const target = binding.value && document.querySelector(binding.value)
+          target.scrollIntoView()
+        })
       }
     }
   }
