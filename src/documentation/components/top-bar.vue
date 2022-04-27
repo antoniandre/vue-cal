@@ -19,7 +19,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
-        w-button(
+        w-button.bd0(
           v-on="on"
           text
           tile
@@ -45,8 +45,8 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
 
-      //- show-on-hover
     w-menu(
+      show-on-hover
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
@@ -54,7 +54,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
-        w-button(
+        w-button.bd0(
           v-on="on"
           text
           tile
@@ -370,10 +370,14 @@ $lighter-text: #ccc;
 .top-menu li {font-size: 15px;}
 .top-menu li .heading {
   font-size: 14px;
-  color: #999;
+  color: #888;
   margin-top: 20px;
   padding: 8px 0;
   border-top: 1px solid #eee;
+  background: linear-gradient(90deg, rgba(128, 231, 172, 0.12), rgba(255, 255, 255, 0));
+
+  &:before {background: inherit;}
+  &:focus:before, &:hover:before {opacity: 1;}
 }
 
 @media screen and (max-width: 600px) {
