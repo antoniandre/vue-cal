@@ -126,3 +126,22 @@
 
 .pale-blue {color: #1471b8;}
 .w-app .vuecal-blue--bg {background-color: rgba(66, 163, 185, 0.8);}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 499px) {
+  .w-app div.announcement {margin-bottom: 16px;}
+  .w-app .announcement > .w-icon, .announcement > svg {
+    margin-right: 2px;
+    font-size: 35px !important;
+    width: 1em !important;
+  }
+  .announcement > svg {
+    width: 0.9em !important;
+    margin-right: 8px !important;
+  }
+  .w-app .announcement--github {
+    > .w-icon {margin-right: 6px;font-size: 30px !important;}
+    a {font-size: 14px;}
+  }
+}

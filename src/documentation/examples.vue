@@ -296,10 +296,10 @@
     h4.title2.mt6
       a(href="#ex--internationalization") # Internationalization
     .spacer
-    .w-flex.no-grow.align-center
+    .w-flex.no-grow.align-center.wrap
       w-icon.mr2(color="primary") material-icons translate
       span.mr2 Current language:
-      w-select.pa0.ma0.no-grow(
+      w-select.pa0.mla.no-grow(
         v-model="locale"
         :items="localesList"
         item-value-key="code"
@@ -441,7 +441,7 @@
     | #[br]You might want to change view as well when going to Today's date, here is an example how:
     a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
     w-icon(color="green lighten-2") fab fa-codepen
-  .w-flex.justify-center
+  .w-flex.justify-center.wrap
     .example.my2.mr3(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(
         ref="vuecal2"
@@ -913,11 +913,11 @@
   .w-flex.align-center.wrap
     | Click and drag on a cell to create an event, downwards or upwards.
     .spacer
-    w-button.mr1(
+    w-button.mr1.my1(
       :outline="!snapToTime15"
       @click="snapToTime15 = !snapToTime15")
       | Snap to time: 15min
-    w-button(
+    w-button.my1(
       outline
       @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
       | Clear all the events
@@ -2135,15 +2135,15 @@
 
   p.mb0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
   pre.mt2.ssh-pre.mb2.logs-box
-    .w-flex.wrap.align-center
+    .w-flex.wrap.align-center.justify-end
       .grey //&nbsp;
         strong event-name:&nbsp;
         span arguments-list
       .spacer
-      w-button(color="primary" outline @click="clearEventsLog")
+      w-button.my1(color="primary" outline @click="clearEventsLog")
         w-icon.mr1 material-icons clear
         | Clear log
-      w-button.ml2(color="primary" outline @click="logMouseEvents = !logMouseEvents")
+      w-button.my1.ml2(color="primary" outline @click="logMouseEvents = !logMouseEvents")
         w-icon.mr1 material-icons {{ logMouseEvents ? 'remove' : 'add' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
     .scrollable
@@ -2219,20 +2219,30 @@
     to a broader view.
 
   .w-flex.my2.mxa.align-center(style="max-width: 500px")
-    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'day'")
-      w-icon.ml2.mr1(v-if="activeView === 'day'") material-icons check
+    w-button.mx1.px2.grow(
+      v-bind="{ [activeView === 'day' ? 'bg-color' : 'color']: 'primary-dark1' }"
+      :outline="activeView !== 'day'"
+      @click="activeView = 'day'")
       | Day
-    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'week'")
-      w-icon.ml2.mr1(v-if="activeView === 'week'") material-icons check
+    w-button.mx1.px2.grow(
+      v-bind="{ [activeView === 'week' ? 'bg-color' : 'color']: 'primary-dark1' }"
+      :outline="activeView !== 'week'"
+      @click="activeView = 'week'")
       | Week
-    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'month'")
-      w-icon.ml2.mr1(v-if="activeView === 'month'") material-icons check
+    w-button.mx1.px2.grow(
+      v-bind="{ [activeView === 'month' ? 'bg-color' : 'color']: 'primary-dark1' }"
+      :outline="activeView !== 'month'"
+      @click="activeView = 'month'")
       | Month
-    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'year'")
-      w-icon.ml2.mr1(v-if="activeView === 'year'") material-icons check
+    w-button.mx1.px2.grow(
+      v-bind="{ [activeView === 'year' ? 'bg-color' : 'color']: 'primary-dark1' }"
+      :outline="activeView !== 'year'"
+      @click="activeView = 'year'")
       | Year
-    w-button.mx1.px2.grow(bg-color="primary-light1" @click="activeView = 'years'")
-      w-icon.ml2.mr1(v-if="activeView === 'years'") material-icons check
+    w-button.mx1.px2.grow(
+      v-bind="{ [activeView === 'years' ? 'bg-color' : 'color']: 'primary-dark1' }"
+      :outline="activeView !== 'years'"
+      @click="activeView = 'years'")
       | Years
 
   .w-flex.mt2.mb6.mxa.justify-center(style="max-width: 500px")
@@ -2266,7 +2276,8 @@
     &lt;button @click="$refs.vuecal.switchView('day', new Date())"&gt;Today&lt;/button&gt;
     &lt;button @click="$refs.vuecal.next()"&gt;Next&lt;/button&gt;
 
-    &lt;vue-cal small
+    &lt;vue-cal
+      small
       ref="vuecal"
       :active-view.sync="activeView"
       :time="false"
@@ -2303,7 +2314,7 @@
     To know more about emitted events refer to the
     #[a(href="#ex--emitted-events") emitted events example].
 
-  .w-flex.align-center.justify-center
+  .w-flex.align-center.justify-center.wrap
     vue-cal.vuecal--blue-theme(
       small
       :time="false"
@@ -2838,7 +2849,7 @@
       sticky-split-labels)
       template(v-slot:no-event) &nbsp;
       template(v-slot:split-label="{ split, view }")
-        w-icon(:color="split.color" size="18") person
+        w-icon(:color="split.color" size="18") material-icons person
         strong(:style="`color: ${split.color}`") {{ split.label }}
 
   ssh-pre(language="html-vue" label="Vue Template").

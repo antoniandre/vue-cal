@@ -3,7 +3,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
-    h1.w-flex.primary.px5
+    h1.w-flex.align-center.primary.px5
       a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         div.top-bar__logo-title Vue Cal
@@ -15,7 +15,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
-      menu-class="mt0 top-menu"
+      menu-class="mt0 top-menu top-menu--doc"
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
@@ -49,7 +49,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
-      menu-class="mt0 top-menu"
+      menu-class="mt0 top-menu top-menu--examples"
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
@@ -403,6 +403,22 @@ $lighter-text: #ccc;
 }
 
 @media screen and (max-width: 449px) {
+  .top-bar.scrolled .top-bar__items {margin-right: 0;}
+  .top-bar.scrolled .top-bar__title > .w-flex {padding-left: 8px;}
+  .top-bar__title {width: 14.5em;}
+  .top-bar .intro {
+    font-size: 11px;
+    left: 72px;
+    letter-spacing: -0.3px;
+  }
   .top-bar__items .w-button__content span {display: none;}
+  .top-menu--examples li {font-size: 13px;}
+  .top-menu--examples li .heading {
+    margin-top: 12px;
+    padding-top: 4px;
+    padding-bottom: 4px;
+    padding-left: 30px;
+  }
+  .top-menu--examples li .w-list__item-label > div {padding-left: 8px;}
 }
 </style>

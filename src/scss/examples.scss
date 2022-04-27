@@ -242,3 +242,15 @@
 }
 
 .logs-box {white-space: pre-wrap;}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 800px) {
+  .ex--custom-day-split-labels .day-split-header .w-icon {display: none;}
+  .ex--custom-day-split-labels .day-split-header strong {
+    overflow: hidden;
+    width: 0.9em;
+    font-size: 13px;
+    letter-spacing: 10px;
+  }
+}

@@ -230,4 +230,10 @@ $kate: #ff7fc8;
   }
   // ------------------------------------------------------
 }
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 499px) {
+  .main-demo .day-split-header strong {display: none;}
+}
 </style>
