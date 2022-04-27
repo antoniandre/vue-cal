@@ -69,14 +69,22 @@
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" active-view="month" xsmall)
-      template(v-slot:arrow-prev)
+      template(#arrow-prev)
         w-icon material-icons arrow_back
-      template(v-slot:arrow-next)
+      template(#arrow-next)
         w-icon material-icons arrow_forward
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal hide-view-selector :time="false" active-view="month" xsmall&gt;
-      &lt;i v-slot:arrow-prev aria-hidden="true" class="icon material-icons"&gt;arrow_back&lt;/i&gt;
-      &lt;i v-slot:arrow-next aria-hidden="true" class="icon material-icons"&gt;arrow_forward&lt;/i&gt;
+    &lt;vue-cal
+      hide-view-selector
+      :time="false"
+      active-view="month"
+      xsmall&gt;
+      &lt;template #arrow-prev&gt;
+        &lt;i class="icon material-icons"&gt;arrow_back&lt;/i&gt;
+      &lt;/template&gt;
+      &lt;template #arrow-next&gt;
+        &lt;i class="icon material-icons"&gt;arrow_forward&lt;/i&gt;
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -304,7 +312,7 @@
         :items="localesList"
         item-value-key="code"
         style="width: 200px")
-        template(v-slot:selection="{ item }")
+        template(#selection="{ item }")
           span.mr2 {{ item.label }}
           w-tag.code.ma0(bg-color="grey-light5" round) {{ item.code }}
   a#ex--internationalization(name="ex--internationalization")
@@ -462,26 +470,27 @@
         today-button
         active-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
-        template(v-slot:today-button)
+        template(#today-button)
           w-tooltip(bottom)
-            template(v-slot:activator="{ on }")
+            template(#activator="{ on }")
               w-button(x-Programmatically fab text v-on="on")
                 w-icon(color="primary" size="20") material-icons my_location
             span Go to Today's date
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal ref="vuecal"
-             xsmall
-             hide-weekends
-             :disable-views="['years']"
-             :time="false"
-             today-button
-             active-view="month"
-             :selected-date="selectedDate"&gt;
+    &lt;vue-cal
+      ref="vuecal"
+      xsmall
+      hide-weekends
+      :disable-views="['years']"
+      :time="false"
+      today-button
+      active-view="month"
+      :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
-      &lt;template v-slot:today-button&gt;
+      &lt;template #today-button&gt;
         &lt;!-- Using Vuetify --&gt;
         &lt;v-tooltip&gt;
-          &lt;template v-slot:activator="{ on }"&gt;
+          &lt;template #activator="{ on }"&gt;
             &lt;v-btn v-on="on"&gt;
               &lt;v-icon&gt;my_location&lt;/v-icon&gt;
             &lt;/v-btn&gt;
@@ -2468,9 +2477,10 @@
         @ready="scrollToCurrentTime('.ex--scroll-to-time')")
     .grow
       ssh-pre.mt4.grow(language="html-vue" label="Vue Template").
-        &lt;vue-cal id="vuecal"
-                 :time-cell-height="timeCellHeight"
-                 @ready="scrollToCurrentTime"&gt;
+        &lt;vue-cal
+          id="vuecal"
+          :time-cell-height="timeCellHeight"
+          @ready="scrollToCurrentTime"&gt;
         &lt;/vue-cal&gt;
       ssh-pre.mt4.grow(language="js" label="Javascript").
         // `timeCellHeight` is set to 26 in the component data.
@@ -2502,7 +2512,7 @@
       active-view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
-      template(v-slot:time-cell="{ hours, minutes }")
+      template(#time-cell="{ hours, minutes }")
         .vuecal__time-cell-line(:class="{ hours: !minutes }")
           strong.primary(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
           span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
@@ -2510,14 +2520,15 @@
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
     #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[w-icon(color="primary") material-icons open_in_new]]
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal small
-             :time-from="5 * 60"
-             :time-step="15"
-             :time-cell-height="18"
-             active-view="day"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends&gt;
-      &lt;template v-slot:time-cell="{ hours, minutes }"&gt;
+    &lt;vue-cal
+      small
+      :time-from="5 * 60"
+      :time-step="15"
+      :time-cell-height="18"
+      active-view="day"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends&gt;
+      &lt;template #time-cell="{ hours, minutes }"&gt;
         &lt;div :class="{ 'vuecal__time-cell-line': true, hours: !minutes }"&gt;
           &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
           &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
@@ -2551,7 +2562,7 @@
       :disable-views="['day']"
       events-count-on-year-view
       :events="events")
-      template(v-slot:events-count="{ events, view }")
+      template(#events-count="{ events, view }")
         span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
 
   ssh-pre(language="html-vue" label="Vue Template").
@@ -2564,7 +2575,7 @@
       active-view="month"
       events-count-on-year-view
       :events="events"&gt;
-      &lt;template v-slot:events-count="{ events, view }"&gt;
+      &lt;template #events-count="{ events, view }"&gt;
         &lt;span v-if="customEventsCount(events)"&gt;
           {{ '\{\{ customEventsCount(events) \}\}' }}
         &lt;/span&gt;
@@ -2577,9 +2588,13 @@
     (Refer to the next example to know more:
     #[a(href="#ex--custom-title-and-cells") Custom title &amp; cells])
   ssh-pre.mt2(language="html-vue" label="Vue Template").
-    &lt;template v-slot:cell-content="{ cell, view, events }"&gt;
-      &lt;span class="vuecal__cell-date"&gt;{{ '\{\{ cell.content \}\}' }}&lt;/span&gt;
-      &lt;span class="vuecal__cell-events-count" v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
+    &lt;template #cell-content="{ cell, view, events }"&gt;
+      &lt;span class="vuecal__cell-date"&gt;
+        {{ '\{\{ cell.content \}\}' }}
+      &lt;/span&gt;
+      &lt;span
+        class="vuecal__cell-events-count"
+        v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
         {{ '\{\{ customEventsCount(events) \}\}' }}
       &lt;/span&gt;
     &lt;/template&gt;
@@ -2615,7 +2630,7 @@
     w-icon(size="22") material-icons keyboard_arrow_right
     | Custom title
   p.ml2.mb2.
-    2 arguments are available through the scoped slot: #[span.code v-slot:title="{ title, view }"]
+    2 arguments are available through the scoped slot: #[span.code #title="{ title, view }"]
   ul
     li
       | #[span.code title], the formatted title (different on all the views). E.g.
@@ -2641,7 +2656,7 @@
   p.ml2.mb2.
     In this example, only the cell number is clickable on month view.#[br]
     5 arguments are available through the scoped slot:#[br]
-    #[span.code v-slot:cell-content="{ cell, view, split, events, goNarrower }"]
+    #[span.code #cell-content="{ cell, view, split, events, goNarrower }"]
   ul
     li #[span.code cell], object containing the cell date.
       ssh-pre(language="js").mt2.mb2.
@@ -2689,7 +2704,7 @@
       :dblclick-to-navigate="false"
       active-view="month"
       :events="events")
-      template(v-slot:title="{ title, view }")
+      template(#title="{ title, view }")
         | 🎉&nbsp;
         span(v-if="view.id === 'years'") Years
         span(v-else-if="view.id === 'year'") {{ view.startDate.format('YYYY') }}
@@ -2697,19 +2712,20 @@
         span(v-else-if="view.id === 'week'") w{{ view.startDate.getWeek() }} ({{ view.startDate.format('MMM YYYY') }})
         span(v-else-if="view.id === 'day'") {{ view.startDate.format('dddd D MMMM (YYYY)') }}
         | &nbsp;🎉
-      template(v-slot:cell-content="{ cell, view, events, goNarrower }")
+      template(#cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :time="false"
-             :dblclick-to-navigate="false"
-             active-view="month"
-             :events="events"&gt;
+    &lt;vue-cal
+      :time="false"
+      :dblclick-to-navigate="false"
+      active-view="month"
+      :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
-      &lt;template v-slot:title="{ title, view }"&gt;
+      &lt;template #title="{ title, view }"&gt;
         🎉
         &lt;span v-if="view.id === 'years'"&gt;Years&lt;/span&gt;
         &lt;!-- Using Vue Cal injected Date prototypes --&gt;
@@ -2721,7 +2737,7 @@
       &lt;/template&gt;
 
       &lt;!-- Custom cells --&gt;
-      &lt;template v-slot:cell-content="{ cell, view, events, goNarrower }"&gt;
+      &lt;template #cell-content="{ cell, view, events, goNarrower }"&gt;
         &lt;span class="vuecal__cell-date" :class="view.id" v-if="view.id === 'day'" @click="goNarrower"&gt;
           {{ '\{\{ cell.date.getDate() \}\}' }}
         &lt;/span&gt;
@@ -2730,7 +2746,7 @@
       &lt;/template&gt;
 
       &lt;!-- Alternatively to custom cells if you just want custom no-event text: --&gt;
-      &lt;!-- &lt;template v-slot:no-event&gt;Nothing here 👌&lt;/template&gt; --&gt;
+      &lt;!-- &lt;template #no-event&gt;Nothing here 👌&lt;/template&gt; --&gt;
     &lt;/vue-cal&gt;
 
   //- Example.
@@ -2782,7 +2798,7 @@
       :time-to="19 * 60"
       hide-weekends
       :events="eventsToPop")
-      template(v-slot:event="{ event, view }")
+      template(#event="{ event, view }")
         w-icon.mt2(color="white" xl) material-icons {{ event.icon }}
         .vuecal__event-title.mb6(v-html="event.title")
         small.vuecal__event-time
@@ -2798,7 +2814,7 @@
       :time-to="19 * 60"
       hide-weekends
       :events="events"&gt;
-      &lt;template v-slot:event="{ event, view }"&gt;
+      &lt;template #event="{ event, view }"&gt;
         &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
 
         &lt;div class="vuecal__event-title" v-html="event.title" /&gt;
@@ -2809,7 +2825,7 @@
              v-html="event.title" /&gt;
 
         &lt;small class="vuecal__event-time"&gt;
-          &lt;!-- Using Vue Cal injected Date prototypes --&gt;
+          &lt;!-- Using Vue Cal Date prototypes --&gt;
           &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
           &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
         &lt;/small&gt;
@@ -2847,18 +2863,19 @@
       :split-days="customDaySplitLabels"
       :hide-weekdays="[5, 6, 7]"
       sticky-split-labels)
-      template(v-slot:no-event) &nbsp;
-      template(v-slot:split-label="{ split, view }")
+      template(#no-event) &nbsp;
+      template(#split-label="{ split, view }")
         w-icon(:color="split.color" size="18") material-icons person
         strong(:style="`color: ${split.color}`") {{ split.label }}
 
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :disable-views="['years', 'year', 'month']"
-             active-view="day"
-             :split-days="daySplits"
-             :hide-weekdays="[5, 6, 7]"
-             sticky-split-labels&gt;
-      &lt;template v-slot:split-label="{ split, view }"&gt;
+    &lt;vue-cal
+      :disable-views="['years', 'year', 'month']"
+      active-view="day"
+      :split-days="daySplits"
+      :hide-weekdays="[5, 6, 7]"
+      sticky-split-labels&gt;
+      &lt;template #split-label="{ split, view }"&gt;
         &lt;i class="icon material-icons"&gt;person&lt;/i&gt;
         &lt;strong :style="`color: ${split.color}`"&gt;{{ '\{\{ split.label \}\}' }}&lt;/strong&gt;
       &lt;/template&gt;
@@ -2918,8 +2935,8 @@
           label-color="grey")
     .w-flex.mt6
       .spacer
-      w-button.ma1(bg-color="light-grey" @click="cancelEventCreation()") Cancel
-      w-button.ma1(@click="closeCreationDialog()") Save
+      w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
+      w-button.ma1(@click="closeCreationDialog") Save
 </template>
 
 <script>
@@ -3419,7 +3436,7 @@ export default {
       e.stopPropagation()
     },
     cancelEventCreation () {
-      this.closeCreationDialog();
+      this.closeCreationDialog()
       (this.deleteEventFunction || this.deleteDragEventFunction)()
     },
     closeCreationDialog () {

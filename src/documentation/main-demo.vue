@@ -32,7 +32,7 @@
         :events="demoExample.events"
         @cell-focus="selectedDate = $event.date || $event"
         style="height: 450px")
-        template(v-slot:split-label="{ split, view }")
+        template(#split-label="{ split, view }")
           w-icon(:color="split.color" size="20") material-icons person
           strong(:style="`color: ${split.color}`") {{ split.label }}
       a.mt4.w-flex.justify-end.grey-light1(
