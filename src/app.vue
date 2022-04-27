@@ -19,7 +19,29 @@ w-app(:class="{ ready }" v-scroll="onScroll")
     .xs12.sm6.text-center.smu-text-left.copyright.
       Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
     .xs12.sm6.text-center.smu-text-right.made-with
-      .mb1 This documentation is made with #[w-icon fab fa-vuejs], #[w-icon fab fa-html5], #[w-icon fab fa-css3], #[w-icon fab fa-sass] &amp; #[w-icon.heart material-icons favorite]
+      .mb1
+        | This documentation is made with
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on") fab fa-vuejs
+          | Vue
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on") fab fa-html5
+          | HTML5 &amp; Pug
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon.ml1(v-on="on") fab fa-css3
+          | CSS3
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon.ml1(v-on="on") fab fa-sass
+          | SCSS
+        span.ml2.mr1 &amp;
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on").heart material-icons favorite
+          | Love
       | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
 </template>
 
