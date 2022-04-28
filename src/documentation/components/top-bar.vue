@@ -10,8 +10,8 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
-    //- a.w-button(href="#top") school
     w-menu(
+      show-on-hover
       hide-on-menu-click
       align-right
       transition="slide-fade-down"
