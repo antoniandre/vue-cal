@@ -611,42 +611,42 @@ div
     strong.mr2.
       With this set of functions, you will most likely not need #[em Moment.js] or any other additional Date library!#[br]#[br]
       Once Vue Cal is loaded, you can access the following functions from anywhere in your code
-      just like a simple #[span.code Date] function.
+      just like a simple #[span.code Date] function.#[br]
     | E.g. #[span.code (new Date()).addDays(2)]
 
   ul
     li.mt3
-      code.mr2 .addDays(days)
+      code.text-bold.mr2 .addDays(days)
       | Adds days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code days]` is an integer.
     li.mt3
-      code.mr2 .subtractDays(days)
+      code.text-bold.mr2 .subtractDays(days)
       | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code days]` is an integer.
     li.mt3
-      code.mr2 .addHours(hours)
+      code.text-bold.mr2 .addHours(hours)
       | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code hours]` is an integer.
     li.mt3
-      code.mr2 .subtractHours(hours)
+      code.text-bold.mr2 .subtractHours(hours)
       | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code hours]` is an integer.
     li.mt3
-      code.mr2 .addMinutes(minutes)
+      code.text-bold.mr2 .addMinutes(minutes)
       | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code minutes]` is an integer.
     li.mt3
-      code.mr2 .subtractMinutes(minutes)
+      code.text-bold.mr2 .subtractMinutes(minutes)
       | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
       | `#[span.code minutes]` is an integer.
     li.mt3
-      code.mr2 .getWeek()
+      code.text-bold.mr2 .getWeek()
       | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
     li.mt3
-      code.mr2 .isToday()
+      code.text-bold.mr2 .isToday()
       | Returns #[span.code true] if the date is Today.
     li.mt3
-      code.mr2 .isLeapYear()
+      code.text-bold.mr2 .isLeapYear()
       | Returns #[span.code true] if the date is in a leap year.
 
   h3.mt4 And because everyone needs a Date/time formatting function...
@@ -655,31 +655,31 @@ div
 
   ul
     li.mt3
-      code.mr2 .format(format)
+      code.text-bold.mr2 .format(format)
       div.
         Returns a formatted date string.
         Default format is #[span.code 'YYYY-MM-DD'], but you can use any formatting keyword from
         this list, and add any character not present in this mapping:
       ul
-        li #[strong.code.black YYYY]: full year. #[span.grey.ml2 E.g. `2019`]
-        li #[strong.code.black YY]: 2 last digits of the year. #[span.grey.ml2 E.g. `19`]
-        li #[strong.code.black MMMM]: month in full. #[span.grey.ml2 E.g. `January`]
-        li #[strong.code.black MMM]: 3 first letters of the month. #[span.grey.ml2 E.g. `Jan`]
-        li #[strong.code.black MM]: month number with leading zero. (01-12) #[span.grey.ml2 E.g. `01`]
-        li #[strong.code.black M]: month number without leading zero. (1-12) #[span.grey.ml2 E.g. `1`]
-        li #[strong.code.black DD]: date of the month with leading zero. (01-31) #[span.grey.ml2 E.g. `01`]
-        li #[strong.code.black D]: date of the month without leading zero. (1-31) #[span.grey.ml2 E.g. `1`]
+        li #[strong.code.black YYYY]: full year. #[span.grey-light1.ml2 // `2019`]
+        li #[strong.code.black YY]: 2 last digits of the year. #[span.grey-light1.ml2 // `19`]
+        li #[strong.code.black MMMM]: month in full. #[span.grey-light1.ml2 // `January`]
+        li #[strong.code.black MMM]: 3 first letters of the month. #[span.grey-light1.ml2 // `Jan`]
+        li #[strong.code.black MM]: month number with leading zero. (01-12) #[span.grey-light1.ml2 // `01`]
+        li #[strong.code.black M]: month number without leading zero. (1-12) #[span.grey-light1.ml2 // `1`]
+        li #[strong.code.black DD]: date of the month with leading zero. (01-31) #[span.grey-light1.ml2 // `01`]
+        li #[strong.code.black D]: date of the month without leading zero. (1-31) #[span.grey-light1.ml2 // `1`]
         li.
           #[strong.code.black S]: (usually with surrounding #[span.code `{ }`]) only in English,
           will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
-        li #[strong.code.black dddd]: day of the week in full. #[span.grey.ml2 E.g. `Monday`]
-        li #[strong.code.black ddd]: 3 first letters of the day of the week. #[span.grey.ml2 E.g. `Mon`]
-        li #[strong.code.black dd]: first letter of the day of the week. #[span.grey.ml2 E.g. `M`]
-        li #[strong.code.black d]: number of the day of the week. (1-7) #[span.grey.ml2 E.g. `1` for Monday]
+        li #[strong.code.black dddd]: day of the week in full. #[span.grey-light1.ml2 // `Monday`]
+        li #[strong.code.black ddd]: 3 first letters of the day of the week. #[span.grey-light1.ml2 // `Mon`]
+        li #[strong.code.black dd]: first letter of the day of the week. #[span.grey-light1.ml2 // `M`]
+        li #[strong.code.black d]: number of the day of the week. (1-7) #[span.grey-light1.ml2 // `1` for Monday]
         li #[strong.black And also all the keywords from the following #[span.code formatTime()] function.]
 
     li.mt3
-      code.mr2 .formatTime(format)
+      code.text-bold.mr2 .formatTime(format)
       div.
         Returns a formatted time string.#[br]
         The #[span.code format()] function can also do this, but this might be a shortcut if you just want
@@ -689,12 +689,12 @@ div
         Default format is #[span.code 'HH:mm'], but you can use any formatting keyword from
         this list, and add any character not present in this mapping:
       ul
-        li #[strong.code.black HH]: Hours with leading zero, 24-hour format. (00-24)#[span.grey.ml2 E.g. `20`]
-        li #[strong.code.black H]: Hours without leading zero, 24-hour format. (0-24)#[span.grey.ml2 E.g. `20`]
-        li #[strong.code.black hh]: Hours with leading zero, 12-hour format. #[span.grey.ml2 E.g. `08`]
-        li #[strong.code.black h]: Hours without leading zero, 12-hour format. #[span.grey.ml2 E.g. `8`]
-        li #[strong.code.black mm]: Minutes with leading zero. #[span.grey.ml2 E.g. `08`]
-        li #[strong.code.black m]: Minutes without leading zero. #[span.grey.ml2 E.g. `8`]
+        li #[strong.code.black HH]: Hours with leading zero, 24-hour format. (00-24)#[span.grey-light1.ml2 // `20`]
+        li #[strong.code.black H]: Hours without leading zero, 24-hour format. (0-24)#[span.grey-light1.ml2 // `20`]
+        li #[strong.code.black hh]: Hours with leading zero, 12-hour format. #[span.grey-light1.ml2 // `08`]
+        li #[strong.code.black h]: Hours without leading zero, 12-hour format. #[span.grey-light1.ml2 // `8`]
+        li #[strong.code.black mm]: Minutes with leading zero. #[span.grey-light1.ml2 // `08`]
+        li #[strong.code.black m]: Minutes without leading zero. #[span.grey-light1.ml2 // `8`]
         li #[strong.code.black am]: (usually with surrounding #[span.code `{ }`]) am or pm (also localized if any)
 
   highlight-message.my4(type="tips")

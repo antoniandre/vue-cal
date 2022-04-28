@@ -727,6 +727,7 @@
     w-radios.d-iblock(
       v-model="indicatorStyle"
       inline
+      label-color="grey"
       :items="indicatorStyleOptions")
   .w-flex.maa.justify-center.wrap
     .example.ma2.my2(style="width: 300px;height: 360px")
@@ -962,14 +963,16 @@
   p.mb1.
     In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
     even with an accidental move while double-clicking.
-  p try to double click to go to the day view with both #[span.code dragToCreateThreshold] to 15 and 0.
+  p try to double click on a cell to go to the day view with both #[span.code dragToCreateThreshold] to 15 and 0.
   .w-flex.wrap.align-center.justify-end
-    span.subtitle-1 Current dragToCreateThreshold:
-    span.code.mr2 {{ dragToCreateThreshold }}
-    w-button(
-      @click="dragToCreateThreshold = dragToCreateThreshold ? 0 : 15")
-        | Set threshold to
-        span.ml2 {{ dragToCreateThreshold ? 0 : 15 }}
+    span.subtitle-1.mr2 dragToCreateThreshold (px):
+    w-radios.d-iblock(
+      v-model="dragToCreateThreshold"
+      inline
+      label-color="grey"
+      :items="dragToCreateThresholdOpts")
+      template(#item="{ item }")
+        code {{ item.label }}
   .example.grow.mt3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
       :time-from="10 * 60"
@@ -1060,20 +1063,21 @@
             :drag-to-create-event="false")
         ssh-pre.my2(language="html-vue" style="font-size: 0.8em").
           &lt;button @click="customEventCreation"&gt;
-              button
+            button
           &lt;/button&gt;
 
-          &lt;vue-cal ref="vuecal"
-                   small
-                   :time-from="10 * 60"
-                   :time-to="16 * 60"
-                   :disable-views="['years', 'year']"
-                   hide-view-selector
-                   hide-title-bar
-                   hide-weekends
-                   editable-events
-                   :cell-click-hold="false"
-                   :drag-to-create-event="false"&gt;
+          &lt;vue-cal
+            ref="vuecal"
+            small
+            :time-from="10 * 60"
+            :time-to="16 * 60"
+            :disable-views="['years', 'year']"
+            hide-view-selector
+            hide-title-bar
+            hide-weekends
+            editable-events
+            :cell-click-hold="false"
+            :drag-to-create-event="false"&gt;
           &lt;/vue-cal&gt;
       p Then you can give custom event attributes as you wish:
       ssh-pre.mt3(language="js" label="Javascript").
@@ -2898,19 +2902,18 @@
     .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
     .vuecal__no-event {display: none;}
 
-  w-dialog(v-model="showDialog" width="600")
-    w-card(title-class="primary--bg white py2")
-      template(#title)
-        w-icon.mr3 material-icons {{ selectedEvent.icon }}
-        span.title1.text-upper {{ selectedEvent.title }}
-        .spacer
-        strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
+  w-dialog(v-model="showDialog" width="600" dialog-class="bdrs2" title-class="primary--bg white py2")
+    template(#title)
+      w-icon.mr3 material-icons {{ selectedEvent.icon }}
+      span.title3.text-upper {{ selectedEvent.title }}
+      .spacer
+      strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
 
-      p(v-html="selectedEvent.contentFull")
-      strong Event details:
-      ul
-        li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
-        li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
+    p(v-html="selectedEvent.contentFull")
+    .text-bold.mt3 Event details:
+    ul
+      li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
+      li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
 
   w-dialog(
     v-model="showEventCreationDialog"
@@ -3077,6 +3080,7 @@ export default {
     logMouseEvents: false,
     snapToTime15: false,
     dragToCreateThreshold: 15,
+    dragToCreateThresholdOpts: [{ label: '0' }, { label: '15' }],
     customDaySplitLabels: [
       { label: 'John', color: 'blue', class: 'split1' },
       { label: 'Tom', color: 'green', class: 'split2' },

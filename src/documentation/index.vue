@@ -42,14 +42,14 @@
     w-alert.message-box(border-left color="pink")
       | If you like Vue Cal, you can
       a.pink.mx2(
-        href="https://www.paypal.me/antoniandre1"
-        target="_blank"
-        style="text-decoration: underline") #[strong Support the project]
-      | or
-      a.pink.ml2(
         href="https://github.com/sponsors/antoniandre"
         target="_blank"
-        style="text-decoration: underline") #[strong Sponsor the author]
+        style="text-decoration: underline") #[strong Sponsor me]
+      | or
+      a.pink.ml2(
+        href="https://www.paypal.me/antoniandre1"
+        target="_blank"
+        style="text-decoration: underline") #[strong buy me a coffee]
       | !
       div Thank you so much to all the backers! #[span.title2.ml1 🙏]
 
@@ -59,7 +59,7 @@
     w-alert.message-box.ml-1(border-left color="pale-blue")
       strong
         | Check out my UI framework for Vue (2 &amp; 3)!
-        a.title2.ml4(
+        a.title3.ml4(
           href="https://antoniandre.github.io/wave-ui"
           target="_blank"
           style="width: 50px;color: #1471b8;text-decoration: underline")
