@@ -1,28 +1,78 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { terser } from "rollup-plugin-terser" // Minifier.
 import { resolve } from 'path'
-import Delete from 'rollup-plugin-delete'
 
-// @todo: rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n ./dist/vuecal.common.drag-and-drop.js ./dist/vuecal.umd.drag-and-drop.js && mv ./dist/vuecal.umd.min.i18n ./dist/i18n && mv ./dist/vuecal.umd.min.drag-and-drop.js ./dist/drag-and-drop.js && rm ./dist/demo.html
+// const isProduction = process.env.NODE_ENV === 'production'
+
+const pkg = require(resolve(__dirname, `package.json`))
+const banner = `/*!
+  * ${pkg.name} v${pkg.version}
+  * (c) ${new Date().getFullYear()} ${pkg.author}
+  * @license MIT
+  */`
 
 const bundlingConf = {
   lib: {
-    entry: resolve(__dirname, '/src/vue-cal/index.js'),
-    name: 'vue-cal',
-    formats: ['es', 'umd', 'cjs']
+    entry: resolve(__dirname, 'src/vue-cal/index.vue'),
+    name: 'vuecal' // For IIFE.
   },
   rollupOptions: {
-    plugins: [
-      // Rollup generates all the files, then remove what we don't want.
-      // @todo: find a better way.
-      Delete({ targets: ['dist/{images,.htaccess}', 'dist/*.{ico,txt,html}'], hook: 'generateBundle' })
-    ],
     // Make sure to externalize deps that shouldn't be bundled into library.
     external: ['vue'],
-    output: {
-      // Provide global variables to use in the UMD build for externalized deps.
-      globals: { vue: 'Vue' }
-    }
+
+    output: [
+      // Works with dynamic import().
+      {
+        format: 'es',
+        dir: 'dist',
+        banner,
+        plugins: [terser()], // Minify.
+        manualChunks(id) {
+          const match = /i18n\/(.{2,5})\.json/.exec(id)
+          if (match) return 'i18n/' + match[1] + '.es'
+          else if (id.includes('drag-and-drop')) return 'drag-and-drop.es'
+        }
+      },
+
+      // Works with dynamic import().
+      {
+        format: 'cjs',
+        dir: 'dist',
+        banner,
+        manualChunks(id) {
+          const match = /i18n\/(.{2,5})\.json/.exec(id)
+          if (match) return 'i18n/' + match[1] + '.cjs'
+          else if (id.includes('drag-and-drop')) return 'drag-and-drop.cjs'
+        }
+      },
+
+      // Works with dynamic import().
+      {
+        format: 'amd',
+        name: 'vuecal',
+        dir: 'dist',
+        // Provide global variables to use in the UMD build for externalized deps.
+        globals: { vue: 'Vue' },
+        banner,
+        manualChunks(id) {
+          const match = /i18n\/(.{2,5})\.json/.exec(id)
+          if (match) return 'i18n/' + match[1] + '.amd'
+          else if (id.includes('drag-and-drop')) return 'drag-and-drop.amd'
+        }
+      },
+
+      // IIFE & UMD don't work with dynamic import().
+      {
+        format: 'iife',
+        name: 'vuecal',
+        inlineDynamicImports: true, // Everything contained in a single file.
+        dir: 'dist',
+        // Provide global variables to use in the UMD build for externalized deps.
+        globals: { vue: 'Vue' },
+        banner
+      }
+    ]
   }
 }
 
