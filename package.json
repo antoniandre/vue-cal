@@ -16,7 +16,6 @@
   "jsdelivr": "dist/vue-cal.es.js",
   "exports": {
     "./dist/vue-cal.css": "./dist/vue-cal.css",
-    "./dist/vuecal.css": "./dist/vue-cal.css",
     "./dist/vue-cal.cjs.js": "./dist/vue-cal.cjs.js",
     ".": {
       "import": "./dist/vue-cal.es.js",
