@@ -6,20 +6,21 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --base /vue-cal/",
-    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vue-cal.css",
+    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vue-cal.css && rm ./dist/favicon.ico",
     "serve": "vite preview --root docs --base /vue-cal/",
     "lint": "vite lint"
   },
-  "main": "./dist/vue-cal.umd.js",
-  "unpkg": "dist/vue-cal.umd.js",
-  "jsdelivr": "dist/vue-cal.umd.js",
-  "module": "./dist/vue-cal.es.js",
+  "main": "dist/vue-cal.cjs.js",
+  "module": "dist/vue-cal.es.js",
+  "unpkg": "dist/vue-cal.es.js",
+  "jsdelivr": "dist/vue-cal.es.js",
   "exports": {
     "./dist/vue-cal.css": "./dist/vue-cal.css",
+    "./dist/vuecal.css": "./dist/vue-cal.css",
     "./dist/vue-cal.cjs.js": "./dist/vue-cal.cjs.js",
     ".": {
       "import": "./dist/vue-cal.es.js",
-      "require": "./dist/vue-cal.umd.js"
+      "require": "./dist/vue-cal.cjs.js"
     }
   },
   "files": [
