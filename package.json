@@ -3,6 +3,10 @@
   "version": "4.3.1",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
+  "repository": "https://github.com/antoniandre/vue-cal",
+  "homepage": "https://antoniandre.github.io/vue-cal",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antoniandre",
   "scripts": {
     "dev": "vite",
     "build": "vite build --base /vue-cal/",
@@ -44,17 +48,22 @@
     "simple-syntax-highlighter": "^2.2.0",
     "vite": "^2.9.5",
     "vite-plugin-pug": "^0.3.1",
-    "vue": "^3.2.33",
     "vue-router": "^4.0.14",
     "wave-ui": "^2.40.2"
   },
+  "peerDependencies": {
+    "vue": "^2.6.14 || ^3.2.0"
+  },
   "keywords": [
+    "vuecal",
+    "vue cal",
     "vue calendar",
     "full calendar",
+    "calendar events",
+    "vue",
     "vuejs",
-    "vue3",
+    "vue 3",
+    "vue 2",
     "ui"
-  ],
-  "license": "MIT",
-  "repository": "https://github.com/antoniandre/vue-cal"
+  ]
 }
