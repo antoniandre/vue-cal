@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --base /vue-cal/",
-    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vue-cal.css && rm ./dist/favicon.ico",
+    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vuecal.css && rm ./dist/favicon.ico",
     "serve": "vite preview --root docs --base /vue-cal/",
     "lint": "vite lint"
   },
@@ -19,7 +19,7 @@
   "unpkg": "dist/vue-cal.es.js",
   "jsdelivr": "dist/vue-cal.es.js",
   "exports": {
-    "./dist/vue-cal.css": "./dist/vue-cal.css",
+    "./dist/vuecal.css": "./dist/vuecal.css",
     "./dist/vue-cal.cjs.js": "./dist/vue-cal.cjs.js",
     ".": {
       "import": "./dist/vue-cal.es.js",
