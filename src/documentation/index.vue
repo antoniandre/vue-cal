@@ -163,21 +163,44 @@
         span.mx6 or
         ssh-pre.my0(language="shell") npm i vue-cal@legacy # Vue 2
 
-      p.mt4 Then import the component and use it:
-      ssh-pre.mt2(language="js" label="Javascript").
-        // In your Vue.js component.
+      p.mt6 Then import Vue Cal in your Vue component and use it:
+      ssh-pre.mb2(language="js").
         import VueCal from 'vue-cal'
         import 'vue-cal/dist/vuecal.css'
-        ...
 
         export default {
           components: { VueCal },
-          data: () => ({
-            ...
-          }),
           ...
         }
-    li
+
+      .demos.mt6.bdrs2.pa4
+        .title2.mb4 Demos on StackBlitz
+        .w-flex.align-center
+          w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") material-icons bolt
+          ul.no-bullet
+            li
+              w-icon.mr2 wi-chevron-right
+              a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
+                | Vue Cal + Vue 3 + Vue CLI
+                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+            li
+              w-icon.mr2 wi-chevron-right
+              a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
+                | Vue Cal + Vue 3 + Vite
+                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+            li
+              w-icon.mr2 wi-chevron-right
+              a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
+                | Vue Cal + Vue 3 &amp; composition API + Vite
+                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+
+            li
+              w-icon.mr2 wi-chevron-right
+              a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
+                | Vue Cal + Vue 2 + Vue CLI
+                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+
+    li.mt8
       h3.mt4 Via #[span.code &lt;script&gt;] tag
       p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
       ssh-pre.mt6(language="html" label="HTML").
@@ -194,6 +217,47 @@
           components: { 'vue-cal': vuecal },
           ...
         }
+      w-flex(wrap align-center)
+        .grow.ma2
+          ssh-pre.mb2(language="js" label="Vue 3").
+            // In your Vue.js component.
+            import VueCal from 'vue-cal'
+            import 'vue-cal/dist/vuecal.css'
+            ...
+
+            export default {
+              components: { VueCal },
+              data: () => ({
+                ...
+              }),
+              ...
+            }
+          p.mt0
+            w-icon.mr2 wi-chevron-right
+            | View the
+            a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
+              | Codepen Demo
+              w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
+        .grow.ma2
+          ssh-pre.mb2(language="js" label="Vue 2").
+            // In your Vue.js component.
+            import VueCal from 'vue-cal'
+            import 'vue-cal/dist/vuecal.css'
+            ...
+
+            export default {
+              components: { VueCal },
+              data: () => ({
+                ...
+              }),
+              ...
+            }
+          p.mt0
+            w-icon.mr2 wi-chevron-right
+            | View the
+            a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
+              | Codepen Demo
+              w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
 
   h2.title2.mt12.pt12
     a(href="#how-to-use") How to use
@@ -358,3 +422,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.demos {
+  background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
+
+  .w-icon.bolt {background-color: rgba(0, 0, 0, 0.05);}
+}
+</style>
