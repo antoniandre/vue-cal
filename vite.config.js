@@ -2,10 +2,10 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { terser } from "rollup-plugin-terser" // Minifier.
 import { resolve } from 'path'
+import pkg from './package.json'
 
 // const isProduction = process.env.NODE_ENV === 'production'
 
-const pkg = require(resolve(__dirname, `package.json`))
 const banner = `/*!
   * ${pkg.name} v${pkg.version}
   * (c) ${new Date().getFullYear()} ${pkg.author}
