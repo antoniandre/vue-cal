@@ -3,39 +3,75 @@
   h2.title2.mt12.pt12
     a(href="#examples") Examples
     a#examples(name="examples")
-  highlight-message.mt3(type="success" no-icon)
-    .w-flex
-      w-icon.ml1.mr3(color="green lighten-2") fab fa-codepen
-      div
-        .title Try it yourself on Codepen. Here is a set of frequent use cases:
-        ul.ml0.no-bullet
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank") Basic calendar
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/rPzWOJ" target="_blank") Calendar with events
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank") Calendar with custom events on month view
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank") Calendar with custom title
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank") Calendar with custom cells
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank") Localized calendar (i18n)
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank") 2 Vue Cal instances to show 2 weeks
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank") 12 Vue Cal instances to show a full year view (slower - not recommended)
-          li
-            w-icon(sm) wi-chevron-right
-            a.ml2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank") How to fetch events from a back-end
+
+  p.title3.
+    In addition to all the examples below, you can try these common use cases on Codepen.
+  p
+    | If you have a doubt about the setup, check back the examples of the
+    a.ml1(href="#installation") installation section
+    | .
+
+  .highlight-box.grow.mt4
+    .title2 Demos on Codepen
+    p.body.mb4.grey Try it yourself.
+    .w-flex.align-center
+      w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") fab fa-codepen
+      ul.no-bullet
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/pGJWjL?editors=1010" target="_blank")
+            | Basic calendar
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/xxWddyd?editors=1010" target="_blank")
+            | Calendar with events (Vue 3)
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/rPzWOJ?editors=1010" target="_blank")
+            | Calendar with events (Vue 2)
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank")
+            | Calendar with custom events on month view
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank")
+            | Calendar with custom title
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank")
+            | Calendar with custom cells
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank")
+            | Localized calendar (i18n)
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank")
+            | 2 Vue Cal instances to show 2 weeks
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank")
+            | 12 Vue Cal instances to show a full year view (slower - not recommended)
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank")
+            | How to fetch events from a back-end
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+        li.mt2
+          w-icon wi-chevron-right
+          a.ml2(href="https://codepen.io/collection/AMvOgd" target="_blank")
+            strong Browse the full Vue Cal Codepen collection
+            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
 
   h3
     a(href="#ex--basic")

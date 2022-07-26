@@ -163,101 +163,93 @@
         span.mx6 or
         ssh-pre.my0(language="shell") npm i vue-cal@legacy # Vue 2
 
-      p.mt6 Then import Vue Cal in your Vue component and use it:
-      ssh-pre.mb2(language="js").
-        import VueCal from 'vue-cal'
-        import 'vue-cal/dist/vuecal.css'
+      p.mt6 Then import Vue Cal in your Vue component and use it.
+      w-flex.vs-d-block(gap="6")
+        ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js").
+          import VueCal from 'vue-cal'
+          import 'vue-cal/dist/vuecal.css'
 
-        export default {
-          components: { VueCal },
-          ...
-        }
+          export default {
+            components: { VueCal },
+            ...
+          }
 
-      .demos.mt6.bdrs2.pa4
-        .title2.mb4 Demos on StackBlitz
-        .w-flex.align-center
-          w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") material-icons bolt
-          ul.no-bullet
-            li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 + Vue CLI
-                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
-            li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 + Vite
-                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
-            li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 &amp; composition API + Vite
-                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+        .highlight-box.grow.mt4
+          .title2 Demos on StackBlitz
+          p.body.mb4.grey Check the different setups for bundlers
+          .w-flex.align-center
+            w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") material-icons bolt
+            ul.no-bullet
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
+                  | Vue Cal + Vue 3 + Vue CLI
+                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
+                  | Vue Cal + Vue 3 + Vite
+                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
+                  | Vue Cal + Vue 3 &amp; composition API + Vite
+                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
 
-            li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 2 + Vue CLI
-                w-icon.mx1(sm style="margin-top: -2px") material-icons open_in_new
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
+                  | Vue Cal + Vue 2 + Vue CLI
+                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
 
     li.mt8
-      h3.mt4 Via #[span.code &lt;script&gt;] tag
+      h3.mt4 Or via #[span.code &lt;script&gt;] tag
       p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-      ssh-pre.mt6(language="html" label="HTML").
-        &lt;head&gt;
-          ...
-          &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
-          &lt;script src="https://unpkg.com/vue-cal"&gt;&lt;/script&gt;
-          &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
-        &lt;/head&gt;
+      w-tabs.my4(:items="2" content-class="pa0")
+        template(#item-title.1) Vue 3
+        template(#item-content.1)
+          ssh-pre.ma0(language="html").
+            &lt;head&gt;
+              ...
+              &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
+              &lt;script src="https://unpkg.com/vue-cal"&gt;&lt;/script&gt;
+              &lt;link href="https://unpkg.com/vue-cal/dist/vuecal.css" rel="stylesheet"&gt;
+            &lt;/head&gt;
+
+        template(#item-title.2) Vue 2
+        template(#item-content.2)
+          ssh-pre.ma0(language="html").
+            &lt;head&gt;
+              ...
+              &lt;script src="https://unpkg.com/vue@legacy"&gt;&lt;/script&gt;
+              &lt;script src="https://unpkg.com/vue-cal@legacy"&gt;&lt;/script&gt;
+              &lt;link href="https://unpkg.com/vue-cal@legacy/dist/vuecal.css" rel="stylesheet"&gt;
+            &lt;/head&gt;
+
       p Then define the component to use in your template:
-      ssh-pre.mt6(language="js" label="Javascript").
-        // In your Vue.js component.
-        export default {
-          components: { 'vue-cal': vuecal },
-          ...
-        }
-      w-flex(wrap align-center)
-        .grow.ma2
-          ssh-pre.mb2(language="js" label="Vue 3").
-            // In your Vue.js component.
-            import VueCal from 'vue-cal'
-            import 'vue-cal/dist/vuecal.css'
+      w-flex.vs-d-block(gap="6")
+        ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js").
+          // In your Vue.js component.
+          export default {
+            components: { VueCal: vuecal },
             ...
-
-            export default {
-              components: { VueCal },
-              data: () => ({
-                ...
-              }),
-              ...
-            }
-          p.mt0
-            w-icon.mr2 wi-chevron-right
-            | View the
-            a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
-              | Codepen Demo
-              w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
-        .grow.ma2
-          ssh-pre.mb2(language="js" label="Vue 2").
-            // In your Vue.js component.
-            import VueCal from 'vue-cal'
-            import 'vue-cal/dist/vuecal.css'
-            ...
-
-            export default {
-              components: { VueCal },
-              data: () => ({
-                ...
-              }),
-              ...
-            }
-          p.mt0
-            w-icon.mr2 wi-chevron-right
-            | View the
-            a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
-              | Codepen Demo
-              w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
+          }
+        .highlight-box.grow.mt4
+          .title2 Demos on Codepen
+          p.body.mb4.grey Check the different setups for direct browser use
+          .w-flex.align-center
+            w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") fab fa-codepen
+            ul.no-bullet
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
+                  | Vue Cal + Vue 3 (IIFE build)
+                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+              li
+                w-icon.mr2 wi-chevron-right
+                a.ml1(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank")
+                  | Vue Cal + Vue 2 (UMD build)
+                  w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
 
   h2.title2.mt12.pt12
     a(href="#how-to-use") How to use
@@ -424,9 +416,22 @@ export default {
 </script>
 
 <style lang="scss">
-.demos {
+.highlight-box {
   background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
+  padding: 16px;
+  border-radius: 8px;
 
-  .w-icon.bolt {background-color: rgba(0, 0, 0, 0.05);}
+  .w-icon.bolt {
+    width: 68px;
+    height: 68px;
+    background-color: rgba(0, 0, 0, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
+
+@media screen and (max-width: 830px) {
+  .w-app .vs-d-block {display: block;}
 }
 </style>
