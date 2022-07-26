@@ -16,15 +16,15 @@
   },
   "main": "dist/vue-cal.cjs.js",
   "module": "dist/vue-cal.es.js",
-  "unpkg": "dist/vue-cal.es.js",
-  "jsdelivr": "dist/vue-cal.es.js",
+  "unpkg": "dist/vue-cal.iife.js",
+  "jsdelivr": "dist/vue-cal.iife.js",
   "exports": {
-    "./dist/vuecal.css": "./dist/vuecal.css",
-    "./dist/vue-cal.cjs.js": "./dist/vue-cal.cjs.js",
     ".": {
       "import": "./dist/vue-cal.es.js",
       "require": "./dist/vue-cal.cjs.js"
-    }
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
   },
   "files": [
     "dist",
