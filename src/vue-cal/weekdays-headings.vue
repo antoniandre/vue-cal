@@ -150,7 +150,7 @@ $weekdays-headings-height-with-splits: 3.4em;
 
 // Media queries.
 //==================================//
-@media screen and(max-width: 550px) {
+@media screen and (max-width: 550px) {
   .vuecal__heading {
     line-height: 1.2;
 
@@ -170,7 +170,7 @@ $weekdays-headings-height-with-splits: 3.4em;
   }
 }
 
-@media screen and(max-width: 450px) {
+@media screen and (max-width: 450px) {
   .vuecal__heading {
     .xsmall,
     .vuecal--small & .xsmall,

@@ -273,12 +273,12 @@ export default {
 
 // Media queries.
 //==================================//
-@media screen and(max-width: 450px) {
+@media screen and (max-width: 450px) {
   .vuecal__title {font-size: 0.9em;}
   .vuecal__view-btn {padding-left: 0.6em;padding-right: 0.6em;}
 }
 
-@media screen and(max-width: 350px) {
+@media screen and (max-width: 350px) {
   .vuecal__view-btn {font-size: 1.1em;}
 }
 </style>
