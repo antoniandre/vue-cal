@@ -6,11 +6,11 @@ import pkg from './package.json'
 
 // const isProduction = process.env.NODE_ENV === 'production'
 
-const banner = `/*!
+const banner = `/**
   * ${pkg.name} v${pkg.version}
   * (c) ${new Date().getFullYear()} ${pkg.author}
   * @license MIT
-  */`
+  */\n`
 
 const bundlingConf = {
   lib: {
