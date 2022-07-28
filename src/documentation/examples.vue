@@ -365,12 +365,6 @@
       @ready="overrideDateTexts")
   ssh-pre(language="html-vue" label="Vue Template" reactive).
     &lt;vue-cal :time="false" small active-view="year" locale="{{ locale }}" /&gt;
-  highlight-message(type="warning") Don't forget to import the locale file you want as follows:
-  ssh-pre(language="js" label="Javascript" reactive).
-    // In your Vue.js component import the locale file in your component:
-    import VueCal from 'vue-cal'
-    import 'vue-cal/dist/i18n/{{ locale }}.js'
-    import 'vue-cal/dist/vuecal.css'
 
   h4 Alternative
   p.
@@ -1260,16 +1254,17 @@
       Note that #[span.code event-drag-create] gets fired on mouseup of the drag-create,
       whereas #[span.code onEventCreate] gets called as soon as the event appears on screen, while dragging.
     ssh-pre(language="html-vue" label="Vue Template").
-      &lt;vue-cal small
-                :time-from="10 * 60"
-                :time-to="16 * 60"
-                :disable-views="['years', 'year']"
-                hide-view-selector
-                hide-title-bar
-                hide-weekends
-                editable-events
-                :on-event-create="onEventCreate"
-                @event-drag-create="showEventCreationDialog = true"&gt;
+      &lt;vue-cal
+        small
+        :time-from="10 * 60"
+        :time-to="16 * 60"
+        :disable-views="['years', 'year']"
+        hide-view-selector
+        hide-title-bar
+        hide-weekends
+        editable-events
+        :on-event-create="onEventCreate"
+        @event-drag-create="showEventCreationDialog = true"&gt;
       &lt;/vue-cal&gt;
     ssh-pre(language="js" label="Javascript").
       data: () => ({
@@ -2558,7 +2553,7 @@
           span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt6(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal
       small
@@ -2587,7 +2582,7 @@
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class (orange color).
@@ -2665,7 +2660,7 @@
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
   h5.mt6.subtitle-1.font-weight-medium
     w-icon(size="22") material-icons keyboard_arrow_right
     | Custom title
@@ -2797,7 +2792,7 @@
 
   highlight-message.my2(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/v2/guide/components-slots.html#Scoped-Slots" target="_blank") vuejs.org/v2/guide/components-slots.html #[w-icon(color="primary") material-icons open_in_new]].
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]].
   highlight-message.my3(type="info")
     | By default an event is rendered as follows.#[br]
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
