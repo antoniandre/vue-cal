@@ -2965,7 +2965,7 @@
         w-select(
           :items="eventsCssClasses"
           placeholder="Event CSS Class"
-          @change="selectedEvent.class = $event"
+          @input="selectedEvent.class = $event"
           :model-value="selectedEvent.class"
           style="max-width: 170px")
         w-switch.no-grow(
