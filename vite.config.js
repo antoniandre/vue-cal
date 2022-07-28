@@ -69,8 +69,7 @@ const bundlingConf = {
         inlineDynamicImports: true, // Everything contained in a single file.
         dir: 'dist',
         // Provide global variables to use in the UMD build for externalized deps.
-        globals: { vue: 'Vue' },
-        banner
+        globals: { vue: 'Vue' }
       }
     ]
   }
