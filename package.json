@@ -1,18 +1,31 @@
 {
   "name": "vue-cal",
-  "version": "3.10.4",
+  "version": "4.3.2",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
+  "repository": "https://github.com/antoniandre/vue-cal",
+  "homepage": "https://antoniandre.github.io/vue-cal",
+  "license": "MIT",
+  "funding": "https://github.com/sponsors/antoniandre",
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint",
-    "build-bundle": "vue-cli-service build --target lib --name vuecal ./src/vue-cal/index.vue --dest ./dist",
-    "postbuild-bundle": "rm -rf ./dist/vuecal.common.i18n ./dist/vuecal.umd.i18n ./dist/vuecal.common.drag-and-drop.js ./dist/vuecal.umd.drag-and-drop.js && mv ./dist/vuecal.umd.min.i18n ./dist/i18n && mv ./dist/vuecal.umd.min.drag-and-drop.js ./dist/drag-and-drop.js && rm ./dist/demo.html"
+    "dev": "vite",
+    "build": "vite build --base /vue-cal/",
+    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vuecal.css && rm ./dist/favicon.ico",
+    "serve": "vite preview --root docs --base /vue-cal/",
+    "lint": "vite lint"
   },
-  "main": "./dist/vuecal.common.js",
-  "unpkg": "dist/vuecal.umd.min.js",
-  "jsdelivr": "dist/vuecal.umd.min.js",
+  "main": "dist/vue-cal.cjs.js",
+  "module": "dist/vue-cal.es.js",
+  "unpkg": "dist/vue-cal.iife.js",
+  "jsdelivr": "dist/vue-cal.iife.js",
+  "exports": {
+    ".": {
+      "import": "./dist/vue-cal.es.js",
+      "require": "./dist/vue-cal.cjs.js"
+    },
+    "./package.json": "./package.json",
+    "./dist/*": "./dist/*"
+  },
   "files": [
     "dist",
     "package.json",
@@ -20,40 +33,38 @@
     "LICENSE"
   ],
   "devDependencies": {
-    "@babel/plugin-proposal-private-methods": "^7.16.11",
+    "@babel/core": "^7.18.9",
+    "@babel/eslint-parser": "^7.18.9",
+    "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@fortawesome/fontawesome-free": "^5.15.4",
-    "@vue/cli-plugin-babel": "^4.5.17",
-    "@vue/cli-plugin-eslint": "^4.5.17",
-    "@vue/cli-plugin-router": "^4.5.17",
-    "@vue/cli-service": "^4.5.17",
-    "@vue/eslint-config-standard": "^5.1.2",
-    "babel-eslint": "^10.1.0",
-    "core-js": "^3.21.1",
-    "eslint": "^7.32.0",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^4.3.1",
-    "eslint-plugin-standard": "^4.1.0",
-    "eslint-plugin-vue": "^6.2.2",
-    "pug": "^3.0.2",
-    "pug-plain-loader": "^1.1.0",
-    "regenerator-runtime": "^0.13.9",
-    "sass-loader": "^10.2.1",
-    "simple-syntax-highlighter": "^1.5.0",
-    "vue": "^2.6.14",
-    "vue-cli-plugin-vuetify": "^2.4.8",
-    "vue-router": "^3.5.3",
-    "vue-scrollto": "^2.20.0",
-    "vue-template-compiler": "^2.6.14",
-    "vuetify": "^2.6.4"
+    "@mdi/font": "^6.9.96",
+    "@vitejs/plugin-vue": "^2.3.3",
+    "@vue/compiler-sfc": "^3.2.37",
+    "autoprefixer": "^10.4.7",
+    "eslint": "^8.20.0",
+    "rollup": "^2.77.2",
+    "rollup-plugin-terser": "^7.0.2",
+    "sass": "^1.54.0",
+    "simple-syntax-highlighter": "^2.2.3",
+    "vite": "^2.9.14",
+    "vite-plugin-pug": "^0.3.1",
+    "vue": "^3.2.37",
+    "vue-router": "^4.1.3",
+    "wave-ui": "^2.40.2"
+  },
+  "peerDependencies": {
+    "vue": "^2.6.14 || ^3.2.0"
   },
   "keywords": [
+    "vuecal",
+    "vue cal",
     "vue calendar",
     "full calendar",
+    "calendar events",
+    "vue",
     "vuejs",
-    "vue3",
+    "vue 3",
+    "vue 2",
     "ui"
-  ],
-  "license": "MIT",
-  "repository": "https://github.com/antoniandre/vue-cal"
+  ]
 }

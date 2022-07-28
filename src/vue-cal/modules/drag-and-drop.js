@@ -97,7 +97,7 @@ export const DragAndDrop = class {
 
     this._vuecal.domEvents.dragAnEvent._eid = event._eid // Only for vuecal dragging-event class.
     dragging._eid = event._eid
-    dragging.fromVueCal = this._vuecal._uid
+    dragging.fromVueCal = this._vuecal._.uid
     event.dragging = true
     // Controls the CSS class of the static event that remains while a copy is being dragged.
     // Thanks to this class, the event being dragged can have a different style.
@@ -222,7 +222,7 @@ export const DragAndDrop = class {
 
     // If the event is not coming from this Vue Cal it means that we are accepting a new event.
     // So create the event in this Vue Cal.
-    if (dragging.fromVueCal !== this._vuecal._uid) {
+    if (dragging.fromVueCal !== this._vuecal._.uid) {
       // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
       // dropping to another calendar then back to the original place.
       const { _eid, start, end, duration, ...cleanTransferData } = transferData
@@ -264,7 +264,7 @@ export const DragAndDrop = class {
     cell.highlighted = false
     cell.highlightedSplit = null
     cancelViewChange = false
-    dragging.toVueCal = this._vuecal._uid
+    dragging.toVueCal = this._vuecal._.uid
 
     // Emit `event-drop` & `event-change` events and return the updated event.
     const params = {

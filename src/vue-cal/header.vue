@@ -4,15 +4,15 @@
     v-if="!options.hideViewSelector"
     role="tablist"
     aria-label="Calendar views navigation")
-    button.vuecal__view-btn(
-      type="button"
-      v-if="v.enabled"
-      :class="{ 'vuecal__view-btn--active': view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
-      v-for="(v, id) in viewProps.views"
-      @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, id, $data)"
-      @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, id, $data)"
-      @click="switchView(id, null, true)"
-      :aria-label="`${v.label} view`") {{ v.label }}
+    template(v-for="(v, id) in viewProps.views" :key="id")
+      button.vuecal__view-btn(
+        v-if="v.enabled"
+        type="button"
+        :class="{ 'vuecal__view-btn--active': view.id === id, 'vuecal__view-btn--highlighted': highlightedControl === id }"
+        @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, id, $data)"
+        @dragleave="editEvents.drag && dnd && dnd.viewSelectorDragLeave($event, id, $data)"
+        @click="switchView(id, null, true)"
+        :aria-label="`${v.label} view`") {{ v.label }}
   .vuecal__title-bar(v-if="!options.hideTitleBar")
     button.vuecal__arrow.vuecal__arrow--prev(
       type="button"
@@ -23,8 +23,7 @@
       :aria-label="`Previous ${view.id}`")
       slot(name="arrow-prev")
     .vuecal__flex.vuecal__title(grow)
-      //- Best way to disable transition is to convert it to simple div tag.
-      component(:is="options.transitions ? 'transition' : 'div'" :name="`slide-fade--${transitionDirection}`")
+      transition(:name="options.transitions ? `slide-fade--${transitionDirection}` : ''")
         component(
           :type="!!broaderView && 'button'"
           :is="broaderView ? 'button' : 'span'"
@@ -33,8 +32,8 @@
           :aria-label="!!broaderView && `Go to ${broaderView} view`")
           slot(name="title")
     button.vuecal__today-btn(
-      type="button"
       v-if="options.todayButton"
+      type="button"
       :class="{ 'vuecal__today-btn--highlighted': highlightedControl === 'today' }"
       @click="goToToday"
       @dragenter="editEvents.drag && dnd && dnd.viewSelectorDragEnter($event, 'today', $data)"
@@ -54,9 +53,9 @@
     :week-days="weekDays"
     :transition-direction="transitionDirection"
     :switch-to-narrower-view="switchToNarrowerView")
-    template(v-slot:weekday-heading="{ heading, view }")
+    template(#weekday-heading="{ heading, view }" v-if="$slots['weekday-heading']")
       slot(name="weekday-heading" :heading="heading" :view="view")
-    template(v-slot:split-label="{ split }")
+    template(#split-label="{ split }" v-if="$slots['split-label']")
       slot(name="split-label" :split="split" :view="view")
 
   //- Sticky split-days headers on day view only.
@@ -67,7 +66,7 @@
 </template>
 
 <script>
-import WeekdaysHeadings from './weekdays-headings'
+import WeekdaysHeadings from './weekdays-headings.vue'
 
 export default {
   inject: ['vuecal', 'previous', 'next', 'switchView', 'updateSelectedDate', 'modules', 'view'],
@@ -274,12 +273,12 @@ export default {
 
 // Media queries.
 //==================================//
-@media screen and(max-width: 450px) {
+@media screen and (max-width: 450px) {
   .vuecal__title {font-size: 0.9em;}
   .vuecal__view-btn {padding-left: 0.6em;padding-right: 0.6em;}
 }
 
-@media screen and(max-width: 350px) {
+@media screen and (max-width: 350px) {
   .vuecal__view-btn {font-size: 1.1em;}
 }
 </style>

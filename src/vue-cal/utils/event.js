@@ -6,8 +6,6 @@
  * Meantime keep `_` for private.
  */
 
-import Vue from 'vue'
-
 const defaultEventDuration = 2 // In hours.
 const minutesInADay = 24 * 60 // Don't do the maths every time.
 
@@ -18,7 +16,7 @@ let _cellOverlaps, _comparisonArray
 
 // This is an approximation, it will not work with DLS time.
 // const approxDayMilliseconds = minutesInADay * 60 * 1000
-// This is an approximate minimum we can get in a year. Purposely stay bellow 365 but close.
+// This is an approximate minimum we can get in a year. Purposely stay below 365 but close.
 // const minYearMilliseconds = 364 * approxDayMilliseconds // Don't do the maths every time.
 
 export default class EventUtils {
@@ -79,7 +77,7 @@ export default class EventUtils {
 
     const event = {
       ...this.eventDefaults,
-      _eid: `${this._vuecal._uid}_${this._vuecal.eventIdIncrement++}`,
+      _eid: `${this._vuecal._.uid}_${this._vuecal.eventIdIncrement++}`,
       start: dateTime,
       startTimeMinutes,
       end,
@@ -123,14 +121,14 @@ export default class EventUtils {
     // If event was previously single-day, event.segments = null,
     // so first create the first segment (first day).
     if (!e.segments) {
-      Vue.set(e, 'segments', {})
-      Vue.set(e.segments, ud.formatDateLite(e.start), {
+      e.segments = {}
+      e.segments[ud.formatDateLite(e.start)] = {
         start: e.start,
         startTimeMinutes: e.startTimeMinutes,
         endTimeMinutes: minutesInADay,
         isFirstDay: true,
         isLastDay: false
-      })
+      }
     }
 
     // Modify the last segment - which will not stay the last one after this function.
@@ -149,13 +147,13 @@ export default class EventUtils {
     const start = ud.addDays(e.end, 1)
     const formattedDate = ud.formatDateLite(start)
     start.setHours(0, 0, 0, 0)
-    Vue.set(e.segments, formattedDate, {
+    e.segments[formattedDate] = {
       start,
       startTimeMinutes: 0,
       endTimeMinutes: e.endTimeMinutes,
       isFirstDay: false,
       isLastDay: true
-    })
+    }
 
     e.end = ud.addMinutes(start, e.endTimeMinutes)
     e.daysCount = Object.keys(e.segments).length
@@ -173,7 +171,7 @@ export default class EventUtils {
     if (segmentsCount <= 1) return ud.formatDateLite(e.end)
 
     // Remove the last segment.
-    Vue.delete(e.segments, ud.formatDateLite(e.end))
+    delete e.segments[ud.formatDateLite(e.end)]
     segmentsCount--
 
     const end = ud.subtractDays(e.end, 1)
@@ -222,7 +220,7 @@ export default class EventUtils {
     // Removing 1 sec when ending at 00:00, so that we don't create a segment for nothing on last day.
     if (!e.end.getHours() && !e.end.getMinutes()) eventEnd -= 1000
 
-    Vue.set(e, 'segments', {})
+    e.segments = {}
 
     // The goal is to create 1 segment per day in the event, but only within the current view.
     if (!e.repeat) { // Simple case first.
@@ -232,7 +230,7 @@ export default class EventUtils {
     else {
       // Start at the beginning of the range, and end at soonest between `repeat.until` if any or range end.
       // This range will most likely be too large (e.g. whole week) and we need to narrow it
-      // down in the while loop bellow.
+      // down in the while loop below.
       // We must not create unused segments, it would break the render or result in weird behaviors.
       timestamp = viewStartTimestamp
       end = Math.min(
@@ -281,13 +279,13 @@ export default class EventUtils {
       }
 
       if (createSegment) {
-        Vue.set(e.segments, formattedDate, {
+        e.segments[formattedDate] = {
           start,
           startTimeMinutes: isFirstDay ? e.startTimeMinutes : 0,
           endTimeMinutes: isLastDay ? e.endTimeMinutes : minutesInADay,
           isFirstDay,
           isLastDay
-        })
+        }
       }
 
       timestamp = nextMidnight
@@ -326,11 +324,11 @@ export default class EventUtils {
       // The array is smaller and smaller as we loop.
       _comparisonArray.shift()
 
-      if (!_cellOverlaps[e._eid]) Vue.set(_cellOverlaps, e._eid, { overlaps: [], start: e.start, position: 0 })
+      if (!_cellOverlaps[e._eid]) _cellOverlaps[e._eid] = { overlaps: [], start: e.start, position: 0 }
       _cellOverlaps[e._eid].position = 0
 
       _comparisonArray.forEach(e2 => {
-        if (!_cellOverlaps[e2._eid]) Vue.set(_cellOverlaps, e2._eid, { overlaps: [], start: e2.start, position: 0 })
+        if (!_cellOverlaps[e2._eid]) _cellOverlaps[e2._eid] = { overlaps: [], start: e2.start, position: 0 }
 
         const eventIsInRange = this.eventInRange(e2, e.start, e.end)
         const eventsInSameTimeStep = options.overlapsPerTimeStep ? ud.datesInSameTimeStep(e.start, e2.start, options.timeStep) : 1

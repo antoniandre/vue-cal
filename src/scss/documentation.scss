@@ -1,0 +1,147 @@
+.documentation {
+  ul {
+    margin-left: 16px;
+
+    &.w-list {margin-left: 0;}
+    &.no-bullet {list-style-type: none;}
+  }
+
+  h2:not(.todo) {
+    font-size: 27px !important;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 30px;
+    padding-bottom: 8px;
+
+    a {color: inherit;}
+  }
+
+  h3 {
+    margin-top: 80px;
+    padding: 10px 0 0;
+  }
+
+  h3 a {
+    font-size: 24px;
+    font-weight: normal;
+    color: #888 !important;
+
+    .w-icon {vertical-align: middle;margin-bottom: 2px;}
+  }
+
+  .examples {
+    h3 {
+      position: relative;
+      margin-bottom: 40px;
+      padding: 16px 22px;
+      background: rgb(0 189 126 / 5%);
+    }
+    h3:after {
+      content: '';
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      max-width: 400px;
+      width: 4px;
+      background: rgba($primary, 0.5);
+    }
+  }
+
+  h4 {margin: 70px 0 8px;}
+  h3 + h4 {margin-top: 20px;}
+  h4 a {color: inherit !important;}
+  h5 {font-size: 1.1em;color: #555;margin-top: 0.5em;}
+
+  .todo .w-tag__content {padding: 0 3px;}
+
+  .api-options {
+    list-style-type: none;
+    margin: 0;
+  }
+  .api-options > li {margin-top: 2em;}
+  .api-options > li > code {
+    font-weight: bold;
+    font-size: 1rem;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background: #eee;
+  }
+  .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
+  .api-options > li > ul {margin-left: 2.5em;margin-top: 0.5em;}
+
+  .message-box {
+    width: 100%;
+    max-width: 650px;
+    margin: 0;
+  }
+
+  .code {font-family: monospace, sans-serif;}
+  span.code {color: black;}
+  .ssh-pre {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    font-size: 13px;
+    line-height: 1.35;
+    &[data-label] {margin-top: 2.5em;}
+  }
+
+  .important-notes {
+    font-weight: normal;
+    font-size: 15px;
+
+    small {
+      display: block;
+      font-size: 13px;
+      line-height: 19px;
+    }
+  }
+
+  .example {
+    max-width: 800px;
+    height: 600px;
+
+    &.grow {max-width: none;}
+
+    .vuecal {
+      overflow: hidden;
+      border-radius: 6px;
+    }
+
+    > .w-card__content {
+      padding: 0;
+      height: 100%;
+    }
+  }
+}
+
+// Yellow theme.
+.vuecal--yellow-theme {
+  .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);}
+  .vuecal__menu {color: #fff;}
+  .vuecal__title-bar {background-color: rgba(255, 236, 202, 0.5);}
+  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(255, 236, 202, 0.4);}
+  .vuecal__cell--selected:before {border-color: rgba(235, 216, 182, 0.5);}
+}
+
+.pale-blue {color: #1471b8;}
+.w-app .vuecal-blue--bg {background-color: rgba(66, 163, 185, 0.8);}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 499px) {
+  .w-app div.announcement {margin-bottom: 16px;}
+  .w-app .announcement > .w-icon, .announcement > svg {
+    margin-right: 2px;
+    font-size: 35px !important;
+    width: 1em !important;
+  }
+  .announcement > svg {
+    width: 0.9em !important;
+    margin-right: 8px !important;
+  }
+  .w-app .announcement--github {
+    > .w-icon {margin-right: 6px;font-size: 30px !important;}
+    a {font-size: 14px;}
+  }
+}

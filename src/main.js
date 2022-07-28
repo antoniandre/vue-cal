@@ -1,18 +1,21 @@
-// Polyfill.
-import 'core-js/stable'
-import 'regenerator-runtime/runtime'
-
-import Vue from 'vue'
-import vuetify from './plugins/vuetify'
+import { createApp } from 'vue'
 import router from './router'
-import App from './app'
+import WaveUI from 'wave-ui'
+import 'wave-ui/dist/wave-ui.css'
+import App from './app.vue'
+
 import '@fortawesome/fontawesome-free/css/fontawesome.css'
 import '@fortawesome/fontawesome-free/css/brands.css'
 
-Vue.config.productionTip = false
+const app = createApp(App).use(router)
 
-new Vue({
-  router,
-  vuetify,
-  render: h => h(App)
-}).$mount('#app')
+new WaveUI(app, {
+  iconsLigature: 'material-icons',
+  colors: {
+    primary: '#42b983',
+    secondary: '#2c3e50',
+    lightgrey: '#eee'
+  }
+})
+
+app.mount('#app')

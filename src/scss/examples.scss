@@ -1,5 +1,3 @@
-$primary: #42b983;
-
 .vuecal__event--dragging {
   background-color: rgba(grey, 0.3) !important;
   border: none !important;
@@ -19,8 +17,8 @@ $primary: #42b983;
 
 .ex--special-hours {
   .business-hours {
-    background-color: rgba(255, 255, 0, 0.2);
-    border: solid rgba(255, 210, 0, 0.6);
+    background-color: rgba(255, 255, 0, 0.15);
+    border: solid rgba(255, 210, 0, 0.3);
     border-width: 2px 0;
   }
 }
@@ -79,12 +77,14 @@ $primary: #42b983;
 
 // Events on month view example.
 .event-indicator--dash .vuecal__cell-events-count {
-  width: 18px;
+  top: 70%;
+  width: 14px;
   height: 2px;
   color: transparent;
 }
 
 .event-indicator--dot .vuecal__cell-events-count {
+  top: 70%;
   width: 4px;
   min-width: 0;
   height: 4px;
@@ -138,7 +138,7 @@ $primary: #42b983;
     height: auto;
     padding: 1px 8px;
   }
-  .v-btn--floating.v-btn--small {width: 26px;height: 26px;background-color: transparent !important;}
+  .w-button {width: 26px;height: 26px;background-color: transparent !important;}
 }
 
 // Split days example.
@@ -239,4 +239,18 @@ $primary: #42b983;
   .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
   .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
   .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
+}
+
+.logs-box {white-space: pre-wrap;}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 800px) {
+  .vuecal--week-view.ex--custom-day-split-labels .day-split-header .w-icon {display: none;}
+  .ex--custom-day-split-labels .day-split-header strong {
+    overflow: hidden;
+    width: 0.9em;
+    font-size: 13px;
+    letter-spacing: 10px;
+  }
 }

@@ -1,0 +1,76 @@
+
+// Global structure.
+// --------------------------------------------------------
+* {margin: 0;padding: 0;}
+
+html {scroll-behavior: smooth;}
+
+#app {overflow-x: hidden;}
+
+.w-app {
+  font: 15px 'Avenir', Helvetica, Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #fff !important;
+  color: #2c3e50;
+  margin-top: 8em;
+  padding-top: 12em;
+}
+
+.page-container {
+  width: 100%;
+  max-width: $page-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Shared classes & styles.
+// --------------------------------------------------------
+a {
+  text-decoration: none;
+  color: $primary;
+
+  &[name] {
+    position: relative;
+    top: -4em;
+    display: block;
+  }
+}
+
+.scrollable {
+  height: 250px;
+  overflow-y: scroll;
+  padding-right: 1.8em;
+}
+
+.footer {
+  font-size: 0.9em;
+  font-style: italic;
+  margin: 3em 0 3.5em;
+
+  .w-icon {
+    font-size: 1.2em;
+
+    &.heart {transition: 1s ease-out;cursor: pointer;}
+    &.heart:hover {animation: pulse 1.8s ease-out infinite;}
+  }
+}
+
+@keyframes pulse {
+  0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
+  25%, 40% {transform: scale(1.3);}
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: ($page-max-width + (2 * $container-padding-md))) {
+  :root {--container-padding: #{$container-padding-md};}
+  .page-container {
+    padding-left: var(--container-padding);
+    padding-right: var(--container-padding);
+  }
+}
+
+@media screen and (max-width: (500 + (2 * $container-padding-sm))) {
+  :root {--container-padding: #{$container-padding-sm};}
+}

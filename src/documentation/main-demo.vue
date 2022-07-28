@@ -1,10 +1,10 @@
 <template lang="pug">
-div
-  .text-center.headline.mb-10
-    span.grey--text.darken-1 Go for the date picker...
-    span.ml-8.primary--text.text--darken-1 or unleash the full potential!
-  .layout.wrap.align-center.justify-center
-    .mx-2
+.main-demo
+  .mb10.tagline
+    .title2.grey-dark1 Go for the date picker...
+    .title1.text-right.primary-dark1 or unleash the full potential!
+  .w-flex.wrap.align-center.justify-center
+    .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
         xsmall
@@ -17,9 +17,9 @@ div
         :disable-views="['week', 'day']"
         @cell-click="selectedDate = $event"
         style="width: 210px;height: 230px")
-      .grey--text.code.my-2(style="font-size: 13px") Selected date: '{{ selectedDate.format() }}'
+      .grey.code.my2(style="font-size: 13px") Selected date: '{{ selectedDate.format() }}'
 
-    .flex.mx-2(style="max-width: 800px")
+    .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
       vue-cal.demo.full-cal.vuecal--full-height-delete(
         hide-weekends
@@ -32,18 +32,18 @@ div
         :events="demoExample.events"
         @cell-focus="selectedDate = $event.date || $event"
         style="height: 450px")
-        template(v-slot:split-label="{ split, view }")
-          v-icon(:color="split.color" size="20") person
+        template(#split-label="{ split, view }")
+          w-icon(:color="split.color" size="20") material-icons person
           strong(:style="`color: ${split.color}`") {{ split.label }}
-      a.mt-4.layout.justify-end.grey--text.text--lighten-1(
+      a.mt4.w-flex.justify-end.grey-light1(
         href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/main-demo.vue"
         target="_blank")
         | View this example source code
-        v-icon.ml-1(small color="grey lighten-1") open_in_new
+        w-icon.ml1(color="grey lighten-1") material-icons open_in_new
 </template>
 
 <script>
-import VueCal from '@/vue-cal'
+import VueCal from '@/vue-cal/index.vue'
 
 const demoExample = {
   splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
@@ -104,7 +104,7 @@ export default {
         start: `${monday} 15:30`,
         end: `${monday} 17:30`,
         title: 'Tennis',
-        content: '<i class="v-icon material-icons mt-1">sports_tennis</i>',
+        content: '<i class="w-icon material-icons mt1">sports_tennis</i>',
         resizable: false,
         split: 1
       },
@@ -112,7 +112,7 @@ export default {
         start: `${monday} 15:30`,
         end: `${monday} 17:30`,
         title: 'Tennis',
-        content: '<i class="v-icon material-icons mt-1">sports_tennis</i>',
+        content: '<i class="w-icon material-icons mt1">sports_tennis</i>',
         resizable: false,
         split: 2
       },
@@ -120,7 +120,7 @@ export default {
         start: `${tuesday} 08:00`,
         end: `${tuesday} 10:00`,
         title: 'Volleyball',
-        content: '<i class="v-icon material-icons mt-1">sports_volleyball</i>',
+        content: '<i class="w-icon material-icons mt1">sports_volleyball</i>',
         resizable: false,
         split: 2
       },
@@ -128,7 +128,7 @@ export default {
         start: `${thursday} 09:00`,
         end: `${thursday} 11:30`,
         title: 'Golf',
-        content: '<i class="v-icon material-icons mt-2">golf_course</i>',
+        content: '<i class="w-icon material-icons mt2">golf_course</i>',
         resizable: false,
         split: 1
       },
@@ -136,7 +136,7 @@ export default {
         start: `${friday} 16:45`,
         end: `${friday} 18:45`,
         title: 'Movie',
-        content: '<i class="v-icon material-icons mt-1">local_play</i>',
+        content: '<i class="w-icon material-icons mt1">local_play</i>',
         resizable: false,
         split: 2
       }
@@ -148,6 +148,17 @@ export default {
 <style lang="scss">
 $john: #42b983;
 $kate: #ff7fc8;
+
+.main-demo {
+  font-size: 12px;
+
+  .tagline {
+    max-width: 500px;
+    margin: 0 auto 5rem;
+
+    .title1 {letter-spacing: normal;}
+  }
+}
 
 .demo {
   border-radius: 4px;
@@ -189,7 +200,7 @@ $kate: #ff7fc8;
     }
   }
   &.full-cal .weekday-label {opacity: 0.4;font-weight: 500;}
-  .vuecal__header .v-icon {color: inherit;}
+  .vuecal__header .w-icon {color: inherit;}
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
   &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
@@ -218,5 +229,11 @@ $kate: #ff7fc8;
     color: transparentize(darken($kate, 10), 0.4);
   }
   // ------------------------------------------------------
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 499px) {
+  .main-demo .day-split-header strong {display: none;}
 }
 </style>

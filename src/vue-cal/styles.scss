@@ -120,7 +120,7 @@ $splits-headers-height: 1.5em;
     min-height: 60px;
     position: relative;
     width: 100%;
-    margin-bottom: 1px;
+    // margin-bottom: 1px;
   }
 
   &--no-time &__bg {
@@ -214,14 +214,14 @@ $splits-headers-height: 1.5em;
   transition: 0.25s ease-out;
 }
 
-.slide-fade--left-enter,
+.slide-fade--left-enter-from,
 .slide-fade--right-leave-to {
   transform: translateX(-15px);
   opacity: 0;
 }
 
 .slide-fade--left-leave-to,
-.slide-fade--right-enter {
+.slide-fade--right-enter-from {
   transform: translateX(15px);
   opacity: 0;
 }

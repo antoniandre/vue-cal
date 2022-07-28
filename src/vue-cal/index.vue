@@ -8,24 +8,24 @@
     :has-splits="hasSplits"
     :day-splits="daySplits"
     :switch-to-narrower-view="switchToNarrowerView")
-    template(v-slot:arrow-prev)
+    template(#arrow-prev)
       slot(name="arrow-prev")
         | &nbsp;
         i.angle
         | &nbsp;
-    template(v-slot:arrow-next)
+    template(#arrow-next)
       slot(name="arrow-next")
         | &nbsp;
         i.angle
         | &nbsp;
-    template(v-slot:today-button)
+    template(#today-button)
       slot(name="today-button")
         span.default {{ texts.today }}
-    template(v-slot:title)
+    template(#title)
       slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
-    template(v-slot:weekday-heading="{ heading, view }")
+    template(#weekday-heading="{ heading, view }" v-if="$slots['weekday-heading']")
       slot(name="weekday-heading" :heading="heading" :view="view")
-    template(v-slot:split-label="{ split }")
+    template(#split-label="{ split }" v-if="$slots['split-label']")
       slot(name="split-label" :split="split" :view="view.id")
 
   .vuecal__flex.vuecal__body(v-if="!hideBody" grow)
@@ -34,7 +34,7 @@
         all-day-bar(
           v-if="showAllDayEvents && hasTimeColumn && (!cellOrSplitMinWidth || (isDayView && !minSplitWidth))"
           v-bind="allDayBar")
-          template(v-slot:event="{ event, view }")
+          template(#event="{ event, view }")
             slot(name="event" :view="view" :event="event")
               .vuecal__event-title.vuecal__event-title--edit(
                 v-if="editEvents.title && event.titleEditable"
@@ -71,9 +71,9 @@
                 :week-days="weekDays"
                 :switch-to-narrower-view="switchToNarrowerView"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
-                template(v-slot:weekday-heading="{ heading, view }")
+                template(#weekday-heading="{ heading, view }" v-if="$slots['weekday-heading']")
                   slot(name="weekday-heading" :heading="heading" :view="view")
-                template(v-slot:split-label="{ split }")
+                template(#split-label="{ split }" v-if="$slots['split-label']")
                   slot(name="split-label" :split="split" :view="view.id")
               .vuecal__flex.vuecal__split-days-headers(v-else-if="hasSplits && stickySplitLabels && minSplitWidth"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
@@ -82,7 +82,7 @@
               all-day-bar(
                 v-if="showAllDayEvents && hasTimeColumn && ((isWeekView && cellOrSplitMinWidth) || (isDayView && hasSplits && minSplitWidth))"
                 v-bind="allDayBar")
-                template(v-slot:event="{ event, view }")
+                template(#event="{ event, view }")
                   slot(name="event" :view="view" :event="event")
                     .vuecal__event-title.vuecal__event-title--edit(
                       v-if="editEvents.title && event.titleEditable"
@@ -94,7 +94,7 @@
                       v-if="event.content && !hasShortEvents && !isShortMonthView"
                       v-html="event.content")
               .vuecal__flex(
-                ref="cells"
+                :ref="el => cellsEl = el"
                 grow
                 :wrap="!cellOrSplitMinWidth || !isWeekView"
                 :style="cellOrSplitMinWidth ? `min-width: ${cellOrSplitMinWidth}px` : ''")
@@ -108,7 +108,7 @@
                   :min-timestamp="minTimestamp"
                   :max-timestamp="maxTimestamp"
                   :cell-splits="hasSplits && daySplits || []")
-                  template(v-slot:cell-content="{ events, split, selectCell }")
+                  template(#cell-content="{ events, split, selectCell }")
                     slot(name="cell-content" :cell="cell" :view="view" :go-narrower="selectCell" :events="events")
                       .split-label(v-if="split && !stickySplitLabels" v-html="split.label")
                       .vuecal__cell-date(v-if="cell.content" v-html="cell.content")
@@ -116,7 +116,7 @@
                         slot(name="events-count" :view="view" :events="events") {{ events.length }}
                       .vuecal__no-event(v-if="!cellOrSplitHasEvents(events, split) && isWeekOrDayView")
                         slot(name="no-event") {{ texts.noEvent }}
-                  template(v-slot:event="{ event, view }")
+                  template(#event="{ event, view }")
                     slot(name="event" :view="view" :event="event")
                       .vuecal__event-title.vuecal__event-title--edit(
                         v-if="editEvents.title && event.titleEditable"
@@ -132,7 +132,8 @@
                       .vuecal__event-content(
                         v-if="event.content && !(isMonthView && event.allDay && showAllDayEvents === 'short') && !isShortMonthView"
                         v-html="event.content")
-                  slot(v-slot:no-event) {{ texts.noEvent }}
+                  template(#no-event)
+                    slot(name="no-event") {{ texts.noEvent }}
     //- Used in alignWithScrollbar() to realign weekdays headings.
     .vuecal__scrollbar-check(v-if="!ready")
       div
@@ -142,11 +143,10 @@
 import DateUtils from './utils/date'
 import CellUtils from './utils/cell'
 import EventUtils from './utils/event'
-
-import Header from './header'
-import WeekdaysHeadings from './weekdays-headings'
-import AllDayBar from './all-day-bar'
-import Cell from './cell'
+import Header from './header.vue'
+import WeekdaysHeadings from './weekdays-headings.vue'
+import AllDayBar from './all-day-bar.vue'
+import Cell from './cell.vue'
 
 import './styles.scss'
 
@@ -272,6 +272,7 @@ export default {
         event: null
       },
       modules: { dnd: null },
+      cellsEl: null,
 
       // At any time this object will be filled with current view, visible events and selected date.
       view: {
@@ -357,18 +358,19 @@ export default {
      *
      * @param {String|Object} locale the language user whishes to have on vue-cal.
      */
-    loadLocale (locale) {
+    async loadLocale (locale) {
       if (typeof this.locale === 'object') {
         this.texts = Object.assign({}, textsDefaults, locale)
         this.utils.date.updateTexts(this.texts)
         return
       }
 
-      if (this.locale === 'en') this.texts = Object.assign({}, textsDefaults, require('./i18n/en.json'))
+      if (this.locale === 'en') {
+        const texts = await import('./i18n/en.json')
+        this.texts = Object.assign({}, textsDefaults, texts)
+      }
       else {
-        // Template litteral `./i18n/${locale}` still crashes eslint...
-        // https://github.com/babel/babel-eslint/issues/681#issuecomment-595591823
-        import(/* webpackInclude: /\.json$/, webpackChunkName: "i18n/[request]" */ './i18n/' + locale)
+        import(`./i18n/${locale}.json`)
           .then(response => {
             this.texts = Object.assign({}, textsDefaults, response.default)
             this.utils.date.updateTexts(this.texts)
@@ -380,7 +382,7 @@ export default {
      * Only import drag and drop module on demand to keep a small library weight.
      */
     loadDragAndDrop () {
-      import(/* webpackChunkName: "drag-and-drop" */ './modules/drag-and-drop')
+      import('./modules/drag-and-drop')
         .then(response => {
           const { DragAndDrop } = response
           this.modules.dnd = new DragAndDrop(this)
@@ -613,7 +615,7 @@ export default {
       const { startDate, endDate, firstCellDate, lastCellDate } = this.view
       // Clear the current view if not explicitely giving an array of events to add.
       if (!events.length) this.view.events = []
-      // @todo: remove the code that explicitely updates this.mutableEvents (e.g on event resize).
+      // @todo: remove the code that explicitly updates this.mutableEvents (e.g on event resize).
       // as we are already mutating the event from mutableEvents.
       events = events.length ? events : [...this.mutableEvents]
 
@@ -622,7 +624,7 @@ export default {
       if (!events || (this.isYearsOrYearView && !this.eventsCountOnYearView)) return
 
       // First remove the events that are not in view.
-      // Keep the unfiltered array of events for outOfScopeEvents bellow.
+      // Keep the unfiltered array of events for outOfScopeEvents below.
       let filteredEvents = events.filter(e => ue.eventInRange(e, startDate, endDate))
 
       // For each multiple-day event and only if needed, create its segments (= days) for rendering in the view.
@@ -839,7 +841,7 @@ export default {
       // Resize events horizontally if resize-x is enabled (add/remove segments).
       if (this.resizeX && this.isWeekView) {
         event.daysCount = ud.countDays(event.start, event.end)
-        const cells = this.$refs.cells
+        const cells = this.cellsEl
         const cellWidth = cells.offsetWidth / cells.childElementCount
         const endCell = Math.floor(cursorCoords.x / cellWidth)
 
@@ -1017,7 +1019,7 @@ export default {
 
         event = Object.assign({ ...this.utils.event.eventDefaults }, event, {
           // Keep the event ids scoped to this calendar instance.
-          _eid: `${this._uid}_${this.eventIdIncrement++}`,
+          _eid: `${this._.uid}_${this.eventIdIncrement++}`,
           segments: multipleDays ? {} : null,
           start,
           startTimeMinutes,
@@ -1115,7 +1117,7 @@ export default {
     },
 
     /**
-     * Double checks the week number is correct. Read bellow to understand!
+     * Double checks the week number is correct. Read below to understand!
      * this is a wrapper around the `getWeek()` function for performance:
      * As this is called multiple times from the template and cannot be in computed since there is
      * a parameter, this wrapper function avoids the `getWeek()` function call 5 times out of 6
@@ -1263,7 +1265,7 @@ export default {
     this.ready = true
   },
 
-  beforeDestroy () {
+  beforeUnmount () {
     const hasTouch = 'ontouchstart' in window
     window.removeEventListener(hasTouch ? 'touchmove' : 'mousemove', this.onMouseMove, { passive: false })
     window.removeEventListener(hasTouch ? 'touchend' : 'mouseup', this.onMouseUp)

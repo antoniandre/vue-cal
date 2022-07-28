@@ -1,8 +1,5 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-import Documentation from '@/documentation'
-
-Vue.use(VueRouter)
+import { createRouter, createWebHistory } from 'vue-router'
+import Documentation from '@/documentation/index.vue'
 
 const routes = [
   {
@@ -11,12 +8,11 @@ const routes = [
   },
   {
     path: '/test',
-    component: () => import(/* webpackChunkName: "isolated-test-view" */ '@/documentation/isolated-test-view.vue')
+    component: () => import('@/documentation/isolated-test-view.vue')
   }
 ]
 
-export default new VueRouter({
-  mode: 'history',
-  base: process.env.BASE_URL,
+export default createRouter({
+  history: createWebHistory(process.env.BASE_URL),
   routes
 })

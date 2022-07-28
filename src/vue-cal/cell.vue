@@ -45,7 +45,7 @@ transition-group.vuecal__cell(
         :overlaps="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).overlaps"
         :event-position="((splitsCount ? split.overlaps[event._eid] : cellOverlaps[event._eid]) || []).position"
         :overlaps-streak="splitsCount ? split.overlapsStreak : cellOverlapsStreak")
-        template(v-slot:event="{ event, view }")
+        template(#event="{ event, view }")
           slot(name="event" :view="view" :event="event")
   .vuecal__now-line(
     v-if="timelineVisible"
@@ -55,7 +55,7 @@ transition-group.vuecal__cell(
 </template>
 
 <script>
-import Event from './event'
+import Event from './event.vue'
 
 export default {
   inject: ['vuecal', 'utils', 'modules', 'view', 'domEvents'],
@@ -220,7 +220,7 @@ export default {
     // When click & holding a cell, and if allowed, set a timeout to create an event (can be cancelled).
     setUpCellHoldTimer (DOMEvent) {
       const { clickHoldACell } = this.domEvents
-      clickHoldACell.cellId = `${this.vuecal._uid}_${this.data.formattedDate}`
+      clickHoldACell.cellId = `${this.vuecal._.uid}_${this.data.formattedDate}`
       // If splitting days, store the clicked split to create an event in it from the global
       // mousemove handler in index.vue.
       clickHoldACell.split = this.splitsCount ? this.getSplitAtCursor(DOMEvent) : null

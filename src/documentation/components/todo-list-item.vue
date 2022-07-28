@@ -1,13 +1,13 @@
 <template lang="pug">
-v-chip.ma-1.pl-1.todo-item(:color="item.color" outlined small)
-  v-icon(size="18") {{ item.icon }}
+w-tag.ma1.pl1.todo-item(:color="item.color" outline round)
+  w-icon(size="16") material-icons {{ item.icon }}
   slot
 </template>
 
 <script>
 const statuses = {
   todo: { color: 'deep-orange', icon: 'access_time' },
-  doing: { color: 'amber darken-1', icon: 'timer' },
+  doing: { color: 'amber darken-1', icon: 'access_time' },
   done: { color: 'green', icon: 'check' }
 }
 
@@ -28,6 +28,6 @@ export default {
   font-size: 12px;
   height: 22px;
 
-  .v-icon {margin-right: 2px;}
+  .w-icon {margin-right: 2px;}
 }
 </style>

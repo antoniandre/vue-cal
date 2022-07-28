@@ -1,26 +1,55 @@
 <template lang="pug">
-  v-app(:class="{ ready }" v-scroll="onScroll")
-    v-container
-      top-bar(:offset-top="offsetTop")
-      router-view
+w-app(:class="{ ready }" v-scroll="onScroll")
+  top-bar(:offset-top="offsetTop")
+  router-view
 
-    v-fab-transition
-      v-btn(color="primary" fixed bottom right fab v-show="!goTopHidden" small href="#top")
-        v-icon(color="white" size="26") keyboard_arrow_up
+  w-transition-twist
+    w-button.go-top.ma2(
+      v-show="!goTopHidden"
+      icon="material-icons keyboard_arrow_up"
+      fixed
+      bottom
+      right
+      round
+      xl
+      v-scroll-to="'#top'")
 
-    v-footer.px-2(color="white")
-      v-layout.mx-auto.container.grey--text.text--darken-1(row wrap align-center justify-center)
-        v-flex.xs12.sm6.text-center.text-sm-left.copyright.
-          Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-        v-flex.xs12.sm6.text-center.text-sm-right.made-with
-          .mb-1 This documentation is made with #[v-icon fab fa-vuejs], #[v-icon fab fa-html5], #[v-icon fab fa-css3], #[v-icon fab fa-sass] &amp; #[v-icon.heart favorite]
-          | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[v-icon fab fa-github] Github].
+  footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
+    .w-divider.fill-width.mb8
+    .xs12.sm6.text-center.smu-text-left.copyright.
+      Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
+    .xs12.sm6.text-center.smu-text-right.made-with
+      .mb1
+        | This documentation is made with
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on") fab fa-vuejs
+          | Vue
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on") fab fa-html5
+          | HTML5 &amp; Pug
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon.ml1(v-on="on") fab fa-css3
+          | CSS3
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon.ml1(v-on="on") fab fa-sass
+          | SCSS
+        span.ml2.mr1 &amp;
+        w-tooltip
+          template(#activator="{ on }")
+            w-icon(v-on="on").heart material-icons favorite
+          | Love
+      | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
 </template>
 
 <script>
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
-import TopBar from '@/documentation/components/top-bar'
+import TopBar from '@/documentation/components/top-bar.vue'
+import '@/scss/index.scss'
 
 export default {
   name: 'app',
@@ -36,66 +65,27 @@ export default {
   methods: {
     onScroll () {
       this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
-      this.goTopHidden = this.offsetTop < 200
+      this.goTopHidden = this.offsetTop < 200 ||
+                         ((document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight) <= 100)
+    }
+  },
+  directives: {
+    scroll: {
+      mounted: (el, binding) => {
+        const f = evt => {
+          if (binding.value(evt, el)) window.removeEventListener('scroll', f)
+        }
+        window.addEventListener('scroll', f)
+      }
+    },
+    scrollTo: {
+      mounted: (el, binding) => {
+        el.addEventListener('click', () => {
+          const target = binding.value && document.querySelector(binding.value)
+          target.scrollIntoView()
+        })
+      }
     }
   }
 }
 </script>
-
-<style lang="scss">
-$primary: #42b983;
-
-* {margin: 0;padding: 0;}
-
-html {font-size: 14px;}
-
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  background-color: #fff !important;
-  color: #2c3e50;
-  padding-top: 8em;
-}
-
-.v-application--wrap {
-  padding-top: 14em;
-  overflow-x: hidden;
-}
-
-.main-content {
-  max-width: 800px;
-  height: 650px;
-}
-
-a {
-  text-decoration: none;
-  color: $primary;
-
-  &[name] {
-    position: relative;
-    top: -4em;
-    display: block;
-  }
-}
-
-.v-card {box-shadow: none;}
-
-.v-footer {
-  font-size: 0.9em;
-  font-style: italic;
-  margin: 3em 0 3.5em;
-
-  .v-icon {
-    font-size: 1.2em;
-
-    &.heart {transition: 1s ease-out;cursor: pointer;}
-    &.heart:hover {animation: pulse 1.8s ease-out infinite;}
-  }
-}
-
-@keyframes pulse {
-  0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
-  25%, 40% {transform: scale(1.3);}
-}
-</style>

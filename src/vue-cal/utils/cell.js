@@ -66,7 +66,7 @@ export default class CellUtils {
    * @return {Object} containing { x: {Number}, y: {Number} }
    */
   getPosition = e => {
-    const { left, top } = this._vuecal.$refs.cells.getBoundingClientRect()
+    const { left, top } = this._vuecal.cellsEl.getBoundingClientRect()
     const { clientX, clientY } = 'ontouchstart' in window && e.touches ? e.touches[0] : e
     return { x: clientX - left, y: clientY - top }
   }
