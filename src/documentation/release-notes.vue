@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.mb1
+    .title.mb5 Version 4.3.4: New ESM build.
+
+  div.mb1
     .title.mb5 Version 4.0.0: supports and only works on Vue 3.
 
   div.grey.mb1
