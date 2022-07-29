@@ -366,6 +366,10 @@
   ssh-pre(language="html-vue" label="Vue Template" reactive).
     &lt;vue-cal :time="false" small active-view="year" locale="{{ locale }}" /&gt;
 
+  highlight-message.
+    For Vue Cal versions prior 4.3.4 (before ESM),
+    the locale file must be loaded separately: #[br]#[span.code import 'vue-cal/dist/i18n/zh-cn.js'].
+
   h4 Alternative
   p.
     If you need full control on the texts, you can alternatively provide an object containing all the
@@ -1294,8 +1298,8 @@
   highlight-message(type="warning")
     ul
       li.
-        Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
-        separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
+        Drag &amp; drop is a module (to keep Vue Cal light weight). For Vue Cal versions prior 4.3.4 (before ESM),
+        it must be loaded separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js'].
       li
         strong Drag &amp; drop is only available on single day events for now.
   h5 Dragging over header
