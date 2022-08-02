@@ -6,7 +6,9 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
     h1.w-flex.align-center.primary.px5
       a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" v-scroll-to="'#top'")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
-        div.top-bar__logo-title Vue Cal
+        .top-bar__logo-title
+          | Vue Cal
+          .version v. {{ version }}
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
@@ -150,6 +152,16 @@ export default {
       // w-tag.ml2(color="blue" outline) UPDATED
     ]
   }),
+
+  computed: {
+    version () {
+      return process.env.VITE_APP_VERSION.replace(
+        /-(\w)(\w+)\.(\d+)/,
+        (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
+      )
+    }
+  },
+
   directives: {
     scrollTo: {
       mounted: (el, binding) => {
@@ -292,6 +304,16 @@ $lighter-text: #ccc;
     transition: opacity 0.3s ease-in-out;
   }
 
+  .version {
+    opacity: 0;
+    color: #bbb;
+    font-style: italic;
+    font-size: 11px;
+    position: absolute;
+    bottom: -8px;
+    right: 0;
+  }
+
   &__items {
     position: absolute;
     right: 0;
@@ -354,17 +376,18 @@ $lighter-text: #ccc;
     border-bottom-color: rgba($lighter-text, 0.5) !important;
     position: fixed !important;
 
-    & .top-bar__title {width: 100%;height: 40px;}
-    & .top-bar__logo {
+    .top-bar__title {width: 100%;height: 40px;}
+    .top-bar__logo {
       width: 32px;
       height: 30px;
       font-size: 0.8em;
       padding-top: 10px;
     }
-    & .top-bar__logo-title {font-size: 0.9em;font-weight: 600;}
-    & .top-bar__logo-title:after {opacity: 0;}
+    .top-bar__logo-title {font-size: 0.9em;font-weight: 600;}
+    .top-bar__logo-title:after {opacity: 0;}
+    .version {opacity: 1;}
 
-    & .top-bar__items {
+    .top-bar__items {
       transition: 0.3s 0.3s ease-in-out all;
       transform: translateX(0%);
       opacity: 1;
