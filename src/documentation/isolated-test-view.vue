@@ -58,21 +58,21 @@ export default {
 </script>
 
 <style lang="scss">
-.vuecal {}
-.vuecal__event {
-  background-color: rgba(160, 220, 255, 0.5);
-  border: 1px solid rgba(0, 100, 150, 0.15);
-}
-
-// Global.
-html, body, #app, .w-application--wrap, .container {height: 100%;}
-#app {padding-top: 2em;}
-.w-application--wrap {min-height: 0;padding-top: 7em;}
 .test-view {
-  height: 100%;
+  height: 100vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
+  padding: 2rem;
+
+  .vuecal {height: 400px;}
+  .vuecal__event {
+    background-color: rgba(160, 220, 255, 0.5);
+    border: 1px solid rgba(0, 100, 150, 0.15);
+  }
 }
-footer {display: none !important;}
+
+// Global.
+.w-app {margin: 0;padding: 0;}
+.top-bar, footer {display: none !important;}
 </style>
