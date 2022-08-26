@@ -314,6 +314,7 @@ export default {
       },
       set (date) {
         this.view.selectedDate = date
+        this.vuecal.$emit('update:selected-date', this.view.selectedDate)
       }
     },
     // Cache result for performance.

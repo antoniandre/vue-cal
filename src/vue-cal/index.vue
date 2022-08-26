@@ -1114,6 +1114,8 @@ export default {
         if (!selectedDate || selectedDate.getTime() !== date.getTime()) this.view.selectedDate = date
         this.switchView(this.view.id)
       }
+
+      this.$emit('update:selected-date', this.view.selectedDate)
     },
 
     /**
@@ -1163,7 +1165,7 @@ export default {
     /**
      * On Windows devices, the .vuecal__bg's vertical scrollbar takes space and pushes the content.
      * This function will also push the weekdays-headings and all-day bar to have them properly aligned.
-     * The calculated style will be placed in the docment head in a style tag so it's only done once
+     * The calculated style will be placed in the document head in a style tag so it's only done once
      * (the scrollbar width never changes).
      * Ref. https://github.com/antoniandre/vue-cal/issues/221
      */
