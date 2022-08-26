@@ -532,11 +532,11 @@ export default {
 
       this.addEventsToView()
 
-      // Prevent firing the `view-change` event twice (if using .sync).
+      // Prevent firing the `view-change` event twice (if using .sync or v-model).
       const viewDate = this.view.startDate && this.view.startDate.getTime()
       if (oldView === view && viewDate === viewDateBeforeChange) return
 
-      // Emit events to outside of Vue Cal and update the activeView (if using .sync).
+      // Emit events to outside of Vue Cal and update the activeView (if using .sync or v-model).
       this.$emit('update:activeView', view)
 
       if (this.ready) {

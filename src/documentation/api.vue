@@ -178,7 +178,9 @@ div
       p.
         Allows you to set a default active view, for the first time you load the calendar.#[br]
         Then control the active view from outside of Vue Cal.#[br]
-        Accepts one of 'years', 'year', 'month', 'week', 'day'.
+        Accepts one of 'years', 'year', 'month', 'week', 'day'.#[br]
+        The active view has a two-way binding: you can use a v-model (or #[code .sync] on Vue 2)
+        on it to keep your variable up to date.
     li
       code.mr2 allDayBarHeight
       span.code [String, Number], default: '25px'
@@ -238,20 +240,22 @@ div
         E.g. setting a date in year 2000 with a activeView of week, will show you that week of year 2000.#[br]#[br]
         Updating the #[span.code selectedDate] programmatically after the first calendar load,
         will update the view if needed to show this date.#[br]
-        Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.
+        Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.#[br]
+        The selected date has a two-way binding: you can use a v-model (or #[code .sync] on Vue 2) on it to
+        keep your variable up to date.
       highlight-message(type="warning").
         A correct string date format is #[code {{ todayFormatted }}] or
         #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't need the time.
         Only these formats will work as a string. You can also provide a native Javascript Date object.
     li
-      code.mr2 minDate
+      code.mr2 minDate
       span.code [String, Date], default: ''
       p.
         Accepts a formatted string or plain JS Date object.#[br]
         Set a minimum date for the cells to be selectable.#[br]
         By default the cell will be grayed out when out of range but CSS classes let you customize this.
     li
-      code.mr2 maxDate
+      code.mr2 maxDate
       span.code [String, Date], default: ''
       p.
         Accepts a formatted string or plain JS Date object.#[br]

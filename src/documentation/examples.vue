@@ -2262,9 +2262,10 @@
     You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
     This example shows how to control the Previous, Next and Today functions and the view selections
     from external buttons.#[br]
-    One important thing to notice is that using the #[span.code .sync] keyword on #[span.code active-view]
-    keeps it updated when Vue Cal changes the view internally. For instance when you click the title to go
-    to a broader view.
+    One important thing to notice is that you can use a v-model on the #[span.code active-view] (or #[span.code :active-view.sync] for Vue 2)
+    in order to keep your variable updated when Vue Cal changes the view internally. For instance when you click the title to go
+    to a broader view.#[br]
+    A v-model can also be used on the #[span.code selected-date] (or #[span.code :selected-date.sync] for Vue 2)
 
   .w-flex.my2.mxa.align-center(style="max-width: 500px")
     w-button.mx1.px2.grow(
@@ -2303,16 +2304,20 @@
     w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.next()")
       | Next
       w-icon.ml1 material-icons keyboard_arrow_right
-
   .w-flex.align-center.justify-center
     vue-cal.vuecal--green-theme(
       small
       ref="vuecal4"
-      :active-view.sync="activeView"
+      v-model:active-view="activeView"
       :time="false"
       hide-view-selector
-      :selected-date="selectedDate"
+      v-model:selected-date="selectedDate"
       style="max-width: 500px;height: 260px")
+  p
+    strong Variables kept in sync thanks to v-model:
+  ul
+    li #[code activeView]: #[strong.code {{ activeView }} ],
+    li #[code selectedDate]: #[strong.code {{ selectedDate.format() }} ]
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
     &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
@@ -2327,7 +2332,7 @@
     &lt;vue-cal
       small
       ref="vuecal"
-      :active-view.sync="activeView"
+      v-model:active-view="activeView"
       :time="false"
       hide-view-selector
       :selected-date="selectedDate"&gt;
