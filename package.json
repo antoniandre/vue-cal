@@ -38,7 +38,7 @@
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@fortawesome/fontawesome-free": "^5.15.4",
     "@mdi/font": "^6.9.96",
-    "@vitejs/plugin-vue": "^2.3.3",
+    "@vitejs/plugin-vue": "^3.0.3",
     "@vue/compiler-sfc": "^3.2.37",
     "autoprefixer": "^10.4.7",
     "eslint": "^8.20.0",
@@ -46,11 +46,11 @@
     "rollup-plugin-terser": "^7.0.2",
     "sass": "^1.54.0",
     "simple-syntax-highlighter": "^2.2.3",
-    "vite": "^2.9.14",
+    "vite": "^3.0.9",
     "vite-plugin-pug": "^0.3.1",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3",
-    "wave-ui": "^2.40.2"
+    "wave-ui": "^2.40.5"
   },
   "peerDependencies": {
     "vue": "^2.6.14 || ^3.2.0"
