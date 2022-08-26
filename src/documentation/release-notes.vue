@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.mb1
+    .title.mb5 Version 4.4.0: Added a v-model on the #[span.code selected-date].
+
+  div.mb1
     .title.mb5 Version 4.3.4: New ESM build by default.
 
   div.mb1
