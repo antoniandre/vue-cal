@@ -8,7 +8,10 @@ div.test-view
     :split-days="daySplits"
     sticky-split-labels
     cell-contextmenu
+    today-button
+    v-model:selectedDate="selectedDate"
     @cell-contextmenu="log")
+  p selectedDate: {{ selectedDate }}
 </template>
 
 <script>
@@ -18,6 +21,7 @@ const now = new Date()
 
 export default {
   components: { VueCal },
+
   data: () => ({
     selectedDate: now,
     view: 'week',
