@@ -1,0 +1,1 @@
+.test-view{height:100vh;overflow:auto;display:flex;flex-direction:column;padding:2rem}.test-view .vuecal{height:400px}.test-view .vuecal__event{background-color:#a0dcff80;border:1px solid rgba(0,100,150,.15)}.w-app{margin:0;padding:0}.top-bar,footer{display:none!important}
