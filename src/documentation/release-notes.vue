@@ -1,6 +1,9 @@
 <template lang="pug">
 div
   div.grey.mb1
+    .title.mb5 Version 4.5.0: Added option to display time labels in cells.
+
+  div.grey.mb1
     .title.mb5 Version 4.4.3: Fix headings misalignments on certain views, when OS sets fixed scrollbars.
 
   div.mb1
