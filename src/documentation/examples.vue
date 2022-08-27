@@ -388,14 +388,48 @@
     a(href="#ex--timeline") # Timeline
     a#ex--timeline(name="ex--timeline")
   p.
-    Timelines are only visible on #[span.code week] and #[span.code day] view.#[br]
-    This example has a set time range from 08:00 to 19:00, time step of 30 minutes (1 hour by default),
+    Timelines are only visible on #[span.code week] and #[span.code day] views.#[br]
+    This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
     24-hour format, and hidden weekends.
   .example.my2.mxa(style="height: 450px")
-    vue-cal.vuecal--green-theme(:time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends)
+    vue-cal.vuecal--green-theme(
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends)
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" hide-weekends /&gt;
+    &lt;vue-cal
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends&gt;
+    &lt;/vue-cal&gt;
+  highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+
+  //- Example.
+  h4.title2
+    a(href="#ex--show-time-in-cells") # Showing time labels in cells
+    a#ex--show-time-in-cells(name="ex--show-time-in-cells")
+  p.
+    You can choose to display the time labels in every cells by enabling the
+    #[span.code showTimeInCells] option.
+  .example.my2.mxa(style="height: 450px")
+    vue-cal.vuecal--green-theme(
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      show-time-in-cells
+      hide-weekends)
+      template(#no-event) &nbsp;
+  ssh-pre(language="html-vue" label="Vue Template").
+    &lt;vue-cal
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends
+      show-time-in-cells&gt;
+    &lt;/vue-cal&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
   //- Example.

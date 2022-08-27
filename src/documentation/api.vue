@@ -44,6 +44,7 @@ div
     resizeX:                [Boolean],         default: false
     selectedDate:           [String, Date],    default: ''
     showAllDayEvents:       [Boolean, String], default: false
+    showTimeInCells:        [Boolean],         default: false
     showWeekNumbers:        [Boolean, String], default: false
     small:                  [Boolean],         default: false
     snapToTime:             [Number],          default: null
@@ -365,6 +366,16 @@ div
       p.
         If #[span.code time] is enabled, set the start of the timeline in minutes.
         By default it starts at midnight.
+    li
+      code.mr2 showTimeInCells
+      span.code [Boolean], default: false
+      p.
+        When set to #[span.code true], the time labels will be visible in
+        each cell, in each time slot of the #[code day] and #[code week] views.
+        You can then use CSS to style to taste.
+        For instance, you could hide all the labels and show only the one that
+        is being hovered.#[br]
+        Will have no effect if #[span.code time] is set to false.
     li
       code.mr2 timeTo
       span.code [Number], default: 24 * 60
