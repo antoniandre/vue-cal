@@ -26,6 +26,8 @@ const bundlingConf = {
       {
         format: 'es',
         dir: 'dist',
+        entryFileNames: '[name].[format].js',
+        chunkFileNames: '[name].js',
         banner,
         plugins: [terser()], // Minify.
         manualChunks(id) {
@@ -39,6 +41,8 @@ const bundlingConf = {
       {
         format: 'cjs',
         dir: 'dist',
+        entryFileNames: '[name].[format].js',
+        chunkFileNames: '[name].js',
         banner,
         manualChunks(id) {
           const match = /i18n\/(.{2,5})\.json/.exec(id)
@@ -52,6 +56,8 @@ const bundlingConf = {
         format: 'amd',
         name: 'vuecal',
         dir: 'dist',
+        entryFileNames: '[name].[format].js',
+        chunkFileNames: '[name].js',
         // Provide global variables to use in the UMD build for externalized deps.
         globals: { vue: 'Vue' },
         banner,
@@ -68,6 +74,8 @@ const bundlingConf = {
         name: 'vuecal',
         inlineDynamicImports: true, // Everything contained in a single file.
         dir: 'dist',
+        entryFileNames: '[name].[format].js',
+        chunkFileNames: '[name].js',
         // Provide global variables to use in the UMD build for externalized deps.
         globals: { vue: 'Vue' }
       }
