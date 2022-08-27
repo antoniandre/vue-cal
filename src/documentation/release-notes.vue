@@ -1,5 +1,8 @@
 <template lang="pug">
 div
+  div.grey.mb1
+    .title.mb5 Version 4.4.3: Fix headings misalignments on certain views, when OS sets fixed scrollbars.
+
   div.mb1
     .title.mb5 Version 4.4.0: Added a v-model on the #[span.code selected-date].
 
