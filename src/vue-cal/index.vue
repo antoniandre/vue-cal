@@ -1181,7 +1181,7 @@ export default {
         const style = document.createElement('style')
         style.id = 'vuecal-align-with-scrollbar'
         style.type = 'text/css'
-        style.innerHTML = `.vuecal__weekdays-headings,.vuecal__all-day {padding-right: ${scrollbarWidth}px}`
+        style.innerHTML = `.vuecal--view-with-time .vuecal__weekdays-headings,.vuecal--view-with-time .vuecal__all-day {padding-right: ${scrollbarWidth}px}`
         document.head.appendChild(style)
       }
     },
