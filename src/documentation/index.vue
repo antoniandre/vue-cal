@@ -163,18 +163,27 @@
         span.mx6 or
         ssh-pre.my0(language="shell") npm i vue-cal@legacy # Vue 2
 
-      p.mt6 Then import Vue Cal in your Vue component and use it.
+      p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
       w-flex.vs-d-block(gap="6")
-        ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js").
-          import VueCal from 'vue-cal'
-          import 'vue-cal/dist/vuecal.css'
+        w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
+          template(#item-title.1) Options API
+          template(#item-content.1)
+            ssh-pre.fill-height.ma0.bd0(language="js").
+              import VueCal from 'vue-cal'
+              import 'vue-cal/dist/vuecal.css'
 
-          export default {
-            components: { VueCal },
-            ...
-          }
+              export default {
+                components: { VueCal },
+                ...
+              }
 
-        .highlight-box.grow.mt4
+          template(#item-title.2) Composition API
+          template(#item-content.2)
+            ssh-pre.fill-height.ma0.bd0(language="js").
+              import VueCal from 'vue-cal'
+              import 'vue-cal/dist/vuecal.css'
+
+        .highlight-box.grow
           .title2 Demos on StackBlitz
           p.body.mb4.grey Check the different setups for bundlers
           .w-flex.align-center
@@ -416,6 +425,8 @@ export default {
 </script>
 
 <style lang="scss">
+.w-tabs__content-wrap {flex-grow: 1;}
+
 .highlight-box {
   background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
   padding: 16px;

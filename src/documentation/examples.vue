@@ -2317,7 +2317,7 @@
     strong Variables kept in sync thanks to v-model:
   ul
     li #[code activeView]: #[strong.code {{ activeView }} ],
-    li #[code selectedDate]: #[strong.code {{ selectedDate.format() }} ]
+    li #[code selectedDate]: #[strong.code {{ selectedDate && selectedDate.format() }} ]
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
     &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
