@@ -246,6 +246,7 @@ export default {
     stickySplitLabels: { type: Boolean, default: false },
     time: { type: Boolean, default: true },
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
+    timeLabelInCells: { type: Boolean, default: false },
     timeFormat: { type: String, default: '' },
     timeFrom: { type: Number, default: 0 }, // In minutes.
     timeStep: { type: Number, default: 60 }, // In minutes.

@@ -24,6 +24,11 @@ transition-group.vuecal__cell(
     @dragover="!isDisabled && editEvents.drag && dnd && dnd.cellDragOver($event, $data, data.startDate, splitsCount ? split.id : null)"
     @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate)"
     @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, splitsCount ? split.id : null)")
+
+    .cell-time-labels(v-if="vuecal.timeLabelInCells && vuecal.time && isWeekOrDayView && !allDay")
+      span.cell-time-label(v-for="(cell, i) in vuecal.timeCells" :key="i").
+        {{ cell.label }}
+
     template(v-if="isWeekOrDayView && !allDay && specialHours.length")
       .vuecal__special-hours(
         v-for="(block, i) in specialHours"
@@ -521,6 +526,23 @@ export default {
     .vuecal--year-view &,
     .vuecal--month-view & {justify-content: center;}
   }
+
+  .cell-time-labels {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .cell-time-label {
+    flex-grow: 1;
+    font-size: 0.8em;
+    opacity: 0.3;
+    line-height: 1.7;
+  }
+  // .cell-time-label:hover {opacity: 0.7;}
 
   &-split {
     display: flex;
