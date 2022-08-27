@@ -26,7 +26,7 @@ const bundlingConf = {
       {
         format: 'es',
         dir: 'dist',
-        entryFileNames: '[name].[format].js',
+        entryFileNames: 'vue-cal.[format].js',
         chunkFileNames: '[name].js',
         banner,
         plugins: [terser()], // Minify.
@@ -41,7 +41,7 @@ const bundlingConf = {
       {
         format: 'cjs',
         dir: 'dist',
-        entryFileNames: '[name].[format].js',
+        entryFileNames: 'vue-cal.[format].js',
         chunkFileNames: '[name].js',
         banner,
         manualChunks(id) {
@@ -56,7 +56,7 @@ const bundlingConf = {
         format: 'amd',
         name: 'vuecal',
         dir: 'dist',
-        entryFileNames: '[name].[format].js',
+        entryFileNames: 'vue-cal.[format].js',
         chunkFileNames: '[name].js',
         // Provide global variables to use in the UMD build for externalized deps.
         globals: { vue: 'Vue' },
@@ -74,7 +74,7 @@ const bundlingConf = {
         name: 'vuecal',
         inlineDynamicImports: true, // Everything contained in a single file.
         dir: 'dist',
-        entryFileNames: '[name].[format].js',
+        entryFileNames: 'vue-cal.[format].js',
         chunkFileNames: '[name].js',
         // Provide global variables to use in the UMD build for externalized deps.
         globals: { vue: 'Vue' }
