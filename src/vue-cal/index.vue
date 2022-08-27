@@ -248,7 +248,7 @@ export default {
     timeCellHeight: { type: Number, default: 40 }, // In pixels.
     timeFormat: { type: String, default: '' },
     timeFrom: { type: Number, default: 0 }, // In minutes.
-    timeLabelInCells: { type: Boolean, default: false },
+    timeLabelsInCells: { type: Boolean, default: false },
     timeStep: { type: Number, default: 60 }, // In minutes.
     timeTo: { type: Number, default: minutesInADay }, // In minutes.
     todayButton: { type: Boolean, default: false },
