@@ -2330,12 +2330,12 @@
     &lt;button @click="$refs.vuecal.next()"&gt;Next&lt;/button&gt;
 
     &lt;vue-cal
-      small
       ref="vuecal"
       v-model:active-view="activeView"
+      v-model:selected-date="selectedDate"
       :time="false"
       hide-view-selector
-      :selected-date="selectedDate"&gt;
+      small&gt;
     &lt;/vue-cal&gt;
 
   h5.subtitle-1.font-weight-bold Other useful Vue Cal internal methods &amp; Date prototypes
