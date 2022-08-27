@@ -25,7 +25,7 @@ transition-group.vuecal__cell(
     @dragleave="!isDisabled && editEvents.drag && dnd && dnd.cellDragLeave($event, $data, data.startDate)"
     @drop="!isDisabled && editEvents.drag && dnd && dnd.cellDragDrop($event, $data, data.startDate, splitsCount ? split.id : null)")
 
-    .cell-time-labels(v-if="options.timeLabelsInCells && options.time && isWeekOrDayView && !allDay")
+    .cell-time-labels(v-if="options.showTimeInCells && options.time && isWeekOrDayView && !allDay")
       span.cell-time-label(v-for="(cell, i) in vuecal.timeCells" :key="i").
         {{ cell.label }}
 
