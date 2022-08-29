@@ -599,6 +599,34 @@ export default {
           break
         case 'day':
           firstCellDate = ud[next ? 'addDays' : 'subtractDays'](startDate, 1)
+          const weekDay = firstCellDate.getDay() // 0 to 6 with Sunday at position 0.
+          const weekDayIndex = this.startWeekOnSunday ? weekDay : ((weekDay || 7) - 1)
+          const isDayHidden = this.weekDays[weekDayIndex].hide
+
+          // If the day to show on the day view is listed as hidden by hideWeekdays or hideWeekends,
+          // show the next one that is not hidden if navigating forward, or show the previous available
+          // if navigating backward.
+          if (isDayHidden) {
+            const daysWithIndex = this.weekDays.map((day, i) => ({ ...day, i }))
+            let dayToShow = null
+            let daysFromDate = 0
+
+            if (next) {
+              dayToShow = ([...daysWithIndex.slice(weekDayIndex), ...daysWithIndex]).find(day => {
+                daysFromDate++
+                return !day.hide
+              }).i // Returns 0 to 6 with Monday at position 0.
+              daysFromDate--
+            }
+            else {
+              dayToShow = ([...daysWithIndex, ...daysWithIndex.slice(0, weekDayIndex)]).reverse().find(day => {
+                daysFromDate++
+                return !day.hide
+              }).i // Returns 0 to 6 with Monday at position 0.
+            }
+
+            firstCellDate = ud[next ? 'addDays' : 'subtractDays'](firstCellDate, daysFromDate)
+          }
           break
       }
       if (firstCellDate) this.switchView(viewId, firstCellDate)
