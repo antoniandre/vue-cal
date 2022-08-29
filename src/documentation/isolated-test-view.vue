@@ -9,6 +9,8 @@ div.test-view
     sticky-split-labels
     cell-contextmenu
     today-button
+    :hide-weekdays="[3]"
+    hide-weekends
     v-model:selectedDate="selectedDate"
     @cell-contextmenu="log")
   p selectedDate: {{ selectedDate }}
