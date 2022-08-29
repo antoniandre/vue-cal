@@ -1,19 +1,29 @@
 <template lang="pug">
 div
   div.grey.mb1
-    .title.mb5 Version 4.5.0: Added option to display time labels in cells.
+    strong.mr1 Version 4.5.1
+    | Fix wrong starting day on week view when the week starts on sunday
+    | &amp; #[span.code hideWeekends] is true.
 
   div.grey.mb1
-    .title.mb5 Version 4.4.3: Fix headings misalignments on certain views, when OS sets fixed scrollbars.
+    strong.mr1 Version 4.5.0
+    | Added option to display time labels in cells.
+
+  div.grey.mb1
+    strong.mr1 Version 4.4.3
+    | Fix headings misalignments on certain views, when OS sets fixed scrollbars.
 
   div.mb1
-    .title.mb5 Version 4.4.0: Added a v-model on the #[span.code selected-date].
+    strong.mr1 Version 4.4.0
+    | Added a v-model on the #[span.code selected-date].
 
   div.mb1
-    .title.mb5 Version 4.3.4: New ESM build by default.
+    strong.mr1 Version 4.3.4
+    | New ESM build by default.
 
   div.mb1
-    .title.mb5 Version 4.0.0: supports and only works on Vue 3.
+    strong.mr1 Version 4.0.0
+    | Supports and only works on Vue 3.
 
   div.grey.mb1
     strong.mr1 Version 3.10.1
