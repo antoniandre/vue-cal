@@ -1,6 +1,11 @@
 <template lang="pug">
 div
   div.grey.mb1
+    strong.mr1 Version 4.6.0
+    | Skip the hidden days on #[span.code day] view (days listed in #[span.code hideWeekends]
+    | and #[span.code hideWeekdays]).
+
+  div.grey.mb1
     strong.mr1 Version 4.5.1
     | Fix wrong starting day on week view when the week starts on sunday
     | &amp; #[span.code hideWeekends] is true.
