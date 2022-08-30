@@ -2,15 +2,13 @@
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
   vue-cal.ml2.mr1.vuecal--blue-theme(
-    show-all-day-events
     :events="events"
     editable-events
-    :split-days="daySplits"
-    sticky-split-labels
     cell-contextmenu
     today-button
-    :hide-weekdays="[3]"
-    hide-weekends
+    :time-from="7 * 60"
+    :time-to="20 * 60"
+    :special-hours="specialHours"
     v-model:selectedDate="selectedDate"
     @cell-contextmenu="log")
   p selectedDate: {{ selectedDate }}
@@ -18,6 +16,9 @@ div.test-view
 
 <script>
 import VueCal from '@/vue-cal/index.vue'
+
+// `from` and `to` are expected in minutes.
+const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
 
 const now = new Date()
 
@@ -27,6 +28,18 @@ export default {
   data: () => ({
     selectedDate: now,
     view: 'week',
+    specialHours: {
+      1: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+      2: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+      3: [
+        { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
+        { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
+      ],
+      4: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+      5: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+      6: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+      7: { from: 9 * 60, to: 18 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+    },
     events: [
       {
         start: new Date(new Date(now).setHours(1, 0, 0)),
@@ -81,4 +94,20 @@ export default {
 // Global.
 .w-app {margin: 0;padding: 0;}
 .top-bar, footer {display: none !important;}
+
+.vuecal__special-hours {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 4px;
+
+  em {font-size: 0.9em;color: #999;}
+}
+.doctor-1 {background-color: hsl(127, 100%, 97%);color: hsl(127, 50%, 67%);}
+.doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
+.doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 67%);}
+.closed {
+  background: hsl(27, 100%, 97%) repeating-linear-gradient(-45deg, hsla(27, 100%, 67%, 0.25), hsla(27, 100%, 67%, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
+  color: hsl(27, 90%, 63%);
+}
 </style>
