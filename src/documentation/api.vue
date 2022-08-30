@@ -266,15 +266,16 @@ div
     li
       code.mr2 specialHours
       span.code [Object], default: {}
-      p
-        | Allows an individual highlighted time range for each day of the week.#[br]
-        | For instance, it could represent the business hours.#[br]
-        | The object must contain indexed days, #[strong from 1 for Monday to 7 for Sunday], of the
-        | days you want to highlight.#[br]
-        | Each day must contain an object with a #[span.code from] and #[span.code to] properties
-        | defining the beginning and the end of the time range #[strong in minutes].#[br]
-        | In addition, you can set a CSS class for each day of the week.#[br]
-        | It is also possible to provide an array of special hours for the same day.#[br]#[br]
+      p.
+        Allows an individual highlighted time range for each day of the week.#[br]
+        For instance, it could represent the business hours.#[br]
+        The object must contain indexed days, #[strong from 1 for Monday to 7 for Sunday], of the
+        days you want to highlight.#[br]
+        Each day must contain an object with a #[span.code from] and #[span.code to] properties
+        defining the beginning and the end of the time range #[strong in minutes].#[br]
+        In addition, you can set a CSS class for each day of the week.#[br]
+        It is also possible to provide an array of special hours for the same day.#[br]
+        A #[span.code label] can also be provided per special hour block, and styled via CSS.#[br]#[br]
 
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
