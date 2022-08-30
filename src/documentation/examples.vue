@@ -449,7 +449,11 @@
       :disable-views="['years', 'year', 'month']"
       :special-hours="specialHours")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;vue-cal :time-from="8 * 60" :time-to="20 * 60" :special-hours="specialHours" /&gt;
+    &lt;vue-cal
+      :disable-views="['years', 'year', 'month']"
+      :time-from="8 * 60"
+      :time-to="20 * 60"
+      :special-hours="specialHours" /&gt;
   ssh-pre(language="js" label="JavaScript").
     // `from` and `to` are expected in minutes.
     const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
@@ -471,6 +475,100 @@
       background-color: rgba(255, 255, 0, 0.15);
       border: solid rgba(255, 210, 0, 0.3);
       border-width: 2px 0;
+    }
+
+  p With the same principle, you could also build a lot more complex layout such as the following one.
+  .example.my2.mxa(style="height: 550px")
+    vue-cal.vuecal--green-theme.ex--doctor-hours(
+      :disable-views="['years', 'year', 'month']"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      :special-hours="specialDoctorHours")
+  ssh-pre(language="html-vue" label="Vue Template").
+    &lt;vue-cal
+      :disable-views="['years', 'year', 'month']"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      :special-hours="specialHours" /&gt;
+  ssh-pre(language="js" label="JavaScript").
+    // In your component's data, special hours from Monday to Sunday (1 to 7).
+    // Note that you can provide an array of multiple blocks for the same day.
+    specialHours: {
+      1: {
+        from: 8 * 60,
+        to: 17 * 60,
+        class: 'doctor-1',
+        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+      },
+      2: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-2',
+        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+      },
+      3: [
+        {
+          from: 8 * 60,
+          to: 12 * 60,
+          class: 'doctor-1',
+          label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
+        },
+        {
+          from: 14 * 60,
+          to: 19 * 60,
+          class: 'doctor-3',
+          label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
+        }
+      ],
+      4: {
+        from: 8 * 60,
+        to: 17 * 60,
+        class: 'doctor-1',
+        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+      },
+      5: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-3',
+        label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
+      },
+      6: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-2',
+        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+      },
+      7: {
+        from: 7 * 60,
+        to: 20 * 60,
+        class: 'closed',
+        label: '<strong>Closed</strong>'
+      }
+    }
+  ssh-pre(language="css" label="CSS").
+    .vuecal__special-hours {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px;
+
+      em {font-size: 0.9em;color: #999;}
+    }
+
+    .doctor-1 {background-color: #f0fff1;color: #81d58b;}
+    .doctor-2 {background-color: #f0f6ff;color: #689bee;}
+    .doctor-3 {background-color: #fcf0ff;color: #d168ee;}
+    .closed {
+      background:
+        #fff7f0
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 162, 87, 0.25),
+          rgba(255, 162, 87, 0.25) 5px,
+          rgba(255, 255, 255, 0) 5px,
+          rgba(255, 255, 255, 0) 15px
+        );
+      color: #f6984c;
     }
 
   //- Example.
@@ -3486,7 +3584,19 @@ export default {
       }
     ],
     deleteEventFunction: null,
-    deleteDragEventFunction: null
+    deleteDragEventFunction: null,
+    specialDoctorHours: {
+      1: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+      2: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+      3: [
+        { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
+        { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
+      ],
+      4: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+      5: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+      6: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+      7: { from: 9 * 60, to: 18 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+    }
   }),
 
   methods: {

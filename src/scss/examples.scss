@@ -23,6 +23,25 @@
   }
 }
 
+.ex--doctor-hours {
+  .vuecal__special-hours {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+
+    em {font-size: 0.9em;color: #999;}
+  }
+
+  .doctor-1 {background-color: rgb(240, 255, 241);color: rgb(129, 213, 139);}
+  .doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
+  .doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 69%);}
+  .closed {
+    background: hsl(27, 100%, 97%) repeating-linear-gradient(-45deg, hsla(27, 100%, 67%, 0.25), hsla(27, 100%, 67%, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
+    color: hsl(27, 90%, 63%);
+  }
+}
+
 // Create events example.
 .ex--create-events {
   .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
