@@ -34,6 +34,7 @@ transition-group.vuecal__cell(
         v-for="(block, i) in specialHours"
         :class="`vuecal__special-hours--day${block.day} ${block.class}`"
         :style="`height: ${block.height}px;top: ${block.top}px`")
+        .special-hours-label(v-if="block.label" v-html="block.label")
     slot(
       name="cell-content"
       :events="events"

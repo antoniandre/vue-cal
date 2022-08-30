@@ -1451,12 +1451,13 @@ export default {
         if (!Array.isArray(day)) day = [day]
         cell = []
 
-        day.forEach(({ from, to, class: Class }, j) => {
+        day.forEach(({ from, to, class: Class, label }, j) => {
           cell[j] = {
             day: i + 1,
             from: ![null, undefined].includes(from) ? from * 1 : null,
             to: ![null, undefined].includes(to) ? to * 1 : null,
-            class: Class || ''
+            class: Class || '',
+            label: label || ''
           }
         })
         return cell
