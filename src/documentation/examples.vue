@@ -247,7 +247,7 @@
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript").
-    // Using Vue Cal Date Prototypes.
+    // Using Vue Cal Date Prototypes (activated by default).
     computed: {
       minDate () {
         return new Date().subtractDays(10)
@@ -281,7 +281,7 @@
       :disable-views="['week']"
       :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
   ssh-pre(language="html-vue" label="Vue Template").
-    &lt;!-- Using Vue Cal Date Prototypes subtractDays, format, addDays. --&gt;
+    &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
     &lt;vue-cal
       xsmall
       hide-view-selector
@@ -367,8 +367,8 @@
     &lt;vue-cal :time="false" small active-view="year" locale="{{ locale }}" /&gt;
 
   highlight-message.
-    For Vue Cal versions prior 4.3.4 (before ESM),
-    the locale file must be loaded separately: #[br]#[span.code import 'vue-cal/dist/i18n/zh-cn.js'].
+    For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
+    the locale file must be loaded separately: #[br]#[span.code import 'vue-cal/dist/i18n/{{ locale }}.js'].
 
   h4 Alternative
   p.
@@ -654,7 +654,7 @@
       :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
       &lt;template #today-button&gt;
-        &lt;!-- Using Vuetify --&gt;
+        &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
         &lt;v-tooltip&gt;
           &lt;template #activator="{ on }"&gt;
             &lt;v-btn v-on="on"&gt;
@@ -804,7 +804,7 @@
       :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
 
-    &lt;!-- Using Vuetify --&gt;
+    &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
     &lt;v-dialog v-model="showDialog"&gt;
       &lt;v-card&gt;
         &lt;v-card-title&gt;
@@ -1324,7 +1324,7 @@
               :on-event-create="onEventCreate"&gt;
           &lt;/vue-cal&gt;
     ssh-pre(language="html-vue" label="Vue Template - dialog box").
-      &lt;!-- Using Vuetify --&gt;
+      &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
       &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
         &lt;v-card&gt;
           &lt;v-card-title&gt;
@@ -1430,7 +1430,8 @@
   highlight-message(type="warning")
     ul
       li.
-        Drag &amp; drop is a module (to keep Vue Cal light weight). For Vue Cal versions prior 4.3.4 (before ESM),
+        Drag &amp; drop is a module (to keep Vue Cal light weight).#[br]
+        For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
         it must be loaded separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js'].
       li
         strong Drag &amp; drop is only available on single day events for now.
@@ -1842,8 +1843,8 @@
   div(style="min-height: 40px")
     w-transition-expand(y)
       .grey(v-if="minEventWidth").
-        #[span.code min-event-width="50"] will only apply a min width of 50% on events that
-        would be smaller than that.
+        #[span.code min-event-width="50"] will only apply a min width of 50% on simultaneous
+        events that would be smaller than that (e.g. with 3 events side by side)
   highlight-message.mb6.
     In some cases you may want to set the events overlaps calculation only per same time step
     (default time step is 1 hour), like in
@@ -3001,7 +3002,7 @@
              v-html="event.title" /&gt;
 
         &lt;small class="vuecal__event-time"&gt;
-          &lt;!-- Using Vue Cal Date prototypes --&gt;
+          &lt;!-- Using Vue Cal Date prototypes (activated by default) --&gt;
           &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
           &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
         &lt;/small&gt;

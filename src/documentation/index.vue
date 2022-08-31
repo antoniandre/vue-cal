@@ -235,7 +235,9 @@
               &lt;link href="https://unpkg.com/vue-cal@legacy/dist/vuecal.css" rel="stylesheet"&gt;
             &lt;/head&gt;
 
-      p Then define the component to use in your template:
+      p.
+        Then define the component to use in your template if you are not using the Vue composition
+        API:
       w-flex.vs-d-block(gap="6")
         ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js").
           // In your Vue.js component.
