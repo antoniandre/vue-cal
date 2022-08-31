@@ -373,6 +373,7 @@ const localesList = [
   { code: 'da', label: 'Danish' },
   { code: 'nl', label: 'Dutch' },
   { code: 'en', label: 'English' },
+  { code: 'et', label: 'Estonian' },
   { code: 'fa', label: 'Farsi' },
   { code: 'fr', label: 'French' },
   { code: 'ka', label: 'Georgian' },
