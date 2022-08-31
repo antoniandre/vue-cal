@@ -1,6 +1,10 @@
 <template lang="pug">
 div
-  div.grey.mb1
+  div.mb1
+    strong.mr1 Version 4.8.0
+    | Added the Estonian locale.
+
+  div.mb1
     strong.mr1 Version 4.6.0
     | Skip the hidden days on #[span.code day] view (days listed in #[span.code hideWeekends]
     | and #[span.code hideWeekdays]).
@@ -10,7 +14,7 @@ div
     | Fix wrong starting day on week view when the week starts on sunday
     | &amp; #[span.code hideWeekends] is true.
 
-  div.grey.mb1
+  div.mb1
     strong.mr1 Version 4.5.0
     | Added option to display time labels in cells.
 
