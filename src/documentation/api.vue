@@ -56,7 +56,7 @@ div
     timeCellHeight:         [Number],          default: 40 // In pixels.
     timeFormat:             [String],          default: ''
     timeFrom:               [Number],          default: 0 // In minutes.
-    timeStep:               [Number],          default: 30 // In minutes.
+    timeStep:               [Number],          default: 60 // In minutes.
     timeTo:                 [Number],          default: 24 * 60 // In minutes.
     todayButton:            [Boolean],         default: false
     transitions:            [Boolean],         default: true
@@ -385,7 +385,7 @@ div
         By default it ends at 24:00.
     li
       code.mr2 timeStep
-      span.code [Number], default: 30
+      span.code [Number], default: 60
       p.
         If #[span.code time] is enabled, set the time increment in minutes.
     li
