@@ -3,6 +3,7 @@ import vue from '@vitejs/plugin-vue'
 import { terser } from "rollup-plugin-terser" // Minifier.
 import { resolve } from 'path'
 import pkg from './package.json'
+import autoprefixer from 'autoprefixer'
 
 // const isProduction = process.env.NODE_ENV === 'production'
 
@@ -111,6 +112,9 @@ export default defineConfig({
       scss: {
         additionalData: '@import "@/scss/_variables.scss";'
       }
+    },
+    postcss: {
+      plugins: [autoprefixer]
     }
   },
   build

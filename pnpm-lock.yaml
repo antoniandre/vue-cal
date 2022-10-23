@@ -10,15 +10,16 @@ specifiers:
   '@vue/compiler-sfc': ^3.2.37
   autoprefixer: ^10.4.7
   eslint: ^8.20.0
+  postcss: ^8.4.18
+  pug: ^3.0.2
   rollup: ^2.77.2
   rollup-plugin-terser: ^7.0.2
   sass: ^1.54.0
   simple-syntax-highlighter: ^2.2.3
   vite: ^3.0.9
-  vite-plugin-pug: ^0.3.1
   vue: ^3.2.37
   vue-router: ^4.1.3
-  wave-ui: ^2.40.5
+  wave-ui: ^2.43.1
 
 devDependencies:
   '@babel/core': 7.18.13
@@ -28,17 +29,18 @@ devDependencies:
   '@mdi/font': 6.9.96
   '@vitejs/plugin-vue': 3.0.3_vite@3.0.9+vue@3.2.37
   '@vue/compiler-sfc': 3.2.37
-  autoprefixer: 10.4.8
+  autoprefixer: 10.4.8_postcss@8.4.18
   eslint: 8.22.0
+  postcss: 8.4.18
+  pug: 3.0.2
   rollup: 2.78.1
   rollup-plugin-terser: 7.0.2_rollup@2.78.1
   sass: 1.54.5
   simple-syntax-highlighter: 2.2.3_vue@3.2.37
   vite: 3.0.9_sass@1.54.5
-  vite-plugin-pug: 0.3.1_vite@3.0.9
   vue: 3.2.37
   vue-router: 4.1.5_vue@3.2.37
-  wave-ui: 2.40.5
+  wave-ui: 2.43.1
 
 packages:
 
@@ -490,7 +492,7 @@ packages:
       '@vue/shared': 3.2.37
       estree-walker: 2.0.2
       magic-string: 0.25.9
-      postcss: 8.4.16
+      postcss: 8.4.18
       source-map: 0.6.1
     dev: true
 
@@ -623,7 +625,7 @@ packages:
     resolution: {integrity: sha512-TaTivMB6pYI1kXwrFlEhLeGfOqoDNdTxjCdwRfFFkEA30Eu+k48W34nlok2EYWJfFFzqaEmichdNM7th6M5HNw==}
     dev: true
 
-  /autoprefixer/10.4.8:
+  /autoprefixer/10.4.8_postcss@8.4.18:
     resolution: {integrity: sha512-75Jr6Q/XpTqEf6D2ltS5uMewJIx5irCU1oBYJrWjFenq/m12WRRrz6g15L1EIoYvPLXTbEry7rDOwrcYNj77xw==}
     engines: {node: ^10 || ^12 || >=14}
     hasBin: true
@@ -635,6 +637,7 @@ packages:
       fraction.js: 4.2.0
       normalize-range: 0.1.2
       picocolors: 1.0.0
+      postcss: 8.4.18
       postcss-value-parser: 4.2.0
     dev: true
 
@@ -687,7 +690,7 @@ packages:
     resolution: {integrity: sha512-7O+FbCihrB5WGbFYesctwmTKae6rOiIzmz1icreWJ+0aA7LJfuqhEso2T9ncpcFtzMQtzXf2QGGueWJGTYsqrA==}
     dependencies:
       function-bind: 1.1.1
-      get-intrinsic: 1.1.2
+      get-intrinsic: 1.1.3
     dev: true
 
   /callsites/3.1.0:
@@ -1272,8 +1275,8 @@ packages:
     engines: {node: '>=6.9.0'}
     dev: true
 
-  /get-intrinsic/1.1.2:
-    resolution: {integrity: sha512-Jfm3OyCxHh9DJyc28qGk+JmfkpO41A4XkneDSujN9MDXrm4oDKdHvndhZ2dN94+ERNfkYJWDclW6k2L/ZGHjXA==}
+  /get-intrinsic/1.1.3:
+    resolution: {integrity: sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A==}
     dependencies:
       function-bind: 1.1.1
       has: 1.0.3
@@ -1656,8 +1659,8 @@ packages:
     resolution: {integrity: sha512-1NNCs6uurfkVbeXG4S8JFT9t19m45ICnif8zWLd5oPSZ50QnwMfK+H3jv408d4jw/7Bttv5axS5IiHoLaVNHeQ==}
     dev: true
 
-  /postcss/8.4.16:
-    resolution: {integrity: sha512-ipHE1XBvKzm5xI7hiHCZJCSugxvsdq2mPnsq5+UF+VHCjiBvtDrlxJfMBToWaP9D5XlgNmcFGqoHmUn0EYEaRQ==}
+  /postcss/8.4.18:
+    resolution: {integrity: sha512-Wi8mWhncLJm11GATDaQKobXSNEYGUHeQLiQqDFG1qQ5UTDPTEvKw0Xt5NsTpktGTwLps3ByrWsBrG0rB8YQ9oA==}
     engines: {node: ^10 || ^12 || >=14}
     dependencies:
       nanoid: 3.3.4
@@ -2024,16 +2027,6 @@ packages:
     resolution: {integrity: sha512-l8lCEmLcLYZh4nbunNZvQCJc5pv7+RCwa8q/LdUx8u7lsWvPDKmpodJAJNwkAhJC//dFY48KuIEmjtd4RViDrA==}
     dev: true
 
-  /vite-plugin-pug/0.3.1_vite@3.0.9:
-    resolution: {integrity: sha512-LOyb1o1eaUjaSrIzZiK95n632CDu4lPJ3U/wKy03mp9OcLAFS0p5R5it7z/FcsqXUiqRtl7QtCO9HnhylC4waA==}
-    peerDependencies:
-      picocolors: ~1
-      vite: ~2
-    dependencies:
-      pug: 3.0.2
-      vite: 3.0.9_sass@1.54.5
-    dev: true
-
   /vite/3.0.9_sass@1.54.5:
     resolution: {integrity: sha512-waYABTM+G6DBTCpYAxvevpG50UOlZuynR0ckTK5PawNVt7ebX6X7wNXHaGIO6wYYFXSM7/WcuFuO2QzhBB6aMw==}
     engines: {node: ^14.18.0 || >=16.0.0}
@@ -2054,7 +2047,7 @@ packages:
         optional: true
     dependencies:
       esbuild: 0.14.54
-      postcss: 8.4.16
+      postcss: 8.4.18
       resolve: 1.22.1
       rollup: 2.77.3
       sass: 1.54.5
@@ -2086,8 +2079,8 @@ packages:
       '@vue/shared': 3.2.37
     dev: true
 
-  /wave-ui/2.40.5:
-    resolution: {integrity: sha512-rCbE/HUdmdXWpswrJmKkjB0wtHrx34gNAL0AHE6ZGHjrag35hEYY2emQ668LiNCpp7j4APeT3j69CSiplYPrPA==}
+  /wave-ui/2.43.1:
+    resolution: {integrity: sha512-s6INgeC4YMwIVbglhXEdjVeyOk7MxUN7pa9e7MJT03b8zA7UUtY32ObjlzPtKo+m1GGYL1Q7yjpMchUqkz561g==}
     dev: true
 
   /which/2.0.2:
