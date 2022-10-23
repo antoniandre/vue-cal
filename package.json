@@ -3,21 +3,20 @@
   "version": "4.8.0",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
-  "repository": "https://github.com/antoniandre/vue-cal",
   "homepage": "https://antoniandre.github.io/vue-cal",
+  "repository": "https://github.com/antoniandre/vue-cal",
   "license": "MIT",
   "funding": "https://github.com/sponsors/antoniandre",
-  "scripts": {
-    "dev": "vite",
-    "build": "vite build --base /vue-cal/",
-    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vuecal.css && rm ./dist/favicon.ico",
-    "serve": "vite preview docs --base /vue-cal/",
-    "lint": "vite lint"
-  },
   "main": "dist/vue-cal.cjs.js",
-  "module": "dist/vue-cal.es.js",
   "unpkg": "dist/vue-cal.iife.js",
   "jsdelivr": "dist/vue-cal.iife.js",
+  "module": "dist/vue-cal.es.js",
+  "files": [
+    "dist",
+    "package.json",
+    "README.md",
+    "LICENSE"
+  ],
   "exports": {
     ".": {
       "import": "./dist/vue-cal.es.js",
@@ -26,12 +25,25 @@
     "./package.json": "./package.json",
     "./dist/*": "./dist/*"
   },
-  "files": [
-    "dist",
-    "package.json",
-    "README.md",
-    "LICENSE"
+  "keywords": [
+    "vuecal",
+    "vue cal",
+    "vue calendar",
+    "full calendar",
+    "calendar events",
+    "vue",
+    "vuejs",
+    "vue 3",
+    "vue 2",
+    "ui"
   ],
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build --base /vue-cal/",
+    "build-bundle": "BUNDLE=true vite build && mv ./dist/style.css ./dist/vuecal.css && rm ./dist/favicon.ico",
+    "serve": "vite preview docs --base /vue-cal/",
+    "lint": "vite lint"
+  },
   "devDependencies": {
     "@babel/core": "^7.18.9",
     "@babel/eslint-parser": "^7.18.9",
@@ -47,24 +59,11 @@
     "sass": "^1.54.0",
     "simple-syntax-highlighter": "^2.2.3",
     "vite": "^3.0.9",
-    "vite-plugin-pug": "^0.3.1",
     "vue": "^3.2.37",
     "vue-router": "^4.1.3",
-    "wave-ui": "^2.40.5"
+    "wave-ui": "file:/Users/anto/localhost/wave-ui/wave-ui-2.41.0.tgz"
   },
   "peerDependencies": {
     "vue": "^2.6.14 || ^3.2.0"
-  },
-  "keywords": [
-    "vuecal",
-    "vue cal",
-    "vue calendar",
-    "full calendar",
-    "calendar events",
-    "vue",
-    "vuejs",
-    "vue 3",
-    "vue 2",
-    "ui"
-  ]
+  }
 }
