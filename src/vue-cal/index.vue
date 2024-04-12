@@ -1,17 +1,15 @@
 <template lang="pug">
-p Calendar
-.vuecal(ref="vuecal" :data-locale="locale" :class="wrapperClasses")
-  .vuecal__cell(v-for="i in 42" :class="cellClasses")
-    | {{ i }}
+.vue-cal(ref="vueCalRef" :data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
+  VueCalBody
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref, provide } from 'vue'
 import { props as propsDefinitions } from './components/props-definitions'
+import VueCalBody from './components/body.vue'
 
-import './styles.scss'
-
-const minutesInADay = 24 * 60 // Don't do the maths every time.
+const props = defineProps(propsDefinitions)
+const vueCalRef = ref(null)
 
 const textsDefaults = {
   weekDays: Array(7).fill(''),
@@ -32,17 +30,15 @@ const textsDefaults = {
   pm: 'pm'
 }
 
-const validViews = ['years', 'year', 'month', 'week', 'day']
-
-const props = defineProps(propsDefinitions)
+const validViews = ['years', 'year', 'month', 'week', 'days', 'day']
 
 const ready = ref(false) // Is vue-cal ready.
 // Make texts reactive before a locale is loaded.
 const texts = ref({ ...textsDefaults })
 
 // At any time this object will be filled with current view details, visible events and selected date.
-const view = {
-  id: '',
+const view = computed(() => ({
+  id: props.activeView,
   title: '',
   startDate: null,
   endDate: null,
@@ -52,7 +48,7 @@ const view = {
   // All the events are stored in the mutableEvents array, but subset of visible ones are passed
   // Into the current view for fast lookup and manipulation.
   events: []
-}
+}))
 
 // const eventIdIncrement = 1 // Internal unique id.
 
@@ -115,4 +111,35 @@ const domEvents = {
 
 // Transition when switching view. left when going toward the past, right when going toward future.
 const transitionDirection = 'right'
+
+const gridLayoutPerView = {
+  years: { cols: 5, rows: 5 },
+  year: { cols: 3, rows: 4 },
+  month: { cols: 7, rows: 6 },
+  week: { cols: 7, rows: 1 },
+  days: { cols: 5, rows: 1 },
+  day: { cols: 1, rows: 1 }
+}
+
+const wrapperClasses = computed(() => ({
+  'vue-cal--ready': ready,
+  [`vue-cal--${view.value.id}-view`]: true
+}))
+
+const wrapperStyles = computed(() => ({
+  '--vue-cal-grid-columns': gridLayoutPerView[view.value.id].cols,
+  '--vue-cal-grid-rows': gridLayoutPerView[view.value.id].rows
+}))
+
+provide('view', view)
+provide('gridLayoutPerView', gridLayoutPerView)
 </script>
+
+<style lang="scss">
+.vue-cal {
+  --vue-cal-grid-columns: 7; // Default value, overridden dynamically on view change.
+  --vue-cal-grid-rows: 6; // Default value, overridden dynamically on view change.
+
+  height: 100%;
+}
+</style>
