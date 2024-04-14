@@ -1,11 +1,13 @@
 <template lang="pug">
 .vue-cal(ref="vueCalRef" :data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
+  VueCalHeader
   VueCalBody
 </template>
 
 <script setup>
 import { computed, ref, provide } from 'vue'
 import { props as propsDefinitions } from './components/props-definitions'
+import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
 
 const props = defineProps(propsDefinitions)
