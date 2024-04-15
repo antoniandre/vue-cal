@@ -2,21 +2,16 @@
 .vue-cal__header
   .vue-cal__view-selector
     button(
-      v-for="(view, id) in availableViews"
+      v-for="(view, id) in vuecal.availableViews"
       type="button"
-      @click="switchView(id)") {{ id }}
-  .vue-cal__title {{ id }}
+      @click="vuecal.switchView(id)") {{ vuecal.texts.value[id] }}
+  .vue-cal__title {{ vuecal.view.title }}
 </template>
 
 <script setup>
-const availableViews = {
-  years: { cols: 5, rows: 5 },
-  year: { cols: 3, rows: 4 },
-  month: { cols: 7, rows: 6 },
-  week: { cols: 7, rows: 1 },
-  days: { cols: 5, rows: 1 },
-  day: { cols: 1, rows: 1 }
-}
+import { inject } from 'vue'
+
+const vuecal = inject('vuecal')
 </script>
 
 <style lang="scss">

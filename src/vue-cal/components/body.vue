@@ -7,10 +7,9 @@
 import { computed, inject } from 'vue'
 import VueCalCell from './cell.vue'
 
-const view = inject('view')
-const gridLayoutPerView = inject('gridLayoutPerView')
+const vuecal = inject('vuecal')
 
-const cellsCount = computed(() => gridLayoutPerView[view.value.id].cols * gridLayoutPerView[view.value.id].rows)
+const cellsCount = computed(() => vuecal.availableViews[vuecal.view.value.id].cols * vuecal.availableViews[vuecal.view.value.id].rows)
 </script>
 
 <style lang="scss">
