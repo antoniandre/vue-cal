@@ -2,13 +2,14 @@
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
   w-radios.mb4(
-    v-model="activeView"
+    v-model="view"
     :items="views"
     return-values
     inline)
 
-  vue-cal.vuecal--blue-theme(
-    v-model:active-view="activeView"
+  vueCal.vuecal--blue-theme(
+    v-model:view="view"
+    :views="views.map(item => item.value)"
     :events="events"
     editable-events
     cell-contextmenu
@@ -31,7 +32,7 @@ const views = [
   { value: 'years', label: 'Years' }
 ]
 
-const activeView = ref('week')
+const view = ref('week')
 const events = ref([])
 const selectedDate = ref('')
 
