@@ -1,79 +1,97 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  vue-cal.ml2.mr1.vuecal--blue-theme(
+  w-radios.mb4(
+    v-model="activeView"
+    :items="views"
+    return-values
+    inline)
+
+  vue-cal.vuecal--blue-theme(
+    v-model:active-view="activeView"
     :events="events"
     editable-events
     cell-contextmenu
     today-button
     :time-from="7 * 60"
     :time-to="20 * 60"
-    :special-hours="specialHours"
-    v-model:selectedDate="selectedDate"
-    @cell-contextmenu="log")
+    v-model:selectedDate="selectedDate")
   p selectedDate: {{ selectedDate }}
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import VueCal from '@/vue-cal/index.vue'
+
+const views = [
+  { value: 'day', label: 'Day' },
+  { value: 'week', label: 'Week' },
+  { value: 'month', label: 'Month' },
+  { value: 'year', label: 'Year' },
+  { value: 'years', label: 'Years' }
+]
+
+const activeView = ref('week')
+const events = ref([])
+const selectedDate = ref('')
 
 // `from` and `to` are expected in minutes.
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
 
 const now = new Date()
 
-export default {
-  components: { VueCal },
+// export default {
+//   components: { VueCal },
 
-  data: () => ({
-    selectedDate: now,
-    view: 'week',
-    specialHours: {
-      1: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-      2: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-      3: [
-        { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
-        { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
-      ],
-      4: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-      5: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
-      6: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-      7: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-    },
-    events: [
-      {
-        start: new Date(new Date(now).setHours(1, 0, 0)),
-        end: new Date(new Date(now).setHours(4, 0, 0)),
-        allDay: true,
-        title: 'Event 1',
-        split: 2
-      },
-      {
-        start: new Date(new Date(now).setHours(1, 0, 0)),
-        end: new Date(new Date(now).setHours(4, 0, 0)),
-        title: 'Event 2',
-        split: 1
-      },
-      {
-        start: new Date(new Date(now).setHours(3, 0, 0)),
-        end: new Date(new Date(now).setHours(5, 0, 0)),
-        title: 'Event 3',
-        split: 2
-      }
-    ],
-    daySplits: [
-      { label: 'Tom', color: 'green' },
-      { label: 'Kate', color: 'pink' }
-    ]
-  }),
+//   data: () => ({
+//     selectedDate: now,
+//     view: 'week',
+//     specialHours: {
+//       1: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+//       2: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+//       3: [
+//         { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
+//         { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
+//       ],
+//       4: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+//       5: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+//       6: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+//       7: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+//     },
+//     events: [
+//       {
+//         start: new Date(new Date(now).setHours(1, 0, 0)),
+//         end: new Date(new Date(now).setHours(4, 0, 0)),
+//         allDay: true,
+//         title: 'Event 1',
+//         split: 2
+//       },
+//       {
+//         start: new Date(new Date(now).setHours(1, 0, 0)),
+//         end: new Date(new Date(now).setHours(4, 0, 0)),
+//         title: 'Event 2',
+//         split: 1
+//       },
+//       {
+//         start: new Date(new Date(now).setHours(3, 0, 0)),
+//         end: new Date(new Date(now).setHours(5, 0, 0)),
+//         title: 'Event 3',
+//         split: 2
+//       }
+//     ],
+//     daySplits: [
+//       { label: 'Tom', color: 'green' },
+//       { label: 'Kate', color: 'pink' }
+//     ]
+//   }),
 
-  methods: {
-    log (...params) {
-      // eslint-disable-next-line
-      console.log(...params)
-    }
-  }
-}
+//   methods: {
+//     log (...params) {
+//       // eslint-disable-next-line
+//       console.log(...params)
+//     }
+//   }
+// }
 </script>
 
 <style lang="scss">
