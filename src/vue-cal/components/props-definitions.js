@@ -1,7 +1,6 @@
 export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
-  activeView: { type: String, default: 'week' },
   // Only used if there are daySplits with minSplitWidth, to add the same height top spacer on time column.
   allDayBarHeight: { type: [String, Number], default: '25px' },
   cellClickHold: { type: Boolean, default: true },
@@ -10,7 +9,6 @@ export const props = {
   dblclickToNavigate: { type: Boolean, default: true },
   disableDatePrototypes: { type: Boolean, default: false },
   disableDays: { type: Array, default: () => [] },
-  disableViews: { type: Array, default: () => [] },
   dragToCreateEvent: { type: Boolean, default: true },
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
@@ -54,6 +52,9 @@ export const props = {
   todayButton: { type: Boolean, default: false },
   transitions: { type: Boolean, default: true },
   twelveHour: { type: Boolean, default: false },
+  view: { type: String, default: 'week' },
+  viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
+  views: { type: Array, default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   xsmall: { type: Boolean, default: false }
 }

@@ -1,38 +1,30 @@
 /**
  * Date Utils & prototypes.
- *
- * Waiting for VS Code to support JavaScript private fields.
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_fields
- * Meantime keep `_` for private.
  */
 
-let now, todayDate, todayF, self
+let now, todayDate, todayF
 let _dateObject = {}
 let _timeObject = {}
 
-export default class DateUtils {
-  texts = {}
+export default class {
+  #texts = {}
 
   constructor (texts, noPrototypes = false) {
-    self = this // For use in Date prototypes.
-    this._texts = texts
+    this.#texts = texts
 
     // Add prototypes ASAP - only once.
-    if (!noPrototypes && Date && !Date.prototype.addDays) this._initDatePrototypes()
-
-    // @todo: This would be nicer, but how to set Date.noPrototypes ASAP only if user wants?
-    // if (Date.noPrototypes) delete Date.noPrototypes
-    // else this._initDatePrototypes()
+    if (!noPrototypes && Date && !Date.prototype.addDays) this.#initDatePrototypes()
   }
 
-  _initDatePrototypes () {
+  #initDatePrototypes () {
+    const self = this
     /* eslint-disable no-extend-native */
-    Date.prototype.addDays = function (days) { return self.addDays(this, days) }
-    Date.prototype.subtractDays = function (days) { return self.subtractDays(this, days) }
-    Date.prototype.addHours = function (hours) { return self.addHours(this, hours) }
-    Date.prototype.subtractHours = function (hours) { return self.subtractHours(this, hours) }
-    Date.prototype.addMinutes = function (minutes) { return self.addMinutes(this, minutes) }
-    Date.prototype.subtractMinutes = function (minutes) { return self.subtractMinutes(this, minutes) }
+    Date.prototype.addDays = function (days) { return self.addDays(this, days || 0) }
+    Date.prototype.subtractDays = function (days) { return self.subtractDays(this, days || 0) }
+    Date.prototype.addHours = function (hours) { return self.addHours(this, hours || 0) }
+    Date.prototype.subtractHours = function (hours) { return self.subtractHours(this, hours || 0) }
+    Date.prototype.addMinutes = function (minutes) { return self.addMinutes(this, minutes || 0) }
+    Date.prototype.subtractMinutes = function (minutes) { return self.subtractMinutes(this, minutes || 0) }
     Date.prototype.getWeek = function () { return self.getWeek(this) }
     Date.prototype.isToday = function () { return self.isToday(this) }
     Date.prototype.isLeapYear = function () { return self.isLeapYear(this) }
@@ -41,7 +33,7 @@ export default class DateUtils {
     /* eslint-enable no-extend-native */
   }
 
-  removePrototypes () {
+  removeDatePrototypes () {
     delete Date.prototype.addDays
     delete Date.prototype.subtractDays
     delete Date.prototype.addHours
@@ -56,7 +48,7 @@ export default class DateUtils {
   }
 
   updateTexts (texts) {
-    this._texts = texts
+    this.#texts = texts
   }
 
   // Cache Today's date (to a maximum) for better isToday() performances. Formatted without leading 0.
@@ -199,13 +191,13 @@ export default class DateUtils {
    *
    * @param {Date} date a JavaScript Date object to format.
    * @param {String} format the wanted format.
-   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this._texts.
+   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this.#texts.
    *                       This becomes useful when showing multiple instances with different languages,
    *                       like in the documentation page.
    * @return {String} the formatted date.
    */
   formatDate (date, format = 'YYYY-MM-DD', texts = null) {
-    if (!texts) texts = this._texts
+    if (!texts) texts = this.#texts
     if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
     if (format === 'YYYY-MM-DD') return this.formatDateLite(date)
 
@@ -257,7 +249,7 @@ export default class DateUtils {
    *
    * @param {Date | Number} date a JavaScript Date object or a time in minutes.
    * @param {String} format the wanted format.
-   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this._texts.
+   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this.#texts.
    *                       This becomes useful when showing multiple instances with different languages,
    *                       like in the documentation page.
    * @param {Boolean} round if time is 23:59:59, rounds up to 24:00 for formatting only.
@@ -273,7 +265,7 @@ export default class DateUtils {
     if (date instanceof Date && format === 'HH:mm') return shouldRound ? '24:00' : this.formatTimeLite(date)
 
     _timeObject = {} // Reinit the time object on each function call.
-    if (!texts) texts = this._texts
+    if (!texts) texts = this.#texts
     const timeObj = this._hydrateTimeObject(date, texts)
 
     const formatted = format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {

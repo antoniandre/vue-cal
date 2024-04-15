@@ -1,38 +1,40 @@
 import { ref, computed } from 'vue'
+import DateUtils from './utils/date'
 
-const textsDefaults = {
-  weekDays: Array(7).fill(''),
-  weekDaysShort: [],
-  months: Array(12).fill(''),
-  years: '',
-  year: '',
-  month: '',
-  week: '',
-  day: '',
-  today: '',
-  noEvent: '',
-  allDay: '',
-  deleteEvent: '',
-  createEvent: '',
-  dateFormat: 'dddd MMMM D, YYYY',
-  am: 'am',
-  pm: 'pm'
+const defaults = {
+  texts: {
+    weekDays: Array(7).fill(''),
+    weekDaysShort: [],
+    months: Array(12).fill(''),
+    years: '',
+    year: '',
+    month: '',
+    week: '',
+    day: '',
+    today: '',
+    noEvent: '',
+    allDay: '',
+    deleteEvent: '',
+    createEvent: '',
+    dateFormat: 'dddd MMMM D, YYYY',
+    am: 'am',
+    pm: 'pm'
+  },
+  availableViews: {
+    day: { cols: 1, rows: 1 },
+    days: { cols: 5, rows: 1 },
+    week: { cols: 7, rows: 1 },
+    month: { cols: 7, rows: 6 },
+    year: { cols: 3, rows: 4 },
+    years: { cols: 5, rows: 5 }
+  }
 }
 
 export default class {
   props = {}
   emit = null // The Vue emit function from the root component.
   ready = ref(false) // Is vue-cal ready.
-  texts = ref({ ... textsDefaults }) // Make texts reactive before a locale is loaded.
-
-  availableViews = {
-    years: { cols: 5, rows: 5 },
-    year: { cols: 3, rows: 4 },
-    month: { cols: 7, rows: 6 },
-    week: { cols: 7, rows: 1 },
-    days: { cols: 5, rows: 1 },
-    day: { cols: 1, rows: 1 }
-  }
+  availableViews = ref({ ...defaults.availableViews })
 
   // At any time this object will be filled with current view details, visible events and selected date.
   view = computed(() => ({
@@ -62,10 +64,12 @@ export default class {
     // https://vitejs.dev/guide/features.html#glob-import
     let translations = import.meta.glob('./i18n/*.json')
     translations = await translations[`./i18n/${locale}.json`]?.() // Load this translation file.
-    this.texts.value = Object.assign({}, textsDefaults, translations)
+    this.texts.value = Object.assign({}, defaults.texts, translations)
   }
 
   switchView (id) {
-    this.emit('update:activeView', id)
+    const availableViews = this.props.views || Object.keys(this.availableViews)
+    if (availableViews.includes(id))this.emit('update:view', id)
+    else console.warn(`Vue Cal: the view \`${id}\` is not available.`)
   }
 }

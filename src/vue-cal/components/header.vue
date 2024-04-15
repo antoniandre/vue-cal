@@ -2,7 +2,7 @@
 .vue-cal__header
   .vue-cal__view-selector
     button(
-      v-for="(view, id) in vuecal.availableViews"
+      v-for="(view, id) in vuecal.availableViews.value"
       type="button"
       @click="vuecal.switchView(id)") {{ vuecal.texts.value[id] }}
   .vue-cal__title {{ vuecal.view.title }}
