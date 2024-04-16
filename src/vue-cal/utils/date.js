@@ -302,7 +302,6 @@ export default class {
 
   _hydrateDateObject (date, texts) {
     if (_dateObject.D) return _dateObject
-    console.log(texts)
 
     const YYYY = date.getFullYear()
     const M = date.getMonth() + 1
