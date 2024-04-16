@@ -197,7 +197,7 @@ export default class {
    * @return {String} the formatted date.
    */
   formatDate (date, format = 'YYYY-MM-DD', texts = null) {
-    if (!texts) texts = this.#texts
+    if (!texts) texts = this.#texts.value
     if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
     if (format === 'YYYY-MM-DD') return this.formatDateLite(date)
 
@@ -265,7 +265,7 @@ export default class {
     if (date instanceof Date && format === 'HH:mm') return shouldRound ? '24:00' : this.formatTimeLite(date)
 
     _timeObject = {} // Reinit the time object on each function call.
-    if (!texts) texts = this.#texts
+    if (!texts) texts = this.#texts.value
     const timeObj = this._hydrateTimeObject(date, texts)
 
     const formatted = format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
@@ -302,6 +302,7 @@ export default class {
 
   _hydrateDateObject (date, texts) {
     if (_dateObject.D) return _dateObject
+    console.log(texts)
 
     const YYYY = date.getFullYear()
     const M = date.getMonth() + 1
@@ -311,19 +312,19 @@ export default class {
     // Some of this props are functions, to only calculate on demand.
     _dateObject = {
       // Year.
-      YYYY, // 2019.
-      YY: () => YYYY.toString().substring(2), // 19.
+      YYYY, // 2024.
+      YY: () => YYYY.toString().substring(2), // 24.
 
       // Month.
       M, // 1 to 12.
-      MM: () => (M < 10 ? '0' : '') + M, // 01 to 12.
+      MM: () => M.toString().padStart(2, 0), // 01 to 12.
       MMM: () => texts.months[M - 1].substring(0, 3), // Jan to Dec.
       MMMM: () => texts.months[M - 1], // January to December.
       MMMMG: () => (texts.monthsGenitive || texts.months)[M - 1], // January to December in genitive form (Greek...)
 
       // Day.
       D, // 1 to 31.
-      DD: () => (D < 10 ? '0' : '') + D, // 01 to 31.
+      DD: () => D.toString().padStart(2, 0), // 01 to 31.
       S: () => this._nth(D), // st, nd, rd, th.
 
       // Day of the week.
@@ -354,12 +355,12 @@ export default class {
     _timeObject = {
       H,
       h,
-      HH: (H < 10 ? '0' : '') + H,
-      hh: (h < 10 ? '0' : '') + h,
+      HH: H.toString().padStart(2, 0),
+      hh: h.toString().padStart(2, 0),
       am,
       AM: am.toUpperCase(),
       m,
-      mm: (m < 10 ? '0' : '') + m
+      mm: m.toString().padStart(2, 0)
     }
 
     return _timeObject
