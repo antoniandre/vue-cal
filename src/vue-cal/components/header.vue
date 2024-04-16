@@ -1,6 +1,11 @@
 <template lang="pug">
 .vue-cal__header
-  .vue-cal__view-selector
+  slot(
+    name="header"
+    :view="vuecal.view.value.id"
+    :available-views="vuecal.availableViews.value"
+    :vuecal="vuecal")
+  .vue-cal__view-selector(v-if="!$slots.header")
     button(
       v-for="(view, id) in vuecal.availableViews.value"
       type="button"

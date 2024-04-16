@@ -1,11 +1,10 @@
 <template lang="pug">
-.vue-cal(
-  :data-locale="locale"
-  :class="wrapperClasses"
-  :style="wrapperStyles")
+.vue-cal(:data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
   slot(v-if="$slots.diy" name="diy" :view="vuecal.view" :vuecal="vuecal")
   template(v-else)
     VueCalHeader
+      template(v-if="$slots.header" #header="{ view, availableViews, vuecal }")
+        slot(name="header" :view="view" :available-views="availableViews" :vuecal="vuecal")
     VueCalBody
       template(v-if="$slots.cell" #cell="{ date, index, events }")
         slot(name="cell" :date="date" :index="index" :events="events")

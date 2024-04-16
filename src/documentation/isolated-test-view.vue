@@ -18,7 +18,14 @@ div.test-view
     :time-to="20 * 60"
     v-model:selectedDate="selectedDate")
     //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
-    template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
+    //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
+    //- template(#header="{ view, availableViews, vuecal }")
+      w-button.ma1(
+        v-for="(grid, viewName) in availableViews"
+        type="button"
+        @click="vuecal.switchView(viewName)"
+        :outline="view !== viewName") {{ viewName }}
+
   p selectedDate: {{ selectedDate }}
 </template>
 
