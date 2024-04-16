@@ -3,8 +3,18 @@
   :data-locale="locale"
   :class="wrapperClasses"
   :style="wrapperStyles")
-  VueCalHeader
-  VueCalBody
+  slot(v-if="$slots.diy" name="diy" :view="vuecal.view" :vuecal="vuecal")
+  template(v-else)
+    VueCalHeader
+    VueCalBody
+      template(v-if="$slots.cell" #cell="{ date, index, events }")
+        slot(name="cell" :date="date" :index="index" :events="events")
+      template(v-if="$slots['cell-date-time']" #cell-date-time="{ date, events }")
+        slot(name="cell-date-time" :date="date" :events="events")
+      template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
+        slot(name="cell-content" :date="date" :events="events")
+      template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
+        slot(name="cell-events" :date="date" :events="events")
 </template>
 
 <script setup>

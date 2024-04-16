@@ -7,7 +7,7 @@ div.test-view
     return-values
     inline)
 
-  vueCal.vuecal--blue-theme(
+  VueCal.vuecal--blue-theme(
     v-model:view="view"
     :views="views.map(item => item.value)"
     :events="events"
@@ -17,6 +17,8 @@ div.test-view
     :time-from="7 * 60"
     :time-to="20 * 60"
     v-model:selectedDate="selectedDate")
+    //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
+    template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
   p selectedDate: {{ selectedDate }}
 </template>
 

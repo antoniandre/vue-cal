@@ -110,6 +110,6 @@ export default class {
   switchView (id) {
     const availableViews = this.props.views || Object.keys(this.availableViews)
     if (availableViews.includes(id))this.emit('update:view', id)
-    else console.warn(`Vue Cal: the view \`${id}\` is not available.`)
+    else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 }
