@@ -36,6 +36,7 @@ const classes = computed(() => {
     [`vue-cal__cell--today`]: vuecal.dateUtils.isToday(props.date),
     [`vue-cal__cell--current-month`]: view.value === 'year' && props.date.getFullYear() === (now.getFullYear()) && props.date.getMonth() === (now.getMonth()),
     [`vue-cal__cell--current-year`]: view.value === 'years' && props.date.getFullYear() === (now.getFullYear()),
+    [`vue-cal__cell--out-of-range`]: view.value === 'month' && props.date.getFullYear() !== (now.getFullYear()) || props.date.getMonth() !== (now.getMonth()),
     [`vue-cal__cell--selected`]: options.selectedDate === props.date,
     [`vue-cal__cell--has-events`]: false
   }
@@ -66,5 +67,6 @@ const cellDate = computed(() => {
 
   &--today, &--current-month, &--current-year {background-color: rgb(152 214 255 / 10%);}
   &--selected {background-color: rgb(152 214 255 / 20%);}
+  &--out-of-range {opacity: 0.5;}
 }
 </style>
