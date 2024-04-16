@@ -31,12 +31,16 @@ const props = defineProps({
 
 const classes = computed(() => {
   const now = new Date()
+  const thisYear = now.getFullYear()
+  const thisMonth = now.getMonth()
+  const y = props.date.getFullYear()
+  const m = props.date.getMonth()
 
   return {
     [`vue-cal__cell--today`]: vuecal.dateUtils.isToday(props.date),
-    [`vue-cal__cell--current-month`]: view.value === 'year' && props.date.getFullYear() === (now.getFullYear()) && props.date.getMonth() === (now.getMonth()),
-    [`vue-cal__cell--current-year`]: view.value === 'years' && props.date.getFullYear() === (now.getFullYear()),
-    [`vue-cal__cell--out-of-range`]: view.value === 'month' && (props.date.getFullYear() !== (now.getFullYear()) || props.date.getMonth() !== (now.getMonth())),
+    [`vue-cal__cell--current-month`]: view.value === 'year' && y === thisYear && m === thisMonth,
+    [`vue-cal__cell--current-year`]: view.value === 'years' && y === thisYear,
+    [`vue-cal__cell--out-of-range`]: view.value === 'month' && (y !== thisYear || m !== thisMonth),
     [`vue-cal__cell--selected`]: options.selectedDate === props.date,
     [`vue-cal__cell--has-events`]: false
   }
