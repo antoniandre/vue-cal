@@ -41,12 +41,19 @@ const classes = computed(() => {
     [`vue-cal__cell--current-month`]: view.value === 'year' && y === thisYear && m === thisMonth,
     [`vue-cal__cell--current-year`]: view.value === 'years' && y === thisYear,
     [`vue-cal__cell--out-of-range`]: view.value === 'month' && (y !== thisYear || m !== thisMonth),
-    [`vue-cal__cell--selected`]: options.selectedDate === props.date,
+    [`vue-cal__cell--selected`]: options.value.selectedDate && vuecal.dateUtils.isSameDate(options.value.selectedDate, props.date),
     [`vue-cal__cell--has-events`]: false
   }
 })
 
 const cellDate = computed(() => {
+  // ! \ IMPORTANT NOTE:
+  // If the selectedDate prop would be added to the vuecal.view, any click on any cell
+  // (triggering an emit of the selectedDate), would trigger a rerendering of all the
+  // cells of the view. The following marker is here to monitor that this does not happen
+  // with any prop while developing.
+  console.log('recomputing cell') // @todo: remove this marker after dev.
+
   switch (view.value) {
     case 'day':
     case 'days':

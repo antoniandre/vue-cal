@@ -75,6 +75,10 @@ export default class {
         break
     }
 
+    // ! \ IMPORTANT NOTE:
+    // If the selectedDate prop would be added to the view, any click on any cell
+    // (triggering an emit of the selectedDate), would trigger a rerendering of all the
+    // cells of the view.
     return {
       id: this.props.view,
       title: '',
@@ -82,7 +86,6 @@ export default class {
       endDate,
       firstCellDate: startDate,
       lastCellDate: endDate,
-      selectedDate: this.props.selectedDate,
       // All the events are stored in the mutableEvents array, but subset of visible ones are passed
       // Into the current view for fast lookup and manipulation.
       events: []

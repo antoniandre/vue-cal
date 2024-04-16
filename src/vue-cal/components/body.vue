@@ -4,7 +4,8 @@
     v-for="(date, i) in cellsDates"
     :key="i"
     :date="date"
-    :index="i")
+    :index="i"
+    @click="emitSelectedDate(date)")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
     template(v-if="$slots['cell-date-time']" #cell-date-time="{ date, events }")
@@ -20,6 +21,7 @@ import { computed, inject } from 'vue'
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
+const options = computed(() => vuecal.props)
 const view = computed(() => vuecal.view.value.id)
 
 // Create as many grid cells as defined in the availableViews map (cols*rows).
@@ -52,6 +54,10 @@ const cellsDates = computed(() => {
 
   return dates
 })
+
+const emitSelectedDate = date => {
+  if (!vuecal.dateUtils.isSameDate(date, options.value.selectedDate)) vuecal.emit('update:selectedDate', date)
+}
 </script>
 
 <style lang="scss">

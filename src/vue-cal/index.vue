@@ -24,7 +24,7 @@ import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
 
 const props = defineProps(propsDefinitions)
-const emit = defineEmits(['update:view'])
+const emit = defineEmits(['update:view', 'update:selectedDate'])
 const vuecal = new VueCal(props, emit)
 
 const wrapperClasses = computed(() => ({
