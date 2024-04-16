@@ -59,7 +59,6 @@ export default class {
         startDate = this.dateUtils.getPreviousFirstDayOfWeek(startDate, this.props.startWeekOnSunday)
         endDate = this.dateUtils.addDays(startDate, 6)
         endDate.setHours(23, 59, 59, 999)
-        console.log(startDate, endDate)
         break
       case 'month':
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1, 0, 0, 0, 0)
