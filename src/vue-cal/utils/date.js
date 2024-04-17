@@ -121,8 +121,10 @@ export default class {
    * @returns {Boolean}
    */
   isSameDate (date1, date2) {
-    if (!(date1 instanceof Date) || isNaN(date1)) return console.warn(`Vue Cal: invalid date provided for comparison: ${date1}.`)
-    else if (!(date2 instanceof Date) || isNaN(date2)) return console.warn(`Vue Cal: invalid date provided for comparison: ${date2}.`)
+    if (!date1 || !date2) return console.warn(`Vue Cal: missing date${!date1 ? '1' : '2'} parameter for comparison with \`isSameDate(date1, date2)\`.`)
+    else if (!(date1 instanceof Date) || isNaN(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: ${date1}.`)
+    else if (!(date2 instanceof Date) || isNaN(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: ${date2}.`)
+
     const y1 = date1.getFullYear()
     const y2 = date2.getFullYear()
     const m1 = date1.getMonth()

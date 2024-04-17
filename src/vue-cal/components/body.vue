@@ -56,7 +56,9 @@ const cellsDates = computed(() => {
 })
 
 const emitSelectedDate = date => {
-  if (!vuecal.dateUtils.isSameDate(date, options.value.selectedDate)) vuecal.emit('update:selectedDate', date)
+  if (!vuecal.dateUtils.isSameDate(date, options.value.selectedDate)) {
+    vuecal.emit('update:selectedDate', date)
+  }
 }
 </script>
 
