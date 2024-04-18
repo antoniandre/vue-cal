@@ -5,7 +5,7 @@
     :key="i"
     :date="date"
     :index="i"
-    @click="emitSelectedDate(date)")
+    @click="vuecal.updateSelectedDate(date)")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
     template(v-if="$slots['cell-date-time']" #cell-date-time="{ date, events }")
@@ -54,12 +54,6 @@ const cellsDates = computed(() => {
 
   return dates
 })
-
-const emitSelectedDate = date => {
-  if (!vuecal.dateUtils.isSameDate(date, options.value.selectedDate)) {
-    vuecal.emit('update:selectedDate', date)
-  }
-}
 </script>
 
 <style lang="scss">
