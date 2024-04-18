@@ -5,6 +5,15 @@
     VueCalHeader
       template(v-if="$slots.header" #header="{ view, availableViews, vuecal }")
         slot(name="header" :view="view" :available-views="availableViews" :vuecal="vuecal")
+      template(v-if="!$slots.header && $slots['arrow-prev']" #arrow-prev)
+        slot(name="arrow-prev")
+      template(v-if="!$slots.header && $slots['arrow-next']" #arrow-next)
+        slot(name="arrow-next")
+      template(v-if="!$slots.header" #today-button)
+        slot(name="today-button")
+      template(v-if="!$slots.header" #title)
+        slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+
     VueCalBody
       template(v-if="$slots.cell" #cell="{ date, index, events }")
         slot(name="cell" :date="date" :index="index" :events="events")
@@ -24,12 +33,12 @@ import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
 
 const props = defineProps(propsDefinitions)
-const emit = defineEmits(['update:view', 'update:selectedDate'])
+const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
 const vuecal = new VueCal(props, emit)
 
 const wrapperClasses = computed(() => ({
   'vue-cal--ready': vuecal.ready,
-  [`vue-cal--${vuecal.view.id}-view`]: true
+  [`vue-cal--${vuecal.view.value.id}-view`]: true
 }))
 
 const wrapperStyles = computed(() => {

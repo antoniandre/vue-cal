@@ -16,7 +16,8 @@ div.test-view
     today-button
     :time-from="7 * 60"
     :time-to="20 * 60"
-    v-model:selectedDate="selectedDate")
+    v-model:selected-date="selectedDate"
+    v-model:view-date="viewDate")
     //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
     //- template(#header="{ view, availableViews, vuecal }")
@@ -26,7 +27,8 @@ div.test-view
         @click="vuecal.switchView(viewName)"
         :outline="view !== viewName") {{ viewName }}
 
-  p selectedDate: {{ selectedDate }}
+  p selected Date: {{ selectedDate }}
+  p View Date: {{ viewDate }}
 </template>
 
 <script setup>
@@ -44,6 +46,7 @@ const views = [
 const view = ref('week')
 const events = ref([])
 const selectedDate = ref('')
+const viewDate = ref(new Date(2023, 11, 1))
 
 // `from` and `to` are expected in minutes.
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }

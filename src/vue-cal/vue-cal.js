@@ -94,8 +94,8 @@ export default class {
   constructor (props, emit) {
     this.props = props
     this.emit = emit
-    this.loadTexts('en')
     this.dateUtils = new DateUtils(this.texts, this.props.disableDatePrototypes)
+    this.loadTexts('en')
   }
 
   async loadTexts (locale) {
@@ -113,5 +113,85 @@ export default class {
     const availableViews = this.props.views || Object.keys(this.availableViews)
     if (availableViews.includes(id)) this.emit('update:view', id)
     else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
+  }
+
+  next () {
+    let newViewDate = new Date(this.view.value.startDate)
+
+    switch (this.view.value.id) {
+      case 'day':
+        newViewDate = this.dateUtils.addDays(newViewDate, 7)
+        break
+      case 'days': {
+        const { cols, rows } = this.availableViews.value.days
+        newViewDate = this.dateUtils.addDays(newViewDate, cols * rows)
+        break
+      }
+      case 'week':
+        newViewDate = this.dateUtils.addDays(newViewDate, 7)
+        break
+      case 'month':
+        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + 1, 1, 0, 0, 0, 0)
+        break
+      case 'year':
+        newViewDate = new Date(newViewDate.getFullYear() + 1, 1, 1, 0, 0, 0, 0)
+        break
+      case 'years': {
+        const { cols, rows } = this.availableViews.value.days
+        newViewDate = new Date(newViewDate.getFullYear() + cols * rows, 1, 1, 0, 0, 0, 0)
+        break
+      }
+    }
+
+    this.emit('update:viewDate', newViewDate)
+  }
+
+  previous () {
+    let newViewDate = new Date(this.view.value.startDate)
+
+    switch (this.view.value.id) {
+      case 'day':
+        newViewDate = this.dateUtils.subtractDays(newViewDate, 7)
+        break
+      case 'days': {
+        const { cols, rows } = this.availableViews.value.days
+        newViewDate = this.dateUtils.subtractDays(newViewDate, cols * rows)
+        break
+      }
+      case 'week':
+        newViewDate = this.dateUtils.subtractDays(newViewDate, 7)
+        break
+      case 'month':
+        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() - 1, 1, 0, 0, 0, 0)
+        break
+      case 'year':
+        newViewDate = new Date(newViewDate.getFullYear() - 1, 1, 1, 0, 0, 0, 0)
+        break
+      case 'years': {
+        const { cols, rows } = this.availableViews.value.days
+        newViewDate = new Date(newViewDate.getFullYear() - cols * rows, 1, 1, 0, 0, 0, 0)
+        break
+      }
+    }
+
+    this.emit('update:viewDate', newViewDate)
+  }
+
+  today () {
+    this.updateViewDate(new Date())
+  }
+
+  updateViewDate (date) {
+    if (!this.dateUtils.isSameDate(date, this.props.viewDate)) {
+      date.setHours(0, 0, 0, 0)
+      this.emit('update:viewDate', date)
+    }
+  }
+
+  updateSelectedDate (date) {
+    if (!this.dateUtils.isSameDate(date, this.props.selectedDate)) {
+      date.setHours(0, 0, 0, 0)
+      this.emit('update:selectedDate', date)
+    }
   }
 }
