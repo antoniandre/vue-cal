@@ -7,7 +7,7 @@ div.test-view
     return-values
     inline)
 
-  VueCal.vuecal--blue-theme(
+  VueCal.vuecal--default-theme(
     v-model:view="view"
     :views="views.map(item => item.value)"
     :events="events"
@@ -114,12 +114,6 @@ const now = new Date()
   display: flex;
   flex-direction: column;
   padding: 2rem;
-
-  .vuecal {height: 400px;}
-  .vuecal__event {
-    background-color: rgba(160, 220, 255, 0.5);
-    border: 1px solid rgba(0, 100, 150, 0.15);
-  }
 }
 
 // Global.
@@ -134,6 +128,7 @@ const now = new Date()
 
   em {font-size: 0.9em;color: #999;}
 }
+
 .doctor-1 {background-color: hsl(127, 100%, 97%);color: hsl(127, 50%, 67%);}
 .doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
 .doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 67%);}

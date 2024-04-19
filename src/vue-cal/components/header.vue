@@ -1,28 +1,32 @@
 <template lang="pug">
-.vue-cal__header
+.vuecal__header
   slot(
     name="header"
     :view="vuecal.view.value.id"
     :available-views="vuecal.availableViews.value"
     :vuecal="vuecal")
-  .vue-cal__view-selector(v-if="!$slots.header")
-    button.vuecal__view-btn(
+  .vuecal__view-selector(v-if="!$slots.header")
+    button.vuecal__view-button(
       v-for="(view, id) in vuecal.availableViews.value"
       @click="vuecal.switchView(id)"
-      :class="{ 'vuecal__view-btn--active': vuecal.view.value.id === id }"
+      :class="{ 'vuecal__view-button--active': vuecal.view.value.id === id }"
       type="button") {{ vuecal.texts.value[id] }}
-  component.vue-cal__title(:is="'button'") {{ vuecal.view.title }}
 
-  nav
-    button.vue-cal__nav.vue-cal__nav--prev(@click="vuecal.previous" type="button")
-      slot(name="arrow-prev")
-        i.angle
-    button.vue-cal__nav.vue-cal__nav--today(@click="vuecal.today" type="button")
+  nav.vuecal__title-bar
+    button.vuecal__nav.vuecal__nav--prev(
+      @click="vuecal.previous"
+      :class="{ 'vuecal__nav--default': !$slots.previous }"
+      type="button")
+      slot(name="previous-button")
+    component.vuecal__title(:is="'button'") {{ vuecal.view.title }}
+    button.vuecal__nav.vuecal__nav--today(@click="vuecal.today" type="button")
       slot(name="today-button")
         span.default {{ vuecal.texts.value.today }}
-    button.vue-cal__nav.vue-cal__nav--next(@click="vuecal.next" type="button")
-      slot(name="arrow-next")
-        i.angle
+    button.vuecal__nav.vuecal__nav--next(
+      @click="vuecal.next"
+      :class="{ 'vuecal__nav--default': !$slots.next }"
+      type="button")
+      slot(name="next-button")
 </template>
 
 <script setup>
@@ -32,70 +36,60 @@ const vuecal = inject('vuecal')
 </script>
 
 <style lang="scss">
-.vue-cal__header {
+.vuecal__header {
   position: relative;
-  display: flex;
+
+  button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: inherit;
+  }
 }
 
-.vue-cal__view-selector {
+.vuecal__view-selector {
   display: flex;
-  gap: 12px;
+  gap: 4px;
   align-items: center;
   justify-content: center;
-
-  button {
-    border: none;
-    background: none;
-    cursor: pointer;
-  }
 }
 
-.vue-cal__title {
+.vuecal__title {
   position: relative;
   justify-content: center;
-
-  button {
-    cursor: pointer;
-    background: none;
-    border: none;
-  }
+  background-color: rgba(#fff, 0.1);
 }
 
-.vue-cal__today-btn {
+.vuecal__today-button {
   position: relative;
   align-items: center;
   display: flex;
   font-size: 0.8em;
-  background: none;
-  border: none;
-  cursor: pointer;
-
-  .default {
-    width: 1em;
-    aspect-ratio: 1;
-    background: none;
-    border: 1px solid currentColor;
-  }
 }
 
-.vue-cal__nav {
-  cursor: pointer;
+.vuecal__header nav {background-color: rgba(#fff, 0.2);}
+
+.vuecal__nav {
   position: relative;
   z-index: 1;
-  background: none;
-  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   &--prev {margin-left: 0.6em;}
   &--next {margin-right: 0.6em;}
 
-  i.angle {
-    display: inline-flex;
+  &--default:before {
+    content: '';
     border: solid currentColor;
     border-width: 0 2px 2px 0;
     padding: 0.25em;
-    transform: rotate(-45deg);
+    transform: translateX(-1px) rotate(-45deg);
   }
 
-  &--prev i.angle {border-width: 2px 0 0 2px;}
+  &--prev.vuecal__nav--default:before {
+    border-width: 2px 0 0 2px;
+    transform: translateX(1px) rotate(-45deg);
+  }
 }
 </style>

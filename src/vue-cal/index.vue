@@ -1,14 +1,14 @@
 <template lang="pug">
-.vue-cal(:data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
+.vuecal(:data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
   slot(v-if="$slots.diy" name="diy" :view="vuecal.view" :vuecal="vuecal")
   template(v-else)
     VueCalHeader
       template(v-if="$slots.header" #header="{ view, availableViews, vuecal }")
         slot(name="header" :view="view" :available-views="availableViews" :vuecal="vuecal")
-      template(v-if="!$slots.header && $slots['arrow-prev']" #arrow-prev)
-        slot(name="arrow-prev")
-      template(v-if="!$slots.header && $slots['arrow-next']" #arrow-next)
-        slot(name="arrow-next")
+      template(v-if="!$slots.header && $slots['previous-button']" #previous-button)
+        slot(name="previous-button")
+      template(v-if="!$slots.header && $slots['next-button']" #next-button)
+        slot(name="next-button")
       template(v-if="!$slots.header" #today-button)
         slot(name="today-button")
       template(v-if="!$slots.header" #title)
@@ -17,8 +17,8 @@
     VueCalBody
       template(v-if="$slots.cell" #cell="{ date, index, events }")
         slot(name="cell" :date="date" :index="index" :events="events")
-      template(v-if="$slots['cell-date-time']" #cell-date-time="{ date, events }")
-        slot(name="cell-date-time" :date="date" :events="events")
+      template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
+        slot(name="cell-date" :date="date" :events="events")
       template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
         slot(name="cell-content" :date="date" :events="events")
       template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
@@ -37,14 +37,14 @@ const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate
 const vuecal = new VueCal(props, emit)
 
 const wrapperClasses = computed(() => ({
-  'vue-cal--ready': vuecal.ready,
-  [`vue-cal--${vuecal.view.value.id}-view`]: true
+  'vuecal--ready': vuecal.ready,
+  [`vuecal--${vuecal.view.value.id}-view`]: true
 }))
 
 const wrapperStyles = computed(() => {
   return {
-    '--vue-cal-grid-columns': vuecal.availableViews.value[vuecal.view.value.id].cols,
-    '--vue-cal-grid-rows': vuecal.availableViews.value[vuecal.view.value.id].rows
+    '--vuecal-grid-columns': vuecal.availableViews.value[vuecal.view.value.id].cols,
+    '--vuecal-grid-rows': vuecal.availableViews.value[vuecal.view.value.id].rows
   }
 })
 
@@ -52,10 +52,150 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
 </script>
 
 <style lang="scss">
-.vue-cal {
-  --vue-cal-grid-columns: 7; // Default value, overridden dynamically on view change.
-  --vue-cal-grid-rows: 6; // Default value, overridden dynamically on view change.
+.vuecal {
+  --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
+  --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
+  --vuecal-primary-color: #1976D2;
+  --vuecal-secondary-color: #fff;
 
+  display: flex;
+  flex-direction: column;
   height: 100%;
+}
+
+.vuecal--default-theme {
+  // Calendar Header.
+  // --------------------------------------------------------
+  border-radius: 6px;
+
+  .vuecal__header {
+    background-color: var(--vuecal-primary-color);
+    color: var(--vuecal-secondary-color);
+    border-top-left-radius: inherit;
+    border-top-right-radius: inherit;
+  }
+
+  .vuecal__view-selector,
+  .vuecal__title-bar {
+    padding-top: 4px;
+    padding-bottom: 4px;
+  }
+
+  .vuecal__view-button {
+    text-transform: uppercase;
+    font-size: 12px;
+  }
+  .vuecal__view-button,
+  .vuecal__nav,
+  .vuecal__title button,
+  .vuecal__today-button {
+    transition: 0.3s;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+
+    &:hover {background-color: rgba(#fff, 0.12);}
+    &--active, &--active:hover {background-color: rgba(#fff, 0.25);}
+    &:active {background-color: rgba(#fff, 0.25);}
+  }
+
+  .vuecal__nav--prev,
+  .vuecal__nav--next {
+    width: 2em;
+    aspect-ratio: 1;
+    border-radius: 99em;
+  }
+
+  // Calendar Body.
+  // --------------------------------------------------------
+  .vuecal__body {
+    border-bottom-left-radius: inherit;
+    border-bottom-right-radius: inherit;
+    border: 1px solid rgba(#000, 0.1);
+    border-top: none;
+    overflow: hidden; // Only for selected cell background not overflowing border radii.
+  }
+  .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
+
+  .vuecal__cell {overflow: hidden;}
+  .vuecal__cell--today {background: rgba(242, 250, 255, 0.4);}
+  .vuecal__cell--selected {background: rgba(242, 250, 255, 0.6);}
+
+  .vuecal--month-view .vuecal__cell-content {
+    justify-content: flex-start;
+    height: 100%;
+    align-items: flex-end;
+    overflow: auto;
+  }
+
+  .vuecal__cell-date {
+    position: sticky;
+    top: 0;
+  }
+
+  .vuecal--month-view .vuecal__cell-date {
+    padding: 4px;
+    border-radius: 99em;
+    width: 2em;
+    aspect-ratio: 1;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #eaf5ff;
+    color: rgb(0 0 0 / 60%);
+    margin: 4px;
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+  }
+  .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
+
+  // Time column.
+  // --------------------------------------------------------
+  .vuecal__time-cell {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .vuecal__time-cell-label {
+    font-size: 11px;
+    letter-spacing: -0.5px;
+    color: rgba(0, 0, 0, 0.5);
+    margin-top: -1px;
+    margin-top: -7.5px;
+    background: #fff;
+    width: 98%;
+    z-index: 1;
+    padding-right: 2px;
+    align-self: flex-start;
+  }
+  .vuecal__time-cell:nth-child(1) .vuecal__time-cell-label {
+    margin-top: -1px;
+    font-size: 10px;
+    background: none;
+  }
+
+  // Calendar events.
+  // --------------------------------------------------------
+  .vuecal__event {
+    max-width: 94%;
+    background-color: var(--w-primary-color);
+    color: rgb(var(--w-contrast-color-rgb));
+    border-radius: 5px;
+    border: 1px solid currentColor;
+    padding: 4px 6px;
+    text-align: center;
+    font-size: 12px;
+    line-height: 1;
+
+    &-time {
+      white-space: nowrap;
+      line-height: 1;
+      letter-spacing: -0.5px;
+    }
+  }
+
+  .vuecal--month-view .vuecal__event {padding-top: 1px;padding-bottom: 1px;}
 }
 </style>

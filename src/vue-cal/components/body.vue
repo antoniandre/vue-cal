@@ -1,5 +1,5 @@
 <template lang="pug">
-.vue-cal__body
+.vuecal__body
   VueCalCell(
     v-for="(date, i) in cellsDates"
     :key="i"
@@ -8,8 +8,8 @@
     @click="vuecal.updateSelectedDate(date)")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
-    template(v-if="$slots['cell-date-time']" #cell-date-time="{ date, events }")
-      slot(name="cell-date-time" :date="date" :events="events")
+    template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
+      slot(name="cell-date" :date="date" :events="events")
     template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
       slot(name="cell-content" :date="date" :events="events")
     template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
@@ -57,10 +57,10 @@ const cellsDates = computed(() => {
 </script>
 
 <style lang="scss">
-.vue-cal__body {
+.vuecal__body {
   display: grid;
-  grid-template-columns: repeat(var(--vue-cal-grid-columns), 1fr);
-  grid-template-rows: repeat(var(--vue-cal-grid-rows), 1fr);
+  grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
+  grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
   height: 100%;
 }
 </style>

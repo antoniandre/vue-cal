@@ -1,16 +1,16 @@
 <template lang="pug">
-.vue-cal__cell(:class="classes")
+.vuecal__cell(:class="classes")
   template(v-if="$slots.cell")
     slot(name="cell" :date="date" :index="index" :events="events") #cell
   template(v-else)
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
 
-    .vue-cal__cell-date-time(v-if="cellDate || $slots['cell-date-time']")
-      slot(name="cell-date-time" :date="date" :events="events") {{ cellDate }}
-    .vue-cal__cell-content(v-if="$slots['cell-content']")
+    .vuecal__cell-date(v-if="cellDate || $slots['cell-date']")
+      slot(name="cell-date" :date="date" :events="events") {{ cellDate }}
+    .vuecal__cell-content(v-if="$slots['cell-content']")
       slot(name="cell-content" :date="date" :events="events")
-    .vue-cal__cell-events(v-if="events.length")
+    .vuecal__cell-events(v-if="events.length")
       slot(name="cell-events" :date="date" :events="events") {{ events }}
 </template>
 
@@ -37,12 +37,12 @@ const classes = computed(() => {
   const m = props.date.getMonth()
 
   return {
-    [`vue-cal__cell--today`]: vuecal.dateUtils.isToday(props.date),
-    [`vue-cal__cell--current-month`]: view.value === 'year' && y === now.getFullYear() && m === now.getMonth(),
-    [`vue-cal__cell--current-year`]: view.value === 'years' && y === now.getFullYear(),
-    [`vue-cal__cell--out-of-range`]: view.value === 'month' && (y !== viewYear || m !== viewMonth),
-    [`vue-cal__cell--selected`]: options.value.selectedDate && vuecal.dateUtils.isSameDate(options.value.selectedDate, props.date),
-    [`vue-cal__cell--has-events`]: false
+    [`vuecal__cell--today`]: vuecal.dateUtils.isToday(props.date),
+    [`vuecal__cell--current-month`]: view.value === 'year' && y === now.getFullYear() && m === now.getMonth(),
+    [`vuecal__cell--current-year`]: view.value === 'years' && y === now.getFullYear(),
+    [`vuecal__cell--out-of-range`]: view.value === 'month' && (y !== viewYear || m !== viewMonth),
+    [`vuecal__cell--selected`]: options.value.selectedDate && vuecal.dateUtils.isSameDate(options.value.selectedDate, props.date),
+    [`vuecal__cell--has-events`]: false
   }
 })
 
@@ -70,13 +70,26 @@ const cellDate = computed(() => {
 </script>
 
 <style lang="scss">
-.vue-cal__cell {
+.vuecal__cell {
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 8px;
 
-  &--today, &--current-month, &--current-year {background-color: rgb(152 214 255 / 10%);}
+  &--today,
+  &--current-month,
+  &--current-year,
+  &--selected {
+    position: relative;
+
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: rgb(152 214 255 / 10%);
+    }
+  }
+
   &--selected {background-color: rgb(152 214 255 / 20%);}
   &--out-of-range {opacity: 0.5;}
 }
