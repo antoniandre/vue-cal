@@ -9,22 +9,23 @@
     button.vuecal__view-button(
       v-for="(view, id) in vuecal.availableViews.value"
       @click="vuecal.switchView(id)"
+      v-html="vuecal.texts.value[id]"
       :class="{ 'vuecal__view-button--active': vuecal.view.value.id === id }"
-      type="button") {{ vuecal.texts.value[id] }}
+      type="button")
 
   nav.vuecal__title-bar
     button.vuecal__nav.vuecal__nav--prev(
       @click="vuecal.previous"
-      :class="{ 'vuecal__nav--default': !$slots.previous }"
+      :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
       type="button")
       slot(name="previous-button")
-    component.vuecal__title(:is="'button'") {{ vuecal.view.title }}
-    button.vuecal__nav.vuecal__nav--today(@click="vuecal.today" type="button")
+    component.vuecal__title(:is="'button'" v-html="vuecal.view.value.title")
+    button.vuecal__nav.vuecal__nav--today(@click="vuecal.goToToday" type="button")
       slot(name="today-button")
-        span.default {{ vuecal.texts.value.today }}
+        span.default(v-html="vuecal.texts.value.today")
     button.vuecal__nav.vuecal__nav--next(
       @click="vuecal.next"
-      :class="{ 'vuecal__nav--default': !$slots.next }"
+      :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
       type="button")
       slot(name="next-button")
 </template>
@@ -54,10 +55,23 @@ const vuecal = inject('vuecal')
   justify-content: center;
 }
 
+.vuecal__title-bar {display: flex;}
+
 .vuecal__title {
   position: relative;
   justify-content: center;
   background-color: rgba(#fff, 0.1);
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+
+  small {
+    display: inline-flex;
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: rgba(#000, 0.15);
+  }
 }
 
 .vuecal__today-button {

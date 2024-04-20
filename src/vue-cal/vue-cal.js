@@ -45,32 +45,40 @@ export default class {
     let startDate = new Date(this.props.viewDate || this.now)
     startDate.setHours(0, 0, 0, 0)
     let endDate = null
+    let title = ''
 
     switch (this.props.view || 'week') {
       case 'day':
         endDate = new Date(startDate)
         endDate.setHours(23, 59, 59, 999)
+        title = startDate.format(this.texts.value.dateFormat)
         break
       case 'days': // Arbitrary range of 10 days.
         endDate = this.dateUtils.addDays(startDate, 10)
         endDate.setHours(23, 59, 59, 999)
+        title = startDate.format(this.texts.value.dateFormat)
         break
       case 'week':
         startDate = this.dateUtils.getPreviousFirstDayOfWeek(startDate, this.props.startWeekOnSunday)
         endDate = this.dateUtils.addDays(startDate, 6)
         endDate.setHours(23, 59, 59, 999)
+        const weekNumber = this.dateUtils.getWeek(startDate)
+        title = startDate.format('MMMM YYYY') + ` <small>${this.texts.value.week} ${weekNumber}</small>`
         break
       case 'month':
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1, 0, 0, 0, 0)
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 999)
+        title = startDate.format('MMMM YYYY')
         break
       case 'year':
         startDate = new Date(startDate.getFullYear(), 0, 1, 0, 0, 0, 0)
         endDate = new Date(startDate.getFullYear() + 1, 0, 0, 23, 59, 59, 999)
+        title = startDate.format()
         break
       case 'years':
         startDate = new Date(startDate.getFullYear(), 0, 1, 0, 0, 0, 0)
         endDate = new Date(startDate.getFullYear() + 25, 0, 0, 23, 59, 59, 999)
+        title = startDate.format()
         break
     }
 
@@ -80,7 +88,7 @@ export default class {
     // cells of the view.
     return {
       id: this.props.view,
-      title: '',
+      title,
       startDate,
       endDate,
       firstCellDate: startDate,
@@ -115,61 +123,37 @@ export default class {
     else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 
-  next () {
-    let newViewDate = new Date(this.view.value.startDate)
-
-    switch (this.view.value.id) {
-      case 'day':
-        newViewDate = this.dateUtils.addDays(newViewDate, 7)
-        break
-      case 'days': {
-        const { cols, rows } = this.availableViews.value.days
-        newViewDate = this.dateUtils.addDays(newViewDate, cols * rows)
-        break
-      }
-      case 'week':
-        newViewDate = this.dateUtils.addDays(newViewDate, 7)
-        break
-      case 'month':
-        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + 1, 1, 0, 0, 0, 0)
-        break
-      case 'year':
-        newViewDate = new Date(newViewDate.getFullYear() + 1, 1, 1, 0, 0, 0, 0)
-        break
-      case 'years': {
-        const { cols, rows } = this.availableViews.value.days
-        newViewDate = new Date(newViewDate.getFullYear() + cols * rows, 1, 1, 0, 0, 0, 0)
-        break
-      }
-    }
-
-    this.emit('update:viewDate', newViewDate)
-  }
-
   previous () {
-    let newViewDate = new Date(this.view.value.startDate)
+    this.navigate(false)
+  }
+
+  next () {
+    this.navigate(true)
+  }
+
+  navigate (forward = true) {
+    let newViewDate = this.view.value.startDate
+    const { cols, rows } = this.availableViews.value[this.view.value.id]
 
     switch (this.view.value.id) {
       case 'day':
-        newViewDate = this.dateUtils.subtractDays(newViewDate, 7)
+      case 'days':
+      case 'week':
+        newViewDate = new Date(this.dateUtils[forward ? 'addDays' : 'subtractDays'](newViewDate, cols * rows))
         break
-      case 'days': {
-        const { cols, rows } = this.availableViews.value.days
-        newViewDate = this.dateUtils.subtractDays(newViewDate, cols * rows)
+      case 'month': {
+        const increment = forward ? 1 : -1
+        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + increment, 1, 0, 0, 0, 0)
         break
       }
-      case 'week':
-        newViewDate = this.dateUtils.subtractDays(newViewDate, 7)
+      case 'year': {
+        const increment = forward ? 1 : -1
+        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
         break
-      case 'month':
-        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() - 1, 1, 0, 0, 0, 0)
-        break
-      case 'year':
-        newViewDate = new Date(newViewDate.getFullYear() - 1, 1, 1, 0, 0, 0, 0)
-        break
+      }
       case 'years': {
-        const { cols, rows } = this.availableViews.value.days
-        newViewDate = new Date(newViewDate.getFullYear() - cols * rows, 1, 1, 0, 0, 0, 0)
+        const increment = forward ? cols * rows : - (cols * rows)
+        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
         break
       }
     }
@@ -177,7 +161,7 @@ export default class {
     this.emit('update:viewDate', newViewDate)
   }
 
-  today () {
+  goToToday () {
     this.updateViewDate(new Date())
   }
 
