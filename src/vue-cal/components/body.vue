@@ -44,10 +44,7 @@ const cellsDates = computed(() => {
         dates.push(new Date(startDate.getFullYear(), i, 1, 0, 0, 0, 0))
         break
       case 'years':
-        // Arbitrarily slice the years picker by quarters of century (25y).
-        // The modulo is only here to always cut off at the same years regardless of the current year.
-        // E.g. always [1975-1999], [2000-2024], [2025-2099].
-        dates.push(new Date((startDate.getFullYear() - (startDate.getFullYear() % 25)) + i, 0, 1, 0, 0, 0, 0))
+        dates.push(new Date(startDate.getFullYear() + i, 0, 1, 0, 0, 0, 0))
         break
     }
   }

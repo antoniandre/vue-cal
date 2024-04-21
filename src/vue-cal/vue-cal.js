@@ -26,7 +26,7 @@ const defaults = {
     week: { cols: 7, rows: 1 },
     month: { cols: 7, rows: 6 },
     year: { cols: 3, rows: 4 },
-    years: { cols: 5, rows: 5 }
+    years: { cols: 5, rows: 5 } // Arbitrarily range of quarters of century (25y).
   }
 }
 
@@ -42,43 +42,55 @@ export default class {
 
   // At any time this object will be filled with current view details, visible events and selected date.
   view = computed(() => {
+    const view = this.props.view || 'week'
     let startDate = new Date(this.props.viewDate || this.now)
     startDate.setHours(0, 0, 0, 0)
     let endDate = null
+    let firstCellDate = null
+    let lastCellDate = null
     let title = ''
+    const cellsCount = this.availableViews.value[view].cols * this.availableViews.value[view].rows
 
-    switch (this.props.view || 'week') {
+    switch (view) {
       case 'day':
         endDate = new Date(startDate)
         endDate.setHours(23, 59, 59, 999)
         title = startDate.format(this.texts.value.dateFormat)
         break
-      case 'days': // Arbitrary range of 10 days.
-        endDate = this.dateUtils.addDays(startDate, 10)
+      case 'days':
+        endDate = this.dateUtils.addDays(startDate, cellsCount - 1)
         endDate.setHours(23, 59, 59, 999)
         title = startDate.format(this.texts.value.dateFormat)
         break
       case 'week':
         startDate = this.dateUtils.getPreviousFirstDayOfWeek(startDate, this.props.startWeekOnSunday)
-        endDate = this.dateUtils.addDays(startDate, 6)
+        endDate = this.dateUtils.addDays(startDate, cellsCount - 1)
         endDate.setHours(23, 59, 59, 999)
         const weekNumber = this.dateUtils.getWeek(startDate)
         title = startDate.format('MMMM YYYY') + ` <small>${this.texts.value.week} ${weekNumber}</small>`
         break
       case 'month':
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1, 0, 0, 0, 0)
+        let dayOfWeek = startDate.getDay()
+        dayOfWeek = (!dayOfWeek ? 7 : dayOfWeek) - 1 // 0-6 starting from Monday.
+        firstCellDate = startDate - dayOfWeek
+
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 999)
+        lastCellDate = startDate.addDays()
+
         title = startDate.format('MMMM YYYY')
         break
       case 'year':
         startDate = new Date(startDate.getFullYear(), 0, 1, 0, 0, 0, 0)
         endDate = new Date(startDate.getFullYear() + 1, 0, 0, 23, 59, 59, 999)
-        title = startDate.format()
+        title = startDate.getFullYear()
         break
       case 'years':
-        startDate = new Date(startDate.getFullYear(), 0, 1, 0, 0, 0, 0)
-        endDate = new Date(startDate.getFullYear() + 25, 0, 0, 23, 59, 59, 999)
-        title = startDate.format()
+        // The modulo is only here to always cut off at the same years regardless of the current year.
+        // E.g. always [1975-1999], [2000-2024], [2025-2099] for the default 5*5 grid.
+        startDate = new Date(startDate.getFullYear() - (startDate.getFullYear() % cellsCount), 0, 1, 0, 0, 0, 0)
+        endDate = new Date(startDate.getFullYear() + cellsCount, 0, 0, 23, 59, 59, 999)
+        title = `${startDate.getFullYear()} - ${endDate.getFullYear()}`
         break
     }
 

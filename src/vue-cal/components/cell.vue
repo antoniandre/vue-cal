@@ -92,7 +92,7 @@ const cellDate = computed(() => {
     }
   }
 
+  &--out-of-range {opacity: 0.5;}
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
-  &--out-of-range:before {opacity: 0.5;}
 }
 </style>

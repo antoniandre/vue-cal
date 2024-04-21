@@ -68,6 +68,8 @@ const vuecal = inject('vuecal')
   display: flex;
   align-items: center;
   gap: 4px;
+  font-weight: bold;
+  font-size: 1.1em;
 
   small {
     display: inline-flex;
@@ -75,13 +77,6 @@ const vuecal = inject('vuecal')
     border-radius: 4px;
     background: rgba(#000, 0.15);
   }
-}
-
-.vuecal__today-button {
-  position: relative;
-  align-items: center;
-  display: flex;
-  font-size: 0.8em;
 }
 
 .vuecal__header nav {background-color: rgba(#fff, 0.2);}
@@ -95,6 +90,11 @@ const vuecal = inject('vuecal')
 
   &--prev {margin-left: 0.6em;}
   &--next {margin-right: 0.6em;}
+  &--today {
+    position: relative;
+    align-items: center;
+    display: flex;
+  }
 
   &--default:before {
     content: '';
