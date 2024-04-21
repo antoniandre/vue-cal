@@ -93,6 +93,7 @@ export default class {
       endDate,
       firstCellDate: startDate,
       lastCellDate: endDate,
+      containsToday: startDate.getTime() <= this.now.getTime() && this.now.getTime() <= endDate.getTime(),
       // All the events are stored in the mutableEvents array, but subset of visible ones are passed
       // Into the current view for fast lookup and manipulation.
       events: []

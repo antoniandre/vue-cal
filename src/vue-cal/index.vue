@@ -88,7 +88,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   .vuecal__view-button,
   .vuecal__nav,
   .vuecal__title button,
-  .vuecal__today-button {
+  .vuecal__nav--today {
     transition: 0.3s;
     border: none;
     padding: 6px 12px;
@@ -104,6 +104,16 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     width: 2em;
     aspect-ratio: 1;
     border-radius: 99em;
+  }
+
+  .vuecal__nav--today {
+    padding-left: 8px;
+    padding-right: 8px;
+
+    .default {
+      text-transform: uppercase;
+      font-size: 0.9em;
+    }
   }
 
   // Calendar Body.

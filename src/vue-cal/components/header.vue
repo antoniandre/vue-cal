@@ -20,7 +20,10 @@
       type="button")
       slot(name="previous-button")
     component.vuecal__title(:is="'button'" v-html="vuecal.view.value.title")
-    button.vuecal__nav.vuecal__nav--today(@click="vuecal.goToToday" type="button")
+    button.vuecal__nav.vuecal__nav--today(
+      @click="vuecal.goToToday"
+      :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
+      type="button")
       slot(name="today-button")
         span.default(v-html="vuecal.texts.value.today")
     button.vuecal__nav.vuecal__nav--next(
