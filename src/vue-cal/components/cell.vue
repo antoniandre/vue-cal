@@ -86,11 +86,13 @@ const cellDate = computed(() => {
       content: '';
       position: absolute;
       inset: 0;
-      background-color: rgb(152 214 255 / 10%);
+      background-color: var(--vuecal-primary-color);
+      filter: saturate(5);
+      opacity: 0.04;
     }
   }
 
-  &--selected {background-color: rgb(152 214 255 / 20%);}
-  &--out-of-range {opacity: 0.5;}
+  &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
+  &--out-of-range:before {opacity: 0.5;}
 }
 </style>
