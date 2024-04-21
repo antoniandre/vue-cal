@@ -31,20 +31,20 @@ const cellsCount = computed(() => vuecal.availableViews.value[view.value].cols *
 // Better performance here than in each cell.
 const cellsDates = computed(() => {
   const dates = []
-  const { startDate } = vuecal.view.value
+  const { firstCellDate } = vuecal.view.value
   for (let i = 0; i < cellsCount.value; i++) {
     switch (view.value) {
       case 'day':
       case 'days':
       case 'week':
       case 'month':
-        dates.push(vuecal.dateUtils.addDays(startDate, i))
+        dates.push(vuecal.dateUtils.addDays(firstCellDate, i))
         break
       case 'year':
-        dates.push(new Date(startDate.getFullYear(), i, 1, 0, 0, 0, 0))
+        dates.push(new Date(firstCellDate.getFullYear(), i, 1, 0, 0, 0, 0))
         break
       case 'years':
-        dates.push(new Date(startDate.getFullYear() + i, 0, 1, 0, 0, 0, 0))
+        dates.push(new Date(firstCellDate.getFullYear() + i, 0, 1, 0, 0, 0, 0))
         break
     }
   }

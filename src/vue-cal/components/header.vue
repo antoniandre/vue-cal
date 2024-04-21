@@ -67,14 +67,16 @@ const vuecal = inject('vuecal')
   flex-grow: 1;
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   font-weight: bold;
-  font-size: 1.1em;
+  font-size: 1.05em;
 
   small {
     display: inline-flex;
     padding: 2px 6px;
     border-radius: 4px;
+    font-weight: normal;
+    font-size: 0.8em;
     background: rgba(#000, 0.15);
   }
 }

@@ -73,10 +73,11 @@ export default class {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1, 0, 0, 0, 0)
         let dayOfWeek = startDate.getDay()
         dayOfWeek = (!dayOfWeek ? 7 : dayOfWeek) - 1 // 0-6 starting from Monday.
-        firstCellDate = startDate - dayOfWeek
+        firstCellDate = this.dateUtils.subtractDays(startDate, dayOfWeek)
 
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 999)
-        lastCellDate = startDate.addDays()
+        lastCellDate = firstCellDate.addDays(cellsCount)
+        lastCellDate.setHours(23, 59, 59, 999)
 
         title = startDate.format('MMMM YYYY')
         break
@@ -96,15 +97,15 @@ export default class {
 
     // ! \ IMPORTANT NOTE:
     // If the selectedDate prop would be added to the view, any click on any cell
-    // (triggering an emit of the selectedDate), would trigger a rerendering of all the
+    // (triggering an emit of the selectedDate), would trigger a re-rendering of all the
     // cells of the view.
     return {
       id: this.props.view,
       title,
       startDate,
       endDate,
-      firstCellDate: startDate,
-      lastCellDate: endDate,
+      firstCellDate: firstCellDate || new Date(startDate),
+      lastCellDate: lastCellDate || new Date(endDate),
       containsToday: startDate.getTime() <= this.now.getTime() && this.now.getTime() <= endDate.getTime(),
       // All the events are stored in the mutableEvents array, but subset of visible ones are passed
       // Into the current view for fast lookup and manipulation.
