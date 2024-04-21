@@ -76,7 +76,7 @@ export default class {
         firstCellDate = this.dateUtils.subtractDays(startDate, dayOfWeek)
 
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 999)
-        lastCellDate = firstCellDate.addDays(cellsCount)
+        lastCellDate = firstCellDate.addDays(cellsCount - 1)
         lastCellDate.setHours(23, 59, 59, 999)
 
         title = startDate.format('MMMM YYYY')
