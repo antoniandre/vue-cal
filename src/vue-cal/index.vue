@@ -38,6 +38,8 @@ const vuecal = new VueCal(props, emit)
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': vuecal.ready,
+  'vuecal--xs': props.xsmall,
+  'vuecal--sm': props.small,
   [`vuecal--${vuecal.view.value.id}-view`]: true
 }))
 
@@ -68,35 +70,61 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   // --------------------------------------------------------
   border-radius: 6px;
 
-  .vuecal__header {
-    background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-secondary-color);
+  .vuecal__header, .vuecal__views-bar:first-child, .vuecal__title-bar:first-child {
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
   }
 
-  .vuecal__view-selector,
+  .vuecal__views-bar,
   .vuecal__title-bar {
+    background-color: var(--vuecal-primary-color);
+    color: var(--vuecal-secondary-color);
     padding-top: 4px;
     padding-bottom: 4px;
+  }
+  .vuecal__title-bar {
+    position: relative;
+    background-color: var(--vuecal-primary-color);
+    color: var(--vuecal-secondary-color);
+
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-color: var(--vuecal-secondary-color);
+      opacity: 0.2;
+    }
   }
 
   .vuecal__view-button {
     text-transform: uppercase;
     font-size: 12px;
   }
+
+  .vuecal__weekday {
+    padding: 2px 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: -0.03em;
+    text-overflow: ellipsis;
+    display: block;
+    font-size: 0.95em;
+  }
+
   .vuecal__view-button,
   .vuecal__nav,
   .vuecal__title button,
   .vuecal__nav--today {
     transition: 0.3s;
-    border: none;
+    border: 1px solid transparent;
     padding: 6px 12px;
     border-radius: 4px;
+    align-self: center;
 
     &:hover {background-color: rgba(#fff, 0.12);}
     &--active, &--active:hover {background-color: rgba(#fff, 0.25);}
     &:active {background-color: rgba(#fff, 0.25);}
+    &:focus-visible {border-color: rgba(#fff, 0.75);}
   }
 
   .vuecal__nav--prev,
@@ -109,6 +137,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   .vuecal__nav--today {
     padding-left: 8px;
     padding-right: 8px;
+    margin-right: 3px;
 
     .default {
       text-transform: uppercase;
@@ -123,7 +152,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     border-bottom-right-radius: inherit;
     border: 1px solid rgba(#000, 0.1);
     border-top: none;
-    overflow: hidden; // Only for selected cell background not overflowing border radii.
+    overflow: hidden; // Only for selected cell background not overflowing bottom border radii.
   }
   .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
 
@@ -206,6 +235,27 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     }
   }
 
-  .vuecal--month-view .vuecal__event {padding-top: 1px;padding-bottom: 1px;}
+  .vuecal--month-view .vuecal__event {
+    padding-top: 1px;
+    padding-bottom: 1px;
+  }
+
+  // Small and xsmall layouts.
+  // --------------------------------------------------------
+  &.vuecal--sm {
+    .vuecal__view-button,
+    .vuecal__nav,
+    .vuecal__title button,
+    .vuecal__nav--today {padding: 6px 8px;}
+  }
+  &.vuecal--xs {
+    .vuecal__view-button,
+    .vuecal__nav,
+    .vuecal__title button,
+    .vuecal__nav--today {padding: 4px 4px;}
+
+    .vuecal__title {gap: 4px;}
+    .vuecal__title small {padding-left: 3px;padding-right: 3px;}
+  }
 }
 </style>

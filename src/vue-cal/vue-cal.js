@@ -30,19 +30,30 @@ const defaults = {
   }
 }
 
+/**
+ * This is the main class of the calendar, it is instantiated once from the index.vue and
+ * inject-provided to all the components.
+ * There is no use of Date prototypes in the codebase, because the user may choose to disable them
+ * (using them would make things a lot simpler).
+ */
 export default class {
   props = {}
   emit = null // The Vue emit function from the root component.
   ready = ref(false) // Is vue-cal ready.
   texts = ref({ ...defaults.texts }) // Make texts reactive before a locale is loaded.
   now = new Date()
-  dateUtils = null // The date utils class.
+  // The date utils class.
+  // A class is needed in order to access the user locale in all the methods, and independently of
+  // other potential Vue Cal instances on the same page.
+  dateUtils = null
 
   availableViews = ref({ ...defaults.availableViews })
 
   // At any time this object will be filled with current view details, visible events and selected date.
   view = computed(() => {
     const view = this.props.view || 'week'
+    const isXs = this.props.xsmall
+    const isSm = this.props.small
     let startDate = new Date(this.props.viewDate || this.now)
     startDate.setHours(0, 0, 0, 0)
     let endDate = null
@@ -52,24 +63,32 @@ export default class {
     const cellsCount = this.availableViews.value[view].cols * this.availableViews.value[view].rows
 
     switch (view) {
-      case 'day':
+      case 'day': {
         endDate = new Date(startDate)
         endDate.setHours(23, 59, 59, 999)
-        title = startDate.format(this.texts.value.dateFormat)
+
+        // Truncate long week day and month texts to 3 letters if xs or sm.
+        let format = this.texts.value.dateFormat
+        if (isXs || isSm) format = format.replace(/dddd|MMMM/g, m0 => m0.substring(0, 3))
+        title = this.dateUtils.formatDate(startDate, format)
         break
+      }
       case 'days':
         endDate = this.dateUtils.addDays(startDate, cellsCount - 1)
         endDate.setHours(23, 59, 59, 999)
         title = startDate.format(this.texts.value.dateFormat)
         break
-      case 'week':
+      case 'week': {
         startDate = this.dateUtils.getPreviousFirstDayOfWeek(startDate, this.props.startWeekOnSunday)
         endDate = this.dateUtils.addDays(startDate, cellsCount - 1)
         endDate.setHours(23, 59, 59, 999)
+
         const weekNumber = this.dateUtils.getWeek(startDate)
-        title = startDate.format('MMMM YYYY') + ` <small>${this.texts.value.week} ${weekNumber}</small>`
+        let format = `${isXs ? 'MMM' : 'MMMM'} YYYY` // Truncate to 3 letters if xs.
+        title = this.dateUtils.formatDate(startDate, format) + ` <small>${this.texts.value.week} ${weekNumber}</small>`
         break
-      case 'month':
+      }
+      case 'month': {
         startDate = new Date(startDate.getFullYear(), startDate.getMonth(), 1, 0, 0, 0, 0)
         let dayOfWeek = startDate.getDay()
         dayOfWeek = (!dayOfWeek ? 7 : dayOfWeek) - 1 // 0-6 starting from Monday.
@@ -79,8 +98,10 @@ export default class {
         lastCellDate = firstCellDate.addDays(cellsCount - 1)
         lastCellDate.setHours(23, 59, 59, 999)
 
-        title = startDate.format('MMMM YYYY')
+        let format = `${isXs ? 'MMM' : 'MMMM'} YYYY` // Truncate to 3 letters if xs.
+        title = this.dateUtils.formatDate(startDate, format)
         break
+      }
       case 'year':
         startDate = new Date(startDate.getFullYear(), 0, 1, 0, 0, 0, 0)
         endDate = new Date(startDate.getFullYear() + 1, 0, 0, 23, 59, 59, 999)

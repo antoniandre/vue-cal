@@ -9,6 +9,7 @@ div.test-view
 
   VueCal.vuecal--default-theme(
     v-model:view="view"
+    xsmall
     :views="views.map(item => item.value)"
     :events="events"
     editable-events

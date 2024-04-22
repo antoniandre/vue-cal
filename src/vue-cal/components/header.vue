@@ -5,7 +5,8 @@
     :view="vuecal.view.value.id"
     :available-views="vuecal.availableViews.value"
     :vuecal="vuecal")
-  .vuecal__view-selector(v-if="!$slots.header")
+
+  .vuecal__views-bar(v-if="!$slots.header")
     button.vuecal__view-button(
       v-for="(view, id) in vuecal.availableViews.value"
       @click="vuecal.switchView(id)"
@@ -31,17 +32,30 @@
       :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
       type="button")
       slot(name="next-button")
+  .vuecal__weekdays-bar(v-if="isWeekOrDaysView")
+    .vuecal__weekday(v-for="day in weekDays") {{ day }}
+
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
+
+const isWeekOrDaysView = computed(() => ['week', 'days'].includes(vuecal.view.value.id))
+
+// Only for days and week views.
+const weekDays = computed(() => vuecal.texts.value.weekDays.map((day, i) => {
+  day = vuecal.props.small || vuecal.props.xsmall ? day.substring(0, 3) : day
+  const date = vuecal.dateUtils.addDays(vuecal.view.value.startDate, i)
+  return `${day} ${date.getDate()}`
+}))
 </script>
 
 <style lang="scss">
 .vuecal__header {
   position: relative;
+  user-select: none;
 
   button {
     background: none;
@@ -51,7 +65,7 @@ const vuecal = inject('vuecal')
   }
 }
 
-.vuecal__view-selector {
+.vuecal__views-bar {
   display: flex;
   gap: 4px;
   align-items: center;
@@ -110,5 +124,17 @@ const vuecal = inject('vuecal')
     border-width: 2px 0 0 2px;
     transform: translateX(1px) rotate(-45deg);
   }
+}
+
+.vuecal__weekdays-bar {
+  display: flex;
+  align-items: center;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  border-width: 0 1px;
+}
+
+.vuecal__weekday {
+  flex: 1 1 0;
+  text-align: center;
 }
 </style>
