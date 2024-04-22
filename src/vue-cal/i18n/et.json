@@ -5,6 +5,7 @@
   "year": "Aasta",
   "month": "Kuu",
   "week": "Nädal",
+  "days": "Päeva",
   "day": "Päev",
   "today": "Täna",
   "noEvent": "Sündmus puudub",

@@ -138,7 +138,7 @@ export default class {
     this.props = props
     this.emit = emit
     this.dateUtils = new DateUtils(this.texts, this.props.disableDatePrototypes)
-    this.loadTexts('en')
+    this.loadTexts(props.locale || 'en-us')
   }
 
   async loadTexts (locale) {

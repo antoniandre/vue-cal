@@ -22,7 +22,7 @@ export const props = {
   hideViewSelector: { type: Boolean, default: false },
   hideWeekdays: { type: Array, default: () => [] },
   hideWeekends: { type: Boolean, default: false },
-  locale: { type: [String, Object], default: 'en' },
+  locale: { type: [String, Object], default: 'en-us' },
   maxDate: { type: [String, Date], default: '' },
   minCellWidth: { type: Number, default: 0 },
   minDate: { type: [String, Date], default: '' },

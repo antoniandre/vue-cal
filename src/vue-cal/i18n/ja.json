@@ -5,11 +5,13 @@
     "year": "今年",
     "month": "月",
     "week": "週",
+    "days": "日々",
     "day": "日",
     "today": "今日",
     "noEvent": "イベントなし",
     "allDay": "終日",
     "deleteEvent": "削除",
     "createEvent": "イベント作成",
-    "dateFormat": "YYYY年 MMMM D日 (dddd)"
+    "dateFormat": "YYYY年 MMMM D日 (dddd)",
+    "truncations": false
   }

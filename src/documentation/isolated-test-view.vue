@@ -1,15 +1,18 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  w-radios.mb4(
-    v-model="view"
-    :items="views"
-    return-values
-    inline)
+  .w-flex.align-center.gap6
+    w-select.mb4.no-grow(v-model="locale" :items="locales") Locale:
+
+    w-radios.mb4(
+      v-model="view"
+      :items="views"
+      return-values
+      inline)
 
   VueCal.vuecal--default-theme(
     v-model:view="view"
-    xsmall
+    :locale="locale"
     :views="views.map(item => item.value)"
     :events="events"
     editable-events
@@ -36,8 +39,19 @@ div.test-view
 import { ref } from 'vue'
 import VueCal from '@/vue-cal/index.vue'
 
+const locale = ref('en-us')
+const locales = [
+  { value: 'ko', label: 'ko' },
+  { value: 'en-gb', label: 'en-gb' },
+  { value: 'en-us', label: 'en-us' },
+  { value: 'ja', label: 'ja' },
+  { value: 'zh-cn', label: 'zh-cn' },
+  { value: 'ar', label: 'ar' },
+  { value: 'fr', label: 'fr' }
+]
 const views = [
   { value: 'day', label: 'Day' },
+  { value: 'days', label: 'Days' },
   { value: 'week', label: 'Week' },
   { value: 'month', label: 'Month' },
   { value: 'year', label: 'Year' },

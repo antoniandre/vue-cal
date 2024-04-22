@@ -6,6 +6,7 @@
   "year": "Any",
   "month": "Mes",
   "week": "Setmana",
+  "days": "Dies",
   "day": "Dia",
   "today": "Avui",
   "noEvent": "No hi ha esdeveniments",
