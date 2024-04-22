@@ -61,6 +61,8 @@ export default class {
     let lastCellDate = null
     let title = ''
     const cellsCount = this.availableViews.value[view].cols * this.availableViews.value[view].rows
+    // For some locales it doesn't makes sense to truncate texts.
+    let { dateFormat, truncations } = this.texts.value
 
     switch (view) {
       case 'day': {
@@ -68,15 +70,26 @@ export default class {
         endDate.setHours(23, 59, 59, 999)
 
         // Truncate long week day and month texts to 3 letters if xs or sm.
-        let format = this.texts.value.dateFormat
-        if (isXs || isSm) format = format.replace(/dddd|MMMM/g, m0 => m0.substring(0, 3))
-        title = this.dateUtils.formatDate(startDate, format)
+        if ((isXs || isSm) && truncations !== false) {
+          // Note: when replacing dddd with ddd, the weekDaysShort will be used in formatDate() if defined.
+          dateFormat = dateFormat.replace(/dddd|MMMM/g, m0 => m0.substring(0, 3))
+        }
+        title = this.dateUtils.formatDate(startDate, dateFormat)
         break
       }
       case 'days':
         endDate = this.dateUtils.addDays(startDate, cellsCount - 1)
         endDate.setHours(23, 59, 59, 999)
-        title = startDate.format(this.texts.value.dateFormat)
+
+        const startMonth = startDate.getMonth()
+        const endMonth = endDate.getMonth()
+        let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
+        // Always shorten month if the locale doesn't forbid it.
+        if (truncations !== false) format = format.replace('MMMM', 'MMM')
+        const startDateFormatted = this.dateUtils.formatDate(startDate, format)
+        const endDateFormatted = this.dateUtils.formatDate(endDate, format)
+
+        title = `${startDateFormatted} - ${endDateFormatted}`
         break
       case 'week': {
         startDate = this.dateUtils.getPreviousFirstDayOfWeek(startDate, this.props.startWeekOnSunday)
@@ -84,7 +97,8 @@ export default class {
         endDate.setHours(23, 59, 59, 999)
 
         const weekNumber = this.dateUtils.getWeek(startDate)
-        let format = `${isXs ? 'MMM' : 'MMMM'} YYYY` // Truncate to 3 letters if xs.
+        // Shorten month if xsmall and the locale doesn't forbid it.
+        let format = `${isXs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
         title = this.dateUtils.formatDate(startDate, format) + ` <small>${this.texts.value.week} ${weekNumber}</small>`
         break
       }
@@ -98,7 +112,8 @@ export default class {
         lastCellDate = firstCellDate.addDays(cellsCount - 1)
         lastCellDate.setHours(23, 59, 59, 999)
 
-        let format = `${isXs ? 'MMM' : 'MMMM'} YYYY` // Truncate to 3 letters if xs.
+        // Shorten month if xsmall and the locale doesn't forbid it.
+        let format = `${isXs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
         title = this.dateUtils.formatDate(startDate, format)
         break
       }
