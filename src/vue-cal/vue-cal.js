@@ -49,7 +49,7 @@ export default class {
 
   availableViews = ref({ ...defaults.availableViews })
 
-  // At any time this object will be filled with current view details, visible events and selected date.
+  // At any time this object will be filled with current view details and visible events.
   view = computed(() => {
     const view = this.props.view || 'week'
     const isXs = this.props.xsmall
@@ -148,6 +148,11 @@ export default class {
     // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
     // https://vitejs.dev/guide/features.html#glob-import
     let translations = import.meta.glob('./i18n/*.json')
+
+    if (!translations[`./i18n/${locale}.json`]) {
+      console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
+      locale = 'en-us'
+    }
     translations = await translations[`./i18n/${locale}.json`]?.() // Load this translation file.
     this.texts.value = Object.assign({}, defaults.texts, translations)
   }

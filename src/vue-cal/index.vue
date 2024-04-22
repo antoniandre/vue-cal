@@ -26,7 +26,7 @@
 </template>
 
 <script setup>
-import { computed, ref, provide, defineEmits } from 'vue'
+import { computed, ref, provide, defineEmits, watch } from 'vue'
 import VueCal from './vue-cal'
 import { props as propsDefinitions } from './components/props-definitions'
 import VueCalHeader from './components/header.vue'
@@ -49,6 +49,8 @@ const wrapperStyles = computed(() => {
     '--vuecal-grid-rows': vuecal.availableViews.value[vuecal.view.value.id].rows
   }
 })
+
+watch(() => props.locale, newLocale => vuecal.loadTexts(newLocale))
 
 provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue components.
 </script>
