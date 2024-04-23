@@ -68,6 +68,13 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   display: flex;
   flex-direction: column;
   height: 100%;
+
+  &__scrollable {
+    overflow: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
 }
 
 .vuecal--default-theme {
@@ -109,7 +116,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
 
   .vuecal__view-button {
     text-transform: uppercase;
-    font-size: 12px;
+    font-size: 0.9em;
   }
 
   .vuecal__view-button,
@@ -139,20 +146,12 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     padding-left: 8px;
     padding-right: 8px;
     margin-right: 3px;
-
-    .default {
-      text-transform: uppercase;
-      font-size: 0.9em;
-    }
+    font-size: 0.85em;
   }
 
   // Calendar Weekdays Headers.
   // --------------------------------------------------------
   .vuecal__scrollable {
-    overflow: auto;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     border: 1px solid rgba(#000, 0.1);
@@ -269,7 +268,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     .vuecal__view-button,
     .vuecal__nav,
     .vuecal__title button,
-    .vuecal__nav--today {padding: 4px 4px;}
+    .vuecal__nav--today {padding: 2px 4px;}
 
     .vuecal__title {gap: 4px;}
     .vuecal__title small {padding-left: 3px;padding-right: 3px;}
