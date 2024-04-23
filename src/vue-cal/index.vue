@@ -14,15 +14,17 @@
       template(v-if="!$slots.header" #title)
         slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
-    VueCalBody
-      template(v-if="$slots.cell" #cell="{ date, index, events }")
-        slot(name="cell" :date="date" :index="index" :events="events")
-      template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
-        slot(name="cell-date" :date="date" :events="events")
-      template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
-        slot(name="cell-content" :date="date" :events="events")
-      template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
-        slot(name="cell-events" :date="date" :events="events")
+    .vuecal__scrollable
+      WeekdaysBar
+      VueCalBody
+        template(v-if="$slots.cell" #cell="{ date, index, events }")
+          slot(name="cell" :date="date" :index="index" :events="events")
+        template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
+          slot(name="cell-date" :date="date" :events="events")
+        template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
+          slot(name="cell-content" :date="date" :events="events")
+        template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
+          slot(name="cell-events" :date="date" :events="events")
 </template>
 
 <script setup>
@@ -31,6 +33,7 @@ import VueCal from './vue-cal'
 import { props as propsDefinitions } from './components/props-definitions'
 import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
+import WeekdaysBar from './components/weekdays-bar.vue'
 
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
@@ -72,18 +75,24 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   // --------------------------------------------------------
   border-radius: 6px;
 
-  .vuecal__header, .vuecal__views-bar:first-child, .vuecal__title-bar:first-child {
+  .vuecal__header {
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
+    background-color: var(--vuecal-primary-color);
+    color: var(--vuecal-secondary-color);
   }
 
   .vuecal__views-bar,
   .vuecal__title-bar {
-    background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-secondary-color);
     padding-top: 4px;
     padding-bottom: 4px;
+
+    &:first-child {
+      border-top-left-radius: inherit;
+      border-top-right-radius: inherit;
+    }
   }
+
   .vuecal__title-bar {
     position: relative;
     background-color: var(--vuecal-primary-color);
@@ -101,16 +110,6 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   .vuecal__view-button {
     text-transform: uppercase;
     font-size: 12px;
-  }
-
-  .vuecal__weekday {
-    padding: 2px 1px;
-    white-space: nowrap;
-    overflow: hidden;
-    letter-spacing: -0.03em;
-    text-overflow: ellipsis;
-    display: block;
-    font-size: 0.95em;
   }
 
   .vuecal__view-button,
@@ -147,15 +146,31 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     }
   }
 
-  // Calendar Body.
+  // Calendar Weekdays Headers.
   // --------------------------------------------------------
-  .vuecal__body {
+  .vuecal__scrollable {
+    overflow: auto;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     border: 1px solid rgba(#000, 0.1);
     border-top: none;
-    overflow: hidden; // Only for selected cell background not overflowing bottom border radii.
   }
+
+  .vuecal__weekday {
+    padding: 2px 1px;
+    white-space: nowrap;
+    overflow: hidden;
+    letter-spacing: -0.03em;
+    text-overflow: ellipsis;
+    display: block;
+    font-size: 0.95em;
+  }
+
+  // Calendar Body.
+  // --------------------------------------------------------
   .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
 
   .vuecal__cell {overflow: hidden;}

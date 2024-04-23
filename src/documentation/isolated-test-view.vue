@@ -136,6 +136,16 @@ const now = new Date()
 .w-app {margin: 0;padding: 0;}
 .top-bar, footer {display: none !important;}
 
+// Min cell width example.
+// --------------------------------------------------------
+// .vuecal__weekdays-bar {margin: auto;} // So it will fill up the whole available space.
+// .vuecal__weekday,
+// .vuecal--week-view .vuecal__cell,
+// .vuecal--days-view .vuecal__cell {min-width: 300px;}
+// .vuecal--week-view .vuecal__cell,
+// .vuecal--days-view .vuecal__cell {min-height: 3000px;}
+// --------------------------------------------------------
+
 .vuecal__special-hours {
   display: flex;
   justify-content: center;
