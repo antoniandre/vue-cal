@@ -52,8 +52,7 @@ export default class {
   // At any time this object will be filled with current view details and visible events.
   view = computed(() => {
     const view = this.props.view || 'week'
-    const isXs = this.props.xsmall
-    const isSm = this.props.small
+    const { sm, xs } = this.props
     let startDate = new Date(this.props.viewDate || this.now)
     startDate.setHours(0, 0, 0, 0)
     let endDate = null
@@ -70,7 +69,7 @@ export default class {
         endDate.setHours(23, 59, 59, 999)
 
         // Truncate long week day and month texts to 3 letters if xs or sm.
-        if ((isXs || isSm) && truncations !== false) {
+        if ((xs || sm) && truncations !== false) {
           // Note: when replacing dddd with ddd, the weekDaysShort will be used in formatDate() if defined.
           dateFormat = dateFormat.replace(/dddd|MMMM/g, m0 => m0.substring(0, 3))
         }
@@ -97,8 +96,8 @@ export default class {
         endDate.setHours(23, 59, 59, 999)
 
         const weekNumber = this.dateUtils.getWeek(startDate)
-        // Shorten month if xsmall and the locale doesn't forbid it.
-        let format = `${isXs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
+        // Shorten month if xs and the locale doesn't forbid it.
+        let format = `${xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
         title = this.dateUtils.formatDate(startDate, format) + ` <small>${this.texts.value.week} ${weekNumber}</small>`
         break
       }
@@ -112,8 +111,8 @@ export default class {
         lastCellDate = this.dateUtils.addDays(firstCellDate, cellsCount - 1)
         lastCellDate.setHours(23, 59, 59, 999)
 
-        // Shorten month if xsmall and the locale doesn't forbid it.
-        let format = `${isXs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
+        // Shorten month if xs and the locale doesn't forbid it.
+        let format = `${xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
         title = this.dateUtils.formatDate(startDate, format)
         break
       }

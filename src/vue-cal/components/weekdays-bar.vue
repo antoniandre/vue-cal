@@ -10,15 +10,15 @@ const vuecal = inject('vuecal')
 const options = vuecal.props
 
 const labelsSize = computed(() => {
-  if (options.xsmall) return 'label-xs'
-  else if (options.small || vuecal.view.value.id === 'days') return 'label-sm'
+  if (options.xs) return 'label-xs'
+  else if (options.sm || vuecal.view.value.id === 'days') return 'label-sm'
   else return 'label'
 })
 
 const isWeekOrDaysView = computed(() => ['week', 'days'].includes(vuecal.view.value.id))
 
 // Only for days and week views.
-// The props small and xsmall are not used in the computed so the switch does not need to recompute.
+// The props sm and xs are not used in the computed so switching doesn't recompute.
 const weekDays = computed(() => {
   const view = vuecal.view.value.id
   const { cols, rows } = vuecal.availableViews.value[view]

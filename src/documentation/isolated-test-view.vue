@@ -10,6 +10,7 @@ div.test-view
       return-values
       inline)
 
+  VueCal.vuecal--default-theme(xs)
   VueCal.vuecal--default-theme(
     v-model:view="view"
     :locale="locale"

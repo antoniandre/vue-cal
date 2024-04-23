@@ -24,7 +24,6 @@ export const props = {
   hideWeekends: { type: Boolean, default: false },
   locale: { type: [String, Object], default: 'en-us' },
   maxDate: { type: [String, Date], default: '' },
-  minCellWidth: { type: Number, default: 0 },
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
   minSplitWidth: { type: Number, default: 0 },
@@ -38,7 +37,7 @@ export const props = {
   showTimeInCells: { type: Boolean, default: false },
   showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
-  small: { type: Boolean, default: false },
+  sm: { type: Boolean, default: false },
   specialHours: { type: Object, default: () => ({}) },
   splitDays: { type: Array, default: () => [] },
   startWeekOnSunday: { type: Boolean, default: false },
@@ -56,5 +55,5 @@ export const props = {
   viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
   views: { type: Array, default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
-  xsmall: { type: Boolean, default: false }
+  xs: { type: Boolean, default: false }
 }

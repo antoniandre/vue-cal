@@ -41,8 +41,8 @@ const vuecal = new VueCal(props, emit)
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': vuecal.ready,
-  'vuecal--xs': props.xsmall,
-  'vuecal--sm': props.small,
+  'vuecal--xs': props.xs,
+  'vuecal--sm': props.sm,
   [`vuecal--${vuecal.view.value.id}-view`]: true
 }))
 
@@ -257,7 +257,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
     padding-bottom: 1px;
   }
 
-  // Small and xsmall layouts.
+  // Sm and xs layouts.
   // --------------------------------------------------------
   &.vuecal--sm {
     .vuecal__view-button,
