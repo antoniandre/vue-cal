@@ -9,11 +9,11 @@ let _timeObject = {}
 export default class {
   #texts = {}
 
-  constructor (texts, noPrototypes = false) {
+  constructor (texts, addPrototypes = true) {
     this.#texts = texts
 
     // Add prototypes ASAP - only once.
-    if (!noPrototypes && Date && !Date.prototype.addDays) this.#initDatePrototypes()
+    if (addPrototypes && Date && !Date.prototype.addDays) this.#initDatePrototypes()
   }
 
   #initDatePrototypes () {

@@ -109,7 +109,7 @@ export default class {
         firstCellDate = this.dateUtils.subtractDays(startDate, dayOfWeek)
 
         endDate = new Date(startDate.getFullYear(), startDate.getMonth() + 1, 0, 23, 59, 59, 999)
-        lastCellDate = firstCellDate.addDays(cellsCount - 1)
+        lastCellDate = this.dateUtils.addDays(firstCellDate, cellsCount - 1)
         lastCellDate.setHours(23, 59, 59, 999)
 
         // Shorten month if xsmall and the locale doesn't forbid it.
@@ -152,7 +152,7 @@ export default class {
   constructor (props, emit) {
     this.props = props
     this.emit = emit
-    this.dateUtils = new DateUtils(this.texts, this.props.disableDatePrototypes)
+    this.dateUtils = new DateUtils(this.texts, this.props.datePrototypes)
     this.loadTexts(props.locale || 'en-us')
   }
 

@@ -7,7 +7,7 @@ export const props = {
   cellContextmenu: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: false },
   dblclickToNavigate: { type: Boolean, default: true },
-  disableDatePrototypes: { type: Boolean, default: false },
+  datePrototypes: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] },
   dragToCreateEvent: { type: Boolean, default: true },
   // Start a drag creation after dragging a certain amount of pixels.
