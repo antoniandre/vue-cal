@@ -47,7 +47,8 @@ const locales = [
   { value: 'ja', label: 'ja' },
   { value: 'zh-cn', label: 'zh-cn' },
   { value: 'ar', label: 'ar' },
-  { value: 'fr', label: 'fr' }
+  { value: 'fr', label: 'fr' },
+  { value: 'ca', label: 'ca' },
 ]
 const views = [
   { value: 'day', label: 'Day' },

@@ -350,8 +350,8 @@ export default class {
       // Day of the week.
       d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
       // Some locales have same start for all the days, so they have specific abbrev in weekDaysShort.
-      dd: () => texts.weekDaysShort ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber][0], // M to S.
-      ddd: () => texts.weekDaysShort ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
+      dd: () => texts.weekDaysShort.length ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber][0], // M to S.
+      ddd: () => texts.weekDaysShort.length ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
       dddd: () => texts.weekDays[dayNumber] // Monday to Sunday.
     }
 

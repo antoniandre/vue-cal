@@ -22,7 +22,7 @@ const defaults = {
   },
   availableViews: {
     day: { cols: 1, rows: 1 },
-    days: { cols: 5, rows: 1 },
+    days: { cols: 10, rows: 1 },
     week: { cols: 7, rows: 1 },
     month: { cols: 7, rows: 6 },
     year: { cols: 3, rows: 4 },

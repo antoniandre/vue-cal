@@ -33,7 +33,8 @@
       type="button")
       slot(name="next-button")
   .vuecal__weekdays-bar(v-if="isWeekOrDaysView")
-    .vuecal__weekday(v-for="day in weekDays") {{ day }}
+    .vuecal__weekday(v-for="day in weekDays").
+      {{ day[options.xsmall ? 'label-xs' : (options.small ? 'label-sm' : 'label') ] }}
 
 </template>
 
@@ -41,15 +42,27 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
+const options = vuecal.props
 
 const isWeekOrDaysView = computed(() => ['week', 'days'].includes(vuecal.view.value.id))
 
 // Only for days and week views.
-const weekDays = computed(() => vuecal.texts.value.weekDays.map((day, i) => {
-  day = vuecal.props.small || vuecal.props.xsmall ? day.substring(0, 3) : day
-  const date = vuecal.dateUtils.addDays(vuecal.view.value.startDate, i)
-  return `${day} ${date.getDate()}`
-}))
+// The props small and xsmall are not used in the computed so the switch does not need to recompute.
+const weekDays = computed(() => {
+  const view = vuecal.view.value.id
+  const { cols, rows } = vuecal.availableViews.value[view]
+
+  return Array(cols * rows).fill({}).map((item, i) => {
+    const date = vuecal.dateUtils.addDays(vuecal.view.value.startDate, i)
+    const dateNumber = date.getDate()
+    return {
+      date,
+      label: `${vuecal.dateUtils.formatDate(date, 'dddd')} ${dateNumber}`,
+      'label-sm': `${vuecal.dateUtils.formatDate(date, 'ddd')} ${dateNumber}`,
+      'label-xs': `${vuecal.dateUtils.formatDate(date, 'dd')} ${dateNumber}`
+    }
+  })
+})
 </script>
 
 <style lang="scss">
