@@ -79,7 +79,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
 
 .vuecal--default-theme {
   // Calendar Header.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   border-radius: 6px;
 
   .vuecal__header {
@@ -150,7 +150,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   }
 
   // Calendar Weekdays Headers.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   .vuecal__scrollable {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
@@ -169,7 +169,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   }
 
   // Calendar Body.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
 
   .vuecal__cell {overflow: hidden;}
@@ -207,7 +207,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
 
   // Time column.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   .vuecal__time-cell {
     display: flex;
     justify-content: flex-end;
@@ -232,7 +232,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   }
 
   // Calendar events.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   .vuecal__event {
     max-width: 94%;
     background-color: var(--w-primary-color);
@@ -257,7 +257,7 @@ provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue compone
   }
 
   // Sm and xs layouts.
-  // --------------------------------------------------------
+  // ------------------------------------------------------
   &.vuecal--sm {
     .vuecal__view-button,
     .vuecal__nav,

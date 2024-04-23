@@ -1,7 +1,7 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  .w-flex.align-center.gap6
+  .w-flex.align-center.gap6.no-grow
     w-select.mb4.no-grow(v-model="locale" :items="locales") Locale:
 
     w-radios.mb4(
