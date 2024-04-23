@@ -9,7 +9,7 @@
         slot(name="previous-button")
       template(v-if="!$slots.header && $slots['next-button']" #next-button)
         slot(name="next-button")
-      template(v-if="!$slots.header" #today-button)
+      template(v-if="!$slots.header && $slots['today-button']" #today-button)
         slot(name="today-button")
       template(v-if="!$slots.header" #title)
         slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}

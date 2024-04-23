@@ -19,7 +19,7 @@ export const props = {
   eventsOnMonthView: { type: [Boolean, String], default: false },
   hideBody: { type: Boolean, default: false },
   hideTitleBar: { type: Boolean, default: false },
-  hideViewSelector: { type: Boolean, default: false },
+  hideViewsBar: { type: Boolean, default: false },
   hideWeekdays: { type: Array, default: () => [] },
   hideWeekends: { type: Boolean, default: false },
   locale: { type: [String, Object], default: 'en-us' },

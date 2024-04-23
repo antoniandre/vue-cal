@@ -6,32 +6,38 @@
     :available-views="vuecal.availableViews.value"
     :vuecal="vuecal")
 
-  .vuecal__views-bar(v-if="!$slots.header")
-    button.vuecal__view-button(
-      v-for="(view, id) in vuecal.availableViews.value"
-      @click="vuecal.switchView(id)"
-      v-html="vuecal.texts.value[id]"
-      :class="{ 'vuecal__view-button--active': vuecal.view.value.id === id }"
-      type="button")
+  template(v-if="!$slots.header")
+    .vuecal__views-bar(v-if="!vuecal.props.hideViewsBar")
+      button.vuecal__view-button(
+        v-for="(view, id) in vuecal.availableViews.value"
+        @click="vuecal.switchView(id)"
+        v-html="vuecal.texts.value[id]"
+        :class="{ 'vuecal__view-button--active': vuecal.view.value.id === id }"
+        type="button")
 
-  nav.vuecal__title-bar
-    button.vuecal__nav.vuecal__nav--prev(
-      @click="vuecal.previous"
-      :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
-      type="button")
-      slot(name="previous-button")
-    component.vuecal__title(:is="'button'" v-html="vuecal.view.value.title")
-    button.vuecal__nav.vuecal__nav--today(
-      @click="vuecal.goToToday"
-      :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
-      type="button")
-      slot(name="today-button")
-        span.default(v-html="vuecal.texts.value.today")
-    button.vuecal__nav.vuecal__nav--next(
-      @click="vuecal.next"
-      :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
-      type="button")
-      slot(name="next-button")
+    nav.vuecal__title-bar(v-if="!vuecal.props.hideTitleBar")
+      button.vuecal__nav.vuecal__nav--prev(
+        @click="vuecal.previous"
+        :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
+        type="button")
+        slot(name="previous-button")
+      component.vuecal__title(:is="'button'" v-html="vuecal.view.value.title")
+      button.vuecal__nav.vuecal__nav--today(
+        v-if="$slots['today-button']"
+        @click="vuecal.goToToday"
+        :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
+        type="button")
+        slot(name="today-button")
+      button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
+        @click="vuecal.goToToday"
+        :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
+        type="button"
+        v-html="vuecal.texts.value.today")
+      button.vuecal__nav.vuecal__nav--next(
+        @click="vuecal.next"
+        :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
+        type="button")
+        slot(name="next-button")
 </template>
 
 <script setup>
@@ -92,15 +98,18 @@ const vuecal = inject('vuecal')
   align-items: center;
   justify-content: center;
 
-  &--prev {margin-left: 0.6em;}
-  &--next {margin-right: 0.6em;}
   &--today {
     position: relative;
     align-items: center;
     display: flex;
-  }
 
-  &--default:before {
+    &.vuecal__nav--default {text-transform: uppercase;}
+  }
+  &--prev {margin-left: 0.6em;}
+  &--next {margin-right: 0.6em;}
+
+  &--prev.vuecal__nav--default:before,
+  &--next.vuecal__nav--default:before {
     content: '';
     border: solid currentColor;
     border-width: 0 2px 2px 0;
