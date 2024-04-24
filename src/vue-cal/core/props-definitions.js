@@ -6,6 +6,7 @@ export const props = {
   cellClickHold: { type: Boolean, default: true },
   cellContextmenu: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: false },
+  datePicker: { type: Boolean, default: false },
   datePrototypes: { type: Boolean, default: true },
   dblclickToNavigate: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] },
@@ -53,7 +54,7 @@ export const props = {
   twelveHour: { type: Boolean, default: false },
   view: { type: String, default: 'week' },
   viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
-  views: { type: Array, default: ['day', 'days', 'week', 'month', 'year', 'years'] },
+  views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   xs: { type: Boolean, default: false }
 }
