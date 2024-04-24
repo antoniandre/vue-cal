@@ -7,34 +7,34 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const options = vuecal.props
+const { view, config: { props: options, availableViews }, dateUtils } = vuecal
 
 const labelsSize = computed(() => {
   if (options.xs) return 'label-xs'
-  else if (options.sm || ['days', 'month'].includes(vuecal.view.value.id)) return 'label-sm'
+  else if (options.sm || ['days', 'month'].includes(view.id.value)) return 'label-sm'
   else return 'label'
 })
 
-const isDaysWeekOrMonthView = computed(() => ['days', 'week', 'month'].includes(vuecal.view.value.id))
+const isDaysWeekOrMonthView = computed(() => ['days', 'week', 'month'].includes(view.id.value))
 
 // Only for days, week and month views.
 // The props sm and xs are not used in the computed so switching doesn't recompute.
 const weekDays = computed(() => {
-  const view = vuecal.view.value.id
-  const { cols, rows } = vuecal.availableViews.value[view]
+  const viewId = view.id.value
+  const { cols, rows } = availableViews.value[viewId]
   // If more than 2 rows, it will look like a month view so there should only be weekdays
   // without numbers.
   const cellsCount = rows === 1 ? cols * rows : cols
 
   return Array(cellsCount).fill({}).map((item, i) => {
-    const date = vuecal.dateUtils.addDays(vuecal.view.value.startDate, i)
+    const date = dateUtils.addDays(view.startDate.value, i)
     const dateNumber = rows === 1 ? ' ' + date.getDate() : ''
 
     return {
       date,
-      label: vuecal.dateUtils.formatDate(date, 'dddd') + dateNumber,
-      'label-sm': vuecal.dateUtils.formatDate(date, 'ddd') + dateNumber,
-      'label-xs': vuecal.dateUtils.formatDate(date, 'dd') + dateNumber
+      label: dateUtils.formatDate(date, 'dddd') + dateNumber,
+      'label-sm': dateUtils.formatDate(date, 'ddd') + dateNumber,
+      'label-xs': dateUtils.formatDate(date, 'dd') + dateNumber
     }
   })
 })

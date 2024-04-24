@@ -17,34 +17,36 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, unref } from 'vue'
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
-const options = computed(() => vuecal.props)
-const view = computed(() => vuecal.view.value.id)
+let { view, view: { id: viewId }, config: { availableViews }, dateUtils } = vuecal
 
 // Create as many grid cells as defined in the availableViews map (cols*rows).
-const cellsCount = computed(() => vuecal.availableViews.value[view.value].cols * vuecal.availableViews.value[view.value].rows)
+const cellsCount = computed(() => {
+  console.log('recomputing cellsCount')
+  return availableViews.value[viewId.value].cols * availableViews.value[viewId.value].rows
+})
 
 // Fill in the dates for each grid cell and return an array of dates.
 // Better performance here than in each cell.
 const cellsDates = computed(() => {
+  console.log('recomputing cellsDates')
   const dates = []
-  const { firstCellDate } = vuecal.view.value
   for (let i = 0; i < cellsCount.value; i++) {
-    switch (view.value) {
+    switch (viewId.value) {
       case 'day':
       case 'days':
       case 'week':
       case 'month':
-        dates.push(vuecal.dateUtils.addDays(firstCellDate, i))
+        dates.push(dateUtils.addDays(view.firstCellDate.value, i))
         break
       case 'year':
-        dates.push(new Date(firstCellDate.getFullYear(), i, 1, 0, 0, 0, 0))
+        dates.push(new Date(view.firstCellDate.value.getFullYear(), i, 1, 0, 0, 0, 0))
         break
       case 'years':
-        dates.push(new Date(firstCellDate.getFullYear() + i, 0, 1, 0, 0, 0, 0))
+        dates.push(new Date(view.firstCellDate.value.getFullYear() + i, 0, 1, 0, 0, 0, 0))
         break
     }
   }

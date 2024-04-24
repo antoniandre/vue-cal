@@ -1,26 +1,24 @@
 <template lang="pug">
 .vuecal__cell(:class="classes")
   template(v-if="$slots.cell")
-    slot(name="cell" :date="date" :index="index" :events="events") #cell
+    slot(name="cell" :date="date" :index="index" :events="view.events") #cell
   template(v-else)
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
 
     .vuecal__cell-date(v-if="cellDate || $slots['cell-date']")
-      slot(name="cell-date" :date="date" :events="events") {{ cellDate }}
+      slot(name="cell-date" :date="date" :events="view.events") {{ cellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
-      slot(name="cell-content" :date="date" :events="events")
-    .vuecal__cell-events(v-if="events.length")
-      slot(name="cell-events" :date="date" :events="events") {{ events }}
+      slot(name="cell-content" :date="date" :events="view.events")
+    .vuecal__cell-events(v-if="view.events.length")
+      slot(name="cell-events" :date="date" :events="view.events") {{ events }}
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const options = computed(() => vuecal.props)
-const view = computed(() => vuecal.view.value.id)
-const events = computed(() => vuecal.view.value.events)
+const { view, config, config: { props: options } } = vuecal
 
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach
@@ -31,17 +29,17 @@ const props = defineProps({
 
 const classes = computed(() => {
   const now = new Date()
-  const viewYear = vuecal.view.value.startDate.getFullYear()
-  const viewMonth = vuecal.view.value.startDate.getMonth()
+  const viewYear = view.startDate.value.getFullYear()
+  const viewMonth = view.startDate.value.getMonth()
   const y = props.date.getFullYear()
   const m = props.date.getMonth()
 
   return {
     [`vuecal__cell--today`]: vuecal.dateUtils.isToday(props.date),
-    [`vuecal__cell--current-month`]: view.value === 'year' && y === now.getFullYear() && m === now.getMonth(),
-    [`vuecal__cell--current-year`]: view.value === 'years' && y === now.getFullYear(),
-    [`vuecal__cell--out-of-range`]: view.value === 'month' && (y !== viewYear || m !== viewMonth),
-    [`vuecal__cell--selected`]: options.value.selectedDate && vuecal.dateUtils.isSameDate(options.value.selectedDate, props.date),
+    [`vuecal__cell--current-month`]: view.id === 'year' && y === now.getFullYear() && m === now.getMonth(),
+    [`vuecal__cell--current-year`]: view.id === 'years' && y === now.getFullYear(),
+    [`vuecal__cell--out-of-range`]: view.id === 'month' && (y !== viewYear || m !== viewMonth),
+    [`vuecal__cell--selected`]: options.selectedDate && vuecal.dateUtils.isSameDate(options.selectedDate, props.date),
     [`vuecal__cell--has-events`]: false
   }
 })
@@ -54,15 +52,20 @@ const cellDate = computed(() => {
   // with any prop while developing.
   console.log('recomputing cell') // @todo: remove this marker after dev.
 
-  switch (view.value) {
+  switch (view.id) {
     case 'day':
+      return ''
     case 'days':
+      if (config.availableViews.days.rows > 1) {
+        return vuecal.dateUtils.formatDate(props.date, 'D')
+      }
+      return ''
     case 'week':
       return ''
     case 'month':
       return vuecal.dateUtils.formatDate(props.date, 'D')
     case 'year':
-      return vuecal.dateUtils.formatDate(props.date, 'MMMM')
+      return vuecal.dateUtils.formatDate(props.date, options.value.xs ? 'MMM' : 'MMMM')
     case 'years':
       return vuecal.dateUtils.formatDate(props.date, 'YYYY')
   }

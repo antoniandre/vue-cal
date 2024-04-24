@@ -28,9 +28,9 @@
 </template>
 
 <script setup>
-import { computed, ref, provide, defineEmits, watch } from 'vue'
-import VueCal from './vue-cal'
-import { props as propsDefinitions } from './components/props-definitions'
+import { computed, provide, watch } from 'vue'
+import VueCal from './core/index'
+import { props as propsDefinitions } from './core/props-definitions'
 import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
 import WeekdaysBar from './components/weekdays-bar.vue'
@@ -38,24 +38,28 @@ import WeekdaysBar from './components/weekdays-bar.vue'
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
 const vuecal = new VueCal(props, emit)
+const { config, view } = vuecal
 
 const wrapperClasses = computed(() => ({
-  'vuecal--ready': vuecal.ready,
-  'vuecal--xs': props.xs,
-  'vuecal--sm': props.sm,
-  [`vuecal--${vuecal.view.value.id}-view`]: true
+  'vuecal--ready': config.ready.value,
+  'vuecal--xs': config.xs.value,
+  'vuecal--sm': config.sm.value,
+  'vuecal--date-picker': props.datePicker,
+  [`vuecal--${view.id.value}-view`]: true
 }))
 
 const wrapperStyles = computed(() => {
+  console.log('recomputing wrapperStyles', config.availableViews.value, view.id.value)
   return {
-    '--vuecal-grid-columns': vuecal.availableViews.value[vuecal.view.value.id].cols,
-    '--vuecal-grid-rows': vuecal.availableViews.value[vuecal.view.value.id].rows
+    '--vuecal-grid-columns': config.availableViews.value[view.id.value].cols,
+    '--vuecal-grid-rows': config.availableViews.value[view.id.value].rows
   }
 })
 
 watch(() => props.locale, newLocale => vuecal.loadTexts(newLocale))
 
-provide('vuecal', vuecal) // Share the Vue Cal object across all the Vue components.
+// Share the vuecal object across all the Vue components.
+provide('vuecal', vuecal)
 </script>
 
 <style lang="scss">

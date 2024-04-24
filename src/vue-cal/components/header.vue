@@ -2,35 +2,35 @@
 .vuecal__header
   slot(
     name="header"
-    :view="vuecal.view.value.id"
-    :available-views="vuecal.availableViews.value"
+    :view="view.id"
+    :available-views="availableViews"
     :vuecal="vuecal")
 
   template(v-if="!$slots.header")
-    .vuecal__views-bar(v-if="!vuecal.props.hideViewsBar")
+    .vuecal__views-bar(v-if="!options.hideViewsBar")
       button.vuecal__view-button(
-        v-for="(view, id) in vuecal.availableViews.value"
+        v-for="(view, id) in availableViews"
         @click="vuecal.switchView(id)"
         v-html="vuecal.texts.value[id]"
-        :class="{ 'vuecal__view-button--active': vuecal.view.value.id === id }"
+        :class="{ 'vuecal__view-button--active': view.id === id }"
         type="button")
 
-    nav.vuecal__title-bar(v-if="!vuecal.props.hideTitleBar")
+    nav.vuecal__title-bar(v-if="!options.hideTitleBar")
       button.vuecal__nav.vuecal__nav--prev(
         @click="vuecal.previous"
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
         type="button")
         slot(name="previous-button")
-      component.vuecal__title(:is="'button'" v-html="vuecal.view.value.title")
+      component.vuecal__title(:is="'button'" v-html="view.title.value")
       button.vuecal__nav.vuecal__nav--today(
         v-if="$slots['today-button']"
         @click="vuecal.goToToday"
-        :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
+        :class="{ 'vuecal__nav--active': view.containsToday }"
         type="button")
         slot(name="today-button")
       button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
         @click="vuecal.goToToday"
-        :class="{ 'vuecal__nav--active': vuecal.view.value.containsToday }"
+        :class="{ 'vuecal__nav--active': view.containsToday }"
         type="button"
         v-html="vuecal.texts.value.today")
       button.vuecal__nav.vuecal__nav--next(
@@ -44,6 +44,7 @@
 import { inject } from 'vue'
 
 const vuecal = inject('vuecal')
+const { view, config: { props: options, availableViews } } = vuecal
 </script>
 
 <style lang="scss">
