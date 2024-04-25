@@ -9,7 +9,7 @@
   template(v-if="!$slots.header")
     .vuecal__views-bar(v-if="!options.hideViewsBar")
       button.vuecal__view-button(
-        v-for="(view, id) in availableViews"
+        v-for="(obj, id) in availableViews"
         @click="vuecal.switchView(id)"
         v-html="vuecal.texts.value[id]"
         :class="{ 'vuecal__view-button--active': view.id === id }"

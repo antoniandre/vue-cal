@@ -174,11 +174,8 @@ provide('vuecal', vuecal)
 
   // Calendar Body.
   // ------------------------------------------------------
-  .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
-
   .vuecal__cell {overflow: hidden;}
-  .vuecal__cell--today {background: rgba(242, 250, 255, 0.4);}
-  .vuecal__cell--selected {background: rgba(242, 250, 255, 0.6);}
+  .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
 
   .vuecal--month-view .vuecal__cell-content {
     justify-content: flex-start;

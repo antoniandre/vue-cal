@@ -1,14 +1,25 @@
+/**
+ * This is the main class of the calendar, it is instantiated once from the index.vue and
+ * inject-provided to all the components.
+ *
+ * GLOBAL IMPORTANT NOTES
+ * ----------------------
+ * - There is no (and there shouldn't be) any use of Date prototypes in the codebase: even if using them
+ *   would simplify things a lot, the user may choose to disable them and nothing would work anymore.
+ *
+ * - Computed variables should only manage one thing (or a small group of vars) at a time:
+ *   Every recomputing can become very expensive when handling a large amount of cells per view
+ *   with a large amount of calendar events. So the more a computed is specific, the less it will have
+ *   expensive impact.
+ *   E.g. we definitely don't want that switching locale, or xs/sm prop would redraw the cells and
+ *   recalculate all the events rendering in each cell.
+ */
+
 import { ref, reactive, computed } from 'vue'
 import { defaults, useConfig } from './config'
 import { useView } from './view'
 import DateUtils from '../utils/date'
 
-/**
- * This is the main class of the calendar, it is instantiated once from the index.vue and
- * inject-provided to all the components.
- * There is no use of Date prototypes in the codebase, because the user may choose to disable them
- * (using them would make things a lot simpler).
- */
 export default class {
   #props = {}
   emit = null // The Vue emit function from the root component.

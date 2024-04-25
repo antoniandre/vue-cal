@@ -6,7 +6,7 @@ export const props = {
   cellClickHold: { type: Boolean, default: true },
   cellContextmenu: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: false },
-  datePicker: { type: Boolean, default: false },
+  datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years].
   datePrototypes: { type: Boolean, default: true },
   dblclickToNavigate: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] },

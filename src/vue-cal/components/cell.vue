@@ -44,6 +44,8 @@ const classes = computed(() => {
   }
 })
 
+// Note: This will recompute when the locale changes (from formatDate) or xs prop changes for instance.
+// So it needs to be a distinct computed from the events.
 const cellDate = computed(() => {
   // ! \ IMPORTANT NOTE:
   // If the selectedDate prop would be added to the vuecal.view, any click on any cell
