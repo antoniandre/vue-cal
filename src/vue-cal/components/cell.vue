@@ -100,4 +100,9 @@ const cellDate = computed(() => {
   &--out-of-range {opacity: 0.5;}
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
 }
+
+.vuecal--day-view {
+  .vuecal__cell--today:before,
+  .vuecal__cell--selected:before {display: none;}
+}
 </style>

@@ -5,7 +5,7 @@
     :key="i"
     :date="date"
     :index="i"
-    @click="vuecal.updateSelectedDate(date)")
+    @click="view.updateSelectedDate(date)")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
     template(v-if="$slots['cell-date']" #cell-date="{ date, events }")

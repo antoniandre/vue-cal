@@ -10,31 +10,31 @@
     .vuecal__views-bar(v-if="!options.hideViewsBar")
       button.vuecal__view-button(
         v-for="(obj, id) in availableViews"
-        @click="vuecal.switchView(id)"
+        @click="view.switchView(id)"
         v-html="vuecal.texts.value[id]"
         :class="{ 'vuecal__view-button--active': view.id === id }"
         type="button")
 
     nav.vuecal__title-bar(v-if="!options.hideTitleBar")
       button.vuecal__nav.vuecal__nav--prev(
-        @click="vuecal.previous"
+        @click="view.previous"
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
         type="button")
         slot(name="previous-button")
       component.vuecal__title(:is="'button'" v-html="view.title")
       button.vuecal__nav.vuecal__nav--today(
         v-if="$slots['today-button']"
-        @click="vuecal.goToToday"
+        @click="view.goToToday"
         :class="{ 'vuecal__nav--active': view.containsToday }"
         type="button")
         slot(name="today-button")
       button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
-        @click="vuecal.goToToday"
+        @click="view.goToToday"
         :class="{ 'vuecal__nav--active': view.containsToday }"
         type="button"
         v-html="vuecal.texts.value.today")
       button.vuecal__nav.vuecal__nav--next(
-        @click="vuecal.next"
+        @click="view.next"
         :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
         type="button")
         slot(name="next-button")
