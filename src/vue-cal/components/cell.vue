@@ -29,8 +29,8 @@ const props = defineProps({
 
 const classes = computed(() => {
   const now = new Date()
-  const viewYear = view.startDate.value.getFullYear()
-  const viewMonth = view.startDate.value.getMonth()
+  const viewYear = view.startDate.getFullYear()
+  const viewMonth = view.startDate.getMonth()
   const y = props.date.getFullYear()
   const m = props.date.getMonth()
 
@@ -67,7 +67,7 @@ const cellDate = computed(() => {
     case 'month':
       return vuecal.dateUtils.formatDate(props.date, 'D')
     case 'year':
-      return vuecal.dateUtils.formatDate(props.date, options.value.xs ? 'MMM' : 'MMMM')
+      return vuecal.dateUtils.formatDate(props.date, options.xs ? 'MMM' : 'MMMM')
     case 'years':
       return vuecal.dateUtils.formatDate(props.date, 'YYYY')
   }

@@ -38,8 +38,8 @@ export default class {
     this.#props = props
     this.emit = emit
     this.dateUtils = new DateUtils(this.texts, this.#props.datePrototypes)
-    this.config = useConfig(props)
-    this.view = useView(this)
+    this.config = reactive(useConfig(props))
+    this.view = reactive(useView(this, props))
 
     this.loadTexts(props.locale || 'en-us')
   }
@@ -60,65 +60,11 @@ export default class {
     this.texts.value = Object.assign({}, defaults.texts, translations)
   }
 
-  switchView (id) {
-    const availableViews = this.#props.views || Object.keys(this.config.availableViews)
-    if (availableViews.includes(id)) this.emit('update:view', id)
-    else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
-  }
-
-  previous () {
-    this.navigate(false)
-  }
-
-  next () {
-    this.navigate(true)
-  }
-
-  navigate (forward = true) {
-    let newViewDate = this.view.value.startDate
-    const { cols, rows } = this.config.availableViews[this.view.value.id]
-
-    switch (this.view.value.id) {
-      case 'day':
-      case 'days':
-      case 'week':
-        newViewDate = new Date(this.dateUtils[forward ? 'addDays' : 'subtractDays'](newViewDate, cols * rows))
-        break
-      case 'month': {
-        const increment = forward ? 1 : -1
-        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + increment, 1, 0, 0, 0, 0)
-        break
-      }
-      case 'year': {
-        const increment = forward ? 1 : -1
-        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
-        break
-      }
-      case 'years': {
-        const increment = forward ? cols * rows : - (cols * rows)
-        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
-        break
-      }
-    }
-
-    this.emit('update:viewDate', newViewDate)
-  }
-
-  goToToday () {
-    this.updateViewDate(new Date())
-  }
-
-  updateViewDate (date) {
-    if (!this.dateUtils.isSameDate(date, this.#props.viewDate)) {
-      date.setHours(0, 0, 0, 0)
-      this.emit('update:viewDate', date)
-    }
-  }
-
-  updateSelectedDate (date) {
-    if (!this.dateUtils.isSameDate(date, this.#props.selectedDate)) {
-      date.setHours(0, 0, 0, 0)
-      this.emit('update:selectedDate', date)
-    }
-  }
+  // Exposing View methods into the VueCal instance for external DIY use.
+  switchView = id => this.view.switchView(id)
+  previous = () => this.view.navigate(false)
+  next = () => this.view.navigate(true)
+  goToToday = () => this.view.updateViewDate(new Date())
+  updateViewDate = date => this.view.updateViewDate(date)
+  updateSelectedDate = date => this.view.updateSelectedDate(date)
 }

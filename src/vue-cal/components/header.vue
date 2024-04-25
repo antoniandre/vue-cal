@@ -21,7 +21,7 @@
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
         type="button")
         slot(name="previous-button")
-      component.vuecal__title(:is="'button'" v-html="view.title.value")
+      component.vuecal__title(:is="'button'" v-html="view.title")
       button.vuecal__nav.vuecal__nav--today(
         v-if="$slots['today-button']"
         @click="vuecal.goToToday"

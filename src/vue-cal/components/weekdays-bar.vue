@@ -11,23 +11,23 @@ const { view, config: { props: options, availableViews }, dateUtils } = vuecal
 
 const labelsSize = computed(() => {
   if (options.xs) return 'label-xs'
-  else if (options.sm || ['days', 'month'].includes(view.id.value)) return 'label-sm'
+  else if (options.sm || ['days', 'month'].includes(view.id)) return 'label-sm'
   else return 'label'
 })
 
-const isDaysWeekOrMonthView = computed(() => ['days', 'week', 'month'].includes(view.id.value))
+const isDaysWeekOrMonthView = computed(() => ['days', 'week', 'month'].includes(view.id))
 
 // Only for days, week and month views.
 // The props sm and xs are not used in the computed so switching doesn't recompute.
 const weekDays = computed(() => {
-  const viewId = view.id.value
-  const { cols, rows } = availableViews.value[viewId]
+  const viewId = view.id
+  const { cols, rows } = availableViews[viewId]
   // If more than 2 rows, it will look like a month view so there should only be weekdays
   // without numbers.
   const cellsCount = rows === 1 ? cols * rows : cols
 
   return Array(cellsCount).fill({}).map((item, i) => {
-    const date = dateUtils.addDays(view.startDate.value, i)
+    const date = dateUtils.addDays(view.startDate, i)
     const dateNumber = rows === 1 ? ' ' + date.getDate() : ''
 
     return {

@@ -10,8 +10,19 @@ div.test-view
       return-values
       inline)
 
-  VueCal.vuecal--default-theme(xs)
+    w-radios.mb4(
+      v-model="size"
+      :items="sizes"
+      return-values
+      inline)
+
   VueCal.vuecal--default-theme(
+    date-picker
+    :xs="size === 'xs'"
+    :sm="size === 'sm'"
+    v-model:selected-date="selectedDate")
+
+  VueCal.vuecal--default-theme.grow(
     v-model:view="view"
     :locale="locale"
     :views="views.map(item => item.value)"
@@ -58,6 +69,12 @@ const views = [
   { value: 'month', label: 'Month' },
   { value: 'year', label: 'Year' },
   { value: 'years', label: 'Years' }
+]
+const size = ref(null)
+const sizes = [
+  { value: null, label: 'Normal' },
+  { value: 'sm', label: 'small' },
+  { value: 'xs', label: 'Extra small' }
 ]
 
 const view = ref('week')
@@ -131,11 +148,32 @@ const now = new Date()
   display: flex;
   flex-direction: column;
   padding: 2rem;
+  gap: 4px;
 }
 
 // Global.
 .w-app {margin: 0;padding: 0;}
 .top-bar, footer {display: none !important;}
+
+// Date picker example.
+// --------------------------------------------------------
+.vuecal--xs {
+  width: 220px;
+  height: auto;
+
+  .vuecal__nav--today, .vuecal__view-button {font-size: 0.75em;}
+  .vuecal__weekday {font-size: 0.8em;}
+  .vuecal__body {
+    padding: 2px;
+    gap: 2px;
+  }
+  .vuecal__cell {
+    aspect-ratio: 1;
+    border-radius: 99em;
+    font-weight: bold;
+    font-size: 12px;
+  }
+}
 
 // Min cell width example.
 // --------------------------------------------------------

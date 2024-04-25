@@ -1,6 +1,6 @@
 <template lang="pug">
 .vuecal(:data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
-  slot(v-if="$slots.diy" name="diy" :view="vuecal.view" :vuecal="vuecal")
+  slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
   template(v-else)
     VueCalHeader
       template(v-if="$slots.header" #header="{ view, availableViews, vuecal }")
@@ -41,18 +41,18 @@ const vuecal = new VueCal(props, emit)
 const { config, view } = vuecal
 
 const wrapperClasses = computed(() => ({
-  'vuecal--ready': config.ready.value,
-  'vuecal--xs': config.xs.value,
-  'vuecal--sm': config.sm.value,
+  'vuecal--ready': config.ready,
+  'vuecal--xs': config.xs,
+  'vuecal--sm': config.sm,
   'vuecal--date-picker': props.datePicker,
-  [`vuecal--${view.id.value}-view`]: true
+  [`vuecal--${view.id}-view`]: true
 }))
 
 const wrapperStyles = computed(() => {
-  console.log('recomputing wrapperStyles', config.availableViews.value, view.id.value)
+  console.log('recomputing wrapperStyles', config.availableViews, view.id)
   return {
-    '--vuecal-grid-columns': config.availableViews.value[view.id.value].cols,
-    '--vuecal-grid-rows': config.availableViews.value[view.id.value].rows
+    '--vuecal-grid-columns': config.availableViews[view.id].cols,
+    '--vuecal-grid-rows': config.availableViews[view.id].rows
   }
 })
 
@@ -275,4 +275,31 @@ provide('vuecal', vuecal)
     .vuecal__title small {padding-left: 3px;padding-right: 3px;}
   }
 }
+
+// Transitions.
+// --------------------------------------------------------
+.vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
+.vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
+  transition: 0.25s ease-out;
+}
+
+.vuecal-slide-fade--left-enter-from,
+.vuecal-slide-fade--right-leave-to {
+  transform: translateX(-15px);
+  opacity: 0;
+}
+
+.vuecal-slide-fade--left-leave-to,
+.vuecal-slide-fade--right-enter-from {
+  transform: translateX(15px);
+  opacity: 0;
+}
+
+.vuecal-slide-fade--left-leave-active,
+.vuecal-slide-fade--right-leave-active {position: absolute !important;height: 100%;}
+.vuecal__title-bar .vuecal-slide-fade--left-leave-active,
+.vuecal__title-bar .vuecal-slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
+.vuecal__heading .vuecal-slide-fade--left-leave-active,
+.vuecal__heading .vuecal-slide-fade--right-leave-active {display: flex;align-items: center;}
+
 </style>
