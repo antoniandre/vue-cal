@@ -4,8 +4,8 @@ export const useView = vuecal => {
   const now = new Date()
   const { config, dateUtils, emit, texts } = vuecal
   const { sm, xs, availableViews, defaultView, props } = config
-  const viewId = computed(() => props.view && availableViews[props.view] ? props.view : defaultView)
-
+  const viewId = ref(props.view && availableViews[props.view] ? props.view : defaultView)
+  let selectedDate = ref(props.selectedDate || null)
   let startDate = ref(new Date(props.viewDate || now))
   startDate.value.setHours(0, 0, 0, 0)
   let endDate = ref(null)
@@ -109,7 +109,10 @@ export const useView = vuecal => {
 
   function switchView (id) {
     const availableViews = Object.keys(config.availableViews)
-    if (availableViews.includes(id)) emit('update:view', id)
+    if (availableViews.includes(id)) {
+      viewId.value = id
+      emit('update:view', id)
+    }
     else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 
@@ -156,22 +159,27 @@ export const useView = vuecal => {
   }
 
   function updateViewDate (date) {
-    if (!dateUtils.isSameDate(date, props.viewDate)) {
+    if (!dateUtils.isSameDate(date, startDate.value)) {
       date.setHours(0, 0, 0, 0)
+      startDate.value = date
       emit('update:viewDate', date)
     }
   }
 
-  function updateSelectedDate (date) {
-    if (!dateUtils.isSameDate(date, props.selectedDate)) {
+  function updateSelectedDate (date, emitUpdate = true) {
+    if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t update the selected date: invalid date provided to `updateSelectedDate(date)`.')
+
+    else if (!selectedDate.value || !dateUtils.isSameDate(date, selectedDate.value)) {
       date.setHours(0, 0, 0, 0)
-      emit('update:selectedDate', date)
+      selectedDate.value = date
+      if (emitUpdate) emit('update:selectedDate', date)
     }
   }
 
   watch(() => config.availableViews.value, updateView)
   watch(() => props.view, updateView)
   watch(() => props.viewDate, updateView)
+  watch(() => props.selectedDate, date => updateSelectedDate(date, false))
 
   updateView()
 
@@ -187,6 +195,7 @@ export const useView = vuecal => {
     firstCellDate,
     lastCellDate,
     containsToday,
+    selectedDate,
     // All the events are stored in the mutableEvents array, but subset of visible ones are passed
     // Into the current view for fast lookup and manipulation.
     events,
