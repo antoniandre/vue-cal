@@ -5,14 +5,18 @@ export const useView = vuecal => {
   const { config, dateUtils, emit, texts } = vuecal
   const { sm, xs, availableViews, defaultView, props } = config
   const viewId = ref(props.view && availableViews[props.view] ? props.view : defaultView)
-  let selectedDate = ref(props.selectedDate || null)
-  let startDate = ref(new Date(props.viewDate || now))
-  startDate.value.setHours(0, 0, 0, 0)
-  let endDate = ref(null)
-  let firstCellDate = ref(startDate.value)
-  let lastCellDate = ref(null)
-  let events = ref([])
-  let containsToday = ref(false)
+  const selectedDate = ref(props.selectedDate || null)
+  // The view date is the one given in prop. It can be any date within the view that will be
+  // computed around it - not necessarily the first day of the view range.
+  // E.g. [startDate, ..., viewDate, ..., endDate]
+  const viewDate = ref(new Date(props.viewDate || now))
+  viewDate.value.setHours(0, 0, 0, 0)
+  const startDate = ref(viewDate)
+  const endDate = ref(null)
+  const firstCellDate = ref(startDate.value)
+  const lastCellDate = ref(null)
+  const events = ref([])
+  const containsToday = ref(false)
 
   const title = computed(() => {
     const { dateFormat, truncations } = texts.value
@@ -48,7 +52,7 @@ export const useView = vuecal => {
   })
 
   function updateView () {
-    startDate.value = new Date(props.viewDate || now)
+    startDate.value = new Date(viewDate.value || now)
     startDate.value.setHours(0, 0, 0, 0)
     const cellsCount = availableViews[viewId.value].cols * availableViews[viewId.value].rows
     // For some locales it doesn't make sense to truncate texts.
@@ -125,15 +129,19 @@ export const useView = vuecal => {
   }
 
   function navigate (forward = true) {
-    let newViewDate = startDate.value
+    let newViewDate = viewDate.value
     const { cols, rows } = config.availableViews[viewId.value]
 
     switch (viewId.value) {
       case 'day':
       case 'days':
-      case 'week':
         newViewDate = new Date(dateUtils[forward ? 'addDays' : 'subtractDays'](newViewDate, cols * rows))
         break
+      case 'week': {
+        const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, props.startWeekOnSunday)
+        newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](prevFirstDayOfWeek, cols * rows)
+        break
+      }
       case 'month': {
         const increment = forward ? 1 : -1
         newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + increment, 1, 0, 0, 0, 0)
@@ -151,18 +159,26 @@ export const useView = vuecal => {
       }
     }
 
-    emit('update:viewDate', newViewDate)
+    updateViewDate(newViewDate)
+    updateView()
   }
 
   function goToToday () {
-    updateViewDate(new Date())
+    const today = new Date()
+    today.setHours(0, 0, 0, 0)
+    updateViewDate(today)
   }
 
-  function updateViewDate (date) {
-    if (!dateUtils.isSameDate(date, startDate.value)) {
+  function updateViewDate (date, emitUpdate = true) {
+    if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t navigate to the given date: invalid date provided to `updateViewDate(date)`.')
+
+    // If the provided date is already in the view range, we don't need/want to update the view and
+    // recompute all the cells!
+    if (!dateUtils.isInRange(date, startDate.value, endDate.value)) {
       date.setHours(0, 0, 0, 0)
-      startDate.value = date
-      emit('update:viewDate', date)
+      viewDate.value = date
+      updateView()
+      if (emitUpdate) emit('update:viewDate', date)
     }
   }
 
@@ -178,7 +194,7 @@ export const useView = vuecal => {
 
   watch(() => config.availableViews.value, updateView)
   watch(() => props.view, updateView)
-  watch(() => props.viewDate, updateView)
+  watch(() => props.viewDate, date => updateViewDate(date, false))
   watch(() => props.selectedDate, date => updateSelectedDate(date, false))
 
   updateView()
@@ -190,6 +206,7 @@ export const useView = vuecal => {
   return {
     id: viewId,
     title,
+    viewDate,
     startDate,
     endDate,
     firstCellDate,

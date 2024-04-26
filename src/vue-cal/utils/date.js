@@ -122,16 +122,20 @@ export default class {
    */
   isSameDate (date1, date2) {
     if (!date1 || !date2) return console.warn(`Vue Cal: missing date${!date1 ? '1' : '2'} parameter for comparison with \`isSameDate(date1, date2)\`.`)
-    else if (!this.isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: ${date1}.`)
-    else if (!this.isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: ${date2}.`)
+    else if (!this.isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${date1}\`.`)
+    else if (!this.isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${date2}\`.`)
 
-    const y1 = date1.getFullYear()
-    const y2 = date2.getFullYear()
-    const m1 = date1.getMonth()
-    const m2 = date2.getMonth()
-    const d1 = date1.getDate()
-    const d2 = date2.getDate()
-    return y1 === y2 && m1 === m2 && d1 === d2
+    const dateA = new Date(date1)
+    dateA.setHours(0, 0, 0, 0)
+    const dateB = new Date(date2)
+    dateB.setHours(0, 0, 0, 0)
+    return dateA.getTime() === dateB.getTime()
+  }
+
+  isInRange (date, rangeStart, rangeEnd) {
+    if (!this.isValid(date)) return console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${date}\`.`)
+
+    return date.getTime() >= rangeStart && date.getTime() <= rangeEnd
   }
 
   isLeapYear (date) {
