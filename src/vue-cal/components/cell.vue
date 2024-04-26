@@ -18,7 +18,7 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config, config: { props: options } } = vuecal
+const { view, config } = vuecal
 
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach
@@ -36,9 +36,9 @@ const classes = computed(() => {
 
   return {
     [`vuecal__cell--today`]: vuecal.dateUtils.isToday(props.date),
-    [`vuecal__cell--current-month`]: view.id === 'year' && y === now.getFullYear() && m === now.getMonth(),
-    [`vuecal__cell--current-year`]: view.id === 'years' && y === now.getFullYear(),
-    [`vuecal__cell--out-of-range`]: view.id === 'month' && (y !== viewYear || m !== viewMonth),
+    [`vuecal__cell--current-month`]: view.isYear && y === now.getFullYear() && m === now.getMonth(),
+    [`vuecal__cell--current-year`]: view.isYears && y === now.getFullYear(),
+    [`vuecal__cell--out-of-range`]: view.isMonth && (y !== viewYear || m !== viewMonth),
     [`vuecal__cell--selected`]: view.selectedDate && vuecal.dateUtils.isSameDate(view.selectedDate, props.date),
     [`vuecal__cell--has-events`]: false
   }

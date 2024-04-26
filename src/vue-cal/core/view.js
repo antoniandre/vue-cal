@@ -223,6 +223,12 @@ export const useView = vuecal => {
     navigate,
     goToToday,
     updateViewDate,
-    updateSelectedDate
+    updateSelectedDate,
+    get isDay () { return viewId.value === 'day' },
+    get isDays () { return viewId.value === 'days' },
+    get isWeek () { return viewId.value === 'week' },
+    get isMonth () { return viewId.value === 'month' },
+    get isYear () { return viewId.value === 'year' },
+    get isYears () { return viewId.value === 'years' }
   }
 }

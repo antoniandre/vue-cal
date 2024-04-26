@@ -11,11 +11,11 @@ const { view, config: { props: options, availableViews }, dateUtils } = vuecal
 
 const labelsSize = computed(() => {
   if (options.xs) return 'label-xs'
-  else if (options.sm || ['days', 'month'].includes(view.id)) return 'label-sm'
+  else if (options.sm || view.isDays || view.isMonth) return 'label-sm'
   else return 'label'
 })
 
-const isDaysWeekOrMonthView = computed(() => ['days', 'week', 'month'].includes(view.id))
+const isDaysWeekOrMonthView = computed(() =>  view.isDays || view.isWeek || view.isMonth)
 
 // Only for days, week and month views.
 // The props sm and xs are not used in the computed so switching doesn't recompute.
