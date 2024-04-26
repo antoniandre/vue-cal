@@ -1,11 +1,6 @@
 <template lang="pug">
 .vuecal__body
-  VueCalCell(
-    v-for="(date, i) in cellsDates"
-    :key="i"
-    :date="date"
-    :index="i"
-    @click="view.updateSelectedDate(date)")
+  VueCalCell(v-for="(date, i) in cellsDates" :key="i" :date="date" :index="i")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
     template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
@@ -17,7 +12,7 @@
 </template>
 
 <script setup>
-import { computed, inject, unref } from 'vue'
+import { computed, inject } from 'vue'
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')

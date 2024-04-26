@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__cell(:class="classes")
+.vuecal__cell(:class="classes" @click="view.updateSelectedDate(date)")
   template(v-if="$slots.cell")
     slot(name="cell" :date="date" :index="index" :events="view.events") #cell
   template(v-else)
@@ -67,7 +67,7 @@ const cellDate = computed(() => {
     case 'month':
       return vuecal.dateUtils.formatDate(props.date, 'D')
     case 'year':
-      return vuecal.dateUtils.formatDate(props.date, options.xs ? 'MMM' : 'MMMM')
+      return vuecal.dateUtils.formatDate(props.date, config.xs ? 'MMM' : 'MMMM')
     case 'years':
       return vuecal.dateUtils.formatDate(props.date, 'YYYY')
   }

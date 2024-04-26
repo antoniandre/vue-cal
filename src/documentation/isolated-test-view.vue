@@ -30,6 +30,8 @@ div.test-view
     editable-events
     cell-contextmenu
     today-button
+    :xs="size === 'xs'"
+    :sm="size === 'sm'"
     :time-from="7 * 60"
     :time-to="20 * 60"
     v-model:selected-date="selectedDate"
