@@ -27,7 +27,7 @@ const weekDays = computed(() => {
   const cellsCount = rows === 1 ? cols * rows : cols
 
   return Array(cellsCount).fill({}).map((item, i) => {
-    const date = dateUtils.addDays(view.startDate, i)
+    const date = dateUtils.addDays(view.firstCellDate, i)
     const dateNumber = rows === 1 ? ' ' + date.getDate() : ''
 
     return {

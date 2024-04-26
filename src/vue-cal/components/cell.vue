@@ -39,7 +39,7 @@ const classes = computed(() => {
     [`vuecal__cell--current-month`]: view.id === 'year' && y === now.getFullYear() && m === now.getMonth(),
     [`vuecal__cell--current-year`]: view.id === 'years' && y === now.getFullYear(),
     [`vuecal__cell--out-of-range`]: view.id === 'month' && (y !== viewYear || m !== viewMonth),
-    [`vuecal__cell--selected`]: options.selectedDate && vuecal.dateUtils.isSameDate(options.selectedDate, props.date),
+    [`vuecal__cell--selected`]: view.selectedDate && vuecal.dateUtils.isSameDate(view.selectedDate, props.date),
     [`vuecal__cell--has-events`]: false
   }
 })
