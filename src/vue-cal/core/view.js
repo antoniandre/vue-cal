@@ -111,13 +111,14 @@ export const useView = vuecal => {
     containsToday.value = startDate.value.getTime() <= now.getTime() && now.getTime() <= endDate.value.getTime()
   }
 
-  function switchView (id) {
+  function switchView (id, emitUpdate = true) {
     const availableViews = Object.keys(config.availableViews)
     if (availableViews.includes(id)) {
       viewId.value = id
       emit('update:view', id)
+      return true // Just for chaining in conditions.
     }
-    else console.warn(`Vue Cal: the \`${id}\` view is not available.`)
+    else return !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 
   function previous () {
@@ -192,8 +193,8 @@ export const useView = vuecal => {
     }
   }
 
+  watch(() => props.view, view => switchView(view, false) && updateView())
   watch(() => config.availableViews.value, updateView)
-  watch(() => props.view, updateView)
   watch(() => props.viewDate, date => updateViewDate(date, false))
   watch(() => props.selectedDate, date => updateSelectedDate(date, false))
 
