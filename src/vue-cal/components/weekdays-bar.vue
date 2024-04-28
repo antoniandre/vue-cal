@@ -53,5 +53,6 @@ const weekDays = computed(() => {
 .vuecal__weekday {
   flex: 1 1 0;
   text-align: center;
+  opacity: 0.8;
 }
 </style>

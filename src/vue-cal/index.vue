@@ -42,8 +42,7 @@ const { config, view } = vuecal
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
-  'vuecal--xs': config.xs,
-  'vuecal--sm': config.sm,
+  [`vuecal--${config.size}`]: true,
   'vuecal--date-picker': props.datePicker,
   [`vuecal--${view.id}-view`]: true
 }))
@@ -72,6 +71,7 @@ provide('vuecal', vuecal)
   display: flex;
   flex-direction: column;
   height: 100%;
+  user-select: none;
 
   &__scrollable {
     overflow: auto;
@@ -82,10 +82,11 @@ provide('vuecal', vuecal)
 }
 
 .vuecal--default-theme {
+  border-radius: 6px;
+  color: #000;
+
   // Calendar Header.
   // ------------------------------------------------------
-  border-radius: 6px;
-
   .vuecal__header {
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
@@ -108,6 +109,8 @@ provide('vuecal', vuecal)
     position: relative;
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-secondary-color);
+    padding-left: 0.6em;
+    padding-right: 0.6em;
 
     &:before {
       content: '';
@@ -175,21 +178,27 @@ provide('vuecal', vuecal)
   // Calendar Body.
   // ------------------------------------------------------
   .vuecal__cell {overflow: hidden;}
-  .vuecal__cells.month-view .vuecal__cell {height: 16.66%;}
+  &.vuecal--lg .vuecal__cell {
+    box-shadow: 0 0 0 0.1px rgba(#000, 0.3) inset;
+  }
+  &.vuecal--lg.vuecal--month-view .vuecal__cell {
+    justify-content: flex-end;
+    align-items: flex-start;
 
-  .vuecal--month-view .vuecal__cell-content {
-    justify-content: flex-start;
-    height: 100%;
-    align-items: flex-end;
-    overflow: auto;
+    &:before {display: none;}
+    &--selected .vuecal__cell-date {
+      background: var(--vuecal-primary-color);
+      color: var(--vuecal-secondary-color);
+    }
   }
 
   .vuecal__cell-date {
     position: sticky;
     top: 0;
+    font-weight: bold;
   }
 
-  .vuecal--month-view .vuecal__cell-date {
+  &.vuecal--lg.vuecal--month-view .vuecal__cell-date {
     padding: 4px;
     border-radius: 99em;
     width: 2em;
@@ -198,12 +207,18 @@ provide('vuecal', vuecal)
     display: flex;
     align-items: center;
     justify-content: center;
-    background: #eaf5ff;
-    color: rgb(0 0 0 / 60%);
     margin: 4px;
     font-size: 13px;
-    font-weight: bold;
     letter-spacing: -0.5px;
+
+    &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--vuecal-primary-color);
+      opacity: 0.1;
+      filter: saturate(2);
+    }
   }
   .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
 
@@ -257,6 +272,36 @@ provide('vuecal', vuecal)
     padding-bottom: 1px;
   }
 
+  // Date picker.
+  // ------------------------------------------------------
+  &.vuecal--date-picker {
+    font-size: 12px;
+
+    .vuecal__views-bar, .vuecal__title-bar {padding-top: 2px;padding-bottom: 2px;}
+    .vuecal__title-bar {padding-left: 0.3em;padding-right: 0.3em;}
+    .vuecal__nav--today, .vuecal__view-button {font-size: 0.9em;}
+    .vuecal__nav--prev, .vuecal__nav--next {width: 1.6em;}
+    .vuecal__nav--prev:before, .vuecal__nav--next:before {padding: 0.22em;}
+    .vuecal__weekday {font-size: 0.95em;}
+    .vuecal__body {padding: 2px;gap: 2px;}
+    &.vuecal--date-picker.vuecal--year-view .vuecal__body {padding: 0.6em;gap: 0.8em;}
+    &.vuecal--month-view .vuecal__cell,
+    &.vuecal--date-picker.vuecal--month-view .vuecal__cell,
+    &.vuecal--date-picker.vuecal--years-view .vuecal__cell {font-size: 0.9em;}
+    &.vuecal--month-view .vuecal__body,
+    &.vuecal--date-picker.vuecal--year-view .vuecal__body,
+    &.vuecal--date-picker.vuecal--years-view .vuecal__body {align-items: center;}
+
+    .vuecal__cell {
+      aspect-ratio: 1;
+      border-radius: 99em;
+      font-weight: bold;
+      font-size: 1em;
+      padding: 8px;
+    }
+    .vuecal__cell-date {font-weight: bold;}
+  }
+
   // Sm and xs layouts.
   // ------------------------------------------------------
   &.vuecal--sm {
@@ -266,6 +311,9 @@ provide('vuecal', vuecal)
     .vuecal__nav--today {padding: 6px 8px;}
   }
   &.vuecal--xs {
+    width: 210px;
+    height: 262px;
+
     .vuecal__view-button,
     .vuecal__nav,
     .vuecal__title button,
@@ -273,33 +321,35 @@ provide('vuecal', vuecal)
 
     .vuecal__title {gap: 4px;}
     .vuecal__title small {padding-left: 3px;padding-right: 3px;}
+
+    &.vuecal--year-view .vuecal__body,
+    &.vuecal--years-view .vuecal__body {margin: auto;}
   }
 }
 
 // Transitions.
 // --------------------------------------------------------
-.vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
-.vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
-  transition: 0.25s ease-out;
-}
+// .vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
+// .vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
+//   transition: 0.25s ease-out;
+// }
 
-.vuecal-slide-fade--left-enter-from,
-.vuecal-slide-fade--right-leave-to {
-  transform: translateX(-15px);
-  opacity: 0;
-}
+// .vuecal-slide-fade--left-enter-from,
+// .vuecal-slide-fade--right-leave-to {
+//   transform: translateX(-15px);
+//   opacity: 0;
+// }
 
-.vuecal-slide-fade--left-leave-to,
-.vuecal-slide-fade--right-enter-from {
-  transform: translateX(15px);
-  opacity: 0;
-}
+// .vuecal-slide-fade--left-leave-to,
+// .vuecal-slide-fade--right-enter-from {
+//   transform: translateX(15px);
+//   opacity: 0;
+// }
 
-.vuecal-slide-fade--left-leave-active,
-.vuecal-slide-fade--right-leave-active {position: absolute !important;height: 100%;}
-.vuecal__title-bar .vuecal-slide-fade--left-leave-active,
-.vuecal__title-bar .vuecal-slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
-.vuecal__heading .vuecal-slide-fade--left-leave-active,
-.vuecal__heading .vuecal-slide-fade--right-leave-active {display: flex;align-items: center;}
-
+// .vuecal-slide-fade--left-leave-active,
+// .vuecal-slide-fade--right-leave-active {position: absolute !important;height: 100%;}
+// .vuecal__title-bar .vuecal-slide-fade--left-leave-active,
+// .vuecal__title-bar .vuecal-slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
+// .vuecal__heading .vuecal-slide-fade--left-leave-active,
+// .vuecal__heading .vuecal-slide-fade--right-leave-active {display: flex;align-items: center;}
 </style>

@@ -79,7 +79,6 @@ const cellDate = computed(() => {
   display: flex;
   justify-content: center;
   align-items: center;
-  padding: 8px;
 
   &--today,
   &--current-month,

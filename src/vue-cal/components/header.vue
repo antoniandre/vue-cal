@@ -106,8 +106,6 @@ const { view, config: { props: options, availableViews } } = vuecal
 
     &.vuecal__nav--default {text-transform: uppercase;}
   }
-  &--prev {margin-left: 0.6em;}
-  &--next {margin-right: 0.6em;}
 
   &--prev.vuecal__nav--default:before,
   &--next.vuecal__nav--default:before {
