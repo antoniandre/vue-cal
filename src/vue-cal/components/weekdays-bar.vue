@@ -1,6 +1,9 @@
 <template lang="pug">
 .vuecal__weekdays-bar(v-if="isDaysWeekOrMonthView")
-  .vuecal__weekday(v-for="day in weekDays") {{ day[labelsSize] }}
+  .vuecal__weekday(
+    v-for="(day, i) in weekDays"
+    :key="i"
+    @click="domEvents.click(day.date)") {{ day[labelsSize] }}
 </template>
 
 <script setup>
@@ -38,6 +41,12 @@ const weekDays = computed(() => {
     }
   })
 })
+
+const domEvents = {
+  click: date => {
+    if (view.isDays || view.isWeek) view.updateSelectedDate(date)
+  }
+}
 </script>
 
 <style lang="scss">

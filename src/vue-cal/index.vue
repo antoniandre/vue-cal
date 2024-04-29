@@ -179,7 +179,7 @@ provide('vuecal', vuecal)
   // ------------------------------------------------------
   .vuecal__cell {overflow: hidden;}
   &.vuecal--lg .vuecal__cell {
-    box-shadow: 0 0 0 0.1px rgba(#000, 0.3) inset;
+    box-shadow: 0 0 0 0.5px rgba(#000, 0.08) inset;
   }
   &.vuecal--lg.vuecal--month-view .vuecal__cell {
     justify-content: flex-end;
@@ -221,6 +221,7 @@ provide('vuecal', vuecal)
     }
   }
   .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
+  &.vuecal--lg .vuecal__cell--today .vuecal__cell-date:before {opacity: 0.3;}
 
   // Time column.
   // ------------------------------------------------------
