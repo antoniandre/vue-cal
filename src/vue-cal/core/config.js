@@ -58,6 +58,7 @@ export const useConfig = props => {
         availViews = Object.entries(views).reduce((obj, [id, size]) => {
           const { cols, rows } = defaults.availableViews[id]
           obj[id] = { cols: size.cols || cols, rows: size.rows || rows }
+          return obj
         }, {})
       }
       // Else case handled by unauthorized Vue props definition error.
