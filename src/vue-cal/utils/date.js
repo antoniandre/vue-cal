@@ -257,7 +257,8 @@ export default class {
       am: () => this._hydrateTimeObject(date, texts).am,
       AM: () => this._hydrateTimeObject(date, texts).AM,
       mm: () => this._hydrateTimeObject(date, texts).mm,
-      m: () => this._hydrateTimeObject(date, texts).m
+      m: () => this._hydrateTimeObject(date, texts).m,
+      s: () => this._hydrateTimeObject(date, texts).s
     }
 
     return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
@@ -369,10 +370,11 @@ export default class {
   _hydrateTimeObject (date, texts) {
     if (_timeObject.am) return _timeObject
 
-    let H, m
+    let H, m, s
     if (date instanceof Date) {
       H = date.getHours()
       m = date.getMinutes()
+      s = date.getSeconds()
     }
     else {
       H = Math.floor(date / 60)
@@ -389,7 +391,8 @@ export default class {
       am,
       AM: am.toUpperCase(),
       m,
-      mm: m.toString().padStart(2, 0)
+      mm: m.toString().padStart(2, 0),
+      s
     }
 
     return _timeObject

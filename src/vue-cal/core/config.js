@@ -30,10 +30,10 @@ export const defaults = {
   }
 }
 
-export const useConfig = (props) => {
+export const useConfig = props => {
   const ready = false
-  const sm = computed(() => { return props.sm && !props.xs })
-  const xs = computed(() => { return props.xs || props.datePicker })
+  const sm = computed(() => props.sm && !props.xs)
+  const xs = computed(() => props.xs || props.datePicker)
   const views = (props.views)
 
   const availableViews = computed(() => {
@@ -87,6 +87,7 @@ export const useConfig = (props) => {
     ready,
     props,
     sm,
-    xs
+    xs,
+    get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') }
   }
 }
