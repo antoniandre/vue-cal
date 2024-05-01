@@ -80,6 +80,8 @@ const cellDate = computed(() => {
   justify-content: center;
   align-items: center;
 
+  .vuecal--days-view &, .vuecal--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+
   &--today,
   &--current-month,
   &--current-year,

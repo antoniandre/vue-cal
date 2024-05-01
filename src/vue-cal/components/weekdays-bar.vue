@@ -57,6 +57,7 @@ const domEvents = {
   align-items: center;
   z-index: 1;
   background-color: var(--vuecal-secondary-color);
+  height: var(--vuecal-weekdays-bar-height);
 }
 
 .vuecal__weekday {

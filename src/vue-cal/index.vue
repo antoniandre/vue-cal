@@ -14,17 +14,19 @@
       template(v-if="!$slots.header" #title)
         slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
 
-    .vuecal__scrollable
-      WeekdaysBar
-      VueCalBody
-        template(v-if="$slots.cell" #cell="{ date, index, events }")
-          slot(name="cell" :date="date" :index="index" :events="events")
-        template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
-          slot(name="cell-date" :date="date" :events="events")
-        template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
-          slot(name="cell-content" :date="date" :events="events")
-        template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
-          slot(name="cell-events" :date="date" :events="events")
+    .vuecal__scrollable(:class="{ 'vuecal__scrollable--row': hasTimeColumn }")
+      TimeColumn(v-if="hasTimeColumn")
+      .w-flex.column.grow
+        WeekdaysBar
+        VueCalBody
+          template(v-if="$slots.cell" #cell="{ date, index, events }")
+            slot(name="cell" :date="date" :index="index" :events="events")
+          template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
+            slot(name="cell-date" :date="date" :events="events")
+          template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
+            slot(name="cell-content" :date="date" :events="events")
+          template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
+            slot(name="cell-events" :date="date" :events="events")
 </template>
 
 <script setup>
@@ -34,11 +36,14 @@ import { props as propsDefinitions } from './core/props-definitions'
 import VueCalHeader from './components/header.vue'
 import VueCalBody from './components/body.vue'
 import WeekdaysBar from './components/weekdays-bar.vue'
+import TimeColumn from './components/time-column.vue'
 
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
 const vuecal = new VueCal(props, emit)
 const { config, view } = vuecal
+
+const hasTimeColumn = computed(() => props.time && (view.isDay || view.isDays || view.isWeek))
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
@@ -65,8 +70,12 @@ provide('vuecal', vuecal)
 .vuecal {
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
+  --vuecal-weekdays-bar-height: 1.6em;
+  --vuecal-time-cell-height: 40px;
+  --vuecal-min-cell-width: 400px;
   --vuecal-primary-color: #1976D2;
   --vuecal-secondary-color: #fff;
+  --vuecal-border-color: #{rgba(#000, 0.08)};
 
   display: flex;
   flex-direction: column;
@@ -74,11 +83,15 @@ provide('vuecal', vuecal)
   user-select: none;
 
   &__scrollable {
+    position: relative; // For the time cells lines to fill up the whole calendar width.
     overflow: auto;
     flex: 1;
     display: flex;
     flex-direction: column;
   }
+  &__scrollable--row {flex-direction: row;}
+
+  .grow {flex-grow: 1;}
 }
 
 .vuecal--default-theme {
@@ -161,7 +174,7 @@ provide('vuecal', vuecal)
   .vuecal__scrollable {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
-    border: 1px solid rgba(#000, 0.1);
+    border: 1px solid var(--vuecal-border-color);
     border-top: none;
   }
 
@@ -179,7 +192,7 @@ provide('vuecal', vuecal)
   // ------------------------------------------------------
   .vuecal__cell {overflow: hidden;}
   &.vuecal--lg .vuecal__cell {
-    box-shadow: 0 0 0 0.5px rgba(#000, 0.08) inset;
+    box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
   }
   &.vuecal--lg.vuecal--month-view .vuecal__cell {
     justify-content: flex-end;
