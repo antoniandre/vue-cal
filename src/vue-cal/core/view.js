@@ -85,8 +85,14 @@ export const useView = vuecal => {
       }
       case 'month': {
         startDate.value = new Date(startDate.value.getFullYear(), startDate.value.getMonth(), 1, 0, 0, 0, 0)
+
+        // By default, the month view has 6 rows of 7 days. If the first day of the month is not
+        // a Monday (or Sunday if startWeekOnSunday), then pad the preceding cells with days from the
+        // previous month. E.g.
+        // M  T  W  T  F  S  S
+        // 28 29 30 1  2  3  4
         let dayOfWeek = startDate.value.getDay()
-        dayOfWeek = (!dayOfWeek ? 7 : dayOfWeek) - 1 // 0-6 starting from Monday.
+        if (!props.startWeekOnSunday) dayOfWeek = (!dayOfWeek ? 7 : dayOfWeek) - 1 // 0-6 starting from Monday.
         firstCellDate.value = dateUtils.subtractDays(startDate.value, dayOfWeek)
 
         endDate.value = new Date(startDate.value.getFullYear(), startDate.value.getMonth() + 1, 0, 23, 59, 59, 999)

@@ -7,6 +7,7 @@ export const props = {
   locale: { type: [String, Object], default: 'en-us' },
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false },
+  startWeekOnSunday: { type: Boolean, default: false },
   time: { type: Boolean, default: true },
   timeFormat: { type: String, default: '' },
   timeFrom: { type: Number, default: 0 }, // In minutes.
@@ -22,7 +23,6 @@ export const props = {
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
-  startWeekOnSunday: { type: Boolean, default: false },
   transitions: { type: Boolean, default: true },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   clickToNavigate: { type: Boolean, default: false },

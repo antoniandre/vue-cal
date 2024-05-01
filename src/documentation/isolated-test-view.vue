@@ -29,6 +29,7 @@ div.test-view
     v-model:view-date="viewDate"
     :events="events"
     :locale="locale"
+    startWeekOnSunday
     editable-events
     cell-contextmenu
     today-button

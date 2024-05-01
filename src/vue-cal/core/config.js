@@ -26,7 +26,7 @@ export const defaults = {
     week: { cols: 7, rows: 1 },
     month: { cols: 7, rows: 6 },
     year: { cols: 4, rows: 3 },
-    years: { cols: 5, rows: 5 } // Arbitrarily range of quarters of century (25y).
+    years: { cols: 5, rows: 5 } // Arbitrary range of quarters of century (25y).
   }
 }
 
