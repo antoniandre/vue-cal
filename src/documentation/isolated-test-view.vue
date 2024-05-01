@@ -24,9 +24,11 @@ div.test-view
 
   VueCal.vuecal--default-theme.grow.no-shrink(
     v-model:view="view"
-    :locale="locale"
     :views="views.map(item => item.value)"
+    v-model:selected-date="selectedDate"
+    v-model:view-date="viewDate"
     :events="events"
+    :locale="locale"
     editable-events
     cell-contextmenu
     today-button
@@ -34,8 +36,7 @@ div.test-view
     :sm="size === 'sm'"
     :time-from="7 * 60"
     :time-to="20 * 60"
-    v-model:selected-date="selectedDate"
-    v-model:view-date="viewDate")
+    :time-step="30")
     //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
     //- template(#header="{ view, availableViews, vuecal }")
