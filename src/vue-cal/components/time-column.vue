@@ -13,7 +13,7 @@ const { config: { props: options }, texts } = vuecal
 const timeCells = computed(() => {
   const cells = []
   const noon = 12 * 60
-  for (let i = 0; i < 24 * 60; i += options.timeStep) {
+  for (let i = options.timeFrom; i < options.timeTo; i += options.timeStep) {
     const hours = ~~(i / 60)
     const mins = i % 60
     const amPm = texts.value[i < noon ? 'am' : 'pm']
@@ -32,25 +32,43 @@ const timeCells = computed(() => {
 .vuecal__time-column {
   display: flex;
   flex-direction: column;
-  margin-top: var(--vuecal-weekdays-bar-height);
-  font-size: 0.85em;
+  align-self: flex-start; // Fill height.
+  padding-top: var(--vuecal-weekdays-bar-height);
+  background-color: var(--vuecal-secondary-color);
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  border-right: 0.5px solid var(--vuecal-border-color);
 
-  .vuecal--day-view & {margin-top: 0;}
+  .vuecal--day-view & {padding-top: 0;}
 }
 
 .vuecal__time-cell {
-  flex: 1 0 auto;
+  position: relative;
   display: flex;
+  flex: 1 0 auto;
+  font-size: 0.85em;
   height: var(--vuecal-time-cell-height);
 
   &:before {
     content: '';
     position: absolute;
-    left: 0;
-    width: 100%;
-    border-top: 1px solid var(--vuecal-border-color);
+    right: 0;
+    width: 5px;
+    top: -0.5px;
+    border-top: 0.5px solid var(--vuecal-border-color);
   }
 
-  label {opacity: 0.5;}
+  label {
+    opacity: 0.5;
+    padding-left: 4px;
+    padding-right: 8px;
+    line-height: 0;
+  }
+  .vuecal--day-view &:first-child label {
+    margin-top: 0.6em;
+    font-size: 0.9em;
+    opacity: 0.4;
+  }
 }
 </style>

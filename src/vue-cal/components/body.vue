@@ -59,5 +59,10 @@ const cellsDates = computed(() => {
   grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
   grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
   height: 100%;
+
+  .vuecal--view-has-time & {
+    background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
+    background-size: 100% var(--vuecal-time-cell-height);
+  }
 }
 </style>

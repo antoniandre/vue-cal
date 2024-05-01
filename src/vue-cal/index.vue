@@ -49,7 +49,8 @@ const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
   [`vuecal--${config.size}`]: true,
   'vuecal--date-picker': props.datePicker,
-  [`vuecal--${view.id}-view`]: true
+  [`vuecal--${view.id}-view`]: true,
+  'vuecal--view-has-time': hasTimeColumn.value
 }))
 
 const wrapperStyles = computed(() => {
@@ -72,7 +73,9 @@ provide('vuecal', vuecal)
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
   --vuecal-weekdays-bar-height: 1.6em;
   --vuecal-time-cell-height: 40px;
-  --vuecal-min-cell-width: 400px;
+  // When there are too many day cells to fit in the view, setting a min cell height will help
+  // visualizing and a horizontal scrollbar will be added.
+  --vuecal-min-cell-width: 0px;
   --vuecal-primary-color: #1976D2;
   --vuecal-secondary-color: #fff;
   --vuecal-border-color: #{rgba(#000, 0.08)};
@@ -176,7 +179,11 @@ provide('vuecal', vuecal)
     border-bottom-right-radius: inherit;
     border: 1px solid var(--vuecal-border-color);
     border-top: none;
+    display: grid;
+    grid-template-columns: 1fr 0fr;
   }
+  &.vuecal--view-has-time .vuecal__scrollable,
+  &.vuecal--day-view .vuecal__scrollable {grid-template-columns: 0fr 1fr;}
 
   .vuecal__weekday {
     padding: 2px 1px;
