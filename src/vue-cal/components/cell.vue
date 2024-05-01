@@ -18,7 +18,7 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config } = vuecal
+const { view, config, config: { props: options }, dateUtils } = vuecal
 
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach
@@ -35,11 +35,11 @@ const classes = computed(() => {
   const m = props.date.getMonth()
 
   return {
-    [`vuecal__cell--today`]: vuecal.dateUtils.isToday(props.date),
+    [`vuecal__cell--today`]: dateUtils.isToday(props.date),
     [`vuecal__cell--current-month`]: view.isYear && y === now.getFullYear() && m === now.getMonth(),
     [`vuecal__cell--current-year`]: view.isYears && y === now.getFullYear(),
     [`vuecal__cell--out-of-range`]: view.isMonth && (y !== viewYear || m !== viewMonth),
-    [`vuecal__cell--selected`]: view.selectedDate && vuecal.dateUtils.isSameDate(view.selectedDate, props.date),
+    [`vuecal__cell--selected`]: view.selectedDate && dateUtils.isSameDate(view.selectedDate, props.date),
     [`vuecal__cell--has-events`]: false
   }
 })
@@ -59,17 +59,17 @@ const cellDate = computed(() => {
       return ''
     case 'days':
       if (config.availableViews.days.rows > 1) {
-        return vuecal.dateUtils.formatDate(props.date, 'D')
+        return dateUtils.formatDate(props.date, 'D')
       }
       return ''
     case 'week':
       return ''
     case 'month':
-      return vuecal.dateUtils.formatDate(props.date, 'D')
+      return dateUtils.formatDate(props.date, 'D')
     case 'year':
-      return vuecal.dateUtils.formatDate(props.date, config.xs ? 'MMM' : 'MMMM')
+      return dateUtils.formatDate(props.date, config.xs ? 'MMM' : 'MMMM')
     case 'years':
-      return vuecal.dateUtils.formatDate(props.date, 'YYYY')
+      return dateUtils.formatDate(props.date, 'YYYY')
   }
 })
 </script>

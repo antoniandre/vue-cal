@@ -59,12 +59,4 @@ export default class {
     translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
     this.texts.value = Object.assign({}, defaults.texts, translations)
   }
-
-  // Exposing View methods into the VueCal instance for external DIY use.
-  switchView = id => this.view.switchView(id)
-  previous = () => this.view.navigate(false)
-  next = () => this.view.navigate(true)
-  goToToday = () => this.view.updateViewDate(new Date())
-  updateViewDate = date => this.view.updateViewDate(date)
-  updateSelectedDate = date => this.view.updateSelectedDate(date)
 }

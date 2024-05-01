@@ -217,8 +217,7 @@ export const useView = vuecal => {
     // All the events are stored in the mutableEvents array, but subset of visible ones are passed
     // Into the current view for fast lookup and manipulation.
     events,
-    updateView,
-    switchView,
+    switch: switchView,
     previous,
     next,
     navigate,

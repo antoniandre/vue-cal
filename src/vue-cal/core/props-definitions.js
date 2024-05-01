@@ -1,15 +1,39 @@
 export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
-  // Only used if there are daySplits with minSplitWidth, to add the same height top spacer on time column.
-  allDayBarHeight: { type: [String, Number], default: '25px' },
-  cellClickHold: { type: Boolean, default: true },
-  cellContextmenu: { type: Boolean, default: false },
-  clickToNavigate: { type: Boolean, default: false },
+  // HANDLED:
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years].
   datePrototypes: { type: Boolean, default: true },
+  locale: { type: [String, Object], default: 'en-us' },
+  selectedDate: { type: [String, Date], default: '' },
+  sm: { type: Boolean, default: false },
+  time: { type: Boolean, default: true },
+  timeFormat: { type: String, default: '' },
+  timeFrom: { type: Number, default: 0 }, // In minutes.
+  timeStep: { type: Number, default: 60 }, // In minutes.
+  timeTo: { type: Number, default: minutesInADay }, // In minutes.
+  titleBar: { type: Boolean, default: true },
+  todayButton: { type: Boolean, default: true },
+  twelveHour: { type: Boolean, default: false },
+  view: { type: String, default: 'week' },
+  viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
+  views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
+  viewsBar: { type: Boolean, default: true },
+  xs: { type: Boolean, default: false },
+
+  // TODO NEXT:
+  startWeekOnSunday: { type: Boolean, default: false },
+  transitions: { type: Boolean, default: true },
+  watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
+  clickToNavigate: { type: Boolean, default: false },
   dblclickToNavigate: { type: Boolean, default: true },
+  hideWeekdays: { type: Array, default: () => [] },
+  hideWeekends: { type: Boolean, default: false },
   disableDays: { type: Array, default: () => [] },
+
+  // TODO:
+  cellClickHold: { type: Boolean, default: true },
+  cellContextmenu: { type: Boolean, default: false },
   dragToCreateEvent: { type: Boolean, default: true },
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
@@ -18,12 +42,6 @@ export const props = {
   events: { type: Array, default: () => [] },
   eventsCountOnYearView: { type: Boolean, default: false },
   eventsOnMonthView: { type: [Boolean, String], default: false },
-  hideBody: { type: Boolean, default: false },
-  hideTitleBar: { type: Boolean, default: false },
-  hideViewsBar: { type: Boolean, default: false },
-  hideWeekdays: { type: Array, default: () => [] },
-  hideWeekends: { type: Boolean, default: false },
-  locale: { type: [String, Object], default: 'en-us' },
   maxDate: { type: [String, Date], default: '' },
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
@@ -33,28 +51,11 @@ export const props = {
   onEventDblclick: { type: [Function, null], default: null },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
-  selectedDate: { type: [String, Date], default: '' },
   showAllDayEvents: { type: [Boolean, String], default: false },
   showTimeInCells: { type: Boolean, default: false },
   showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
-  sm: { type: Boolean, default: false },
   specialHours: { type: Object, default: () => ({}) },
   splitDays: { type: Array, default: () => [] },
-  startWeekOnSunday: { type: Boolean, default: false },
   stickySplitLabels: { type: Boolean, default: false },
-  time: { type: Boolean, default: true },
-  timeCellHeight: { type: Number, default: 40 }, // In pixels.
-  timeFormat: { type: String, default: '' },
-  timeFrom: { type: Number, default: 0 }, // In minutes.
-  timeStep: { type: Number, default: 60 }, // In minutes.
-  timeTo: { type: Number, default: minutesInADay }, // In minutes.
-  todayButton: { type: Boolean, default: false },
-  transitions: { type: Boolean, default: true },
-  twelveHour: { type: Boolean, default: false },
-  view: { type: String, default: 'week' },
-  viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
-  views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
-  watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
-  xs: { type: Boolean, default: false }
 }
