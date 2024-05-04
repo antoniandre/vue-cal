@@ -1,7 +1,13 @@
 <template lang="pug">
 .vuecal__time-column
   .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i")
-    label {{ options.twelveHour ? time.formatted12 : time.formatted24 }}
+    slot(
+      name="time-cell"
+      :index="i"
+      :minutes="time.minutes"
+      :format12="time.formatted12"
+      :format24="time.formatted24")
+      label {{ options.twelveHour ? time.formatted12 : time.formatted24 }}
 </template>
 
 <script setup>

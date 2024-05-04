@@ -38,6 +38,7 @@ div.test-view
     :time-from="7 * 60"
     :time-to="20 * 60"
     :time-step="30")
+    //- template(#title="view") {{ view }}
     //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
     //- template(#header="{ view, availableViews, vuecal }")

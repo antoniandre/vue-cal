@@ -11,21 +11,23 @@
         slot(name="next-button")
       template(v-if="!$slots.header && $slots['today-button']" #today-button)
         slot(name="today-button")
-      template(v-if="!$slots.header" #title)
-        slot(name="title" :title="viewTitle" :view="view") {{ viewTitle }}
+      template(v-if="!$slots.header && $slots.title" #title)
+        slot(name="title" v-bind="view")
 
     .vuecal__scrollable(:class="{ 'vuecal__scrollable--row': hasTimeColumn }")
       TimeColumn(v-if="hasTimeColumn")
+        template(v-if="$slots['time-cell']" #time-cell="{ index, minutes, format12, format24 }")
+          slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
       .w-flex.column.grow
         WeekdaysBar
         VueCalBody
           template(v-if="$slots.cell" #cell="{ date, index, events }")
             slot(name="cell" :date="date" :index="index" :events="events")
-          template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
+          template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ date, events }")
             slot(name="cell-date" :date="date" :events="events")
-          template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
+          template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ date, events }")
             slot(name="cell-content" :date="date" :events="events")
-          template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
+          template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ date, events }")
             slot(name="cell-events" :date="date" :events="events")
 </template>
 
@@ -75,7 +77,7 @@ provide('vuecal', vuecal)
   --vuecal-time-cell-height: 40px;
   // When there are too many day cells to fit in the view, setting a min cell height will help
   // visualizing and a horizontal scrollbar will be added.
-  --vuecal-min-cell-width: 0px;
+  --vuecal-min-cell-width: 0;
   --vuecal-primary-color: #1976D2;
   --vuecal-secondary-color: #fff;
   --vuecal-border-color: #{rgba(#000, 0.08)};
