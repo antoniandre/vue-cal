@@ -52,8 +52,10 @@ export const useView = vuecal => {
   })
 
   function updateView () {
+    // Potentially wrong date up to this point: needs to be adjusted to each view.
     startDate.value = new Date(viewDate.value || now)
     startDate.value.setHours(0, 0, 0, 0)
+
     const cellsCount = availableViews[viewId.value].cols * availableViews[viewId.value].rows
     // For some locales it doesn't make sense to truncate texts.
     let { dateFormat, truncations } = texts.value
@@ -122,9 +124,9 @@ export const useView = vuecal => {
     if (availableViews.includes(id)) {
       viewId.value = id
       emit('update:view', id)
-      return true // Just for chaining in conditions.
+      updateView()
     }
-    else return !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
+    else !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 
   function previous () {
@@ -167,7 +169,6 @@ export const useView = vuecal => {
     }
 
     updateViewDate(newViewDate)
-    updateView()
   }
 
   function goToToday () {
@@ -184,8 +185,8 @@ export const useView = vuecal => {
     if (!dateUtils.isInRange(date, startDate.value, endDate.value)) {
       date.setHours(0, 0, 0, 0)
       viewDate.value = date
-      updateView()
       if (emitUpdate) emit('update:viewDate', date)
+      updateView()
     }
   }
 
@@ -199,7 +200,7 @@ export const useView = vuecal => {
     }
   }
 
-  watch(() => props.view, view => switchView(view, false) && updateView())
+  watch(() => props.view, view => switchView(view, false))
   watch(() => config.availableViews.value, updateView)
   watch(() => props.viewDate, date => updateViewDate(date, false))
   watch(() => props.selectedDate, date => updateSelectedDate(date, false))
