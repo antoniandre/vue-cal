@@ -187,6 +187,8 @@ provide('vuecal', vuecal)
   &.vuecal--view-has-time .vuecal__scrollable,
   &.vuecal--day-view .vuecal__scrollable {grid-template-columns: 0fr 1fr;}
 
+  &.vuecal--lg .vuecal__weekdays-bar,
+  &.vuecal--sm .vuecal__weekdays-bar {border-bottom: 0.5px solid var(--vuecal-border-color);}
   .vuecal__weekday {
     padding: 2px 1px;
     white-space: nowrap;
