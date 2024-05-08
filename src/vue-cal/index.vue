@@ -41,7 +41,7 @@ import WeekdaysBar from './components/weekdays-bar.vue'
 import TimeColumn from './components/time-column.vue'
 
 const props = defineProps(propsDefinitions)
-const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
+const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate', 'cell-click'])
 const vuecal = new VueCal(props, emit)
 const { config, view } = vuecal
 
@@ -146,7 +146,7 @@ provide('vuecal', vuecal)
 
   .vuecal__view-button,
   .vuecal__nav,
-  .vuecal__title button,
+  button.vuecal__title,
   .vuecal__nav--today {
     transition: 0.3s;
     border: 1px solid transparent;

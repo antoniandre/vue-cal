@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__cell(:class="classes" @click="view.updateSelectedDate(date)")
+.vuecal__cell(:class="classes" v-on="cellEventHandlers")
   template(v-if="$slots.cell")
     slot(name="cell" :date="date" :index="index" :events="view.events") #cell
   template(v-else)
@@ -72,6 +72,22 @@ const cellDate = computed(() => {
       return dateUtils.formatDate(props.date, 'YYYY')
   }
 })
+
+const onCellClick = () => {
+  view.updateSelectedDate(props.date)
+
+  if (config.clickToNavigate) {
+    if ((view.isMonth || view.isDays || view.isWeek) && config.availableViews.day) view.switch('day')
+    else if (view.isYear && config.availableViews.month) view.switch('month')
+    else if (view.isYears && config.availableViews.year) view.switch('year')
+    view.updateViewDate(props.date)
+  }
+  vuecal.emit('cell-click', { date: props.date, view })
+}
+
+const cellEventHandlers = {
+  click: onCellClick
+}
 </script>
 
 <style lang="scss">

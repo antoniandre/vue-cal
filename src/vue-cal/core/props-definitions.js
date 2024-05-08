@@ -23,9 +23,9 @@ export const props = {
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
+  clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   transitions: { type: Boolean, default: true },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
-  clickToNavigate: { type: Boolean, default: false },
   dblclickToNavigate: { type: Boolean, default: true },
   hideWeekdays: { type: Array, default: () => [] },
   hideWeekends: { type: Boolean, default: false },
