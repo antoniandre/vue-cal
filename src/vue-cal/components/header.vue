@@ -21,9 +21,16 @@
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
         type="button")
         slot(name="previous-button")
-      component.vuecal__title(v-if="$slots.title" :is="'button'")
+      component.vuecal__title(
+        v-if="$slots.title"
+        :is="config.clickToNavigate ? 'button' : 'div'"
+        v-on="titleEventHandlers")
         slot(name="title")
-      component.vuecal__title(v-else :is="'button'" v-html="view.title")
+      component.vuecal__title(
+        v-else
+        :is="config.clickToNavigate ? 'button' : 'div'"
+        v-on="titleEventHandlers"
+        v-html="view.title")
       template(v-if="options.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"
@@ -47,7 +54,18 @@
 import { inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config: { props: options, availableViews } } = vuecal
+const { view, config, config: { props: options, availableViews } } = vuecal
+
+const onTitleClick = () => {
+  if (config.clickToNavigate) {
+    if ((view.isDay || view.isDays) && config.availableViews.month) view.switch('month')
+    else if (view.isMonth && config.availableViews.years) view.switch('years')
+  }
+}
+
+const titleEventHandlers = {
+  ...(config.clickToNavigate ? { click: onTitleClick } : {})
+}
 </script>
 
 <style lang="scss">
@@ -75,14 +93,14 @@ const { view, config: { props: options, availableViews } } = vuecal
 .vuecal__title {
   position: relative;
   justify-content: center;
-  background-color: rgba(#fff, 0.1);
-  flex-grow: 1;
+  margin: auto; // If the title is a button (when navigation is enabled), better have it fit to the content.
   display: flex;
   align-items: center;
   gap: 6px;
   font-weight: bold;
   font-size: 1.05em;
 
+  // The week number label.
   small {
     display: inline-flex;
     padding: 2px 6px;
