@@ -21,16 +21,20 @@
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
         type="button")
         slot(name="previous-button")
-      component.vuecal__title(
-        v-if="$slots.title"
-        :is="config.clickToNavigate ? 'button' : 'div'"
-        v-on="titleEventHandlers")
-        slot(name="title")
-      component.vuecal__title(
-        v-else
-        :is="config.clickToNavigate ? 'button' : 'div'"
-        v-on="titleEventHandlers"
-        v-html="view.title")
+      .vuecal__transition-wrap
+        transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
+          div(:key="view.id + view.startDate.getTime()")
+            component.vuecal__title(
+              v-if="$slots.title"
+              :is="config.clickToNavigate ? 'button' : 'div'"
+              v-on="titleEventHandlers")
+              slot(name="title")
+            component.vuecal__title(
+              v-else
+              :is="config.clickToNavigate ? 'button' : 'div'"
+              v-on="titleEventHandlers"
+              v-html="view.title"
+              :key="view.id + view.startDate.getTime()")
       template(v-if="options.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"
@@ -89,6 +93,21 @@ const titleEventHandlers = {
 }
 
 .vuecal__title-bar {display: flex;}
+
+.vuecal__header .vuecal__transition-wrap {
+  position: relative;
+  flex-grow: 1;
+
+  & > div {
+    position: absolute;
+    inset: 0;
+    white-space: nowrap;
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+  }
+}
 
 .vuecal__title {
   position: relative;

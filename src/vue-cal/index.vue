@@ -108,13 +108,13 @@ provide('vuecal', vuecal)
 
 .vuecal-slide-fade--left-enter-from,
 .vuecal-slide-fade--right-leave-to {
-  transform: translateX(-15px);
+  transform: translateX(-12px);
   opacity: 0;
 }
 
 .vuecal-slide-fade--left-leave-to,
 .vuecal-slide-fade--right-enter-from {
-  transform: translateX(15px);
+  transform: translateX(12px);
   opacity: 0;
 }
 
@@ -125,5 +125,5 @@ provide('vuecal', vuecal)
 .vuecal__heading .vuecal-slide-fade--left-leave-active,
 .vuecal__heading .vuecal-slide-fade--right-leave-active {display: flex;align-items: center;}
 
-@import './default-theme.scss';
+@import './default-theme.scss'; // Keep at the end.
 </style>
