@@ -123,7 +123,10 @@ export const useView = vuecal => {
 
   function switchView (id, emitUpdate = true) {
     const availableViews = Object.keys(config.availableViews)
+
+    if (viewId.value === id) return
     if (availableViews.includes(id)) {
+      transitionDirection.value = availableViews.indexOf(id) < availableViews.indexOf(viewId.value) ? 'left' : 'right'
       viewId.value = id
       emit('update:view', id)
       updateView()
@@ -186,6 +189,7 @@ export const useView = vuecal => {
     // recompute all the cells!
     if (!dateUtils.isInRange(date, startDate.value, endDate.value)) {
       date.setHours(0, 0, 0, 0)
+      transitionDirection.value = date.getTime() < startDate.value.getTime() ? 'left' : 'right'
       viewDate.value = date
       if (emitUpdate) emit('update:viewDate', date)
       updateView()
