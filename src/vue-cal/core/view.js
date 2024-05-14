@@ -17,6 +17,8 @@ export const useView = vuecal => {
   const lastCellDate = ref(null)
   const events = ref([])
   const containsToday = ref(false)
+  // Transition when switching view. left when going toward the past, right when going toward future.
+  const transitionDirection = ref('right')
 
   const title = computed(() => {
     const { dateFormat, truncations } = texts.value
@@ -231,6 +233,7 @@ export const useView = vuecal => {
     goToToday,
     updateViewDate,
     updateSelectedDate,
+    transitionDirection,
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },
     get isWeek () { return viewId.value === 'week' },

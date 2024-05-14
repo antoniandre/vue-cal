@@ -2,6 +2,7 @@ export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
   // HANDLED:
+  clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years].
   datePrototypes: { type: Boolean, default: true },
   locale: { type: [String, Object], default: 'en-us' },
@@ -23,12 +24,11 @@ export const props = {
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
-  clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   transitions: { type: Boolean, default: true },
+  hideWeekends: { type: Boolean, default: false },
+  hideWeekdays: { type: Array, default: () => [] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   dblclickToNavigate: { type: Boolean, default: true },
-  hideWeekdays: { type: Array, default: () => [] },
-  hideWeekends: { type: Boolean, default: false },
   disableDays: { type: Array, default: () => [] },
 
   // TODO:
