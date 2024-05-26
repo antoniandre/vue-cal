@@ -96,7 +96,8 @@ const cellEventHandlers = {
   justify-content: center;
   align-items: center;
 
-  .vuecal--days-view &, .vuecal--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+  .vuecal__scrollable--days-view &,
+  .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
 
   &--today,
   &--current-month,
@@ -118,7 +119,7 @@ const cellEventHandlers = {
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
 }
 
-.vuecal--day-view {
+.vuecal__scrollable--day-view {
   .vuecal__cell--today:before,
   .vuecal__cell--selected:before {display: none;}
 }

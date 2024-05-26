@@ -84,16 +84,18 @@
 
   // Calendar Weekdays Headers.
   // ------------------------------------------------------
-  .vuecal__scrollable {
+  .vuecal__scrollable-wrap {
     border-bottom-left-radius: inherit;
     border-bottom-right-radius: inherit;
     border: 1px solid var(--vuecal-border-color);
     border-top: none;
+  }
+  .vuecal__scrollable {
     display: grid;
     grid-template-columns: 1fr 0fr;
+
+    &--row {grid-template-columns: 0fr 1fr;}
   }
-  &.vuecal--view-has-time .vuecal__scrollable,
-  &.vuecal--day-view .vuecal__scrollable {grid-template-columns: 0fr 1fr;}
 
   &.vuecal--lg .vuecal__weekdays-bar,
   &.vuecal--sm .vuecal__weekdays-bar {border-bottom: 0.5px solid var(--vuecal-border-color);}
@@ -113,7 +115,7 @@
   &.vuecal--lg .vuecal__cell {
     box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
   }
-  &.vuecal--lg.vuecal--month-view .vuecal__cell {
+  &.vuecal--lg .vuecal__scrollable--month-view .vuecal__cell {
     justify-content: flex-end;
     align-items: flex-start;
 
@@ -130,7 +132,7 @@
     font-weight: bold;
   }
 
-  &.vuecal--lg.vuecal--month-view .vuecal__cell-date {
+  &.vuecal--lg .vuecal__scrollable--month-view .vuecal__cell-date {
     padding: 4px;
     border-radius: 99em;
     width: 2em;
@@ -200,7 +202,7 @@
     }
   }
 
-  .vuecal--month-view .vuecal__event {
+  .vuecal__scrollable--month-view .vuecal__event {
     padding-top: 1px;
     padding-bottom: 1px;
   }
@@ -217,13 +219,12 @@
     .vuecal__nav--prev:before, .vuecal__nav--next:before {padding: 0.22em;}
     .vuecal__weekday {font-size: 0.95em;}
     .vuecal__body {padding: 2px;gap: 2px;}
-    &.vuecal--date-picker.vuecal--year-view .vuecal__body {padding: 0.6em;gap: 0.8em;}
-    &.vuecal--month-view .vuecal__cell,
-    &.vuecal--date-picker.vuecal--month-view .vuecal__cell,
-    &.vuecal--date-picker.vuecal--years-view .vuecal__cell {font-size: 0.9em;}
-    &.vuecal--month-view .vuecal__body,
-    &.vuecal--date-picker.vuecal--year-view .vuecal__body,
-    &.vuecal--date-picker.vuecal--years-view .vuecal__body {align-items: center;}
+    .vuecal__scrollable--year-view .vuecal__body {padding: 0.6em;gap: 0.8em;}
+    .vuecal__scrollable--month-view .vuecal__body,
+    .vuecal__scrollable--year-view .vuecal__body,
+    .vuecal__scrollable--years-view .vuecal__body {align-items: center;}
+    .vuecal__scrollable--month-view .vuecal__cell,
+    .vuecal__scrollable--years-view .vuecal__cell {font-size: 0.9em;}
 
     .vuecal__cell {
       aspect-ratio: 1;

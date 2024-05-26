@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__body
+.vuecal__body(:style="wrapperStyles")
   VueCalCell(v-for="(date, i) in cellsDates" :key="i" :date="date" :index="i")
     template(v-if="$slots.cell" #cell="{ date, index, events }")
       slot(name="cell" :date="date" :index="index" :events="events")
@@ -16,7 +16,7 @@ import { computed, inject } from 'vue'
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
-let { view, config: { availableViews }, dateUtils } = vuecal
+let { view, config, config: { availableViews }, dateUtils } = vuecal
 
 // Create as many grid cells as defined in the availableViews map (cols*rows).
 const cellsCount = computed(() => {
@@ -50,6 +50,18 @@ const cellsDates = computed(() => {
   }
 
   return dates
+})
+
+// These CSS variables must stay at this level and not at the root, because they need to be "dead"
+// and frozen with the animated container when leaving in a vue transition, for a successful smooth
+// transition. In other terms, there can be 2 vuecal__scrollable elements that are animated with
+// different values of these CSS variables at the same time. Beautiful :)
+const wrapperStyles = computed(() => {
+  console.log('recomputing wrapperStyles', config.availableViews, view.id)
+  return {
+    '--vuecal-grid-columns': config.availableViews[view.id].cols,
+    '--vuecal-grid-rows': config.availableViews[view.id].rows
+  }
 })
 </script>
 

@@ -14,21 +14,25 @@
       template(v-if="!$slots.header && $slots.title" #title)
         slot(name="title" v-bind="view")
 
-    .vuecal__scrollable(:class="{ 'vuecal__scrollable--row': hasTimeColumn }")
-      TimeColumn(v-if="hasTimeColumn")
-        template(v-if="$slots['time-cell']" #time-cell="{ index, minutes, format12, format24 }")
-          slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
-      .w-flex.column.grow
-        WeekdaysBar
-        VueCalBody
-          template(v-if="$slots.cell" #cell="{ date, index, events }")
-            slot(name="cell" :date="date" :index="index" :events="events")
-          template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ date, events }")
-            slot(name="cell-date" :date="date" :events="events")
-          template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ date, events }")
-            slot(name="cell-content" :date="date" :events="events")
-          template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ date, events }")
-            slot(name="cell-events" :date="date" :events="events")
+    .vuecal__transition-wrap
+      transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
+        .vuecal__scrollable(
+          :class="scrollableElClasses"
+          :key="view.id + view.startDate.getTime()")
+          TimeColumn(v-if="hasTimeColumn")
+            template(v-if="$slots['time-cell']" #time-cell="{ index, minutes, format12, format24 }")
+              slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
+          .w-flex.column.grow
+            WeekdaysBar
+            VueCalBody
+              template(v-if="$slots.cell" #cell="{ date, index, events }")
+                slot(name="cell" :date="date" :index="index" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ date, events }")
+                slot(name="cell-date" :date="date" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ date, events }")
+                slot(name="cell-content" :date="date" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ date, events }")
+                slot(name="cell-events" :date="date" :events="events")
 </template>
 
 <script setup>
@@ -55,13 +59,10 @@ const wrapperClasses = computed(() => ({
   'vuecal--view-has-time': hasTimeColumn.value
 }))
 
-const wrapperStyles = computed(() => {
-  console.log('recomputing wrapperStyles', config.availableViews, view.id)
-  return {
-    '--vuecal-grid-columns': config.availableViews[view.id].cols,
-    '--vuecal-grid-rows': config.availableViews[view.id].rows
-  }
-})
+const scrollableElClasses = computed(() => ({
+  'vuecal__scrollable--row': hasTimeColumn.value,
+  [`vuecal__scrollable--${view.id}-view`]: true
+}))
 
 watch(() => props.locale, newLocale => vuecal.loadTexts(newLocale))
 
@@ -87,14 +88,22 @@ provide('vuecal', vuecal)
   height: 100%;
   user-select: none;
 
+  &__transition-wrap {
+    position: relative;
+    flex: 1;
+    min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
+  }
+
   &__scrollable {
     position: relative; // For the time cells lines to fill up the whole calendar width.
     overflow: auto;
     flex: 1;
+    height: 100%;
     display: flex;
     flex-direction: column;
+
+    &--row {flex-direction: row;}
   }
-  &__scrollable--row {flex-direction: row;}
 
   .grow {flex-grow: 1;}
 }
@@ -103,7 +112,7 @@ provide('vuecal', vuecal)
 // --------------------------------------------------------
 .vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
 .vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
-  transition: 0.25s ease-out;
+  transition: 0.25s ease-in-out;
 }
 
 .vuecal-slide-fade--left-enter-from,
@@ -118,12 +127,15 @@ provide('vuecal', vuecal)
   opacity: 0;
 }
 
-.vuecal-slide-fade--left-leave-active,
-.vuecal-slide-fade--right-leave-active {position: absolute !important;height: 100%;}
-.vuecal__title-bar .vuecal-slide-fade--left-leave-active,
-.vuecal__title-bar .vuecal-slide-fade--right-leave-active {left: 0;right: 0;height: auto;}
-.vuecal__heading .vuecal-slide-fade--left-leave-active,
-.vuecal__heading .vuecal-slide-fade--right-leave-active {display: flex;align-items: center;}
+.vuecal-slide-fade--left-enter-active,
+.vuecal-slide-fade--right-enter-active,
+// When navigating hyper fast, make sure that any left-over 3rd animated container is positioned absolute
+// so it does not briefly appear below the calendar.
+.vuecal-slide-fade--left-leave-active ~ .vuecal-slide-fade--left-leave-active,
+.vuecal-slide-fade--right-leave-active ~ .vuecal-slide-fade--right-leave-active {
+  position: absolute !important;
+  inset: 0;
+}
 
 @import './default-theme.scss'; // Keep at the end.
 </style>

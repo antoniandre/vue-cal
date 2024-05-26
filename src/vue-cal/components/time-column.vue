@@ -46,7 +46,7 @@ const timeCells = computed(() => {
   z-index: 2;
   border-right: 0.5px solid var(--vuecal-border-color);
 
-  .vuecal--day-view & {padding-top: 0;}
+  .vuecal__scrollable--day-view & {padding-top: 0;}
 }
 
 .vuecal__time-cell {
@@ -71,7 +71,7 @@ const timeCells = computed(() => {
     padding-right: 8px;
     line-height: 0;
   }
-  .vuecal--day-view &:first-child label {
+  .vuecal__scrollable--day-view &:first-child label {
     margin-top: 0.6em;
     font-size: 0.9em;
     opacity: 0.4;
