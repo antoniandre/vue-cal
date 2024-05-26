@@ -1,6 +1,15 @@
 .vuecal--default-theme {
+  position: relative;
   border-radius: 6px;
   color: #000;
+
+  &:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: var(--vuecal-primary-color);
+    opacity: 0.04;
+  }
 
   // Calendar Header.
   // ------------------------------------------------------
