@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal(:data-locale="locale" :class="wrapperClasses" :style="wrapperStyles")
+.vuecal(:data-locale="locale" :class="wrapperClasses")
   slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
   template(v-else)
     VueCalHeader
