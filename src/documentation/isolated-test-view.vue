@@ -2,6 +2,7 @@
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
   .w-flex.align-center.gap6.no-grow
+    w-switch.mb4.no-grow(v-model="startWeekOnSunday") Start Week On Sunday
     w-select.mb4.no-grow(v-model="locale" :items="locales") Locale:
 
     w-radios.mb4(
@@ -29,7 +30,7 @@ div.test-view
     v-model:view-date="viewDate"
     :events="events"
     :locale="locale"
-    startWeekOnSunday
+    :start-week-on-sunday="startWeekOnSunday"
     editable-events
     cell-contextmenu
     today-button
@@ -87,6 +88,7 @@ const view = ref('week')
 const events = ref([])
 const selectedDate = ref('')
 const viewDate = ref(new Date(2023, 11, 1))
+const startWeekOnSunday = ref(false)
 
 // `from` and `to` are expected in minutes.
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }

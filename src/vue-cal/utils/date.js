@@ -101,12 +101,21 @@ export default class {
     return d
   }
 
-  getWeek (date) {
+  /**
+   * Get the week number for the given date.
+   * Note: If starting the week on Sunday, 1 is added to the result because it's the first day
+   * of the next week - compared to start from Monday where the Sunday is in the past week.
+   *
+   * @param {Date} date the date to know the week for.
+   * @param {Boolean} weekStartsOnSunday if the week starts on Sunday. Default Monday.
+   * @returns {Number} the week number ranging from 1 to 53.
+   */
+  getWeek (date, weekStartsOnSunday = false) {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
     const dayNum = d.getUTCDay() || 7
     d.setUTCDate(d.getUTCDate() + 4 - dayNum)
     const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7)
+    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7) + (weekStartsOnSunday ? 1 : 0)
   }
 
   isToday (date) {

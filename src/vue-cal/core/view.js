@@ -36,7 +36,7 @@ export const useView = vuecal => {
         return `${startDateFormatted} - ${endDateFormatted}`
       }
       case 'week': {
-        const weekNumber = dateUtils.getWeek(startDate.value)
+        const weekNumber = dateUtils.getWeek(startDate.value, props.startWeekOnSunday)
         // Shorten month if xs and the locale doesn't forbid it.
         const format = `${xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
         return dateUtils.formatDate(startDate.value, format) + ` <small>${texts.value.week} ${weekNumber}</small>`
@@ -182,12 +182,24 @@ export const useView = vuecal => {
     updateViewDate(today)
   }
 
-  function updateViewDate (date, emitUpdate = true) {
+  /**
+   * Takes the view to a given date.
+   * If the date is already in the view range, nothing will
+   * happen, unless the forceUpdate bool is set to true. For instance, when switching the
+   * startWeekOnSunday, we want to update the view and force the first day of the view to
+   * switch between Sunday and Monday, even if it may already be in view.
+   *
+   * @param {Date} date the new Date to bring to the view.
+   * @param {Boolean} emitUpdate emits the update:viewDate event (not wanted from watcher)
+   * @param {Boolean} forceUpdate By default if the date is in view range, nothing happens.
+   * @returns void
+   */
+  function updateViewDate (date, emitUpdate = true, forceUpdate = false) {
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t navigate to the given date: invalid date provided to `updateViewDate(date)`.')
 
     // If the provided date is already in the view range, we don't need/want to update the view and
-    // recompute all the cells!
-    if (!dateUtils.isInRange(date, startDate.value, endDate.value)) {
+    // recompute all the cells! But if forced (forceUpdate), just do it.
+    if (!dateUtils.isInRange(date, startDate.value, endDate.value) || forceUpdate) {
       date.setHours(0, 0, 0, 0)
       transitionDirection.value = date.getTime() < startDate.value.getTime() ? 'left' : 'right'
       viewDate.value = date
@@ -206,10 +218,21 @@ export const useView = vuecal => {
     }
   }
 
+  /**
+   * When switching the startWeekOnSunday prop, update the view.
+   *
+   * @param {Boolean} bool start the week on Sunday or not.
+   */
+  function switchWeekStart (bool) {
+    if (bool) updateView()
+    else updateViewDate(dateUtils.addDays(startDate.value, 1), true, true)
+  }
+
   watch(() => props.view, view => switchView(view, false))
   watch(() => config.availableViews.value, updateView)
   watch(() => props.viewDate, date => updateViewDate(date, false))
   watch(() => props.selectedDate, date => updateSelectedDate(date, false))
+  watch(() => props.startWeekOnSunday, bool => switchWeekStart(bool))
 
   updateView()
 
