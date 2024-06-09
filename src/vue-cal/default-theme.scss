@@ -111,8 +111,8 @@
 
   // Calendar Body.
   // ------------------------------------------------------
-  .vuecal__cell {overflow: hidden;}
-  &.vuecal--lg .vuecal__cell {
+  .vuecal__cell {
+    overflow: hidden;
     box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
   }
   &.vuecal--lg .vuecal__scrollable--month-view .vuecal__cell {
@@ -223,8 +223,6 @@
     .vuecal__scrollable--month-view .vuecal__body,
     .vuecal__scrollable--year-view .vuecal__body,
     .vuecal__scrollable--years-view .vuecal__body {align-items: center;}
-    .vuecal__scrollable--month-view .vuecal__cell,
-    .vuecal__scrollable--years-view .vuecal__cell {font-size: 0.9em;}
 
     .vuecal__cell {
       aspect-ratio: 1;
@@ -232,7 +230,10 @@
       font-weight: bold;
       font-size: 1em;
       padding: 8px;
+      box-shadow: none;
     }
+    .vuecal__scrollable--month-view .vuecal__cell,
+    .vuecal__scrollable--years-view .vuecal__cell {font-size: 0.9em;}
     .vuecal__cell-date {font-weight: bold;}
   }
 
@@ -242,7 +243,7 @@
     .vuecal__view-button,
     .vuecal__nav,
     .vuecal__title button,
-    .vuecal__nav--today {padding: 6px 8px;}
+    .vuecal__nav--today {padding-left: 8px;padding-right: 8px;}
   }
   &.vuecal--xs {
     width: 210px;
@@ -251,7 +252,7 @@
     .vuecal__view-button,
     .vuecal__nav,
     .vuecal__title button,
-    .vuecal__nav--today {padding: 2px 4px;}
+    .vuecal__nav--today {padding-left: 4px;padding-right: 4px;}
 
     .vuecal__title {gap: 4px;}
     .vuecal__title small {padding-left: 3px;padding-right: 3px;}
