@@ -25,14 +25,14 @@
           .w-flex.column.grow
             WeekdaysBar
             VueCalBody
-              template(v-if="$slots.cell" #cell="{ date, index, events }")
-                slot(name="cell" :date="date" :index="index" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ date, events }")
-                slot(name="cell-date" :date="date" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ date, events }")
-                slot(name="cell-content" :date="date" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ date, events }")
-                slot(name="cell-events" :date="date" :events="events")
+              template(v-if="$slots.cell" #cell="{ start, end, index, events }")
+                slot(name="cell" :start="start" :end="end" :index="index" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ start, end, events }")
+                slot(name="cell-date" :start="start" :end="end" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ start, end, events }")
+                slot(name="cell-content" :start="start" :end="end" :events="events")
+              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ start, end, events }")
+                slot(name="cell-events" :start="start" :end="end" :events="events")
 </template>
 
 <script setup>

@@ -1,14 +1,19 @@
 <template lang="pug">
 .vuecal__body(:style="bodyStyles")
-  VueCalCell(v-for="(date, i) in cellsDates" :key="i" :date="date" :index="i")
-    template(v-if="$slots.cell" #cell="{ date, index, events }")
-      slot(name="cell" :date="date" :index="index" :events="events")
-    template(v-if="$slots['cell-date']" #cell-date="{ date, events }")
-      slot(name="cell-date" :date="date" :events="events")
-    template(v-if="$slots['cell-content']" #cell-content="{ date, events }")
-      slot(name="cell-content" :date="date" :events="events")
-    template(v-if="$slots['cell-events']" #cell-events="{ date, events }")
-      slot(name="cell-events" :date="date" :events="events")
+  VueCalCell(
+    v-for="(date, i) in cellsDates"
+    :key="i"
+    :start="date.start"
+    :end="date.end"
+    :index="i")
+    template(v-if="$slots.cell" #cell="{ start, end, index, events }")
+      slot(name="cell" :start="date.start" :end="date.end" :index="index" :events="events")
+    template(v-if="$slots['cell-date']" #cell-date="{ start, end, events }")
+      slot(name="cell-date" :start="date.start" :end="date.end" :events="events")
+    template(v-if="$slots['cell-content']" #cell-content="{ start, end, events }")
+      slot(name="cell-content" :start="date.start" :end="date.end" :events="events")
+    template(v-if="$slots['cell-events']" #cell-events="{ start, end, events }")
+      slot(name="cell-events" :start="date.start" :end="date.end" :events="events")
 </template>
 
 <script setup>
@@ -38,13 +43,22 @@ const cellsDates = computed(() => {
       case 'days':
       case 'week':
       case 'month':
-        dates.push(dateUtils.addDays(view.firstCellDate, i))
+        const start = dateUtils.addDays(view.firstCellDate, i)
+        const end = new Date(start)
+        end.setHours(23, 59, 59, 999)
+        dates.push({ start, end })
         break
       case 'year':
-        dates.push(new Date(view.firstCellDate.getFullYear(), i, 1, 0, 0, 0, 0))
+        dates.push({
+          start: new Date(view.firstCellDate.getFullYear(), i, 1, 0, 0, 0, 0),
+          end: new Date(view.firstCellDate.getFullYear(), i + 1, 0, 23, 59, 59, 999)
+        })
         break
       case 'years':
-        dates.push(new Date(view.firstCellDate.getFullYear() + i, 0, 1, 0, 0, 0, 0))
+        dates.push({
+          start: new Date(view.firstCellDate.getFullYear() + i, 0, 1, 0, 0, 0, 0),
+          end: new Date(view.firstCellDate.getFullYear() + i + 1, 0, 0, 23, 59, 59, 999)
+        })
         break
     }
   }

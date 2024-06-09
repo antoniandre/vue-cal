@@ -5,13 +5,12 @@
   template(v-else)
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
-
-    .vuecal__cell-date(v-if="cellDate || $slots['cell-date']")
-      slot(name="cell-date" :date="date" :events="view.events") {{ cellDate }}
+    .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
+      slot(name="cell-date" :start="start" :end="end" :events="view.events") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
-      slot(name="cell-content" :date="date" :events="view.events")
+      slot(name="cell-content" :start="start" :end="end" :events="view.events")
     .vuecal__cell-events(v-if="view.events.length")
-      slot(name="cell-events" :date="date" :events="view.events") {{ events }}
+      slot(name="cell-events" :start="start" :end="end" :events="view.events") {{ events }}
 </template>
 
 <script setup>
@@ -23,7 +22,8 @@ const { view, config, config: { props: options }, dateUtils } = vuecal
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach
   // events to a specific date.
-  date: { type: Date, required: true },
+  start: { type: Date, required: true },
+  end: { type: Date, required: true },
   index: { type: Number, required: true }
 })
 
@@ -31,22 +31,22 @@ const classes = computed(() => {
   const now = new Date()
   const viewYear = view.startDate.getFullYear()
   const viewMonth = view.startDate.getMonth()
-  const y = props.date.getFullYear()
-  const m = props.date.getMonth()
+  const y = props.start.getFullYear()
+  const m = props.start.getMonth()
 
   return {
-    [`vuecal__cell--today`]: dateUtils.isToday(props.date),
+    [`vuecal__cell--today`]: dateUtils.isToday(props.start),
     [`vuecal__cell--current-month`]: view.isYear && y === now.getFullYear() && m === now.getMonth(),
     [`vuecal__cell--current-year`]: view.isYears && y === now.getFullYear(),
     [`vuecal__cell--out-of-range`]: view.isMonth && (y !== viewYear || m !== viewMonth),
-    [`vuecal__cell--selected`]: view.selectedDate && dateUtils.isSameDate(view.selectedDate, props.date),
+    [`vuecal__cell--selected`]: view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
     [`vuecal__cell--has-events`]: false
   }
 })
 
 // Note: This will recompute when the locale changes (from formatDate) or xs prop changes for instance.
 // So it needs to be a distinct computed from the events.
-const cellDate = computed(() => {
+const formattedCellDate = computed(() => {
   // ! \ IMPORTANT NOTE:
   // If the selectedDate prop would be added to the vuecal.view, any click on any cell
   // (triggering an emit of the selectedDate), would trigger a rerendering of all the
@@ -58,31 +58,30 @@ const cellDate = computed(() => {
     case 'day':
       return ''
     case 'days':
-      if (config.availableViews.days.rows > 1) {
-        return dateUtils.formatDate(props.date, 'D')
-      }
+      if (config.availableViews.days.rows > 1) dateUtils.formatDate(props.start, 'D')
       return ''
     case 'week':
       return ''
     case 'month':
-      return dateUtils.formatDate(props.date, 'D')
+      return dateUtils.formatDate(props.start, 'D')
     case 'year':
-      return dateUtils.formatDate(props.date, config.xs ? 'MMM' : 'MMMM')
+      return dateUtils.formatDate(props.start, config.xs ? 'MMM' : 'MMMM')
     case 'years':
-      return dateUtils.formatDate(props.date, 'YYYY')
+      return dateUtils.formatDate(props.start, 'YYYY')
   }
 })
 
 const onCellClick = () => {
-  view.updateSelectedDate(props.date)
+  view.updateSelectedDate(props.start)
+  view.updateViewDate(props.start)
 
   if (config.clickToNavigate) {
     if ((view.isMonth || view.isDays || view.isWeek) && config.availableViews.day) view.switch('day')
     else if (view.isYear && config.availableViews.month) view.switch('month')
     else if (view.isYears && config.availableViews.year) view.switch('year')
-    view.updateViewDate(props.date)
+    view.updateViewDate(props.start)
   }
-  vuecal.emit('cell-click', { date: props.date, view })
+  vuecal.emit('cell-click', { date: props.start, view })
 }
 
 const cellEventHandlers = {

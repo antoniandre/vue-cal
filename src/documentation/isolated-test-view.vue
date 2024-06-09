@@ -40,7 +40,7 @@ div.test-view
     :time-step="30"
     click-to-navigate)
     //- template(#title="view") {{ view }}
-    //- template(#cell="{ date, index }") ({{ date }}, {{ index }})
+    //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
     //- template(#header="{ view, availableViews, vuecal }")
       w-button.ma1(
