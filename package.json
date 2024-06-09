@@ -61,7 +61,7 @@
     "vite": "^5.2.10",
     "vue": "^3.4.25",
     "vue-router": "^4.3.2",
-    "wave-ui": "^2.48.0"
+    "wave-ui": "^3.13.5"
   },
   "peerDependencies": {
     "vue": "^2.6.14 || ^3.2.0"
