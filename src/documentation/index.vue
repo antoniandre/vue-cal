@@ -1,7 +1,7 @@
 <template lang="pug">
 .documentation.page-container
   //- Main demo.
-  main-demo
+  //- main-demo
 
   //- Github project.
   h2.mt12.pt12.mb4.title2 Github project &nbsp;&amp;&nbsp; important notes
@@ -275,7 +275,7 @@
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   //- Examples.
-  examples(:locales-list="localesList")
+  //- examples(:locales-list="localesList")
 
   //- API.
   api(:locales-list="localesList")
