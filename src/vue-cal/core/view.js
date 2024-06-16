@@ -53,6 +53,49 @@ export const useView = vuecal => {
     }
   })
 
+  // Create as many grid cells as defined in the availableViews map (cols*rows).
+  const cellsCount = computed(() => {
+    return availableViews[viewId.value].cols * availableViews[viewId.value].rows
+  })
+
+  // Fill in the dates for each grid cell and return an array of dates.
+  // Better performance here than in each cell.
+  // Also this computed should only manage pure dates: no text, no event, nothing likely to be
+  // triggering recomputing due to a change in the reactivity chain.
+  // Every recomputing can become very expensive when handling a large amount of cells per view
+  // with a large amount of calendar events.
+  const dates = computed(() => {
+    console.log('recomputing view dates')
+    const dates = []
+    for (let i = 0; i < cellsCount.value; i++) {
+      switch (viewId.value) {
+        case 'day':
+        case 'days':
+        case 'week':
+        case 'month':
+          const start = dateUtils.addDays(firstCellDate.value, i)
+          const end = new Date(start)
+          end.setHours(23, 59, 59, 999)
+          dates.push({ start, end })
+          break
+        case 'year':
+          dates.push({
+            start: new Date(firstCellDate.value.getFullYear(), i, 1, 0, 0, 0, 0),
+            end: new Date(firstCellDate.value.getFullYear(), i + 1, 0, 23, 59, 59, 999)
+          })
+          break
+        case 'years':
+          dates.push({
+            start: new Date(firstCellDate.value.getFullYear() + i, 0, 1, 0, 0, 0, 0),
+            end: new Date(firstCellDate.value.getFullYear() + i + 1, 0, 0, 23, 59, 59, 999)
+          })
+          break
+      }
+    }
+
+    return dates
+  })
+
   function updateView () {
     // Potentially wrong date up to this point: needs to be adjusted to each view.
     startDate.value = new Date(viewDate.value || now)
@@ -250,6 +293,7 @@ export const useView = vuecal => {
     lastCellDate,
     containsToday,
     selectedDate,
+    dates,
     // All the events are stored in the mutableEvents array, but subset of visible ones are passed
     // Into the current view for fast lookup and manipulation.
     events,
