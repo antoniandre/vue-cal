@@ -33,14 +33,16 @@ const classes = computed(() => {
   const viewMonth = view.startDate.getMonth()
   const y = props.start.getFullYear()
   const m = props.start.getMonth()
+  const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][props.start.getDay()]
 
   return {
-    [`vuecal__cell--today`]: dateUtils.isToday(props.start),
-    [`vuecal__cell--current-month`]: view.isYear && y === now.getFullYear() && m === now.getMonth(),
-    [`vuecal__cell--current-year`]: view.isYears && y === now.getFullYear(),
-    [`vuecal__cell--out-of-range`]: view.isMonth && (y !== viewYear || m !== viewMonth),
-    [`vuecal__cell--selected`]: view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
-    [`vuecal__cell--has-events`]: false
+    [`vuecal__cell--${dayOfWeek}`]: true,
+    'vuecal__cell--today': dateUtils.isToday(props.start),
+    'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
+    'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
+    'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
+    'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
+    'vuecal__cell--has-events': false
   }
 })
 
