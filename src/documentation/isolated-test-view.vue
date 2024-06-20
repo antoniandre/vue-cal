@@ -2,13 +2,14 @@
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
   .w-flex.align-center.gap6.no-grow
-    w-switch.mb4.no-grow(v-model="startWeekOnSunday") Start Week On Sunday
-    w-switch.mb4.no-grow(v-model="hideWeekends") Hide Weekends
-    w-select.mb4.no-grow(v-model="locale" :items="locales") Locale:
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
+    w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
 
     w-radios.mb4(
-      v-model="view"
-      :items="views"
+      v-model="mainVuecalConfig.view"
+      :items="viewsArray"
       return-values
       inline)
 
@@ -20,29 +21,12 @@ div.test-view
 
   VueCal.vuecal--default-theme.no-shrink(
     date-picker
-    :xs="size === 'xs'"
-    :sm="size === 'sm'"
-    v-model:selected-date="selectedDate"
-    :hide-weekends="hideWeekends")
+    v-model:selected-date="mainVuecalConfig.selectedDate"
+    v-bind="mainVuecalConfig")
 
   VueCal.vuecal--default-theme.grow.no-shrink(
     v-model:view="view"
-    :views="views.map(item => item.value)"
-    v-model:selected-date="selectedDate"
-    v-model:view-date="viewDate"
-    :events="events"
-    :locale="locale"
-    :start-week-on-sunday="startWeekOnSunday"
-    editable-events
-    cell-contextmenu
-    today-button
-    :xs="size === 'xs'"
-    :sm="size === 'sm'"
-    :time-from="7 * 60"
-    :time-to="20 * 60"
-    :time-step="30"
-    click-to-navigate
-    :hide-weekends="hideWeekends")
+    v-bind="mainVuecalConfig")
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
@@ -53,15 +37,14 @@ div.test-view
         @click="vuecal.switchView(viewName)"
         :outline="view !== viewName") {{ viewName }}
 
-  p selected Date: {{ selectedDate }}
-  p View Date: {{ viewDate }}
+  p selected Date: {{ mainVuecalConfig.selectedDate }}
+  p View Date: {{ mainVuecalConfig.viewDate }}
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import VueCal from '@/vue-cal/index.vue'
 
-const locale = ref('en-us')
 const locales = [
   { value: 'ko', label: 'ko' },
   { value: 'en-gb', label: 'en-gb' },
@@ -72,14 +55,17 @@ const locales = [
   { value: 'fr', label: 'fr' },
   { value: 'ca', label: 'ca' },
 ]
-const views = [
-  { value: 'day', label: 'Day' },
-  { value: 'days', label: 'Days' },
-  { value: 'week', label: 'Week' },
-  { value: 'month', label: 'Month' },
-  { value: 'year', label: 'Year' },
-  { value: 'years', label: 'Years' }
-]
+const views = {
+  day: { label: 'Day' },
+  days: { label: 'Days', cols: 365, rows: 1 },
+  week: { label: 'Week' },
+  month: { label: 'Month' },
+  year: { label: 'Year' },
+  years: { label: 'Years' }
+}
+const viewsArray = Object.entries(views).map(([viewId, obj]) => ({ ...obj, value: viewId }))
+const view = ref('week')
+
 const size = ref(null)
 const sizes = [
   { value: null, label: 'Normal' },
@@ -87,17 +73,27 @@ const sizes = [
   { value: 'xs', label: 'Extra small' }
 ]
 
-const view = ref('week')
-const events = ref([])
-const selectedDate = ref('')
-const viewDate = ref(new Date(2023, 11, 1))
-const startWeekOnSunday = ref(false)
-const hideWeekends = ref(false)
+const mainVuecalConfig = reactive({
+  views,
+  selectedDate: ref(null),
+  viewDate: ref(new Date(2023, 11, 1)),
+  locale: ref('en-us'),
+  startWeekOnSunday: ref(false),
+  todayButton: ref(true),
+  xs: computed(() => size.value === 'xs'),
+  sm: computed(() => size.value === 'sm'),
+  timeFrom: 7 * 60,
+  timeTo: 20 * 60,
+  timeStep: 30,
+  hideWeekends: ref(false),
+  clickToNavigate: ref(false),
+  events: ref([])
+})
 
 // `from` and `to` are expected in minutes.
-const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
+// const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
 
-const now = new Date()
+// const now = new Date()
 
 // export default {
 //   components: { VueCal },
