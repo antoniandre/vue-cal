@@ -53,6 +53,11 @@ export const useView = vuecal => {
     }
   })
 
+  const cols = computed(() => {
+    return config.availableViews[viewId.value].cols
+  })
+  const rows = computed(() => config.availableViews[viewId.value].rows)
+
   // Create as many grid cells as defined in the availableViews map (cols*rows).
   const cellsCount = computed(() => {
     return availableViews[viewId.value].cols * availableViews[viewId.value].rows
@@ -74,6 +79,8 @@ export const useView = vuecal => {
         case 'week':
         case 'month':
           const start = dateUtils.addDays(firstCellDate.value, i)
+          const startDayOfWeek = start.getDay()
+          if (config.hideWeekends && (startDayOfWeek === 0 || startDayOfWeek === 6)) continue
           const end = new Date(start)
           end.setHours(23, 59, 59, 999)
           dates.push({ start, end })
@@ -294,6 +301,8 @@ export const useView = vuecal => {
     containsToday,
     selectedDate,
     dates,
+    cols,
+    rows,
     // All the events are stored in the mutableEvents array, but subset of visible ones are passed
     // Into the current view for fast lookup and manipulation.
     events,

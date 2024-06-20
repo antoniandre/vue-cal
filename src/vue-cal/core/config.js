@@ -35,6 +35,7 @@ export const useConfig = props => {
   const sm = computed(() => props.sm && !props.xs)
   const xs = computed(() => props.xs || props.datePicker)
   const clickToNavigate = computed(() => props.clickToNavigate || (props.datePicker && props.clickToNavigate !== false))
+  const hideWeekends = computed(() => props.hideWeekends || (props.datePicker && props.hideWeekends !== false))
   const views = (props.views)
 
   const availableViews = computed(() => {
@@ -91,6 +92,7 @@ export const useConfig = props => {
     sm,
     xs,
     clickToNavigate,
+    hideWeekends,
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') }
   }
 }

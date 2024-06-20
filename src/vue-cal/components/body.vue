@@ -30,8 +30,8 @@ let { view, config } = vuecal
 const bodyStyles = computed(() => {
   console.log('recomputing bodyStyles', config.availableViews, view.id)
   return {
-    '--vuecal-grid-columns': config.availableViews[view.id].cols,
-    '--vuecal-grid-rows': config.availableViews[view.id].rows
+    '--vuecal-grid-columns': view.cols,
+    '--vuecal-grid-rows': view.rows
   }
 })
 </script>

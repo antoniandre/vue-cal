@@ -3,6 +3,7 @@
 div.test-view
   .w-flex.align-center.gap6.no-grow
     w-switch.mb4.no-grow(v-model="startWeekOnSunday") Start Week On Sunday
+    w-switch.mb4.no-grow(v-model="hideWeekends") Hide Weekends
     w-select.mb4.no-grow(v-model="locale" :items="locales") Locale:
 
     w-radios.mb4(
@@ -21,7 +22,8 @@ div.test-view
     date-picker
     :xs="size === 'xs'"
     :sm="size === 'sm'"
-    v-model:selected-date="selectedDate")
+    v-model:selected-date="selectedDate"
+    :hide-weekends="hideWeekends")
 
   VueCal.vuecal--default-theme.grow.no-shrink(
     v-model:view="view"
@@ -39,7 +41,8 @@ div.test-view
     :time-from="7 * 60"
     :time-to="20 * 60"
     :time-step="30"
-    click-to-navigate)
+    click-to-navigate
+    :hide-weekends="hideWeekends")
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
@@ -89,6 +92,7 @@ const events = ref([])
 const selectedDate = ref('')
 const viewDate = ref(new Date(2023, 11, 1))
 const startWeekOnSunday = ref(false)
+const hideWeekends = ref(false)
 
 // `from` and `to` are expected in minutes.
 const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
