@@ -54,37 +54,50 @@ export const useView = vuecal => {
   })
 
   const cols = computed(() => {
-    return config.availableViews[viewId.value].cols
+    // Includes all the weekdays, but some may need to be hidden.
+    const fullUsualCols = config.availableViews[viewId.value].cols
+    return fullUsualCols - (config.hideWeekends && ['week', 'month'].includes(viewId.value) ? 2 : 0)
   })
   const rows = computed(() => config.availableViews[viewId.value].rows)
 
-  // Create as many grid cells as defined in the availableViews map (cols*rows).
-  const cellsCount = computed(() => {
-    return availableViews[viewId.value].cols * availableViews[viewId.value].rows
-  })
+  // Create as many grid cells as defined in the availableViews map (cols * rows).
+  const cellsCount = computed(() => cols.value * rows.value)
 
-  // Fill in the dates for each grid cell and return an array of dates.
-  // Better performance here than in each cell.
-  // Also this computed should only manage pure dates: no text, no event, nothing likely to be
-  // triggering recomputing due to a change in the reactivity chain.
-  // Every recomputing can become very expensive when handling a large amount of cells per view
-  // with a large amount of calendar events.
+  // Generates an array of dates for each cell in the view: 1 cell = 1 date range [start, end].
+  // IMPORTANT NOTES:
+  // - Better performance here than in each cell.
+  // - This computed should only manage pure dates: no text, no event, nothing likely to be
+  //   triggering recomputing due to a change in the reactivity chain.
+  //   Every recomputing can become very expensive when handling a large amount of cells per view
+  //   with a large amount of calendar events.
   const dates = computed(() => {
     console.log('recomputing view dates')
     const dates = []
-    for (let i = 0; i < cellsCount.value; i++) {
+    // Every time a weekday is removed from the generated array of cells dates, this modifier is
+    // incremented so we always keep the number of cells specified in the availablesViews object.
+    let modifier = 0
+
+    for (let i = 0; i < (cellsCount.value + modifier); i++) {
       switch (viewId.value) {
         case 'day':
         case 'days':
         case 'week':
-        case 'month':
+        case 'month': {
           const start = dateUtils.addDays(firstCellDate.value, i)
-          const startDayOfWeek = start.getDay()
-          if (config.hideWeekends && (startDayOfWeek === 0 || startDayOfWeek === 6)) continue
+          const isWeekend = [0, 6].includes(start.getDay())
+
+          // If hiding weekend and the current cell is a Saturday or Sunday skip it and add one
+          // more date at the end to fill up the cells.
+          if (config.hideWeekends && viewId.value !== 'day' && isWeekend) {
+            modifier++
+            continue
+          }
+
           const end = new Date(start)
           end.setHours(23, 59, 59, 999)
           dates.push({ start, end })
           break
+        }
         case 'year':
           dates.push({
             start: new Date(firstCellDate.value.getFullYear(), i, 1, 0, 0, 0, 0),
@@ -108,7 +121,6 @@ export const useView = vuecal => {
     startDate.value = new Date(viewDate.value || now)
     startDate.value.setHours(0, 0, 0, 0)
 
-    const cellsCount = availableViews[viewId.value].cols * availableViews[viewId.value].rows
     // For some locales it doesn't make sense to truncate texts.
     let { dateFormat, truncations } = texts.value
     firstCellDate.value = null
@@ -128,12 +140,12 @@ export const useView = vuecal => {
         break
       }
       case 'days':
-        endDate.value = dateUtils.addDays(startDate.value, cellsCount - 1)
+        endDate.value = dateUtils.addDays(startDate.value, cellsCount.value - 1)
         endDate.value.setHours(23, 59, 59, 999)
         break
       case 'week': {
         startDate.value = dateUtils.getPreviousFirstDayOfWeek(startDate.value, props.startWeekOnSunday)
-        endDate.value = dateUtils.addDays(startDate.value, cellsCount - 1)
+        endDate.value = dateUtils.addDays(startDate.value, cellsCount.value - 1)
         endDate.value.setHours(23, 59, 59, 999)
         break
       }
@@ -150,7 +162,7 @@ export const useView = vuecal => {
         firstCellDate.value = dateUtils.subtractDays(startDate.value, dayOfWeek)
 
         endDate.value = new Date(startDate.value.getFullYear(), startDate.value.getMonth() + 1, 0, 23, 59, 59, 999)
-        lastCellDate.value = dateUtils.addDays(firstCellDate.value, cellsCount - 1)
+        lastCellDate.value = dateUtils.addDays(firstCellDate.value, cellsCount.value - 1)
         lastCellDate.value.setHours(23, 59, 59, 999)
         break
       }
@@ -161,8 +173,8 @@ export const useView = vuecal => {
       case 'years':
         // The modulo is only here to always cut off at the same years regardless of the current year.
         // E.g. always [1975-1999], [2000-2024], [2025-2099] for the default 5*5 grid.
-        startDate.value = new Date(startDate.value.getFullYear() - (startDate.value.getFullYear() % cellsCount), 0, 1, 0, 0, 0, 0)
-        endDate.value = new Date(startDate.value.getFullYear() + cellsCount, 0, 0, 23, 59, 59, 999)
+        startDate.value = new Date(startDate.value.getFullYear() - (startDate.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
+        endDate.value = new Date(startDate.value.getFullYear() + cellsCount.value, 0, 0, 23, 59, 59, 999)
         break
     }
 

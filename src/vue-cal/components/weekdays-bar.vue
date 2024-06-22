@@ -23,21 +23,16 @@ const isDaysWeekOrMonthView = computed(() =>  view.isDays || view.isWeek || view
 // Only for days, week and month views.
 // The props sm and xs are not used in the computed so switching doesn't recompute.
 const weekDays = computed(() => {
-  const viewId = view.id
-  const { cols, rows } = availableViews[viewId]
-  // If more than 2 rows, it will look like a month view so there should only be weekdays
-  // without numbers.
-  const cellsCount = rows === 1 ? cols * rows : cols
-
-  return Array(cellsCount).fill({}).map((item, i) => {
-    const date = dateUtils.addDays(view.firstCellDate, i)
-    const dateNumber = rows === 1 ? ' ' + date.getDate() : ''
+  // Regardless of how many view rows, we always want to display a maximum of view cols headings,
+  // hence the slice(0, view.cols).
+  return view.dates.slice(0, view.cols).map(({ start, end }, i) => {
+    const dateNumber = view.rows === 1 ? ' ' + start.getDate() : ''
 
     return {
-      date,
-      label: dateUtils.formatDate(date, 'dddd') + dateNumber,
-      'label-sm': dateUtils.formatDate(date, 'ddd') + dateNumber,
-      'label-xs': dateUtils.formatDate(date, 'dd') + dateNumber
+      date: start,
+      label: dateUtils.formatDate(start, 'dddd') + dateNumber,
+      'label-sm': dateUtils.formatDate(start, 'ddd') + dateNumber,
+      'label-xs': dateUtils.formatDate(start, 'dd') + dateNumber
     }
   })
 })
