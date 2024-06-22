@@ -26,6 +26,7 @@ div.test-view
 
   VueCal.vuecal--default-theme.grow.no-shrink(
     v-model:view="view"
+    v-model:selected-date="mainVuecalConfig.selectedDate"
     v-bind="mainVuecalConfig")
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})

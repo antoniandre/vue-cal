@@ -36,7 +36,7 @@ export const useConfig = props => {
   const xs = computed(() => props.xs || props.datePicker)
   const clickToNavigate = computed(() => props.clickToNavigate || (props.datePicker && props.clickToNavigate !== false))
   const hideWeekends = computed(() => props.hideWeekends || (props.datePicker && props.hideWeekends !== false))
-  const views = (props.views)
+  const views = props.views
 
   const availableViews = computed(() => {
     const datePicker = props.datePicker
