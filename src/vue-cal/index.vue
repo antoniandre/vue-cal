@@ -1,5 +1,7 @@
 <template lang="pug">
 .vuecal(:data-locale="locale" :class="wrapperClasses")
+  p Start-end: {{ view.startDate.format('YYYY-MM-DD HH:mm') }} - {{ view.endDate.format('YYYY-MM-DD HH:mm') }}
+  p firstCell-lastCell: {{ view.firstCellDate.format('YYYY-MM-DD HH:mm') }} - {{ view.lastCellDate.format('YYYY-MM-DD HH:mm') }}
   slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
   template(v-else)
     VueCalHeader
