@@ -3,8 +3,9 @@ export const minutesInADay = 24 * 60 // Don't do the maths every time.
 export const props = {
   // HANDLED:
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
-  datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years].
+  datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   datePrototypes: { type: Boolean, default: true },
+  hideWeekends: { type: Boolean, default: false },
   locale: { type: [String, Object], default: 'en-us' },
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false },
@@ -16,6 +17,7 @@ export const props = {
   timeTo: { type: Number, default: minutesInADay }, // In minutes.
   titleBar: { type: Boolean, default: true },
   todayButton: { type: Boolean, default: true },
+  transitions: { type: Boolean, default: true },
   twelveHour: { type: Boolean, default: false },
   view: { type: String, default: 'week' },
   viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
@@ -24,8 +26,6 @@ export const props = {
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
-  transitions: { type: Boolean, default: true },
-  hideWeekends: { type: Boolean, default: false },
   hideWeekdays: { type: Array, default: () => [] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   dblclickToNavigate: { type: Boolean, default: true },
