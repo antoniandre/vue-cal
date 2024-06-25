@@ -27,16 +27,21 @@ const props = defineProps({
   index: { type: Number, required: true }
 })
 
+const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+
 const classes = computed(() => {
   const now = new Date()
   const viewYear = view.startDate.getFullYear()
   const viewMonth = view.startDate.getMonth()
   const y = props.start.getFullYear()
   const m = props.start.getMonth()
-  const dayOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'][props.start.getDay()]
+  const dayOfWeek = daysOfWeek[props.start.getDay()]
 
   return {
-    [`vuecal__cell--${dayOfWeek}`]: true,
+    [`vuecal__cell--${dayOfWeek}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
+    [`vuecal__cell--${months[m]}`]: view.isYear,
+    [`vuecal__cell--${y}`]: view.isYears,
     'vuecal__cell--today': dateUtils.isToday(props.start),
     'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
