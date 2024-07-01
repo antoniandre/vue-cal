@@ -46,7 +46,7 @@ export const useConfig = props => {
   // E.g. { 1: true, 6: true, 7 true } will hide the Mondays and weekends.
   const hideWeekdays = computed(() => {
     const weekDays = {} // 1-7, Mon - Sun.
-    if (props.hideWeekends.value) (weekDays[6] = true) && (weekDays[7] = true)
+    if (props.hideWeekends) (weekDays[6] = true) && (weekDays[7] = true)
     if (props.hideWeekdays?.length) props.hideWeekdays.forEach(day => weekDays[daysOfWeekMap[day]] = true)
 
     return weekDays
