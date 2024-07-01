@@ -80,6 +80,7 @@ export const useView = vuecal => {
       const visibleDays = '1234567'.split('').filter(day => !Object.keys(config.hideWeekdays).includes(day))
       let firstVisibleDay = Math.min(...visibleDays)
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) firstVisibleDay = 1
+      if (config.viewDayOffset) firstVisibleDay += config.viewDayOffset
 
       return dateUtils.addDays(startDate.value, firstVisibleDay - 1)
     }
@@ -161,9 +162,11 @@ export const useView = vuecal => {
       case 'day':
         endDate.value = new Date(startDate.value)
         endDate.value.setHours(23, 59, 59, 999)
+        break
       case 'days':
         endDate.value = dateUtils.addDays(startDate.value, cellsCount.value)
         endDate.value.setMilliseconds(-1)
+        break
       case 'week':
         startDate.value = dateUtils.getPreviousFirstDayOfWeek(startDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
         endDate.value = dateUtils.addDays(startDate.value, 7)
