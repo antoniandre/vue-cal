@@ -292,7 +292,10 @@ export const useView = vuecal => {
    */
   function switchWeekStart (bool) {
     if (!bool && !startDate.value.getDay()) updateViewDate(dateUtils.addDays(startDate.value, 1), true, true)
-    else updateView()
+    else {
+      transitionDirection.value = 'left'
+      updateView()
+    }
   }
 
   /**
