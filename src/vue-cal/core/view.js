@@ -28,8 +28,8 @@ export const useView = vuecal => {
         let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
         // Always shorten month if the locale doesn't forbid it.
         if (truncations !== false) format = format.replace('MMMM', 'MMM')
-        const startDateFormatted = dateUtils.formatDate(startDate.value, format)
-        const endDateFormatted = dateUtils.formatDate(endDate.value, format)
+        const startDateFormatted = dateUtils.formatDate(firstCellDate.value, format)
+        const endDateFormatted = dateUtils.formatDate(lastCellDate.value, format)
 
         return `${startDateFormatted} - ${endDateFormatted}`
       }
@@ -269,9 +269,13 @@ export const useView = vuecal => {
 
     // If the provided date is already in the view range, we don't need/want to update the view and
     // recompute all the cells! But if forced (forceUpdate), just do it.
-    if (!dateUtils.isInRange(date, startDate.value, endDate.value) || forceUpdate) {
+    // Before checking if the date is in view range, use the firstCellDate and lastCellDate unless on month view
+    // (where we still want to navigate when clicking a cell that is out of range).
+    let [start, end] = [firstCellDate.value, lastCellDate.value]
+    if (viewId.value === 'month') ([start, end] = [startDate.value, endDate.value])
+    if (!dateUtils.isInRange(date, start, end) || forceUpdate) {
       date.setHours(0, 0, 0, 0)
-      transitionDirection.value = date.getTime() < startDate.value.getTime() ? 'left' : 'right'
+      transitionDirection.value = date.getTime() < start.getTime() ? 'left' : 'right'
       viewDate.value = date
       if (emitUpdate) emit('update:viewDate', date)
       updateView()
