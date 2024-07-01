@@ -73,7 +73,7 @@ export const useView = vuecal => {
       let dayOfWeek = startDate.value.getDay() || 7 // 1-7, starting from Monday.
 
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) dayOfWeek += 1
-
+      if (config.viewDayOffset) dayOfWeek -= config.viewDayOffset
       return dateUtils.subtractDays(startDate.value, dayOfWeek - 1)
     }
     else if (viewId.value === 'week') {

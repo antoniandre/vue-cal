@@ -7,6 +7,8 @@ div.test-view
     w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
 
+    w-input(v-model="mainVuecalConfig.viewDayOffset" type="number") View Day Offset
+
     w-radios.mb4(
       v-model="mainVuecalConfig.view"
       :items="viewsArray"
@@ -32,6 +34,7 @@ div.test-view
   VueCal.vuecal--default-theme.grow.no-shrink(
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
+    v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig")
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
@@ -96,6 +99,7 @@ const mainVuecalConfig = reactive({
   timeStep: 30,
   hideWeekends: ref(false),
   hideWeekdays,
+  viewDayOffset: ref(0),
   clickToNavigate: ref(false),
   events: ref([])
 })

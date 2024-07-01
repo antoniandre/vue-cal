@@ -22,6 +22,8 @@ export const props = {
   twelveHour: { type: Boolean, default: false },
   view: { type: String, default: 'week' },
   viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
+  // Only available for month and day views, this will shift the start of the view (left or right) by x days (signed integer).
+  viewDayOffset: { type: Number, default: 0 },
   views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   viewsBar: { type: Boolean, default: true },
   xs: { type: Boolean, default: false },
