@@ -51,12 +51,12 @@ const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate
 const vuecal = new VueCal(props, emit)
 const { config, view } = vuecal
 
-const hasTimeColumn = computed(() => props.time && (view.isDay || view.isDays || view.isWeek))
+const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
   [`vuecal--${config.size}`]: true,
-  'vuecal--date-picker': props.datePicker,
+  'vuecal--date-picker': config.datePicker,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value
 }))
@@ -66,7 +66,7 @@ const scrollableElClasses = computed(() => ({
   [`vuecal__scrollable--${view.id}-view`]: true
 }))
 
-watch(() => props.locale, newLocale => vuecal.loadTexts(newLocale))
+watch(() => config.locale, newLocale => vuecal.loadTexts(newLocale))
 
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)

@@ -3,19 +3,19 @@
   slot(
     name="header"
     :view="view.id"
-    :available-views="availableViews"
+    :available-views="config.availableViews"
     :vuecal="vuecal")
 
   template(v-if="!$slots.header")
-    .vuecal__views-bar(v-if="options.viewsBar")
+    .vuecal__views-bar(v-if="config.viewsBar")
       button.vuecal__view-button(
-        v-for="(obj, id) in availableViews"
+        v-for="(obj, id) in config.availableViews"
         @click="view.switch(id)"
         v-html="vuecal.texts.value[id]"
         :class="{ 'vuecal__view-button--active': view.id === id }"
         type="button")
 
-    nav.vuecal__title-bar(v-if="options.titleBar")
+    nav.vuecal__title-bar(v-if="config.titleBar")
       button.vuecal__nav.vuecal__nav--prev(
         @click="view.previous"
         :class="{ 'vuecal__nav--default': !$slots['previous-button'] }"
@@ -35,7 +35,7 @@
               v-on="titleEventHandlers"
               v-html="view.title"
               :key="view.id + view.startDate.getTime()")
-      template(v-if="options.todayButton")
+      template(v-if="config.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"
           @click="view.goToToday"
@@ -58,7 +58,7 @@
 import { inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config, config: { props: options, availableViews } } = vuecal
+const { view, config } = vuecal
 
 const onTitleClick = () => {
   if (config.clickToNavigate) {
@@ -116,6 +116,7 @@ const titleEventHandlers = {
   display: flex;
   align-items: center;
   gap: 6px;
+  font-family: inherit;
   font-weight: bold;
   font-size: 1.05em;
 

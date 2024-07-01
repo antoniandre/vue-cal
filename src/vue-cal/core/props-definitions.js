@@ -5,6 +5,7 @@ export const props = {
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   datePrototypes: { type: Boolean, default: true },
+  hideWeekdays: { type: Array, default: () => [] }, // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
   hideWeekends: { type: Boolean, default: false },
   locale: { type: [String, Object], default: 'en-us' },
   selectedDate: { type: [String, Date], default: '' },
@@ -26,7 +27,6 @@ export const props = {
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
-  hideWeekdays: { type: Array, default: () => [] },
   watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   dblclickToNavigate: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] },

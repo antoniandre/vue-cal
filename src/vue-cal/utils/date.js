@@ -152,7 +152,8 @@ export default class {
     return !(year % 400) || (year % 100 && !(year % 4))
   }
 
-  // Returns today if it's FirstDayOfWeek (Monday or Sunday) or previous FirstDayOfWeek otherwise.
+  // Returns the last Monday or Sunday (depending on weekStartsOnSunday) before a date or that date if it is.
+  // If no date is given, today is used.
   getPreviousFirstDayOfWeek (date = null, weekStartsOnSunday) {
     const prevFirstDayOfWeek = (date && new Date(date.valueOf())) || new Date()
     const dayModifier = weekStartsOnSunday ? 7 : 6

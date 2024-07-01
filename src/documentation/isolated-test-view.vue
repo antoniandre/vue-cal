@@ -19,6 +19,11 @@ div.test-view
       return-values
       inline)
 
+    w-select.mb4(
+      v-model="hideWeekdays"
+      :items="weekdays"
+      multiple)
+
   VueCal.vuecal--default-theme.no-shrink(
     date-picker
     v-model:selected-date="mainVuecalConfig.selectedDate"
@@ -74,6 +79,9 @@ const sizes = [
   { value: 'xs', label: 'Extra small' }
 ]
 
+const weekdays = [{ label: 'mon' }, { label: 'tue' }, { label: 'wed' }, { label: 'thu' }, { label: 'fri' }, { label: 'sat' }, { label: 'sun' }]
+const hideWeekdays = ref([])
+
 const mainVuecalConfig = reactive({
   views,
   selectedDate: ref(null),
@@ -87,6 +95,7 @@ const mainVuecalConfig = reactive({
   timeTo: 20 * 60,
   timeStep: 30,
   hideWeekends: ref(false),
+  hideWeekdays,
   clickToNavigate: ref(false),
   events: ref([])
 })

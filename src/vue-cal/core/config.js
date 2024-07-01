@@ -1,4 +1,4 @@
-import { computed, ref, unref } from 'vue'
+import { computed, ref, unref, toRefs } from 'vue'
 
 export const defaults = {
   texts: {
@@ -30,12 +30,29 @@ export const defaults = {
   }
 }
 
+const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+const daysOfWeekMap = daysOfWeek.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun.
+  obj[day] = i || 7
+  return obj
+}, {})
+
 export const useConfig = props => {
   const ready = false
   const sm = computed(() => props.sm && !props.xs)
   const xs = computed(() => props.xs || props.datePicker)
   const clickToNavigate = computed(() => props.clickToNavigate || (props.datePicker && props.clickToNavigate !== false))
-  const hideWeekends = computed(() => props.hideWeekends)
+
+  // An object consisting of only the weekdays to hide, given their index (1-7, Mon - Sun).
+  // E.g. { 1: true, 6: true, 7 true } will hide the Mondays and weekends.
+  const hideWeekdays = computed(() => {
+    const weekDays = {} // 1-7, Mon - Sun.
+    if (props.hideWeekends.value) (weekDays[6] = true) && (weekDays[7] = true)
+    if (props.hideWeekdays?.length) props.hideWeekdays.forEach(day => weekDays[daysOfWeekMap[day]] = true)
+
+    return weekDays
+  })
+  const hideWeekends = computed(() => props.hideWeekends || (hideWeekdays.value[6] && hideWeekdays.value[7]))
+
   const views = props.views
 
   const availableViews = computed(() => {
@@ -85,6 +102,7 @@ export const useConfig = props => {
   })
 
   return {
+    ...toRefs(props),
     defaultView,
     availableViews,
     ready,
@@ -92,7 +110,9 @@ export const useConfig = props => {
     sm,
     xs,
     clickToNavigate,
+    hideWeekdays,
     hideWeekends,
+    get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') }
   }
 }

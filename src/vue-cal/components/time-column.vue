@@ -7,19 +7,19 @@
       :minutes="time.minutes"
       :format12="time.formatted12"
       :format24="time.formatted24")
-      label {{ options.twelveHour ? time.formatted12 : time.formatted24 }}
+      label {{ config.twelveHour ? time.formatted12 : time.formatted24 }}
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { config: { props: options }, texts } = vuecal
+const { config, texts } = vuecal
 
 const timeCells = computed(() => {
   const cells = []
   const noon = 12 * 60
-  for (let i = options.timeFrom; i < options.timeTo; i += options.timeStep) {
+  for (let i = config.timeFrom; i < config.timeTo; i += config.timeStep) {
     const hours = ~~(i / 60)
     const mins = i % 60
     const amPm = texts.value[i < noon ? 'am' : 'pm']

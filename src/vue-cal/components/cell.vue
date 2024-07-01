@@ -17,7 +17,7 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config, config: { props: options }, dateUtils } = vuecal
+const { view, config, dateUtils } = vuecal
 
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach

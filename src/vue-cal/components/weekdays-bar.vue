@@ -10,11 +10,11 @@
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { view, config: { props: options }, dateUtils } = vuecal
+const { view, config, dateUtils } = vuecal
 
 const labelsSize = computed(() => {
-  if (options.xs) return 'label-xs'
-  else if (options.sm || view.isDays || view.isMonth) return 'label-sm'
+  if (config.xs) return 'label-xs'
+  else if (config.sm || view.isDays || view.isMonth) return 'label-sm'
   else return 'label'
 })
 
