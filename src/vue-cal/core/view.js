@@ -1,19 +1,25 @@
-import { ref, computed, watch } from 'vue'
+import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
 export const useView = vuecal => {
-  const now = new Date()
   const { config, dateUtils, emit, texts } = vuecal
   const { availableViews } = config
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)
+
+  // Preset at now date on load, but updated every minute if watchRealTime,
+  // or updated at least on each cells rerender, in order to keep Today's date accurate.
+  let now = ref(new Date())
+
   // The view date is the one given in prop. It can be any date within the view that will be
   // computed around it - not necessarily the first day of the view range.
   // E.g. [startDate, ..., viewDate, ..., endDate]
-  const viewDate = ref(new Date(config.viewDate || now))
+  const viewDate = ref(new Date(config.viewDate || now.value))
   viewDate.value.setHours(0, 0, 0, 0)
   const startDate = ref(viewDate)
   const endDate = ref(null)
   const events = ref([])
+  // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
+  let timeTickerId = null
 
   // Transition when switching view. Left when going toward the past, right when going toward future.
   const transitionDirection = ref('right')
@@ -146,7 +152,7 @@ export const useView = vuecal => {
 
   const lastCellDate = computed(() => dates.value[dates.value.length - 1].end)
 
-  const containsToday = computed(() => firstCellDate.value.getTime() <= now.getTime() && now.getTime() <= lastCellDate.value.getTime())
+  const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
 
   /**
    * This function is called after each view variable update and will recompute the theoretical view
@@ -155,7 +161,7 @@ export const useView = vuecal => {
    * scope dates.
    */
   function updateView () {
-    startDate.value = new Date(viewDate.value || now)
+    startDate.value = new Date(viewDate.value || now.value)
     startDate.value.setHours(0, 0, 0, 0)
 
     switch (viewId.value) {
@@ -219,7 +225,9 @@ export const useView = vuecal => {
     switch (viewId.value) {
       case 'day':
       case 'days':
-        newViewDate = new Date(dateUtils[forward ? 'addDays' : 'subtractDays'](newViewDate, cols * rows))
+        // In days view, hiding weekdays will extend the date range of as many skipped days, so
+        // navigating to the next range should take in account the last calculated cell date.
+        newViewDate = new Date(dateUtils[forward ? 'addDays' : 'subtractDays'](forward ? lastCellDate.value : firstCellDate.value, 1))
         break
       case 'week': {
         const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, config.startWeekOnSunday && !config.hideWeekdays[7])
@@ -323,6 +331,18 @@ export const useView = vuecal => {
     console.log('toggling weekdays', config.hideWeekdays)
   }
 
+  /**
+   * Only if watchRealTime is true.
+   * Pull the current time from user machine every minute to keep vue-cal accurate even when idle.
+   * This will redraw the now line every minute and ensure that Today's date is always accurate.
+   */
+  function timeTick () {
+    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+    now.value = new Date()
+    timeTickerId = setTimeout(timeTick, 60 * 1000) // Every minute.
+    console.log('timeTick: ', now.value)
+  }
+
   watch(() => config.view, view => switchView(view, false))
   watch(() => config.availableViews, updateView)
   watch(() => config.viewDate, date => updateViewDate(date, false))
@@ -333,11 +353,22 @@ export const useView = vuecal => {
 
   updateView()
 
+  // Timers are expensive, this should only trigger on demand.
+  if (config.time && config.watchRealTime) {
+    // Snap the time ticker on round minutes (when seconds = 0), so that we can set
+    // the time ticker interval to 60 seconds and spare some function calls.
+    console.log('😸', 'setting time ticker')
+    timeTickerId = setTimeout(timeTick, (60 - now.value.getSeconds()) * 1000)
+  }
+
+  onBeforeUnmount(() => (timeTickerId = clearTimeout(timeTickerId))) // Stop the time ticker.
+
   // ! \ IMPORTANT NOTE:
   // If the selectedDate prop would be added to the view, any click on any cell
   // (triggering an emit of the selectedDate), would trigger a re-rendering of all the
   // cells of the view.
   return {
+    now,
     id: viewId,
     title,
     viewDate,
@@ -361,6 +392,7 @@ export const useView = vuecal => {
     updateViewDate,
     updateSelectedDate,
     transitionDirection,
+    // Getters.
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },
     get isWeek () { return viewId.value === 'week' },

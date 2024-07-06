@@ -11,10 +11,16 @@
       slot(name="cell-content" :start="start" :end="end" :events="view.events")
     .vuecal__cell-events(v-if="view.events.length")
       slot(name="cell-events" :start="start" :end="end" :events="view.events") {{ events }}
+
+  .vuecal__now-line(
+    v-if="nowLine.show"
+    :style="`top: ${nowLine.todaysTimePosition}px`"
+    :title="nowLine.currentTime")
+    span {{ nowLine.currentTime }}
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, reactive } from 'vue'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
@@ -30,6 +36,8 @@ const props = defineProps({
 const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
+const isToday = computed(() => dateUtils.isToday(props.start))
+
 const classes = computed(() => {
   const now = new Date()
   const viewYear = view.startDate.getFullYear()
@@ -42,7 +50,7 @@ const classes = computed(() => {
     [`vuecal__cell--${dayOfWeek}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
     [`vuecal__cell--${months[m]}`]: view.isYear,
     [`vuecal__cell--${y}`]: view.isYears,
-    'vuecal__cell--today': dateUtils.isToday(props.start),
+    'vuecal__cell--today': isToday.value,
     'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
@@ -76,6 +84,15 @@ const formattedCellDate = computed(() => {
     case 'years':
       return dateUtils.formatDate(props.start, 'YYYY')
   }
+})
+
+// Draw a line in today's cell at the exact current time.
+const nowLine = reactive({
+  show: computed(() => (view.isDay || view.isDays || view.isWeek) && isToday.value && config.time),
+  nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
+  todaysTimePosition: computed(() => Math.round((nowLine.nowInMinutes - config.timeFrom) * nowLine.timeScale)),
+  timeScale: computed(() => config.timeCellHeight / config.timeStep),
+  currentTime: computed(() => dateUtils.formatTime(view.now))
 })
 
 const onCellClick = () => {
@@ -123,6 +140,39 @@ const cellEventHandlers = {
 
   &--out-of-range {opacity: 0.5;}
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
+}
+
+.vuecal__now-line {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 0;
+  border-top: 1px solid;
+  border-color: red;
+  opacity: 0.6;
+  z-index: 1;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: -6px;
+    left: 0;
+    border: 5px solid transparent;
+    border-left-color: inherit;
+  }
+
+  &:after {
+    content: "";
+    position: absolute;
+    inset: -6px 0;
+  }
+
+  span {
+    position: absolute;
+    right: 1px;
+    font-size: 10px;
+    opacity: 0.7;
+  }
 }
 
 .vuecal__scrollable--day-view {

@@ -1,5 +1,8 @@
 <template lang="pug">
-.vuecal(:data-locale="locale" :class="wrapperClasses")
+.vuecal(
+  :data-locale="locale"
+  :class="wrapperClasses"
+  :style="wrapperStyles")
   p Start-end: {{ view.startDate.format('YYYY-MM-DD HH:mm') }} - {{ view.endDate.format('YYYY-MM-DD HH:mm') }}
   p firstCell-lastCell: {{ view.firstCellDate.format('YYYY-MM-DD HH:mm') }} - {{ view.lastCellDate.format('YYYY-MM-DD HH:mm') }}
   slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
@@ -59,6 +62,10 @@ const wrapperClasses = computed(() => ({
   'vuecal--date-picker': config.datePicker,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value
+}))
+
+const wrapperStyles = computed(() => ({
+  '--vuecal-time-cell-height': `${config.timeCellHeight || 40}px`
 }))
 
 const scrollableElClasses = computed(() => ({

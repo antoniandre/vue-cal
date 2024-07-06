@@ -12,6 +12,7 @@ export const props = {
   sm: { type: Boolean, default: false },
   startWeekOnSunday: { type: Boolean, default: false },
   time: { type: Boolean, default: true },
+  timeCellHeight: { type: Number, default: 40 }, // In pixels.
   timeFormat: { type: String, default: '' },
   timeFrom: { type: Number, default: 0 }, // In minutes.
   timeStep: { type: Number, default: 60 }, // In minutes.
@@ -26,12 +27,13 @@ export const props = {
   viewDayOffset: { type: Number, default: 0 },
   views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   viewsBar: { type: Boolean, default: true },
+  watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   xs: { type: Boolean, default: false },
 
   // TODO NEXT:
-  watchRealTime: { type: Boolean, default: false }, // Expensive, so only trigger on demand.
   dblclickToNavigate: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] },
+  specialHours: { type: Object, default: () => ({}) },
 
   // TODO:
   cellClickHold: { type: Boolean, default: true },
@@ -57,7 +59,6 @@ export const props = {
   showTimeInCells: { type: Boolean, default: false },
   showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
-  specialHours: { type: Object, default: () => ({}) },
   splitDays: { type: Array, default: () => [] },
   stickySplitLabels: { type: Boolean, default: false },
 }

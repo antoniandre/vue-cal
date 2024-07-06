@@ -101,6 +101,7 @@ const mainVuecalConfig = reactive({
   hideWeekdays,
   viewDayOffset: ref(0),
   clickToNavigate: ref(false),
+  watchRealTime: ref(true),
   events: ref([])
 })
 
