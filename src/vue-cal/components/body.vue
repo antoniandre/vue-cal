@@ -1,7 +1,7 @@
 <template lang="pug">
 .vuecal__body(:style="bodyStyles")
   VueCalCell(
-    v-for="(date, i) in view.dates"
+    v-for="(date, i) in view.cellDates"
     :key="i"
     :start="date.start"
     :end="date.end"

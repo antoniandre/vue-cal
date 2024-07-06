@@ -101,7 +101,7 @@ export const useView = vuecal => {
   //   triggering recomputing due to a change in the reactivity chain.
   //   Every recomputing can become very expensive when handling a large amount of cells per view
   //   with a large amount of calendar events.
-  const dates = computed(() => {
+  const cellDates = computed(() => {
     console.log('recomputing view dates')
     const dates = []
     const isDaysWeekOrMonthView = ['days', 'week', 'month'].includes(viewId.value)
@@ -150,7 +150,7 @@ export const useView = vuecal => {
     return dates
   })
 
-  const lastCellDate = computed(() => dates.value[dates.value.length - 1].end)
+  const lastCellDate = computed(() => cellDates.value[cellDates.value.length - 1].end)
 
   const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
 
@@ -340,7 +340,6 @@ export const useView = vuecal => {
     // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
     now.value = new Date()
     timeTickerId = setTimeout(timeTick, 60 * 1000) // Every minute.
-    console.log('timeTick: ', now.value)
   }
 
   watch(() => config.view, view => switchView(view, false))
@@ -357,7 +356,6 @@ export const useView = vuecal => {
   if (config.time && config.watchRealTime) {
     // Snap the time ticker on round minutes (when seconds = 0), so that we can set
     // the time ticker interval to 60 seconds and spare some function calls.
-    console.log('😸', 'setting time ticker')
     timeTickerId = setTimeout(timeTick, (60 - now.value.getSeconds()) * 1000)
   }
 
@@ -378,7 +376,7 @@ export const useView = vuecal => {
     lastCellDate,
     containsToday,
     selectedDate,
-    dates,
+    cellDates,
     cols,
     rows,
     // All the events are stored in the mutableEvents array, but subset of visible ones are passed

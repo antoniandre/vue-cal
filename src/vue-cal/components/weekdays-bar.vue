@@ -25,7 +25,7 @@ const isDaysWeekOrMonthView = computed(() =>  view.isDays || view.isWeek || view
 const weekDays = computed(() => {
   // Regardless of how many view rows, we always want to display a maximum of view cols headings,
   // hence the slice(0, view.cols).
-  return view.dates.slice(0, view.cols).map(({ start, end }, i) => {
+  return view.cellDates.slice(0, view.cols).map(({ start }) => {
     const dateNumber = view.rows === 1 ? ' ' + start.getDate() : ''
 
     return {
