@@ -105,12 +105,13 @@ const mainVuecalConfig = reactive({
   events: ref([])
 })
 
+// Pretend a call to a backend.
 setTimeout(() => {
   mainVuecalConfig.events = [
     { title: 'Event 1', start: '2024-07-07 10:00', end: '2024-07-07 10:30' },
-    { title: 'Event 2', start: '2024-07-07 11:00', end: '2024-07-07 11:30' },
+    { title: 'Event 2', start: '2024-07-07 11:00', end: '2024-07-07 11:30' }
   ]
-})
+}, 1000)
 
 // `from` and `to` are expected in minutes.
 // const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
