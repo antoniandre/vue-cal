@@ -21,7 +21,7 @@
 
 <script setup>
 import { computed, inject, reactive } from 'vue'
-import { months, weekdays } from '@/vue-cal/config'
+import { months, weekdays } from '@/vue-cal/core/config'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
