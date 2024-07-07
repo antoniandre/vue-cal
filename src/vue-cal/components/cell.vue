@@ -21,6 +21,7 @@
 
 <script setup>
 import { computed, inject, reactive } from 'vue'
+import { months, weekdays } from '@/vue-cal/config'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
@@ -33,9 +34,6 @@ const props = defineProps({
   index: { type: Number, required: true }
 })
 
-const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
-const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const classes = computed(() => {
@@ -44,10 +42,10 @@ const classes = computed(() => {
   const viewMonth = view.startDate.getMonth()
   const y = props.start.getFullYear()
   const m = props.start.getMonth()
-  const dayOfWeek = daysOfWeek[props.start.getDay()]
+  const weekday = weekdays[props.start.getDay()]
 
   return {
-    [`vuecal__cell--${dayOfWeek}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
+    [`vuecal__cell--${weekday}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
     [`vuecal__cell--${months[m]}`]: view.isYear,
     [`vuecal__cell--${y}`]: view.isYears,
     'vuecal__cell--today': isToday.value,

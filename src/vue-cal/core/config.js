@@ -30,8 +30,10 @@ export const defaults = {
   }
 }
 
-const daysOfWeek = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
-const daysOfWeekMap = daysOfWeek.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun.
+export const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
+export const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
+
+const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun.
   obj[day] = i || 7
   return obj
 }, {})
@@ -47,7 +49,7 @@ export const useConfig = props => {
   const hideWeekdays = computed(() => {
     const weekDays = {} // 1-7, Mon - Sun.
     if (props.hideWeekends) (weekDays[6] = true) && (weekDays[7] = true)
-    if (props.hideWeekdays?.length) props.hideWeekdays.forEach(day => weekDays[daysOfWeekMap[day]] = true)
+    if (props.hideWeekdays?.length) props.hideWeekdays.forEach(day => weekDays[weekdaysMap[day]] = true)
 
     return weekDays
   })

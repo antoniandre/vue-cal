@@ -76,11 +76,11 @@ export const useView = vuecal => {
       // previous month. E.g.
       // M  T  W  T  F  S  S
       // 28 29 30 1  2  3  4
-      let dayOfWeek = startDate.value.getDay() || 7 // 1-7, starting from Monday.
+      let weekday = startDate.value.getDay() || 7 // 1-7, starting from Monday.
 
-      if (config.startWeekOnSunday && !config.hideWeekdays[7]) dayOfWeek += 1
-      if (config.viewDayOffset) dayOfWeek -= config.viewDayOffset
-      return dateUtils.subtractDays(startDate.value, dayOfWeek - 1)
+      if (config.startWeekOnSunday && !config.hideWeekdays[7]) weekday += 1
+      if (config.viewDayOffset) weekday -= config.viewDayOffset
+      return dateUtils.subtractDays(startDate.value, weekday - 1)
     }
     else if (viewId.value === 'week') {
       const visibleDays = '1234567'.split('').filter(day => !Object.keys(config.hideWeekdays).includes(day))
