@@ -12,12 +12,11 @@ export const useView = vuecal => {
 
   // The view date is the one given in prop. It can be any date within the view that will be
   // computed around it - not necessarily the first day of the view range.
-  // E.g. [startDate, ..., viewDate, ..., endDate]
+  // E.g. [start, ..., viewDate, ..., end]
   const viewDate = ref(new Date(config.viewDate || now.value))
   viewDate.value.setHours(0, 0, 0, 0)
-  const startDate = ref(viewDate)
-  const endDate = ref(null)
-  const events = ref([])
+  const start = ref(viewDate)
+  const end = ref(null)
   // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   let timeTickerId = null
 
@@ -29,7 +28,7 @@ export const useView = vuecal => {
 
     switch (viewId.value) {
       case 'day':
-        return dateUtils.formatDate(startDate.value, dateFormat)
+        return dateUtils.formatDate(start.value, dateFormat)
       case 'days': {
         let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
         // Always shorten month if the locale doesn't forbid it.
@@ -40,20 +39,20 @@ export const useView = vuecal => {
         return `${startDateFormatted} - ${endDateFormatted}`
       }
       case 'week': {
-        const weekNumber = dateUtils.getWeek(startDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
+        const weekNumber = dateUtils.getWeek(start.value, config.startWeekOnSunday && !config.hideWeekdays[7])
         // Shorten month if xs and the locale doesn't forbid it.
         const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(startDate.value, format) + ` <small>${texts.value.week} ${weekNumber}</small>`
+        return dateUtils.formatDate(start.value, format) + ` <small>${texts.value.week} ${weekNumber}</small>`
       }
       case 'month': {
         // Shorten month if xs and the locale doesn't forbid it.
         const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(startDate.value, format)
+        return dateUtils.formatDate(start.value, format)
       }
       case 'year':
-        return startDate.value.getFullYear()
+        return start.value.getFullYear()
       case 'years':
-        return `${startDate.value.getFullYear()} - ${endDate.value.getFullYear()}`
+        return `${start.value.getFullYear()} - ${end.value.getFullYear()}`
     }
   })
 
@@ -76,11 +75,11 @@ export const useView = vuecal => {
       // previous month. E.g.
       // M  T  W  T  F  S  S
       // 28 29 30 1  2  3  4
-      let weekday = startDate.value.getDay() || 7 // 1-7, starting from Monday.
+      let weekday = start.value.getDay() || 7 // 1-7, starting from Monday.
 
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) weekday += 1
       if (config.viewDayOffset) weekday -= config.viewDayOffset
-      return dateUtils.subtractDays(startDate.value, weekday - 1)
+      return dateUtils.subtractDays(start.value, weekday - 1)
     }
     else if (viewId.value === 'week') {
       const visibleDays = '1234567'.split('').filter(day => !Object.keys(config.hideWeekdays).includes(day))
@@ -88,10 +87,10 @@ export const useView = vuecal => {
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) firstVisibleDay = 1
       if (config.viewDayOffset) firstVisibleDay += config.viewDayOffset
 
-      return dateUtils.addDays(startDate.value, firstVisibleDay - 1)
+      return dateUtils.addDays(start.value, firstVisibleDay - 1)
     }
 
-    else return startDate.value
+    else return start.value
   })
 
   // Generates an array of dates for each cell in the view: 1 cell = 1 date range [start, end].
@@ -161,40 +160,40 @@ export const useView = vuecal => {
    * scope dates.
    */
   function updateView () {
-    startDate.value = new Date(viewDate.value || now.value)
-    startDate.value.setHours(0, 0, 0, 0)
+    start.value = new Date(viewDate.value || now.value)
+    start.value.setHours(0, 0, 0, 0)
 
     switch (viewId.value) {
       case 'day':
-        endDate.value = new Date(startDate.value)
-        endDate.value.setHours(23, 59, 59, 999)
+        end.value = new Date(start.value)
+        end.value.setHours(23, 59, 59, 999)
         break
       case 'days':
-        endDate.value = dateUtils.addDays(startDate.value, cellsCount.value)
-        endDate.value.setMilliseconds(-1)
+        end.value = dateUtils.addDays(start.value, cellsCount.value)
+        end.value.setMilliseconds(-1)
         break
       case 'week':
-        startDate.value = dateUtils.getPreviousFirstDayOfWeek(startDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
-        endDate.value = dateUtils.addDays(startDate.value, 7)
-        endDate.value.setMilliseconds(-1)
+        start.value = dateUtils.getPreviousFirstDayOfWeek(start.value, config.startWeekOnSunday && !config.hideWeekdays[7])
+        end.value = dateUtils.addDays(start.value, 7)
+        end.value.setMilliseconds(-1)
         break
       case 'month':
-        startDate.value = new Date(startDate.value.getFullYear(), startDate.value.getMonth(), 1, 0, 0, 0, 0)
-        endDate.value = new Date(startDate.value.getFullYear(), startDate.value.getMonth() + 1, 0, 23, 59, 59, 999)
+        start.value = new Date(start.value.getFullYear(), start.value.getMonth(), 1, 0, 0, 0, 0)
+        end.value = new Date(start.value.getFullYear(), start.value.getMonth() + 1, 0, 23, 59, 59, 999)
         break
       case 'year':
-        startDate.value = new Date(startDate.value.getFullYear(), 0, 1, 0, 0, 0, 0)
-        endDate.value = new Date(startDate.value.getFullYear() + 1, 0, 0, 23, 59, 59, 999)
+        start.value = new Date(start.value.getFullYear(), 0, 1, 0, 0, 0, 0)
+        end.value = new Date(start.value.getFullYear() + 1, 0, 0, 23, 59, 59, 999)
         break
       case 'years':
         // The modulo is only here to always cut off at the same years regardless of the current year.
         // E.g. always [1975-1999], [2000-2024], [2025-2099] for the default 5*5 grid.
-        startDate.value = new Date(startDate.value.getFullYear() - (startDate.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
-        endDate.value = new Date(startDate.value.getFullYear() + cellsCount.value, 0, 0, 23, 59, 59, 999)
+        start.value = new Date(start.value.getFullYear() - (start.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
+        end.value = new Date(start.value.getFullYear() + cellsCount.value, 0, 0, 23, 59, 59, 999)
         break
     }
 
-    console.log('🙆‍♂️', 'updateView', { startDate: startDate.value, endDate: endDate.value })
+    console.log('🙆‍♂️', 'updateView', { start: start.value, end: end.value })
   }
 
   function switchView (id, emitUpdate = true) {
@@ -280,7 +279,7 @@ export const useView = vuecal => {
     // Before checking if the date is in view range, use the firstCellDate and lastCellDate unless on month view
     // (where we still want to navigate when clicking a cell that is out of range).
     let [start, end] = [firstCellDate.value, lastCellDate.value]
-    if (viewId.value === 'month') ([start, end] = [startDate.value, endDate.value])
+    if (viewId.value === 'month') ([start, end] = [start.value, end.value])
     if (!dateUtils.isInRange(date, start, end) || forceUpdate) {
       date.setHours(0, 0, 0, 0)
       transitionDirection.value = date.getTime() < start.getTime() ? 'left' : 'right'
@@ -306,7 +305,7 @@ export const useView = vuecal => {
    * @param {Boolean} bool start the week on Sunday or not.
    */
   function switchWeekStart (bool) {
-    if (!bool && !startDate.value.getDay()) updateViewDate(dateUtils.addDays(startDate.value, 1), true, true)
+    if (!bool && !start.value.getDay()) updateViewDate(dateUtils.addDays(start.value, 1), true, true)
     else {
       transitionDirection.value = 'left'
       updateView()
@@ -319,9 +318,9 @@ export const useView = vuecal => {
    * @param {Boolean} hide hide weekends or not.
    */
   function toggleWeekends (hide) {
-    console.log('😮', hide, config.startWeekOnSunday, startDate.value)
-    if (hide && config.startWeekOnSunday && !startDate.value.getDay()) updateViewDate(dateUtils.addDays(startDate.value, 1), true, true)
-    else if (!hide && config.startWeekOnSunday && startDate.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(startDate.value, 1), true, true)
+    console.log('😮', hide, config.startWeekOnSunday, start.value)
+    if (hide && config.startWeekOnSunday && !start.value.getDay()) updateViewDate(dateUtils.addDays(start.value, 1), true, true)
+    else if (!hide && config.startWeekOnSunday && start.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(start.value, 1), true, true)
   }
 
   /**
@@ -370,8 +369,8 @@ export const useView = vuecal => {
     id: viewId,
     title,
     viewDate,
-    startDate,
-    endDate,
+    start,
+    end,
     firstCellDate,
     lastCellDate,
     containsToday,

@@ -3,7 +3,7 @@
   :data-locale="locale"
   :class="wrapperClasses"
   :style="wrapperStyles")
-  p Start-end: {{ view.startDate.format('YYYY-MM-DD HH:mm') }} - {{ view.endDate.format('YYYY-MM-DD HH:mm') }}
+  p Start-end: {{ view.start.format('YYYY-MM-DD HH:mm') }} - {{ view.end.format('YYYY-MM-DD HH:mm') }}
   p firstCell-lastCell: {{ view.firstCellDate.format('YYYY-MM-DD HH:mm') }} - {{ view.lastCellDate.format('YYYY-MM-DD HH:mm') }}
   slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
   template(v-else)
@@ -23,7 +23,7 @@
       transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
         .vuecal__scrollable(
           :class="scrollableElClasses"
-          :key="view.id + view.startDate.getTime()")
+          :key="view.id + view.start.getTime()")
           TimeColumn(v-if="hasTimeColumn")
             template(v-if="$slots['time-cell']" #time-cell="{ index, minutes, format12, format24 }")
               slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")

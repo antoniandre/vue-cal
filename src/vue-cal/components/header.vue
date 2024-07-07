@@ -23,7 +23,7 @@
         slot(name="previous-button")
       .vuecal__transition-wrap
         transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
-          div(:key="view.id + view.startDate.getTime()")
+          div(:key="view.id + view.start.getTime()")
             component.vuecal__title(
               v-if="$slots.title"
               :is="config.clickToNavigate ? 'button' : 'div'"
@@ -34,7 +34,7 @@
               :is="config.clickToNavigate ? 'button' : 'div'"
               v-on="titleEventHandlers"
               v-html="view.title"
-              :key="view.id + view.startDate.getTime()")
+              :key="view.id + view.start.getTime()")
       template(v-if="config.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"

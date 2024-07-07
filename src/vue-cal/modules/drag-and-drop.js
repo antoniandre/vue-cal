@@ -104,7 +104,7 @@ export const DragAndDrop = class {
     setTimeout(() => (event.draggingStatic = true), 0)
 
     viewChanged = false
-    viewBeforeDrag = { id: this._vuecal.view.id, date: this._vuecal.view.startDate }
+    viewBeforeDrag = { id: this._vuecal.view.id, date: this._vuecal.view.start }
 
     cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
   }

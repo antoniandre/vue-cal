@@ -38,8 +38,8 @@ const isToday = computed(() => dateUtils.isToday(props.start))
 
 const classes = computed(() => {
   const now = new Date()
-  const viewYear = view.startDate.getFullYear()
-  const viewMonth = view.startDate.getMonth()
+  const viewYear = view.start.getFullYear()
+  const viewMonth = view.start.getMonth()
   const y = props.start.getFullYear()
   const m = props.start.getMonth()
   const weekday = weekdays[props.start.getDay()]

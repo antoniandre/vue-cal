@@ -2237,8 +2237,8 @@
     ssh-pre.mt2(language="js").
       {
         view: [String],
-        startDate: [Date], // View start - JS native Date object.
-        endDate: [Date], // View end - JS native Date object.
+        start: [Date], // View start - JS native Date object.
+        end: [Date], // View end - JS native Date object.
         firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
         outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
@@ -2817,14 +2817,14 @@
       ssh-pre(language="js").mt2.mb3.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // JavaScript Date object.
-          endDate: {Date}, // JavaScript Date object.
+          start: {Date}, // JavaScript Date object.
+          end: {Date}, // JavaScript Date object.
           selectedDate: {Date} // JavaScript Date object.
         }
   p.
     You can use one or the other to format the title as you wish.#[br]
     Using the pre-formatted #[span.code title] will be easy but not very flexible.#[br]
-    If you render the date yourself from #[span.code view.startDate], don't forget
+    If you render the date yourself from #[span.code view.start], don't forget
     the different formats for all the views: years, year, month, week, day.
 
   h5.mt6.subtitle-1.font-weight-medium
@@ -2839,8 +2839,8 @@
       ssh-pre(language="js").mt2.mb2.
         {
           content: {String}, // Pre-formatted cell content if any.
-          startDate: {Date}, // JavaScript Date object.
-          endDate: {Date}, // JavaScript Date object.
+          start: {Date}, // JavaScript Date object.
+          end: {Date}, // JavaScript Date object.
           formattedDate: {String}, // formatted start date. E.g. "2019-04-05".
           today: {Boolean}
         }
@@ -2848,8 +2848,8 @@
       ssh-pre(language="js").mt2.mb2.
         {
           id: {String}, // Current view, one of: years, year, month, week, day.
-          startDate: {Date}, // JavaScript Date object.
-          endDate: {Date}, // JavaScript Date object.
+          start: {Date}, // JavaScript Date object.
+          end: {Date}, // JavaScript Date object.
           selectedDate: {Date} // JavaScript Date object.
         }
     li #[span.code split], when splitting days, object containing the current split info.
@@ -2884,10 +2884,10 @@
       template(#title="{ title, view }")
         | 🎉&nbsp;
         span(v-if="view.id === 'years'") Years
-        span(v-else-if="view.id === 'year'") {{ view.startDate.format('YYYY') }}
-        span(v-else-if="view.id === 'month'") {{ view.startDate.format('MMMM YYYY') }}
-        span(v-else-if="view.id === 'week'") w{{ view.startDate.getWeek() }} ({{ view.startDate.format('MMM YYYY') }})
-        span(v-else-if="view.id === 'day'") {{ view.startDate.format('dddd D MMMM (YYYY)') }}
+        span(v-else-if="view.id === 'year'") {{ view.start.format('YYYY') }}
+        span(v-else-if="view.id === 'month'") {{ view.start.format('MMMM YYYY') }}
+        span(v-else-if="view.id === 'week'") w{{ view.start.getWeek() }} ({{ view.start.format('MMM YYYY') }})
+        span(v-else-if="view.id === 'day'") {{ view.start.format('dddd D MMMM (YYYY)') }}
         | &nbsp;🎉
       template(#cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
@@ -2906,10 +2906,10 @@
         🎉
         &lt;span v-if="view.id === 'years'"&gt;Years&lt;/span&gt;
         &lt;!-- Using Vue Cal injected Date prototypes --&gt;
-        &lt;span v-else-if="view.id === 'year'"&gt;{{ "\{\{ view.startDate.format('YYYY') \}\}" }}&lt;/span&gt;
-        &lt;span v-else-if="view.id === 'month'"&gt;{{ "\{\{ view.startDate.format('MMMM YYYY') \}\}" }}&lt;/span&gt;
-        &lt;span v-else-if="view.id === 'week'"&gt;w{{ "\{\{ view.startDate.getWeek() \}\} (\{\{ view.startDate.format('MMM YYYY') \}\}" }})&lt;/span&gt;
-        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.startDate.format('dddd D MMMM (YYYY)') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'year'"&gt;{{ "\{\{ view.start.format('YYYY') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'month'"&gt;{{ "\{\{ view.start.format('MMMM YYYY') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'week'"&gt;w{{ "\{\{ view.start.getWeek() \}\} (\{\{ view.start.format('MMM YYYY') \}\}" }})&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.start.format('dddd D MMMM (YYYY)') \}\}" }}&lt;/span&gt;
         🎉
       &lt;/template&gt;
 
