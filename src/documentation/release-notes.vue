@@ -1,6 +1,10 @@
 <template lang="pug">
 div
   div.mb1
+    strong.mr1 Version 4.9.0
+    | Added the Portuguese (Portugal) and Finnish locale.
+
+  div.mb1
     strong.mr1 Version 4.8.0
     | Added the Estonian locale.
 
