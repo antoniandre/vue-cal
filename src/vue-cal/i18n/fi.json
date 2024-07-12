@@ -11,5 +11,5 @@
 	"allDay": "Koko päivä",
 	"deleteEvent": "Poista tapahtuma",
 	"createEvent": "Luo tapahtuma",
-	"dateFormat": "dddd MMMM D{S}, YYYY"
+	"dateFormat": "dddd, D MMMM YYYY"
 }
