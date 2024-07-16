@@ -185,13 +185,13 @@ $lighter-text: #ccc;
   position: absolute;
   border-bottom: 1px solid transparent;
   background: rgba(255, 255, 255, 0.1);
-  @include backdrop-blur;
   transition: 0.3s ease-in-out all, 0.1s 0s ease-in-out border-color;
   top: 0;
   left: 0;
   right: 0;
   padding-right: 30px;
   box-sizing: content-box;
+  @include backdrop-blur;
 
   h1 {height: 100%;}
 
