@@ -5,6 +5,7 @@
 	"year": "Vuosi",
 	"month": "Kuukausi",
 	"week": "Viikko",
+  "days": "Päivät",
 	"day": "Päivä",
 	"today": "Tänään",
 	"noEvent": "Ei tapahtumia",
