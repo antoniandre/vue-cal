@@ -21,7 +21,6 @@ import { useView } from './view'
 import DateUtils from '../utils/date'
 
 export default class {
-  #props = {}
   emit = null // The Vue emit function from the root component.
   config = null
   texts = ref({ ...defaults.texts }) // Make texts reactive before a locale is loaded.
@@ -35,11 +34,10 @@ export default class {
   view = null
 
   constructor (props, emit) {
-    this.#props = props
     this.emit = emit
-    this.dateUtils = new DateUtils(this.texts, this.#props.datePrototypes)
-    this.config = reactive(useConfig(props))
-    this.view = reactive(useView(this, props))
+    this.dateUtils = new DateUtils(this.texts, props.datePrototypes)
+    this.config = reactive(useConfig(this, props))
+    this.view = reactive(useView(this))
 
     this.loadTexts(props.locale || 'en-us')
   }

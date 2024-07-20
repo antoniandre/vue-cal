@@ -153,6 +153,16 @@ export const useView = vuecal => {
 
   const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
 
+  const events = computed(() => {
+    const events = {}
+    cellDates.value.forEach(({ start }) => {
+      const cellStartFormatted = dateUtils.formatDate(start)
+      events[cellStartFormatted] = []
+      if (config.events.byDate[cellStartFormatted]?.length) events[cellStartFormatted].push(...config.events.byDate[cellStartFormatted])
+    })
+    return events
+  })
+
   /**
    * This function is called after each view variable update and will recompute the theoretical view
    * [start-end] date range.
@@ -361,9 +371,8 @@ export const useView = vuecal => {
   onBeforeUnmount(() => (timeTickerId = clearTimeout(timeTickerId))) // Stop the time ticker.
 
   // ! \ IMPORTANT NOTE:
-  // If the selectedDate prop would be added to the view, any click on any cell
-  // (triggering an emit of the selectedDate), would trigger a re-rendering of all the
-  // cells of the view.
+  // If the selectedDate prop would be added to the view, any click on any cell (triggering an emit
+  // of the selectedDate), would trigger a re-rendering of all the cells of the view.
   return {
     now,
     id: viewId,
@@ -378,9 +387,10 @@ export const useView = vuecal => {
     cellDates,
     cols,
     rows,
-    // All the events are stored and indexed by dates in the config.eventsByDates array.
-    // The following events array is only a subset of visible ones.
-    // events,
+    // All the events are stored and indexed in the config.events object.
+    // The following events array is only a subset of visible ones, plus any potential recurring
+    // and multi-day events.
+    events,
     switch: switchView,
     previous,
     next,

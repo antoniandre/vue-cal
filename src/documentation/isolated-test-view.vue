@@ -108,8 +108,8 @@ const mainVuecalConfig = reactive({
 // Pretend a call to a backend.
 setTimeout(() => {
   mainVuecalConfig.events = [
-    { title: 'Event 1', start: '2024-07-07 10:00', end: '2024-07-07 10:30' },
-    { title: 'Event 2', start: '2024-07-07 11:00', end: '2024-07-07 11:30' }
+    { title: 'Event 1', start: '2024-07-20 10:00', end: '2024-07-20 10:30' },
+    { title: 'Event 2', start: '2024-07-20 11:00', end: '2024-07-20 11:30' }
   ]
 }, 1000)
 
