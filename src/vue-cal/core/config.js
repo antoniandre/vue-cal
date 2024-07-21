@@ -109,7 +109,6 @@ export const useConfig = (vuecal, props) => {
     defaultView,
     availableViews,
     ready,
-    props,
     sm,
     xs,
     clickToNavigate,

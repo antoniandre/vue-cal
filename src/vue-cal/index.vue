@@ -65,7 +65,7 @@ const wrapperClasses = computed(() => ({
 }))
 
 const wrapperStyles = computed(() => ({
-  '--vuecal-time-cell-height': `${config.timeCellHeight || 40}px`
+  '--vuecal-time-cell-height': config.timeCellHeight && `${config.timeCellHeight}px`
 }))
 
 const scrollableElClasses = computed(() => ({
@@ -84,7 +84,7 @@ provide('vuecal', vuecal)
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
   --vuecal-weekdays-bar-height: 1.6em;
-  --vuecal-time-cell-height: 40px;
+  --vuecal-time-cell-height: 40px; // Default value, can be overridden from props.
   // When there are too many day cells to fit in the view, setting a min cell height will help
   // visualizing and a horizontal scrollbar will be added.
   --vuecal-min-cell-width: 0;

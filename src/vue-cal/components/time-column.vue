@@ -61,7 +61,7 @@ const timeCells = computed(() => {
     position: absolute;
     right: 0;
     width: 5px;
-    top: -0.5px;
+    top: 0.5px;
     border-top: 0.5px solid var(--vuecal-border-color);
   }
 
