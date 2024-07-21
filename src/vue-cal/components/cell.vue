@@ -1,18 +1,23 @@
 <template lang="pug">
 .vuecal__cell(:class="classes" v-on="cellEventHandlers")
   template(v-if="$slots.cell")
-    slot(name="cell" :date="date" :index="index" :events="view.events") #cell
+    slot(name="cell" :date="date" :index="index" :events="cellEvents")
   template(v-else)
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
-      slot(name="cell-date" :start="start" :end="end" :events="view.events") {{ formattedCellDate }}
+      slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
-      slot(name="cell-content" :start="start" :end="end" :events="view.events")
-    .vuecal__cell-events(v-if="view.events[start.format()].length")
-      slot(v-if="$slots['cell-events']" name="cell-events" :start="start" :end="end" :events="view.events") {{ events }}
+      slot(name="cell-content" :start="start" :end="end" :events="cellEvents")
+    .vuecal__cell-events(v-if="cellEvents.length")
+      slot(
+        v-if="$slots['cell-events']"
+        name="cell-events"
+        :start="start"
+        :end="end"
+        :events="cellEvents")
       template(v-else)
-        .event(v-for="eventId in view.events[start.format()]" :key="eventId") {{ eventsManager.getEvent(eventId) }}
+        event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
 
   .vuecal__now-line(
     v-if="nowLine.show"
@@ -24,6 +29,7 @@
 <script setup>
 import { computed, inject, reactive } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
+import Event from './event.vue'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils, eventsManager } = vuecal
@@ -86,6 +92,8 @@ const formattedCellDate = computed(() => {
   }
 })
 
+const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)])
+
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
   show: computed(() => {
@@ -121,6 +129,7 @@ const cellEventHandlers = {
 
 <style lang="scss">
 .vuecal__cell {
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;

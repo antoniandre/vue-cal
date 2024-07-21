@@ -185,15 +185,15 @@
   // Calendar events.
   // ------------------------------------------------------
   .vuecal__event {
-    max-width: 94%;
-    background-color: var(--w-primary-color);
-    color: rgb(var(--w-contrast-color-rgb));
-    border-radius: 5px;
-    border: 1px solid currentColor;
-    padding: 4px 6px;
     text-align: center;
+    background-color: var(--vuecal-primary-color);
+    color: var(--vuecal-secondary-color);
+    border: 1px solid currentColor;
+    border-radius: 4px;
+    padding: 2px;
     font-size: 12px;
     line-height: 1;
+    overflow: hidden;
 
     &-time {
       white-space: nowrap;
