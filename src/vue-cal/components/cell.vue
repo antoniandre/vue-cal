@@ -9,8 +9,10 @@
       slot(name="cell-date" :start="start" :end="end" :events="view.events") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
       slot(name="cell-content" :start="start" :end="end" :events="view.events")
-    .vuecal__cell-events(v-if="view.events.length")
-      slot(name="cell-events" :start="start" :end="end" :events="view.events") {{ events }}
+    .vuecal__cell-events(v-if="view.events[start.format()].length")
+      slot(v-if="$slots['cell-events']" name="cell-events" :start="start" :end="end" :events="view.events") {{ events }}
+      template(v-else)
+        .event(v-for="eventId in view.events[start.format()]" :key="eventId") {{ eventsManager.getEvent(eventId) }}
 
   .vuecal__now-line(
     v-if="nowLine.show"
@@ -24,7 +26,7 @@ import { computed, inject, reactive } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 
 const vuecal = inject('vuecal')
-const { view, config, dateUtils } = vuecal
+const { view, config, dateUtils, eventsManager } = vuecal
 
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach

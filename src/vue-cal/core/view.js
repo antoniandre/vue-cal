@@ -1,7 +1,7 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
 export const useView = vuecal => {
-  const { config, dateUtils, emit, texts } = vuecal
+  const { config, dateUtils, emit, texts, eventsManager } = vuecal
   const { availableViews } = config
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)
@@ -158,7 +158,9 @@ export const useView = vuecal => {
     cellDates.value.forEach(({ start }) => {
       const cellStartFormatted = dateUtils.formatDate(start)
       events[cellStartFormatted] = []
-      if (config.events.byDate[cellStartFormatted]?.length) events[cellStartFormatted].push(...config.events.byDate[cellStartFormatted])
+      console.log(eventsManager.events)
+      const eventsByDate = eventsManager.getEventsByDate(cellStartFormatted)
+      if (eventsByDate?.length) events[cellStartFormatted].push(...eventsByDate)
     })
     return events
   })
@@ -387,7 +389,7 @@ export const useView = vuecal => {
     cellDates,
     cols,
     rows,
-    // All the events are stored and indexed in the config.events object.
+    // All the events are stored and indexed in the events object of the eventsManager.
     // The following events array is only a subset of visible ones, plus any potential recurring
     // and multi-day events.
     events,

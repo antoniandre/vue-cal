@@ -17,6 +17,7 @@
 
 import { ref, reactive, computed } from 'vue'
 import { defaults, useConfig } from './config'
+import { useEvents } from './events'
 import { useView } from './view'
 import DateUtils from '../utils/date'
 
@@ -37,6 +38,7 @@ export default class {
     this.emit = emit
     this.dateUtils = new DateUtils(this.texts, props.datePrototypes)
     this.config = reactive(useConfig(this, props))
+    this.eventsManager = reactive(useEvents(this))
     this.view = reactive(useView(this))
 
     this.loadTexts(props.locale || 'en-us')
