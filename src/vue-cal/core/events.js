@@ -54,8 +54,14 @@ export const useEvents = vuecal => {
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
     event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
     event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).
-    event._.startMinutesFormatted = `${(~~(event._.startMinutes / 60)).toString().padStart(2, 0)}:${(event._.startMinutes % 60).toString().padStart(2, 0)}`
-    event._.endMinutesFormatted = `${(~~(event._.endMinutes / 60)).toString().padStart(2, 0)}:${(event._.endMinutes % 60).toString().padStart(2, 0)}`
+    const startHours = event.start.getHours()
+    const startMinutes = event.start.getMinutes().toString().padStart(2, 0)
+    const endHours = event.end.getHours()
+    const endMinutes = event.end.getMinutes().toString().padStart(2, 0)
+    event._.startTimeFormatted24 = `${startHours.toString().padStart(2, 0)}:${startMinutes}`
+    event._.startTimeFormatted12 = `${(startHours % 12) || 12}${startMinutes ? `:${startMinutes}` : ''} ${startHours < 12 ? 'AM' : 'PM'}`
+    event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
+    event._.endTimeFormatted12 = `${(endHours % 12) || 12}${endMinutes ? `:${endMinutes}` : ''} ${endHours < 12 ? 'AM' : 'PM'}`
     event._.duration = event._.endMinutes - event._.startMinutes // Integer (minutes).
   }
 

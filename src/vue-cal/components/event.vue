@@ -5,7 +5,8 @@
   .vuecal__event-content
     | {{ event.content }}
   .vuecal__event-time
-    | {{ event._.startMinutesFormatted }} - {{ event._.endMinutesFormatted }}
+    | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+    | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
 </template>
 
 <script setup>
@@ -24,7 +25,7 @@ const classes = computed(() => ({
   [`vuecal__event--${props.id}`]: true,
   [event.value.class]: !!event.value.class,
   'vuecal__event--recurring': !!event.recurring,
-  'vuecal__event--multiday': !!event._.multiday
+  'vuecal__event--multiday': !!event._?.multiday
 }))
 
 const styles = computed(() => {

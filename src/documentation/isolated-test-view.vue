@@ -2,6 +2,7 @@
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
   .w-flex.align-center.gap6.no-grow
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
     w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
@@ -25,6 +26,8 @@ div.test-view
       v-model="hideWeekdays"
       :items="weekdays"
       multiple)
+  .w-flex
+    w-button(@click="addEvent") Add event
 
   VueCal.vuecal--default-theme.no-shrink(
     date-picker
@@ -96,7 +99,8 @@ const mainVuecalConfig = reactive({
   sm: computed(() => size.value === 'sm'),
   timeFrom: 7 * 60,
   timeTo: 20 * 60,
-  timeStep: 30,
+  timeStep: 60,
+  twelveHour: ref(false),
   hideWeekends: ref(false),
   hideWeekdays,
   viewDayOffset: ref(0),
@@ -112,6 +116,10 @@ setTimeout(() => {
     { title: 'Event 2', start: '2024-07-20 11:00', end: '2024-07-20 11:30' }
   ]
 }, 1000)
+
+const addEvent = () => {
+  mainVuecalConfig.events.push({ title: 'Event 1', start: (new Date()).subtractHours(4), end: (new Date()).subtractHours(3) })
+}
 
 // `from` and `to` are expected in minutes.
 // const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
