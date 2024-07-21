@@ -8,14 +8,13 @@ export const useEvents = vuecal => {
     const events = {
       byDate: {}, // A map of single-day events indexed by date.
       recurring: [], // An array of events IDs that are recurring.
-      multidays: [], // An array of events IDs that are multi-days.
+      multiday: [], // An array of events IDs that are multiday.
       byId: {} // A map of all the events indexed by ID for fast lookup.
     }
 
     vuecal.config.events.forEach(event => {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
       normalizeEventDates(event)
-      const isMultiDays = !dateUtils.isSameDate(event.start, event.end)
 
       // Inject a unique ID in each event.
       if (!event._) event._ = {}
@@ -27,8 +26,8 @@ export const useEvents = vuecal => {
         events.recurring.push(event._.id)
         // @todo: Possibly do other things here.
       }
-      else if (isMultiDays) {
-        events.multidays.push(event._.id)
+      else if (event._.multiday) {
+        events.multiday.push(event._.id)
         // @todo: Possibly do other things here.
       }
       else {
@@ -51,6 +50,7 @@ export const useEvents = vuecal => {
     else if (event.end.getTime() < event.start.getTime()) console.error(`Vue Cal: invalid event dates for event "${event.title}". The event ends before it starts.`, event.start, event.end)
 
     if (!event._) event._ = {}
+    event._.multiday = !dateUtils.isSameDate(event.start, event.end)
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
     event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
     event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).

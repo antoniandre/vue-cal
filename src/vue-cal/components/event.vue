@@ -5,29 +5,35 @@
   .vuecal__event-content
     | {{ event.content }}
   .vuecal__event-time
-    | {{ event._.startMinutesFormatted }}-{{ event._.endMinutesFormatted }}
+    | {{ event._.startMinutesFormatted }} - {{ event._.endMinutesFormatted }}
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
+const { config, eventsManager } = vuecal
 
 const props = defineProps({
   id: { type: Number, required: true }
 })
 
+const event = computed(() => eventsManager.getEvent(props.id))
+
 const classes = computed(() => ({
   [`vuecal__event--${props.id}`]: true,
-  [event.class]: !!event.class
+  [event.value.class]: !!event.value.class,
+  'vuecal__event--recurring': !!event.recurring,
+  'vuecal__event--multiday': !!event._.multiday
 }))
 
-const styles = computed(() => ({
-  top: `0px`,
-  height: `0px`
-}))
-
-const event = computed(() => vuecal.eventsManager.getEvent(props.id))
+const styles = computed(() => {
+  const deltaTimeScale = config.timeTo - config.timeFrom
+  return {
+    top: `${(event.value._.startMinutes - config.timeFrom) * 100 / deltaTimeScale}%`,
+    height: `${event.value._.duration * 100 / deltaTimeScale}%`
+  }
+})
 </script>
 
 <style lang="scss">

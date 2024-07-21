@@ -84,7 +84,7 @@ provide('vuecal', vuecal)
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
   --vuecal-weekdays-bar-height: 1.6em;
-  --vuecal-time-cell-height: 40px; // Default value, can be overridden from props.
+  --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
   // When there are too many day cells to fit in the view, setting a min cell height will help
   // visualizing and a horizontal scrollbar will be added.
   --vuecal-min-cell-width: 0;
@@ -94,7 +94,6 @@ provide('vuecal', vuecal)
 
   display: flex;
   flex-direction: column;
-  height: 100%;
   user-select: none;
 
   &__transition-wrap {

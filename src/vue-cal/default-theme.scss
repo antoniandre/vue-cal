@@ -185,7 +185,6 @@
   // Calendar events.
   // ------------------------------------------------------
   .vuecal__event {
-    text-align: center;
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-secondary-color);
     border: 1px solid currentColor;
@@ -199,6 +198,7 @@
       white-space: nowrap;
       line-height: 1;
       letter-spacing: -0.5px;
+      font-size: 11px;
     }
   }
 
