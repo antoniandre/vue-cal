@@ -88,7 +88,13 @@ const formattedCellDate = computed(() => {
 
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
-  show: computed(() => (view.isDay || view.isDays || view.isWeek) && isToday.value && config.time),
+  show: computed(() => {
+    if (!view.isDay && !view.isDays && !view.isWeek) return
+    if (!isToday.value || !config.time) return
+    if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
+    if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
+    return true
+  }),
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
   todaysTimePosition: computed(() => Math.round((nowLine.nowInMinutes - config.timeFrom) * nowLine.timeScale)),
   timeScale: computed(() => config.timeCellHeight / config.timeStep),
