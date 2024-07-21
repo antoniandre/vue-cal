@@ -52,6 +52,11 @@ export const useEvents = vuecal => {
 
     if (!event._) event._ = {}
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
+    event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
+    event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).
+    event._.startMinutesFormatted = `${(~~(event._.startMinutes / 60)).toString().padStart(2, 0)}:${(event._.startMinutes % 60).toString().padStart(2, 0)}`
+    event._.endMinutesFormatted = `${(~~(event._.endMinutes / 60)).toString().padStart(2, 0)}:${(event._.endMinutes % 60).toString().padStart(2, 0)}`
+    event._.duration = event._.endMinutes - event._.startMinutes // Integer (minutes).
   }
 
   const getEvent = id => events.value.byId[id]
