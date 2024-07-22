@@ -128,7 +128,7 @@ export const useView = vuecal => {
 
           const end = new Date(start)
           end.setHours(23, 59, 59, 999)
-          dates.push({ start, end })
+          dates.push({ start, startFormatted: dateUtils.formatDate(start), end })
           break
         }
         case 'year':
@@ -155,12 +155,10 @@ export const useView = vuecal => {
 
   const events = computed(() => {
     const events = {}
-    cellDates.value.forEach(({ start }) => {
-      const cellStartFormatted = dateUtils.formatDate(start)
-      events[cellStartFormatted] = []
-      console.log(eventsManager.events)
-      const eventsByDate = eventsManager.getEventsByDate(cellStartFormatted)
-      if (eventsByDate?.length) events[cellStartFormatted].push(...eventsByDate)
+    cellDates.value.forEach(({ startFormatted }) => {
+      events[startFormatted] = []
+      const eventsByDate = eventsManager.getEventsByDate(startFormatted)
+      if (eventsByDate?.length) events[startFormatted].push(...eventsByDate)
     })
     return events
   })
