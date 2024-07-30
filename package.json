@@ -47,7 +47,6 @@
   "devDependencies": {
     "@babel/core": "^7.24.8",
     "@babel/eslint-parser": "^7.24.8",
-    "@fortawesome/fontawesome-free": "^5.15.4",
     "@mdi/font": "^6.9.96",
     "@vitejs/plugin-vue": "^5.0.5",
     "@vue/compiler-sfc": "^3.4.31",

@@ -14,9 +14,6 @@ importers:
       '@babel/eslint-parser':
         specifier: ^7.24.8
         version: 7.24.8(@babel/core@7.24.8)(eslint@8.57.0)
-      '@fortawesome/fontawesome-free':
-        specifier: ^5.15.4
-        version: 5.15.4
       '@mdi/font':
         specifier: ^6.9.96
         version: 6.9.96
@@ -315,10 +312,6 @@ packages:
   '@eslint/js@8.57.0':
     resolution: {integrity: sha512-Ys+3g2TaW7gADOJzPt83SJtCDhMjndcDMFVQ/Tj9iA1BfJzFKD9mAUXT3OenpuPHbI6P/myECxRJrofUsDx/5g==}
     engines: {node: ^12.22.0 || ^14.17.0 || >=16.0.0}
-
-  '@fortawesome/fontawesome-free@5.15.4':
-    resolution: {integrity: sha512-eYm8vijH/hpzr/6/1CJ/V/Eb1xQFW2nnUKArb3z+yUWv7HTwj6M7SP957oMjfZjAHU6qpoNc2wQvIxBLWYa/Jg==}
-    engines: {node: '>=6'}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -1491,8 +1484,6 @@ snapshots:
       - supports-color
 
   '@eslint/js@8.57.0': {}
-
-  '@fortawesome/fontawesome-free@5.15.4': {}
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:

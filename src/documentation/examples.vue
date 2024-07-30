@@ -15,7 +15,7 @@
     .title2 Demos on Codepen
     p.body.mb4.grey Try it yourself.
     .w-flex.align-center
-      w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") fab fa-codepen
+      w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") mdi mdi-codepen
       ul.no-bullet
         li
           w-icon wi-chevron-right
@@ -614,7 +614,7 @@
     w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
     | #[br]You might want to change view as well when going to Today's date, here is an example how:
     a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
-    w-icon(color="green lighten-2") fab fa-codepen
+    w-icon(color="green lighten-2") mdi mdi-codepen
   .w-flex.justify-center.wrap
     .example.my2.mr3(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--green-theme.ex--adding-a-today-button(

@@ -14,35 +14,34 @@ div(:class="{ ready }" v-scroll="onScroll")
       xl
       v-scroll-to="'#top'")
 
-  footer.page-container.w-flex.grey-dark1.wrap.justify-center.mt12.mb8
-    .w-divider.fill-width.mb8
-    .xs12.sm6.text-center.smu-text-left.copyright.
-      Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-    .xs12.sm6.text-center.smu-text-right.made-with
-      .mb1
+  footer.page-container.w-flex.grey-dark1.wrap.justify-space-between.mt12.mb8.smd-column.smd-justify-center.gap4
+    .text-center.smu-text-left.copyright
+      | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
+    .made-with.text-right.smd-text-center.no-grow
+      .w-flex.gap1.mb1.justify-end.smd-justify-center
         | This documentation is made with
         w-tooltip
           template(#activator="{ on }")
-            w-icon(v-on="on") fab fa-vuejs
+            w-icon(v-on="on") mdi mdi-vuejs
           | Vue
         w-tooltip
           template(#activator="{ on }")
-            w-icon(v-on="on") fab fa-html5
+            w-icon(v-on="on") mdi mdi-language-html5
           | HTML5 &amp; Pug
         w-tooltip
           template(#activator="{ on }")
-            w-icon.ml1(v-on="on") fab fa-css3
+            w-icon.ml1(v-on="on") mdi mdi-language-css3
           | CSS3
         w-tooltip
           template(#activator="{ on }")
-            w-icon.ml1(v-on="on") fab fa-sass
+            w-icon.ml1(v-on="on") mdi mdi-sass
           | SCSS
         span.ml2.mr1 &amp;
         w-tooltip
           template(#activator="{ on }")
-            w-icon(v-on="on").heart material-icons favorite
+            w-icon(v-on="on").heart mdi mdi-heart
           | Love
-      | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon fab fa-github] Github].
+      | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
 </template>
 
 <script>

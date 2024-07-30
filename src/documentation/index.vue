@@ -6,7 +6,7 @@
   //- Github project.
   h2.mt12.pt12.mb4.title2 Github project &nbsp;&amp;&nbsp; important notes
   .announcement.announcement--github.w-flex.align-center.mb8
-    w-icon.mr5.lightgrey(size="46") fab fa-github
+    w-icon.mr5.lightgrey(size="46") mdi mdi-github
     a.title4(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[w-icon(color="primary") material-icons open_in_new]
 
   .announcement.w-flex.align-center.mb8
@@ -249,7 +249,7 @@
           .title2 Demos on Codepen
           p.body.mb4.grey Check the different setups for direct browser use
           .w-flex.align-center
-            w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") fab fa-codepen
+            w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") mdi mdi-codepen
             ul.no-bullet
               li
                 w-icon.mr2 wi-chevron-right
