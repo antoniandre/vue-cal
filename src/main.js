@@ -15,7 +15,8 @@ app.use(WaveUI, {
     primary: '#42b983',
     secondary: '#2c3e50',
     lightgrey: '#eee'
-  }
+  },
+  theme: 'auto'
 })
 
 app.mount('#app')

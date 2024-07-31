@@ -17,7 +17,7 @@
     border-top-left-radius: inherit;
     border-top-right-radius: inherit;
     background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-secondary-color);
+    color: var(--vuecal-header-color);
   }
 
   .vuecal__views-bar,
@@ -34,7 +34,6 @@
   .vuecal__title-bar {
     position: relative;
     background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-secondary-color);
     padding-left: 0.6em;
     padding-right: 0.6em;
 

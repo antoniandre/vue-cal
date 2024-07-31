@@ -1,6 +1,12 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
+  w-switch.theme-switch.no-grow(
+    v-model="isDarkMode"
+    @update:model-value="$waveui.switchTheme(isDarkMode ? 'light' : 'dark')")
+    template(#thumb)
+      w-icon(size="0.8rem") mdi {{ isDarkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
+
   .w-flex.align-center.gap6.no-grow
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
@@ -54,8 +60,12 @@ div.test-view
 </template>
 
 <script setup>
-import { ref, reactive, computed } from 'vue'
+import { ref, reactive, computed, inject } from 'vue'
 import VueCal from '@/vue-cal/index.vue'
+
+const $waveui = inject('$waveui')
+
+const isDarkMode = computed(() => $waveui.theme === 'dark')
 
 const locales = [
   { value: 'ko', label: 'ko' },
@@ -219,5 +229,17 @@ const addEvent = () => {
 .closed {
   background: hsl(27, 100%, 97%) repeating-linear-gradient(-45deg, hsla(27, 100%, 67%, 0.25), hsla(27, 100%, 67%, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
   color: hsl(27, 90%, 63%);
+}
+
+.theme-switch {
+  position: absolute;
+  top: 10px;
+  right: 24px;
+
+  .w-switch__thumb {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 </style>
