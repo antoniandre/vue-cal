@@ -83,5 +83,8 @@ export default defineConfig({
       plugins: [autoprefixer]
     }
   },
-  build: process.env.BUNDLE ? bundlingConf : { outDir: 'docs' }
+  build: process.env.BUNDLE ? bundlingConf : { outDir: 'docs' },
+  define: {
+    __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
+  }
 })
