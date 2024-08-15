@@ -10,7 +10,6 @@ const app = createApp(App)
 
 app.use(router)
 app.use(WaveUI, {
-  iconsLigature: 'material-icons',
   colors: {
     primary: '#42b983',
     secondary: '#2c3e50',

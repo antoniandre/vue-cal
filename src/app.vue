@@ -6,7 +6,7 @@ div(:class="{ ready }" v-scroll="onScroll")
   w-transition-twist
     w-button.go-top.ma2(
       v-show="!goTopHidden"
-      icon="material-icons keyboard_arrow_up"
+      icon="wi-chevron-up"
       fixed
       bottom
       right

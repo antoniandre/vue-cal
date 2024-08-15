@@ -1,6 +1,6 @@
 <template lang="pug">
 component(:class="`highlight highlight--${type}`" :is="tag")
-  w-icon(v-if="!noIcon") material-icons {{ icon }}
+  w-icon(v-if="!noIcon") {{ icon }}
   slot
 </template>
 
@@ -35,49 +35,47 @@ export default {
   border-left: 3px solid;
 
   &--info {
-    background-color: rgba(#09f, 0.08) !important;
-    border-color: #09f !important;
+    background-color: rgba(#09f, 0.08);
+    border-color: #09f;
   }
 
   &--success {
-    background-color: rgba(#6c0, 0.1) !important;
-    border-color: #6c0 !important;
+    background-color: rgba(#6c0, 0.1);
+    border-color: #6c0;
   }
 
   &--tips {
-    background-color: rgba(#ff0, 0.15) !important;
-    border-color: #fd0 !important;
+    background-color: rgba(#ff0, 0.15);
+    border-color: #fd0;
   }
 
   &--warning {
-    background-color: rgba(#fa0, 0.1) !important;
-    border-color: #fa0 !important;
+    background-color: rgba(#fa0, 0.1);
+    border-color: #fa0;
   }
 
   &--error {
-    background-color: rgba(#f33, 0.08) !important;
-    border-color: #f33 !important;
+    background-color: rgba(#f33, 0.08);
+    border-color: #f33;
   }
 
   > .w-icon {
     position: absolute;
     left: -11px;
-    color: #fff !important;
+    color: #fff;
     border-radius: 1em;
     width: 20px;
     height: 20px;
     font-size: 18px;
     line-height: 20px;
     text-align: center;
-    text-indent: 1px;
-    top: 0.5em;
+    top: 0.5rem;
   }
 
-  &--info > .w-icon {background: #09f !important;transform: rotate(180deg);}
-  &--success > .w-icon {background-color: #6c0 !important;}
-  &--error > .w-icon {background-color: #f33 !important;}
-  &--tips > .w-icon {background-color: #fd0 !important;transform: rotate(180deg);}
-  &--warning > .w-icon {background-color: #fa0 !important;}
-  &--info > .w-icon, &.warning > .w-icon {font-size: 16px;}
+  &--info > .w-icon {background: #09f;font-size: 25px;}
+  &--success > .w-icon {background-color: #6c0;}
+  &--error > .w-icon {background-color: #f33;}
+  &--tips > .w-icon {background-color: #fd0;}
+  &--warning > .w-icon {background-color: #fa0;font-size: 15px;}
 }
 </style>

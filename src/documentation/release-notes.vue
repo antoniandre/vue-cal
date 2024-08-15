@@ -271,7 +271,7 @@ div
   .w-flex.my12.align-center
     .w-divider.primary--bg.px3
     w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
-      w-icon.mr2 material-icons {{ seeOldReleaseNotes ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}
+      w-icon.mr2 mdi mdi-{{ seeOldReleaseNotes ? 'keyboard-arrow-up' : 'keyboard-arrow-down' }}
       strong Older release notes
     .w-divider.primary--bg.grow
 
