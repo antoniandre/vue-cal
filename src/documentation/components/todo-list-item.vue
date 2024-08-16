@@ -6,8 +6,8 @@ w-tag.ma1.pl1.todo-item(:color="item.color" outline round)
 
 <script>
 const statuses = {
-  todo: { color: 'deep-orange', icon: 'mdi mdi-access_time' },
-  doing: { color: 'amber darken-1', icon: 'mdi mdi-access_time' },
+  todo: { color: 'deep-orange', icon: 'mdi mdi-clock-outline' },
+  doing: { color: 'amber darken-1', icon: 'mdi mdi-clock-outline' },
   done: { color: 'green', icon: 'wi-check' }
 }
 

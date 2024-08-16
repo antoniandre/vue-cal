@@ -5,12 +5,12 @@
 
   //- Github project.
   h2.mt12.pt12.mb4.title2 Github project &nbsp;&amp;&nbsp; important notes
-  .announcement.announcement--github.w-flex.align-center.mb8
+  .announcement.announcement--github.w-flex.align-center.mb6
     w-icon.mr5.lightgrey(size="46") mdi mdi-github
-    a.title4(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[w-icon(color="primary") material-icons open_in_new]
+    a.title4(href="https://github.com/antoniandre/vue-cal" target="_blank") //github.com/antoniandre/vue-cal #[w-icon(color="primary") mdi mdi-open-in-new]
 
-  .announcement.w-flex.align-center.mb8
-    w-icon.ml-1.mr4(size="50" color="amber-light3") material-icons info
+  .announcement.w-flex.align-center.mb6
+    w-icon.ml-1.mr4(size="50" color="amber-light3") mdi mdi-information-outline
     w-alert.message-box.important-notes(border-left color="orange-dark1" bg-color="yellow-light5")
       ul.ml6
         li.mb2
@@ -26,19 +26,8 @@
             | customizable for all the scenarii and a breeze to override.#[br]
             strong You most likely don't need the #[code !important] flag.
 
-  .announcement.w-flex.align-center.mb8
-    w-icon.ml-1.mr4(size="50" color="orange-light3") material-icons report
-    w-alert.message-box(border-left color="orange")
-      a.orange(
-        href="https://blog.vuejs.org/posts/vue-3-as-the-new-default.html"
-        target="_blank"
-        style="text-decoration: underline") Vue 3 is the new default
-      | , and so is Vue Cal 4, for Vue 3. #[span.title2.ml1 🙌]#[br]
-      | For Vue 2 projects, you should use #[code npm i vue-cal@#[strong legacy]].
-
-
-  .announcement.w-flex.align-center.mb8
-    w-icon.ml-1.mr4(size="50" color="pink-light3") material-icons favorite
+  .announcement.w-flex.align-center.mb6
+    w-icon.ml-1.mr4(size="50" color="pink-light3") mdi mdi-heart
     w-alert.message-box(border-left color="pink")
       | If you like Vue Cal, you can
       a.pink.mx2(
@@ -57,13 +46,14 @@
     svg.mr4.blue-light1(viewBox="0 0 725 477" style="width: 50px;stroke: #497ca2;stroke-width: 5px")
       path(fill="#497ca2" d="M449 0c-78 5-152 39-217 82-19 13-37 26-54 40-39 1-77 15-110 34-34 21-53 60-61 99-11 52-8 108 6 159 7 23 16 46 33 63 4-4 13-4 13-11-1-5-7-8-9-14-27-48-32-108-11-159 13-32 36-63 68-77 19-9 42-7 58 6 6 7 18 4 24-2 6-4 11-10 19-10-24 25-39 60-38 95 1 15 3 31 8 45 16 36 41 69 76 89 5 2 10 6 16 7 5-2 14-5 14-12-4-9-14-12-21-18-27-23-56-48-67-82-9-29-1-60 8-88 7-15 21-32 39-29 15 1 28 13 43 8 11-5 13-17 16-27 5-17 3-38-10-51-16-18-40-23-62-25l-11-2c23-19 53-26 81-31 21-3 43-5 64-2 18 3 28 21 42 31-33 47-57 102-56 159a170 170 0 0086 149c6-1 13-7 10-14-5-11-17-16-25-25-33-30-52-75-50-121 1-29 11-58 24-84 12-25 25-52 47-71 9-8 22-13 33-7 20 8 42 14 63 13-35 27-55 70-64 113-9 44-7 91 12 133 15 37 45 68 81 85 32 16 67 24 101 27 18 1 36 2 53-4 4-1 6-7 2-9-13-6-28-4-42-6-45-5-92-16-127-45-34-28-54-71-60-114-5-47 7-97 34-137 11-15 26-31 45-34 14-1 25 12 31 23 6 12 16 24 29 28 20-10 40-26 43-50 2-17-6-34-14-49-15-25-40-43-69-48-20-5-41-2-61-6-22-21-54-24-83-24zm6 21c22 0 48 5 62 25 4 7 8 16 8 24-1 10-10 22-21 19-9-7-18-14-30-16-14-4-31-1-43 8-6 6-17 8-24 2-9-6-17-15-28-17-27-7-54 1-81 6a364 364 0 01157-51zm117 29c33 0 66 25 72 58 3 12 3 28-8 35-3 2-6 4-8 1-8-12-12-27-23-37-3-7-12-8-19-9-13-2-26 0-39-4 7-7 6-17 4-25l-3-16 24-3zm-372 92l46 2c18 2 33 16 34 34 1 7 1 17-6 21-6 0-12-4-18-6-21-8-46-14-67-3-6 2-11 9-17 5-10-4-18-14-30-12-30 1-56 21-77 42-16 17-30 37-43 56 0-39 17-80 49-104 26-22 61-30 94-34l35-1z")
     w-alert.message-box.ml-1(border-left color="pale-blue")
-      strong
-        | Check out my UI framework for Vue (2 &amp; 3)!
-        a.title3.ml4(
+      .text-bold
+        | Do you need A UI framework? Checkout
+        a.title2.ml4(
           href="https://antoniandre.github.io/wave-ui"
           target="_blank"
           style="width: 50px;color: #1471b8;text-decoration: underline")
             strong Wave UI
+        div By the same awesome author.
 
 
   //- To Do list.
@@ -73,7 +63,7 @@
 
   w-accordion(:model-value="[false, true]" :items="2" expand-icon-right expand-single)
     template(#item-title.1)
-      w-icon.mr2.primary material-icons check_circle
+      w-icon.mr2.primary wi-check
       strong.mra Done
     template(#item-content.1)
       .w-flex.wrap.align-center
@@ -127,7 +117,7 @@
         todo-list-item Disable days
         todo-list-item Support Vue 3
     template(#item-title.2)
-      w-icon.mr2.orange material-icons access_time
+      w-icon.mr2.orange mdi mdi-clock-outline
       strong.mra Backlog
     template(#item-content.2)
       .w-flex.wrap
@@ -187,29 +177,29 @@
           .title2 Demos on StackBlitz
           p.body.mb4.grey Check the different setups for bundlers
           .w-flex.align-center
-            w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") material-icons bolt
+            w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") mdi mdi-lightning-bolt
             ul.no-bullet
               li
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
                   | Vue Cal + Vue 3 + Vue CLI
-                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
               li
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
                   | Vue Cal + Vue 3 + Vite
-                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
               li
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
                   | Vue Cal + Vue 3 &amp; composition API + Vite
-                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
               li
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
                   | Vue Cal + Vue 2 + Vue CLI
-                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
     li.mt8
       h3.mt4 Or via #[span.code &lt;script&gt;] tag
@@ -255,12 +245,12 @@
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010" target="_blank")
                   | Vue Cal + Vue 3 (IIFE build)
-                  w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
               li
                 w-icon.mr2 wi-chevron-right
                 a.ml1(href="https://codepen.io/antoniandre/pen/pGJWjL" target="_blank")
                   | Vue Cal + Vue 2 (UMD build)
-                  w-icon.ml1(sm style="margin-top: -2px") material-icons open_in_new
+                  w-icon.ml1(sm style="margin-top: -2px") mdi mdi-open-in-new
 
   h2.title2.mt12.pt12
     a(href="#how-to-use") How to use

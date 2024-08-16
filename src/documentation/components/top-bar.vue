@@ -27,7 +27,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           tile
           color="secondary"
           height="100%")
-          w-icon.mr2(lg) material-icons school
+          w-icon.mr2(lg) mdi mdi-school
           span DOC
 
       w-list.mt0.pa0.sh2.white--bg.bdrs1(
@@ -63,7 +63,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           href="#examples"
           v-scroll-to="'#examples'"
           height="100%")
-          w-icon.mr2(lg) material-icons apps
+          w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
       w-list.mt0.pa0.sh2.white--bg.bdrs1(
         nav
@@ -100,7 +100,7 @@ export default {
       { href: '#release-notes', label: 'Release notes' }
     ],
     examples: [
-      { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'material-icons done' },
+      { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
       { href: '#ex--basic', label: 'Basic, hide weekends' },
       { href: '#ex--small-cal', label: 'Small calendar, no view selector, custom arrows' },
       { href: '#ex--disable-views', label: 'Disable views, default view' },
@@ -108,15 +108,15 @@ export default {
       { href: '#ex--disable-days', label: 'Disable days' },
       { href: '#ex--calendar-themes', label: 'Calendar themes' },
       { href: '#ex--hiding-particular-week-days', label: 'Hide particular weekdays &amp; show week numbers' },
-      { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'material-icons translate' },
+      { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
       { href: '#ex--internationalization', label: 'Internationalization' },
-      { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'material-icons access_time' },
+      { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
       { href: '#ex--timeline', label: 'Timeline' },
       { href: '#ex--special-hours', label: 'Business Hours' },
       { href: '#ex--today-current-time', label: 'Today\'s current time' },
       { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
 
-      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'material-icons event' },
+      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'mdi mdi-calendar' },
       { href: '#ex--timeless-events', label: 'Timeless events' },
       { href: '#ex--events-with-time', label: 'Events with time information' },
       { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
@@ -134,13 +134,13 @@ export default {
       { href: '#ex--all-day-events', label: 'All day events' },
       { href: '#ex--splitting-days', label: 'Splitting days' },
 
-      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'material-icons swap_horiz' },
+      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
       { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
       { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
       { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
       { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
 
-      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'material-icons tune' },
+      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
       { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
       { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
       { href: '#ex--custom-events-count', label: 'Custom events count' },

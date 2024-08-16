@@ -4,34 +4,32 @@ component(:class="`highlight highlight--${type}`" :is="tag")
   slot
 </template>
 
-<script>
-export default {
-  props: {
-    tag: { type: String, default: 'p' },
-    type: { type: String, default: 'info' },
-    noIcon: { type: Boolean, default: false }
-  },
-  computed: {
-    icon () {
-      switch (this.type) {
-        case 'success': return 'check'
-        case 'error': return 'close'
-        case 'warning': return 'priority_high'
-        case 'tips': return 'wb_incandescent'
-        case 'info':
-        default: return 'priority_high'
-      }
-    }
+<script setup>
+import { computed } from 'vue'
+
+const props = defineProps({
+  tag: { type: String, default: 'p' },
+  type: { type: String, default: 'info' },
+  noIcon: { type: Boolean, default: false }
+})
+
+const icon = computed(() => {
+  switch (props.type) {
+    case 'success': return 'wi-check'
+    case 'error': return 'wi-cross'
+    case 'warning': return 'mdi mdi-exclamation-thick'
+    case 'tips': return 'mdi mdi-lightbulb-on'
+    case 'info': return 'mdi mdi-information-symbol'
+    default: return 'wi-check'
   }
-}
+})
 </script>
 
 <style lang="scss">
 .highlight {
   position: relative;
-  margin-top: 12px;
-  margin-bottom: 12px;
-  padding: 8px 16px 8px 24px;
+  margin-top: 5px;
+  padding: 8px 15px;
   border-left: 3px solid;
 
   &--info {
