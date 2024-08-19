@@ -21,61 +21,61 @@
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/pGJWjL?editors=1010" target="_blank")
             | Basic calendar
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/xxWddyd?editors=1010" target="_blank")
             | Calendar with events (Vue 3)
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/rPzWOJ?editors=1010" target="_blank")
             | Calendar with events (Vue 2)
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/jJbygw?editors=1010" target="_blank")
             | Calendar with custom events on month view
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/abbVQLy?editors=1010" target="_blank")
             | Calendar with custom title
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/WWRLgG?editors=1010" target="_blank")
             | Calendar with custom cells
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/dxXvwv?editors=1010" target="_blank")
             | Localized calendar (i18n)
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/MWWbZgK" target="_blank")
             | 2 Vue Cal instances to show 2 weeks
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/jOOmxzo" target="_blank")
             | 12 Vue Cal instances to show a full year view (slower - not recommended)
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/antoniandre/pen/rbpPab?editors=1010" target="_blank")
             | How to fetch events from a back-end
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
         li.mt2
           w-icon wi-chevron-right
           a.ml2(href="https://codepen.io/collection/AMvOgd" target="_blank")
             strong Browse the full Vue Cal Codepen collection
-            w-icon.ml2(sm style="margin-top: -2px") material-icons open_in_new
+            w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
   h3
     a(href="#ex--basic")
-      w-icon.mr2 material-icons done
+      w-icon.mr2 mdi mdi-done
       | Basic
   //- Example.
   h4.title2
@@ -106,9 +106,9 @@
   .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--green-theme(hide-view-selector :time="false" active-view="month" xsmall)
       template(#arrow-prev)
-        w-icon material-icons arrow_back
+        w-icon mdi mdi-arrow-left
       template(#arrow-next)
-        w-icon material-icons arrow_forward
+        w-icon mdi mdi-arrow-right
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal
       hide-view-selector
@@ -116,10 +116,10 @@
       active-view="month"
       xsmall&gt;
       &lt;template #arrow-prev&gt;
-        &lt;i class="icon material-icons"&gt;arrow_back&lt;/i&gt;
+        &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
       &lt;/template&gt;
       &lt;template #arrow-next&gt;
-        &lt;i class="icon material-icons"&gt;arrow_forward&lt;/i&gt;
+        &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
@@ -164,7 +164,7 @@
           active-view="month"
           :disable-views="['week']")
       .grey.text-center
-        w-icon.pr1(style="padding-bottom: 2px") material-icons keyboard_arrow_up
+        w-icon.pr1(style="padding-bottom: 2px") mdi mdi-arrow-up
         | Date picker layout, no transition
   .w-flex.wrap
     ssh-pre.grow.mr2(language="html-vue" label="Vue Template - Rounded Cell").
@@ -334,14 +334,14 @@
   //- Example.
   h3
     a(href="#ex--internationalization")
-      w-icon.mr2 material-icons translate
+      w-icon.mr2 mdi mdi-translate
       | Internationalization (i18n)
   .w-flex.align-end.wrap
     h4.title2.mt6
       a(href="#ex--internationalization") # Internationalization
     .spacer
     .w-flex.no-grow.align-center.wrap
-      w-icon.mr2(color="primary") material-icons translate
+      w-icon.mr2(color="primary") mdi mdi-translate
       span.mr2 Current language:
       w-select.pa0.mla.no-grow(
         v-model="locale"
@@ -380,7 +380,7 @@
 
   h3
     a(href="#ex--timeline")
-      w-icon.mr2 material-icons access_time
+      w-icon.mr2 mdi mdi-clock-outline
       | Timeline, business hours &amp; Today
 
   //- Example.
@@ -640,7 +640,7 @@
           w-tooltip(bottom)
             template(#activator="{ on }")
               w-button(x-Programmatically fab text v-on="on")
-                w-icon(color="primary" size="20") material-icons my_location
+                w-icon(color="primary" size="20") mdi mdi-map-marker-outline
             span Go to Today's date
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal
@@ -675,7 +675,7 @@
 
   h3
     a(href="#ex--timeless-events")
-      w-icon.mr2 material-icons event
+      w-icon.mr2 mdi mdi-calendar
       | Events
 
   //- Example.
@@ -708,21 +708,21 @@
           start: '2018-11-21',
           end: '2018-11-21',
           title: 'Need to go shopping',
-          content: '&lt;i class="icon material-icons"&gt;shopping_cart&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-cart-outline"&gt;&lt;/i&gt;',
           class: 'leisure'
         },
         {
           start: '2018-11-21',
           end: '2018-11-21',
           title: 'Golf with John',
-          content: '&lt;i class="icon material-icons"&gt;golf_course&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-golf"&gt;&lt;/i&gt;',
           class: 'sport'
         },
         {
           start: '2018-11-22',
           end: '2018-11-22',
           title: 'Dad\'s birthday!',
-          content: '&lt;i class="icon material-icons"&gt;cake&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
           class: 'sport'
         }
       ]
@@ -766,7 +766,7 @@
         // start: new Date(2018, 11 - 1, 16, 10, 30),
         // end: new Date(2018, 11 - 1, 16, 11, 30),
         title: 'Doctor appointment',
-        content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
+        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
         class: 'health'
       },
       ...
@@ -833,7 +833,7 @@
           start: '2018-11-20 14:00',
           end: '2018-11-20 18:00',
           title: 'Need to go shopping',
-          icon: 'shopping_cart', // Custom attribute.
+          icon: 'mdi mdi-cart-outline', // Custom attribute.
           content: 'Click to see my shopping list',
           contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
           class: 'leisure'
@@ -842,7 +842,7 @@
           start: '2018-11-22 10:00',
           end: '2018-11-22 15:00',
           title: 'Golf with John',
-          icon: 'golf_course', // Custom attribute.
+          icon: 'mdi mdi-golf', // Custom attribute.
           content: 'Do I need to tell how many holes?',
           contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom attribute.
           class: 'sport'
@@ -1060,7 +1060,7 @@
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:30',
         title: 'Boring event',
-        content: '&lt;i class="icon material-icons"&gt;block&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
+        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
         class: 'blue-event',
         deletable: false,
         resizable: false,
@@ -1690,21 +1690,21 @@
           start: '2018-11-16 10:00',
           end: '2018-11-20 12:37',
           title: 'Running Marathon',
-          content: '&lt;i class="icon material-icons"&gt;directions_run&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-run"&gt;&lt;/i&gt;',
           class: 'sport'
         },
         {
           start: '2018-11-20 10:00',
           end: '2018-11-20 10:25',
           title: 'Drink water!',
-          content: '&lt;i class="icon material-icons"&gt;local_drink&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
           class: 'health'
         },
         {
           start: '2018-11-21 19:00',
           end: '2018-11-23 11:30',
           title: 'Trip to India',
-          content: '&lt;i class="icon material-icons"&gt;flight&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-airplane"&gt;&lt;/i&gt;',
           class: 'leisure'
         }
       ]
@@ -1760,7 +1760,7 @@
           start: '2018-11-19 22:00',
           end: '2018-11-20 11:00',
           title: 'Nightclub',
-          content: '&lt;i class="icon material-icons"&gt;local_drink&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
           class: 'leisure',
           repeat: {
             weekdays: [1, 3], // You can repeat on multiple days of the week.
@@ -1771,7 +1771,7 @@
           start: '2018-11-23', // You can put time or not, will be discarded if all-day.
           end: '2018-11-23',
           title: 'Pizza day!',
-          content: '&lt;i class="icon material-icons"&gt;local_pizza&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-pizza"&gt;&lt;/i&gt;',
           class: 'pink-event',
           allDay: true,
           repeat: {
@@ -1783,7 +1783,7 @@
           start: '2018-11-22 10:00',
           end: '2018-11-22 12:00',
           title: 'Piano lesson',
-          content: '&lt;i class="icon material-icons"&gt;queue_music&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-music"&gt;&lt;/i&gt;',
           class: 'leisure',
           repeat: {
             every: 'week',
@@ -1794,7 +1794,7 @@
           start: '2018-11-20 18:00',
           end: '2018-11-20 20:00',
           title: 'Tennis tournament',
-          content: '&lt;i class="icon material-icons"&gt;sports_tennis&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-tennis"&gt;&lt;/i&gt;',
           class: 'sport',
           repeat: {
             every: 14,
@@ -1805,7 +1805,7 @@
           start: '2018-11-01',
           end: '2018-11-01',
           title: 'Crêpes day',
-          content: '&lt;i class="icon material-icons"&gt;restaurant&lt;/i&gt;',
+          content: '&lt;i class="icon mdi silverware-fork-knife"&gt;&lt;/i&gt;',
           class: 'yellow-event',
           allDay: true,
           repeat: {
@@ -1817,7 +1817,7 @@
           start: '2015-06-15',
           end: '2015-06-15',
           title: 'My Birthday',
-          content: '&lt;i class="icon material-icons"&gt;cake&lt;/i&gt;&lt;br&gt;I am 4.',
+          content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;&lt;br&gt;I am 4.',
           class: 'blue-event',
           allDay: true,
           repeat: {
@@ -1838,7 +1838,7 @@
   .w-flex.mb3.align-center
     | Optionally you can set a min width (in percent) to the events:
     w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
-      w-icon.mr1 material-icons {{ minEventWidth ? 'close' : 'add' }}
+      w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
       | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
   div(style="min-height: 40px")
     w-transition-expand(y)
@@ -1881,21 +1881,21 @@
           start: '2018-11-21 14:00',
           end: '2018-11-21 22:00',
           title: 'A big thing',
-          content: '&lt;i class="icon material-icons"&gt;sentiment_satisfied_alt&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-emoticon-outline"&gt;&lt;/i&gt;',
           class: 'health'
         },
         {
           start: '2018-11-21 16:00',
           end: '2018-11-21 19:00',
           title: 'Another thing',
-          content: '&lt;i class="icon material-icons"&gt;thumb_up&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-thumb-up-outline"&gt;&lt;/i&gt;',
           class: 'blue-event'
         },
         {
           start: '2018-11-20 18:30',
           end: '2018-11-20 20:30',
           title: 'Crossfit',
-          content: '&lt;i class="icon material-icons"&gt;fitness_center&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
           class: 'sport'
         },
         ...
@@ -2029,7 +2029,7 @@
         start: '2019-02-12',
         end: '2019-02-12',
         title: 'Day off!',
-        content: '&lt;i class="icon material-icons"&gt;beach_access&lt;/i&gt;',
+        content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
         class: 'yellow-event',
         allDay: true
       },
@@ -2037,7 +2037,7 @@
         start: '2019-02-14',
         end: '2019-02-14',
         title: 'Valentine\'s day',
-        content: '&lt;i class="icon material-icons"&gt;favorite_outline&lt;/i&gt;',
+        content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
         class: 'pink-event',
         allDay: true
       },
@@ -2078,25 +2078,25 @@
       w-button.px2.mr2.my1(
         :outline="!splitsExample.minCellWidth"
         @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
-        w-icon.mr2 material-icons {{ splitsExample.minCellWidth ? 'close' : 'add' }}
+        w-icon.mr2 mdi mdi-{{ splitsExample.minCellWidth ? 'close' : 'plus' }}
         | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
 
       w-button.px2.mr2.my1(
         :outline="!splitsExample.minSplitWidth"
         @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
-        w-icon.mr2 material-icons {{ splitsExample.minSplitWidth ? 'close' : 'add' }}
+        w-icon.mr2 mdi mdi-{{ splitsExample.minSplitWidth ? 'close' : 'plus' }}
         | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
 
       w-button.px2.mr2.my1(
         :outline="!splitsExample.stickySplitLabels"
         @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
-        w-icon.mr2 material-icons {{ splitsExample.stickySplitLabels ? 'close' : 'add' }}
+        w-icon.mr2 mdi mdi-{{ splitsExample.stickySplitLabels ? 'close' : 'plus' }}
         | Sticky Split Labels
 
       w-button.px2.my1(
         :outline="splitsExample.splitDays[1].hide"
         @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
-        w-icon.mr2 material-icons {{ splitsExample.splitDays[1].hide ? 'add' : 'close' }}
+        w-icon.mr2 mdi mdi-{{ splitsExample.splitDays[1].hide ? 'plus' : 'close' }}
         | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
   .example.grow.my2(style="height: 600px")
@@ -2157,7 +2157,7 @@
           start: '2018-11-19 10:35',
           end: '2018-11-19 11:30',
           title: 'Doctor appointment',
-          content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health',
           split: 1 // Has to match the id of the split you have set (or integers if none).
         },
@@ -2165,7 +2165,7 @@
           start: '2018-11-19 18:30',
           end: '2018-11-19 19:15',
           title: 'Dentist appointment',
-          content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health',
           split: 2
         },
@@ -2173,7 +2173,7 @@
           start: '2018-11-20 18:30',
           end: '2018-11-20 20:30',
           title: 'Crossfit',
-          content: '&lt;i class="icon material-icons"&gt;fitness_center&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
           class: 'sport',
           split: 1
         },
@@ -2197,7 +2197,7 @@
 
   h3
     a(href="#ex--emitted-events")
-      w-icon.mr2(medium) material-icons swap_horiz
+      w-icon.mr2(medium) mdi mdi-swap_horizontal
       | Communicating with Vue Cal
 
   //- Example.
@@ -2207,7 +2207,7 @@
   p.mb0.
     Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
     If you are not familiar with Vue JS events, you should read about it here:
-    #[a(href="https://vuejs.org/v2/guide/events.html" target="_blank") vuejs.org/v2/guide/events.html #[w-icon(color="primary") material-icons open_in_new]]#[br]#[br]
+    #[a(href="https://vuejs.org/v2/guide/events.html" target="_blank") vuejs.org/v2/guide/events.html #[w-icon(color="primary") mdi mdi-open-in-new]]#[br]#[br]
     Here is the list of emitted events:
   h4.mt2 View-related
   ul
@@ -2322,10 +2322,10 @@
         span arguments-list
       .spacer
       w-button.my1(color="primary" outline @click="clearEventsLog")
-        w-icon.mr1 material-icons clear
+        w-icon.mr1 mdi mdi-close
         | Clear log
       w-button.my1.ml2(color="primary" outline @click="logMouseEvents = !logMouseEvents")
-        w-icon.mr1 material-icons {{ logMouseEvents ? 'remove' : 'add' }}
+        w-icon.mr1 mdi mdi-{{ logMouseEvents ? 'close' : 'plus' }}
         | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
     .scrollable
       .mt1(v-for="(l, i) in reversedLogs" :key="i")
@@ -2429,14 +2429,14 @@
 
   .w-flex.mt2.mb6.mxa.justify-center(style="max-width: 500px")
     w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.previous()")
-      w-icon.mr1 material-icons keyboard_arrow_left
+      w-icon.mr1 mdi mdi-arrow-left
       | Previous
     w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.switchView('day', new Date())")
-      w-icon.mr1 material-icons my_location
+      w-icon.mr1 mdi mdi-map-marker-outline
       | Today
     w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.next()")
       | Next
-      w-icon.ml1 material-icons keyboard_arrow_right
+      w-icon.ml1 mdi mdi-arrow-right
   .w-flex.align-center.justify-center
     vue-cal.vuecal--green-theme(
       small
@@ -2554,10 +2554,10 @@
     will be replaced by the new array of events. You may lose your changes if you
     modified events within Vue Cal.
   w-button.ma1(@click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
-    w-icon.mr2 material-icons add
+    w-icon.mr2 mdi mdi-plus
     | Add an event
   w-button.ma1(@click="eventsCopy.pop()")
-    w-icon.mr2 material-icons remove
+    w-icon.mr2 mdi mdi-close
     | Remove last event
   p.mb0 Here is the live array of event titles:
   pre {{ eventsCopy.map(e => e.title) }}
@@ -2596,7 +2596,7 @@
           start: '2018-11-19 10:35',
           end: '2018-11-19 11:30',
           title: 'Doctor appointment',
-          content: '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;',
+          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health'
         },
         ...
@@ -2605,7 +2605,7 @@
 
   h3
     a(href="#ex--timeline-tweaking")
-      w-icon.mr2 material-icons tune
+      w-icon.mr2 mdi mdi-tune
       | Advanced Vue Cal customization
       small.ml2 #[em="- when CSS won't do it"]
 
@@ -2638,10 +2638,10 @@
       if (!HTMLElement.prototype.scrollTo) HTMLElement.prototype.scrollTo = function ({ top }) { this.scrollTop = top }
 
   w-button.mt2.mr2(@click="scrollToCurrentTime('.ex--scroll-to-time')")
-    w-icon material-icons vertical_align_bottom
+    w-icon mdi mdi-format-vertical-align-bottom
     | Scroll to current time
   w-button.mt2.mr2(@click="scrollToTop('.ex--scroll-to-time')")
-    w-icon material-icons vertical_align_top
+    w-icon mdi mdi-format-vertical-align-top
     | Scroll to top
   .w-flex.wrap
     .example.my4.mr2.grow(style="width: 360px;height: 360px;max-width: 100%")
@@ -2695,7 +2695,7 @@
           span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
   highlight-message.mt6(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
   ssh-pre(language="html-vue" label="Vue Template").
     &lt;vue-cal
       small
@@ -2724,7 +2724,7 @@
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
   p.
     In the following example, we only count the events which have the custom
     #[span.code leisure] CSS class (orange color).
@@ -2802,9 +2802,9 @@
   highlight-message(type="tips").
     Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]]
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
   h5.mt6.subtitle-1.font-weight-medium
-    w-icon(size="22") material-icons keyboard_arrow_right
+    w-icon(size="22") mdi mdi-arrow-right
     | Custom title
   p.ml2.mb2.
     2 arguments are available through the scoped slot: #[span.code #title="{ title, view }"]
@@ -2828,7 +2828,7 @@
     the different formats for all the views: years, year, month, week, day.
 
   h5.mt6.subtitle-1.font-weight-medium
-    w-icon(size="22") material-icons keyboard_arrow_right
+    w-icon(size="22") mdi mdi-arrow-right
     | Custom cells
   p.ml2.mb2.
     In this example, only the cell number is clickable on month view.#[br]
@@ -2934,7 +2934,7 @@
 
   highlight-message.my2(type="tips").
     If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") material-icons open_in_new]].
+    #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]].
   highlight-message.my3(type="info")
     | By default an event is rendered as follows.#[br]
     | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
@@ -2976,7 +2976,7 @@
       hide-weekends
       :events="eventsToPop")
       template(#event="{ event, view }")
-        w-icon.mt2(color="white" xl) material-icons {{ event.icon }}
+        w-icon.mt2(color="white" xl) {{ event.icon }}
         .vuecal__event-title.mb6(v-html="event.title")
         small.vuecal__event-time
           strong.mr1 Event start:
@@ -3015,14 +3015,14 @@
         start: '2018-11-20 14:00',
         end: '2018-11-20 18:00',
         title: 'Need to go shopping',
-        icon: 'shopping_cart', // Custom attribute.
+        icon: 'mdi mdi-cart-outline', // Custom attribute.
         class: 'leisure'
       },
       {
         start: '2018-11-22 10:00',
         end: '2018-11-22 15:00',
         title: 'Golf with John',
-        icon: 'golf_course', // Custom attribute.
+        icon: 'mdi mdi-golf', // Custom attribute.
         class: 'sport'
       }
     ]
@@ -3042,7 +3042,7 @@
       sticky-split-labels)
       template(#no-event) &nbsp;
       template(#split-label="{ split, view }")
-        w-icon(:color="split.color" size="18") material-icons person
+        w-icon(:color="split.color" size="18") mdi mdi-account
         strong(:style="`color: ${split.color}`") {{ split.label }}
 
   ssh-pre(language="html-vue" label="Vue Template").
@@ -3053,7 +3053,7 @@
       :hide-weekdays="[5, 6, 7]"
       sticky-split-labels&gt;
       &lt;template #split-label="{ split, view }"&gt;
-        &lt;i class="icon material-icons"&gt;person&lt;/i&gt;
+        &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
         &lt;strong :style="`color: ${split.color}`"&gt;{{ '\{\{ split.label \}\}' }}&lt;/strong&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
@@ -3077,7 +3077,7 @@
 
   w-dialog(v-model="showDialog" width="600" dialog-class="bdrs2" title-class="primary--bg white py2")
     template(#title)
-      w-icon.mr3 material-icons {{ selectedEvent.icon }}
+      w-icon.mr3 {{ selectedEvent.icon }}
       span.title3.text-upper {{ selectedEvent.title }}
       .spacer
       strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
@@ -3129,7 +3129,7 @@ const events = [
     start: '2018-10-30 10:30',
     end: '2018-10-30 11:30',
     title: 'Doctor appointment',
-    content: '<i class="w-icon material-icons">local_hospital</i>',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
     split: 1
   },
@@ -3137,7 +3137,7 @@ const events = [
     start: '2018-11-16 10:30',
     end: '2018-11-16 11:30',
     title: 'Doctor appointment',
-    content: '<i class="w-icon material-icons">local_hospital</i>',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
     split: 1
   },
@@ -3145,7 +3145,7 @@ const events = [
     start: '2018-11-19 10:35',
     end: '2018-11-19 11:30',
     title: 'Doctor appointment',
-    content: '<i class="w-icon material-icons">local_hospital</i>',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
     split: 1
   },
@@ -3153,7 +3153,7 @@ const events = [
     start: '2018-11-19 18:30',
     end: '2018-11-19 19:15',
     title: 'Dentist appointment',
-    content: '<i class="w-icon material-icons">local_hospital</i>',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
     split: 2
   },
@@ -3161,7 +3161,7 @@ const events = [
     start: '2018-11-20 18:30',
     end: '2018-11-20 20:30',
     title: 'Crossfit',
-    content: '<i class="w-icon material-icons">fitness_center</i>',
+    content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
     split: 2
   },
@@ -3169,7 +3169,7 @@ const events = [
     start: '2018-11-21 11:00',
     end: '2018-11-21 13:00',
     title: 'Brunch with Jane',
-    content: '<i class="w-icon material-icons">local_cafe</i>',
+    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
     class: 'leisure',
     split: 1,
     background: false
@@ -3178,7 +3178,7 @@ const events = [
     start: '2018-11-21 19:30',
     end: '2018-11-21 23:00',
     title: 'Swimming lesson',
-    content: '<i class="w-icon material-icons">pool</i>',
+    content: '<i class="w-icon mdi mdi-pool"></i>',
     class: 'sport',
     split: 2
   },
@@ -3186,7 +3186,7 @@ const events = [
     start: '2018-11-23 12:30',
     end: '2018-11-23 13:00',
     title: 'Macca\'s with Mark',
-    content: '<i class="w-icon material-icons">fastfood</i>',
+    content: '<i class="w-icon mdi mdi-food"></i>',
     class: 'leisure',
     split: 2
   },
@@ -3194,7 +3194,7 @@ const events = [
     start: '2018-11-23 21:00',
     end: '2018-11-23 23:30',
     title: 'Movie time',
-    content: '<i class="w-icon material-icons">local_play</i>',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
     split: 1
   },
@@ -3202,7 +3202,7 @@ const events = [
     start: '2018-11-30 21:00',
     end: '2018-11-30 23:30',
     title: 'Another movie tonight',
-    content: '<i class="w-icon material-icons">local_play</i>',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
     split: 1
   }
@@ -3266,7 +3266,7 @@ export default {
         start: '2018-11-20 14:00',
         end: '2018-11-20 17:30',
         title: 'Boring event',
-        content: '<i class="w-icon material-icons">block</i><br>I am not draggable, not resizable and not deletable.',
+        content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
         class: 'blue-event',
         deletable: false,
         resizable: false,
@@ -3279,28 +3279,28 @@ export default {
         start: '2018-11-21 14:00',
         end: '2018-11-21 22:00',
         title: 'A big thing',
-        content: '<i class="w-icon material-icons">sentiment_satisfied_alt</i>',
+        content: '<i class="w-icon mdi mdi-emoticon-outline"></i>',
         class: 'health'
       },
       {
         start: '2018-11-21 16:00',
         end: '2018-11-21 19:00',
         title: 'Another thing',
-        content: '<i class="w-icon material-icons">thumb_up</i>',
+        content: '<i class="w-icon mdi mdi-thumb-up-outline"></i>',
         class: 'blue-event'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure'
       }
     ],
@@ -3310,21 +3310,21 @@ export default {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
         title: 'Recall Dave',
-        content: '<i class="w-icon material-icons">local_cafe</i>',
+        content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
         class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Eat pop corns',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure'
       },
       {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Enjoy the movie',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure'
       }
     ],
@@ -3339,21 +3339,21 @@ export default {
         start: '2018-11-16 10:00',
         end: '2018-11-20 12:37',
         title: 'Running Marathon',
-        content: '<i class="w-icon material-icons">directions_run</i>',
+        content: '<i class="w-icon mdi mdi-run"></i>',
         class: 'sport'
       },
       {
         start: '2018-11-20 10:00',
         end: '2018-11-20 10:25',
         title: 'Drink water!',
-        content: '<i class="w-icon material-icons">local_drink</i>',
+        content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
         class: 'health drink-water'
       },
       {
         start: '2018-11-21 19:00',
         end: '2018-11-23 11:30',
         title: 'Trip to India',
-        content: '<i class="w-icon material-icons">flight</i>',
+        content: '<i class="w-icon mdi mdi-airplane"></i>',
         class: 'leisure'
       }
     ],
@@ -3363,7 +3363,7 @@ export default {
         start: '2019-02-12',
         end: '2019-02-12',
         title: 'Day off!',
-        content: '<i class="w-icon material-icons">beach_access</i>',
+        content: '<i class="w-icon mdi mdi-umbrella-beach-outline"></i>',
         class: 'yellow-event',
         allDay: true
       },
@@ -3371,7 +3371,7 @@ export default {
         start: '2019-02-14',
         end: '2019-02-14',
         title: 'Valentine\'s day',
-        content: '<i class="w-icon material-icons">favorite_outline</i>',
+        content: '<i class="w-icon mdi mdi-heart-outline"></i>',
         class: 'pink-event',
         allDay: true
       },
@@ -3379,7 +3379,7 @@ export default {
         start: '2019-02-14',
         end: '2019-02-14',
         title: 'Need to go shopping',
-        content: '<i class="w-icon material-icons">shopping_cart</i>',
+        content: '<i class="w-icon mdi mdi-cart-outline"></i>',
         class: 'leisure',
         allDay: true
       },
@@ -3387,7 +3387,7 @@ export default {
         start: '2019-02-11 10:35',
         end: '2019-02-11 11:30',
         title: 'Doctor appointment',
-        content: '<i class="w-icon material-icons">local_hospital</i>',
+        content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
         class: 'health',
         split: 1
       },
@@ -3395,7 +3395,7 @@ export default {
         start: '2019-02-11 18:30',
         end: '2019-02-11 19:15',
         title: 'Dentist appointment',
-        content: '<i class="w-icon material-icons">local_hospital</i>',
+        content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
         class: 'health',
         split: 2
       },
@@ -3403,7 +3403,7 @@ export default {
         start: '2019-02-12 18:30',
         end: '2019-02-12 20:30',
         title: 'Crossfit',
-        content: '<i class="w-icon material-icons">fitness_center</i>',
+        content: '<i class="w-icon mdi mdi-dumbbell"></i>',
         class: 'sport',
         split: 1
       },
@@ -3411,7 +3411,7 @@ export default {
         start: '2019-02-13 11:00',
         end: '2019-02-13 13:00',
         title: 'Brunch with Jane',
-        content: '<i class="w-icon material-icons">local_cafe</i>',
+        content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
         class: 'leisure',
         split: 1
       },
@@ -3419,7 +3419,7 @@ export default {
         start: '2019-02-13 19:30',
         end: '2019-02-13 23:00',
         title: 'Swimming lesson',
-        content: '<i class="w-icon material-icons">pool</i>',
+        content: '<i class="w-icon mdi mdi-pool"></i>',
         class: 'sport',
         split: 2
       },
@@ -3427,7 +3427,7 @@ export default {
         start: '2019-02-15 12:30',
         end: '2019-02-15 13:00',
         title: 'Macca\'s with Mark',
-        content: '<i class="w-icon material-icons">fastfood</i>',
+        content: '<i class="w-icon mdi mdi-food"></i>',
         class: 'leisure',
         split: 2
       },
@@ -3435,7 +3435,7 @@ export default {
         start: '2019-02-15 21:00',
         end: '2019-02-15 23:30',
         title: 'Movie time',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure',
         split: 1
       }
@@ -3446,7 +3446,7 @@ export default {
         start: '2018-11-21 12:00',
         end: '2018-11-21 12:30',
         title: 'Recall Dave',
-        content: '<i class="w-icon material-icons">local_cafe</i>',
+        content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
         class: 'leisure',
         split: 1
       },
@@ -3454,7 +3454,7 @@ export default {
         start: '2018-11-21 20:00',
         end: '2018-11-21 22:00',
         title: 'Salsa',
-        content: '<i class="w-icon material-icons">directions_walk</i>',
+        content: '<i class="w-icon mdi mdi-walk"></i>',
         class: 'sport',
         split: 1
       },
@@ -3462,7 +3462,7 @@ export default {
         start: '2018-11-23 21:00',
         end: '2018-11-23 23:30',
         title: 'Movie time',
-        content: '<i class="w-icon material-icons">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket"></i>',
         class: 'leisure',
         split: 2
       }
@@ -3510,28 +3510,28 @@ export default {
         start: '2018-11-21',
         end: '2018-11-21',
         title: 'Need to go shopping',
-        content: '<i class="w-icon material-icons">shopping_cart</i>',
+        content: '<i class="w-icon mdi mdi-cart-outline"></i>',
         class: 'leisure'
       },
       {
         start: '2018-11-21',
         end: '2018-11-21',
         title: 'Golf with John',
-        content: '<i class="w-icon material-icons">golf_course</i>',
+        content: '<i class="w-icon mdi mdi-golf"></i>',
         class: 'sport'
       },
       {
         start: '2018-11-22',
         end: '2018-11-22',
         title: 'Dad\'s birthday!',
-        content: '<i class="w-icon material-icons">cake</i>',
+        content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
         class: 'sport'
       },
       {
         start: '2018-11-23',
         end: '2018-11-23',
         title: 'Black Friday',
-        content: '<i class="w-icon material-icons">shopping_cart</i>',
+        content: '<i class="w-icon mdi mdi-cart-outline"></i>',
         class: 'leisure'
       }
     ],
@@ -3540,7 +3540,7 @@ export default {
         start: '2018-11-21 14:00',
         end: '2018-11-21 16:30',
         title: 'Surgery',
-        content: '<i class="w-icon material-icons">restaurant</i>',
+        content: '<i class="w-icon mdi silverware-fork-knife"></i>',
         class: 'health',
         split: 2
       }
@@ -3550,7 +3550,7 @@ export default {
         start: '2018-11-20 14:00',
         end: '2018-11-20 18:00',
         title: 'Need to go shopping',
-        icon: 'shopping_cart',
+        icon: 'mdi mdi-cart-outline',
         content: 'Click to see my shopping list',
         contentFull: 'My shopping list is rather long:<br><ul><li>Avocados</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
         class: 'leisure'
@@ -3559,7 +3559,7 @@ export default {
         start: '2018-11-22 10:00',
         end: '2018-11-22 15:00',
         title: 'Golf with John',
-        icon: 'golf_course',
+        icon: 'mdi mdi-golf',
         content: 'Do I need to tell how many holes?',
         contentFull: 'Okay.<br>It will be a 18 hole golf course.',
         class: 'sport'

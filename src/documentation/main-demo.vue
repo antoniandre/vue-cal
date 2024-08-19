@@ -33,13 +33,13 @@
         @cell-focus="selectedDate = $event.date || $event"
         style="height: 450px")
         template(#split-label="{ split, view }")
-          w-icon(:color="split.color" size="20") material-icons person
+          w-icon(:color="split.color" size="20") mdi mdi-account
           strong(:style="`color: ${split.color}`") {{ split.label }}
       a.mt4.w-flex.justify-end.grey-light1(
         href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/main-demo.vue"
         target="_blank")
         | View this example source code
-        w-icon.ml1(color="grey lighten-1") material-icons open_in_new
+        w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
 </template>
 
 <script>
@@ -104,7 +104,7 @@ export default {
         start: `${monday} 15:30`,
         end: `${monday} 17:30`,
         title: 'Tennis',
-        content: '<i class="w-icon material-icons mt1">sports_tennis</i>',
+        content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
         resizable: false,
         split: 1
       },
@@ -112,7 +112,7 @@ export default {
         start: `${monday} 15:30`,
         end: `${monday} 17:30`,
         title: 'Tennis',
-        content: '<i class="w-icon material-icons mt1">sports_tennis</i>',
+        content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
         resizable: false,
         split: 2
       },
@@ -120,7 +120,7 @@ export default {
         start: `${tuesday} 08:00`,
         end: `${tuesday} 10:00`,
         title: 'Volleyball',
-        content: '<i class="w-icon material-icons mt1">sports_volleyball</i>',
+        content: '<i class="w-icon mdi mdi-volleyball mt1"></i>',
         resizable: false,
         split: 2
       },
@@ -128,7 +128,7 @@ export default {
         start: `${thursday} 09:00`,
         end: `${thursday} 11:30`,
         title: 'Golf',
-        content: '<i class="w-icon material-icons mt2">golf_course</i>',
+        content: '<i class="w-icon mdi mdi-golf mt2"></i>',
         resizable: false,
         split: 1
       },
@@ -136,7 +136,7 @@ export default {
         start: `${friday} 16:45`,
         end: `${friday} 18:45`,
         title: 'Movie',
-        content: '<i class="w-icon material-icons mt1">local_play</i>',
+        content: '<i class="w-icon mdi mdi-ticket mt1"></i>',
         resizable: false,
         split: 2
       }

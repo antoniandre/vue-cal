@@ -574,7 +574,7 @@ div
           li If no #[span.code title] is provided, no title will be displayed.
           li.
             #[span.code content] accepts free HTML, for instance:
-            '&lt;i class="icon material-icons"&gt;local_hospital&lt;/i&gt;'.#[br]
+            '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;'.#[br]
             If no #[span.code content] is provided, no content will be displayed.
           li.
             You may need an event CSS #[span.code class] to handle different event types
