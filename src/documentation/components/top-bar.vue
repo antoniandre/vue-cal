@@ -191,7 +191,8 @@ $lighter-text: #ccc;
   right: 0;
   padding-right: 30px;
   box-sizing: content-box;
-  @include backdrop-blur;
+  background-color: rgba(#fff, 0.6);
+  backdrop-filter: blur(6px);
 
   h1 {height: 100%;}
 
@@ -221,8 +222,8 @@ $lighter-text: #ccc;
       width: 100%;
       display: block;
       z-index: -1;
-      border-left: none !important;
-      border-right: none !important;
+      border-left: none;
+      border-right: none;
     }
 
     &:before {
@@ -331,7 +332,7 @@ $lighter-text: #ccc;
     &.heading {
       padding-left: 8px;
       margin-top: 8px;
-      color: #888 !important;
+      color: #888;
     }
   }
 
@@ -373,8 +374,8 @@ $lighter-text: #ccc;
   // When scrolled: sticky top bar.
   &.scrolled {
     transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
-    border-bottom-color: rgba($lighter-text, 0.5) !important;
-    position: fixed !important;
+    border-bottom-color: rgba($lighter-text, 0.5);
+    position: fixed;
 
     .top-bar__title {width: 100%;height: 40px;}
     .top-bar__logo {
@@ -420,9 +421,9 @@ $lighter-text: #ccc;
 
   .top-bar.scrolled,
   .top-bar.scrolled .w-toolbar__content,
-  .scrolled .top-bar__logo-link {height: 32px !important;}
+  .scrolled .top-bar__logo-link {height: 32px;}
 
-  .top-bar__items .w-button {padding: 0 10px !important;}
+  .top-bar__items .w-button {padding: 0 10px;}
 }
 
 @media screen and (max-width: 449px) {
