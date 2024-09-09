@@ -1,4 +1,10 @@
 <template lang="pug">
+w-switch.theme-switch(
+  :model-value="store.darkMode"
+  @update:modelValue="store.toggleDarkMode")
+  template(#thumb)
+    w-icon mdi {{ store.darkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
+
 w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
   .top-bar__title
     span.top-bar__title-line
@@ -55,7 +61,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
       append-to=".top-bar__items"
       custom)
       template(#activator="{ on }")
-        w-button.bd0(
+        w-button.bd0.mr10(
           v-on="on"
           text
           tile
@@ -175,6 +181,13 @@ const vScrollTo = {
 $primary: #42b983;
 $secondary: #2c3e50;
 $lighter-text: #ccc;
+
+.theme-switch {
+  position: fixed;
+  top: 8px;
+  right: 8px;
+  z-index: 11;
+}
 
 .top-bar {
   z-index: 10;
@@ -423,6 +436,8 @@ $lighter-text: #ccc;
 }
 
 @media screen and (max-width: 449px) {
+  .theme-switch {top: 4px;right: 4px;}
+
   .top-bar.scrolled .top-bar__items {margin-right: 0;}
   .top-bar.scrolled .top-bar__title > .w-flex {padding-left: 8px;}
   .top-bar__title {width: 14.5em;}
