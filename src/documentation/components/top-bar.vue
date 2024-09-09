@@ -83,94 +83,90 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
             span(:class="{ ml8: !item.icon }" v-html="item.label")
 </template>
 
-<script>
-export default {
-  props: {
-    offsetTop: { type: Number, default: 0 }
-  },
+<script setup>
+import { computed, ref } from 'vue'
+import { useAppStore } from '@/store'
 
-  data: () => ({
-    todayDate: (new Date()).getDate(),
-    docs: [
-      { href: '#installation', label: 'Installation' },
-      { href: '#how-to-use', label: 'How to use' },
-      { href: '#api', label: 'API' },
-      { href: '#date-prototypes', label: 'Date prototypes' },
-      { href: '#css-notes', label: 'CSS notes' },
-      { href: '#release-notes', label: 'Release notes' }
-    ],
-    examples: [
-      { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
-      { href: '#ex--basic', label: 'Basic, hide weekends' },
-      { href: '#ex--small-cal', label: 'Small calendar, no view selector, custom arrows' },
-      { href: '#ex--disable-views', label: 'Disable views, default view' },
-      { href: '#ex--min-max-dates', label: 'Min / max dates &amp; single click to navigate' },
-      { href: '#ex--disable-days', label: 'Disable days' },
-      { href: '#ex--calendar-themes', label: 'Calendar themes' },
-      { href: '#ex--hiding-particular-week-days', label: 'Hide particular weekdays &amp; show week numbers' },
-      { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
-      { href: '#ex--internationalization', label: 'Internationalization' },
-      { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
-      { href: '#ex--timeline', label: 'Timeline' },
-      { href: '#ex--special-hours', label: 'Business Hours' },
-      { href: '#ex--today-current-time', label: 'Today\'s current time' },
-      { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
+const store = useAppStore()
 
-      { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'mdi mdi-calendar' },
-      { href: '#ex--timeless-events', label: 'Timeless events' },
-      { href: '#ex--events-with-time', label: 'Events with time information' },
-      { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
-      { href: '#ex--events-indicators', label: 'Events indicators' },
-      { href: '#ex--events-on-month-view', label: 'Display events on month view' },
-      { href: '#ex--edit-and-delete-events', label: 'Edit &amp; delete events' },
-      { href: '#ex--create-events', label: 'Create events' },
-      { href: '#ex--other-event-creation-methods', label: 'Other event creation methods' },
-      { href: '#ex--drag-and-drop', label: 'Drag &amp; drop' },
-      { href: '#ex--external-events-drag-and-drop', label: 'External events drag &amp; drop' },
-      { href: '#ex--multiple-day-events', label: 'Multiple day events' },
-      { href: '#ex--recurring-events', label: 'Recurring events' },
-      { href: '#ex--overlapping-events', label: 'Overlapping events' },
-      { href: '#ex--background-events', label: 'Background events' },
-      { href: '#ex--all-day-events', label: 'All day events' },
-      { href: '#ex--splitting-days', label: 'Splitting days' },
+const props = defineProps({
+  offsetTop: { type: Number, default: 0 }
+})
 
-      { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
-      { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
-      { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
-      { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
-      { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
+const todayDate = ref((new Date()).getDate())
+const docs = [
+  { href: '#installation', label: 'Installation' },
+  { href: '#how-to-use', label: 'How to use' },
+  { href: '#api', label: 'API' },
+  { href: '#date-prototypes', label: 'Date prototypes' },
+  { href: '#css-notes', label: 'CSS notes' },
+  { href: '#release-notes', label: 'Release notes' }
+]
+const examples = [
+  { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
+  { href: '#ex--basic', label: 'Basic, hide weekends' },
+  { href: '#ex--small-cal', label: 'Small calendar, no view selector, custom arrows' },
+  { href: '#ex--disable-views', label: 'Disable views, default view' },
+  { href: '#ex--min-max-dates', label: 'Min / max dates &amp; single click to navigate' },
+  { href: '#ex--disable-days', label: 'Disable days' },
+  { href: '#ex--calendar-themes', label: 'Calendar themes' },
+  { href: '#ex--hiding-particular-week-days', label: 'Hide particular weekdays &amp; show week numbers' },
+  { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
+  { href: '#ex--internationalization', label: 'Internationalization' },
+  { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
+  { href: '#ex--timeline', label: 'Timeline' },
+  { href: '#ex--special-hours', label: 'Business Hours' },
+  { href: '#ex--today-current-time', label: 'Today\'s current time' },
+  { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
 
-      { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
-      { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
-      { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
-      { href: '#ex--custom-events-count', label: 'Custom events count' },
-      { href: '#ex--custom-title-and-cells', label: 'Custom title &amp; cells' },
-      { href: '#ex--custom-event-rendering', label: 'Custom event rendering' },
-      { href: '#ex--custom-day-split-labels', label: 'Custom day split labels' }
+  { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'mdi mdi-calendar' },
+  { href: '#ex--timeless-events', label: 'Timeless events' },
+  { href: '#ex--events-with-time', label: 'Events with time information' },
+  { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
+  { href: '#ex--events-indicators', label: 'Events indicators' },
+  { href: '#ex--events-on-month-view', label: 'Display events on month view' },
+  { href: '#ex--edit-and-delete-events', label: 'Edit &amp; delete events' },
+  { href: '#ex--create-events', label: 'Create events' },
+  { href: '#ex--other-event-creation-methods', label: 'Other event creation methods' },
+  { href: '#ex--drag-and-drop', label: 'Drag &amp; drop' },
+  { href: '#ex--external-events-drag-and-drop', label: 'External events drag &amp; drop' },
+  { href: '#ex--multiple-day-events', label: 'Multiple day events' },
+  { href: '#ex--recurring-events', label: 'Recurring events' },
+  { href: '#ex--overlapping-events', label: 'Overlapping events' },
+  { href: '#ex--background-events', label: 'Background events' },
+  { href: '#ex--all-day-events', label: 'All day events' },
+  { href: '#ex--splitting-days', label: 'Splitting days' },
 
-      // w-tag.ml2(color="primary" outline) NEW
-      // w-tag.ml2(color="blue" outline) UPDATED
-    ]
-  }),
+  { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
+  { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
+  { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
+  { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
+  { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
 
-  computed: {
-    version () {
-      return process.env.VITE_APP_VERSION.replace(
-        /-(\w)(\w+)\.(\d+)/,
-        (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
-      )
-    }
-  },
+  { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
+  { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
+  { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
+  { href: '#ex--custom-events-count', label: 'Custom events count' },
+  { href: '#ex--custom-title-and-cells', label: 'Custom title &amp; cells' },
+  { href: '#ex--custom-event-rendering', label: 'Custom event rendering' },
+  { href: '#ex--custom-day-split-labels', label: 'Custom day split labels' }
 
-  directives: {
-    scrollTo: {
-      mounted: (el, binding) => {
-        el.addEventListener('click', () => {
-          const target = binding.value && document.querySelector(binding.value)
-          target.scrollIntoView()
-        })
-      }
-    }
+  // w-tag.ml2(color="primary" outline) NEW
+  // w-tag.ml2(color="blue" outline) UPDATED
+]
+const version = computed(() => {
+  return process.env.VITE_APP_VERSION.replace(
+    /-(\w)(\w+)\.(\d+)/,
+    (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
+  )
+})
+
+const vScrollTo = {
+  mounted: (el, binding) => {
+    el.addEventListener('click', () => {
+      const target = binding.value && document.querySelector(binding.value)
+      target.scrollIntoView()
+    })
   }
 }
 </script>

@@ -149,16 +149,16 @@
     li
       h3.mt4 Via NPM
       .w-flex.align-center.mt2.xs-column.xs-align-start
-        ssh-pre.my0(language="shell" :dark="$store.state.darkMode") npm i vue-cal # Vue 3
+        ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal # Vue 3
         span.mx6 or
-        ssh-pre.my0(language="shell" :dark="$store.state.darkMode") npm i vue-cal@legacy # Vue 2
+        ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@legacy # Vue 2
 
       p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
       w-flex.vs-d-block(gap="6")
         w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
           template(#item-title.1) Options API
           template(#item-content.1)
-            ssh-pre.fill-height.ma0.bd0(language="js" :dark="$store.state.darkMode").
+            ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
               import VueCal from 'vue-cal'
               import 'vue-cal/dist/vuecal.css'
 
@@ -169,7 +169,7 @@
 
           template(#item-title.2) Composition API
           template(#item-content.2)
-            ssh-pre.fill-height.ma0.bd0(language="js" :dark="$store.state.darkMode").
+            ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
               import VueCal from 'vue-cal'
               import 'vue-cal/dist/vuecal.css'
 
@@ -207,7 +207,7 @@
       w-tabs.my4(:items="2" content-class="pa0")
         template(#item-title.1) Vue 3
         template(#item-content.1)
-          ssh-pre.ma0(language="html" :dark="$store.state.darkMode").
+          ssh-pre.ma0(language="html" :dark="store.darkMode").
             &lt;head&gt;
               ...
               &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
@@ -217,7 +217,7 @@
 
         template(#item-title.2) Vue 2
         template(#item-content.2)
-          ssh-pre.ma0(language="html" :dark="$store.state.darkMode").
+          ssh-pre.ma0(language="html" :dark="store.darkMode").
             &lt;head&gt;
               ...
               &lt;script src="https://unpkg.com/vue@legacy"&gt;&lt;/script&gt;
@@ -229,7 +229,7 @@
         Then define the component to use in your template if you are not using the Vue composition
         API:
       w-flex.vs-d-block(gap="6")
-        ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="$store.state.darkMode").
+        ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="store.darkMode").
           // In your Vue.js component.
           export default {
             components: { VueCal: vuecal },
@@ -259,7 +259,7 @@
     p.
       Wait! Before you dive in, make sure you place Vue Cal in a container that #[strong has a set height]! (not auto or initial)#[br]
       By default Vue Cal will take the full width &amp; height of its container if it has a set height.
-    ssh-pre.my2(language="html-vue" :dark="$store.state.darkMode").
+    ssh-pre.my2(language="html-vue" :dark="store.darkMode").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px" /&gt;
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
@@ -287,7 +287,7 @@
     You can copy and change any color to quickly get a nice render.#[br]
     If that is still not doing what you want you can change even more in your own CSS.
 
-  ssh-pre(language="css" label="CSS" :dark="$store.state.darkMode").
+  ssh-pre(language="css" label="CSS" :dark="store.darkMode").
     /* Green-theme. */
     .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
     .vuecal__title-bar {background-color: #e4f5ef;}
@@ -337,7 +337,9 @@
   release-notes
 </template>
 
-<script>
+<script setup>
+import { computed } from 'vue'
+import { useAppStore } from '@/store'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import VueCal from '@/vue-cal/index.vue'
@@ -349,6 +351,7 @@ import Api from './api.vue'
 import ReleaseNotes from './release-notes.vue'
 import '@/scss/documentation.scss'
 
+const store = useAppStore()
 const localesList = [
   { code: 'sq', label: 'Albanian' },
   { code: 'ar', label: 'Arabic' },
@@ -392,29 +395,9 @@ const localesList = [
   { code: 'uk', label: 'Ukrainian' },
   { code: 'vi', label: 'Vietnamese' }
 ]
-
-export default {
-  components: {
-    VueCal,
-    SshPre,
-    HighlightMessage,
-    TodoListItem,
-    MainDemo,
-    Examples,
-    Api,
-    ReleaseNotes
-  },
-
-  data: () => ({
-    localesList
-  }),
-
-  computed: {
-    nowFormatted () {
-      return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
-    }
-  }
-}
+const nowFormatted = computed(() => {
+  return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
+})
 </script>
 
 <style lang="scss">

@@ -44,47 +44,47 @@ div(:class="{ ready }" v-scroll="onScroll")
       | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { useAppStore } from '@/store'
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
 import TopBar from '@/documentation/components/top-bar.vue'
 import '@/scss/index.scss'
 
-export default {
-  name: 'app',
-  components: { TopBar },
-  data: () => ({
-    ready: false,
-    offsetTop: 0,
-    goTopHidden: true
-  }),
-  created () {
-    setTimeout(() => (this.ready = true), 500)
-  },
-  methods: {
-    onScroll () {
-      this.offsetTop = window.pageYOffset || document.documentElement.scrollTop
-      this.goTopHidden = this.offsetTop < 200 ||
-                         ((document.documentElement.offsetHeight - document.documentElement.scrollTop - window.innerHeight) <= 100)
+const store = useAppStore()
+const ready = ref(false)
+const offsetTop = ref(0)
+const goTopHidden = ref(true)
+
+const onScroll = () => {
+  const { scrollTop, offsetHeight } = document.documentElement
+  offsetTop.value = window.scrollY || scrollTop
+  goTopHidden.value = offsetTop.value < 200 || (offsetHeight - scrollTop - window.innerHeight <= 100)
+}
+
+nextTick(() => (ready.value = true))
+
+onMounted(() => {
+  if (localStorage.theme) store.applyTheme(localStorage.theme)
+})
+
+// Directives.
+const vScroll = {
+  mounted: (el, binding) => {
+    const f = evt => {
+      if (binding.value(evt, el)) window.removeEventListener('scroll', f)
     }
-  },
-  directives: {
-    scroll: {
-      mounted: (el, binding) => {
-        const f = evt => {
-          if (binding.value(evt, el)) window.removeEventListener('scroll', f)
-        }
-        window.addEventListener('scroll', f)
-      }
-    },
-    scrollTo: {
-      mounted: (el, binding) => {
-        el.addEventListener('click', () => {
-          const target = binding.value && document.querySelector(binding.value)
-          target.scrollIntoView()
-        })
-      }
-    }
+    window.addEventListener('scroll', f)
+  }
+}
+
+const vScrollTo = {
+  mounted: (el, binding) => {
+    el.addEventListener('click', () => {
+      const target = binding.value && document.querySelector(binding.value)
+      target.scrollIntoView()
+    })
   }
 }
 </script>
