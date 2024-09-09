@@ -3,7 +3,14 @@
 // --------------------------------------------------------
 * {margin: 0;padding: 0;}
 
-html {scroll-behavior: smooth;}
+:root {
+  scroll-behavior: smooth;
+  --w-base-color-rgb: 44, 62, 80;
+
+  &[data-theme="dark"] {
+    --w-base-color-rgb: 255, 255, 255, 0.8;
+  }
+}
 
 #app {overflow-x: hidden;}
 
@@ -11,7 +18,7 @@ html {scroll-behavior: smooth;}
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: #2c3e50;
+  color: rgba(var(--w-base-color-rgb));
   margin-top: 8em;
   padding-top: 12em;
 }

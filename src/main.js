@@ -11,9 +11,16 @@ const app = createApp(App)
 app.use(router)
 app.use(WaveUI, {
   colors: {
-    primary: '#42b983',
-    secondary: '#2c3e50',
-    lightgrey: '#eee'
+    light: {
+      primary: '#42b983',
+      secondary: '#2c3e50',
+      lightgrey: '#eee'
+    },
+    dark: {
+      primary: '#73daab',
+      secondary: '#fff',
+      lightgrey: '#444'
+    }
   },
   theme: 'auto'
 })

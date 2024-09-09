@@ -4,13 +4,13 @@ div
     a(href="#api") API
     a#api(name="api")
   p Here is the list of all the available views.
-  ssh-pre.mt2(language="js").
+  ssh-pre.mt2(language="js" :dark="$store.state.darkMode").
     ['years', 'year', 'month', 'week', 'day']
   p.
     Here is the list of all the parameters available and their description below this table.#[br]
     Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
     instead of the #[span.code camelCase] for consistency.
-  ssh-pre.mt2(language="js").
+  ssh-pre.mt2(language="js" :dark="$store.state.darkMode").
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
@@ -79,7 +79,7 @@ div
         | into the i18n directory.#[br]
         | this is what a language json looks like.
 
-        ssh-pre.my2(language="json").
+        ssh-pre.my2(language="json" :dark="$store.state.darkMode").
           {
             "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -280,14 +280,14 @@ div
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
         span.ml3 With a single range of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="$store.state.darkMode").
           // In the component's data.
           specialHours: {
             3: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml3 With multiple ranges of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="$store.state.darkMode").
           // In the component's data.
           specialHours: {
             3: [
@@ -465,7 +465,7 @@ div
         | Split each day into multiple vertical splits.#[br]
         | Accepts an array of split objects with attributes.#[br]
         | Each split object can have these attributes, they are all optional:
-        ssh-pre(language="js").
+        ssh-pre(language="js" :dark="$store.state.darkMode").
           {
             id: {Integer | String}, // All ids must be set if using `hide`.
             class: {String},
@@ -553,7 +553,7 @@ div
         Accepts an array of event objects.#[br]
         This is what an event object must look like:
       div
-        ssh-pre.mt2(language="js").
+        ssh-pre.mt2(language="js" :dark="$store.state.darkMode").
           {
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
