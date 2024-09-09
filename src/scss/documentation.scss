@@ -138,7 +138,10 @@
   .w-app .amber {color: #ffd865;}
   .w-app .deep-orange {color: #ff9c65;}
 
-  .documentation h2:not(.todo) {border-bottom-color: #383838;}
+  .documentation h2:not(.todo) {
+    color: var(--w-primary-color);
+    border-bottom-color: #383838;
+  }
   .message-box:after {opacity: 0.15;}
   .message-box.pink {color: #ffa9c6;}
   .message-box.important-notes {
@@ -146,6 +149,18 @@
     background-color: rgba(255, 225, 62, 0.07);
   }
   .message-box.pale-blue {color: #65bcff;}
+
+  .highlight-box {
+    background: linear-gradient(45deg, #2c3730, rgb(255 255 255 / 0%));
+
+    .grey {color: #aaa;}
+  }
+
+  .documentation span.code {color: rgba(#fff, 0.85);}
+  .documentation .api-options > li > code {
+    background: #eeeeee26;
+    color: #5fb991;
+  }
 }
 
 // Media queries.
