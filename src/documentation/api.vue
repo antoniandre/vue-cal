@@ -481,13 +481,12 @@ div
     li
       code.mr2 editableEvents
       span.code [Boolean, Object], default: false
-      p
-        | When #[span.code editableEvents] is set to #[span.code true], it allows:
-        ul
-          li Dragging and dropping events
-          li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
-          li Deleting events by click and hold an event.
-          li Editing events title
+      p When #[span.code editableEvents] is set to #[span.code true], it allows:
+      ul
+        li Dragging and dropping events
+        li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
+        li Deleting events by click and hold an event.
+        li Editing events title
       highlight-message
         ul
           li
@@ -553,7 +552,7 @@ div
         Allows you to place events in the calendar.#[br]
         Accepts an array of event objects.#[br]
         This is what an event object must look like:
-      p
+      div
         ssh-pre.mt2(language="js").
           {
             start: '2018-11-19 12:00', // Required.
@@ -666,8 +665,7 @@ div
       | Returns #[span.code true] if the date is in a leap year.
 
   h3.mt4 And because everyone needs a Date/time formatting function...
-  p.
-    It is now available directly from the Date object, with your loaded locale!
+  p It is now available directly from the Date object, with your loaded locale!
 
   ul
     li.mt3
