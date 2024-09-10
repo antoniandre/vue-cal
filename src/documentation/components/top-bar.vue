@@ -36,7 +36,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           w-icon.mr2(lg) mdi mdi-school
           span DOC
 
-      w-list.mt0.pa0.sh2.white--bg.bdrs1(
+      w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
         nav
         :items="docs"
         item-route-key="href"
@@ -71,7 +71,7 @@ w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
           height="100%")
           w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
-      w-list.mt0.pa0.sh2.white--bg.bdrs1(
+      w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
         nav
         :items="examples"
         item-route-key="href"
@@ -418,7 +418,7 @@ $lighter-text: #ccc;
   color: #888;
   margin-top: 20px;
   padding: 8px 0;
-  border-top: 1px solid #eee;
+  border-top: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.1);
   background: linear-gradient(90deg, rgba(128, 231, 172, 0.12), rgba(255, 255, 255, 0));
 
   &:before {background: inherit;}

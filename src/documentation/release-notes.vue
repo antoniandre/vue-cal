@@ -38,235 +38,6 @@ div
     strong.mr1 Version 4.0.0
     | Supports and only works on Vue 3.
 
-  div.grey.mb1
-    strong.mr1 Version 3.10.1
-    | Prevent focusing cells when they are disabled.
-
-  div.mb1
-    strong.mr1 Version 3.10.0
-    | Allow multiple ranges in daily special hours.
-
-  div.grey.mb1
-    strong.mr1 Version 3.9.1
-    | Fix: Prevent disabling full month or year when using #[span.code disable-days].
-
-  div.mb1
-    strong.mr1 Version 3.9.0
-    | Allow full custom locale.
-
-  div.grey.mb1
-    strong.mr1 Version 3.8.4
-    | Fix showing events ending at 24:00 on Safari.
-
-  div.grey.mb1
-    strong.mr1 Version 3.8.3
-    | Return the full original DOM event from #[span.code cell-contextmenu].
-
-  div.grey.mb1
-    strong.mr1 Version 3.8.2
-    | Add #[span.code active-view] validations and raise warning if incorrect.
-
-  div.grey.mb1
-    strong.mr1 Version 3.8.1
-    | Fix all-day events when no time information is provided.
-  div.mb1
-    strong.mr1 Version 3.8.0
-    | Add Mongolian language.
-  div.mb1
-    strong.mr1 Version 3.7.0
-    | Add a new #[span.code disable-days] option.
-  div.grey.mb1
-    strong.mr1 Version 3.6.5
-    | Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.
-  div.grey.mb1
-    strong.mr1 Version 3.6.4
-    ul
-      li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
-      li When #[span.code time] is #[span.code true], keep 23:59:59 internally, but format string to 24:00.
-      li Fix previous / next navigation on day view when date prototypes are disabled.
-      li Add shortWeekDays to the #[span.code uk] locale.
-  div.grey.mb1
-    strong.mr1 Version 3.6.3
-    | Return the correct event on out-of-scope event click on month view.
-  div.grey.mb1
-    strong.mr1 Version 3.6.2
-    | Fix all-day events not showing up and fix error when using #[span.code hide-body].
-  div.grey.mb1
-    strong.mr1 Version 3.6.1
-    | Fix timeless events not showing up.
-  div.mb1
-    strong.mr1 Version 3.6.0
-    | Added Albanian language and short days in Russian language
-  div.grey.mb1
-    strong.mr1 Version 3.5.6
-    | Fix multiple day events display across days when #[span.code time] is false
-  div.grey.mb1
-    strong.mr1 Version 3.5.4
-    | Add mouseup event listener when deletable but not resizable
-  div.grey.mb1
-    strong Version 3.5.3
-    ul
-      li Provide the split (if any) to event creation from cell click &amp; hold.
-      li.
-        Add mousemove &amp; mouseup event handlers if drag-creation is allowed but
-        #[span.code editableEvents.resize] is set to false.
-  div.grey.mb1
-    strong Version 3.5.1
-    ul
-      li Don't fire cell-click when clicking on an event
-      li Focus and highlight cell on mousedown rather than click
-  div.
-    #[strong Version 3.5.0] Create events with click &amp; drag.
-    Refer to the #[a(href="#ex--create-events") Create events] example.
-  div.grey.
-    #[strong Version 3.4.1] Also return the original event from the emitted
-    #[span.code event-duration-change] event
-  div.
-    #[strong Version 3.4.0] Add a #[span.code split-label] slot for day splits labels.
-    Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
-  div.grey #[strong Version 3.3.1] Add custom event renderer back in all-day bar events
-  div.
-    #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day
-    bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
-  div.grey.
-    #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events
-    are not editable or on event creation
-  div.grey #[strong Version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
-  div.grey #[strong Version 3.2.6] Display the no-event slot accurately per slot if there are
-  div.grey.
-    #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week]
-    &amp; #[span.code day] views
-  div.grey #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
-  div
-    strong.mr2 Version 3.2
-    | The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
-    | Refer to the #[a(href="#ex--external-controls") external controls] example.
-  div.mt2.grey #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
-  div
-    strong Version 3.1.0
-    highlight-message(type="warning").
-      The event properties #[span.code startDate] and #[span.code endDate] have been merged into
-      #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
-      #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
-      but Vue Cal offers Date prototype functions to easily format the date how you want.
-    ul
-      li Fixed multiple day events resizing on x and y axis.
-      li Allow disabling Date prototypes
-      li Emit an #[span.code event-resizing] repeatedly while resizing an event
-  div.mt4
-    strong Version 3.0
-    h3.mt0.pt0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
-    p.mb0.
-      Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
-      on Vue.js, 100% designed for Vue, and still no dependency!
-    highlight-message.mb0(type="warning")
-      h3.mt0.pt0.
-        Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not
-        available on touch screens
-      p.mb0 Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
-
-    highlight-message.mb6(type="success")
-      h3.mt0.pt0 New Features
-      ul
-        li
-          h4.mt2.pt0 Events drag &amp; drop
-          p.
-            Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
-            separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
-
-        li
-          h4.mt0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
-        li
-          h4.mt0 #[span.code snapToTime] option on event drop and event resize
-          p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].
-        li
-          h4.mt0 The #[span.code editableEvents] option now also accept an object to precisely allow specific edition
-          p Refer to the #[span.code editableEvents] option in the #[a(href="#api") API section].
-      h3.mt0.mb2 Big changes
-      ul
-        li.error
-          strong In the coming version 3.1:
-          p.
-            Now that Vue Cal has Date prototypes and it is so easy to format a date,
-            the event properties #[span.code startDate] and #[span.code endDate] will be removed
-            and the start and end of event will be exlusively defined through #[span.code start]
-            and #[span.code end]. It will accept both a String and a Javascript Date.#[br]
-            Vue Cal will always return the Date object and not the string, even if you defined it
-            as a string.
-        li.
-          The #[span.code event-change] emitted event now returns an object containing the
-          #[span.code event] and the #[span.code originalEvent].
-        li.
-          the #[span.code event-title-change] and #[span.code event-duration-change] events now return an object
-          containing the #[span.code event] and the #[span.code oldTitle] or #[span.code oldDate].
-        li.
-          Vue Cal's #[span.code createEvent()] function now accepts a duration parameter to easily override
-          the default 2 hours.
-          (ref. #[a(href="#ex--create-events") Create events] example)
-        li.
-          The internal event #[span.code classes] property is replaced with
-          #[span.code class] like in the external event definition. This means you can now
-          update the #[span.code class] property seemlessly like the initial event definition.
-          (From your component methods called from Vue Cal fired events or from #[span.code onEventCreate])
-
-        li
-          h4.mt3.pt0 Renamed slot
-          p The #[span.code event-renderer] slot is renamed into #[span.code event]
-        li
-          h4.mt3.pt0 Huge code refactoring
-          p.
-            Introducing Vue dependency injections, Utils classes, and a couple of improvements on
-            event resize.
-
-      h3.mt0.mb2 Other noticeable changes
-      ul
-        li.
-          When creating an event with a given #[span.code endDate], the required
-          #[span.code endTimeMinutes] is automatically add.
-        li
-          h4.mt3.pt0 You don't need to call #[span.code alignAllDayBar()] anymore
-          p.
-            Previously, in some cases you would need to call this function to realign the
-            all-day bar with the scrollbar when the scrollbar is fixed (E.g. on Windows).#[br]
-            Now the function (renamed to #[span.code alignWithScrollbar]) is triggered automatically
-            and in all the cases, once, in mounted.#[br]
-            It will now also align the weekdays headings if needed.
-        li
-          h4.mt3.pt0 Renamed CSS classes
-          p.
-            If you use them in your own CSS (or if you have a custom color theme)
-            you might want to update them:#[br]
-          strong Cells
-          ul
-            li #[span.code .current] becomes #[span.code .vuecal__cell--current]
-            li #[span.code .today] becomes #[span.code .vuecal__cell--today]
-            li #[span.code .out-of-scope] becomes #[span.code .vuecal__cell--out-of-scope]
-            li #[span.code .before-min] becomes #[span.code .vuecal__cell--before-min]
-            li #[span.code .after-max] becomes #[span.code .vuecal__cell--after-max]
-            li #[span.code .disabled] becomes #[span.code .vuecal__cell--disabled]
-            li #[span.code .selected] becomes #[span.code .vuecal__cell--selected]
-            li #[span.code .vuecal__cell--has-splits] &amp; #[span.code .vuecal__cell--has-events] remain the same
-          strong View selector buttons
-          ul
-            li Added class: #[span.code .vuecal__view-btn]
-            li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
-
-        li
-          h4.mt0 New CSS classes when an event is dragged
-          ul
-            li Over a cell: #[span.code .vuecal__cell--highlighted]
-            li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
-            li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
-            li Event dragging class: #[span.code .vuecal__event-dragging]
-        li
-          h4.mt0 Updated color theme
-          p.
-            If you have a custom color theme, these new classes should be added:
-            #[span.code .vuecal__view-btn--highlighted],
-            #[span.code .vuecal__arrow--highlighted],
-            #[span.code .vuecal__cell--highlighted].#[br]
-            Refer to the #[a(href="#css-notes") CSS Notes].
-
   //- Older release notes.
   .w-flex.my12.align-center
     .w-divider.primary--bg.px3
@@ -277,6 +48,235 @@ div
 
   w-transition-expand(y)
     div(v-if="seeOldReleaseNotes")
+      div.grey.mb1
+        strong.mr1 Version 3.10.1
+        | Prevent focusing cells when they are disabled.
+
+      div.mb1
+        strong.mr1 Version 3.10.0
+        | Allow multiple ranges in daily special hours.
+
+      div.grey.mb1
+        strong.mr1 Version 3.9.1
+        | Fix: Prevent disabling full month or year when using #[span.code disable-days].
+
+      div.mb1
+        strong.mr1 Version 3.9.0
+        | Allow full custom locale.
+
+      div.grey.mb1
+        strong.mr1 Version 3.8.4
+        | Fix showing events ending at 24:00 on Safari.
+
+      div.grey.mb1
+        strong.mr1 Version 3.8.3
+        | Return the full original DOM event from #[span.code cell-contextmenu].
+
+      div.grey.mb1
+        strong.mr1 Version 3.8.2
+        | Add #[span.code active-view] validations and raise warning if incorrect.
+
+      div.grey.mb1
+        strong.mr1 Version 3.8.1
+        | Fix all-day events when no time information is provided.
+      div.mb1
+        strong.mr1 Version 3.8.0
+        | Add Mongolian language.
+      div.mb1
+        strong.mr1 Version 3.7.0
+        | Add a new #[span.code disable-days] option.
+      div.grey.mb1
+        strong.mr1 Version 3.6.5
+        | Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.
+      div.grey.mb1
+        strong.mr1 Version 3.6.4
+        ul
+          li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
+          li When #[span.code time] is #[span.code true], keep 23:59:59 internally, but format string to 24:00.
+          li Fix previous / next navigation on day view when date prototypes are disabled.
+          li Add shortWeekDays to the #[span.code uk] locale.
+      div.grey.mb1
+        strong.mr1 Version 3.6.3
+        | Return the correct event on out-of-scope event click on month view.
+      div.grey.mb1
+        strong.mr1 Version 3.6.2
+        | Fix all-day events not showing up and fix error when using #[span.code hide-body].
+      div.grey.mb1
+        strong.mr1 Version 3.6.1
+        | Fix timeless events not showing up.
+      div.mb1
+        strong.mr1 Version 3.6.0
+        | Added Albanian language and short days in Russian language
+      div.grey.mb1
+        strong.mr1 Version 3.5.6
+        | Fix multiple day events display across days when #[span.code time] is false
+      div.grey.mb1
+        strong.mr1 Version 3.5.4
+        | Add mouseup event listener when deletable but not resizable
+      div.grey.mb1
+        strong Version 3.5.3
+        ul
+          li Provide the split (if any) to event creation from cell click &amp; hold.
+          li.
+            Add mousemove &amp; mouseup event handlers if drag-creation is allowed but
+            #[span.code editableEvents.resize] is set to false.
+      div.grey.mb1
+        strong Version 3.5.1
+        ul
+          li Don't fire cell-click when clicking on an event
+          li Focus and highlight cell on mousedown rather than click
+      div.
+        #[strong Version 3.5.0] Create events with click &amp; drag.
+        Refer to the #[a(href="#ex--create-events") Create events] example.
+      div.grey.
+        #[strong Version 3.4.1] Also return the original event from the emitted
+        #[span.code event-duration-change] event
+      div.
+        #[strong Version 3.4.0] Add a #[span.code split-label] slot for day splits labels.
+        Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
+      div.grey #[strong Version 3.3.1] Add custom event renderer back in all-day bar events
+      div.
+        #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day
+        bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
+      div.grey.
+        #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events
+        are not editable or on event creation
+      div.grey #[strong Version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
+      div.grey #[strong Version 3.2.6] Display the no-event slot accurately per slot if there are
+      div.grey.
+        #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week]
+        &amp; #[span.code day] views
+      div.grey #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
+      div
+        strong.mr2 Version 3.2
+        | The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
+        | Refer to the #[a(href="#ex--external-controls") external controls] example.
+      div.mt2.grey #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
+      div
+        strong Version 3.1.0
+        highlight-message(type="warning").
+          The event properties #[span.code startDate] and #[span.code endDate] have been merged into
+          #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
+          #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
+          but Vue Cal offers Date prototype functions to easily format the date how you want.
+        ul
+          li Fixed multiple day events resizing on x and y axis.
+          li Allow disabling Date prototypes
+          li Emit an #[span.code event-resizing] repeatedly while resizing an event
+      div.mt4
+        strong Version 3.0
+        h3.mt0.pt0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
+        p.mb0.
+          Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
+          on Vue.js, 100% designed for Vue, and still no dependency!
+        highlight-message.mb0(type="warning")
+          h3.mt0.pt0.
+            Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not
+            available on touch screens
+          p.mb0 Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
+
+        highlight-message.mb6(type="success")
+          h3.mt0.pt0 New Features
+          ul
+            li
+              h4.mt2.pt0 Events drag &amp; drop
+              p.
+                Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
+                separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
+
+            li
+              h4.mt0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
+            li
+              h4.mt0 #[span.code snapToTime] option on event drop and event resize
+              p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].
+            li
+              h4.mt0 The #[span.code editableEvents] option now also accept an object to precisely allow specific edition
+              p Refer to the #[span.code editableEvents] option in the #[a(href="#api") API section].
+          h3.mt0.mb2 Big changes
+          ul
+            li.error
+              strong In the coming version 3.1:
+              p.
+                Now that Vue Cal has Date prototypes and it is so easy to format a date,
+                the event properties #[span.code startDate] and #[span.code endDate] will be removed
+                and the start and end of event will be exlusively defined through #[span.code start]
+                and #[span.code end]. It will accept both a String and a Javascript Date.#[br]
+                Vue Cal will always return the Date object and not the string, even if you defined it
+                as a string.
+            li.
+              The #[span.code event-change] emitted event now returns an object containing the
+              #[span.code event] and the #[span.code originalEvent].
+            li.
+              the #[span.code event-title-change] and #[span.code event-duration-change] events now return an object
+              containing the #[span.code event] and the #[span.code oldTitle] or #[span.code oldDate].
+            li.
+              Vue Cal's #[span.code createEvent()] function now accepts a duration parameter to easily override
+              the default 2 hours.
+              (ref. #[a(href="#ex--create-events") Create events] example)
+            li.
+              The internal event #[span.code classes] property is replaced with
+              #[span.code class] like in the external event definition. This means you can now
+              update the #[span.code class] property seemlessly like the initial event definition.
+              (From your component methods called from Vue Cal fired events or from #[span.code onEventCreate])
+
+            li
+              h4.mt3.pt0 Renamed slot
+              p The #[span.code event-renderer] slot is renamed into #[span.code event]
+            li
+              h4.mt3.pt0 Huge code refactoring
+              p.
+                Introducing Vue dependency injections, Utils classes, and a couple of improvements on
+                event resize.
+
+          h3.mt0.mb2 Other noticeable changes
+          ul
+            li.
+              When creating an event with a given #[span.code endDate], the required
+              #[span.code endTimeMinutes] is automatically add.
+            li
+              h4.mt3.pt0 You don't need to call #[span.code alignAllDayBar()] anymore
+              p.
+                Previously, in some cases you would need to call this function to realign the
+                all-day bar with the scrollbar when the scrollbar is fixed (E.g. on Windows).#[br]
+                Now the function (renamed to #[span.code alignWithScrollbar]) is triggered automatically
+                and in all the cases, once, in mounted.#[br]
+                It will now also align the weekdays headings if needed.
+            li
+              h4.mt3.pt0 Renamed CSS classes
+              p.
+                If you use them in your own CSS (or if you have a custom color theme)
+                you might want to update them:#[br]
+              strong Cells
+              ul
+                li #[span.code .current] becomes #[span.code .vuecal__cell--current]
+                li #[span.code .today] becomes #[span.code .vuecal__cell--today]
+                li #[span.code .out-of-scope] becomes #[span.code .vuecal__cell--out-of-scope]
+                li #[span.code .before-min] becomes #[span.code .vuecal__cell--before-min]
+                li #[span.code .after-max] becomes #[span.code .vuecal__cell--after-max]
+                li #[span.code .disabled] becomes #[span.code .vuecal__cell--disabled]
+                li #[span.code .selected] becomes #[span.code .vuecal__cell--selected]
+                li #[span.code .vuecal__cell--has-splits] &amp; #[span.code .vuecal__cell--has-events] remain the same
+              strong View selector buttons
+              ul
+                li Added class: #[span.code .vuecal__view-btn]
+                li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
+
+            li
+              h4.mt0 New CSS classes when an event is dragged
+              ul
+                li Over a cell: #[span.code .vuecal__cell--highlighted]
+                li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
+                li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
+                li Event dragging class: #[span.code .vuecal__event-dragging]
+            li
+              h4.mt0 Updated color theme
+              p.
+                If you have a custom color theme, these new classes should be added:
+                #[span.code .vuecal__view-btn--highlighted],
+                #[span.code .vuecal__arrow--highlighted],
+                #[span.code .vuecal__cell--highlighted].#[br]
+                Refer to the #[a(href="#css-notes") CSS Notes].
+
       div.grey #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
       div.grey #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
       div.grey #[strong Version 2.24.1] Disable special hours in the all-day bar
