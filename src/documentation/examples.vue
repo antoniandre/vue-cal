@@ -3118,7 +3118,7 @@
 <script>
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import VueCal from '@/vue-cal/index.vue'
+import { VueCal } from '@/vue-cal'
 import HighlightMessage from './components/highlight-message.vue'
 import '@/scss/examples.scss'
 
