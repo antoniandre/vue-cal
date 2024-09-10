@@ -1,7 +1,7 @@
 <template lang="pug">
 .documentation.page-container
   //- Main demo.
-  //- main-demo
+  main-demo
 
   //- Github project.
   h2.mt12.pt12.mb4.title2 Github project &nbsp;&amp;&nbsp; important notes
