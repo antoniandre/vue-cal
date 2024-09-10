@@ -42,107 +42,98 @@
         w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
 </template>
 
-<script>
-import VueCal from '@/vue-cal/index.vue'
+<script setup>
+import { computed, ref } from 'vue'
+import { VueCal } from '@/vue-cal'
 
-const demoExample = {
+const demoExample = ref({
   splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
   editable: { title: false, drag: true, resize: true, create: true, delete: true },
   events: []
+})
+const selectedDate = new Date()
+
+// Get the Monday of the real time current week.
+const previousFirstDayOfWeek = computed(() => {
+  return new Date(new Date().setDate(new Date().getDate() - (new Date().getDay() + 6) % 7))
+})
+
+// Place all the events in the real time current week.
+for (let i = 0; i < 5; i++) {
+  const day = previousFirstDayOfWeek.value.addDays(i).format()
+
+  demoExample.value.events.push(
+    {
+      start: `${day} 12:00`,
+      end: `${day} 13:00`,
+      title: 'LUNCH',
+      class: 'lunch',
+      background: true,
+      deletable: false,
+      resizable: false,
+      split: 1
+    },
+    {
+      start: `${day} 12:00`,
+      end: `${day} 13:00`,
+      title: 'LUNCH',
+      class: 'lunch',
+      background: true,
+      deletable: false,
+      resizable: false,
+      split: 2
+    }
+  )
 }
 
-export default {
-  components: { VueCal },
-  data: () => ({
-    demoExample,
-    selectedDate: new Date()
-  }),
+// Date.format() and Date.addDays() are helper methods added by Vue Cal.
+const monday = previousFirstDayOfWeek.value.format()
+const tuesday = previousFirstDayOfWeek.value.addDays(1).format()
+const thursday = previousFirstDayOfWeek.value.addDays(3).format()
+const friday = previousFirstDayOfWeek.value.addDays(4).format()
 
-  computed: {
-    // Get the Monday of the real time current week.
-    previousFirstDayOfWeek () {
-      return new Date(new Date().setDate(new Date().getDate() - (new Date().getDay() + 6) % 7))
-    }
+demoExample.value.events.push(
+  {
+    start: `${monday} 15:30`,
+    end: `${monday} 17:30`,
+    title: 'Tennis',
+    content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
+    resizable: false,
+    split: 1
   },
-
-  created () {
-    // Place all the events in the real time current week.
-    for (let i = 0; i < 5; i++) {
-      const day = this.previousFirstDayOfWeek.addDays(i).format()
-
-      this.demoExample.events.push(
-        {
-          start: `${day} 12:00`,
-          end: `${day} 13:00`,
-          title: 'LUNCH',
-          class: 'lunch',
-          background: true,
-          deletable: false,
-          resizable: false,
-          split: 1
-        },
-        {
-          start: `${day} 12:00`,
-          end: `${day} 13:00`,
-          title: 'LUNCH',
-          class: 'lunch',
-          background: true,
-          deletable: false,
-          resizable: false,
-          split: 2
-        }
-      )
-    }
-
-    // Date.format() and Date.addDays() are helper methods added by Vue Cal.
-    const monday = this.previousFirstDayOfWeek.format()
-    const tuesday = this.previousFirstDayOfWeek.addDays(1).format()
-    const thursday = this.previousFirstDayOfWeek.addDays(3).format()
-    const friday = this.previousFirstDayOfWeek.addDays(4).format()
-    this.demoExample.events.push(
-      {
-        start: `${monday} 15:30`,
-        end: `${monday} 17:30`,
-        title: 'Tennis',
-        content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
-        resizable: false,
-        split: 1
-      },
-      {
-        start: `${monday} 15:30`,
-        end: `${monday} 17:30`,
-        title: 'Tennis',
-        content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
-        resizable: false,
-        split: 2
-      },
-      {
-        start: `${tuesday} 08:00`,
-        end: `${tuesday} 10:00`,
-        title: 'Volleyball',
-        content: '<i class="w-icon mdi mdi-volleyball mt1"></i>',
-        resizable: false,
-        split: 2
-      },
-      {
-        start: `${thursday} 09:00`,
-        end: `${thursday} 11:30`,
-        title: 'Golf',
-        content: '<i class="w-icon mdi mdi-golf mt2"></i>',
-        resizable: false,
-        split: 1
-      },
-      {
-        start: `${friday} 16:45`,
-        end: `${friday} 18:45`,
-        title: 'Movie',
-        content: '<i class="w-icon mdi mdi-ticket mt1"></i>',
-        resizable: false,
-        split: 2
-      }
-    )
+  {
+    start: `${monday} 15:30`,
+    end: `${monday} 17:30`,
+    title: 'Tennis',
+    content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
+    resizable: false,
+    split: 2
+  },
+  {
+    start: `${tuesday} 08:00`,
+    end: `${tuesday} 10:00`,
+    title: 'Volleyball',
+    content: '<i class="w-icon mdi mdi-volleyball mt1"></i>',
+    resizable: false,
+    split: 2
+  },
+  {
+    start: `${thursday} 09:00`,
+    end: `${thursday} 11:30`,
+    title: 'Golf',
+    content: '<i class="w-icon mdi mdi-golf mt2"></i>',
+    resizable: false,
+    split: 1
+  },
+  {
+    start: `${friday} 16:45`,
+    end: `${friday} 18:45`,
+    title: 'Movie',
+    content: '<i class="w-icon mdi mdi-ticket mt1"></i>',
+    resizable: false,
+    split: 2
   }
-}
+)
 </script>
 
 <style lang="scss">
