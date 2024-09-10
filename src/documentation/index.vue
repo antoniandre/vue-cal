@@ -342,7 +342,8 @@ import { computed } from 'vue'
 import { useAppStore } from '@/store'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import VueCal from '@/vue-cal/index.vue'
+import EnUs from '@/vue-cal/i18n/fr.json'
+import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal/index'
 import HighlightMessage from './components/highlight-message.vue'
 import TodoListItem from './components/todo-list-item.vue'
 import MainDemo from './main-demo.vue'
@@ -352,6 +353,10 @@ import ReleaseNotes from './release-notes.vue'
 import '@/scss/documentation.scss'
 
 const store = useAppStore()
+
+useLocale(EnUs)
+addDatePrototypes()
+
 const localesList = [
   { code: 'sq', label: 'Albanian' },
   { code: 'ar', label: 'Arabic' },

@@ -42,16 +42,16 @@
 
 <script setup>
 import { computed, provide, watch } from 'vue'
-import VueCal from './core/index'
-import { props as propsDefinitions } from './core/props-definitions'
-import VueCalHeader from './components/header.vue'
-import VueCalBody from './components/body.vue'
-import WeekdaysBar from './components/weekdays-bar.vue'
-import TimeColumn from './components/time-column.vue'
+import { _vc } from '../index'
+import { props as propsDefinitions } from '../core/props-definitions'
+import VueCalHeader from './header.vue'
+import VueCalBody from './body.vue'
+import WeekdaysBar from './weekdays-bar.vue'
+import TimeColumn from './time-column.vue'
 
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate', 'cell-click'])
-const vuecal = new VueCal(props, emit)
+const vuecal = new _vc(props, emit)
 const { config, view } = vuecal
 
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))

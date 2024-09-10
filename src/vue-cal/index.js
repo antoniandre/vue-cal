@@ -1,3 +1,40 @@
+import { reactive, ref } from 'vue'
+import { defaults, useConfig } from './core/config'
+import { useDateUtils } from './utils/date'
+import { useEvents } from './core/events'
+import { useView } from './core/view'
+import VueCal from './components/index.vue'
+
+let dateUtils = null
+
+const useLocale = texts => {
+  dateUtils = reactive(useDateUtils(Object.assign({}, defaults.texts, texts)))
+}
+
+const loadTexts = async locale => {
+  // Vite can't resolve imports that have more than 1 variable and no extension.
+  // https://vitejs.dev/guide/features.html#dynamic-import
+  // So this glob is much more convenient and not penalizing as all the matches are
+  // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
+  // https://vitejs.dev/guide/features.html#glob-import
+  let translations = import.meta.glob('./i18n/*.json')
+
+  if (!translations[`./i18n/${locale}.json`]) {
+    console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
+    locale = 'en-us'
+  }
+  translations = await translations[`./i18n/${locale}.json`]?.() // Load this translation file.
+  return Object.assign({}, defaults.texts, translations)
+}
+
+const addDatePrototypes = () => {
+  dateUtils.addDatePrototypes()
+}
+
+const removeDatePrototypes = () => {
+  dateUtils.removeDatePrototypes()
+}
+
 /**
  * This is the main class of the calendar, it is instantiated once from the index.vue and
  * inject-provided to all the components.
@@ -14,14 +51,7 @@
  *   E.g. we definitely don't want that switching locale, or xs/sm prop would redraw the cells and
  *   recalculate all the events rendering in each cell.
  */
-
-import { ref, reactive, computed } from 'vue'
-import { defaults, useConfig } from './config'
-import { useEvents } from './events'
-import { useView } from './view'
-import DateUtils from '../utils/date'
-
-export default class {
+const _vc = class {
   emit = null // The Vue emit function from the root component.
   config = null
   texts = ref({ ...defaults.texts }) // Make texts reactive before a locale is loaded.
@@ -36,27 +66,17 @@ export default class {
 
   constructor (props, emit) {
     this.emit = emit
-    this.dateUtils = new DateUtils(this.texts, props.datePrototypes)
+    this.dateUtils = reactive(dateUtils)
     this.config = reactive(useConfig(this, props))
     this.eventsManager = reactive(useEvents(this))
     this.view = reactive(useView(this))
-
-    this.loadTexts(props.locale || 'en-us')
   }
+}
 
-  async loadTexts (locale) {
-    // Vite can't resolve imports that have more than 1 variable and no extension.
-    // https://vitejs.dev/guide/features.html#dynamic-import
-    // So this glob is much more convenient and not penalizing as all the matches are
-    // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
-    // https://vitejs.dev/guide/features.html#glob-import
-    let translations = import.meta.glob('../i18n/*.json')
-
-    if (!translations[`../i18n/${locale}.json`]) {
-      console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
-      locale = 'en-us'
-    }
-    translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
-    this.texts.value = Object.assign({}, defaults.texts, translations)
-  }
+export {
+  VueCal,
+  useLocale,
+  addDatePrototypes,
+  removeDatePrototypes,
+  _vc
 }
