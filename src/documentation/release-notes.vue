@@ -1,6 +1,19 @@
 <template lang="pug">
 div
   div.mb1
+    strong.mr1 Version 5.0.0
+    ul
+      li Completely refactored from the ground up, with Composition API and composables
+      li Performance-oriented: faster and more efficient than before
+      li Add and remove Date prototypes very easily
+      li Externally preload a locale and provide it if you want to avoid a promise handling. (optional)
+      li sticky headers + sticky time bar at the same time - only with CSS
+      li New layout with grids, more flexible
+      li New custom view of x days. The grid layout will adapt
+      li New more modern default UI
+      li Rewrote some options for easier use
+
+  div.mb1
     strong.mr1 Version 4.9.0
     | Added the Portuguese (Portugal) and Finnish locale.
 
