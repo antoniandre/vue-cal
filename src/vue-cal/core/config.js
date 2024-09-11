@@ -104,6 +104,23 @@ export const useConfig = (vuecal, props) => {
     else return Object.keys(availableViews)[0]
   })
 
+  const loadTexts = async locale => {
+    // Vite can't resolve imports that have more than 1 variable and no extension.
+    // https://vitejs.dev/guide/features.html#dynamic-import
+    // So this glob is much more convenient and not penalizing as all the matches are
+    // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
+    // https://vitejs.dev/guide/features.html#glob-import
+    let translations = import.meta.glob('../i18n/*.json')
+
+    if (!translations[`../i18n/${locale}.json`]) {
+      console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
+      locale = 'en-us'
+    }
+    translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
+    // Update the texts in the reactive store for all the components to use.
+    vuecal.texts = Object.assign(vuecal.texts, Object.assign({ ...defaults.texts }, translations))
+  }
+
   return {
     ...toRefs(props),
     defaultView,
@@ -116,6 +133,7 @@ export const useConfig = (vuecal, props) => {
     hideWeekends,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
-    get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') }
+    get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },
+    loadTexts
   }
 }

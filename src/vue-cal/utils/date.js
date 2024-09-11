@@ -2,38 +2,31 @@
  * Date Utils & prototypes.
  */
 
-let now, todayDate, todayF
-let _dateObject = {}
-let _timeObject = {}
+import { ref } from 'vue'
 
-export default class {
-  #texts = {}
+export const useDateUtils = initTexts => {
+  let now, todayDate, todayF
+  let _dateObject = {}
+  let _timeObject = {}
+  let texts = ref(initTexts)
 
-  constructor (texts, addPrototypes = true) {
-    this.#texts = texts
-
-    // Add prototypes ASAP - only once.
-    if (addPrototypes && Date && !Date.prototype.addDays) this.#initDatePrototypes()
-  }
-
-  #initDatePrototypes () {
-    const self = this
+  const addDatePrototypes = () => {
     /* eslint-disable no-extend-native */
-    Date.prototype.addDays = function (days) { return self.addDays(this, days || 0) }
-    Date.prototype.subtractDays = function (days) { return self.subtractDays(this, days || 0) }
-    Date.prototype.addHours = function (hours) { return self.addHours(this, hours || 0) }
-    Date.prototype.subtractHours = function (hours) { return self.subtractHours(this, hours || 0) }
-    Date.prototype.addMinutes = function (minutes) { return self.addMinutes(this, minutes || 0) }
-    Date.prototype.subtractMinutes = function (minutes) { return self.subtractMinutes(this, minutes || 0) }
-    Date.prototype.getWeek = function () { return self.getWeek(this) }
-    Date.prototype.isToday = function () { return self.isToday(this) }
-    Date.prototype.isLeapYear = function () { return self.isLeapYear(this) }
-    Date.prototype.format = function (format = 'YYYY-MM-DD') { return self.formatDate(this, format) }
-    Date.prototype.formatTime = function (format = 'HH:mm') { return self.formatTime(this, format) }
+    Date.prototype.addDays = function (days) { return addDays(this, days || 0) }
+    Date.prototype.subtractDays = function (days) { return subtractDays(this, days || 0) }
+    Date.prototype.addHours = function (hours) { return addHours(this, hours || 0) }
+    Date.prototype.subtractHours = function (hours) { return subtractHours(this, hours || 0) }
+    Date.prototype.addMinutes = function (minutes) { return addMinutes(this, minutes || 0) }
+    Date.prototype.subtractMinutes = function (minutes) { return subtractMinutes(this, minutes || 0) }
+    Date.prototype.getWeek = function () { return getWeek(this) }
+    Date.prototype.isToday = function () { return isToday(this) }
+    Date.prototype.isLeapYear = function () { return isLeapYear(this) }
+    Date.prototype.format = function (format = 'YYYY-MM-DD') { return formatDate(this, format) }
+    Date.prototype.formatTime = function (format = 'HH:mm') { return formatTime(this, format) }
     /* eslint-enable no-extend-native */
   }
 
-  removeDatePrototypes () {
+  const removeDatePrototypes = () => {
     delete Date.prototype.addDays
     delete Date.prototype.subtractDays
     delete Date.prototype.addHours
@@ -47,13 +40,11 @@ export default class {
     delete Date.prototype.formatTime
   }
 
-  updateTexts (texts) {
-    this.#texts = texts
-  }
+  const updateTexts = newTexts => (texts.value = newTexts)
 
   // Cache Today's date (to a maximum) for better isToday() performances. Formatted without leading 0.
   // We still need to update Today's date when Today changes without page refresh.
-  _todayFormatted () {
+  const _todayFormatted = () => {
     if (todayDate !== (new Date()).getDate()) {
       now = new Date()
       todayDate = now.getDate()
@@ -65,37 +56,37 @@ export default class {
 
   // UTILITIES.
   // ====================================================================
-  addDays (date, days) {
+  const addDays = (date, days) => {
     const d = new Date(date.valueOf())
     d.setDate(d.getDate() + days)
     return d
   }
 
-  subtractDays (date, days) {
+  const subtractDays = (date, days) => {
     const d = new Date(date.valueOf())
     d.setDate(d.getDate() - days)
     return d
   }
 
-  addHours (date, hours) {
+  const addHours = (date, hours) => {
     const d = new Date(date.valueOf())
     d.setHours(d.getHours() + hours)
     return d
   }
 
-  subtractHours (date, hours) {
+  const subtractHours = (date, hours) => {
     const d = new Date(date.valueOf())
     d.setHours(d.getHours() - hours)
     return d
   }
 
-  addMinutes (date, minutes) {
+  const addMinutes = (date, minutes) => {
     const d = new Date(date.valueOf())
     d.setMinutes(d.getMinutes() + minutes)
     return d
   }
 
-  subtractMinutes (date, minutes) {
+  const subtractMinutes = (date, minutes) => {
     const d = new Date(date.valueOf())
     d.setMinutes(d.getMinutes() - minutes)
     return d
@@ -110,7 +101,7 @@ export default class {
    * @param {Boolean} weekStartsOnSunday if the week starts on Sunday. Default Monday.
    * @returns {Number} the week number ranging from 1 to 53.
    */
-  getWeek (date, weekStartsOnSunday = false) {
+  const getWeek = (date, weekStartsOnSunday = false) => {
     const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
     const dayNum = d.getUTCDay() || 7
     d.setUTCDate(d.getUTCDate() + 4 - dayNum)
@@ -118,8 +109,8 @@ export default class {
     return Math.ceil((((d - yearStart) / 86400000) + 1) / 7) + (weekStartsOnSunday ? 1 : 0)
   }
 
-  isToday (date) {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === this._todayFormatted()
+  const isToday = date => {
+    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === _todayFormatted()
   }
 
   /**
@@ -129,10 +120,10 @@ export default class {
    * @param {Date} date2
    * @returns {Boolean}
    */
-  isSameDate (date1, date2) {
+  const isSameDate = (date1, date2) => {
     if (!date1 || !date2) return console.warn(`Vue Cal: missing date${!date1 ? '1' : '2'} parameter for comparison with \`isSameDate(date1, date2)\`.`)
-    else if (!this.isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${date1}\`.`)
-    else if (!this.isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${date2}\`.`)
+    else if (!isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${date1}\`.`)
+    else if (!isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${date2}\`.`)
 
     const dateA = new Date(date1)
     dateA.setHours(0, 0, 0, 0)
@@ -141,20 +132,20 @@ export default class {
     return dateA.getTime() === dateB.getTime()
   }
 
-  isInRange (date, rangeStart, rangeEnd) {
-    if (!this.isValid(date)) return console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${date}\`.`)
+  const isInRange = (date, rangeStart, rangeEnd) => {
+    if (!isValid(date)) return console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${date}\`.`)
 
     return date.getTime() >= rangeStart && date.getTime() <= rangeEnd
   }
 
-  isLeapYear (date) {
+  const isLeapYear = date => {
     const year = date.getFullYear()
     return !(year % 400) || (year % 100 && !(year % 4))
   }
 
   // Returns the last Monday or Sunday (depending on weekStartsOnSunday) before a date or that date if it is.
   // If no date is given, today is used.
-  getPreviousFirstDayOfWeek (date = null, weekStartsOnSunday) {
+  const getPreviousFirstDayOfWeek = (date = null, weekStartsOnSunday) => {
     const prevFirstDayOfWeek = (date && new Date(date.valueOf())) || new Date()
     const dayModifier = weekStartsOnSunday ? 7 : 6
     prevFirstDayOfWeek.setDate(prevFirstDayOfWeek.getDate() - (prevFirstDayOfWeek.getDay() + dayModifier) % 7)
@@ -167,7 +158,7 @@ export default class {
    * @param {String | Date} date the string to convert to Date.
    * @return {Date} the equivalent Javascript Date object.
    */
-  stringToDate (date) {
+  const stringToDate = date => {
     if (date instanceof Date) return date
     // Regexp way is less performant: https://jsperf.com/string-to-date-regexp-vs-new-date
     // const [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
@@ -183,7 +174,7 @@ export default class {
    * @param {Date} date the JavaScript Date to extract minutes from.
    * @return {Number} the number of minutes (total of hours plus minutes).
    */
-  dateToMinutes = date => date.getHours() * 60 + date.getMinutes()
+  const dateToMinutes = date => date.getHours() * 60 + date.getMinutes()
 
   /**
    * Count the number of days this date range spans onto.
@@ -193,7 +184,7 @@ export default class {
    * @param {String | Date} end the end date
    * @return {Integer} The number of days this date range involves
    */
-  countDays (start, end) {
+  const countDays = (start, end) => {
     // replace '-' with '/' for Safari.
     if (typeof start === 'string') start = start.replace(/-/g, '/')
     if (typeof end === 'string') end = end.replace(/-/g, '/')
@@ -214,13 +205,11 @@ export default class {
    * @return {Boolean} `true` if their time is included in the same time step,
    *                   this means these 2 dates are very close.
    */
-  datesInSameTimeStep (date1, date2, timeStep) {
+  const datesInSameTimeStep = (date1, date2, timeStep) => {
     return Math.abs(date1.getTime() - date2.getTime()) <= timeStep * 60 * 1000
   }
 
-  isValid (date) {
-    return date && date instanceof Date && !isNaN(date)
-  }
+  const isValid = date => (date && date instanceof Date && !isNaN(date))
   // ====================================================================
 
   // FORMATTERS.
@@ -235,10 +224,10 @@ export default class {
    *                       like in the documentation page.
    * @return {String} the formatted date.
    */
-  formatDate (date, format = 'YYYY-MM-DD', texts = null) {
-    if (!texts) texts = this.#texts.value
+  const formatDate = (date, format = 'YYYY-MM-DD', txts = null) => {
+    if (!txts) txts = texts.value
     if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
-    if (format === 'YYYY-MM-DD') return this.formatDateLite(date)
+    if (format === 'YYYY-MM-DD') return formatDateLite(date)
 
     // Reinit the date and time object on each function call.
     _dateObject = {}
@@ -246,29 +235,29 @@ export default class {
 
     // Each keyword is a function to load the dateObject or timeObject on demand: no wasted resource.
     const dateObj = {
-      YYYY: () => this._hydrateDateObject(date, texts).YYYY,
-      YY: () => this._hydrateDateObject(date, texts).YY(),
-      M: () => this._hydrateDateObject(date, texts).M,
-      MM: () => this._hydrateDateObject(date, texts).MM(),
-      MMM: () => this._hydrateDateObject(date, texts).MMM(),
-      MMMM: () => this._hydrateDateObject(date, texts).MMMM(),
-      MMMMG: () => this._hydrateDateObject(date, texts).MMMMG(),
-      D: () => this._hydrateDateObject(date, texts).D,
-      DD: () => this._hydrateDateObject(date, texts).DD(),
-      S: () => this._hydrateDateObject(date, texts).S(),
-      d: () => this._hydrateDateObject(date, texts).d,
-      dd: () => this._hydrateDateObject(date, texts).dd(),
-      ddd: () => this._hydrateDateObject(date, texts).ddd(),
-      dddd: () => this._hydrateDateObject(date, texts).dddd(),
-      HH: () => this._hydrateTimeObject(date, texts).HH,
-      H: () => this._hydrateTimeObject(date, texts).H,
-      hh: () => this._hydrateTimeObject(date, texts).hh,
-      h: () => this._hydrateTimeObject(date, texts).h,
-      am: () => this._hydrateTimeObject(date, texts).am,
-      AM: () => this._hydrateTimeObject(date, texts).AM,
-      mm: () => this._hydrateTimeObject(date, texts).mm,
-      m: () => this._hydrateTimeObject(date, texts).m,
-      s: () => this._hydrateTimeObject(date, texts).s
+      YYYY: () => _hydrateDateObject(date, txts).YYYY,
+      YY: () => _hydrateDateObject(date, txts).YY(),
+      M: () => _hydrateDateObject(date, txts).M,
+      MM: () => _hydrateDateObject(date, txts).MM(),
+      MMM: () => _hydrateDateObject(date, txts).MMM(),
+      MMMM: () => _hydrateDateObject(date, txts).MMMM(),
+      MMMMG: () => _hydrateDateObject(date, txts).MMMMG(),
+      D: () => _hydrateDateObject(date, txts).D,
+      DD: () => _hydrateDateObject(date, txts).DD(),
+      S: () => _hydrateDateObject(date, txts).S(),
+      d: () => _hydrateDateObject(date, txts).d,
+      dd: () => _hydrateDateObject(date, txts).dd(),
+      ddd: () => _hydrateDateObject(date, txts).ddd(),
+      dddd: () => _hydrateDateObject(date, txts).dddd(),
+      HH: () => _hydrateTimeObject(date, txts).HH,
+      H: () => _hydrateTimeObject(date, txts).H,
+      hh: () => _hydrateTimeObject(date, txts).hh,
+      h: () => _hydrateTimeObject(date, txts).h,
+      am: () => _hydrateTimeObject(date, txts).am,
+      AM: () => _hydrateTimeObject(date, txts).AM,
+      mm: () => _hydrateTimeObject(date, txts).mm,
+      m: () => _hydrateTimeObject(date, txts).m,
+      s: () => _hydrateTimeObject(date, txts).s
     }
 
     return format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
@@ -278,7 +267,7 @@ export default class {
   }
 
   // More performant function to convert a Date to `YYYY-MM-DD` formatted string only.
-  formatDateLite (date) {
+  const formatDateLite = date => {
     const m = date.getMonth() + 1
     const d = date.getDate()
     return `${date.getFullYear()}-${m < 10 ? '0' : ''}${m}-${d < 10 ? '0' : ''}${d}`
@@ -295,18 +284,18 @@ export default class {
    * @param {Boolean} round if time is 23:59:59, rounds up to 24:00 for formatting only.
    * @return {String} the formatted time.
    */
-  formatTime (date, format = 'HH:mm', texts = null, round = false) {
+  const formatTime = (date, format = 'HH:mm', txts = null, round = false) => {
     let shouldRound = false
     if (round) {
       const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
       if ((h + m + s) === (23 + 59 + 59)) shouldRound = true
     }
 
-    if (date instanceof Date && format === 'HH:mm') return shouldRound ? '24:00' : this.formatTimeLite(date)
+    if (date instanceof Date && format === 'HH:mm') return shouldRound ? '24:00' : formatTimeLite(date)
 
     _timeObject = {} // Reinit the time object on each function call.
-    if (!texts) texts = this.#texts.value
-    const timeObj = this._hydrateTimeObject(date, texts)
+    if (!txts) txts = texts.value
+    const timeObj = _hydrateTimeObject(date, txts)
 
     const formatted = format.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (m, contents) => {
       const result = timeObj[contents.replace(/\{|\}/g, '')]
@@ -324,13 +313,13 @@ export default class {
    * @param {Date} date a JavaScript Date object to format.
    * @return {String} the formatted time.
    */
-  formatTimeLite (date) {
+  const formatTimeLite = date => {
     const h = date.getHours()
     const m = date.getMinutes()
     return `${(h < 10 ? '0' : '') + h}:${(m < 10 ? '0' : '') + m}`
   }
 
-  _nth (d) {
+  const _nth = d => {
     if (d > 3 && d < 21) return 'th'
     switch (d % 10) {
       case 1: return 'st'
@@ -340,7 +329,7 @@ export default class {
     }
   }
 
-  _hydrateDateObject (date, texts) {
+  const _hydrateDateObject = (date, txts) => {
     if (_dateObject.D) return _dateObject
 
     const YYYY = date.getFullYear()
@@ -357,27 +346,27 @@ export default class {
       // Month.
       M, // 1 to 12.
       MM: () => M.toString().padStart(2, 0), // 01 to 12.
-      MMM: () => texts.months[M - 1].substring(0, 3), // Jan to Dec.
-      MMMM: () => texts.months[M - 1], // January to December.
-      MMMMG: () => (texts.monthsGenitive || texts.months)[M - 1], // January to December in genitive form (Greek...)
+      MMM: () => txts.months[M - 1].substring(0, 3), // Jan to Dec.
+      MMMM: () => txts.months[M - 1], // January to December.
+      MMMMG: () => (txts.monthsGenitive || txts.months)[M - 1], // January to December in genitive form (Greek...)
 
       // Day.
       D, // 1 to 31.
       DD: () => D.toString().padStart(2, 0), // 01 to 31.
-      S: () => this._nth(D), // st, nd, rd, th.
+      S: () => _nth(D), // st, nd, rd, th.
 
       // Day of the week.
       d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
       // Some locales have same start for all the days, so they have specific abbrev in weekDaysShort.
-      dd: () => texts.weekDaysShort.length ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber][0], // M to S.
-      ddd: () => texts.weekDaysShort.length ? texts.weekDaysShort[dayNumber] : texts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
-      dddd: () => texts.weekDays[dayNumber] // Monday to Sunday.
+      dd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber][0], // M to S.
+      ddd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
+      dddd: () => txts.weekDays[dayNumber] // Monday to Sunday.
     }
 
     return _dateObject
   }
 
-  _hydrateTimeObject (date, texts) {
+  const _hydrateTimeObject = (date, txts) => {
     if (_timeObject.am) return _timeObject
 
     let H, m, s
@@ -392,7 +381,7 @@ export default class {
     }
 
     const h = H % 12 ? H % 12 : 12
-    const am = (texts || { am: 'am', pm: 'pm' })[H === 24 || H < 12 ? 'am' : 'pm']
+    const am = (txts || { am: 'am', pm: 'pm' })[H === 24 || H < 12 ? 'am' : 'pm']
     _timeObject = {
       H,
       h,
@@ -408,4 +397,32 @@ export default class {
     return _timeObject
   }
   // ====================================================================
+
+  return {
+    addDatePrototypes,
+    removeDatePrototypes,
+    updateTexts,
+    _todayFormatted,
+    addDays,
+    subtractDays,
+    addHours,
+    subtractHours,
+    addMinutes,
+    subtractMinutes,
+    getWeek,
+    isToday,
+    isSameDate,
+    isInRange,
+    isLeapYear,
+    getPreviousFirstDayOfWeek,
+    stringToDate,
+    dateToMinutes,
+    countDays,
+    datesInSameTimeStep,
+    isValid,
+    formatDate,
+    formatDateLite,
+    formatTime,
+    formatTimeLite
+  }
 }

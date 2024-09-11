@@ -42,8 +42,8 @@
 
 <script setup>
 import { computed, provide, watch } from 'vue'
-import { _vc } from '../index'
 import { props as propsDefinitions } from '../core/props-definitions'
+import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
 import VueCalBody from './body.vue'
 import WeekdaysBar from './weekdays-bar.vue'
@@ -51,7 +51,8 @@ import TimeColumn from './time-column.vue'
 
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate', 'cell-click'])
-const vuecal = new _vc(props, emit)
+
+const vuecal = useVueCal(props, emit)
 const { config, view } = vuecal
 
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
@@ -73,7 +74,7 @@ const scrollableElClasses = computed(() => ({
   [`vuecal__scrollable--${view.id}-view`]: true
 }))
 
-watch(() => config.locale, newLocale => vuecal.loadTexts(newLocale))
+watch(() => config.locale, newLocale => config.loadTexts(newLocale))
 
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
@@ -145,5 +146,5 @@ provide('vuecal', vuecal)
   inset: 0;
 }
 
-@import './default-theme.scss'; // Keep at the end.
+@import '../default-theme.scss'; // Keep at the end.
 </style>

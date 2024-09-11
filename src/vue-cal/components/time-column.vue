@@ -22,7 +22,7 @@ const timeCells = computed(() => {
   for (let i = config.timeFrom; i < config.timeTo; i += config.timeStep) {
     const hours = ~~(i / 60)
     const mins = i % 60
-    const amPm = texts.value[i < noon ? 'am' : 'pm']
+    const amPm = texts[i < noon ? 'am' : 'pm']
 
     cells.push({
       minutes: i,

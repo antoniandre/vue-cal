@@ -61,11 +61,15 @@ div.test-view
 
 <script setup>
 import { ref, reactive, computed, inject } from 'vue'
-import VueCal from '@/vue-cal/index.vue'
+import EnUs from '@/vue-cal/i18n/en-us.json'
+import { VueCal, addDatePrototypes, useLocale } from '@/vue-cal'
+
+useLocale(EnUs)
+addDatePrototypes()
 
 const $waveui = inject('$waveui')
 
-const isDarkMode = computed(() => $waveui.theme === 'dark')
+const isDarkMode = computed(() => ($waveui.theme === 'dark'))
 
 const locales = [
   { value: 'ko', label: 'ko' },

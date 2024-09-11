@@ -24,7 +24,7 @@ export const useView = vuecal => {
   const transitionDirection = ref('right')
 
   const title = computed(() => {
-    const { dateFormat, truncations } = texts.value
+    const { dateFormat, truncations } = texts
 
     switch (viewId.value) {
       case 'day':
@@ -42,7 +42,7 @@ export const useView = vuecal => {
         const weekNumber = dateUtils.getWeek(start.value, config.startWeekOnSunday && !config.hideWeekdays[7])
         // Shorten month if xs and the locale doesn't forbid it.
         const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(start.value, format) + ` <small>${texts.value.week} ${weekNumber}</small>`
+        return dateUtils.formatDate(start.value, format) + ` <small>${texts.week} ${weekNumber}</small>`
       }
       case 'month': {
         // Shorten month if xs and the locale doesn't forbid it.

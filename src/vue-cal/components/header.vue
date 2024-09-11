@@ -11,7 +11,7 @@
       button.vuecal__view-button(
         v-for="(obj, id) in config.availableViews"
         @click="view.switch(id)"
-        v-html="vuecal.texts.value[id]"
+        v-html="vuecal.texts[id]"
         :class="{ 'vuecal__view-button--active': view.id === id }"
         type="button")
 
@@ -46,7 +46,7 @@
           @click="view.goToToday"
           :class="{ 'vuecal__nav--active': view.containsToday }"
           type="button"
-          v-html="vuecal.texts.value.today")
+          v-html="vuecal.texts.today")
       button.vuecal__nav.vuecal__nav--next(
         @click="view.next"
         :class="{ 'vuecal__nav--default': !$slots['next-button'] }"
