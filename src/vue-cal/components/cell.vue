@@ -92,7 +92,7 @@ const formattedCellDate = computed(() => {
   }
 })
 
-const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)])
+const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)] || [])
 
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({

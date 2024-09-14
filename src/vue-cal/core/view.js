@@ -1,7 +1,6 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
-export const useView = vuecal => {
-  const { config, dateUtils, emit, texts, eventsManager } = vuecal
+export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   const { availableViews } = config
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)

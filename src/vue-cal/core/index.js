@@ -6,13 +6,13 @@ import { useView } from './view'
 
 // This reactive store is the one and only source of truth.
 export const state = reactive({
+  emit: null,
   texts: { ...defaults.texts }, // Make texts reactive before a locale is loaded.
+  now: new Date(),
   dateUtils: {},
   config: {},
   eventsManager: {},
-  view: {},
-  now: new Date(),
-  emit: null
+  view: {}
 })
 
 /**
@@ -35,6 +35,7 @@ export const state = reactive({
  * @param {function} emit The Vue emit function from the root VueCal component (index.vue).
  */
 export const useVueCal = (props, emit) => {
+  state.emit = emit
   // The date utils composable.
   // A class/composable is needed in order to access the user locale in all the methods, and
   // independently of other potential Vue Cal instances on the same page.
@@ -43,7 +44,6 @@ export const useVueCal = (props, emit) => {
   state.eventsManager = useEvents(state)
   // At any time this object will be filled with current view details and visible events.
   state.view = useView(state)
-  state.emit = emit
 
   return state
 }
