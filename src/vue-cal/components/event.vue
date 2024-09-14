@@ -2,8 +2,7 @@
 .vuecal__event(:class="classes" :style="styles")
   .vuecal__event-title
     | {{ event.title }}
-  .vuecal__event-content
-    | {{ event.content }}
+  .vuecal__event-content(v-html="event.content")
   .vuecal__event-time
     | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
     | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
