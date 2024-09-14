@@ -1,12 +1,6 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 div.test-view
-  w-switch.theme-switch.no-grow(
-    v-model="isDarkMode"
-    @update:model-value="$waveui.switchTheme(isDarkMode ? 'light' : 'dark')")
-    template(#thumb)
-      w-icon(size="0.8rem") mdi {{ isDarkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
-
   .w-flex.align-center.gap6.no-grow
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
@@ -68,8 +62,6 @@ useLocale(EnUs)
 addDatePrototypes()
 
 const $waveui = inject('$waveui')
-
-const isDarkMode = computed(() => ($waveui.theme === 'dark'))
 
 const locales = [
   { value: 'ko', label: 'ko' },
