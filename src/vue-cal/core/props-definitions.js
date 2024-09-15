@@ -12,6 +12,7 @@ export const props = {
   locale: { type: [String, Object], default: 'en-us' },
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false },
+  splitDays: { type: Array, default: () => [] },
   startWeekOnSunday: { type: Boolean, default: false },
   time: { type: Boolean, default: true },
   timeCellHeight: { type: Number, default: 40 }, // In pixels.
@@ -60,6 +61,5 @@ export const props = {
   showTimeInCells: { type: Boolean, default: false },
   showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
-  splitDays: { type: Array, default: () => [] },
   stickySplitLabels: { type: Boolean, default: false }
 }

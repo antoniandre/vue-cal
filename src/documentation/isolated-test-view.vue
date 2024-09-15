@@ -113,7 +113,8 @@ const mainVuecalConfig = reactive({
   viewDayOffset: ref(0),
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
-  events: ref([])
+  events: ref([]),
+  splitDays: [{ label: 'Dr 1' }, { label: 'Dr 2' }]
 })
 
 // Pretend a call to a backend.

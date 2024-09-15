@@ -2,7 +2,25 @@
 .vuecal__cell(:class="classes" v-on="cellEventHandlers")
   template(v-if="$slots.cell")
     slot(name="cell" :date="date" :index="index" :events="cellEvents")
-  template(v-else)
+  template(v-else-if="daySplits")
+    .vuecal__cell-split(v-for="(split, i) in daySplits" :key="i")
+      p {{ split.label }}
+      template(v-if="$slots['cell-events']")
+        slot(name="cell-events")
+      .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
+        slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
+      .vuecal__cell-content(v-if="$slots['cell-content']")
+        slot(name="cell-content" :start="start" :end="end" :events="cellEvents")
+      .vuecal__cell-events(v-if="cellEvents.length")
+        slot(
+          v-if="$slots['cell-events']"
+          name="cell-events"
+          :start="start"
+          :end="end"
+          :events="cellEvents")
+        template(v-else)
+          event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
+  template(v-else-if="!daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -31,9 +49,6 @@ import { computed, inject, reactive } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import Event from './event.vue'
 
-const vuecal = inject('vuecal')
-const { view, config, dateUtils, eventsManager } = vuecal
-
 const props = defineProps({
   // Even with time=false, the date of the cell will still be provided in order to attach
   // events to a specific date.
@@ -42,6 +57,8 @@ const props = defineProps({
   index: { type: Number, required: true }
 })
 
+const vuecal = inject('vuecal')
+const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const classes = computed(() => {
@@ -61,6 +78,7 @@ const classes = computed(() => {
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
+    'vuecal__cell--has-splits': daySplits.value,
     'vuecal__cell--has-events': false
   }
 })
@@ -93,6 +111,10 @@ const formattedCellDate = computed(() => {
 })
 
 const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)] || [])
+
+const daySplits = computed(() => {
+  return (config.splitDays.length && (view.isDay || view.isDays || view.isWeek) && config.splitDays)
+})
 
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
@@ -153,8 +175,17 @@ const cellEventHandlers = {
     }
   }
 
+  &--has-splits {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
+}
+
+.vuecal__cell-split {
+  position: relative;
+  display: flex;
+  flex-grow: 1;
+  flex-basis: 0;
+  background-image: linear-gradient(90deg, rgb(134, 134, 253), transparent);
 }
 
 .vuecal__now-line {
