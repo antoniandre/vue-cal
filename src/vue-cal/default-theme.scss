@@ -1,7 +1,27 @@
 .vuecal--default-theme {
+  --vuecal-primary-color: #1976D2;
+  --vuecal-secondary-color: #fff;
+  --vuecal-base-color: #000;
+  --vuecal-contrast-color: #fff;
+  --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
+  --vuecal-header-color: var(--vuecal-secondary-color);
+  --vuecal-events-color: var(--vuecal-contrast-color);
+
   position: relative;
   border-radius: 6px;
-  color: #000;
+  color: var(--vuecal-base-color);
+
+  // Dark theme.
+  // ------------------------------------------------------
+  &.vuecal--dark {
+    --vuecal-primary-color: #1976D2;
+    --vuecal-secondary-color: #2e2e2e;
+    --vuecal-base-color: #fff;
+    --vuecal-contrast-color: #000;
+    --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
+    --vuecal-header-color: var(--vuecal-base-color);
+    --vuecal-events-color: var(--vuecal-base-color);
+  }
 
   &:before {
     content: '';
@@ -185,7 +205,7 @@
   // ------------------------------------------------------
   .vuecal__event {
     background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-secondary-color);
+    color: var(--vuecal-events-color);
     border: 1px solid currentColor;
     border-radius: 4px;
     padding: 2px;

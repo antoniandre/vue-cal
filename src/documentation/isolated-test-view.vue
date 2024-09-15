@@ -96,6 +96,7 @@ const hideWeekdays = ref([])
 
 const mainVuecalConfig = reactive({
   views,
+  dark: computed(() => $waveui.theme === 'dark'),
   selectedDate: ref(null),
   viewDate: ref(new Date(2023, 11, 1)),
   locale: ref('en-us'),

@@ -3,6 +3,7 @@ export const minutesInADay = 24 * 60 // Don't do the maths every time.
 export const props = {
   // HANDLED:
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
+  dark: { type: Boolean, default: false },
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   datePrototypes: { type: Boolean, default: true },
   hideWeekdays: { type: Array, default: () => [] }, // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
@@ -60,5 +61,5 @@ export const props = {
   showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
   splitDays: { type: Array, default: () => [] },
-  stickySplitLabels: { type: Boolean, default: false },
+  stickySplitLabels: { type: Boolean, default: false }
 }
