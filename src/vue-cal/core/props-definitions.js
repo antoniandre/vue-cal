@@ -6,6 +6,7 @@ export const props = {
   dark: { type: Boolean, default: false },
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   datePrototypes: { type: Boolean, default: true },
+  events: { type: Array, default: () => [] },
   hideWeekdays: { type: Array, default: () => [] }, // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
   hideWeekends: { type: Boolean, default: false },
   locale: { type: [String, Object], default: 'en-us' },
@@ -44,7 +45,6 @@ export const props = {
   // This prevents drag creation by mistake when you want to navigate.
   dragToCreateThreshold: { type: Number, default: 15 },
   editableEvents: { type: [Boolean, Object], default: false },
-  events: { type: Array, default: () => [] },
   eventsCountOnYearView: { type: Boolean, default: false },
   eventsOnMonthView: { type: [Boolean, String], default: false },
   maxDate: { type: [String, Date], default: '' },
