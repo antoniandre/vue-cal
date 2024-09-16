@@ -121,6 +121,11 @@ export const useConfig = (vuecal, props) => {
     vuecal.texts = Object.assign(vuecal.texts, Object.assign({ ...defaults.texts }, translations))
   }
 
+  const daySplits = computed(() => {
+    const { view } = vuecal
+    return (props.splitDays.length && (view.isDay || view.isDays || view.isWeek) && props.splitDays)
+  })
+
   return {
     ...toRefs(props),
     defaultView,
@@ -131,6 +136,7 @@ export const useConfig = (vuecal, props) => {
     clickToNavigate,
     hideWeekdays,
     hideWeekends,
+    daySplits,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },

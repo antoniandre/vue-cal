@@ -45,8 +45,11 @@ const timeCells = computed(() => {
   left: 0;
   z-index: 2;
   border-right: 0.5px solid var(--vuecal-border-color);
+  // Smoothen transition between day view and days or week view.
+  transition: padding-top 0.3s ease-in-out;
 
   .vuecal__scrollable--day-view & {padding-top: 0;}
+  .vuecal--has-splits.vuecal--day-view & {padding-top: var(--vuecal-weekdays-bar-height);}
 }
 
 .vuecal__time-cell {
@@ -71,7 +74,7 @@ const timeCells = computed(() => {
     padding-right: 8px;
     line-height: 0;
   }
-  .vuecal__scrollable--day-view &:first-child label {
+  .vuecal:not(.vuecal--has-splits) .vuecal__scrollable--day-view &:first-child label {
     margin-top: 0.6em;
     font-size: 0.9em;
     opacity: 0.4;

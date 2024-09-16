@@ -2,9 +2,8 @@
 .vuecal__cell(:class="classes" v-on="cellEventHandlers")
   template(v-if="$slots.cell")
     slot(name="cell" :date="date" :index="index" :events="cellEvents")
-  template(v-else-if="daySplits")
-    .vuecal__cell-split(v-for="(split, i) in daySplits" :key="i")
-      p {{ split.label }}
+  template(v-else-if="config.daySplits")
+    .vuecal__cell-split(v-for="(split, i) in config.daySplits" :key="i" :class="split.class")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -20,7 +19,7 @@
           :events="cellEvents")
         template(v-else)
           event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
-  template(v-else-if="!daySplits")
+  template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -78,7 +77,7 @@ const classes = computed(() => {
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
-    'vuecal__cell--has-splits': daySplits.value,
+    'vuecal__cell--has-splits': config.daySplits,
     'vuecal__cell--has-events': false
   }
 })
@@ -111,10 +110,6 @@ const formattedCellDate = computed(() => {
 })
 
 const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)] || [])
-
-const daySplits = computed(() => {
-  return (config.splitDays.length && (view.isDay || view.isDays || view.isWeek) && config.splitDays)
-})
 
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
@@ -178,14 +173,6 @@ const cellEventHandlers = {
   &--has-splits {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
   &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
-}
-
-.vuecal__cell-split {
-  position: relative;
-  display: flex;
-  flex-grow: 1;
-  flex-basis: 0;
-  background-image: linear-gradient(90deg, rgb(134, 134, 253), transparent);
 }
 
 .vuecal__now-line {

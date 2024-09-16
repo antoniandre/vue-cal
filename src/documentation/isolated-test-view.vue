@@ -114,14 +114,14 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  splitDays: [{ label: 'Dr 1' }, { label: 'Dr 2' }]
+  splitDays: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }]
 })
 
 // Pretend a call to a backend.
 setTimeout(() => {
   mainVuecalConfig.events = [
-    { title: 'Event 1', start: '2024-07-20 10:00', end: '2024-07-20 10:30' },
-    { title: 'Event 2', start: '2024-07-20 11:00', end: '2024-07-20 11:30' }
+    { title: 'Event 1', start: '2024-09-20 10:00', end: '2024-09-20 10:30' },
+    { title: 'Event 2', start: '2024-09-20 11:00', end: '2024-09-20 11:30' }
   ]
 }, 1000)
 
@@ -239,5 +239,12 @@ const addEvent = () => {
     align-items: center;
     justify-content: center;
   }
+}
+
+.vuecal__cell-split {
+  &.dr-1 {background-color: rgba(134, 192, 253, 0.1);}
+  &.dr-2 {background-color: rgba(187, 148, 255, 0.15);}
+  .vuecal--dark &.dr-1 {background-color: rgb(60 110 136 / 40%);}
+  .vuecal--dark &.dr-2 {background-color: rgb(138 93 131 / 30%);}
 }
 </style>

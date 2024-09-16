@@ -4,6 +4,12 @@
     v-for="(day, i) in weekDays"
     :key="i"
     @click="domEvents.click(day.date)") {{ day[labelsSize] }}
+    .vuecal__cell-splits(v-if="config.daySplits")
+      .vuecal__cell-split.vuecal__cell-split--label(
+        v-for="(split, i) in config.daySplits"
+        :key="i"
+        :class="split.class"
+        v-html="split.label")
 </template>
 
 <script setup>
@@ -49,6 +55,7 @@ const domEvents = {
   position: sticky;
   top: 0;
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   z-index: 1;
   background-color: var(--vuecal-secondary-color);

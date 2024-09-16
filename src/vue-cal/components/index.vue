@@ -29,6 +29,13 @@
               slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
           .w-flex.column.grow
             WeekdaysBar
+            .vuecal__cell-splits(v-if="config.daySplits && view.isDay")
+              .vuecal__cell-split.vuecal__cell-split--label(
+                v-for="(split, i) in config.daySplits"
+                :key="i"
+                :class="split.class"
+                v-html="split.label")
+
             VueCalBody
               template(v-if="$slots.cell" #cell="{ start, end, index, events }")
                 slot(name="cell" :start="start" :end="end" :index="index" :events="events")
@@ -63,7 +70,8 @@ const wrapperClasses = computed(() => ({
   'vuecal--date-picker': config.datePicker,
   'vuecal--dark': config.dark,
   [`vuecal--${view.id}-view`]: true,
-  'vuecal--view-has-time': hasTimeColumn.value
+  'vuecal--view-has-time': hasTimeColumn.value,
+  'vuecal--has-splits': config.daySplits
 }))
 
 const wrapperStyles = computed(() => ({
@@ -85,7 +93,7 @@ provide('vuecal', vuecal)
 .vuecal {
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-weekdays-bar-height: 1.6em;
+  --vuecal-weekdays-bar-height: 1.6rem;
   --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
   // When there are too many day cells to fit in the view, setting a min cell width will help
   // visualizing and a horizontal scrollbar will be added.
@@ -94,6 +102,11 @@ provide('vuecal', vuecal)
   display: flex;
   flex-direction: column;
   user-select: none;
+
+  &--has-splits {--vuecal-weekdays-bar-height: 2.5rem;}
+  &--has-splits.vuecal--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
+
+  &, *, :before, :after {box-sizing: border-box;}
 
   &__transition-wrap {
     position: relative;
@@ -113,6 +126,23 @@ provide('vuecal', vuecal)
   }
 
   .grow {flex-grow: 1;}
+
+  // Shared in headers and cells.
+  &__cell-splits {display: flex;}
+  &__cell-split {
+    position: relative;
+    display: flex;
+    flex-grow: 1;
+    flex-basis: 0;
+    justify-content: center;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+  &__cell-split--label {
+    font-size: 12px;
+    align-items: center;
+  }
+  &--has-splits.vuecal--day-view &__cell-split--label {height: var(--vuecal-weekdays-bar-height);}
 }
 
 // Transitions.
