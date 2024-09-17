@@ -104,7 +104,12 @@
     Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   .example.my2.mxa(style="width: 250px;height: 260px")
-    vue-cal.vuecal--green-theme(hide-view-selector :time="false" active-view="month" xsmall)
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      hide-view-selector
+      :time="false"
+      active-view="month"
+      xsmall)
       template(#arrow-prev)
         w-icon mdi mdi-arrow-left
       template(#arrow-next)
@@ -148,7 +153,8 @@
         active-view="month"
         :disable-views="['week']")
     .example.ma2(style="width: 270px;height: 300px")
-      vue-cal.vuecal--rounded-theme.vuecal--green-theme(
+      vue-cal.vuecal--rounded-theme.vuecal--default-theme(
+        :dark="store.darkTheme"
         xsmall
         hide-view-selector
         :time="false"
@@ -201,7 +207,8 @@
     even when navigating from cells and title bar clicks.#[br]#[br]
     By default all the views are visible and the default active view is the #[span.code week] view.
   .example.mxa.mt2(style="height: 350px")
-    vue-cal.vuecal--green-theme.ex--disable-views(
+    vue-cal.vuecal--default-theme.ex--disable-views(
+      :dark="store.darkTheme"
       :time="false"
       active-view="month"
       :disable-views="['years', 'year', 'week']")
@@ -227,7 +234,8 @@
         2 different CSS class are available on out of range cells: #[span.code .before-min]
         &amp; #[span.code .after-max].
   .example.my2.mxa(style="width: 250px;height: 260px")
-    vue-cal.vuecal--green-theme.ex--min-max-dates(
+    vue-cal.vuecal--default-theme.ex--min-max-dates(
+      :dark="store.darkTheme"
       xsmall
       hide-view-selector
       click-to-navigate
@@ -272,7 +280,8 @@
     You can use the #[span.code disable-days] option to provide an array of formatted dates
     (e.g. #[span.code 2020-09-18]) to disable.#[br]
   .example.my2.mxa(style="width: 250px;height: 260px")
-    vue-cal.vuecal--green-theme.ex--disable-days(
+    vue-cal.vuecal--default-theme.ex--disable-days(
+      :dark="store.darkTheme"
       xsmall
       hide-view-selector
       click-to-navigate
@@ -319,7 +328,8 @@
     Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
   .example.mxa(style="height: 350px")
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       :time="false"
       show-week-numbers
       :hide-weekdays="[2, 3, 5]"
@@ -357,7 +367,8 @@
     Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
     Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
   .example.my2.mxa(style="width: 500px;height: 340px;max-width: 100%")
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       :time="false"
       small
       active-view="year"
@@ -392,7 +403,8 @@
     This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
     24-hour format, and hidden weekends.
   .example.my2.mxa(style="height: 450px")
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       :time-from="8 * 60"
       :time-to="19 * 60"
       :time-step="30"
@@ -415,7 +427,8 @@
     You can choose to display the time labels in every cells by enabling the
     #[span.code showTimeInCells] option.
   .example.my2.mxa(style="height: 450px")
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       :time-from="8 * 60"
       :time-to="19 * 60"
       :time-step="30"
@@ -443,7 +456,8 @@
     Refer to the #[a(href="#api") API] section to read more about the
     #[span.code special-hours] option.
   .example.my2.mxa(style="height: 450px")
-    vue-cal.vuecal--green-theme.ex--special-hours(
+    vue-cal.vuecal--default-theme.ex--special-hours(
+      :dark="store.darkTheme"
       :time-from="8 * 60"
       :time-to="20 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -479,7 +493,8 @@
 
   p With the same principle, you could also build a lot more complex layout such as the following one.
   .example.my2.mxa(style="height: 550px")
-    vue-cal.vuecal--green-theme.ex--doctor-hours(
+    vue-cal.vuecal--default-theme.ex--doctor-hours(
+      :dark="store.darkTheme"
       :disable-views="['years', 'year', 'month']"
       :time-from="7 * 60"
       :time-to="20 * 60"
@@ -587,10 +602,11 @@
     This feature has no impact on performance.
 
   p.
-    If you want the now line to keep accurate position even while your calendar is iddle, you can use the option
+    If you want the now line to keep accurate position even while your calendar is idle, you can use the option
     #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
   .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--today-current-time(
+    vue-cal.vuecal--default-theme.ex--today-current-time(
+      :dark="store.darkTheme"
       xsmall
       :time-cell-height="26"
       active-view="day"
@@ -617,7 +633,8 @@
     w-icon(color="green lighten-2") mdi mdi-codepen
   .w-flex.justify-center.wrap
     .example.my2.mr3(style="max-width: 280px;height: 250px")
-      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--default-theme.ex--adding-a-today-button(
+        :dark="store.darkTheme"
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -627,7 +644,8 @@
         active-view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     .example.my2(style="max-width: 280px;height: 250px")
-      vue-cal.vuecal--green-theme.ex--adding-a-today-button(
+      vue-cal.vuecal--default-theme.ex--adding-a-today-button(
+        :dark="store.darkTheme"
         ref="vuecal2"
         xsmall
         hide-weekends
@@ -687,18 +705,20 @@
     Timeless events cannot be resized as they have no time or duration information.#[br]
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   .example.my2.mxa(style="height: 350px")
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time="false"
       :disable-views="['years', 'year', 'month']"
       hide-weekends
       :events="timelessEvents")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-    &lt;vue-cal selected-date="2018-11-19"
-             :time="false"
-             :disable-views="['years', 'year', 'month']"
-             hide-weekends
-             :events="events"&gt;
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time="false"
+      :disable-views="['years', 'year', 'month']"
+      hide-weekends
+      :events="events"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
@@ -741,8 +761,9 @@
     The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
 
   .example.my2.mxa
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -750,7 +771,7 @@
       :events="events")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -785,8 +806,9 @@
     li #[span.code e]: the associated javascript DOM event
   highlight-message.mt3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   .example.my2.mxa(style="height: 520px")
-    vue-cal.vuecal--green-theme.ex--open-dialog-on-event-click(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.ex--open-dialog-on-event-click(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
       :disable-views="['years', 'year']"
@@ -795,7 +817,7 @@
       :on-event-click="onEventClick")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
       :disable-views="['years', 'year']"
@@ -897,9 +919,10 @@
       :items="indicatorStyleOptions")
   .w-flex.maa.justify-center.wrap
     .example.ma2.my2(style="width: 300px;height: 360px")
-      vue-cal.vuecal--green-theme(
+      vue-cal.vuecal--default-theme(
+        :dark="store.darkTheme"
         :class="'event-indicator--' + indicatorStyle"
-        selected-date="2018-11-19"
+        :selected-date="stringToDate('2018-11-19')"
         xsmall
         :time-from="10 * 60"
         active-view="month"
@@ -909,7 +932,7 @@
     .example.ma2.my2(style="width: 300px;height: 360px")
       vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
-        selected-date="2018-11-19"
+        :selected-date="stringToDate('2018-11-19')"
         xsmall
         :time-from="10 * 60"
         :disable-views="['day']"
@@ -918,7 +941,7 @@
         :events="events")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       xsmall
       :time-from="10 * 60"
       :disable-views="['day']"
@@ -961,8 +984,9 @@
     any event information via CSS.#[br]
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   .example.my4.mxa(style="height: 600px")
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete.ex--events-on-month-view(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.vuecal--full-height-delete.ex--events-on-month-view(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
       active-view="month"
@@ -971,7 +995,7 @@
       :events="events")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
       active-view="month"
@@ -1033,8 +1057,9 @@
 
   p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
   .example.my2.mxa
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year']"
@@ -1043,7 +1068,7 @@
       :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
       :events="editableEvents")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-    &lt;vue-cal selected-date="2018-11-19"
+    &lt;vue-cal :selected-date="stringToDate('2018-11-19')"
              :time-from="10 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year']"
@@ -1098,7 +1123,8 @@
       @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
       | Clear all the events
   .example.mxa.mt3(style="height: 280px")
-    vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
+      :dark="store.darkTheme"
       ref="vuecalCreateEx"
       hide-view-selector
       hide-title-bar
@@ -1140,7 +1166,8 @@
       template(#item="{ item }")
         code {{ item.label }}
   .example.grow.mt3(style="height: 280px")
-    vue-cal.ex--create-events.vuecal--green-theme.vuecal--full-height-delete(
+    vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
+      :dark="store.darkTheme"
       :time-from="10 * 60"
       :time-to="16 * 60"
       hide-weekends
@@ -1170,7 +1197,8 @@
         away from #[span.code cell-dblclick]:
       .w-flex.wrap
         .example.grow.my2.mr3(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+            :dark="store.darkTheme"
             ref="vuecal3"
             small
             hide-view-selector
@@ -1215,8 +1243,9 @@
 
       .w-flex.align-top.wrap
         .example.grow.my2.mr3(style="height: 280px")
-          vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-            ref="vuecal"
+          vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+            :dark="store.darkTheme"
+            ref="vuecalEl"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -1299,7 +1328,8 @@
         The dialog box will allow you to set all the event attributes.
       .w-flex.wrap
         .example.grow.my2.mr3(style="height: 280px")
-          vue-cal.grow.vuecal--green-theme.vuecal--full-height-delete(
+          vue-cal.grow.vuecal--default-theme.vuecal--full-height-delete(
+            :dark="store.darkTheme"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -1373,7 +1403,8 @@
 
     p With the same method, you can open a dialog at the end of the event drag-creation.
     .example.grow.my2(style="height: 280px")
-      vue-cal.vuecal--green-theme.vuecal--full-height-delete(
+      vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+        :dark="store.darkTheme"
         small
         :time-from="10 * 60"
         :time-to="16 * 60"
@@ -1503,8 +1534,9 @@
       You can use that class to give it a different style.
 
   .example.my4.mxa
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       today-button
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -1515,7 +1547,7 @@
       :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       today-button
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -1567,7 +1599,8 @@
       :time-to="16 * 60"
       editable-events
       @event-drop="onEventDrop")
-    vue-cal.ml1.grow.external-events-drag-and-drop.vuecal--green-theme(
+    vue-cal.ml1.grow.external-events-drag-and-drop.vuecal--default-theme(
+      :dark="store.darkTheme"
       small
       hide-view-selector
       hide-weekends
@@ -1662,8 +1695,9 @@
     3 CSS classes are available to target the event first day, the last day and all the days in between:
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   .example.my2.mxa
-    vue-cal.vuecal--green-theme.ex--multiple-day-events.vuecal--full-height-delete(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.ex--multiple-day-events.vuecal--full-height-delete(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
       hide-weekends
@@ -1673,7 +1707,7 @@
       :events="multipleDayEvents")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -1743,7 +1777,7 @@
     .text-center.title1.grey Demo coming soon.
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
       hide-weekends
@@ -1852,8 +1886,9 @@
     You can achieve this event overlaps grouping with the option #[span.code overlaps-per-time-step].
 
   .example.my2.mxa
-    vue-cal.vuecal--green-theme.vuecal--full-height-delete(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.vuecal--full-height-delete(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -1863,7 +1898,7 @@
       :events="overlappingEvents")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -1913,8 +1948,9 @@
     Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   .example.my2.mxa
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -1922,7 +1958,7 @@
       :events="backgroundEvents")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -2100,8 +2136,9 @@
         | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
 
   .example.grow.my2(style="height: 600px")
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year']"
@@ -2126,7 +2163,7 @@
     &lt;/button&gt;
 
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-step="30"
       :disable-views="['years', 'year', 'month']"
@@ -2333,8 +2370,9 @@
         strong.mr1 {{ l.name }}:
         span {{ l.args.replace(/,/g, m => ', ').replace(/":(?=["\w\[\{])/g, m => '": ') }}
   .example.mt6.mb2.mxa
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year']"
@@ -2361,7 +2399,7 @@
 
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year']"
@@ -2438,7 +2476,8 @@
       | Next
       w-icon.ml1 mdi mdi-arrow-right
   .w-flex.align-center.justify-center
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       small
       ref="vuecal4"
       v-model:active-view="activeView"
@@ -2563,8 +2602,9 @@
   pre {{ eventsCopy.map(e => e.title) }}
 
   .example.my4.mxa
-    vue-cal.vuecal--green-theme(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -2581,7 +2621,7 @@
     &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -2645,7 +2685,8 @@
     | Scroll to top
   .w-flex.wrap
     .example.my4.mr2.grow(style="width: 360px;height: 360px;max-width: 100%")
-      vue-cal.ex--scroll-to-time.vuecal--green-theme(
+      vue-cal.ex--scroll-to-time.vuecal--default-theme(
+        :dark="store.darkTheme"
         small
         active-view="day"
         :disable-views="['years', 'year', 'month', 'week']"
@@ -2681,7 +2722,8 @@
     For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
     So if you don't set this class you are free to paint the lines yourself or not.
   .example.my4.mxa(style="width: 360px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme(
+    vue-cal.vuecal--default-theme(
+      :dark="store.darkTheme"
       small
       :time-from="5 * 60"
       :time-step="15"
@@ -2730,8 +2772,9 @@
     #[span.code leisure] CSS class (orange color).
 
   .example.my4.mxa(style="width: 300px;height: 360px;max-width: 100%")
-    vue-cal.vuecal--green-theme.ex--custom-events-count(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.ex--custom-events-count(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       xsmall
       :time-from="10 * 60"
       :time-step="2 * 60"
@@ -2744,7 +2787,7 @@
 
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       xsmall
       :time-from="10 * 60"
       :time-step="2 * 60"
@@ -2876,7 +2919,8 @@
       &lt;/div&gt;
 
   .example.my2.mxa(style="height: 400px")
-    vue-cal.vuecal--green-theme.ex--custom-title-and-cells(
+    vue-cal.vuecal--default-theme.ex--custom-title-and-cells(
+      :dark="store.darkTheme"
       :time="false"
       :dblclick-to-navigate="false"
       active-view="month"
@@ -2969,8 +3013,9 @@
     Note that #[span.code _eid] is a reserved keyword.
 
   .example.my2.mxa(style="height: 520px")
-    vue-cal.vuecal--green-theme.ex--custom-event-rendering(
-      selected-date="2018-11-19"
+    vue-cal.vuecal--default-theme.ex--custom-event-rendering(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
       hide-weekends
@@ -2986,7 +3031,7 @@
           span {{ event.end.formatTime('h O\'clock') }}
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      selected-date="2018-11-19"
+      :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
       hide-weekends
@@ -3034,7 +3079,8 @@
   p.mb6 You can provide a custom split label when a simple label is not enough.
 
   .example.my2.mxa(style="height: 250px")
-    vue-cal.ex--custom-day-split-labels.vuecal--green-theme(
+    vue-cal.ex--custom-day-split-labels.vuecal--default-theme(
+      :dark="store.darkTheme"
       :disable-views="['years', 'year', 'month']"
       active-view="day"
       :split-days="customDaySplitLabels"
