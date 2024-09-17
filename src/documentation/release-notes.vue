@@ -5,6 +5,8 @@ div
     ul
       li Completely refactored from the ground up, with Composition API and composables
       li Performance-oriented: faster and more efficient than before
+      li Now exposes all the date utilities for external use
+      li Now adapted and convenient to use with Composition API
       li Add and remove Date prototypes very easily
       li Externally preload a locale and provide it if you want to avoid a promise handling. (optional)
       li sticky headers + sticky time bar at the same time - only with CSS
