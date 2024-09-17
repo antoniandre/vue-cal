@@ -265,7 +265,7 @@
     vue-cal(small :time="false" hide-view-selector style="height: 250px")
 
   //- Examples.
-  //- examples(:locales-list="localesList")
+  examples(:locales-list="localesList")
 
   //- API.
   api(:locales-list="localesList")
