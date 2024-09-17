@@ -103,7 +103,7 @@ provide('vuecal', vuecal)
   flex-direction: column;
   user-select: none;
 
-  &--has-splits {--vuecal-weekdays-bar-height: 2.5rem;}
+  &--has-splits {--vuecal-weekdays-bar-height: 2.2rem;}
   &--has-splits.vuecal--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
 
   &, *, :before, :after {box-sizing: border-box;}

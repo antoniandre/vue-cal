@@ -6,9 +6,11 @@
   --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
   --vuecal-header-color: var(--vuecal-secondary-color);
   --vuecal-events-color: var(--vuecal-contrast-color);
+  --vuecal-border-radius: 6px;
 
   position: relative;
-  border-radius: 6px;
+  border-radius: var(--vuecal-border-radius);
+  clip-path: inset(0 round var(--vuecal-border-radius));
   color: var(--vuecal-base-color);
 
   // Dark theme.
@@ -34,8 +36,6 @@
   // Calendar Header.
   // ------------------------------------------------------
   .vuecal__header {
-    border-top-left-radius: inherit;
-    border-top-right-radius: inherit;
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-header-color);
   }
@@ -44,11 +44,6 @@
   .vuecal__title-bar {
     padding-top: 4px;
     padding-bottom: 4px;
-
-    &:first-child {
-      border-top-left-radius: inherit;
-      border-top-right-radius: inherit;
-    }
   }
 
   .vuecal__title-bar {
@@ -127,6 +122,7 @@
     display: block;
     font-size: 0.95em;
   }
+  &.vuecal--has-splits .vuecal__weekday {padding-left: 0;padding-right: 0;}
 
   // Calendar Body.
   // ------------------------------------------------------
