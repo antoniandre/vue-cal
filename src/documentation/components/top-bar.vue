@@ -242,7 +242,7 @@ $lighter-text: #ccc;
 
     &:after {
       margin-top: 5px;
-      border: 1px solid $secondary;
+      border: 1px solid rgb(var(--w-contrast-bg-color-rgb));
     }
   }
 
@@ -286,6 +286,7 @@ $lighter-text: #ccc;
       box-shadow: 2px 2px 3px rgba(0, 0, 0, 0.5);
       transform: translate(0, 0);
     }
+    [data-theme="dark"] .ready & {box-shadow: 2px 2px 3px #000;}
   }
 
   &__logo-link {
