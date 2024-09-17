@@ -56,11 +56,13 @@ div.test-view
 <script setup>
 import { ref, reactive, computed, inject } from 'vue'
 import EnUs from '@/vue-cal/i18n/en-us.json'
-import { VueCal, addDatePrototypes, useLocale } from '@/vue-cal'
+import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
+import { useAppStore } from '@/store'
 
 useLocale(EnUs)
 addDatePrototypes()
 
+const store = useAppStore()
 const $waveui = inject('$waveui')
 
 const locales = [
@@ -96,7 +98,7 @@ const hideWeekdays = ref([])
 
 const mainVuecalConfig = reactive({
   views,
-  dark: computed(() => $waveui.theme === 'dark'),
+  dark: computed(() => store.darkMode),
   selectedDate: ref(null),
   viewDate: ref(new Date(2023, 11, 1)),
   locale: ref('en-us'),
