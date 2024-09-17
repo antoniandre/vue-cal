@@ -1,5 +1,5 @@
 /**
- * Date Utils & prototypes.
+ * Date utils & prototypes.
  */
 
 import { ref } from 'vue'
@@ -8,7 +8,7 @@ export const useDateUtils = initTexts => {
   let now, todayDate, todayF
   let _dateObject = {}
   let _timeObject = {}
-  let texts = ref(initTexts)
+  const texts = ref(initTexts)
 
   const addDatePrototypes = () => {
     /* eslint-disable no-extend-native */
