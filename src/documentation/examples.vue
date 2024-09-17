@@ -2032,8 +2032,9 @@
     span.white :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
 
   .example.my2.mxa
-    vue-cal.vuecal--green-theme.ex--all-day-events(
-      selected-date="2019-02-11"
+    vue-cal.vuecal--default-theme.ex--all-day-events(
+      :dark="store.darkTheme"
+      :selected-date="stringToDate('2019-02-11')"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
       hide-weekends
@@ -2049,7 +2050,7 @@
     &lt;/button&gt;
 
     &lt;vue-cal
-      selected-date="2019-02-11"
+      :selected-date="stringToDate('2019-02-11')"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
       hide-weekends
