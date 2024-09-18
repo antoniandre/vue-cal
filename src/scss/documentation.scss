@@ -82,7 +82,9 @@
     margin-bottom: 12px;
     font-size: 13px;
     line-height: 1.35;
+
     &[data-label] {margin-top: 2.5em;}
+    &--dark {background-color: #2d2d2d;}
   }
 
   .important-notes {

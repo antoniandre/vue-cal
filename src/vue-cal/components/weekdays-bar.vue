@@ -60,6 +60,7 @@ const domEvents = {
   z-index: 1;
   background-color: var(--vuecal-secondary-color);
   height: var(--vuecal-weekdays-bar-height);
+  white-space: nowrap;
 }
 
 .vuecal__weekday {
