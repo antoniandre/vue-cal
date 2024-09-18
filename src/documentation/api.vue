@@ -28,7 +28,7 @@ div
     eventsOnMonthView:      [Boolean, String], default: false
     hideBody:               [Boolean],         default: false
     hideTitleBar:           [Boolean],         default: false
-    hideViewSelector:       [Boolean],         default: false
+    hideViewsBar:           [Boolean],         default: false
     hideWeekdays:           [Array],           default: []
     hideWeekends:           [Boolean],         default: false
     locale:                 [String],          default: 'en'
@@ -61,7 +61,7 @@ div
     todayButton:            [Boolean],         default: false
     transitions:            [Boolean],         default: true
     twelveHour:             [Boolean],         default: false
-    xsmall:                 [Boolean],         default: false
+    xs:                     [Boolean],         default: false
     watchRealTime:          [Boolean],         default: false
 
   ul.api-options
@@ -107,7 +107,7 @@ div
         #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
         #[a(href="#css-notes") CSS Notes].
     li
-      code.mr2 hideViewSelector
+      code.mr2 hideViewsBar
       span.code [Boolean], default: false
       p.
         When set to #[span.code true], the top view selector will disappear.#[br]
@@ -310,7 +310,7 @@ div
         2 media queries are truncating the days of the week below 450px,
         read on in the #[a(href="#css-notes") CSS Notes].
     li
-      code.mr2 xsmall
+      code.mr2 xs
       span.code [Boolean], default: false
       p.
         When set to #[span.code true], the days of the week headings will be truncated to 1 letter.#[br]

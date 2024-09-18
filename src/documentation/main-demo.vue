@@ -7,9 +7,9 @@
     .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
-        xsmall
+        xs
         :selected-date="selectedDate"
-        hide-view-selector
+        :views-bar="false"
         :time="false"
         :transitions="false"
         active-view="month"

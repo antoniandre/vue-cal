@@ -105,21 +105,21 @@
     With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
   .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
-      hide-view-selector
+      :dark="store.darkMode"
+      :views-bar="false"
       :time="false"
       active-view="month"
-      xsmall)
+      xs)
       template(#arrow-prev)
         w-icon mdi mdi-arrow-left
       template(#arrow-next)
         w-icon mdi mdi-arrow-right
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      hide-view-selector
+      :views-bar="false"
       :time="false"
       active-view="month"
-      xsmall&gt;
+      xs&gt;
       &lt;template #arrow-prev&gt;
         &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
       &lt;/template&gt;
@@ -147,24 +147,24 @@
   .w-flex.maa.justify-center.wrap
     .example.ma2(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
-        xsmall
-        hide-view-selector
+        xs
+        :views-bar="false"
         :time="false"
         active-view="month"
         :disable-views="['week']")
     .example.ma2(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--default-theme(
-        :dark="store.darkTheme"
-        xsmall
-        hide-view-selector
+        :dark="store.darkMode"
+        xs
+        :views-bar="false"
         :time="false"
         active-view="month"
         :disable-views="['week']")
     .w-flex.column.justify-center.no-grow.pl5
       .example.ma2(style="width: 210px;height: 230px")
         vue-cal.vuecal--date-picker(
-          xsmall
-          hide-view-selector
+          xs
+          :views-bar="false"
           :time="false"
           :transitions="false"
           active-view="month"
@@ -176,8 +176,8 @@
     ssh-pre.grow.mr2(language="html-vue" label="Vue Template - Rounded Cell" :dark="store.darkMode").
       &lt;vue-cal
           class="vuecal--rounded-theme vuecal--green-theme"
-          xsmall
-          hide-view-selector
+          xs
+          :views-bar="false"
           :time="false"
           active-view="month"
           :disable-views="['week']"
@@ -186,8 +186,8 @@
     ssh-pre.grow(language="html-vue" label="Vue Template - Date Picker" :dark="store.darkMode").
       &lt;vue-cal
           class="vuecal--date-picker"
-          xsmall
-          hide-view-selector
+          xs
+          :views-bar="false"
           :time="false"
           :transitions="false"
           active-view="month"
@@ -208,7 +208,7 @@
     By default all the views are visible and the default active view is the #[span.code week] view.
   .example.mxa.mt2(style="height: 350px")
     vue-cal.vuecal--default-theme.ex--disable-views(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time="false"
       active-view="month"
       :disable-views="['years', 'year', 'week']")
@@ -235,9 +235,9 @@
         &amp; #[span.code .after-max].
   .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--default-theme.ex--min-max-dates(
-      :dark="store.darkTheme"
-      xsmall
-      hide-view-selector
+      :dark="store.darkMode"
+      xs
+      :views-bar="false"
       click-to-navigate
       :time="false"
       active-view="month"
@@ -245,8 +245,8 @@
       :max-date="maxDate")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
-      xsmall
-      hide-view-selector
+      xs
+      :views-bar="false"
       click-to-navigate
       :time="false"
       active-view="month"
@@ -281,9 +281,9 @@
     (e.g. #[span.code 2020-09-18]) to disable.#[br]
   .example.my2.mxa(style="width: 250px;height: 260px")
     vue-cal.vuecal--default-theme.ex--disable-days(
-      :dark="store.darkTheme"
-      xsmall
-      hide-view-selector
+      :dark="store.darkMode"
+      xs
+      :views-bar="false"
       click-to-navigate
       :time="false"
       active-view="month"
@@ -292,8 +292,8 @@
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
     &lt;vue-cal
-      xsmall
-      hide-view-selector
+      xs
+      :views-bar="false"
       click-to-navigate
       :time="false"
       active-view="month"
@@ -329,7 +329,7 @@
 
   .example.mxa(style="height: 350px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time="false"
       show-week-numbers
       :hide-weekdays="[2, 3, 5]"
@@ -368,7 +368,7 @@
     Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
   .example.my2.mxa(style="width: 500px;height: 340px;max-width: 100%")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time="false"
       small
       active-view="year"
@@ -404,7 +404,7 @@
     24-hour format, and hidden weekends.
   .example.my2.mxa(style="height: 450px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time-from="8 * 60"
       :time-to="19 * 60"
       :time-step="30"
@@ -428,7 +428,7 @@
     #[span.code showTimeInCells] option.
   .example.my2.mxa(style="height: 450px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time-from="8 * 60"
       :time-to="19 * 60"
       :time-step="30"
@@ -457,7 +457,7 @@
     #[span.code special-hours] option.
   .example.my2.mxa(style="height: 450px")
     vue-cal.vuecal--default-theme.ex--special-hours(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time-from="8 * 60"
       :time-to="20 * 60"
       :disable-views="['years', 'year', 'month']"
@@ -494,7 +494,7 @@
   p With the same principle, you could also build a lot more complex layout such as the following one.
   .example.my2.mxa(style="height: 550px")
     vue-cal.vuecal--default-theme.ex--doctor-hours(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :disable-views="['years', 'year', 'month']"
       :time-from="7 * 60"
       :time-to="20 * 60"
@@ -606,14 +606,14 @@
     #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
   .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--default-theme.ex--today-current-time(
-      :dark="store.darkTheme"
-      xsmall
+      :dark="store.darkMode"
+      xs
       :time-cell-height="26"
       active-view="day"
       :disable-views="['years', 'year', 'month']"
       @ready="scrollToCurrentTime('.ex--today-current-time')")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-    &lt;vue-cal xsmall active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
+    &lt;vue-cal xs active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
   //- Example.
   h4.title2
@@ -634,9 +634,9 @@
   .w-flex.justify-center.wrap
     .example.my2.mr3(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--default-theme.ex--adding-a-today-button(
-        :dark="store.darkTheme"
+        :dark="store.darkMode"
         ref="vuecal2"
-        xsmall
+        xs
         hide-weekends
         :disable-views="['years']"
         :time="false"
@@ -645,9 +645,9 @@
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     .example.my2(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--default-theme.ex--adding-a-today-button(
-        :dark="store.darkTheme"
+        :dark="store.darkMode"
         ref="vuecal2"
-        xsmall
+        xs
         hide-weekends
         :disable-views="['years']"
         :time="false"
@@ -663,7 +663,7 @@
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       ref="vuecal"
-      xsmall
+      xs
       hide-weekends
       :disable-views="['years']"
       :time="false"
@@ -706,7 +706,7 @@
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   .example.my2.mxa(style="height: 350px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time="false"
       :disable-views="['years', 'year', 'month']"
@@ -762,7 +762,7 @@
 
   .example.my2.mxa
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
@@ -807,7 +807,7 @@
   highlight-message.mt3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   .example.my2.mxa(style="height: 520px")
     vue-cal.vuecal--default-theme.ex--open-dialog-on-event-click(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -920,10 +920,10 @@
   .w-flex.maa.justify-center.wrap
     .example.ma2.my2(style="width: 300px;height: 360px")
       vue-cal.vuecal--default-theme(
-        :dark="store.darkTheme"
+        :dark="store.darkMode"
         :class="'event-indicator--' + indicatorStyle"
         :selected-date="stringToDate('2018-11-19')"
-        xsmall
+        xs
         :time-from="10 * 60"
         active-view="month"
         :disable-views="['day']"
@@ -933,7 +933,7 @@
       vue-cal.vuecal--yellow-theme(
         :class="'event-indicator--' + indicatorStyle"
         :selected-date="stringToDate('2018-11-19')"
-        xsmall
+        xs
         :time-from="10 * 60"
         :disable-views="['day']"
         events-count-on-year-view
@@ -942,7 +942,7 @@
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
-      xsmall
+      xs
       :time-from="10 * 60"
       :disable-views="['day']"
       events-count-on-year-view
@@ -985,7 +985,7 @@
     If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   .example.my4.mxa(style="height: 600px")
     vue-cal.vuecal--default-theme.vuecal--full-height-delete.ex--events-on-month-view(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
@@ -1058,12 +1058,12 @@
   p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
   .example.my2.mxa
     vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
       :time-to="23 * 60"
       :disable-views="['years', 'year']"
-      hide-view-selector
+      :views-bar="false"
       hide-weekends
       :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
       :events="editableEvents")
@@ -1072,7 +1072,7 @@
              :time-from="10 * 60"
              :time-to="23 * 60"
              :disable-views="['years', 'year']"
-             hide-view-selector
+             :views-bar="false"
              hide-weekends
              :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
              :events="events"
@@ -1124,9 +1124,9 @@
       | Clear all the events
   .example.mxa.mt3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       ref="vuecalCreateEx"
-      hide-view-selector
+      :views-bar="false"
       hide-title-bar
       hide-weekends
       :time-from="10 * 60"
@@ -1137,7 +1137,7 @@
       :drag-to-create-threshold="0")
   ssh-pre.my2(language="html-vue" :dark="store.darkMode").
     &lt;vue-cal
-      hide-view-selector
+      :views-bar="false"
       hide-title-bar
       hide-weekends
       :time-from="10 * 60"
@@ -1167,7 +1167,7 @@
         code {{ item.label }}
   .example.grow.mt3(style="height: 280px")
     vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time-from="10 * 60"
       :time-to="16 * 60"
       hide-weekends
@@ -1198,10 +1198,10 @@
       .w-flex.wrap
         .example.grow.my2.mr3(style="height: 280px")
           vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-            :dark="store.darkTheme"
+            :dark="store.darkMode"
             ref="vuecal3"
             small
-            hide-view-selector
+            :views-bar="false"
             hide-title-bar
             hide-weekends
             :time-from="10 * 60"
@@ -1215,7 +1215,7 @@
           &lt;vue-cal
             ref="vuecal"
             small
-            hide-view-selector
+            :views-bar="false"
             hide-weekends
             hide-title-bar
             :time-from="10 * 60"
@@ -1244,13 +1244,13 @@
       .w-flex.align-top.wrap
         .example.grow.my2.mr3(style="height: 280px")
           vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-            :dark="store.darkTheme"
+            :dark="store.darkMode"
             ref="vuecalEl"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
-            hide-view-selector
+            :views-bar="false"
             hide-title-bar
             hide-weekends
             editable-events
@@ -1267,7 +1267,7 @@
             :time-from="10 * 60"
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
-            hide-view-selector
+            :views-bar="false"
             hide-title-bar
             hide-weekends
             editable-events
@@ -1329,12 +1329,12 @@
       .w-flex.wrap
         .example.grow.my2.mr3(style="height: 280px")
           vue-cal.grow.vuecal--default-theme.vuecal--full-height-delete(
-            :dark="store.darkTheme"
+            :dark="store.darkMode"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
-            hide-view-selector
+            :views-bar="false"
             hide-title-bar
             hide-weekends
             editable-events
@@ -1346,7 +1346,7 @@
               :time-from="10 * 60"
               :time-to="16 * 60"
               :disable-views="['years', 'year']"
-              hide-view-selector
+              :views-bar="false"
               hide-title-bar
               hide-weekends
               editable-events
@@ -1404,12 +1404,12 @@
     p With the same method, you can open a dialog at the end of the event drag-creation.
     .example.grow.my2(style="height: 280px")
       vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-        :dark="store.darkTheme"
+        :dark="store.darkMode"
         small
         :time-from="10 * 60"
         :time-to="16 * 60"
         :disable-views="['years', 'year']"
-        hide-view-selector
+        :views-bar="false"
         hide-title-bar
         hide-weekends
         editable-events
@@ -1426,7 +1426,7 @@
         :time-from="10 * 60"
         :time-to="16 * 60"
         :disable-views="['years', 'year']"
-        hide-view-selector
+        :views-bar="false"
         hide-title-bar
         hide-weekends
         editable-events
@@ -1535,7 +1535,7 @@
 
   .example.my4.mxa
     vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       today-button
       :time-from="10 * 60"
@@ -1592,7 +1592,7 @@
           div {{ item.content }}
     vue-cal.mr1.grow.external-events-drag-and-drop.vuecal--blue-theme(
       small
-      hide-view-selector
+      :views-bar="false"
       hide-weekends
       :disable-views="['years', 'year', 'month', 'day']"
       :time-from="9 * 60"
@@ -1600,9 +1600,9 @@
       editable-events
       @event-drop="onEventDrop")
     vue-cal.ml1.grow.external-events-drag-and-drop.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       small
-      hide-view-selector
+      :views-bar="false"
       hide-weekends
       :disable-views="['years', 'year', 'month', 'day']"
       :time-from="9 * 60"
@@ -1623,7 +1623,7 @@
     &lt;/div&gt;
 
     &lt;vue-cal small
-             hide-view-selector
+             :views-bar="false"
              hide-weekends
              :disable-views="['years', 'year', 'month', 'day']"
              :time-from="9 * 60"
@@ -1696,7 +1696,7 @@
     #[span.code event-start], #[span.code event-middle], #[span.code event-end].
   .example.my2.mxa
     vue-cal.vuecal--default-theme.ex--multiple-day-events.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
@@ -1887,7 +1887,7 @@
 
   .example.my2.mxa
     vue-cal.vuecal--default-theme.vuecal--full-height-delete(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
       :time-to="23 * 60"
@@ -1949,7 +1949,7 @@
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   .example.my2.mxa
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -2033,7 +2033,7 @@
 
   .example.my2.mxa
     vue-cal.vuecal--default-theme.ex--all-day-events(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2019-02-11')"
       :time-from="7 * 60"
       :disable-views="['years', 'year']"
@@ -2138,7 +2138,7 @@
 
   .example.grow.my2(style="height: 600px")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-step="30"
@@ -2372,7 +2372,7 @@
         span {{ l.args.replace(/,/g, m => ', ').replace(/":(?=["\w\[\{])/g, m => '": ') }}
   .example.mt6.mb2.mxa
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
@@ -2478,12 +2478,12 @@
       w-icon.ml1 mdi mdi-arrow-right
   .w-flex.align-center.justify-center
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       small
       ref="vuecal4"
       v-model:active-view="activeView"
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       v-model:selected-date="selectedDate"
       style="max-width: 500px;height: 260px")
   p
@@ -2507,7 +2507,7 @@
       v-model:active-view="activeView"
       v-model:selected-date="selectedDate"
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       small&gt;
     &lt;/vue-cal&gt;
 
@@ -2544,15 +2544,15 @@
     vue-cal.vuecal--blue-theme(
       small
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       active-view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       style="max-width: 360px;height: 260px")
     vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
-      xsmall
+      xs
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       active-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
       @cell-focus="selectedDate = $event"
@@ -2561,7 +2561,7 @@
     &lt;vue-cal
       small
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       active-view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
@@ -2569,9 +2569,9 @@
       style="max-width: 360px;height: 260px"&gt;
     &lt;/vue-cal&gt;
     &lt;vue-cal
-      xsmall
+      xs
       :time="false"
-      hide-view-selector
+      :views-bar="false"
       active-view="month"
       :disable-views="['years', 'year', 'week', 'day']"
       @cell-focus="selectedDate = $event"
@@ -2604,7 +2604,7 @@
 
   .example.my4.mxa
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
@@ -2687,11 +2687,11 @@
   .w-flex.wrap
     .example.my4.mr2.grow(style="width: 360px;height: 360px;max-width: 100%")
       vue-cal.ex--scroll-to-time.vuecal--default-theme(
-        :dark="store.darkTheme"
+        :dark="store.darkMode"
         small
         active-view="day"
         :disable-views="['years', 'year', 'month', 'week']"
-        hide-view-selector
+        :views-bar="false"
         :time-cell-height="timeCellHeight"
         @ready="scrollToCurrentTime('.ex--scroll-to-time')")
     .grow
@@ -2724,7 +2724,7 @@
     So if you don't set this class you are free to paint the lines yourself or not.
   .example.my4.mxa(style="width: 360px;height: 360px;max-width: 100%")
     vue-cal.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       small
       :time-from="5 * 60"
       :time-step="15"
@@ -2774,9 +2774,9 @@
 
   .example.my4.mxa(style="width: 300px;height: 360px;max-width: 100%")
     vue-cal.vuecal--default-theme.ex--custom-events-count(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
-      xsmall
+      xs
       :time-from="10 * 60"
       :time-step="2 * 60"
       active-view="month"
@@ -2789,7 +2789,7 @@
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
-      xsmall
+      xs
       :time-from="10 * 60"
       :time-step="2 * 60"
       :disable-views="['day']"
@@ -2921,12 +2921,12 @@
 
   .example.my2.mxa(style="height: 400px")
     vue-cal.vuecal--default-theme.ex--custom-title-and-cells(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :time="false"
       :dblclick-to-navigate="false"
       active-view="month"
       :events="events")
-      template(#title="{ title, view }")
+      //- template(#title="{ title, view }")
         | 🎉&nbsp;
         span(v-if="view.id === 'years'") Years
         span(v-else-if="view.id === 'year'") {{ view.start.format('YYYY') }}
@@ -2934,7 +2934,7 @@
         span(v-else-if="view.id === 'week'") w{{ view.start.getWeek() }} ({{ view.start.format('MMM YYYY') }})
         span(v-else-if="view.id === 'day'") {{ view.start.format('dddd D MMMM (YYYY)') }}
         | &nbsp;🎉
-      template(#cell-content="{ cell, view, events, goNarrower }")
+      //- template(#cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
         .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
         .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
@@ -3015,7 +3015,7 @@
 
   .example.my2.mxa(style="height: 520px")
     vue-cal.vuecal--default-theme.ex--custom-event-rendering(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
@@ -3081,7 +3081,7 @@
 
   .example.my2.mxa(style="height: 250px")
     vue-cal.ex--custom-day-split-labels.vuecal--default-theme(
-      :dark="store.darkTheme"
+      :dark="store.darkMode"
       :disable-views="['years', 'year', 'month']"
       active-view="day"
       :split-days="customDaySplitLabels"

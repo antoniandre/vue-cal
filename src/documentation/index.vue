@@ -262,7 +262,7 @@
     ssh-pre.my2(language="html-vue" :dark="store.darkMode").
       &lt;!-- If the container has no height, set a height on vue-cal --&gt;
       &lt;vue-cal style="height: 250px" /&gt;
-    vue-cal(small :time="false" hide-view-selector style="height: 250px")
+    vue-cal(small :time="false" :views-bar="false" style="height: 250px")
 
   //- Examples.
   examples(:locales-list="localesList")
@@ -315,7 +315,7 @@
     of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
 
     If this is not enough for your particular use, you can add your own in your CSS.#[br]
-    Additionally, you can use the options #[span.code small] &amp; #[span.code xsmall]
+    Additionally, you can use the options #[span.code small] &amp; #[span.code xs]
     to truncate week days at any size.
 
   h3.mt12 # Disabled text selection
