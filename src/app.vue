@@ -45,13 +45,14 @@ div(:class="{ ready }" v-scroll="onScroll")
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, nextTick, inject } from 'vue'
 import { useAppStore } from '@/store'
 // Including the top bar from the documentation view and passing the
 // offsetTop var slows down too much the top bar animation on scroll.
 import TopBar from '@/documentation/components/top-bar.vue'
 import '@/scss/index.scss'
 
+const $waveui = inject('$waveui')
 const store = useAppStore()
 const ready = ref(false)
 const offsetTop = ref(0)
@@ -66,7 +67,7 @@ const onScroll = () => {
 nextTick(() => (ready.value = true))
 
 onMounted(() => {
-  if (localStorage.theme) store.applyTheme(localStorage.theme)
+  store.applyTheme(localStorage.theme || $waveui.preferredTheme)
 })
 
 // Directives.
