@@ -7,9 +7,10 @@ div
       li Performance-oriented: faster and more efficient than before
       li Now exposes all the date utilities for external use
       li Now adapted and convenient to use with Composition API
-      li Add and remove Date prototypes very easily
+      li Easily benefit from Date prototypes and whenever you want, even before the calendar is created/mounted
       li Externally preload a locale and provide it if you want to avoid a promise handling. (optional)
-      li sticky headers + sticky time bar at the same time - only with CSS
+      li Easily theme with dark or white theme + CSS variables
+      li Sticky headers + sticky time bar at the same time - only with CSS
       li New layout with grids, more flexible
       li New custom view of x days. The grid layout will adapt
       li New more modern default UI
