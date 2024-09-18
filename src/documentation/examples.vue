@@ -2926,13 +2926,14 @@
       :dblclick-to-navigate="false"
       active-view="month"
       :events="events")
-      //- template(#title="{ title, view }")
+      template(#title="view")
         | 🎉&nbsp;
         span(v-if="view.id === 'years'") Years
         span(v-else-if="view.id === 'year'") {{ view.start.format('YYYY') }}
         span(v-else-if="view.id === 'month'") {{ view.start.format('MMMM YYYY') }}
         span(v-else-if="view.id === 'week'") w{{ view.start.getWeek() }} ({{ view.start.format('MMM YYYY') }})
-        span(v-else-if="view.id === 'day'") {{ view.start.format('dddd D MMMM (YYYY)') }}
+        span(v-else-if="view.id === 'days'") {{ view.start.format('D MMMM YYYY') }} - {{ view.end.format('D MMMM YYYY') }}
+        span(v-else-if="view.id === 'day'") {{ view.start.format('dddd D MMMM YYYY') }}
         | &nbsp;🎉
       //- template(#cell-content="{ cell, view, events, goNarrower }")
         span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
@@ -2947,14 +2948,15 @@
       :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
-      &lt;template #title="{ title, view }"&gt;
+      &lt;template #title="view"&gt;
         🎉
         &lt;span v-if="view.id === 'years'"&gt;Years&lt;/span&gt;
         &lt;!-- Using Vue Cal injected Date prototypes --&gt;
         &lt;span v-else-if="view.id === 'year'"&gt;{{ "\{\{ view.start.format('YYYY') \}\}" }}&lt;/span&gt;
         &lt;span v-else-if="view.id === 'month'"&gt;{{ "\{\{ view.start.format('MMMM YYYY') \}\}" }}&lt;/span&gt;
         &lt;span v-else-if="view.id === 'week'"&gt;w{{ "\{\{ view.start.getWeek() \}\} (\{\{ view.start.format('MMM YYYY') \}\}" }})&lt;/span&gt;
-        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.start.format('dddd D MMMM (YYYY)') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'days'"&gt;{{ "\{\{ view.start.format('D MMMM YYYY') \}\}" }} - {{ "\{\{ view.end.format('D MMMM YYYY') \}\}" }}&lt;/span&gt;
+        &lt;span v-else-if="view.id === 'day'"&gt;{{ "\{\{ view.start.format('dddd D MMMM YYYY') \}\}" }}&lt;/span&gt;
         🎉
       &lt;/template&gt;
 
