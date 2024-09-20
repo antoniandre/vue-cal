@@ -1,13 +1,11 @@
-import { state } from './core'
+import { globalState } from './core'
 import { defaults } from './core/config'
 import { useDateUtils } from './utils/date'
 import VueCal from './components/index.vue'
 
-state.dateUtils = useDateUtils(defaults.texts)
-
 const useLocale = texts => {
-  state.texts = Object.assign(defaults.texts, texts)
-  state.dateUtils.updateTexts(state.texts)
+  globalState.texts = Object.assign({}, defaults.texts, texts)
+  globalState.dateUtils.updateTexts(globalState.texts)
 }
 
 const {
@@ -35,7 +33,7 @@ const {
   formatDateLite,
   formatTime,
   formatTimeLite
-} = state.dateUtils
+} = globalState.dateUtils
 
 export {
   VueCal,
