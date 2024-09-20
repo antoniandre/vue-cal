@@ -10,7 +10,6 @@
 
   position: relative;
   border-radius: var(--vuecal-border-radius);
-  clip-path: inset(0 round var(--vuecal-border-radius));
   color: var(--vuecal-base-color);
 
   // Dark theme.
@@ -25,19 +24,13 @@
     --vuecal-events-color: var(--vuecal-base-color);
   }
 
-  &:before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background-color: var(--vuecal-primary-color);
-    opacity: 0.04;
-  }
-
   // Calendar Header.
   // ------------------------------------------------------
   .vuecal__header {
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-header-color);
+    border-top-left-radius: var(--vuecal-border-radius);
+    border-top-right-radius: var(--vuecal-border-radius);
   }
 
   .vuecal__views-bar,
@@ -51,14 +44,7 @@
     background-color: var(--vuecal-primary-color);
     padding-left: 0.6em;
     padding-right: 0.6em;
-
-    &:before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: var(--vuecal-secondary-color);
-      opacity: 0.2;
-    }
+    background-color: color-mix(in srgb, var(--vuecal-secondary-color) 20%, transparent);
   }
 
   .vuecal__view-button {
@@ -99,10 +85,21 @@
   // Calendar Weekdays Headers.
   // ------------------------------------------------------
   .vuecal__scrollable-wrap {
-    border-bottom-left-radius: inherit;
-    border-bottom-right-radius: inherit;
+    position: relative;
+    background-color: color-mix(in srgb, var(--vuecal-primary-color) 4%, transparent);
     border: 1px solid var(--vuecal-border-color);
     border-top: none;
+    border-bottom-left-radius: var(--vuecal-border-radius);
+    border-bottom-right-radius: var(--vuecal-border-radius);
+    // Cut off any content inside to respect the outer border radius.
+    // a tooltip inside the body would be truncated, but can be teleported with Vue.
+    overflow: hidden;
+
+    // If the header is hidden apply the border radius all around.
+    &:first-child {
+      border-top-left-radius: var(--vuecal-border-radius);
+      border-top-right-radius: var(--vuecal-border-radius);
+    }
   }
   .vuecal__scrollable {
     display: grid;
