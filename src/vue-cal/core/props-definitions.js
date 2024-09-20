@@ -14,6 +14,7 @@ export const props = {
   sm: { type: Boolean, default: false },
   splitDays: { type: Array, default: () => [] },
   startWeekOnSunday: { type: Boolean, default: false },
+  theme: { type: [String, Boolean], default: 'default' },
   time: { type: Boolean, default: true },
   timeCellHeight: { type: Number, default: 40 }, // In pixels.
   timeFormat: { type: String, default: '' },

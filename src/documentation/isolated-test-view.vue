@@ -29,12 +29,12 @@ div.test-view
   .w-flex
     w-button(@click="addEvent") Add event
 
-  VueCal.vuecal--default-theme.no-shrink(
+  VueCal.no-shrink(
     date-picker
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-bind="mainVuecalConfig")
 
-  VueCal.vuecal--default-theme.grow.no-shrink(
+  VueCal.grow.no-shrink(
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"

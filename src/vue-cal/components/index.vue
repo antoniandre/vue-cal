@@ -64,6 +64,7 @@ const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays |
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
+  [`vuecal--${config.theme}-theme`]: config.theme,
   [`vuecal--${config.size}`]: true,
   'vuecal--date-picker': config.datePicker,
   'vuecal--dark': config.dark,
