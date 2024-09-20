@@ -101,7 +101,7 @@ const mainVuecalConfig = reactive({
   dark: computed(() => store.darkMode),
   selectedDate: ref(null),
   viewDate: ref(new Date(2023, 11, 1)),
-  locale: ref('en-us'),
+  locale: ref(''),
   startWeekOnSunday: ref(false),
   todayButton: ref(true),
   xs: computed(() => size.value === 'xs'),

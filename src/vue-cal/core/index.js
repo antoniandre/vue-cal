@@ -4,10 +4,12 @@ import { useDateUtils } from '../utils/date'
 import { useEvents } from './events'
 import { useView } from './view'
 
-// Global reactive store: common to all the Vuecal instances.
+// Shared global reactive store: common to all the VueCal instances.
+// The global store is also used when the user wants to use Date prototypes with localized texts
+// before or without the Vue Cal component.
 export const globalState = reactive({
   texts: { ...defaults.texts }, // Make texts reactive before a locale is loaded.
-  dateUtils: useDateUtils(defaults.texts)
+  dateUtils: useDateUtils(defaults.texts) // Some Date utils functions need localized texts.
 })
 
 /**
@@ -34,20 +36,19 @@ export const useVueCal = (props, emit) => {
   const state = reactive({
     emit,
     texts: { ...globalState.texts }, // Make texts reactive before a locale is loaded.
-    dateUtils: globalState.dateUtils,
+    // The date utils composable.
+    // A class/composable is needed in order to access the user locale in all the methods, and
+    // independently of other potential Vue Cal instances on the same page.
+    dateUtils: { ...globalState.dateUtils },
     now: new Date(),
     config: {},
     eventsManager: {},
-    view: {}
+    view: {} // At any time this object will be filled with current view details and visible events.
   })
 
-  // The date utils composable.
-  // A class/composable is needed in order to access the user locale in all the methods, and
-  // independently of other potential Vue Cal instances on the same page.
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts))
   state.config = useConfig(state, props)
   state.eventsManager = useEvents(state)
-  // At any time this object will be filled with current view details and visible events.
   state.view = useView(state)
 
   return state

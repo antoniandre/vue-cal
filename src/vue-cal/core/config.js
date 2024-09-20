@@ -30,6 +30,7 @@ export const defaults = {
   }
 }
 
+// Short labels for CSS classes.
 export const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 export const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
@@ -104,6 +105,11 @@ export const useConfig = (vuecal, props) => {
     else return Object.keys(availableViews.value)[0]
   })
 
+  const daySplits = computed(() => {
+    const { view } = vuecal
+    return (props.splitDays.length && (view.isDay || view.isDays || view.isWeek) && props.splitDays)
+  })
+
   const loadTexts = async locale => {
     // Vite can't resolve imports that have more than 1 variable and no extension.
     // https://vitejs.dev/guide/features.html#dynamic-import
@@ -119,12 +125,13 @@ export const useConfig = (vuecal, props) => {
     translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
     // Update the texts in the reactive store for all the components to use.
     vuecal.texts = Object.assign(vuecal.texts, Object.assign({ ...defaults.texts }, translations))
+    dateUtils.updateTexts(vuecal.texts)
   }
 
-  const daySplits = computed(() => {
-    const { view } = vuecal
-    return (props.splitDays.length && (view.isDay || view.isDays || view.isWeek) && props.splitDays)
-  })
+  // If a locale is requested via prop, load it (async call).
+  // But if a locale is directly provided from external source using useLocale(),
+  // the locale is ready right away.
+  if (props.locale || !vuecal.texts.today) loadTexts(props.locale || 'en-us')
 
   return {
     ...toRefs(props),
