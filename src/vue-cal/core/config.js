@@ -100,8 +100,8 @@ export const useConfig = (vuecal, props) => {
   const defaultView = computed(() => {
     console.log('recomputing defaultView')
     if (props.datePicker) return 'month'
-    else if (availableViews.week) return 'week'
-    else return Object.keys(availableViews)[0]
+    else if (availableViews.value.week) return 'week'
+    else return Object.keys(availableViews.value)[0]
   })
 
   const loadTexts = async locale => {

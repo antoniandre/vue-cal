@@ -97,6 +97,7 @@ const titleEventHandlers = {
 .vuecal__header .vuecal__transition-wrap {
   position: relative;
   flex-grow: 1;
+  min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
 
   & > div {
     position: absolute;

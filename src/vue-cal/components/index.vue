@@ -17,7 +17,7 @@
       template(v-if="!$slots.header && $slots.title" #title)
         slot(name="title" v-bind="view")
 
-    .vuecal__transition-wrap
+    .vuecal__scrollable-wrap
       transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
         .vuecal__scrollable(
           :class="scrollableElClasses"
@@ -107,7 +107,7 @@ provide('vuecal', vuecal)
 
   &, *, :before, :after {box-sizing: border-box;}
 
-  &__transition-wrap {
+  &__scrollable-wrap {
     position: relative;
     flex: 1;
     min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
