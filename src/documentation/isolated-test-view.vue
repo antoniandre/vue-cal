@@ -246,7 +246,7 @@ const addEvent = () => {
 .vuecal__cell-split {
   &.dr-1 {background-color: rgba(134, 192, 253, 0.1);}
   &.dr-2 {background-color: rgba(187, 148, 255, 0.15);}
-  .vuecal--dark &.dr-1 {background-color: rgb(60 110 136 / 40%);}
-  .vuecal--dark &.dr-2 {background-color: rgb(138 93 131 / 30%);}
+  .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}
+  .vuecal--dark &.dr-2 {background-color: rgba(131, 184, 255, 0.1);}
 }
 </style>

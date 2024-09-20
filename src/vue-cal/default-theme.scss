@@ -6,6 +6,7 @@
   --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
   --vuecal-header-color: var(--vuecal-secondary-color);
   --vuecal-events-color: var(--vuecal-contrast-color);
+  --vuecal-events-border-color: currentColor;
   --vuecal-border-radius: 6px;
 
   position: relative;
@@ -15,13 +16,14 @@
   // Dark theme.
   // ------------------------------------------------------
   &.vuecal--dark {
-    --vuecal-primary-color: #1976D2;
+    --vuecal-primary-color: #316191;
     --vuecal-secondary-color: #2e2e2e;
     --vuecal-base-color: #fff;
     --vuecal-contrast-color: #000;
     --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
     --vuecal-header-color: var(--vuecal-base-color);
     --vuecal-events-color: var(--vuecal-base-color);
+    --vuecal-events-border-color: color-mix(in srgb, var(--vuecal-base-color) 50%, transparent);
   }
 
   // Calendar Header.
@@ -196,7 +198,7 @@
   .vuecal__event {
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-events-color);
-    border: 1px solid currentColor;
+    border: 1px solid var(--vuecal-events-border-color);
     border-radius: 4px;
     padding: 2px;
     font-size: 12px;
