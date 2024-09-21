@@ -102,8 +102,10 @@ provide('vuecal', vuecal)
   flex-direction: column;
   user-select: none;
 
+  &--date-picker {--vuecal-weekdays-bar-height: 1.3rem;}
   &--has-splits {--vuecal-weekdays-bar-height: 2.2rem;}
-  &--has-splits.vuecal--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  &--has-splits .vuecal__scrollable--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
 
   &, *, :before, :after {box-sizing: border-box;}
 
@@ -141,7 +143,8 @@ provide('vuecal', vuecal)
     font-size: 12px;
     align-items: center;
   }
-  &--has-splits.vuecal--day-view &__cell-split--label {height: var(--vuecal-weekdays-bar-height);}
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  &--has-splits .vuecal__scrollable--day-view &__cell-split--label {height: var(--vuecal-weekdays-bar-height);}
 }
 
 // Transitions.

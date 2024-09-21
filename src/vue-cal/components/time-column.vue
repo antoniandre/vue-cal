@@ -49,7 +49,8 @@ const timeCells = computed(() => {
   transition: padding-top 0.3s ease-in-out;
 
   .vuecal__scrollable--day-view & {padding-top: 0;}
-  .vuecal--has-splits.vuecal--day-view & {padding-top: var(--vuecal-weekdays-bar-height);}
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  .vuecal--has-splits .vuecal__scrollable--day-view & {padding-top: var(--vuecal-weekdays-bar-height);}
 }
 
 .vuecal__time-cell {
@@ -74,6 +75,7 @@ const timeCells = computed(() => {
     padding-right: 8px;
     line-height: 0;
   }
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   .vuecal:not(.vuecal--has-splits) .vuecal__scrollable--day-view &:first-child label {
     margin-top: 0.6em;
     font-size: 0.9em;
