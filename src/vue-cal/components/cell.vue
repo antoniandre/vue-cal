@@ -109,7 +109,9 @@ const formattedCellDate = computed(() => {
   }
 })
 
-const cellEvents = computed(() => view.events[dateUtils.formatDate(props.start)] || [])
+const cellEvents = computed(() => {
+  return view.events[dateUtils.formatDate(props.start)] || []
+})
 
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
@@ -154,25 +156,8 @@ const cellEventHandlers = {
   .vuecal__scrollable--days-view &,
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
 
-  &--today,
-  &--current-month,
-  &--current-year,
-  &--selected {
-    position: relative;
-
-    &:before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background-color: var(--vuecal-primary-color);
-      filter: saturate(5);
-      opacity: 0.04;
-    }
-  }
-
   &--has-splits {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
-  &--selected:before {background-color: var(--vuecal-primary-color);opacity: 0.08;}
 }
 
 .vuecal__now-line {
