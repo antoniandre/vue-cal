@@ -1,4 +1,6 @@
 import { computed, ref, unref, toRefs } from 'vue'
+import { promises as fs } from 'fs'
+import path from 'path'
 
 export const defaults = {
   texts: {
@@ -110,19 +112,47 @@ export const useConfig = (vuecal, props) => {
     return (props.splitDays.length && (view.isDay || view.isDays || view.isWeek) && props.splitDays)
   })
 
+  /**
+   * Asynchronously loads translation texts for the given locale.
+   *
+   * Uses Vite's `import.meta.glob` to lazy load translation JSON files on client-side.
+   * On server-side (SSR), it reads the JSON files directly from the file system.
+   * Falls back to 'en-us' if the requested locale does not exist.
+   *
+   * @async
+   * @function loadTexts
+   * @param {string} locale - The locale identifier (e.g., 'en-us') for which to load translation texts.
+   * @throws {Error} Throws an error if the locale file is not found on the server-side.
+   * @returns {Promise<void>} Resolves when the translation texts are successfully loaded and applied.
+   */
   const loadTexts = async locale => {
     // Vite can't resolve imports that have more than 1 variable and no extension.
     // https://vitejs.dev/guide/features.html#dynamic-import
     // So this glob is much more convenient and not penalizing as all the matches are
     // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
     // https://vitejs.dev/guide/features.html#glob-import
-    let translations = import.meta.glob('../i18n/*.json')
+    let translations = import.meta.glob('../i18n/*.json', { as: 'url' })
+    const isSSR = typeof window === 'undefined'
 
-    if (!translations[`../i18n/${locale}.json`]) {
-      console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
-      locale = 'en-us'
+    if (isSSR) {
+      // Server-Side: Read JSON directly from the file system
+      const filePath = path.resolve(__dirname, `../i18n/${locale}.json`)
+      try {
+        const data = await fs.readFile(filePath, 'utf-8')
+        translations = JSON.parse(data)
+      } catch (error) {
+        throw new Error(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
+      }
     }
-    translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
+    else {
+      if (!translations[`../i18n/${locale}.json`]) {
+        console.warn(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
+        locale = 'en-us'
+        return
+      }
+      translations = await translations[`../i18n/${locale}.json`]?.() // Load this translation file.
+    }
+
     // Update the texts in the reactive store for all the components to use.
     vuecal.texts = Object.assign(vuecal.texts, Object.assign({ ...defaults.texts }, translations))
     dateUtils.updateTexts(vuecal.texts)
