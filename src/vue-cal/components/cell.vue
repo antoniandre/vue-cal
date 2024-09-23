@@ -110,6 +110,7 @@ const formattedCellDate = computed(() => {
 })
 
 const cellEvents = computed(() => {
+  if (config.datePicker || config.xs) return []
   return view.events[dateUtils.formatDate(props.start)] || []
 })
 

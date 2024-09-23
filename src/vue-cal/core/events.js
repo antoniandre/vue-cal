@@ -68,9 +68,21 @@ export const useEvents = vuecal => {
   const getEvent = id => events.value.byId[id]
   const getEventsByDate = dateFormatted => events.value.byDate[dateFormatted]
 
+  const getViewEvents = cellDates => {
+    const events = {}
+    cellDates.forEach(({ startFormatted }) => {
+      events[startFormatted] = []
+      const eventsByDate = getEventsByDate(startFormatted)
+      if (eventsByDate?.length) events[startFormatted].push(...eventsByDate)
+    })
+    return events
+  }
+
+
   return {
     events,
     getEvent,
-    getEventsByDate
+    getEventsByDate,
+    getViewEvents
   }
 }

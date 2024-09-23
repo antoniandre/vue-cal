@@ -9,6 +9,7 @@ export const props = {
   // The array of events to display in Vue Cal.
   // Can hold just the view events and be updated or the full array of all events available.
   events: { type: Array, default: () => [] },
+  eventsOnMonthView: { type: [Boolean, String], default: false }, // Allows displaying all events on month view.
   hideWeekdays: { type: Array, default: () => [] }, // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
   hideWeekends: { type: Boolean, default: false }, // Show or hide both Saturday and Sunday in days, week and month views.
   // en-us is the default and fallback if locale is not supported.
@@ -56,7 +57,6 @@ export const props = {
   dragToCreateThreshold: { type: Number, default: 15 },
   editableEvents: { type: [Boolean, Object], default: false },
   eventsCountOnYearView: { type: Boolean, default: false },
-  eventsOnMonthView: { type: [Boolean, String], default: false },
   maxDate: { type: [String, Date], default: '' },
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },

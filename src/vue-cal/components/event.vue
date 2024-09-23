@@ -11,8 +11,7 @@
 <script setup>
 import { computed, inject } from 'vue'
 
-const vuecal = inject('vuecal')
-const { config, eventsManager } = vuecal
+const { config, eventsManager, view } = inject('vuecal')
 
 const props = defineProps({
   id: { type: Number, required: true }
@@ -28,6 +27,7 @@ const classes = computed(() => ({
 }))
 
 const styles = computed(() => {
+  if (!config.time || view.isMonth) return false
   const deltaTimeScale = config.timeTo - config.timeFrom
   return {
     top: `${(event.value._.startMinutes - config.timeFrom) * 100 / deltaTimeScale}%`,
@@ -41,5 +41,7 @@ const styles = computed(() => {
   position: absolute;
   left: 0;
   width: 90%;
+
+  .vuecal__scrollable--month-view & {position: relative;}
 }
 </style>

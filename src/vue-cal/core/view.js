@@ -152,16 +152,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
 
   const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
 
+  // Array of IDs inside an object indexed by cell dates.
   const events = computed(() => {
-    const events = {}
-    cellDates.value.forEach(({ startFormatted }) => {
-      events[startFormatted] = []
-      const eventsByDate = eventsManager.getEventsByDate(startFormatted)
-      if (eventsByDate?.length) events[startFormatted].push(...eventsByDate)
-    })
-    return events
+    if (viewId.value === 'month' && !config.eventsOnMonthView) return []
+    return eventsManager.getViewEvents(cellDates.value)
   })
-
   /**
    * This function is called after each view variable update and will recompute the theoretical view
    * [start-end] date range.
