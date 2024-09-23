@@ -1,10 +1,9 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
-import pkg from './package.json'
 import autoprefixer from 'autoprefixer'
-
-// const isProduction = process.env.NODE_ENV === 'production'
+import { viteStaticCopy } from 'vite-plugin-static-copy'
+import pkg from './package.json'
 
 const banner = `/**
   * ${pkg.name} v${pkg.version}
@@ -15,40 +14,23 @@ const banner = `/**
 const bundlingConf = {
   minify: true,
   lib: {
-    entry: resolve(__dirname, 'src/vue-cal/index.vue'),
-    name: 'vuecal' // For IIFE.
+    entry: resolve(__dirname, 'src/vue-cal/index.js'),
+    name: 'vuecal', // The global name of the library
+    fileName: format => `vue-cal.${format}.js` // Output filename pattern
   },
   rollupOptions: {
     // Make sure to externalize deps that shouldn't be bundled into library.
-    external: ['vue'],
-
-    output: [
-      // Works with dynamic import().
-      {
-        format: 'es',
-        dir: 'dist',
-        entryFileNames: 'vue-cal.[format].js',
-        chunkFileNames: '[name].js',
-        banner,
-        manualChunks(id) {
-          const match = /i18n\/(.{2,5})\.json/.exec(id)
-          if (match) return 'i18n/' + match[1] + '.es'
-          else if (id.includes('drag-and-drop')) return 'drag-and-drop.es'
-        }
-      },
-
-      // IIFE & UMD don't work with dynamic import().
-      {
-        format: 'iife',
-        name: 'vuecal',
-        inlineDynamicImports: true, // Everything contained in a single file.
-        dir: 'dist',
-        entryFileNames: 'vue-cal.[format].js',
-        chunkFileNames: '[name].js',
-        // Provide global variables to use in the UMD build for externalized deps.
-        globals: { vue: 'Vue' }
+    external: id => {
+      if (id === 'vue') return true // Externalize vue.
+      if (id.endsWith('.json')) return true // Externalize JSON files.
+      return false
+    },
+    output: {
+      banner,
+      globals: {
+        vue: 'Vue' // Vue should be treated as external and available as a global variable
       }
-    ]
+    }
   }
 }
 
@@ -67,6 +49,14 @@ export default defineConfig({
           whitespace: 'preserve'
         }
       }
+    }),
+    viteStaticCopy({
+      targets: [
+        {
+          src: 'src/vue-cal/i18n/*.json', // Source directory of your JSON files
+          dest: 'i18n' // Destination in the dist folder
+        }
+      ]
     })
   ], // https://vitejs.dev/config/
   resolve: {
@@ -84,5 +74,5 @@ export default defineConfig({
       plugins: [autoprefixer]
     }
   },
-  build: process.env.BUNDLE ? bundlingConf : { outDir: 'docs' },
+  build: process.env.BUNDLE ? bundlingConf : { outDir: 'docs' }
 })

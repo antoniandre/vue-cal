@@ -59,6 +59,7 @@
     "sass": "^1.79.3",
     "simple-syntax-highlighter": "^3.0.10",
     "vite": "^5.4.7",
+    "vite-plugin-static-copy": "^1.0.6",
     "vue": "^3.5.8",
     "vue-router": "^4.4.5",
     "wave-ui": "^3.16.1"
