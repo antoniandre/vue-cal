@@ -174,10 +174,13 @@
     }
     .vuecal__cell--selected .vuecal__cell-date {background-color: var(--vuecal-primary-color);}
   }
+  &.vuecal--light:is(.vuecal--sm, .vuecal--lg) .vuecal__scrollable--month-view {
+    .vuecal__cell-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 8%, transparent);}
+    .vuecal__cell--today .vuecal__cell-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 22%, transparent);}
+    .vuecal__cell--selected .vuecal__cell-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 40%, transparent);}
   }
 
   .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
-  &.vuecal--lg .vuecal__cell--today .vuecal__cell-date:before {opacity: 0.3;}
 
   // Time column.
   // ------------------------------------------------------
@@ -240,6 +243,7 @@
     .vuecal__nav--prev, .vuecal__nav--next {width: 1.6em;}
     .vuecal__nav--prev:before, .vuecal__nav--next:before {padding: 0.22em;}
     .vuecal__weekday {font-size: 0.95em;}
+
     .vuecal__body {padding: 2px;gap: 2px;}
     // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
     .vuecal__scrollable--year-view .vuecal__body {padding: 0.6em;gap: 0.8em;}
@@ -254,11 +258,6 @@
       font-size: 1em;
       padding: 9px;
       box-shadow: none;
-
-      &--today:before,
-      &--current-month:before,
-      &--current-year:before {opacity: 0.1;}
-      &--selected:before {opacity: 0.25;}
     }
 
     // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
@@ -266,6 +265,18 @@
     .vuecal__scrollable--month-view .vuecal__cell,
     .vuecal__scrollable--years-view .vuecal__cell {font-size: 0.9em;}
     .vuecal__cell-date {font-weight: bold;}
+
+    &.vuecal--dark .vuecal__cell--today,
+    &.vuecal--dark .vuecal__cell--current-month,
+    &.vuecal--dark .vuecal__cell--current-year {background-color: color-mix(in srgb, var(--vuecal-primary-color) 50%, transparent)}
+    &.vuecal--dark .vuecal__cell--selected {background-color: var(--vuecal-primary-color);}
+  }
+
+  &.vuecal--date-picker.vuecal--light {
+    .vuecal__cell--today,
+    .vuecal__cell--current-month,
+    .vuecal__cell--current-year {background-color: color-mix(in srgb, var(--vuecal-primary-color) 12%, transparent);}
+    .vuecal__cell--selected {background-color: color-mix(in srgb, var(--vuecal-primary-color) 28%, transparent);}
   }
 
   // Sm and xs layouts.

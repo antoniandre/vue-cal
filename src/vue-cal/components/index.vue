@@ -68,6 +68,7 @@ const wrapperClasses = computed(() => ({
   [`vuecal--${config.size}`]: true,
   'vuecal--date-picker': config.datePicker,
   'vuecal--dark': config.dark,
+  'vuecal--light': !config.dark,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value,
   'vuecal--has-splits': config.daySplits
