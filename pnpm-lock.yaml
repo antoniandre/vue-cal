@@ -19,7 +19,7 @@ importers:
         version: 7.4.47
       '@vitejs/plugin-vue':
         specifier: ^5.1.4
-        version: 5.1.4(vite@5.4.7(sass@1.79.3))(vue@3.5.8)
+        version: 5.1.4(vite@5.4.8(sass@1.79.3))(vue@3.5.8)
       autoprefixer:
         specifier: ^10.4.20
         version: 10.4.20(postcss@8.4.47)
@@ -45,11 +45,11 @@ importers:
         specifier: ^3.0.10
         version: 3.0.10(vue@3.5.8)
       vite:
-        specifier: ^5.4.7
-        version: 5.4.7(sass@1.79.3)
+        specifier: ^5.4.8
+        version: 5.4.8(sass@1.79.3)
       vite-plugin-static-copy:
         specifier: ^1.0.6
-        version: 1.0.6(vite@5.4.7(sass@1.79.3))
+        version: 1.0.6(vite@5.4.8(sass@1.79.3))
       vue:
         specifier: ^3.5.8
         version: 3.5.8
@@ -57,8 +57,8 @@ importers:
         specifier: ^4.4.5
         version: 4.4.5(vue@3.5.8)
       wave-ui:
-        specifier: ^3.16.1
-        version: 3.16.1(vue@3.5.8)
+        specifier: ^3.16.2
+        version: 3.16.2(vue@3.5.8)
 
 packages:
 
@@ -542,8 +542,8 @@ packages:
     resolution: {integrity: sha512-yQbXgO/OSZVD2IsiLlro+7Hf6Q18EJrKSEsdoMzKePKXct3gvD8oLcOQdIzGupr5Fj+EDe8gO/lxc1BzfMpxvA==}
     engines: {node: '>=8'}
 
-  browserslist@4.23.3:
-    resolution: {integrity: sha512-btwCFJVjI4YWDNfau8RhZ+B1Q/VLoUITrm3RlP6y1tYGWIOa+InuYiRGXUBXo8nA1qKmHMyLB/iVQg5TT4eFoA==}
+  browserslist@4.24.0:
+    resolution: {integrity: sha512-Rmb62sR1Zpjql25eSanFGEhAxcFwfA1K0GuQcLoaJBAcENegrQut3hYdhXFF1obQfiDyqIW/cLM5HSJ/9k884A==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
 
@@ -629,8 +629,8 @@ packages:
   doctypes@1.1.0:
     resolution: {integrity: sha512-LLBi6pEqS6Do3EKQ3J0NqHWV5hhb78Pi8vvESYwyOy2c31ZEZVdtitdzsQsKb7878PEERhzUk0ftqGhG6Mz+pQ==}
 
-  electron-to-chromium@1.5.27:
-    resolution: {integrity: sha512-o37j1vZqCoEgBuWWXLHQgTN/KDKe7zwpiY5CPeq2RvUqOyJw9xnrULzZAEVQ5p4h+zjMk7hgtOoPdnLxr7m/jw==}
+  electron-to-chromium@1.5.28:
+    resolution: {integrity: sha512-VufdJl+rzaKZoYVUijN13QcXVF5dWPZANeFTLNy+OSpHdDL5ynXTF35+60RSBbaQYB1ae723lQXHCrf4pyLsMw==}
 
   entities@4.5.0:
     resolution: {integrity: sha512-V0hjH4dGPh9Ao5p0MoRY6BVqtwCjhz6vI5LT8AJ55H+4g9/4vbHx1I54fS0XuclLhDHArPQCiMjDxjaL8fPxhw==}
@@ -1211,8 +1211,8 @@ packages:
     peerDependencies:
       vite: ^5.0.0
 
-  vite@5.4.7:
-    resolution: {integrity: sha512-5l2zxqMEPVENgvzTuBpHer2awaetimj2BGkhBPdnwKbPNOlHsODU+oiazEZzLK7KhAnOrO+XGYJYn4ZlUhDtDQ==}
+  vite@5.4.8:
+    resolution: {integrity: sha512-FqrItQ4DT1NC4zCUqMB4c4AZORMKIa0m8/URVCZ77OZ/QSNeJ54bU1vrFADbDsuwfIPcgknRkmqakQcgnL4GiQ==}
     engines: {node: ^18.0.0 || >=20.0.0}
     hasBin: true
     peerDependencies:
@@ -1270,8 +1270,8 @@ packages:
       typescript:
         optional: true
 
-  wave-ui@3.16.1:
-    resolution: {integrity: sha512-p10hgwcIZbYcFiqgINekL31HMERijtCdQUm08QVA6aXT6Y4oWzLVgMCD0J475okdFMDu3lU0OgbMdUpiYMj1Yw==}
+  wave-ui@3.16.2:
+    resolution: {integrity: sha512-H/ZafdXLU37CwjH2EuCLDdSMAa4Sh4WvfXew2C1neR9XaTaINP7a0oJK75IY1httck00rKY4Rhn34ht8JDjDJg==}
     peerDependencies:
       vue: ^3.2.0
 
@@ -1351,7 +1351,7 @@ snapshots:
     dependencies:
       '@babel/compat-data': 7.25.4
       '@babel/helper-validator-option': 7.24.8
-      browserslist: 4.23.3
+      browserslist: 4.24.0
       lru-cache: 5.1.1
       semver: 6.3.1
 
@@ -1616,9 +1616,9 @@ snapshots:
 
   '@ungap/structured-clone@1.2.0': {}
 
-  '@vitejs/plugin-vue@5.1.4(vite@5.4.7(sass@1.79.3))(vue@3.5.8)':
+  '@vitejs/plugin-vue@5.1.4(vite@5.4.8(sass@1.79.3))(vue@3.5.8)':
     dependencies:
-      vite: 5.4.7(sass@1.79.3)
+      vite: 5.4.8(sass@1.79.3)
       vue: 3.5.8
 
   '@vue/compiler-core@3.5.8':
@@ -1715,7 +1715,7 @@ snapshots:
 
   autoprefixer@10.4.20(postcss@8.4.47):
     dependencies:
-      browserslist: 4.23.3
+      browserslist: 4.24.0
       caniuse-lite: 1.0.30001663
       fraction.js: 4.3.7
       normalize-range: 0.1.2
@@ -1740,12 +1740,12 @@ snapshots:
     dependencies:
       fill-range: 7.1.1
 
-  browserslist@4.23.3:
+  browserslist@4.24.0:
     dependencies:
       caniuse-lite: 1.0.30001663
-      electron-to-chromium: 1.5.27
+      electron-to-chromium: 1.5.28
       node-releases: 2.0.18
-      update-browserslist-db: 1.1.0(browserslist@4.23.3)
+      update-browserslist-db: 1.1.0(browserslist@4.24.0)
 
   call-bind@1.0.7:
     dependencies:
@@ -1837,7 +1837,7 @@ snapshots:
 
   doctypes@1.1.0: {}
 
-  electron-to-chromium@1.5.27: {}
+  electron-to-chromium@1.5.28: {}
 
   entities@4.5.0: {}
 
@@ -2437,9 +2437,9 @@ snapshots:
 
   universalify@2.0.1: {}
 
-  update-browserslist-db@1.1.0(browserslist@4.23.3):
+  update-browserslist-db@1.1.0(browserslist@4.24.0):
     dependencies:
-      browserslist: 4.23.3
+      browserslist: 4.24.0
       escalade: 3.2.0
       picocolors: 1.1.0
 
@@ -2447,15 +2447,15 @@ snapshots:
     dependencies:
       punycode: 2.3.1
 
-  vite-plugin-static-copy@1.0.6(vite@5.4.7(sass@1.79.3)):
+  vite-plugin-static-copy@1.0.6(vite@5.4.8(sass@1.79.3)):
     dependencies:
       chokidar: 3.6.0
       fast-glob: 3.3.2
       fs-extra: 11.2.0
       picocolors: 1.1.0
-      vite: 5.4.7(sass@1.79.3)
+      vite: 5.4.8(sass@1.79.3)
 
-  vite@5.4.7(sass@1.79.3):
+  vite@5.4.8(sass@1.79.3):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.47
@@ -2483,7 +2483,7 @@ snapshots:
       '@vue/server-renderer': 3.5.8(vue@3.5.8)
       '@vue/shared': 3.5.8
 
-  wave-ui@3.16.1(vue@3.5.8):
+  wave-ui@3.16.2(vue@3.5.8):
     dependencies:
       vue: 3.5.8
 
