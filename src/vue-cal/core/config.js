@@ -1,5 +1,4 @@
 import { computed, ref, unref, toRefs } from 'vue'
-import { promises as fs } from 'fs'
 import path from 'path'
 
 export const defaults = {
@@ -132,10 +131,14 @@ export const useConfig = (vuecal, props) => {
     // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
     // https://vitejs.dev/guide/features.html#glob-import
     let translations = import.meta.glob('../i18n/*.json', { query: '?url', import: 'default' })
-    const isSSR = typeof window === 'undefined'
 
-    if (isSSR) {
-      // Server-Side: Read JSON directly from the file system
+    if (import.meta.env.SSR) {
+      // Server-Side: Read JSON directly from the file system.
+      let fs
+      (async () => {
+        fs = await import('fs').then(mod => mod.promises)
+      })()
+
       const filePath = path.resolve(__dirname, `../i18n/${locale}.json`)
       try {
         const data = await fs.readFile(filePath, 'utf-8')
