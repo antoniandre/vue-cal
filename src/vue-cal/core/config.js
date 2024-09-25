@@ -131,7 +131,7 @@ export const useConfig = (vuecal, props) => {
     // So this glob is much more convenient and not penalizing as all the matches are
     // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
     // https://vitejs.dev/guide/features.html#glob-import
-    let translations = import.meta.glob('../i18n/*.json', { as: 'url' })
+    let translations = import.meta.glob('../i18n/*.json', { query: '?url', import: 'default' })
     const isSSR = typeof window === 'undefined'
 
     if (isSSR) {
