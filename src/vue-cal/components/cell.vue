@@ -22,6 +22,7 @@
   template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
+    .vuecal__special-hours(v-if="specialHours" :style="specialHours.style" :class="specialHours.class")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
@@ -114,6 +115,26 @@ const cellEvents = computed(() => {
   return view.events[dateUtils.formatDate(props.start)] || []
 })
 
+const specialHours = computed(() => {
+  if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
+
+  const { from, to, class: classes } = config.specialHours?.[props.start.getDay() || 7] || {}
+  if (!from || !to) return
+
+  const top = from && timeMinutesToTopPosition(from)
+  const height = to && timeMinutesToTopPosition(to) - top
+
+  return {
+    from,
+    to,
+    style: {
+      top: top + 'px',
+      height: height + 'px'
+    },
+    class: classes
+  }
+})
+
 // Draw a line in today's cell at the exact current time.
 const nowLine = reactive({
   show: computed(() => {
@@ -128,6 +149,10 @@ const nowLine = reactive({
   timeScale: computed(() => config.timeCellHeight / config.timeStep),
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
+
+const timeMinutesToTopPosition = timeInMinutes => {
+  return Math.round((timeInMinutes - config.timeFrom) * nowLine.timeScale)
+}
 
 const onCellClick = () => {
   view.updateSelectedDate(props.start)

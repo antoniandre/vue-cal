@@ -116,8 +116,15 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  splitDays: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
-  eventsOnMonthView: true
+  // splitDays: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
+  eventsOnMonthView: true,
+  specialHours: {
+    1: { from: 8 * 60, to: 17 * 60, class: 'business-hours' },
+    2: { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+    3: { from: 7 * 60, to: 19 * 60, class: 'business-hours' },
+    4: { from: 8 * 60, to: 17 * 60, class: 'business-hours' },
+    5: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+  }
 })
 
 // Pretend a call to a backend.
@@ -216,14 +223,17 @@ const addEvent = () => {
 // --------------------------------------------------------
 
 .vuecal__special-hours {
+  position: absolute;
   display: flex;
   justify-content: center;
   align-items: center;
   padding: 4px;
+  width: 100%;
 
   em {font-size: 0.9em;color: #999;}
 }
 
+.business-hours {background-color: rgba(117, 176, 255, 0.2);color: hsl(217, 80%, 67%);}
 .doctor-1 {background-color: hsl(127, 100%, 97%);color: hsl(127, 50%, 67%);}
 .doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
 .doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 67%);}

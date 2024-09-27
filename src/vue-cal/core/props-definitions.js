@@ -18,6 +18,7 @@ export const props = {
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
+  specialHours: { type: Object, default: () => ({}) }, // Highlight a particular time range on each day of the week, individually.
   splitDays: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
   startWeekOnSunday: { type: Boolean, default: false }, // Shows Sunday before Monday in days, week and month views.
   theme: { type: [String, Boolean], default: 'default' }, // Only adds a CSS class when set to default.
@@ -45,8 +46,7 @@ export const props = {
 
   // TODO NEXT:
   dblclickToNavigate: { type: Boolean, default: true },
-  disableDays: { type: Array, default: () => [] },
-  specialHours: { type: Object, default: () => ({}) },
+  disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
 
   // TODO:
   cellClickHold: { type: Boolean, default: true },
