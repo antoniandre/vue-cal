@@ -126,8 +126,9 @@ const cellEvents = computed(() => {
  */
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
+  const weekday = weekdays[props.start.getDay()]
 
-  let daySpecialHours = config.specialHours?.[props.start.getDay() || 7]
+  let daySpecialHours = config.specialHours?.[weekday]
   if (!daySpecialHours) return
 
   if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
