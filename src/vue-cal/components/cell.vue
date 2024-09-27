@@ -22,11 +22,12 @@
   template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
-    .vuecal__special-hours(
-      v-if="specialHours"
-      :style="specialHours.style"
-      :class="specialHours.class"
-      v-html="specialHours.label || ''")
+    template(v-if="specialHours")
+      .vuecal__special-hours(
+        v-for="(range, i) in specialHours"
+        :style="range.style"
+        :class="range.class"
+        v-html="range.label || ''")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
@@ -119,25 +120,36 @@ const cellEvents = computed(() => {
   return view.events[dateUtils.formatDate(props.start)] || []
 })
 
+/**
+ * The special hours of the current cell day.
+ * returns an array if the view day, days, week and the specialHours prop is set correctly.
+ */
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
 
-  const { from, to, class: classes, label } = config.specialHours?.[props.start.getDay() || 7] || {}
-  if (!from || !to) return
+  let daySpecialHours = config.specialHours?.[props.start.getDay() || 7]
+  if (!daySpecialHours) return
 
-  const top = from && timeMinutesToTopPosition(from)
-  const height = to && timeMinutesToTopPosition(to) - top
+  if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
 
-  return {
-    from,
-    to,
-    style: {
-      top: top + 'px',
-      height: height + 'px'
-    },
-    label,
-    class: classes
-  }
+  return daySpecialHours.map(dayRanges => {
+    const { from, to, class: classes, label } = dayRanges
+    if (!from || !to) return
+
+    const top = from && timeMinutesToTopPosition(from)
+    const height = to && timeMinutesToTopPosition(to) - top
+
+    return {
+      from,
+      to,
+      style: {
+        top: top + 'px',
+        height: height + 'px'
+      },
+      label,
+      class: classes
+    }
+  })
 })
 
 // Draw a line in today's cell at the exact current time.
