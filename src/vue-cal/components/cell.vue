@@ -22,7 +22,11 @@
   template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
-    .vuecal__special-hours(v-if="specialHours" :style="specialHours.style" :class="specialHours.class")
+    .vuecal__special-hours(
+      v-if="specialHours"
+      :style="specialHours.style"
+      :class="specialHours.class"
+      v-html="specialHours.label || ''")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
@@ -118,7 +122,7 @@ const cellEvents = computed(() => {
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
 
-  const { from, to, class: classes } = config.specialHours?.[props.start.getDay() || 7] || {}
+  const { from, to, class: classes, label } = config.specialHours?.[props.start.getDay() || 7] || {}
   if (!from || !to) return
 
   const top = from && timeMinutesToTopPosition(from)
@@ -131,6 +135,7 @@ const specialHours = computed(() => {
       top: top + 'px',
       height: height + 'px'
     },
+    label,
     class: classes
   }
 })
@@ -184,6 +189,16 @@ const cellEventHandlers = {
 
   &--has-splits {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
+}
+
+.vuecal__special-hours {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  left: 0;
+  right: 0;
 }
 
 .vuecal__now-line {
