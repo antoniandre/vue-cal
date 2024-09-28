@@ -137,16 +137,12 @@ const specialHours = computed(() => {
     const { from, to, class: classes, label } = dayRanges
     if (!from || !to) return
 
-    const top = from && timeMinutesToTopPosition(from)
-    const height = to && timeMinutesToTopPosition(to) - top
+    const dayRangeMinutes = config.timeTo - config.timeFrom
+    const top = from && ((from - config.timeFrom) * 100 / dayRangeMinutes)
+    const height = to && ((to - config.timeFrom) * 100 / dayRangeMinutes) - top
 
     return {
-      from,
-      to,
-      style: {
-        top: top + 'px',
-        height: height + 'px'
-      },
+      style: { top: top + '%', height: height + '%' },
       label,
       class: classes
     }
