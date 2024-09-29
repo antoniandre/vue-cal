@@ -44,7 +44,7 @@
 
   .vuecal__now-line(
     v-if="nowLine.show"
-    :style="`top: ${nowLine.todaysTimePosition}px`"
+    :style="nowLine.style"
     :title="nowLine.currentTime")
     span {{ nowLine.currentTime }}
 </template>
@@ -128,11 +128,13 @@ const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
   const weekday = weekdays[props.start.getDay()]
 
+  // The special hours ranges for the current cell day.
   let daySpecialHours = config.specialHours?.[weekday]
   if (!daySpecialHours) return
 
   if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
 
+  // Foreach of the given ranges, return an object with CSS positioning in percentage.
   return daySpecialHours.map(dayRanges => {
     const { from, to, class: classes, label } = dayRanges
     if (!from || !to) return
@@ -159,14 +161,13 @@ const nowLine = reactive({
     return true
   }),
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
-  todaysTimePosition: computed(() => Math.round((nowLine.nowInMinutes - config.timeFrom) * nowLine.timeScale)),
-  timeScale: computed(() => config.timeCellHeight / config.timeStep),
+  todaysTimePosition: computed(() => {
+    const dayRangeMinutes = config.timeTo - config.timeFrom
+    return (nowLine.nowInMinutes - config.timeFrom) * 100 / dayRangeMinutes
+  }),
+  style: computed(() => `top: ${nowLine.todaysTimePosition}%`),
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
-
-const timeMinutesToTopPosition = timeInMinutes => {
-  return Math.round((timeInMinutes - config.timeFrom) * nowLine.timeScale)
-}
 
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
