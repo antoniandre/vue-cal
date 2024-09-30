@@ -7,6 +7,7 @@ div.test-view
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
     w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.daySplits") Day Splits
 
     w-input(v-model="mainVuecalConfig.viewDayOffset" type="number") View Day Offset
 
@@ -116,20 +117,23 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  // splitDays: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
+  daySplits: ref(false),
+  splitDays: computed(() => {
+    return mainVuecalConfig.daySplits ? [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }] : undefined
+  }),
   eventsOnMonthView: true,
-  specialHours: {
-    'mon': { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    'tue': { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    'wed': [
-      { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
-      { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
-    ],
-    'thu': { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    'fri': { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
-    'sat': { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    'sun': { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  },
+  // specialHours: {
+  //   'mon': { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+  //   'tue': { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+  //   'wed': [
+  //     { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
+  //     { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
+  //   ],
+  //   'thu': { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+  //   'fri': { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
+  //   'sat': { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+  //   'sun': { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+  // }
 })
 
 // Pretend a call to a backend.
