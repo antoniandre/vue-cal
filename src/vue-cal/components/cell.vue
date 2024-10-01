@@ -179,7 +179,7 @@ const onCellClick = () => {
     else if (view.isYears && config.availableViews.year) view.switch('year')
     view.updateViewDate(props.start)
   }
-  vuecal.emit('cell-click', { date: props.start, view })
+  vuecal.emit('cell-click', { start: props.start, end: props.end, events: cellEvents.value })
 }
 
 const cellEventHandlers = {
