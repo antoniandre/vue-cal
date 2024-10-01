@@ -182,9 +182,9 @@ const onCellClick = () => {
   vuecal.emit('cell-click', { start: props.start, end: props.end, events: cellEvents.value })
 }
 
-const cellEventHandlers = {
-  click: onCellClick
-}
+const cellEventHandlers = computed(() => {
+  return config.eventListeners.cell
+})
 </script>
 
 <style lang="scss">

@@ -46,7 +46,7 @@
 </template>
 
 <script setup>
-import { computed, provide, watch } from 'vue'
+import { computed, provide, useAttrs, watch } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
@@ -57,7 +57,7 @@ import TimeColumn from './time-column.vue'
 const props = defineProps(propsDefinitions)
 const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate', 'cell-click'])
 
-const vuecal = useVueCal(props, emit)
+const vuecal = useVueCal(props, emit, useAttrs())
 const { config, view } = vuecal
 
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))

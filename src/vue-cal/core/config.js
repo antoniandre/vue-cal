@@ -40,12 +40,32 @@ const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun
   return obj
 }, {})
 
-export const useConfig = (vuecal, props) => {
+export const useConfig = (vuecal, props, attrs) => {
   const { dateUtils } = vuecal
   const ready = false
   const sm = computed(() => props.sm && !props.xs)
   const xs = computed(() => props.xs || props.datePicker)
   const clickToNavigate = computed(() => props.clickToNavigate || (props.datePicker && props.clickToNavigate !== false))
+
+  /**
+   * Extract all the Vue Cal external event listeners for cells and events, and prepare an object to
+   * pass to the cell component which will v-on this object of listeners.
+   */
+  const eventListeners = computed(() => {
+    const listeners = {
+      cell: {}, // All possible event listeners to attach to cells.
+      event: {} // All possible event listeners to attach to calendar events.
+    }
+
+    // Forward any cell and calendar-events event listener attached to VueCal to the cell and event components.
+    // For instance, convert vuecal.onCellMouseenter to cell.mouseenter.
+    Object.entries(attrs).forEach(([attr, value]) => {
+      const [m0, m1, m2, m3] = attr.match(/^on(Cell|Event)(.)(.*)/) || []
+      if (m0) listeners[m1.toLowerCase()][m2.toLowerCase() + m3] = value
+    })
+
+    return listeners
+  })
 
   // An object consisting of only the weekdays to hide, given their index (1-7, Mon - Sun).
   // E.g. { 1: true, 6: true, 7 true } will hide the Mondays and weekends.
@@ -168,6 +188,8 @@ export const useConfig = (vuecal, props) => {
 
   return {
     ...toRefs(props),
+    // All the events listeners for cells and events that the end user may have attached to vue-cal.
+    eventListeners,
     defaultView,
     availableViews,
     ready,
