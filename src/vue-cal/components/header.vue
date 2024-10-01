@@ -26,12 +26,12 @@
           div(:key="view.id + view.start.getTime()")
             component.vuecal__title(
               v-if="$slots.title"
-              :is="config.clickToNavigate ? 'button' : 'div'"
+              :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers")
               slot(name="title")
             component.vuecal__title(
               v-else
-              :is="config.clickToNavigate ? 'button' : 'div'"
+              :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers"
               v-html="view.title"
               :key="view.id + view.start.getTime()")
@@ -55,21 +55,16 @@
 </template>
 
 <script setup>
-import { inject } from 'vue'
+import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
 const { view, config } = vuecal
 
 const onTitleClick = () => {
-  if (config.clickToNavigate) {
-    if ((view.isDay || view.isDays) && config.availableViews.month) view.switch('month')
-    else if (view.isMonth && config.availableViews.years) view.switch('years')
-  }
+  if (config.clickToNavigate) view.broader()
 }
 
-const titleEventHandlers = {
-  ...(config.clickToNavigate ? { click: onTitleClick } : {})
-}
+const titleEventHandlers = computed(() => config.clickToNavigate ? { click: onTitleClick } : {})
 </script>
 
 <style lang="scss">

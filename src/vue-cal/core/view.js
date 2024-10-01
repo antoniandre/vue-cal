@@ -22,6 +22,22 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   // Transition when switching view. Left when going toward the past, right when going toward future.
   const transitionDirection = ref('right')
 
+  /**
+   * {String|undefined} The next available broader view from the current view.
+   */
+  const broaderView = computed(() => {
+    const availableViews = Object.keys(config.availableViews)
+    return availableViews[availableViews.indexOf(viewId.value) + 1]
+  })
+
+  /**
+   * {String|undefined} The next available narrower view from the current view.
+   */
+  const narrowerView = computed(() => {
+    const availableViews = Object.keys(config.availableViews)
+    return availableViews[availableViews.indexOf(viewId.value) - 1]
+  })
+
   const title = computed(() => {
     const { dateFormat, truncations } = texts
 
@@ -157,6 +173,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     if (viewId.value === 'month' && !config.eventsOnMonthView) return []
     return eventsManager.getViewEvents(cellDates.value)
   })
+
   /**
    * This function is called after each view variable update and will recompute the theoretical view
    * [start-end] date range.
@@ -213,6 +230,16 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     else !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
 
+  function switchToBroaderView () {
+    if (broaderView.value) switchView(broaderView.value)
+    else console.warn('Vue Cal: no broader view is available.')
+  }
+
+  function switchToNarrowerView () {
+    if (narrowerView.value) switchView(narrowerView.value)
+    else console.warn('Vue Cal: no narrower view is available.')
+  }
+
   function previous () {
     navigate(false)
   }
@@ -221,6 +248,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     navigate(true)
   }
 
+  /**
+   * Navigate to the next or previous similar view.
+   *
+   * @param {bool} forward
+   */
   function navigate (forward = true) {
     let newViewDate = viewDate.value
     const { cols, rows } = config.availableViews[viewId.value]
@@ -370,6 +402,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   return {
     now,
     id: viewId,
+    broaderView,
+    narrowerView,
     title,
     viewDate,
     start,
@@ -386,6 +420,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     // and multi-day events.
     events,
     switch: switchView,
+    broader: switchToBroaderView,
+    narrower: switchToNarrowerView,
     previous,
     next,
     navigate,
