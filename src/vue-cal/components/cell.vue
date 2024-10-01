@@ -1,11 +1,11 @@
 <template lang="pug">
 .vuecal__cell(:class="classes" v-on="cellEventHandlers")
   template(v-if="$slots.cell")
-    slot(name="cell" :date="date" :index="index" :events="cellEvents")
+    slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
   template(v-else-if="config.daySplits")
     .vuecal__cell-split(v-for="(split, i) in config.daySplits" :key="i" :class="split.class")
       template(v-if="$slots['cell-events']")
-        slot(name="cell-events")
+        slot(name="cell-events" :start="start" :end="end" :events="cellEvents")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
         slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
       .vuecal__cell-content(v-if="$slots['cell-content']")
