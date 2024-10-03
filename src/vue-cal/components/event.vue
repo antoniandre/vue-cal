@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__event(:class="classes" :style="styles")
+.vuecal__event(v-on="eventListeners" :class="classes" :style="styles")
   .vuecal__event-title
     | {{ event.title }}
   .vuecal__event-content(v-html="event.content")
@@ -18,6 +18,14 @@ const props = defineProps({
 })
 
 const event = computed(() => eventsManager.getEvent(props.id))
+
+/**
+ * Automatically forwards any event listener attached to vuecal starting with @event- to the
+ * (calendar) event.
+ */
+ const eventListeners = computed(() => {
+   return { ...config.eventListeners.event }
+})
 
 const classes = computed(() => ({
   [`vuecal__event--${props.id}`]: true,
