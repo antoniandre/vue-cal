@@ -19,12 +19,10 @@ const props = defineProps({
 
 const event = computed(() => eventsManager.getEvent(props.id))
 
-/**
- * Automatically forwards any event listener attached to vuecal starting with @event- to the
- * (calendar) event.
- */
- const eventListeners = computed(() => {
-   return { ...config.eventListeners.event }
+// Automatically forwards any event listener attached to vuecal starting with @event- to the
+// (calendar) event.
+const eventListeners = computed(() => {
+  return { ...config.eventListeners.event }
 })
 
 const classes = computed(() => ({

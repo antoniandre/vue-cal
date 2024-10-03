@@ -181,9 +181,7 @@ const onCellClick = () => {
   }
 }
 
-/**
- * Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
- */
+// Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
 const cellEventHandlers = computed(() => {
   const eventListeners = { ...config.eventListeners.cell }
 

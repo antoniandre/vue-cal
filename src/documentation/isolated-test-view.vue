@@ -40,11 +40,12 @@ div.test-view
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @cell-click="(e, cell) => log('cell-click', {e, cell})"
-    @cell-mousedown="(e, cell) => log('cell-mousedown', {e, cell})"
-    @cell-touchstart="(e, cell) => log('cell-touchstart', {e, cell})"
-    @cell-mouseover="(e, cell) => log('cell-mouseover', {e, cell})"
-    @cell-mouseout="(e, cell) => log('cell-mouseout', {e, cell})")
+    @event-click="(e, event) => log('event-click', { e, event })"
+    @cell-click="(e, cell) => log('cell-click', { e, cell })"
+    @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
+    @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
+    @cell-mouseover="(e, cell) => log('cell-mouseover', { e, cell })"
+    @cell-mouseout="(e, cell) => log('cell-mouseout', { e, cell })")
 
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
