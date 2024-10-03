@@ -22,7 +22,14 @@ const event = computed(() => eventsManager.getEvent(props.id))
 // Automatically forwards any event listener attached to vuecal starting with @event- to the
 // (calendar) event.
 const eventListeners = computed(() => {
-  return { ...config.eventListeners.event }
+  const eventListeners = { ...config.eventListeners.event }
+
+  // Inject the cell details in each eventListener handler call as 2nd param.
+  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
+    eventListeners[eventListener] = e => handler(e, event.value)
+  })
+
+  return eventListeners
 })
 
 const classes = computed(() => ({
