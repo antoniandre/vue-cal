@@ -35,12 +35,16 @@ div.test-view
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-bind="mainVuecalConfig")
 
-  VueCal.grow.no-shrink(
+  VueCal.no-shrink(
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-click="(e, event) => log('event-click', { e, event })"
+    @event-click.stop="(e, event) => log('event-click', { e, event })"
+    @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
+    @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
+    @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
+    @event-contextmenu.prevent="(e, event) => log('event-contextmenu', { e, event })"
     @cell-click="(e, cell) => log('cell-click', { e, cell })"
     @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
     @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
