@@ -179,11 +179,21 @@ const onCellClick = () => {
     else if (view.isYears && config.availableViews.year) view.switch('year')
     view.updateViewDate(props.start)
   }
-  vuecal.emit('cell-click', { start: props.start, end: props.end, events: cellEvents.value })
 }
 
+/**
+ * Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
+ */
 const cellEventHandlers = computed(() => {
-  return config.eventListeners.cell
+  const eventListeners = { ...config.eventListeners.cell }
+  // Store a potential onclick to combine w/ internal onclick, below.
+  const externalOnClick = eventListeners.click
+
+  eventListeners.click = e => {
+    onCellClick({ start: props.start, end: props.end }, e)
+    externalOnClick?.(e, { start: props.start, end: props.end, events: cellEvents })
+  }
+  return eventListeners
 })
 </script>
 

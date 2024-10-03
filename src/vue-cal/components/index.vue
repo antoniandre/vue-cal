@@ -55,7 +55,12 @@ import WeekdaysBar from './weekdays-bar.vue'
 import TimeColumn from './time-column.vue'
 
 const props = defineProps(propsDefinitions)
-const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate', 'cell-click'])
+
+// In addition to the following emitted events, there are other manually-handled events that are forwarded
+// to specific components, allowing the user to have full flexibility and control on their own events:
+// cell-click, cell-xxxx, where xxxx is an existing DOM event name given by the end user;
+// event-click, event-xxxx, where xxxx is an existing DOM event name given by the end user.
+const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
 
 const vuecal = useVueCal(props, emit, useAttrs())
 const { config, view } = vuecal

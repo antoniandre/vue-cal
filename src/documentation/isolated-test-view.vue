@@ -30,7 +30,7 @@ div.test-view
   .w-flex
     w-button(@click="addEvent") Add event
 
-  VueCal.no-shrink(
+  //- VueCal.no-shrink(
     date-picker
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-bind="mainVuecalConfig")
@@ -39,7 +39,13 @@ div.test-view
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
-    v-bind="mainVuecalConfig")
+    v-bind="mainVuecalConfig"
+    @cell-click="(e, cell) => log('cell-click', {e, cell})"
+    @cell-mousedown="(e, cell) => log('cell-mousedown', {e, cell})"
+    @cell-touchstart="(e, cell) => log('cell-touchstart', {e, cell})"
+    @cell-mouseover="(e, cell) => log('cell-mouseover', {e, cell})"
+    @cell-mouseout="(e, cell) => log('cell-mouseout', {e, cell})")
+
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
     //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
@@ -147,6 +153,8 @@ setTimeout(() => {
 const addEvent = () => {
   mainVuecalConfig.events.push({ title: 'Event 1', start: (new Date()).subtractHours(4), end: (new Date()).subtractHours(3) })
 }
+
+const log = (...args) => console.log(...args)
 
 // `from` and `to` are expected in minutes.
 // const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
