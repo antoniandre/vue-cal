@@ -186,12 +186,18 @@ const onCellClick = () => {
  */
 const cellEventHandlers = computed(() => {
   const eventListeners = { ...config.eventListeners.cell }
+
+  // Inject the cell details in each eventListener handler call as 2nd param.
+  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
+    eventListeners[eventListener] = e => handler(e, { start: props.start, end: props.end, events: cellEvents })
+  })
+
   // Store a potential onclick to combine w/ internal onclick, below.
   const externalOnClick = eventListeners.click
 
   eventListeners.click = e => {
     onCellClick({ start: props.start, end: props.end }, e)
-    externalOnClick?.(e, { start: props.start, end: props.end, events: cellEvents })
+    externalOnClick?.(e)
   }
   return eventListeners
 })
