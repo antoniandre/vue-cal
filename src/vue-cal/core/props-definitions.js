@@ -50,7 +50,6 @@ export const props = {
 
   // TODO:
   cellClickHold: { type: Boolean, default: true },
-  cellContextmenu: { type: Boolean, default: false },
   dragToCreateEvent: { type: Boolean, default: true },
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
@@ -61,9 +60,7 @@ export const props = {
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
   minSplitWidth: { type: Number, default: 0 },
-  onEventClick: { type: [Function, null], default: null },
   onEventCreate: { type: [Function, null], default: null },
-  onEventDblclick: { type: [Function, null], default: null },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
   showAllDayEvents: { type: [Boolean, String], default: false },
