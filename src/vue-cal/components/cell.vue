@@ -138,11 +138,11 @@ const specialHours = computed(() => {
   return daySpecialHours.map(dayRanges => {
     let { from, to, class: classes, label } = dayRanges
     if (!from || !to) return
-    // If the special hours are out of range then return.
+    // Return if the special hours are completely out of range.
     if (config.timeFrom >= to || config.timeTo <= from) return
 
-    from = Math.max(config.timeFrom, from) // To ensure that from is in range.
-    to = Math.min(config.timeTo, to) // To ensure that to is in range.
+    from = Math.max(config.timeFrom, from) // Ensure that from is in range.
+    to = Math.min(config.timeTo, to) // Ensure that to is in range.
 
     const dayRangeMinutes = config.timeTo - config.timeFrom
     const top = from && ((from - config.timeFrom) * 100 / dayRangeMinutes)

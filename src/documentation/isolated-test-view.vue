@@ -75,7 +75,6 @@ useLocale(EnUs)
 addDatePrototypes()
 
 const store = useAppStore()
-const $waveui = inject('$waveui')
 
 const locales = [
   { value: 'ko', label: 'ko' },
@@ -85,8 +84,9 @@ const locales = [
   { value: 'zh-cn', label: 'zh-cn' },
   { value: 'ar', label: 'ar' },
   { value: 'fr', label: 'fr' },
-  { value: 'ca', label: 'ca' },
+  { value: 'ca', label: 'ca' }
 ]
+
 const views = {
   day: { label: 'Day' },
   days: { label: 'Days', cols: 365, rows: 1 },
@@ -137,8 +137,8 @@ const mainVuecalConfig = reactive({
     mon: { from: 5 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
     tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
     wed: [
-    { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
-    { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
+      { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
+      { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
     ],
     thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
     fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
@@ -161,51 +161,27 @@ const addEvent = () => {
 
 const log = (...args) => console.log(...args)
 
-// `from` and `to` are expected in minutes.
-// const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours', label: 'Full day shift' }
-
-// const now = new Date()
-
-// export default {
-//   components: { VueCal },
-
-//   data: () => ({
-//     selectedDate: now,
-//     view: 'week',
-//     events: [
-//       {
-//         start: new Date(new Date(now).setHours(1, 0, 0)),
-//         end: new Date(new Date(now).setHours(4, 0, 0)),
-//         allDay: true,
-//         title: 'Event 1',
-//         split: 2
-//       },
-//       {
-//         start: new Date(new Date(now).setHours(1, 0, 0)),
-//         end: new Date(new Date(now).setHours(4, 0, 0)),
-//         title: 'Event 2',
-//         split: 1
-//       },
-//       {
-//         start: new Date(new Date(now).setHours(3, 0, 0)),
-//         end: new Date(new Date(now).setHours(5, 0, 0)),
-//         title: 'Event 3',
-//         split: 2
-//       }
-//     ],
-//     daySplits: [
-//       { label: 'Tom', color: 'green' },
-//       { label: 'Kate', color: 'pink' }
-//     ]
-//   }),
-
-//   methods: {
-//     log (...params) {
-//       // eslint-disable-next-line
-//       console.log(...params)
-//     }
+// events: [
+//   {
+//     start: new Date(new Date(now).setHours(1, 0, 0)),
+//     end: new Date(new Date(now).setHours(4, 0, 0)),
+//     allDay: true,
+//     title: 'Event 1',
+//     split: 2
+//   },
+//   {
+//     start: new Date(new Date(now).setHours(1, 0, 0)),
+//     end: new Date(new Date(now).setHours(4, 0, 0)),
+//     title: 'Event 2',
+//     split: 1
+//   },
+//   {
+//     start: new Date(new Date(now).setHours(3, 0, 0)),
+//     end: new Date(new Date(now).setHours(5, 0, 0)),
+//     title: 'Event 3',
+//     split: 2
 //   }
-// }
+// ]
 </script>
 
 <style lang="scss">
