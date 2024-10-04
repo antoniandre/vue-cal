@@ -136,19 +136,24 @@ const specialHours = computed(() => {
 
   // Foreach of the given ranges, return an object with CSS positioning in percentage.
   return daySpecialHours.map(dayRanges => {
-    const { from, to, class: classes, label } = dayRanges
+    let { from, to, class: classes, label } = dayRanges
     if (!from || !to) return
+    // If the special hours are out of range then return.
+    if (config.timeFrom >= to || config.timeTo <= from) return
+
+    from = Math.max(config.timeFrom, from) // To ensure that from is in range.
+    to = Math.min(config.timeTo, to) // To ensure that to is in range.
 
     const dayRangeMinutes = config.timeTo - config.timeFrom
     const top = from && ((from - config.timeFrom) * 100 / dayRangeMinutes)
-    const height = to && ((to - config.timeFrom) * 100 / dayRangeMinutes) - top
+    const height = to && from && ((to - from) * 100 / dayRangeMinutes)
 
     return {
       style: { top: top + '%', height: height + '%' },
       label,
       class: classes
     }
-  })
+  }).filter(specialRanges => !!specialRanges)
 })
 
 // Draw a line in today's cell at the exact current time.
