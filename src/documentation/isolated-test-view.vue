@@ -66,9 +66,9 @@ div.test-view
 </template>
 
 <script setup>
-import { ref, reactive, computed, inject } from 'vue'
+import { ref, reactive, computed } from 'vue'
 import EnUs from '@/vue-cal/i18n/en-us.json'
-import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
+import { VueCal, addDatePrototypes, useLocale } from '@/vue-cal'
 import { useAppStore } from '@/store'
 
 useLocale(EnUs)
@@ -134,7 +134,7 @@ const mainVuecalConfig = reactive({
   }),
   eventsOnMonthView: true,
   specialHours: {
-    mon: { from: 5 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+    mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
     tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
     wed: [
       { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
