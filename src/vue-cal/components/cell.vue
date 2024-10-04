@@ -122,7 +122,7 @@ const cellEvents = computed(() => {
 
 /**
  * The special hours of the current cell day.
- * returns an array if the view day, days, week and the specialHours prop is set correctly.
+ * returns an array if the view is day, days, week and the specialHours prop is set correctly.
  */
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
