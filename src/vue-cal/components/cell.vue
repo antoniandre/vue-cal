@@ -137,16 +137,16 @@ const specialHours = computed(() => {
   // Foreach of the given ranges, return an object with CSS positioning in percentage.
   return daySpecialHours.map(dayRanges => {
     let { from, to, class: classes, label } = dayRanges
-    if (!from || !to) return
-    // Return if the special hours are completely out of range.
-    if (config.timeFrom >= to || config.timeTo <= from) return
+
+    // Return if the special hours are incorrect or completely out of range.
+    if (isNaN(from) || isNaN(to) || config.timeFrom >= to || config.timeTo <= from) return
 
     from = Math.max(config.timeFrom, from) // Ensure that from is in range.
     to = Math.min(config.timeTo, to) // Ensure that to is in range.
 
     const dayRangeMinutes = config.timeTo - config.timeFrom
-    const top = from && ((from - config.timeFrom) * 100 / dayRangeMinutes)
-    const height = to && from && ((to - from) * 100 / dayRangeMinutes)
+    const top = (from - config.timeFrom) * 100 / dayRangeMinutes
+    const height = (to - from) * 100 / dayRangeMinutes
 
     return {
       style: { top: top + '%', height: height + '%' },
