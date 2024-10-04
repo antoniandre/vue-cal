@@ -22,12 +22,6 @@
   template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
-    template(v-if="specialHours")
-      .vuecal__special-hours(
-        v-for="(range, i) in specialHours"
-        :style="range.style"
-        :class="range.class"
-        v-html="range.label || ''")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
@@ -42,6 +36,12 @@
       template(v-else)
         event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
 
+  template(v-if="specialHours")
+    .vuecal__special-hours(
+      v-for="(range, i) in specialHours"
+      :style="range.style"
+      :class="range.class"
+      v-html="range.label || ''")
   .vuecal__now-line(
     v-if="nowLine.show"
     :style="nowLine.style"
@@ -223,6 +223,7 @@ const cellEventHandlers = computed(() => {
   align-items: center;
   left: 0;
   right: 0;
+  z-index: -1; // Under the day splits if enabled.
 }
 
 .vuecal__now-line {
