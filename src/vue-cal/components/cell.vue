@@ -211,7 +211,7 @@ const cellEventListeners = computed(() => {
     eventListeners[eventListener] = e => handler(e, { start: props.start, end: props.end, events: cellEvents })
   })
 
-  // Store a potential onclick to combine w/ internal onclick, below.
+  // Store a potential onclick to combine with internal onclick, below.
   const externalOnClick = eventListeners.click
 
   eventListeners.click = e => {
@@ -222,10 +222,6 @@ const cellEventListeners = computed(() => {
   eventListeners.touchstart = onCellTouchstart
   eventListeners.mousedown = onCellMousedown
 
-  eventListeners.click = e => {
-    onCellClick({ start: props.start, end: props.end }, e)
-    externalOnClick?.(e)
-  }
   return eventListeners
 })
 </script>
