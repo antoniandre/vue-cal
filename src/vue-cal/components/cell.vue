@@ -144,9 +144,8 @@ const specialHours = computed(() => {
     from = Math.max(config.timeFrom, from) // Ensure that from is in range.
     to = Math.min(config.timeTo, to) // Ensure that to is in range.
 
-    const dayRangeMinutes = config.timeTo - config.timeFrom
-    const top = (from - config.timeFrom) * 100 / dayRangeMinutes
-    const height = (to - from) * 100 / dayRangeMinutes
+    const top = minutesToPercentage(from)
+    const height = minutesToPercentage(to) - top
 
     return {
       style: { top: top + '%', height: height + '%' },
@@ -166,13 +165,20 @@ const nowLine = reactive({
     return true
   }),
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
-  todaysTimePosition: computed(() => {
-    const dayRangeMinutes = config.timeTo - config.timeFrom
-    return (nowLine.nowInMinutes - config.timeFrom) * 100 / dayRangeMinutes
-  }),
+  todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes)),
   style: computed(() => `top: ${nowLine.todaysTimePosition}%`),
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
+
+/**
+ * Converts minutes in the day to a percentage position.
+ *
+ * @param {Number} minutes time in minutes
+ */
+const minutesToPercentage = minutes => {
+  const dayRangeMinutes = config.timeTo - config.timeFrom
+  return (minutes - config.timeFrom) * 100 / dayRangeMinutes
+}
 
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
