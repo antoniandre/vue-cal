@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__cell(:class="classes" v-on="cellEventHandlers")
+.vuecal__cell(:class="classes" v-on="cellEventListeners")
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
   template(v-else-if="config.daySplits")
@@ -186,8 +186,24 @@ const onCellClick = () => {
   }
 }
 
+const trackMousemove = (touch = false) => {
+  document.addEventListener(touch ? 'touchmove' : 'mousemove', onDocMousemove)
+  document.addEventListener(touch ? 'touchend' : 'mouseup', onDocMouseup)
+}
+
+const onDocMousemove = e => {
+  console.log('🧥', 'mousemove', e.target, e)
+}
+
+const onDocMouseup = e => {
+  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+}
+
+const onCellMousedown = () => trackMousemove()
+const onCellTouchstart = () => trackMousemove(true)
+
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
-const cellEventHandlers = computed(() => {
+const cellEventListeners = computed(() => {
   const eventListeners = { ...config.eventListeners.cell }
 
   // Inject the cell details in each eventListener handler call as 2nd param.
@@ -197,6 +213,14 @@ const cellEventHandlers = computed(() => {
 
   // Store a potential onclick to combine w/ internal onclick, below.
   const externalOnClick = eventListeners.click
+
+  eventListeners.click = e => {
+    onCellClick({ start: props.start, end: props.end }, e)
+    externalOnClick?.(e)
+  }
+
+  eventListeners.touchstart = onCellTouchstart
+  eventListeners.mousedown = onCellMousedown
 
   eventListeners.click = e => {
     onCellClick({ start: props.start, end: props.end }, e)
@@ -212,6 +236,8 @@ const cellEventHandlers = computed(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+  user-select: none;
+  touch-action: none; // Prevents browser default touch handling.
 
   .vuecal__scrollable--days-view &,
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
