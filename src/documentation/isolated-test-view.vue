@@ -39,17 +39,17 @@ div.test-view
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
-    v-bind="mainVuecalConfig"
-    @event-click.stop="(e, event) => log('event-click', { e, event })"
-    @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
-    @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
-    @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
-    @event-contextmenu.prevent="(e, event) => log('event-contextmenu', { e, event })"
-    @cell-click="(e, cell) => log('cell-click', { e, cell })"
-    @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
-    @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
-    @cell-mouseover="(e, cell) => log('cell-mouseover', { e, cell })"
-    @cell-mouseout="(e, cell) => log('cell-mouseout', { e, cell })")
+    v-bind="mainVuecalConfig")
+    //- @event-click.stop="(e, event) => log('event-click', { e, event })"
+    //- @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
+    //- @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
+    //- @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
+    //- @event-contextmenu.prevent="(e, event) => log('event-contextmenu', { e, event })"
+    //- @cell-click="(e, cell) => log('cell-click', { e, cell })"
+    //- @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
+    //- @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
+    //- @cell-mouseover="(e, cell) => log('cell-mouseover', { e, cell })"
+    //- @cell-mouseout="(e, cell) => log('cell-mouseout', { e, cell })")
 
     //- template(#title="view") {{ view }}
     //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
@@ -118,8 +118,8 @@ const mainVuecalConfig = reactive({
   todayButton: ref(true),
   xs: computed(() => size.value === 'xs'),
   sm: computed(() => size.value === 'sm'),
-  timeFrom: 7 * 60,
-  timeTo: 20 * 60,
+  // timeFrom: 7 * 60,
+  // timeTo: 20 * 60,
   timeStep: 60,
   twelveHour: ref(false),
   hideWeekends: ref(false),

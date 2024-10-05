@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__cell(:class="classes" v-on="cellEventListeners")
+.vuecal__cell(ref="cellEl" :class="classes" v-on="cellEventListeners")
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
   template(v-else-if="config.daySplits")
@@ -36,6 +36,7 @@
       template(v-else)
         event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
 
+  .vuecal__event-placeholder(v-if="touch.dragging" :style="touch.newEventStyle")
   template(v-if="specialHours")
     .vuecal__special-hours(
       v-for="(range, i) in specialHours"
@@ -50,7 +51,7 @@
 </template>
 
 <script setup>
-import { computed, inject, reactive } from 'vue'
+import { computed, inject, reactive, ref } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import Event from './event.vue'
 
@@ -65,6 +66,24 @@ const props = defineProps({
 const vuecal = inject('vuecal')
 const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
+
+const cellEl = ref(null)
+const touch = reactive({
+  dragging: false,
+  startX: 0,
+  startY: 0,
+  moveX: 0,
+  moveY: 0,
+  startPercentageX: 0,
+  startPercentageY: 0,
+  movePercentageX: 0,
+  movePercentageY: 0,
+  newEventStyle: computed(() => ({
+    top: Math.min(touch.startPercentageY, touch.movePercentageY) + '%',
+    height: Math.abs(touch.movePercentageY - touch.startPercentageY) + '%'
+  }))
+})
+
 
 const classes = computed(() => {
   const now = new Date()
@@ -192,21 +211,40 @@ const onCellClick = () => {
   }
 }
 
-const trackMousemove = (touch = false) => {
-  document.addEventListener(touch ? 'touchmove' : 'mousemove', onDocMousemove)
-  document.addEventListener(touch ? 'touchend' : 'mouseup', onDocMouseup)
+const trackMousemove = e => {
+  const rect = cellEl.value.getBoundingClientRect()
+  touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
+  touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
+  touch.startPercentageX = touch.startX * 100 / rect.width
+  touch.startPercentageY = touch.startY * 100 / rect.height
+
+  document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
+  document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 }
 
 const onDocMousemove = e => {
-  console.log('🧥', 'mousemove', e.target, e)
+  touch.dragging = true
+  const rect = cellEl.value.getBoundingClientRect()
+  touch.moveX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
+  touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
+  touch.movePercentageX = touch.moveX * 100 / rect.width
+  touch.movePercentageY = touch.moveY * 100 / rect.height
 }
 
 const onDocMouseup = e => {
+  touch.dragging = false
+  touch.startX = 0
+  touch.startY = 0
+  touch.moveX = 0
+  touch.moveY = 0
+  touch.startPercentageX = 0
+  touch.startPercentageY = 0
+  touch.movePercentageX = 0
+  touch.movePercentageY = 0
+  touch.newEventStyle.value = {}
+
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
 }
-
-const onCellMousedown = () => trackMousemove()
-const onCellTouchstart = () => trackMousemove(true)
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
 const cellEventListeners = computed(() => {
@@ -225,8 +263,8 @@ const cellEventListeners = computed(() => {
     externalOnClick?.(e)
   }
 
-  eventListeners.touchstart = onCellTouchstart
-  eventListeners.mousedown = onCellMousedown
+  eventListeners.touchstart = trackMousemove
+  eventListeners.mousedown = trackMousemove
 
   return eventListeners
 })
@@ -295,5 +333,12 @@ const cellEventListeners = computed(() => {
 .vuecal__scrollable--day-view {
   .vuecal__cell--today:before,
   .vuecal__cell--selected:before {display: none;}
+}
+
+.vuecal__event-placeholder {
+  background-color: rgb(35, 181, 181);
+  position: absolute;
+  left: 0;
+  right: 0;
 }
 </style>
