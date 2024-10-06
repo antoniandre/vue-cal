@@ -319,6 +319,12 @@ export const useDateUtils = initTexts => {
     return `${(h < 10 ? '0' : '') + h}:${(m < 10 ? '0' : '') + m}`
   }
 
+  const formatMinutes = minutes => {
+    const h = Math.floor(minutes / 60).toString().padStart(2, 0)
+    const m = (minutes % 60).toString().padStart(2, 0)
+    return `${h}:${m}`
+  }
+
   const _nth = d => {
     if (d > 3 && d < 21) return 'th'
     switch (d % 10) {
@@ -423,6 +429,7 @@ export const useDateUtils = initTexts => {
     formatDate,
     formatDateLite,
     formatTime,
-    formatTimeLite
+    formatTimeLite,
+    formatMinutes
   }
 }

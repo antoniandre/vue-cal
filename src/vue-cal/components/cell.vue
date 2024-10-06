@@ -36,7 +36,8 @@
       template(v-else)
         event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
 
-  .vuecal__event-placeholder(v-if="touch.dragging" :style="touch.newEventStyle")
+  .vuecal__event-placeholder(v-if="touch.dragging" :style="eventPlaceholder.style")
+    | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
   template(v-if="specialHours")
     .vuecal__special-hours(
       v-for="(range, i) in specialHours"
@@ -77,13 +78,24 @@ const touch = reactive({
   startPercentageX: 0,
   startPercentageY: 0,
   movePercentageX: 0,
-  movePercentageY: 0,
-  newEventStyle: computed(() => ({
-    top: Math.min(touch.startPercentageY, touch.movePercentageY) + '%',
-    height: Math.abs(touch.movePercentageY - touch.startPercentageY) + '%'
-  }))
+  movePercentageY: 0
 })
 
+// While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
+// The calendar creation could be canceled for different wanted reasons at the end of dragging.
+const eventPlaceholder = computed(() => {
+  const startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
+  const endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
+
+  return {
+    style: {
+      top: startPercentage + '%',
+      height: Math.abs(endPercentage - startPercentage) + '%'
+    },
+    start: dateUtils.formatMinutes(percentageToMinutes(startPercentage)),
+    end: dateUtils.formatMinutes(percentageToMinutes(endPercentage))
+  }
+})
 
 const classes = computed(() => {
   const now = new Date()
@@ -103,6 +115,7 @@ const classes = computed(() => {
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
     'vuecal__cell--has-splits': config.daySplits,
+    'vuecal__cell--dragging': touch.dragging,
     'vuecal__cell--has-events': false
   }
 })
@@ -199,6 +212,16 @@ const minutesToPercentage = minutes => {
   return (minutes - config.timeFrom) * 100 / dayRangeMinutes
 }
 
+/**
+ * Converts percentage position to minutes in the day.
+ *
+ * @param {Number} percentage time in percentage
+ */
+ const percentageToMinutes = percentage => {
+  const dayRangeMinutes = config.timeTo - config.timeFrom
+  return ~~((percentage * dayRangeMinutes / 100) + config.timeFrom)
+}
+
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
   view.updateViewDate(props.start)
@@ -241,7 +264,6 @@ const onDocMouseup = e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
-  touch.newEventStyle.value = {}
 
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
 }
@@ -340,5 +362,8 @@ const cellEventListeners = computed(() => {
   position: absolute;
   left: 0;
   right: 0;
+  padding-left: 4px;
+  border-radius: 4px;
+  font-size: 11px;
 }
 </style>
