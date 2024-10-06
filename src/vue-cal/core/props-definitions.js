@@ -47,25 +47,24 @@ export const props = {
   // TODO NEXT:
   dblclickToNavigate: { type: Boolean, default: true },
   disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
-
-  // TODO:
   cellClickHold: { type: Boolean, default: true },
   dragToCreateEvent: { type: Boolean, default: true },
-  // Start a drag creation after dragging a certain amount of pixels.
-  // This prevents drag creation by mistake when you want to navigate.
   dragToCreateThreshold: { type: Number, default: 15 },
   editableEvents: { type: [Boolean, Object], default: false },
+  onEventCreate: { type: [Function, null], default: null },
+  showWeekNumbers: { type: [Boolean, String], default: false },
+  snapToTime: { type: Number, default: 0 },
+
+  // TODO:
+  // Start a drag creation after dragging a certain amount of pixels.
+  // This prevents drag creation by mistake when you want to navigate.
   eventsCountOnYearView: { type: Boolean, default: false },
   maxDate: { type: [String, Date], default: '' },
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
   minSplitWidth: { type: Number, default: 0 },
-  onEventCreate: { type: [Function, null], default: null },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
   showAllDayEvents: { type: [Boolean, String], default: false },
   showTimeInCells: { type: Boolean, default: false },
-  showWeekNumbers: { type: [Boolean, String], default: false },
-  snapToTime: { type: Number, default: 0 },
-  stickySplitLabels: { type: Boolean, default: false }
 }
