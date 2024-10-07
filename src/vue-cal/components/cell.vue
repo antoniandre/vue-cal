@@ -2,8 +2,13 @@
 .vuecal__cell(ref="cellEl" :class="classes" v-on="cellEventListeners")
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
+
   template(v-else-if="config.daySplits")
-    .vuecal__cell-split(v-for="(split, i) in config.daySplits" :key="i" :class="split.class")
+    .vuecal__cell-split(
+      v-for="(split, i) in config.daySplits"
+      :key="i"
+      :class="split.class"
+      :data-split="i + 1")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events" :start="start" :end="end" :events="cellEvents")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -19,6 +24,9 @@
           :events="cellEvents")
         template(v-else)
           event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
+      .vuecal__event-placeholder(v-if="touch.dragging && touch.split === i + 1" :style="eventPlaceholder.style")
+        | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
+
   template(v-else-if="!config.daySplits")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
@@ -35,15 +43,16 @@
         :events="cellEvents")
       template(v-else)
         event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
+    .vuecal__event-placeholder(v-if="touch.dragging" :style="eventPlaceholder.style")
+      | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  .vuecal__event-placeholder(v-if="touch.dragging" :style="eventPlaceholder.style")
-    | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
   template(v-if="specialHours")
     .vuecal__special-hours(
       v-for="(range, i) in specialHours"
       :style="range.style"
       :class="range.class"
       v-html="range.label || ''")
+
   .vuecal__now-line(
     v-if="nowLine.show"
     :style="nowLine.style"
@@ -69,6 +78,8 @@ const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const cellEl = ref(null)
+// The touch/mouse events listeners are always attached to the cell, but if the event.target is a split,
+// display the event placeholder in that split.
 const touch = reactive({
   dragging: false,
   startX: 0,
@@ -78,7 +89,8 @@ const touch = reactive({
   startPercentageX: 0,
   startPercentageY: 0,
   movePercentageX: 0,
-  movePercentageY: 0
+  movePercentageY: 0,
+  split: null
 })
 
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
@@ -217,7 +229,7 @@ const minutesToPercentage = minutes => {
  *
  * @param {Number} percentage time in percentage
  */
- const percentageToMinutes = percentage => {
+const percentageToMinutes = percentage => {
   const dayRangeMinutes = config.timeTo - config.timeFrom
   return ~~((percentage * dayRangeMinutes / 100) + config.timeFrom)
 }
@@ -235,6 +247,7 @@ const onCellClick = () => {
 }
 
 const trackMousemove = e => {
+  touch.split = ~~e.target.dataset.split
   const rect = cellEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
@@ -264,6 +277,7 @@ const onDocMouseup = e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
+  touch.split = null
 
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
 }

@@ -78,7 +78,6 @@ export const useEvents = vuecal => {
     return events
   }
 
-
   return {
     events,
     getEvent,
