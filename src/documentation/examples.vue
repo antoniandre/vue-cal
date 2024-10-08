@@ -1303,7 +1303,7 @@
             end: {Date}, // Event start + 2 hours.
             title: '',
             content: '',
-            split /* if any */: {Integer | String} // The current day split id that was clicked.
+            schedule /* if any */: {Integer | String} // The current day schedule id that was clicked.
         }
 
       p.
@@ -1483,8 +1483,8 @@
   h5 Dragging over a cell
   ul
     li.
-      If you drag an event over a cell or a split
-      (ref. #[a(href="#ex--splitting-days") splitting days]), the cell/split gets into a
+      If you drag an event over a cell or a day schedule
+      (ref. #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
       highlighted state, showing you where the event would go if you drop it.
     li.
       You can drop an event in any cell. But because it does not make much sense to drop it into a
@@ -1523,7 +1523,7 @@
         li #[span.code .vuecal__today-btn--highlighted]
         li #[span.code .vuecal__arrow--highlighted]
         li #[span.code .vuecal__cell--highlighted]
-        li #[span.code .vuecal__cell-split--highlighted]
+        li #[span.code .vuecal__cell-schedule--highlighted]
     li.
       You can change the style of the event being dragged through the
       #[span.code .vuecal__event--dragging] CSS class.
@@ -1544,7 +1544,7 @@
       :snap-to-time="15"
       editable-events
       :events="eventsToDrag"
-      :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
+      :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
@@ -1555,7 +1555,7 @@
       :snap-to-time="15"
       editable-events
       :events="events"
-      :split-days="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
+      :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
       class="vuecal--full-height-delete"&gt;
     &lt;/vue-cal&gt;
   ssh-pre(language="css" label="CSS" :dark="store.darkMode").
@@ -1944,7 +1944,7 @@
   p.
     Just add the property #[span.code background: true] to your events.#[br]
     The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
-    They are not affected by other events: they stay in the background occupying the whole cell/split width.#[br]
+    They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
     Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
     Refer to the #[span.code events] option in the #[a(href="#api") API] section.
   .example.my2.mxa
@@ -2092,49 +2092,49 @@
 
   //- Example.
   h4.title2
-    a(href="#ex--splitting-days") # Splitting days &amp; split events
-    a#ex--splitting-days(name="ex--splitting-days")
+    a(href="#ex--schedules") # schedules &amp; schedule events
+    a#ex--schedules(name="ex--schedules")
   .mb6
-    | Split each day into multiple containers passing a CSS class &amp; a label per split, and allow split-specific events.
+    | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
     br
     br
     | By default the body of the calendar will fit the container.#[br]
-    | But with the options #[span.code min-cell-width] or #[span.code min-split-width], you can increase the calendar
+    | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
     | body width and it will become scrollable horizontally.
     ul
       li #[span.code min-cell-width.black] will only be activated on week view, since there is only 1 cell in day view.
-      li If both #[span.code min-cell-width] and #[span.code min-split-width] are set, #[span.code min-split-width] will be used.
+      li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
 
-    | #[br]You can also use the option #[span.code sticky-split-labels] to place the split labels in the header.#[br]#[br]
+    | #[br]You can also use the option #[span.code sticky-schedule-labels] to place the schedule labels in the header.#[br]#[br]
 
-    | You can toggle the splits thanks to the #[span.code hide] property of each split in #[span.code splitDays].#[br]#[br]
+    | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
 
-    | Refer to the #[span.code min-cell-width.black], #[span.code min-split-width] and #[span.code splitDays] option in the #[a(href="#api") API] section.#[br]#[br]
+    | Refer to the #[span.code min-cell-width.black], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
 
     .w-flex.align-center.wrap
       w-button.px2.mr2.my1(
-        :outline="!splitsExample.minCellWidth"
-        @click="splitsExample.minCellWidth = splitsExample.minCellWidth ? 0 : 400")
-        w-icon.mr2 mdi mdi-{{ splitsExample.minCellWidth ? 'close' : 'plus' }}
-        | {{ splitsExample.minCellWidth ? `Min cell width: ${splitsExample.minCellWidth}px` : 'Add min cell width' }}
+        :outline="!schedulesExample.minCellWidth"
+        @click="schedulesExample.minCellWidth = schedulesExample.minCellWidth ? 0 : 400")
+        w-icon.mr2 mdi mdi-{{ schedulesExample.minCellWidth ? 'close' : 'plus' }}
+        | {{ schedulesExample.minCellWidth ? `Min cell width: ${schedulesExample.minCellWidth}px` : 'Add min cell width' }}
 
       w-button.px2.mr2.my1(
-        :outline="!splitsExample.minSplitWidth"
-        @click="splitsExample.minSplitWidth = splitsExample.minSplitWidth ? 0 : 200")
-        w-icon.mr2 mdi mdi-{{ splitsExample.minSplitWidth ? 'close' : 'plus' }}
-        | {{ splitsExample.minSplitWidth ? `Min split width: ${splitsExample.minSplitWidth}px` : 'Add min split width' }}
+        :outline="!schedulesExample.minScheduleWidth"
+        @click="schedulesExample.minScheduleWidth = schedulesExample.minScheduleWidth ? 0 : 200")
+        w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
+        | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
 
       w-button.px2.mr2.my1(
-        :outline="!splitsExample.stickySplitLabels"
-        @click="splitsExample.stickySplitLabels = !splitsExample.stickySplitLabels")
-        w-icon.mr2 mdi mdi-{{ splitsExample.stickySplitLabels ? 'close' : 'plus' }}
-        | Sticky Split Labels
+        :outline="!schedulesExample.stickyScheduleLabels"
+        @click="schedulesExample.stickyScheduleLabels = !schedulesExample.stickyScheduleLabels")
+        w-icon.mr2 mdi mdi-{{ schedulesExample.stickyScheduleLabels ? 'close' : 'plus' }}
+        | Sticky Schedule Labels
 
       w-button.px2.my1(
-        :outline="splitsExample.splitDays[1].hide"
-        @click="splitsExample.splitDays[1].hide = !splitsExample.splitDays[1].hide")
-        w-icon.mr2 mdi mdi-{{ splitsExample.splitDays[1].hide ? 'plus' : 'close' }}
-        | {{ splitsExample.splitDays[1].hide ? 'Show' : 'Hide' }} Dad
+        :outline="schedulesExample.schedules[1].hide"
+        @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
+        w-icon.mr2 mdi mdi-{{ schedulesExample.schedules[1].hide ? 'plus' : 'close' }}
+        | {{ schedulesExample.schedules[1].hide ? 'Show' : 'Hide' }} Dad
 
   .example.grow.my2(style="height: 600px")
     vue-cal.vuecal--default-theme(
@@ -2144,22 +2144,22 @@
       :time-step="30"
       :disable-views="['years', 'year']"
       editable-events
-      :events="splitEvents"
-      :split-days="splitsExample.splitDays"
-      :sticky-split-labels="splitsExample.stickySplitLabels"
-      :min-cell-width="splitsExample.minCellWidth"
-      :min-split-width="splitsExample.minSplitWidth")
+      :events="scheduleEvents"
+      :schedules="schedulesExample.schedules"
+      :sticky-schedule-labels="schedulesExample.stickyScheduleLabels"
+      :min-cell-width="schedulesExample.minCellWidth"
+      :min-schedule-width="schedulesExample.minScheduleWidth")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
     &lt;/button&gt;
-    &lt;button @click="minSplitWidth = minSplitWidth ? 0 : 200"&gt;
-      {{ '\{\{ minSplitWidth ? \'min split width: 200px\' : \'Add min split width\' \}\}' }}
+    &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
+      {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
     &lt;/button&gt;
-    &lt;button @click="stickySplitLabels = !stickySplitLabels"&gt;
-      Sticky Split Labels
+    &lt;button @click="stickyScheduleLabels = !stickyScheduleLabels"&gt;
+      Sticky Schedule Labels
     &lt;/button&gt;
-    &lt;button @click="splitDays[1].hide = !splitDays[1].hide"&gt;
+    &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
       Show/Hide Dad
     &lt;/button&gt;
 
@@ -2170,20 +2170,20 @@
       :disable-views="['years', 'year', 'month']"
       editable-events
       :events="events"
-      :split-days="splitDays"
-      :sticky-split-labels="stickySplitLabels"
+      :schedules="schedules"
+      :sticky-schedule-labels="stickyScheduleLabels"
       :min-cell-width="minCellWidth"
-      :min-split-width="minSplitWidth"&gt;
+      :min-schedule-width="minScheduleWidth"&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     data: () => ({
-      stickySplitLabels: false,
+      stickyScheduleLabels: false,
       minCellWidth: 400,
-      minSplitWidth: 0,
-      splitDays: [
+      minScheduleWidth: 0,
+      schedules: [
         // The id property is added automatically if none (starting from 1), but you can set a custom one.
-        // If you need to toggle the splits, you must set the id explicitly.
+        // If you need to toggle the schedules, you must set the id explicitly.
         { id: 1, class: 'mom', label: 'Mom' },
         { id: 2, class: 'dad', label: 'Dad', hide: false },
         { id: 3, class: 'kid1', label: 'Kid 1' },
@@ -2197,7 +2197,7 @@
           title: 'Doctor appointment',
           content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health',
-          split: 1 // Has to match the id of the split you have set (or integers if none).
+          schedule: 1 // Has to match the id of the schedule you have set (or integers if none).
         },
         {
           start: '2018-11-19 18:30',
@@ -2205,7 +2205,7 @@
           title: 'Dentist appointment',
           content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health',
-          split: 2
+          schedule: 2
         },
         {
           start: '2018-11-20 18:30',
@@ -2213,20 +2213,20 @@
           title: 'Crossfit',
           content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
           class: 'sport',
-          split: 1
+          schedule: 1
         },
         ...
       ]
     })
 
   ssh-pre(language="css" label="CSS" :dark="store.darkMode").
-    /* You can easily set a different style for each split of your days. */
-    .vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
-    .vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
-    .vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-    .vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-    .vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-    .vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
+    /* You can easily set a different style for each schedule of your days. */
+    .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+    .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+    .vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+    .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+    .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+    .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
     /* Different color for different event types. */
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
@@ -2267,8 +2267,8 @@
         was focused from tab key.
         It would then return the cell start date (at midnight).
       li.
-        If split-days is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
-        and #[span.code cell-focus] emitted events will return an object containing the date and the clicked split id.
+        If schedules is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
+        and #[span.code cell-focus] emitted events will return an object containing the date and the clicked schedule id.
 
   highlight-message
     | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
@@ -2330,8 +2330,8 @@
         li #[span.code event], the calendar event object that was dropped
         li #[span.code oldDate], the Javascript Date the event was starting from before drag
         li #[span.code newDate], the Javascript Date the event is now starting from
-        li #[span.code oldSplit] only if splitting days, the id of the split the event came from
-        li #[span.code newSplit] only if splitting days, the id of the split the event is dropped into
+        li #[span.code oldSchedule] only if schedules, the id of the schedule the event came from
+        li #[span.code newSchedule] only if schedules, the id of the schedule the event is dropped into
     li.mt3 #[code.mr1 event-change] - returns an object containing:
       ul
         li #[span.code event], the calendar event object that was changed
@@ -2658,7 +2658,7 @@
       li #[span.code arrow-next]
       li #[span.code today-button]
       li #[span.code weekday-heading]
-      li #[span.code split-label]
+      li #[span.code schedule-label]
       li #[span.code time-cell]
       li #[span.code week-number-cell]
       li #[span.code cell-content]
@@ -2877,7 +2877,7 @@
   p.ml2.mb2.
     In this example, only the cell number is clickable on month view.#[br]
     5 arguments are available through the scoped slot:#[br]
-    #[span.code #cell-content="{ cell, view, split, events, goNarrower }"]
+    #[span.code #cell-content="{ cell, view, schedule, events, goNarrower }"]
   ul
     li #[span.code cell], object containing the cell date.
       ssh-pre(language="js" :dark="store.darkMode").mt2.mb2.
@@ -2896,8 +2896,8 @@
           end: {Date}, // JavaScript Date object.
           selectedDate: {Date} // JavaScript Date object.
         }
-    li #[span.code split], when splitting days, object containing the current split info.
-    li #[span.code events], array containing all the events of the current cell or split.
+    li #[span.code schedule], when schedules, object containing the current schedule info.
+    li #[span.code events], array containing all the events of the current cell or schedule.
     li #[span.code goNarrower], function to navigate to narrower view if possible.
   highlight-message.my3(type="info")
     | By default a cell is rendered as follows.#[br]
@@ -2907,8 +2907,8 @@
     ssh-pre.my2.ml5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)" :dark="store.darkMode").
       Now this is the part you can customize:
 
-      &lt;!-- Will be added if splitting days and split labels are set --&gt;
-      &lt;div class="split-label" /&gt;
+      &lt;!-- Will be added if schedules and schedule labels are set --&gt;
+      &lt;div class="schedule-label" /&gt;
       &lt;!-- Will be added on years, year &amp; month view --&gt;
       &lt;div class="vuecal__cell-date" /&gt;
       &lt;!-- Will be added on month view --&gt;
@@ -3077,51 +3077,51 @@
 
   //- Example.
   h4.title2
-    a(href="#ex--custom-day-split-labels") # Custom day split labels
-    a#ex--custom-day-split-labels(name="ex--custom-day-split-labels")
-  p.mb6 You can provide a custom split label when a simple label is not enough.
+    a(href="#ex--custom-schedule-labels") # Custom day schedule labels
+    a#ex--custom-schedule-labels(name="ex--custom-schedule-labels")
+  p.mb6 You can provide a custom schedule label when a simple label is not enough.
 
   .example.my2.mxa(style="height: 250px")
-    vue-cal.ex--custom-day-split-labels.vuecal--default-theme(
+    vue-cal.ex--custom-schedule-labels.vuecal--default-theme(
       :dark="store.darkMode"
       :disable-views="['years', 'year', 'month']"
       active-view="day"
-      :split-days="customDaySplitLabels"
+      :schedules="customDayScheduleLabels"
       :hide-weekdays="[5, 6, 7]"
-      sticky-split-labels)
+      sticky-schedule-labels)
       template(#no-event) &nbsp;
-      template(#split-label="{ split, view }")
-        w-icon(:color="split.color" size="18") mdi mdi-account
-        strong(:style="`color: ${split.color}`") {{ split.label }}
+      template(#schedule-label="{ schedule, view }")
+        w-icon(:color="schedule.color" size="18") mdi mdi-account
+        strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
 
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :disable-views="['years', 'year', 'month']"
       active-view="day"
-      :split-days="daySplits"
+      :schedules="schedules"
       :hide-weekdays="[5, 6, 7]"
-      sticky-split-labels&gt;
-      &lt;template #split-label="{ split, view }"&gt;
+      sticky-schedule-labels&gt;
+      &lt;template #schedule-label="{ schedule, view }"&gt;
         &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
-        &lt;strong :style="`color: ${split.color}`"&gt;{{ '\{\{ split.label \}\}' }}&lt;/strong&gt;
+        &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     // In data.
-    customDaySplitLabels: [
-      { label: 'John', color: 'blue', class: 'split1' },
-      { label: 'Tom', color: 'green', class: 'split2' },
-      { label: 'Kate', color: 'orange', class: 'split3' },
-      { label: 'Jess', color: 'red', class: 'split4' }
+    customDayScheduleLabels: [
+      { label: 'John', color: 'blue', class: 'schedule1' },
+      { label: 'Tom', color: 'green', class: 'schedule2' },
+      { label: 'Kate', color: 'orange', class: 'schedule3' },
+      { label: 'Jess', color: 'red', class: 'schedule4' }
     ]
 
   ssh-pre(language="css" label="CSS" :dark="store.darkMode").
-    .vuecal .day-split-header {font-size: 11px;}
-    .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
-    .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
-    .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
-    .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
+    .vuecal .schedule-header {font-size: 11px;}
+    .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
+    .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
+    .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
+    .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
     .vuecal__no-event {display: none;}
 
   w-dialog(v-model="showDialog" width="600" dialog-class="bdrs2" title-class="primary--bg white py2")
@@ -3187,7 +3187,7 @@ const events = [
     title: 'Doctor appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-16 10:30',
@@ -3195,7 +3195,7 @@ const events = [
     title: 'Doctor appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-19 10:35',
@@ -3203,7 +3203,7 @@ const events = [
     title: 'Doctor appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-19 18:30',
@@ -3211,7 +3211,7 @@ const events = [
     title: 'Dentist appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 2
+    schedule: 2
   },
   {
     start: '2018-11-20 18:30',
@@ -3219,7 +3219,7 @@ const events = [
     title: 'Crossfit',
     content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
-    split: 2
+    schedule: 2
   },
   {
     start: '2018-11-21 11:00',
@@ -3227,7 +3227,7 @@ const events = [
     title: 'Brunch with Jane',
     content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
     class: 'leisure',
-    split: 1,
+    schedule: 1,
     background: false
   },
   {
@@ -3236,7 +3236,7 @@ const events = [
     title: 'Swimming lesson',
     content: '<i class="w-icon mdi mdi-pool"></i>',
     class: 'sport',
-    split: 2
+    schedule: 2
   },
   {
     start: '2018-11-23 12:30',
@@ -3244,7 +3244,7 @@ const events = [
     title: 'Macca\'s with Mark',
     content: '<i class="w-icon mdi mdi-food"></i>',
     class: 'leisure',
-    split: 2
+    schedule: 2
   },
   {
     start: '2018-11-23 21:00',
@@ -3252,7 +3252,7 @@ const events = [
     title: 'Movie time',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-30 21:00',
@@ -3260,7 +3260,7 @@ const events = [
     title: 'Another movie tonight',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
-    split: 1
+    schedule: 1
   }
 ]
 
@@ -3270,11 +3270,11 @@ const props = defineProps({
 
 const vuecalEl = ref(null)
 const locale = ref('zh-cn')
-const splitsExample = ref({
+const schedulesExample = ref({
   minCellWidth: 400,
-  minSplitWidth: 0,
-  stickySplitLabels: false,
-  splitDays: [
+  minScheduleWidth: 0,
+  stickyScheduleLabels: false,
+  schedules: [
     { id: 1, class: 'mom', label: 'Mom' },
     { id: 2, class: 'dad', label: 'Dad', hide: false },
     { id: 3, class: 'kid1', label: 'Kid 1' },
@@ -3306,11 +3306,11 @@ const logMouseEvents = ref(false)
 const snapToTime15 = ref(false)
 const dragToCreateThreshold = ref(15)
 const dragToCreateThresholdOpts = ref([{ label: '0' }, { label: '15' }])
-const customDaySplitLabels = [
-  { label: 'John', color: 'blue', class: 'split1' },
-  { label: 'Tom', color: 'green', class: 'split2' },
-  { label: 'Kate', color: 'orange', class: 'split3' },
-  { label: 'Jess', color: 'red', class: 'split4' }
+const customDayScheduleLabels = [
+  { label: 'John', color: 'blue', class: 'schedule1' },
+  { label: 'Tom', color: 'green', class: 'schedule2' },
+  { label: 'Kate', color: 'orange', class: 'schedule3' },
+  { label: 'Jess', color: 'red', class: 'schedule4' }
 ]
 const editableEvents = [
   ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
@@ -3441,7 +3441,7 @@ const allDayEvents = [
     title: 'Doctor appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 1
+    schedule: 1
   },
   {
     start: '2019-02-11 18:30',
@@ -3449,7 +3449,7 @@ const allDayEvents = [
     title: 'Dentist appointment',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
-    split: 2
+    schedule: 2
   },
   {
     start: '2019-02-12 18:30',
@@ -3457,7 +3457,7 @@ const allDayEvents = [
     title: 'Crossfit',
     content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
-    split: 1
+    schedule: 1
   },
   {
     start: '2019-02-13 11:00',
@@ -3465,7 +3465,7 @@ const allDayEvents = [
     title: 'Brunch with Jane',
     content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
     class: 'leisure',
-    split: 1
+    schedule: 1
   },
   {
     start: '2019-02-13 19:30',
@@ -3473,7 +3473,7 @@ const allDayEvents = [
     title: 'Swimming lesson',
     content: '<i class="w-icon mdi mdi-pool"></i>',
     class: 'sport',
-    split: 2
+    schedule: 2
   },
   {
     start: '2019-02-15 12:30',
@@ -3481,7 +3481,7 @@ const allDayEvents = [
     title: 'Macca\'s with Mark',
     content: '<i class="w-icon mdi mdi-food"></i>',
     class: 'leisure',
-    split: 2
+    schedule: 2
   },
   {
     start: '2019-02-15 21:00',
@@ -3489,10 +3489,10 @@ const allDayEvents = [
     title: 'Movie time',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
-    split: 1
+    schedule: 1
   }
 ]
-const splitEvents = [
+const scheduleEvents = [
   ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
   {
     start: '2018-11-21 12:00',
@@ -3500,7 +3500,7 @@ const splitEvents = [
     title: 'Recall Dave',
     content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
     class: 'leisure',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-21 20:00',
@@ -3508,7 +3508,7 @@ const splitEvents = [
     title: 'Salsa',
     content: '<i class="w-icon mdi mdi-walk"></i>',
     class: 'sport',
-    split: 1
+    schedule: 1
   },
   {
     start: '2018-11-23 21:00',
@@ -3516,7 +3516,7 @@ const splitEvents = [
     title: 'Movie time',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
-    split: 2
+    schedule: 2
   }
 ]
 const backgroundEvents = [
@@ -3594,7 +3594,7 @@ const eventsToDrag = [
     title: 'Surgery',
     content: '<i class="w-icon mdi silverware-fork-knife"></i>',
     class: 'health',
-    split: 2
+    schedule: 2
   }
 ]
 const eventsToPop = [

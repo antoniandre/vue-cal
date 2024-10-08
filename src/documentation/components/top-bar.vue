@@ -141,7 +141,7 @@ const examples = [
   { href: '#ex--overlapping-events', label: 'Overlapping events' },
   { href: '#ex--background-events', label: 'Background events' },
   { href: '#ex--all-day-events', label: 'All day events' },
-  { href: '#ex--splitting-days', label: 'Splitting days' },
+  { href: '#ex--schedules', label: 'Day schedules' },
 
   { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
   { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
@@ -155,7 +155,7 @@ const examples = [
   { href: '#ex--custom-events-count', label: 'Custom events count' },
   { href: '#ex--custom-title-and-cells', label: 'Custom title &amp; cells' },
   { href: '#ex--custom-event-rendering', label: 'Custom event rendering' },
-  { href: '#ex--custom-day-split-labels', label: 'Custom day split labels' }
+  { href: '#ex--custom-schedules', label: 'Custom day schedules' }
 
   // w-tag.ml2(color="primary" outline) NEW
   // w-tag.ml2(color="blue" outline) UPDATED

@@ -26,15 +26,14 @@
         :selected-date="selectedDate"
         :time-from="8 * 60"
         :time-to="19 * 60"
-        :split-days="demoExample.splits"
-        sticky-split-labels
+        :schedules="demoExample.schedules"
         :editable-events="demoExample.editable"
         :events="demoExample.events"
         @cell-focus="selectedDate = $event.date || $event"
         style="height: 450px")
-        template(#split-label="{ split, view }")
-          w-icon(:color="split.color" size="20") mdi mdi-account
-          strong(:style="`color: ${split.color}`") {{ split.label }}
+        template(#schedule-label="{ schedule, view }")
+          w-icon(:color="schedule.color" size="20") mdi mdi-account
+          strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
       a.mt4.w-flex.justify-end.grey-light1(
         href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/main-demo.vue"
         target="_blank")
@@ -47,7 +46,7 @@ import { computed, ref } from 'vue'
 import { VueCal } from '@/vue-cal'
 
 const demoExample = ref({
-  splits: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
+  schedules: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
   editable: { title: false, drag: true, resize: true, create: true, delete: true },
   events: []
 })
@@ -71,7 +70,7 @@ for (let i = 0; i < 5; i++) {
       background: true,
       deletable: false,
       resizable: false,
-      split: 1
+      schedule: 1
     },
     {
       start: `${day} 12:00`,
@@ -81,7 +80,7 @@ for (let i = 0; i < 5; i++) {
       background: true,
       deletable: false,
       resizable: false,
-      split: 2
+      schedule: 2
     }
   )
 }
@@ -99,7 +98,7 @@ demoExample.value.events.push(
     title: 'Tennis',
     content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
     resizable: false,
-    split: 1
+    schedule: 1
   },
   {
     start: `${monday} 15:30`,
@@ -107,7 +106,7 @@ demoExample.value.events.push(
     title: 'Tennis',
     content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
     resizable: false,
-    split: 2
+    schedule: 2
   },
   {
     start: `${tuesday} 08:00`,
@@ -115,7 +114,7 @@ demoExample.value.events.push(
     title: 'Volleyball',
     content: '<i class="w-icon mdi mdi-volleyball mt1"></i>',
     resizable: false,
-    split: 2
+    schedule: 2
   },
   {
     start: `${thursday} 09:00`,
@@ -123,7 +122,7 @@ demoExample.value.events.push(
     title: 'Golf',
     content: '<i class="w-icon mdi mdi-golf mt2"></i>',
     resizable: false,
-    split: 1
+    schedule: 1
   },
   {
     start: `${friday} 16:45`,
@@ -131,7 +130,7 @@ demoExample.value.events.push(
     title: 'Movie',
     content: '<i class="w-icon mdi mdi-ticket mt1"></i>',
     resizable: false,
-    split: 2
+    schedule: 2
   }
 )
 </script>
@@ -225,6 +224,6 @@ $kate: #ff7fc8;
 // Media queries.
 // --------------------------------------------------------
 @media screen and (max-width: 499px) {
-  .main-demo .day-split-header strong {display: none;}
+  .main-demo .schedule-header strong {display: none;}
 }
 </style>

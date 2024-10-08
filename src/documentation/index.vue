@@ -21,7 +21,7 @@
           small
             | For performance, simplified logic, readability, structure &amp; maintenance of your own code,
             | what can be done via CSS should be done via CSS. CSS classes will help you style your events,
-            | cells, splits, etc.#[br]
+            | cells, schedules, etc.#[br]
             | Vue Cal provides the minimum needed CSS styles, not the nicest one: that makes it highly
             | customizable for all the scenarii and a breeze to override.#[br]
             strong You most likely don't need the #[code !important] flag.
@@ -74,7 +74,7 @@
         todo-list-item Add timeline
         todo-list-item time format 12/24 h
         todo-list-item Support for i18n
-        todo-list-item Split days
+        todo-list-item Day schedules
         todo-list-item Support events
         todo-list-item Background events
         todo-list-item Overlap events
@@ -105,7 +105,6 @@
         todo-list-item Today button
         todo-list-item Externalize locales
         todo-list-item Support more simultaneous events
-        todo-list-item Sticky day splits labels
         todo-list-item Hide particular weekdays
         todo-list-item Optional week number
         todo-list-item Date prototypes
@@ -295,8 +294,8 @@
     .vuecal:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(235, 255, 245, 0.4);}
     .vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
     /* Cells and buttons get highlighted when an event is dragged over it. */
-    .vuecal__cell--highlighted:not(.vuecal__cell--has-splits),
-    .vuecal__cell-split--highlighted {background-color: rgba(195, 255, 225, 0.5);}
+    .vuecal__cell--highlighted:not(.vuecal__cell--has-schedules),
+    .vuecal__cell-schedule--highlighted {background-color: rgba(195, 255, 225, 0.5);}
     .vuecal__arrow.vuecal__arrow--highlighted,
     .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
 

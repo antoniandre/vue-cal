@@ -7,7 +7,7 @@ div.test-view
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
     w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.daySplits") Day Splits
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
 
     w-input(v-model="mainVuecalConfig.viewDayOffset" type="number") View Day Offset
 
@@ -129,9 +129,9 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  daySplits: ref(false),
-  splitDays: computed(() => {
-    return mainVuecalConfig.daySplits ? [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }] : undefined
+  showSchedules: ref(false),
+  schedules: computed(() => {
+    return mainVuecalConfig.showSchedules ? [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }] : undefined
   }),
   eventsOnMonthView: true,
   specialHours: {
@@ -168,19 +168,19 @@ const log = (...args) => console.log(...args)
 //     end: new Date(new Date(now).setHours(4, 0, 0)),
 //     allDay: true,
 //     title: 'Event 1',
-//     split: 2
+//     schedule: 2
 //   },
 //   {
 //     start: new Date(new Date(now).setHours(1, 0, 0)),
 //     end: new Date(new Date(now).setHours(4, 0, 0)),
 //     title: 'Event 2',
-//     split: 1
+//     schedule: 1
 //   },
 //   {
 //     start: new Date(new Date(now).setHours(3, 0, 0)),
 //     end: new Date(new Date(now).setHours(5, 0, 0)),
 //     title: 'Event 3',
-//     split: 2
+//     schedule: 2
 //   }
 // ]
 </script>
@@ -234,7 +234,7 @@ const log = (...args) => console.log(...args)
   }
 }
 
-.vuecal__cell-split {
+.vuecal__cell-schedule {
   &.dr-1 {background-color: rgba(134, 192, 253, 0.1);}
   &.dr-2 {background-color: rgba(187, 148, 255, 0.15);}
   .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}

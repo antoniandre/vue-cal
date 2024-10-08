@@ -127,9 +127,9 @@ export const useConfig = (vuecal, props, attrs) => {
     else return Object.keys(availableViews.value)[0]
   })
 
-  const daySplits = computed(() => {
+  const schedules = computed(() => {
     const { view } = vuecal
-    return (props.splitDays.length && (view.isDay || view.isDays || view.isWeek) && props.splitDays)
+    return (props.schedules.length && (view.isDay || view.isDays || view.isWeek) && props.schedules)
   })
 
   /**
@@ -198,7 +198,7 @@ export const useConfig = (vuecal, props, attrs) => {
     clickToNavigate,
     hideWeekdays,
     hideWeekends,
-    daySplits,
+    schedules,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },

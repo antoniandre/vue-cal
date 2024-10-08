@@ -3,12 +3,12 @@
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
 
-  template(v-else-if="config.daySplits")
-    .vuecal__cell-split(
-      v-for="(split, i) in config.daySplits"
+  template(v-else-if="config.schedules")
+    .vuecal__cell-schedule(
+      v-for="(schedule, i) in config.schedules"
       :key="i"
-      :class="split.class"
-      :data-split="i + 1")
+      :class="schedule.class"
+      :data-schedule="i + 1")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events" :start="start" :end="end" :events="cellEvents")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -24,10 +24,10 @@
           :events="cellEvents")
         template(v-else)
           event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
-      .vuecal__event-placeholder(v-if="touch.dragging && touch.split === i + 1" :style="eventPlaceholder.style")
+      .vuecal__event-placeholder(v-if="touch.dragging && touch.schedule === i + 1" :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  template(v-else-if="!config.daySplits")
+  template(v-else-if="!config.schedules")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -79,8 +79,8 @@ const isToday = computed(() => dateUtils.isToday(props.start))
 
 const cellEl = ref(null)
 
-// The touch/mouse events listeners are always attached to the cell, but if the event.target is a split,
-// display the event placeholder in that split.
+// The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
+// display the event placeholder in that schedule.
 const touch = reactive({
   dragging: false,
   startX: 0,
@@ -91,7 +91,7 @@ const touch = reactive({
   startPercentageY: 0,
   movePercentageX: 0,
   movePercentageY: 0,
-  split: null
+  schedule: null
 })
 
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
@@ -111,7 +111,7 @@ const eventPlaceholder = computed(() => {
     endMinutes,
     start: dateUtils.formatMinutes(startMinutes),
     end: dateUtils.formatMinutes(endMinutes),
-    ...(touch.split ? { split: touch.split } : {})
+    ...(touch.schedule ? { schedule: touch.schedule } : {})
   }
 })
 
@@ -132,7 +132,7 @@ const classes = computed(() => {
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
-    'vuecal__cell--has-splits': config.daySplits,
+    'vuecal__cell--has-schedules': config.schedules?.length,
     'vuecal__cell--dragging': touch.dragging,
     'vuecal__cell--has-events': false
   }
@@ -253,7 +253,7 @@ const onCellClick = () => {
 }
 
 const trackMousemove = e => {
-  touch.split = ~~e.target.dataset.split
+  touch.schedule = ~~e.target.dataset.schedule
   const rect = cellEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
@@ -274,14 +274,14 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = e => {
-  let { start, end, startMinutes, endMinutes, style, split } = eventPlaceholder.value
+  let { start, end, startMinutes, endMinutes, style, schedule } = eventPlaceholder.value
   start = new Date(props.start)
   start.setMinutes(startMinutes)
   end = new Date(props.start)
   end.setMinutes(endMinutes)
 
   const eventToEmit = { start, end, style }
-  if (config.daySplits) eventToEmit.split = split
+  if (config.schedules) eventToEmit.schedule = schedule
   vuecal.emit('event-create', e, eventToEmit)
 
   touch.dragging = false
@@ -293,7 +293,7 @@ const onDocMouseup = e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
-  touch.split = null
+  touch.schedule = null
 
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
 }
@@ -343,7 +343,7 @@ const cellEventListeners = computed(() => {
   .vuecal__scrollable--days-view &,
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
 
-  &--has-splits {align-items: stretch;}
+  &--has-schedules {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
 }
 
@@ -355,7 +355,7 @@ const cellEventListeners = computed(() => {
   align-items: center;
   left: 0;
   right: 0;
-  z-index: -1; // Under the day splits if enabled.
+  z-index: -1; // Under the day schedules if enabled.
 }
 
 .vuecal__now-line {

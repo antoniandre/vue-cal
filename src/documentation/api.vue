@@ -36,7 +36,7 @@ div
     minCellWidth:           [Number],          default: 0 // In pixels.
     minDate:                [String, Date],    default: ''
     minEventWidth:          [Number],          default: 0 // In percent.
-    minSplitWidth:          [Number],          default: 0 // In pixels.
+    minScheduleWidth:       [Number],          default: 0 // In pixels.
     onEventClick:           [Function],        default: null
     onEventCreate:          [Function],        default: null
     onEventDblclick:        [Function],        default: null
@@ -49,9 +49,8 @@ div
     small:                  [Boolean],         default: false
     snapToTime:             [Number],          default: null
     specialHours:           [Object],          default: {}
-    splitDays:              [Array],           default: []
+    schedules:              [Array],           default: []
     startWeekOnSunday:      [Boolean],         default: false
-    stickySplitLabels:      [Boolean],         default: false
     time:                   [Boolean],         default: true
     timeCellHeight:         [Number],          default: 40 // In pixels.
     timeFormat:             [String],          default: ''
@@ -187,7 +186,7 @@ div
       span.code [String, Number], default: '25px'
       p.
         When the all day bar is visible and Vue Cal is also scrollable horizontally (due to
-        #[span.code minCellWidth] or day splits with #[span.code minSplitWidth]),
+        #[span.code minCellWidth] or day schedules with #[span.code minScheduleWidth]),
         the all-day bar must have a fixed height for this particular layout.#[br]
         Only if these conditions are fulfilled, the height provided through this option will be
         used. If none is provided the default height will be used.#[br]
@@ -447,24 +446,24 @@ div
         When a number is set, in pixels, each cell #[strong of the #[span.code week] view (only)]
         will have this minimum width.#[br]
         If it does not fit in the calendar body, the overflow will be scrollable.
-        If #[span.code minSplitWidth] is also set, it will override #[span.code minCellWidth].
+        If #[span.code minScheduleWidth] is also set, it will override #[span.code minCellWidth].
     li
-      code.mr2 minSplitWidth
+      code.mr2 minScheduleWidth
       span.code [Number], default: 0
       p.
-        This is for day splits only, and it applies to the
+        This is for day schedules only, and it applies to the
         #[strong #[span.code week] and #[span.code day] views (only)].#[br]
-        When a number is set, in pixels, each split of each cell will have this minimum width.#[br]
+        When a number is set, in pixels, each schedule of each cell will have this minimum width.#[br]
         If it does not fit in the calendar body, the overflow will be scrollable.#[br]
-        If #[span.code minCellWidth] is also set, #[span.code minSplitWidth] will override it on
+        If #[span.code minCellWidth] is also set, #[span.code minScheduleWidth] will override it on
         #[span.code week] view.
     li
-      code.mr2 splitDays
+      code.mr2 schedules
       span.code [Array], default: []
       p
-        | Split each day into multiple vertical splits.#[br]
-        | Accepts an array of split objects with attributes.#[br]
-        | Each split object can have these attributes, they are all optional:
+        | Split each day into multiple vertical schedules.#[br]
+        | Accepts an array of schedule objects with attributes.#[br]
+        | Each schedule object can have these attributes, they are all optional:
         ssh-pre(language="js" :dark="store.darkMode").
           {
             id: {Integer | String}, // All ids must be set if using `hide`.
@@ -472,12 +471,6 @@ div
             label: {String},
             hide: {Boolean} // You can toggle the column on and of with this.
           }
-    li
-      code.mr2 stickySplitLabels
-      span.code [Boolean], default: false
-      p.
-        When set to #[span.code true], the day splits labels will be displayed in the header
-        instead of in-cell.
     li
       code.mr2 editableEvents
       span.code [Boolean, Object], default: false
@@ -564,7 +557,7 @@ div
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
             background: {Boolean} // Optional. (Event type not CSS property)
-            split: {Number|String} // Optional.
+            schedule: {Number|String} // Optional.
             allDay: {Boolean} // Optional.
             deletable: false // optional - force undeletable when events are editable.
             resizable: false // optional - force unresizable when events are editable.
@@ -583,9 +576,9 @@ div
             The #[span.code background] attribute sets an event as a background event,
             which allows overlapping and disable the ability to drag &amp; resize.
           li.
-            When using #[span.code splitDays], the #[span.code split] attribute accepts a number,
-            starting from 1, corresponding to the split you want the event to appear in.#[br]
-            Optionally, if you have set the #[span.code id] property in #[span.code splitDays],
+            When using #[span.code schedules], the #[span.code schedule] attribute accepts a number,
+            starting from 1, corresponding to the schedule you want the event to appear in.#[br]
+            Optionally, if you have set the #[span.code id] property in #[span.code schedules],
             you have to use the same #[span.code id] here (Integer or String).
           li.
             When the #[span.code showAllDayEvents] and #[span.code time] options are set to

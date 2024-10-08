@@ -27,12 +27,12 @@
               slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
           .w-flex.column.grow
             WeekdaysBar
-            .vuecal__cell-splits(v-if="config.daySplits && view.isDay")
-              .vuecal__cell-split.vuecal__cell-split--label(
-                v-for="(split, i) in config.daySplits"
+            .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
+              .vuecal__cell-schedule.vuecal__cell-schedule--label(
+                v-for="(schedule, i) in config.schedules"
                 :key="i"
-                :class="split.class"
-                v-html="split.label")
+                :class="schedule.class"
+                v-html="schedule.label")
 
             VueCalBody
               template(v-if="$slots.cell" #cell="{ start, end, index, events }")
@@ -76,7 +76,7 @@ const wrapperClasses = computed(() => ({
   'vuecal--light': !config.dark,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value,
-  'vuecal--has-splits': config.daySplits
+  'vuecal--has-schedules': config.schedules
 }))
 
 const wrapperStyles = computed(() => ({
@@ -109,9 +109,9 @@ provide('vuecal', vuecal)
   user-select: none;
 
   &--date-picker {--vuecal-weekdays-bar-height: 1.3rem;}
-  &--has-splits {--vuecal-weekdays-bar-height: 2.2rem;}
+  &--has-schedules {--vuecal-weekdays-bar-height: 2.2rem;}
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-splits .vuecal__scrollable--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
+  &--has-schedules .vuecal__scrollable--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
 
   &, *, :before, :after {box-sizing: border-box;}
 
@@ -135,8 +135,8 @@ provide('vuecal', vuecal)
   .grow {flex-grow: 1;}
 
   // Shared in headers and cells.
-  &__cell-splits {display: flex;}
-  &__cell-split {
+  &__cell-schedules {display: flex;}
+  &__cell-schedule {
     position: relative;
     display: flex;
     flex-grow: 1;
@@ -145,12 +145,12 @@ provide('vuecal', vuecal)
     overflow: hidden;
     white-space: nowrap;
   }
-  &__cell-split--label {
+  &__cell-schedule--label {
     font-size: 12px;
     align-items: center;
   }
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-splits .vuecal__scrollable--day-view &__cell-split--label {height: var(--vuecal-weekdays-bar-height);}
+  &--has-schedules .vuecal__scrollable--day-view &__cell-schedule--label {height: var(--vuecal-weekdays-bar-height);}
 }
 
 // Transitions.

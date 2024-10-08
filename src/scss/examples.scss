@@ -160,13 +160,13 @@
   .w-button {width: 26px;height: 26px;background-color: transparent !important;}
 }
 
-// Split days example.
-.vuecal__cell-split.dad {background-color: rgba(221, 238, 255, 0.5);}
-.vuecal__cell-split.mom {background-color: rgba(255, 232, 251, 0.5);}
-.vuecal__cell-split.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-.vuecal__cell-split.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-.vuecal__cell-split.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-.vuecal__cell-split .split-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
+// Schedules example.
+.vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+.vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+.vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+.vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+.vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+.vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
 
 .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
 .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
@@ -251,13 +251,13 @@
   &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 }
 
-// Split day labels example.
-.ex--custom-day-split-labels {
-  .day-split-header {font-size: 11px;}
-  .vuecal__body .split1 {background-color: rgba(226, 242, 253, 0.7);}
-  .vuecal__body .split2 {background-color: rgba(232, 245, 233, 0.7);}
-  .vuecal__body .split3 {background-color: rgba(255, 243, 224, 0.7);}
-  .vuecal__body .split4 {background-color: rgba(255, 235, 238, 0.7);}
+// Schedules labels example.
+.ex--custom-schedule-labels {
+  .schedule-header {font-size: 11px;}
+  .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
+  .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
+  .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
+  .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
 }
 
 .logs-box {white-space: pre-wrap;}
@@ -265,8 +265,8 @@
 // Media queries.
 // --------------------------------------------------------
 @media screen and (max-width: 800px) {
-  .vuecal--week-view.ex--custom-day-split-labels .day-split-header .w-icon {display: none;}
-  .ex--custom-day-split-labels .day-split-header strong {
+  .vuecal--week-view.ex--custom-schedule-labels .schedule-header .w-icon {display: none;}
+  .ex--custom-schedule-labels .schedule-header strong {
     overflow: hidden;
     width: 0.9em;
     font-size: 13px;

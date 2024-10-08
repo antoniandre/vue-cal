@@ -132,7 +132,7 @@ export const DragAndDrop = class {
   }
 
   /**
-   * On cell/split enter with a dragging event.
+   * On cell/schedule enter with a dragging event.
    * Highlight the cell, and if on `years`, `year`, `month` view,
    * set a timer to go deeper on drag hold over this cell.
    *
@@ -160,24 +160,24 @@ export const DragAndDrop = class {
   }
 
   /**
-   * On cell/split drag over, highlight the cell being hovered,
-   * Useful when starting to drag event on the same cell/split it's in.
-   * Warning: This is fired repeatedly as long as you stay over this cell/split.
+   * On cell/schedule drag over, highlight the cell being hovered,
+   * Useful when starting to drag event on the same cell/schedule it's in.
+   * Warning: This is fired repeatedly as long as you stay over this cell/schedule.
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
    * @param {Date} cellDate The hovered cell starting date.
-   * @param {Number|String} split The optional split being hovered if any.
+   * @param {Number|String} schedule The optional schedule being hovered if any.
    */
-  cellDragOver (e, cell, cellDate, split) {
+  cellDragOver (e, cell, cellDate, schedule) {
     e.preventDefault()
     cell.highlighted = true
-    if (split || split === 0) cell.highlightedSplit = split
+    if (schedule || schedule === 0) cell.highlightedSchedule = schedule
   }
 
   /**
-   * When event drag leaves a cell/split.
-   * Remove the cell/split highlighted state.
+   * When event drag leaves a cell/schedule.
+   * Remove the cell/schedule highlighted state.
    * Warning: cell dragleave event happens AFTER another cell dragenter!
    *
    * @param {Object} e The associated DOM event.
@@ -188,7 +188,7 @@ export const DragAndDrop = class {
 
     if (e.currentTarget.contains(e.relatedTarget)) return
 
-    cell.highlightedSplit = false
+    cell.highlightedSchedule = false
 
     // Only cancel the timer if leaving the current cell to no other one.
     // If leaving this cell to enter another, a cancel is done in cellDragEnter,
@@ -201,16 +201,16 @@ export const DragAndDrop = class {
   }
 
   /**
-   * On successful event drop into a cell/split.
+   * On successful event drop into a cell/schedule.
    * Change the event start and end time and remove the event dragging state
-   * and cell/split highlighted state.
+   * and cell/schedule highlighted state.
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
    * @param {Date} cellDate The hovered cell starting date.
-   * @param {Number|String} split The optional split being dropped into, if any.
+   * @param {Number|String} schedule The optional schedule being dropped into, if any.
    */
-  cellDragDrop (e, cell, cellDate, split) {
+  cellDragDrop (e, cell, cellDate, schedule) {
     // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
     e.preventDefault()
 
@@ -227,7 +227,7 @@ export const DragAndDrop = class {
       // dropping to another calendar then back to the original place.
       const { _eid, start, end, duration, ...cleanTransferData } = transferData
       // Note: createAnEvent adds the event to the view.
-      event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split })
+      event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
     }
     else {
       // Find the dragged event from its _eid in the view or mutableEvents array.
@@ -246,12 +246,12 @@ export const DragAndDrop = class {
         const duration = transferData.endTimeMinutes - transferData.startTimeMinutes
         // Pass exactly the same event as it was before the view change (same _eid as well) except dates.
         const { start, end, ...cleanTransferData } = transferData
-        event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, split })
+        event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
         // Note: createAnEvent adds the event to the view.
       }
     }
 
-    const { start: oldDate, split: oldSplit } = event
+    const { start: oldDate, schedule: oldSchedule } = event
     this._updateEventStartEnd(e, event, transferData, cellDate)
 
     // Only add the event to view after the start and end are modified otherwise
@@ -259,10 +259,10 @@ export const DragAndDrop = class {
     if (addToView) this._vuecal.addEventsToView([event])
 
     event.dragging = false
-    if (split || split === 0) event.split = split
+    if (schedule || schedule === 0) event.schedule = schedule
 
     cell.highlighted = false
-    cell.highlightedSplit = null
+    cell.highlightedSchedule = null
     cancelViewChange = false
     dragging.toVueCal = this._vuecal._.uid
 
@@ -271,7 +271,7 @@ export const DragAndDrop = class {
       event: this._vuecal.cleanupEvent(event),
       oldDate,
       newDate: event.start,
-      ...((split || split === 0) && { oldSplit, newSplit: split }),
+      ...((schedule || schedule === 0) && { oldSchedule, newSchedule: schedule }),
       originalEvent: this._vuecal.cleanupEvent(transferData),
       external: !dragging.fromVueCal // If external event, not coming from any Vue Cal.
     }

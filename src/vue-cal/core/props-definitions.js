@@ -19,7 +19,7 @@ export const props = {
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
   specialHours: { type: Object, default: () => ({}) }, // Highlight a particular time range on each day of the week, individually.
-  splitDays: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
+  schedules: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
   startWeekOnSunday: { type: Boolean, default: false }, // Shows Sunday before Monday in days, week and month views.
   theme: { type: [String, Boolean], default: 'default' }, // Only adds a CSS class when set to default.
   time: { type: Boolean, default: true },
@@ -62,7 +62,7 @@ export const props = {
   maxDate: { type: [String, Date], default: '' },
   minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
-  minSplitWidth: { type: Number, default: 0 },
+  minScheduleWidth: { type: Number, default: 0 },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
   showAllDayEvents: { type: [Boolean, String], default: false },
