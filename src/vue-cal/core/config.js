@@ -18,7 +18,8 @@ export const defaults = {
     createEvent: '',
     dateFormat: 'dddd MMMM D, YYYY',
     am: 'am',
-    pm: 'pm'
+    pm: 'pm',
+    truncations: true
   },
 
   availableViews: {
