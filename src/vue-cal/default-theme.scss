@@ -237,7 +237,11 @@
   &.vuecal--date-picker {
     font-size: 12px;
 
-    .vuecal__views-bar, .vuecal__title-bar {padding-top: 2px;padding-bottom: 2px;}
+    .vuecal__views-bar, .vuecal__title-bar {
+      padding-top: 2px;
+      padding-bottom: 2px;
+      height: 2em; // Fixed height for taller character locales like ja and cn.
+    }
     .vuecal__title-bar {padding-left: 0.3em;padding-right: 0.3em;}
     .vuecal__nav--today, .vuecal__view-button {font-size: 0.9em;}
     .vuecal__nav--prev, .vuecal__nav--next {width: 1.6em;}
