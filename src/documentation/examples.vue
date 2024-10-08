@@ -475,14 +475,14 @@
     // In your component's data, special hours from Monday to Friday.
     // Note that you can provide an array of multiple blocks for the same day.
     specialHours: {
-      1: dailyHours,
-      2: dailyHours,
-      3: [
+      mon: dailyHours,
+      tue: dailyHours,
+      wed: [
         { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
         { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
       ],
-      4: dailyHours,
-      5: dailyHours
+      thu: dailyHours,
+      fri: dailyHours
     }
   ssh-pre(language="css" label="CSS" :dark="store.darkMode").
     .business-hours {
@@ -509,19 +509,19 @@
     // In your component's data, special hours from Monday to Sunday (1 to 7).
     // Note that you can provide an array of multiple blocks for the same day.
     specialHours: {
-      1: {
+      mon: {
         from: 8 * 60,
         to: 17 * 60,
         class: 'doctor-1',
         label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
       },
-      2: {
+      tue: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-2',
         label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
       },
-      3: [
+      wed: [
         {
           from: 8 * 60,
           to: 12 * 60,
@@ -535,25 +535,25 @@
           label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
         }
       ],
-      4: {
+      thu: {
         from: 8 * 60,
         to: 17 * 60,
         class: 'doctor-1',
         label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
       },
-      5: {
+      fri: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-3',
         label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
       },
-      6: {
+      sat: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-2',
         label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
       },
-      7: {
+      sun: {
         from: 7 * 60,
         to: 20 * 60,
         class: 'closed',
@@ -3639,16 +3639,16 @@ const draggables = ref([
 const deleteEventFunction = ref(null)
 const deleteDragEventFunction = ref(null)
 const specialDoctorHours = {
-  1: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  2: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  3: [
+  mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+  tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+  wed: [
     { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
     { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
   ],
-  4: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  5: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
-  6: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  7: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+  thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+  fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+  sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+  sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
 }
 
 // Computed.
@@ -3661,14 +3661,16 @@ const todayFormattedNotWeekend = computed(() => {
 })
 const minDate = computed(() => new Date().subtractDays(10))
 const maxDate = computed(() => new Date().addDays(10))
-const specialHours = computed(() => {
-  const array = Array(5).fill('').reduce((obj, item, i) => (obj[i + 1] = dailyHours) && obj, {})
-  array[3] = [
+const specialHours = computed(() => ({
+  mon: dailyHours,
+  tue: dailyHours,
+  wed: [
     { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
     { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-  ]
-  return array
-})
+  ],
+  thu: dailyHours,
+  fri: dailyHours
+}))
 
 // Methods.
 const logEvents = (emittedEventName, params) => {
