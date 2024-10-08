@@ -78,6 +78,7 @@ const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const cellEl = ref(null)
+
 // The touch/mouse events listeners are always attached to the cell, but if the event.target is a split,
 // display the event placeholder in that split.
 const touch = reactive({
@@ -291,16 +292,25 @@ const cellEventListeners = computed(() => {
     eventListeners[eventListener] = e => handler(e, { start: props.start, end: props.end, events: cellEvents })
   })
 
-  // Store a potential onclick to combine with internal onclick, below.
-  const externalOnClick = eventListeners.click
+  // Store a copy of any potential external handler to combine with internal handlers like click,
+  // touchstart, mousedown.
+  const externalHandlers = { ...eventListeners }
 
   eventListeners.click = e => {
     onCellClick({ start: props.start, end: props.end }, e)
-    externalOnClick?.(e)
+    externalHandlers.click?.(e)
   }
 
-  eventListeners.touchstart = trackMousemove
-  eventListeners.mousedown = trackMousemove
+  if (config.time && view.isDay || view.isDays || view.isWeek) {
+    eventListeners.touchstart = e => {
+      trackMousemove(e)
+      externalHandlers.touchstart?.(e)
+    }
+    eventListeners.mousedown = e => {
+      trackMousemove(e)
+      externalHandlers.mousedown?.(e)
+    }
+  }
 
   return eventListeners
 })
