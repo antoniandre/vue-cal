@@ -30,7 +30,7 @@ div.test-view
   .w-flex
     w-button(@click="addEvent") Add event
 
-  //- VueCal.no-shrink(
+  VueCal.no-shrink(
     date-picker
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-bind="mainVuecalConfig")
@@ -39,7 +39,8 @@ div.test-view
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
-    v-bind="mainVuecalConfig")
+    v-bind="mainVuecalConfig"
+    @event-create.stop="(e, event) => log('event-create', { e, event })")
     //- @event-click.stop="(e, event) => log('event-click', { e, event })"
     //- @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
     //- @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"

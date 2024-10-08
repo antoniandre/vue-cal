@@ -99,14 +99,19 @@ const touch = reactive({
 const eventPlaceholder = computed(() => {
   const startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
   const endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
+  const startMinutes = percentageToMinutes(startPercentage)
+  const endMinutes = percentageToMinutes(endPercentage)
 
   return {
     style: {
       top: startPercentage + '%',
       height: Math.abs(endPercentage - startPercentage) + '%'
     },
-    start: dateUtils.formatMinutes(percentageToMinutes(startPercentage)),
-    end: dateUtils.formatMinutes(percentageToMinutes(endPercentage))
+    startMinutes,
+    endMinutes,
+    start: dateUtils.formatMinutes(startMinutes),
+    end: dateUtils.formatMinutes(endMinutes),
+    ...(touch.split ? { split: touch.split } : {})
   }
 })
 
@@ -269,6 +274,16 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = e => {
+  let { start, end, startMinutes, endMinutes, style, split } = eventPlaceholder.value
+  start = new Date(props.start)
+  start.setMinutes(startMinutes)
+  end = new Date(props.start)
+  end.setMinutes(endMinutes)
+
+  const eventToEmit = { start, end, style }
+  if (config.daySplits) eventToEmit.split = split
+  vuecal.emit('event-create', e, eventToEmit)
+
   touch.dragging = false
   touch.startX = 0
   touch.startY = 0
