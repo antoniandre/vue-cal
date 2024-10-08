@@ -150,20 +150,19 @@ export const useConfig = (vuecal, props, attrs) => {
     // So this glob is much more convenient and not penalizing as all the matches are
     // lazy-loaded by default. E.g. { comp1: () => import('path/to/comp1.vue' }
     // https://vitejs.dev/guide/features.html#glob-import
-    let translations = import.meta.glob('../i18n/*.json', { query: '?url', import: 'default' })
+    let translations = import.meta.glob('../i18n/*.json', { import: 'default' })
 
     if (import.meta.env.SSR) {
       // Server-Side: Read JSON directly from the file system.
       let fs
-      (async () => {
-        fs = await import('fs').then(mod => mod.promises)
-      })()
+      (async () => (fs = await import('fs').then(mod => mod.promises)))()
 
       const filePath = path.resolve(__dirname, `../i18n/${locale}.json`)
       try {
         const data = await fs.readFile(filePath, 'utf-8')
         translations = JSON.parse(data)
-      } catch (error) {
+      }
+      catch (error) {
         throw new Error(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
       }
     }

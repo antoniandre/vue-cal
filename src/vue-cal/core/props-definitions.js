@@ -14,7 +14,7 @@ export const props = {
   hideWeekends: { type: Boolean, default: false }, // Show or hide both Saturday and Sunday in days, week and month views.
   // en-us is the default and fallback if locale is not supported.
   // The locale can also be provided externally to avoid using Promises.
-  locale: { type: [String, Object], default: '' }, // A language to use for all the texts.
+  locale: { type: String, default: '' }, // A language to use for all the texts.
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
