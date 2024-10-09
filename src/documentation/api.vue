@@ -1,16 +1,14 @@
 <template lang="pug">
+h1.title1 API
 div
-  h2.title1.mt12.pt12
-    a(href="#api") API
-    a#api(name="api")
   p Here is the list of all the available views.
-  ssh-pre.mt2(language="js" :dark="store.darkMode").
+  ssh-pre.mt2(language="js" :dark="darkMode").
     ['years', 'year', 'month', 'week', 'day']
   p.
     Here is the list of all the parameters available and their description below this table.#[br]
     Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
     instead of the #[span.code camelCase] for consistency.
-  ssh-pre.mt2(language="js" :dark="store.darkMode").
+  ssh-pre.mt2(language="js" :dark="darkMode").
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
@@ -73,12 +71,12 @@ div
         (#[a(href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank") ISO 639-1])
         unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
       highlight-message(type="info")
-        | Currently available languages are {{ localesList.map(l => l.label).join(', ') }}.#[br]
+        | Currently available languages are {{ locales.map(l => l.label).join(', ') }}.#[br]
         | If you are interested in providing a language support please do a pull request with a json file
         | into the i18n directory.#[br]
         | this is what a language json looks like.
 
-        ssh-pre.my2(language="json" :dark="store.darkMode").
+        ssh-pre.my2(language="json" :dark="darkMode").
           {
             "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -226,7 +224,7 @@ div
         You can also provide a custom renderer to the weeks numbers cells through the
         #[span.code week-number-cell] slot.
       highlight-message
-        a#there-can-be-53-weeks-in-a-year(name="there-can-be-53-weeks-in-a-year")
+        a#there-can-be-53-weeks-in-a-year
         strong Did you know there can be 53 weeks in the year?#[br]
         | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year.
         | In this case the week number will be 53 instead of 1.
@@ -279,14 +277,14 @@ div
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
         span.ml3 With a single range of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="darkMode").
           // In the component's data.
           specialHours: {
             3: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml3 With multiple ranges of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="darkMode").
           // In the component's data.
           specialHours: {
             3: [
@@ -464,7 +462,7 @@ div
         | Split each day into multiple vertical schedules.#[br]
         | Accepts an array of schedule objects with attributes.#[br]
         | Each schedule object can have these attributes, they are all optional:
-        ssh-pre(language="js" :dark="store.darkMode").
+        ssh-pre(language="js" :dark="darkMode").
           {
             id: {Integer | String}, // All ids must be set if using `hide`.
             class: {String},
@@ -546,7 +544,7 @@ div
         Accepts an array of event objects.#[br]
         This is what an event object must look like:
       div
-        ssh-pre.mt2(language="js" :dark="store.darkMode").
+        ssh-pre.mt2(language="js" :dark="darkMode").
           {
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
@@ -612,7 +610,7 @@ div
 
   h2.title1.mt12.pt12
     a(href="#date-prototypes") #[strong.code Date] Prototypes
-    a#date-prototypes(name="date-prototypes")
+    a#date-prototypes
   p
     | Vue Cal has no dependency and performs date operations through a few notable useful and efficient functions that
     | have been added to the native #[span.code Date] class for your convenience.#[br]
@@ -722,20 +720,24 @@ div
 
 <script setup>
 import { computed } from 'vue'
-import { useAppStore } from '@/store'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import HighlightMessage from './components/highlight-message.vue'
+import EnUs from '@/vue-cal/i18n/fr.json'
+import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
 
-const store = useAppStore()
-const props = defineProps({
-  localesList: { type: Array }
+defineProps({
+  locales: { type: Array },
+  darkMode: { type: Boolean }
 })
+
+useLocale(EnUs)
+addDatePrototypes()
 
 const now = new Date()
 
 const nowFormatted = computed(() => {
-  return Date.prototype.format && (new Date()).format('YYYY{MM}DD')
+  return Date.prototype.format && now.format('YYYY{MM}DD')
 })
 
 const todayFormatted = computed(() => {

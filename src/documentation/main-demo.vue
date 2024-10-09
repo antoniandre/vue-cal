@@ -7,21 +7,20 @@
     .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
-        xs
-        :selected-date="selectedDate"
+        :dark="darkMode"
+        date-picker
+        v-model:view="month"
+        v-model:selected-date="selectedDate"
         :views-bar="false"
-        :time="false"
         :transitions="false"
-        active-view="month"
         :events="demoExample.events"
-        :disable-views="['week', 'day']"
-        @cell-click="selectedDate = $event"
-        style="width: 210px;height: 230px")
+        @cell-click="selectedDate = $event")
       .grey.code.my2(style="font-size: 13px") Selected date: '{{ selectedDate.format() }}'
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
       vue-cal.demo.full-cal.vuecal--full-height-delete(
+        :dark="darkMode"
         hide-weekends
         :selected-date="selectedDate"
         :time-from="8 * 60"
@@ -43,7 +42,15 @@
 
 <script setup>
 import { computed, ref } from 'vue'
-import { VueCal } from '@/vue-cal'
+import EnUs from '@/vue-cal/i18n/fr.json'
+import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
+
+defineProps({
+  darkMode: { type: Boolean }
+})
+
+useLocale(EnUs)
+addDatePrototypes()
 
 const demoExample = ref({
   schedules: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],

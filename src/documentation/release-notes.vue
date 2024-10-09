@@ -1,5 +1,9 @@
 <template lang="pug">
-div
+h1.title1
+  a(href="#release-notes") Release notes
+  a#release-notes
+
+.mt4
   div.mb1
     strong.mr1 Version 5.0.0
     ul
@@ -58,7 +62,7 @@ div
   .w-flex.my12.align-center
     .w-divider.primary--bg.px3
     w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
-      w-icon.mr2 mdi mdi-{{ seeOldReleaseNotes ? 'keyboard-arrow-up' : 'keyboard-arrow-down' }}
+      w-icon.mr2(:flip-y="!!seeOldReleaseNotes") wi-arrow-down
       strong Older release notes
     .w-divider.primary--bg.grow
 
@@ -581,13 +585,14 @@ div
       div.mt3 #[strong Version 1.0.0] First public release
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue'
 import HighlightMessage from './components/highlight-message.vue'
 
-export default {
-  components: { HighlightMessage },
-  data: () => ({
-    seeOldReleaseNotes: false
-  })
-}
+defineProps({
+  locales: { type: Array },
+  darkMode: { type: Boolean }
+})
+
+const seeOldReleaseNotes = ref(false)
 </script>
