@@ -1,28 +1,73 @@
 <template lang="pug">
-.documentation.page-container
-  nav.mb12(v-if="$route.fullPath !== '/'")
-    ul.size--lg
-      li
-        router-link(to="/") Home
-      li
-        router-link(to="/getting-started") Getting Started
-      li
-        router-link(to="/api") API
-      li
-        router-link(to="/examples") Examples
-      li
-        router-link(to="/migration-guide") Migration Guide
-      li
-        router-link(to="/road-map") Road Map
-      li
-        router-link(to="/release-notes") Release Notes
+top-bar(v-if="$route.name !== 'home'" fixed)
 
-  router-view(:locales="localesList" :dark-mode="store.darkMode")
+.page.w-flex.grow.page-container(:class="`page--${$route.name}`")
+  aside(v-if="$route.name !== 'home'")
+    nav.mb12
+      ul.size--lg
+        li
+          router-link(to="/") Home
+        li
+          router-link(to="/getting-started") Getting Started
+        li
+          router-link(to="/api") API
+        li
+          router-link(to="/examples") Examples
+        li
+          router-link(to="/migration-guide") Migration Guide
+        li
+          router-link(to="/road-map") Road Map
+        li
+          router-link(to="/release-notes") Release Notes
+
+  router-view(v-if="$route.name === 'home'" :locales="localesList" :dark-mode="store.darkMode")
+  main.main(v-else :class="`main--${$route.name}`")
+    router-view(:locales="localesList" :dark-mode="store.darkMode")
+
+    w-transition-twist
+      w-button.go-top.ma2(
+        v-show="!goTopHidden"
+        icon="wi-chevron-up"
+        fixed
+        bottom
+        right
+        round
+        xl
+        v-scroll-to="'#top'")
+
+footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
+  .text-center.smu-text-left.copyright
+    | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
+  .made-with.text-right.smd-text-center.no-grow
+    .w-flex.gap1.mb1.justify-end.smd-justify-center
+      | This documentation is made with
+      w-tooltip
+        template(#activator="{ on }")
+          w-icon(v-on="on") mdi mdi-vuejs
+        | Vue
+      w-tooltip
+        template(#activator="{ on }")
+          w-icon(v-on="on") mdi mdi-language-html5
+        | HTML5 &amp; Pug
+      w-tooltip
+        template(#activator="{ on }")
+          w-icon.ml1(v-on="on") mdi mdi-language-css3
+        | CSS3
+      w-tooltip
+        template(#activator="{ on }")
+          w-icon.ml1(v-on="on") mdi mdi-sass
+        | SCSS
+      span.ml2.mr1 &amp;
+      w-tooltip
+        template(#activator="{ on }")
+          w-icon(v-on="on").heart mdi mdi-heart
+        | Love
+    | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
 </template>
 
 <script setup>
-import '@/scss/documentation.scss'
 import { useAppStore } from '@/store'
+import TopBar from '@/documentation/components/top-bar.vue'
 
 const store = useAppStore()
 
@@ -72,24 +117,6 @@ const localesList = [
 </script>
 
 <style lang="scss">
-.w-tabs__content-wrap {flex-grow: 1;}
-
-.highlight-box {
-  background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
-  padding: 16px;
-  border-radius: 8px;
-
-  .w-icon.bolt {
-    width: 68px;
-    height: 68px;
-    background-color: rgba(0, 0, 0, 0.05);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-}
-
-@media screen and (max-width: 830px) {
-  .w-app .vs-d-block {display: block;}
-}
+@import '@/scss/index.scss';
+@import '@/scss/documentation.scss';
 </style>

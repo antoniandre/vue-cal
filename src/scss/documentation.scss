@@ -6,8 +6,10 @@
     &.no-bullet {list-style-type: none;}
   }
 
-  h2:not(.todo) {
-    font-size: 27px !important;
+  h1 {line-height: 1;}
+
+  h2 {
+    font-size: 27px;
     border-bottom: 1px solid #eee;
     margin-bottom: 30px;
     padding-bottom: 8px;
@@ -26,6 +28,21 @@
     color: #888 !important;
 
     .w-icon {vertical-align: middle;margin-bottom: 2px;}
+  }
+
+  .highlight-box {
+    background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
+    padding: 16px;
+    border-radius: 8px;
+
+    .w-icon.bolt {
+      width: 68px;
+      height: 68px;
+      background-color: rgba(#000, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
   }
 
   .examples {

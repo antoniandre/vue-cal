@@ -199,4 +199,7 @@ defineProps({
 </script>
 
 <style lang="scss">
+@media screen and (max-width: 830px) {
+  .w-flex.vs-d-block {display: block;}
+}
 </style>

@@ -1,91 +1,14 @@
 <template lang="pug">
-div(:class="{ ready }" v-scroll="onScroll")
-  top-bar(:offset-top="offsetTop")
-  router-view
-
-  w-transition-twist
-    w-button.go-top.ma2(
-      v-show="!goTopHidden"
-      icon="wi-chevron-up"
-      fixed
-      bottom
-      right
-      round
-      xl
-      v-scroll-to="'#top'")
-
-  footer.page-container.w-flex.grey-dark1.wrap.justify-space-between.mt12.mb8.smd-column.smd-justify-center.gap4
-    .text-center.smu-text-left.copyright
-      | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-    .made-with.text-right.smd-text-center.no-grow
-      .w-flex.gap1.mb1.justify-end.smd-justify-center
-        | This documentation is made with
-        w-tooltip
-          template(#activator="{ on }")
-            w-icon(v-on="on") mdi mdi-vuejs
-          | Vue
-        w-tooltip
-          template(#activator="{ on }")
-            w-icon(v-on="on") mdi mdi-language-html5
-          | HTML5 &amp; Pug
-        w-tooltip
-          template(#activator="{ on }")
-            w-icon.ml1(v-on="on") mdi mdi-language-css3
-          | CSS3
-        w-tooltip
-          template(#activator="{ on }")
-            w-icon.ml1(v-on="on") mdi mdi-sass
-          | SCSS
-        span.ml2.mr1 &amp;
-        w-tooltip
-          template(#activator="{ on }")
-            w-icon(v-on="on").heart mdi mdi-heart
-          | Love
-      | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
+documentation
 </template>
 
 <script setup>
-import { ref, onMounted, nextTick, inject } from 'vue'
+import { onMounted, inject } from 'vue'
 import { useAppStore } from '@/store'
-// Including the top bar from the documentation view and passing the
-// offsetTop var slows down too much the top bar animation on scroll.
-import TopBar from '@/documentation/components/top-bar.vue'
-import '@/scss/index.scss'
+import Documentation from '@/documentation/index.vue'
 
 const $waveui = inject('$waveui')
 const store = useAppStore()
-const ready = ref(false)
-const offsetTop = ref(0)
-const goTopHidden = ref(true)
 
-const onScroll = () => {
-  const { scrollTop, offsetHeight } = document.documentElement
-  offsetTop.value = window.scrollY || scrollTop
-  goTopHidden.value = offsetTop.value < 200 || (offsetHeight - scrollTop - window.innerHeight <= 100)
-}
-
-nextTick(() => (ready.value = true))
-
-onMounted(() => {
-  store.applyTheme(localStorage.theme || $waveui.preferredTheme)
-})
-
-// Directives.
-const vScroll = {
-  mounted: (el, binding) => {
-    const f = evt => {
-      if (binding.value(evt, el)) window.removeEventListener('scroll', f)
-    }
-    window.addEventListener('scroll', f)
-  }
-}
-
-const vScrollTo = {
-  mounted: (el, binding) => {
-    el.addEventListener('click', () => {
-      const target = binding.value && document.querySelector(binding.value)
-      target.scrollIntoView()
-    })
-  }
-}
+onMounted(() => store.applyTheme(localStorage.theme || $waveui.preferredTheme))
 </script>

@@ -5,7 +5,7 @@ w-switch.theme-switch(
   template(#thumb)
     w-icon mdi {{ store.darkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
 
-w-toolbar.top-bar.pa0(:class="{ scrolled: offsetTop > 108 }")
+w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
@@ -96,6 +96,7 @@ import { useAppStore } from '@/store'
 const store = useAppStore()
 
 const props = defineProps({
+  fixed: { type: Boolean },
   offsetTop: { type: Number, default: 0 }
 })
 
@@ -382,7 +383,7 @@ $lighter-text: #ccc;
   }
 
   // When scrolled: sticky top bar.
-  &.scrolled {
+  &.fixed {
     transition: 0.6s ease-in-out all, 0.3s 0.5s ease-in-out border-color;
     border-bottom-color: rgba($lighter-text, 0.5);
     position: fixed;
@@ -427,11 +428,11 @@ $lighter-text: #ccc;
 }
 
 @media screen and (max-width: 600px) {
-  .scrolled .top-bar__logo {transform: scale(0.7);}
+  .fixed .top-bar__logo {transform: scale(0.7);}
 
-  .top-bar.scrolled,
-  .top-bar.scrolled .w-toolbar__content,
-  .scrolled .top-bar__logo-link {height: 32px;}
+  .top-bar.fixed,
+  .top-bar.fixed .w-toolbar__content,
+  .fixed .top-bar__logo-link {height: 32px;}
 
   .top-bar__items .w-button {padding: 0 10px;}
 }
@@ -439,8 +440,8 @@ $lighter-text: #ccc;
 @media screen and (max-width: 449px) {
   .theme-switch {top: 4px;right: 4px;}
 
-  .top-bar.scrolled .top-bar__items {margin-right: 0;}
-  .top-bar.scrolled .top-bar__title > .w-flex {padding-left: 8px;}
+  .top-bar.fixed .top-bar__items {margin-right: 0;}
+  .top-bar.fixed .top-bar__title > .w-flex {padding-left: 8px;}
   .top-bar__title {width: 14.5em;}
   .top-bar .intro {
     font-size: 11px;

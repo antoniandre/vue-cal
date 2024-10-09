@@ -1,33 +1,63 @@
-
 // Global structure.
 // --------------------------------------------------------
-* {margin: 0;padding: 0;}
-
 :root {
   scroll-behavior: smooth;
   --w-base-color-rgb: 44, 62, 80;
 
-  &[data-theme="dark"] {
-    --w-base-color-rgb: 255, 255, 255, 0.8;
-  }
+  &[data-theme="dark"] {--w-base-color-rgb: 255, 255, 255, 0.8;}
 }
-
-#app {overflow-x: hidden;}
 
 .w-app {
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgba(var(--w-base-color-rgb));
-  margin-top: 8em;
-  padding-top: 12em;
+  overflow-x: hidden;
 }
 
-.page-container {
-  width: 100%;
-  max-width: $page-max-width;
-  margin-left: auto;
-  margin-right: auto;
+aside {
+  max-width: 300px;
+  flex-grow: 1;
+  flex-shrink: 0;
+  padding: 1.5rem 2rem 2rem;
+  height: 100%;
+
+  position: sticky;
+  top: 0;
+  border-right: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.2);
+
+  nav {
+    position: sticky;
+    top: 0;
+  }
+}
+
+.page {
+  margin-top: 41px;
+  overflow: auto;
+}
+
+main {
+  padding-top: 1rem;
+  margin-left: 4rem;
+  flex-grow: 1;
+}
+
+footer {
+  display: flex;
+  flex-grow: 0;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  font-size: 0.9em;
+  font-style: italic;
+  margin: 1rem 0 1rem;
+
+  .w-icon {
+    font-size: 1.2em;
+
+    &.heart {transition: 1s ease-out;cursor: pointer;}
+    &.heart:hover {animation: pulse 1.8s ease-out infinite;}
+  }
 }
 
 // Shared classes & styles.
@@ -49,18 +79,14 @@ a {
   padding-right: 1.8em;
 }
 
-.footer {
-  font-size: 0.9em;
-  font-style: italic;
-  margin: 3em 0 3.5em;
-
-  .w-icon {
-    font-size: 1.2em;
-
-    &.heart {transition: 1s ease-out;cursor: pointer;}
-    &.heart:hover {animation: pulse 1.8s ease-out infinite;}
-  }
+.page-container {
+  width: 100%;
+  max-width: $page-max-width;
+  margin-left: auto;
+  margin-right: auto;
 }
+
+.w-tabs__content-wrap {flex-grow: 1;}
 
 @keyframes pulse {
   0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}

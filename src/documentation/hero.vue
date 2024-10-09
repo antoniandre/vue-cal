@@ -1,5 +1,5 @@
 <template lang="pug">
-.main-demo
+.hero
   .mb10.tagline
     .title2.grey-dark1 Go for the date picker...
     .title1.text-right.primary-dark1 or unleash the full potential!
@@ -34,7 +34,7 @@
           w-icon(:color="schedule.color" size="20") mdi mdi-account
           strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
       a.mt4.w-flex.justify-end.grey-light1(
-        href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/main-demo.vue"
+        href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/hero.vue"
         target="_blank")
         | View this example source code
         w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
@@ -146,8 +146,22 @@ demoExample.value.events.push(
 $john: #42b983;
 $kate: #ff7fc8;
 
-.main-demo {
+.hero {
+  position: relative;
+  height: 850px;
   font-size: 12px;
+  margin-bottom: 8rem;
+
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    inset: auto 15% 5px;
+    border-bottom: 4px solid var(--w-primary-color);
+  }
+  &:after {
+    bottom: 0;
+    border-bottom: 2px solid rgba(var(--w-contrast-bg-color-rgb), 0.8);
+  }
 
   .tagline {
     max-width: 500px;
@@ -178,7 +192,6 @@ $kate: #ff7fc8;
   // Full power calendar.
   // ------------------------------------------------------
   &.full-cal .vuecal__menu {background-color: transparent;}
-  &.full-cal .vuecal__title-bar {background: rgba(0, 0, 0, 0.03);}
   .vuecal__view-btn {
     background: none;
     padding: 0 10px;
@@ -231,6 +244,6 @@ $kate: #ff7fc8;
 // Media queries.
 // --------------------------------------------------------
 @media screen and (max-width: 499px) {
-  .main-demo .schedule-header strong {display: none;}
+  .hero .schedule-header strong {display: none;}
 }
 </style>
