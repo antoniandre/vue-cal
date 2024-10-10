@@ -66,10 +66,9 @@ a {
   text-decoration: none;
   color: $primary;
 
-  &[name] {
+  &[id] {
     position: relative;
-    top: -4em;
-    display: block;
+    top: -3rem;
   }
 }
 

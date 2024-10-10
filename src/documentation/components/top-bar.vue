@@ -10,7 +10,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
     span.top-bar__title-line
     span.top-bar__title-line
     h1.w-flex.align-center.primary.px5
-      a.w-flex.align-center.top-bar__logo-link.no-grow(href="#top" v-scroll-to="'#top'")
+      router-link.w-flex.align-center.top-bar__logo-link.no-grow(:to="{ name: 'home', hash: '#top' }")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         .top-bar__logo-title
           | Vue Cal
