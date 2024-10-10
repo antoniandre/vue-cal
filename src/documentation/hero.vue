@@ -7,7 +7,7 @@
     .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
-        :dark="darkMode"
+        :dark="store.darkMode"
         date-picker
         v-model:view="month"
         v-model:selected-date="selectedDate"
@@ -20,7 +20,7 @@
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
       vue-cal.demo.full-cal.vuecal--full-height-delete(
-        :dark="darkMode"
+        :dark="store.darkMode"
         hide-weekends
         :selected-date="selectedDate"
         :time-from="8 * 60"
@@ -42,12 +42,11 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useAppStore } from '@/store'
 import EnUs from '@/vue-cal/i18n/fr.json'
 import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
 
-defineProps({
-  darkMode: { type: Boolean }
-})
+const store = useAppStore()
 
 useLocale(EnUs)
 addDatePrototypes()

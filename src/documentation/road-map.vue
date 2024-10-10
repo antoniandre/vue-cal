@@ -82,11 +82,6 @@ w-accordion(:model-value="[false, true]" :items="2" expand-icon-right expand-sin
 
 <script setup>
 import TodoListItem from './components/todo-list-item.vue'
-
-defineProps({
-  locales: { type: Array },
-  darkMode: { type: Boolean }
-})
 </script>
 
 <style lang="scss">

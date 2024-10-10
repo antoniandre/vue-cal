@@ -589,10 +589,5 @@ h1.title1
 import { ref } from 'vue'
 import HighlightMessage from './components/highlight-message.vue'
 
-defineProps({
-  locales: { type: Array },
-  darkMode: { type: Boolean }
-})
-
 const seeOldReleaseNotes = ref(false)
 </script>
