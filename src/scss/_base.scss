@@ -16,30 +16,28 @@
 }
 
 aside {
-  max-width: 300px;
+  width: 220px;
   flex-grow: 1;
   flex-shrink: 0;
   padding: 1.5rem 2rem 2rem;
-  height: 100%;
-
-  position: sticky;
-  top: 0;
-  border-right: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.2);
 
   nav {
-    position: sticky;
-    top: 0;
+    position: fixed;
+    top: 70px;
   }
+
+  ul {margin-left: 20px;}
 }
 
 .page {
-  margin-top: 41px;
+  position: relative;
   overflow: auto;
 }
 
 main {
-  padding-top: 1rem;
-  margin-left: 4rem;
+  padding-top: 65px; // 40 for the top bar height, + arbitrary 25 for spacing out.
+  padding-left: 4rem;
+  border-left: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.2);
   flex-grow: 1;
 }
 
