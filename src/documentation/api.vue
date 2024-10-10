@@ -2,13 +2,13 @@
 h1.title1 API
 div
   p Here is the list of all the available views.
-  ssh-pre.mt2(language="js" :dark="darkMode").
+  ssh-pre.mt2(language="js" :dark="store.darkMode").
     ['years', 'year', 'month', 'week', 'day']
   p.
     Here is the list of all the parameters available and their description below this table.#[br]
     Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
     instead of the #[span.code camelCase] for consistency.
-  ssh-pre.mt2(language="js" :dark="darkMode").
+  ssh-pre.mt2(language="js" :dark="store.darkMode").
     activeView:             [String],          default: 'week'
     allDayBarHeight:        [String, Number],  default: '25px'
     cellClickHold:          [Boolean],         default: true
@@ -76,7 +76,7 @@ div
         | into the i18n directory.#[br]
         | this is what a language json looks like.
 
-        ssh-pre.my2(language="json" :dark="darkMode").
+        ssh-pre.my2(language="json" :dark="store.darkMode").
           {
             "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
             "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
@@ -277,14 +277,14 @@ div
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
         span.ml3 With a single range of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="darkMode").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
             3: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml3 With multiple ranges of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="darkMode").
+        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
             3: [
@@ -462,7 +462,7 @@ div
         | Split each day into multiple vertical schedules.#[br]
         | Accepts an array of schedule objects with attributes.#[br]
         | Each schedule object can have these attributes, they are all optional:
-        ssh-pre(language="js" :dark="darkMode").
+        ssh-pre(language="js" :dark="store.darkMode").
           {
             id: {Integer | String}, // All ids must be set if using `hide`.
             class: {String},
@@ -544,7 +544,7 @@ div
         Accepts an array of event objects.#[br]
         This is what an event object must look like:
       div
-        ssh-pre.mt2(language="js" :dark="darkMode").
+        ssh-pre.mt2(language="js" :dark="store.darkMode").
           {
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
@@ -719,21 +719,19 @@ div
 </template>
 
 <script setup>
-import { computed } from 'vue'
+import { computed, inject } from 'vue'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message.vue'
+import { useAppStore } from '@/store'
 import EnUs from '@/vue-cal/i18n/fr.json'
 import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
-
-defineProps({
-  locales: { type: Array },
-  darkMode: { type: Boolean }
-})
+import HighlightMessage from './components/highlight-message.vue'
 
 useLocale(EnUs)
 addDatePrototypes()
 
+const store = useAppStore()
+const locales = inject('locales')
 const now = new Date()
 
 const nowFormatted = computed(() => {
