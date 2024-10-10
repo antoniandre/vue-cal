@@ -1,6 +1,6 @@
 <template lang="pug">
-div(:class="{ ready }" v-scroll="onScroll")
-  top-bar(:offset-top="offsetTop")
+div(:class="{ ready }")
+  top-bar(:fixed="offsetTop > 130")
 
 hero
 
@@ -76,29 +76,15 @@ hero
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, inject } from 'vue'
 import TopBar from '@/documentation/components/top-bar.vue'
 import Hero from './hero.vue'
 
+defineProps({
+  offsetTop: { type: Number }
+})
+
 const ready = ref(false)
-const offsetTop = ref(0)
-const goTopHidden = ref(true)
-
-const onScroll = () => {
-  const { scrollTop, offsetHeight } = document.documentElement
-  offsetTop.value = window.scrollY || scrollTop
-  goTopHidden.value = offsetTop.value < 200 || (offsetHeight - scrollTop - window.innerHeight <= 100)
-}
-
-// Directives.
-const vScroll = {
-  mounted: (el, binding) => {
-    const f = evt => {
-      if (binding.value(evt, el)) window.removeEventListener('scroll', f)
-    }
-    window.addEventListener('scroll', f)
-  }
-}
 
 nextTick(() => (ready.value = true))
 </script>
@@ -109,5 +95,8 @@ nextTick(() => (ready.value = true))
   padding-top: 8rem;
 
   .hero {margin-top: 6rem;}
+
+  aside, nav {padding-top: 0;}
+  aside nav {position: static;}
 }
 </style>

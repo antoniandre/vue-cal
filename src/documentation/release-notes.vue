@@ -1,7 +1,5 @@
 <template lang="pug">
-h1.title1
-  a(href="#release-notes") Release notes
-  a#release-notes
+h1.title1 Release notes
 
 .mt4
   div.mb1

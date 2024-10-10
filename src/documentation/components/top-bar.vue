@@ -5,7 +5,7 @@ w-switch.theme-switch(
   template(#thumb)
     w-icon mdi {{ store.darkMode ? 'mdi-weather-night' : 'mdi-white-balance-sunny' }}
 
-w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
+w-toolbar.top-bar.pa0(:class="{ fixed }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
@@ -39,16 +39,13 @@ w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
       w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
         nav
         :items="docs"
-        item-route-key="href"
         item-class="pa0")
         template(#item="{ item }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
-          .w-flex.grow.align-center.px5.py2(
-            v-else-if="item.href"
-            v-scroll-to="`${item.href}`")
+          router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
-          span.py2(v-else)
+          .py2(v-else)
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
 
@@ -67,21 +64,18 @@ w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
           tile
           color="secondary"
           href="#examples"
-          v-scroll-to="'#examples'"
+          :route="{ name: 'examples', hash: '#examples' }"
           height="100%")
           w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
       w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
         nav
         :items="examples"
-        item-route-key="href"
         item-class="pa0"
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
         template(#item="{ item }")
           w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
-          .w-flex.grow.align-center.px5.py2(
-            v-else-if="item.href"
-            v-scroll-to="`${item.href}`")
+          router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(:class="{ ml8: !item.icon }" v-html="item.label")
           .w-flex.grow.align-center.px5.py2(v-else)
@@ -93,89 +87,81 @@ w-toolbar.top-bar.pa0(:class="{ fixed: fixed || (offsetTop > 170) }")
 import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
 
-const store = useAppStore()
-
 const props = defineProps({
-  fixed: { type: Boolean },
-  offsetTop: { type: Number, default: 0 }
+  fixed: { type: Boolean }
 })
 
+const store = useAppStore()
 const todayDate = ref((new Date()).getDate())
+
 const docs = [
-  { href: '#installation', label: 'Installation' },
-  { href: '#how-to-use', label: 'How to use' },
-  { href: '#api', label: 'API' },
-  { href: '#date-prototypes', label: 'Date prototypes' },
-  { href: '#css-notes', label: 'CSS notes' },
-  { href: '#release-notes', label: 'Release notes' }
+  { route: '/getting-started', label: 'Installation' },
+  { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to use' },
+  { route: '/api', label: 'API' },
+  // { route: { name: 'example', hash: '#date-prototypes' }, label: 'Date prototypes' },
+  // { route: { name: 'example', hash: '#css-notes' }, label: 'CSS notes' },
+  { route: '/release-notes', label: 'Release notes' }
 ]
+
 const examples = [
-  { class: 'heading', href: '#ex--basic', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
-  { href: '#ex--basic', label: 'Basic, hide weekends' },
-  { href: '#ex--small-cal', label: 'Small calendar, no view selector, custom arrows' },
-  { href: '#ex--disable-views', label: 'Disable views, default view' },
-  { href: '#ex--min-max-dates', label: 'Min / max dates &amp; single click to navigate' },
-  { href: '#ex--disable-days', label: 'Disable days' },
-  { href: '#ex--calendar-themes', label: 'Calendar themes' },
-  { href: '#ex--hiding-particular-week-days', label: 'Hide particular weekdays &amp; show week numbers' },
-  { class: 'heading', href: '#ex--internationalization', label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
-  { href: '#ex--internationalization', label: 'Internationalization' },
-  { class: 'heading', href: '#ex--timeline', label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
-  { href: '#ex--timeline', label: 'Timeline' },
-  { href: '#ex--special-hours', label: 'Business Hours' },
-  { href: '#ex--today-current-time', label: 'Today\'s current time' },
-  { href: '#ex--adding-a-today-button', label: 'Adding a Today button' },
+  { class: 'heading', route: '/example', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
+  { route: { name: 'example', hash: '#ex--basic' }, label: 'Basic, hide weekends' },
+  { route: { name: 'example', hash: '#ex--small-cal' }, label: 'Small calendar, no view selector, custom arrows' },
+  { route: { name: 'example', hash: '#ex--disable-views' }, label: 'Disable views, default view' },
+  { route: { name: 'example', hash: '#ex--min-max-dates' }, label: 'Min / max dates &amp; single click to navigate' },
+  { route: { name: 'example', hash: '#ex--disable-days' }, label: 'Disable days' },
+  { route: { name: 'example', hash: '#ex--calendar-themes' }, label: 'Calendar themes' },
+  { route: { name: 'example', hash: '#ex--hiding-particular-week-days' }, label: 'Hide particular weekdays &amp; show week numbers' },
+  { class: 'heading', route: { name: 'example', hash: '#ex--internationalization' }, label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
+  { route: { name: 'example', hash: '#ex--internationalization' }, label: 'Internationalization' },
+  { class: 'heading', route: { name: 'example', hash: '#ex--timeline' }, label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
+  { route: { name: 'example', hash: '#ex--timeline' }, label: 'Timeline' },
+  { route: { name: 'example', hash: '#ex--special-hours' }, label: 'Business Hours' },
+  { route: { name: 'example', hash: '#ex--today-current-time' }, label: 'Today\'s current time' },
+  { route: { name: 'example', hash: '#ex--adding-a-today-button' }, label: 'Adding a Today button' },
 
-  { class: 'heading', href: '#ex--timeless-events', label:'EVENTS', icon: 'mdi mdi-calendar' },
-  { href: '#ex--timeless-events', label: 'Timeless events' },
-  { href: '#ex--events-with-time', label: 'Events with time information' },
-  { href: '#ex--open-dialog-on-event-click', label: 'Open a dialog box on event click / dblclick' },
-  { href: '#ex--events-indicators', label: 'Events indicators' },
-  { href: '#ex--events-on-month-view', label: 'Display events on month view' },
-  { href: '#ex--edit-and-delete-events', label: 'Edit &amp; delete events' },
-  { href: '#ex--create-events', label: 'Create events' },
-  { href: '#ex--other-event-creation-methods', label: 'Other event creation methods' },
-  { href: '#ex--drag-and-drop', label: 'Drag &amp; drop' },
-  { href: '#ex--external-events-drag-and-drop', label: 'External events drag &amp; drop' },
-  { href: '#ex--multiple-day-events', label: 'Multiple day events' },
-  { href: '#ex--recurring-events', label: 'Recurring events' },
-  { href: '#ex--overlapping-events', label: 'Overlapping events' },
-  { href: '#ex--background-events', label: 'Background events' },
-  { href: '#ex--all-day-events', label: 'All day events' },
-  { href: '#ex--schedules', label: 'Day schedules' },
+  { class: 'heading', route: { name: 'example', hash: '#ex--timeless-events' }, label:'EVENTS', icon: 'mdi mdi-calendar' },
+  { route: { name: 'example', hash: '#ex--timeless-events' }, label: 'Timeless events' },
+  { route: { name: 'example', hash: '#ex--events-with-time' }, label: 'Events with time information' },
+  { route: { name: 'example', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a dialog box on event click / dblclick' },
+  { route: { name: 'example', hash: '#ex--events-indicators' }, label: 'Events indicators' },
+  { route: { name: 'example', hash: '#ex--events-on-month-view' }, label: 'Display events on month view' },
+  { route: { name: 'example', hash: '#ex--edit-and-delete-events' }, label: 'Edit &amp; delete events' },
+  { route: { name: 'example', hash: '#ex--create-events' }, label: 'Create events' },
+  { route: { name: 'example', hash: '#ex--other-event-creation-methods' }, label: 'Other event creation methods' },
+  { route: { name: 'example', hash: '#ex--drag-and-drop' }, label: 'Drag &amp; drop' },
+  { route: { name: 'example', hash: '#ex--external-events-drag-and-drop' }, label: 'External events drag &amp; drop' },
+  { route: { name: 'example', hash: '#ex--multiple-day-events' }, label: 'Multiple day events' },
+  { route: { name: 'example', hash: '#ex--recurring-events' }, label: 'Recurring events' },
+  { route: { name: 'example', hash: '#ex--overlapping-events' }, label: 'Overlapping events' },
+  { route: { name: 'example', hash: '#ex--background-events' }, label: 'Background events' },
+  { route: { name: 'example', hash: '#ex--all-day-events' }, label: 'All day events' },
+  { route: { name: 'example', hash: '#ex--schedules' }, label: 'Day schedules' },
 
-  { class: 'heading', href: '#ex--emitted-events', label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
-  { href: '#ex--emitted-events', label: 'Vue Cal emitted events' },
-  { href: '#ex--external-controls', label: 'External controls &amp; use of Vue Cal methods' },
-  { href: '#ex--sync-two-calendars', label: 'Sync two vue-cal instances' },
-  { href: '#ex--modifying-events-from-outside', label: 'Modifying events from outside' },
+  { class: 'heading', route: { name: 'example', hash: '#ex--emitted-events' }, label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
+  { route: { name: 'example', hash: '#ex--emitted-events' }, label: 'Vue Cal emitted events' },
+  { route: { name: 'example', hash: '#ex--external-controls' }, label: 'External controls &amp; use of Vue Cal methods' },
+  { route: { name: 'example', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
+  { route: { name: 'example', hash: '#ex--modifying-events-from-outside' }, label: 'Modifying events from outside' },
 
-  { class: 'heading', href: '#ex--timeline-tweaking', label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
-  { href: '#ex--scroll-to-time', label: 'Scroll the view to a particular time' },
-  { href: '#ex--timeline-tweaking', label: 'Timeline tweaking' },
-  { href: '#ex--custom-events-count', label: 'Custom events count' },
-  { href: '#ex--custom-title-and-cells', label: 'Custom title &amp; cells' },
-  { href: '#ex--custom-event-rendering', label: 'Custom event rendering' },
-  { href: '#ex--custom-schedules', label: 'Custom day schedules' }
+  { class: 'heading', route: { name: 'example', hash: '#ex--timeline-tweaking' }, label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
+  { route: { name: 'example', hash: '#ex--scroll-to-time' }, label: 'Scroll the view to a particular time' },
+  { route: { name: 'example', hash: '#ex--timeline-tweaking' }, label: 'Timeline tweaking' },
+  { route: { name: 'example', hash: '#ex--custom-events-count' }, label: 'Custom events count' },
+  { route: { name: 'example', hash: '#ex--custom-title-and-cells' }, label: 'Custom title &amp; cells' },
+  { route: { name: 'example', hash: '#ex--custom-event-rendering' }, label: 'Custom event rendering' },
+  { route: { name: 'example', hash: '#ex--custom-schedules' }, label: 'Custom day schedules' }
 
   // w-tag.ml2(color="primary" outline) NEW
   // w-tag.ml2(color="blue" outline) UPDATED
 ]
+
 const version = computed(() => {
   return process.env.VITE_APP_VERSION.replace(
     /-(\w)(\w+)\.(\d+)/,
     (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
   )
 })
-
-const vScrollTo = {
-  mounted: (el, binding) => {
-    el.addEventListener('click', () => {
-      const target = binding.value && document.querySelector(binding.value)
-      target.scrollIntoView()
-    })
-  }
-}
 </script>
 
 <style lang="scss">
@@ -191,7 +177,6 @@ $lighter-text: #ccc;
 }
 
 .top-bar {
-  z-index: 10;
   position: absolute;
   border-bottom: 1px solid transparent;
   background: rgba(255, 255, 255, 0.1);
@@ -203,6 +188,8 @@ $lighter-text: #ccc;
   box-sizing: content-box;
   background-color: rgba(#fff, 0.6);
   backdrop-filter: blur(6px);
+
+  .w-app &.w-toolbar {z-index: 10;}
 
   h1 {height: 100%;}
 

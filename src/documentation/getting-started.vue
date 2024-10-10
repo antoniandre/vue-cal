@@ -10,16 +10,16 @@ ul.ml4
   li
     h3.mt4 Via NPM
     .w-flex.align-center.mt2.xs-column.xs-align-start
-      ssh-pre.my0(language="shell" :dark="darkMode") npm i vue-cal # Vue 3
+      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal # Vue 3
       span.mx6 or
-      ssh-pre.my0(language="shell" :dark="darkMode") npm i vue-cal@legacy # Vue 2
+      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@legacy # Vue 2
 
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
     w-flex.vs-d-block(gap="6")
       w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
         template(#item-title.1) Options API
         template(#item-content.1)
-          ssh-pre.fill-height.ma0.bd0(language="js" :dark="darkMode").
+          ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
             import VueCal from 'vue-cal'
             import 'vue-cal/dist/vuecal.css'
 
@@ -30,7 +30,7 @@ ul.ml4
 
         template(#item-title.2) Composition API
         template(#item-content.2)
-          ssh-pre.fill-height.ma0.bd0(language="js" :dark="darkMode").
+          ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
             import VueCal from 'vue-cal'
             import 'vue-cal/dist/vuecal.css'
 
@@ -68,7 +68,7 @@ ul.ml4
     w-tabs.my4(:items="2" content-class="pa0")
       template(#item-title.1) Vue 3
       template(#item-content.1)
-        ssh-pre.ma0(language="html" :dark="darkMode").
+        ssh-pre.ma0(language="html" :dark="store.darkMode").
           &lt;head&gt;
             ...
             &lt;script src="https://unpkg.com/vue"&gt;&lt;/script&gt;
@@ -78,7 +78,7 @@ ul.ml4
 
       template(#item-title.2) Vue 2
       template(#item-content.2)
-        ssh-pre.ma0(language="html" :dark="darkMode").
+        ssh-pre.ma0(language="html" :dark="store.darkMode").
           &lt;head&gt;
             ...
             &lt;script src="https://unpkg.com/vue@legacy"&gt;&lt;/script&gt;
@@ -90,7 +90,7 @@ ul.ml4
       Then define the component to use in your template if you are not using the Vue composition
       API:
     w-flex.vs-d-block(gap="6")
-      ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="darkMode").
+      ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="store.darkMode").
         // In your Vue.js component.
         export default {
           components: { VueCal: vuecal },
@@ -120,10 +120,10 @@ highlight-message(type="warning")
   p.
     Wait! Before you dive in, make sure you place Vue Cal in a container that #[strong has a set height]! (not auto or initial)#[br]
     By default Vue Cal will take the full width &amp; height of its container if it has a set height.
-  ssh-pre.my2(language="html-vue" :dark="darkMode").
+  ssh-pre.my2(language="html-vue" :dark="store.darkMode").
     &lt;!-- If the container has no height, set a height on vue-cal --&gt;
     &lt;vue-cal style="height: 250px" /&gt;
-  vue-cal(small :dark="darkMode" :time="false" :views-bar="false" style="height: 250px")
+  vue-cal(small :dark="store.darkMode" :time="false" :views-bar="false" style="height: 250px")
 
 //- CSS notes.
 h2.title2.mt12.pt12
@@ -142,7 +142,7 @@ p.
   You can copy and change any color to quickly get a nice render.#[br]
   If that is still not doing what you want you can change even more in your own CSS.
 
-ssh-pre(language="css" label="CSS" :dark="darkMode").
+ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   /* Green-theme. */
   .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
   .vuecal__title-bar {background-color: #e4f5ef;}
@@ -189,13 +189,11 @@ p.
 <script setup>
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message.vue'
+import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
+import HighlightMessage from './components/highlight-message.vue'
 
-defineProps({
-  locales: { type: Array },
-  darkMode: { type: Boolean }
-})
+const store = useAppStore()
 </script>
 
 <style lang="scss">

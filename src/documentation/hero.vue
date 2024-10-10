@@ -148,7 +148,6 @@ $kate: #ff7fc8;
 .hero {
   position: relative;
   height: 850px;
-  font-size: 12px;
   margin-bottom: 8rem;
 
   &:before, &:after {

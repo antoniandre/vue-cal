@@ -1,7 +1,7 @@
 <template lang="pug">
 top-bar(v-if="$route.name !== 'home'" fixed)
 
-.page.w-flex.grow.page-container(:class="`page--${$route.name}`")
+.page.w-flex.grow.page-container(:class="`page--${$route.name}`" v-scroll="onScroll")
   aside(v-if="$route.name !== 'home'")
     nav.mb12
       ul.size--lg
@@ -20,20 +20,20 @@ top-bar(v-if="$route.name !== 'home'" fixed)
         li
           router-link(to="/release-notes") Release Notes
 
-  router-view(v-if="$route.name === 'home'" :locales="localesList" :dark-mode="store.darkMode")
+  router-view(v-if="$route.name === 'home'" :offset-top="offsetTop")
   main.main(v-else :class="`main--${$route.name}`")
-    router-view(:locales="localesList" :dark-mode="store.darkMode")
+    router-view
 
     w-transition-twist
       w-button.go-top.ma2(
         v-show="!goTopHidden"
+        @click="scrollToTop"
         icon="wi-chevron-up"
         fixed
         bottom
         right
         round
-        xl
-        v-scroll-to="'#top'")
+        xl)
 
 footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
   .text-center.smu-text-left.copyright
@@ -66,12 +66,33 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
 </template>
 
 <script setup>
+import { provide, ref } from 'vue'
 import { useAppStore } from '@/store'
 import TopBar from '@/documentation/components/top-bar.vue'
 
 const store = useAppStore()
+const offsetTop = ref(0)
+const goTopHidden = ref(true)
 
-const localesList = [
+const scrollToTop = () => document.querySelector('#top').scrollIntoView()
+
+// Directives.
+const vScroll = {
+  mounted: (el, binding) => {
+    const f = evt => {
+      if (binding.value(evt, el)) window.removeEventListener('scroll', f)
+    }
+    window.addEventListener('scroll', f)
+  }
+}
+
+const onScroll = () => {
+  const { scrollTop, offsetHeight } = document.documentElement
+  offsetTop.value = window.scrollY || scrollTop
+  goTopHidden.value = offsetTop.value < 200 || (offsetHeight - scrollTop - window.innerHeight <= 100)
+}
+
+provide('locales', [
   { code: 'sq', label: 'Albanian' },
   { code: 'ar', label: 'Arabic' },
   { code: 'bn', label: 'Bangla' },
@@ -113,7 +134,7 @@ const localesList = [
   { code: 'tr', label: 'Turkish' },
   { code: 'uk', label: 'Ukrainian' },
   { code: 'vi', label: 'Vietnamese' }
-]
+])
 </script>
 
 <style lang="scss">
