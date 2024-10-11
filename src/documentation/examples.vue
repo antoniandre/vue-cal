@@ -91,7 +91,7 @@
       @click="example1theme = example1theme === 'green' ? 'blue' : 'green'")
       | {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
   .example.my2.mxa(style="height: 450px")
-    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends)
+    vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends :dark="store.darkMode")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal :time="false" hide-weekends /&gt;
   highlight-message For all the options details, refer to the #[a(href="#api") API] section.
@@ -108,7 +108,7 @@
       :dark="store.darkMode"
       :views-bar="false"
       :time="false"
-      active-view="month"
+      view="month"
       xs)
       template(#arrow-prev)
         w-icon mdi mdi-arrow-left
@@ -118,7 +118,7 @@
     &lt;vue-cal
       :views-bar="false"
       :time="false"
-      active-view="month"
+      view="month"
       xs&gt;
       &lt;template #arrow-prev&gt;
         &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
@@ -150,15 +150,16 @@
         xs
         :views-bar="false"
         :time="false"
-        active-view="month"
-        :disable-views="['week']")
+        view="month"
+        :disable-views="['week']"
+        :dark="store.darkMode")
     .example.ma2(style="width: 270px;height: 300px")
       vue-cal.vuecal--rounded-theme.vuecal--default-theme(
         :dark="store.darkMode"
         xs
         :views-bar="false"
         :time="false"
-        active-view="month"
+        view="month"
         :disable-views="['week']")
     .w-flex.column.justify-center.no-grow.pl5
       .example.ma2(style="width: 210px;height: 230px")
@@ -167,7 +168,7 @@
           :views-bar="false"
           :time="false"
           :transitions="false"
-          active-view="month"
+          view="month"
           :disable-views="['week']")
       .grey.text-center
         w-icon.pr1(style="padding-bottom: 2px") mdi mdi-arrow-up
@@ -179,7 +180,7 @@
           xs
           :views-bar="false"
           :time="false"
-          active-view="month"
+          view="month"
           :disable-views="['week']"
           style="width: 270px;height: 300px"&gt;
       &lt;/vue-cal&gt;
@@ -190,7 +191,7 @@
           :views-bar="false"
           :time="false"
           :transitions="false"
-          active-view="month"
+          view="month"
           :disable-views="['week']"
           style="width: 210px;height: 230px"&gt;
       &lt;/vue-cal&gt;
@@ -210,10 +211,10 @@
     vue-cal.vuecal--default-theme.ex--disable-views(
       :dark="store.darkMode"
       :time="false"
-      active-view="month"
+      view="month"
       :disable-views="['years', 'year', 'week']")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-    &lt;vue-cal :time="false" active-view="month" :disable-views="['years', 'year', 'week']" /&gt;
+    &lt;vue-cal :time="false" view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
   //- Example.
   h4.title2
@@ -240,7 +241,7 @@
       :views-bar="false"
       click-to-navigate
       :time="false"
-      active-view="month"
+      view="month"
       :min-date="minDate"
       :max-date="maxDate")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
@@ -249,7 +250,7 @@
       :views-bar="false"
       click-to-navigate
       :time="false"
-      active-view="month"
+      view="month"
       :min-date="minDate"
       :max-date="maxDate"&gt;
     &lt;/vue-cal&gt;
@@ -286,7 +287,7 @@
       :views-bar="false"
       click-to-navigate
       :time="false"
-      active-view="month"
+      view="month"
       :disable-views="['week']"
       :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
@@ -296,7 +297,7 @@
       :views-bar="false"
       click-to-navigate
       :time="false"
-      active-view="month"
+      view="month"
       :disable-views="['week']"
       :disable-days="[
         new Date().subtractDays(2).format(),
@@ -371,7 +372,7 @@
       :dark="store.darkMode"
       :time="false"
       small
-      active-view="year"
+      view="year"
       :locale="locale"
       @ready="overrideDateTexts")
   ssh-pre(language="html-vue" label="Vue Template" reactive :dark="store.darkMode").
@@ -609,7 +610,7 @@
       :dark="store.darkMode"
       xs
       :time-cell-height="26"
-      active-view="day"
+      view="day"
       :disable-views="['years', 'year', 'month']"
       @ready="scrollToCurrentTime('.ex--today-current-time')")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
@@ -641,7 +642,7 @@
         :disable-views="['years']"
         :time="false"
         today-button
-        active-view="month"
+        view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
     .example.my2(style="max-width: 280px;height: 250px")
       vue-cal.vuecal--default-theme.ex--adding-a-today-button(
@@ -652,7 +653,7 @@
         :disable-views="['years']"
         :time="false"
         today-button
-        active-view="month"
+        view="month"
         :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
         template(#today-button)
           w-tooltip(bottom)
@@ -668,7 +669,7 @@
       :disable-views="['years']"
       :time="false"
       today-button
-      active-view="month"
+      view="month"
       :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
       &lt;template #today-button&gt;
@@ -925,8 +926,8 @@
         :selected-date="stringToDate('2018-11-19')"
         xs
         :time-from="10 * 60"
-        active-view="month"
-        :disable-views="['day']"
+        view="month"
+        date-picker
         events-count-on-year-view
         :events="events")
     .example.ma2.my2(style="width: 300px;height: 360px")
@@ -935,18 +936,19 @@
         :selected-date="stringToDate('2018-11-19')"
         xs
         :time-from="10 * 60"
-        :disable-views="['day']"
+        date-picker
         events-count-on-year-view
-        active-view="month"
-        :events="events")
+        view="month"
+        :events="events"
+        :dark="store.darkMode")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       xs
       :time-from="10 * 60"
-      :disable-views="['day']"
+      date-picker
       events-count-on-year-view
-      active-view="month"
+      view="month"
       :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -989,7 +991,7 @@
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
-      active-view="month"
+      view="month"
       hide-weekends
       events-on-month-view="short"
       :events="events")
@@ -998,7 +1000,7 @@
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :disable-views="['years', 'year']"
-      active-view="month"
+      view="month"
       hide-weekends
       events-on-month-view="short"
       :events="events"
@@ -1598,7 +1600,8 @@
       :time-from="9 * 60"
       :time-to="16 * 60"
       editable-events
-      @event-drop="onEventDrop")
+      @event-drop="onEventDrop"
+      :dark="store.darkMode")
     vue-cal.ml1.grow.external-events-drag-and-drop.vuecal--default-theme(
       :dark="store.darkMode"
       small
@@ -2542,10 +2545,11 @@
 
   .w-flex.align-center.justify-center.wrap
     vue-cal.vuecal--blue-theme(
+      :dark="store.darkMode"
       small
       :time="false"
       :views-bar="false"
-      active-view="week"
+      view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       style="max-width: 360px;height: 260px")
@@ -2553,8 +2557,8 @@
       xs
       :time="false"
       :views-bar="false"
-      active-view="month"
-      :disable-views="['years', 'year', 'week', 'day']"
+      view="month"
+      :views="['month']"
       @cell-focus="selectedDate = $event"
       style="max-width: 270px;height: 290px;transform: scale(0.9)")
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
@@ -2562,7 +2566,7 @@
       small
       :time="false"
       :views-bar="false"
-      active-view="week"
+      view="week"
       :disable-views="['years', 'year', 'month']"
       :selected-date="selectedDate"
       class="vuecal--blue-theme"
@@ -2572,8 +2576,8 @@
       xs
       :time="false"
       :views-bar="false"
-      active-view="month"
-      :disable-views="['years', 'year', 'week', 'day']"
+      view="month"
+      :views="['month']"
       @cell-focus="selectedDate = $event"
       class="vuecal--blue-theme vuecal--rounded-theme"
       style="max-width: 270px;height: 290px"&gt;
@@ -2689,7 +2693,7 @@
       vue-cal.ex--scroll-to-time.vuecal--default-theme(
         :dark="store.darkMode"
         small
-        active-view="day"
+        view="day"
         :disable-views="['years', 'year', 'month', 'week']"
         :views-bar="false"
         :time-cell-height="timeCellHeight"
@@ -2729,7 +2733,7 @@
       :time-from="5 * 60"
       :time-step="15"
       :time-cell-height="18"
-      active-view="day"
+      view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends)
       template(#time-cell="{ hours, minutes }")
@@ -2745,7 +2749,7 @@
       :time-from="5 * 60"
       :time-step="15"
       :time-cell-height="18"
-      active-view="day"
+      view="day"
       :disable-views="['years', 'year', 'month']"
       hide-weekends&gt;
       &lt;template #time-cell="{ hours, minutes }"&gt;
@@ -2779,8 +2783,8 @@
       xs
       :time-from="10 * 60"
       :time-step="2 * 60"
-      active-view="month"
-      :disable-views="['day']"
+      view="month"
+      date-picker
       events-count-on-year-view
       :events="events")
       template(#events-count="{ events, view }")
@@ -2792,8 +2796,8 @@
       xs
       :time-from="10 * 60"
       :time-step="2 * 60"
-      :disable-views="['day']"
-      active-view="month"
+      date-picker
+      view="month"
       events-count-on-year-view
       :events="events"&gt;
       &lt;template #events-count="{ events, view }"&gt;
@@ -2924,7 +2928,7 @@
       :dark="store.darkMode"
       :time="false"
       :dblclick-to-navigate="false"
-      active-view="month"
+      view="month"
       :events="events")
       template(#title="view")
         | 🎉&nbsp;
@@ -2944,7 +2948,7 @@
     &lt;vue-cal
       :time="false"
       :dblclick-to-navigate="false"
-      active-view="month"
+      view="month"
       :events="events"&gt;
 
       &lt;!-- Custom title --&gt;
@@ -3085,7 +3089,7 @@
     vue-cal.ex--custom-schedule-labels.vuecal--default-theme(
       :dark="store.darkMode"
       :disable-views="['years', 'year', 'month']"
-      active-view="day"
+      view="day"
       :schedules="customDayScheduleLabels"
       :hide-weekdays="[5, 6, 7]"
       sticky-schedule-labels)
@@ -3097,7 +3101,7 @@
   ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;vue-cal
       :disable-views="['years', 'year', 'month']"
-      active-view="day"
+      view="day"
       :schedules="schedules"
       :hide-weekdays="[5, 6, 7]"
       sticky-schedule-labels&gt;
