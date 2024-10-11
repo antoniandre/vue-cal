@@ -2,7 +2,7 @@
 h1.title1 Getting Started
 
 //- Installation
-h2.title2
+h2.title2.mt12
   a(href="#installation") Installation
   a#installation
 p.mt2 You have 2 options: using #[strong NPM] or #[strong.code &lt;script&gt;] tag.
@@ -15,7 +15,7 @@ ul.ml4
       ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@legacy # Vue 2
 
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
-    w-flex.vs-d-block(gap="6")
+    .w-flex.gap6.smd-column
       w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
         template(#item-title.1) Options API
         template(#item-content.1)
@@ -89,7 +89,7 @@ ul.ml4
     p.
       Then define the component to use in your template if you are not using the Vue composition
       API:
-    w-flex.vs-d-block(gap="6")
+    .w-flex.gap6.smd-column
       ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="store.darkMode").
         // In your Vue.js component.
         export default {
@@ -116,6 +116,29 @@ ul.ml4
 h2.title2.mt12.pt12
   a(href="#how-to-use") How to use
   a#how-to-use
+p Once you've imported the Vue Cal component, it's super simple. In your template just use:
+ssh-pre.my2(language="html-vue" :dark="store.darkMode").
+  &lt;vue-cal ... /&gt;
+p.
+  Without any options, Vue Cal will not do much things for you apart from being a calendar.
+  You may choose to provide options:
+.w-flex.gap4.smd-column
+  div
+    p &bull; As direct props like this:
+    ssh-pre.my2.ml3(language="html-vue" :dark="store.darkMode").
+      &lt;vue-cal hide-weekends time ... /&gt;
+  div
+    p &bull; Or bind all the props via v-bind like this:
+    ssh-pre.my2.ml3(language="html-vue" :dark="store.darkMode").
+      &lt;vue-cal v-bind="config" /&gt;
+
+      const config = {
+        hideWeekends: true,
+        time: true
+        ...
+      }
+
+
 highlight-message(type="warning")
   p.
     Wait! Before you dive in, make sure you place Vue Cal in a container that #[strong has a set height]! (not auto or initial)#[br]
@@ -198,6 +221,6 @@ const store = useAppStore()
 
 <style lang="scss">
 @media screen and (max-width: 830px) {
-  .w-flex.vs-d-block {display: block;}
+  .w-flex.w-flex.gap4.smd-column {display: block;}
 }
 </style>

@@ -98,5 +98,6 @@ nextTick(() => (ready.value = true))
 
   aside, nav {padding-top: 0;}
   aside nav {position: static;}
+  main {padding-top: 0;}
 }
 </style>
