@@ -7,6 +7,7 @@
     .ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
+        ref="vuecalEl"
         :dark="store.darkMode"
         date-picker
         v-model:view="month"
@@ -15,11 +16,12 @@
         :transitions="false"
         :events="demoExample.events"
         @cell-click="selectedDate = $event")
-      .grey.code.my2(style="font-size: 13px") Selected date: '{{ selectedDate.format() }}'
+      .grey.code.mt2.text-center(style="font-size: 12px") Selected date: {{ selectedDate.format() }}
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
       vue-cal.demo.full-cal.vuecal--full-height-delete(
+        ref="vuecal2El"
         :dark="store.darkMode"
         hide-weekends
         :selected-date="selectedDate"
@@ -33,11 +35,14 @@
         template(#schedule-label="{ schedule, view }")
           w-icon(:color="schedule.color" size="20") mdi mdi-account
           strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
-      a.mt4.w-flex.justify-end.grey-light1(
-        href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/hero.vue"
-        target="_blank")
-        | View this example source code
-        w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
+      .w-flex.align-center.wrap.mt3
+        p Pick your favorite color:
+        input.ml1(type="color" @input="e => setThemeColor(e.target.value)" value="#ff0000")
+        a.mla.w-flex.justify-end.grey-light1(
+          href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/hero.vue"
+          target="_blank")
+          | View this example source code
+          w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
 </template>
 
 <script setup>
@@ -56,6 +61,9 @@ const demoExample = ref({
   editable: { title: false, drag: true, resize: true, create: true, delete: true },
   events: []
 })
+const vuecalEl = ref(null)
+const vuecal2El = ref(null)
+
 const selectedDate = new Date()
 
 // Get the Monday of the real time current week.
@@ -139,6 +147,11 @@ demoExample.value.events.push(
     schedule: 2
   }
 )
+
+const setThemeColor = color => {
+  vuecalEl.value.$el.style.setProperty('--vuecal-primary-color', color)
+  vuecal2El.value.$el.style.setProperty('--vuecal-primary-color', color)
+}
 </script>
 
 <style lang="scss">
