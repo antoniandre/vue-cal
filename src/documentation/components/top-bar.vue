@@ -9,8 +9,8 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
   .top-bar__title
     span.top-bar__title-line
     span.top-bar__title-line
-    h1.w-flex.align-center.primary.px5
-      router-link.w-flex.align-center.top-bar__logo-link.no-grow(:to="{ name: 'home', hash: '#top' }")
+    component.w-flex.align-center.primary.px5.mb0.title1(:is="$route.name === 'home' ? 'h1' : 'div'")
+      router-link.top-bar__logo-link.w-flex.align-center.no-grow.gap4(:to="{ name: 'home', hash: '#top' }")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         .top-bar__logo-title
           | Vue Cal
@@ -41,7 +41,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
         :items="docs"
         item-class="pa0")
         template(#item="{ item }")
-          w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
+          w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
           router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(v-html="item.label")
@@ -74,7 +74,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
         item-class="pa0"
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
         template(#item="{ item }")
-          w-divider.grow(v-if="item.class === 'w-divider'" color="grey-light1")
+          w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
           router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(:class="{ ml8: !item.icon }" v-html="item.label")
@@ -96,11 +96,15 @@ const todayDate = ref((new Date()).getDate())
 
 const docs = [
   { route: '/getting-started', label: 'Installation' },
-  { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to use' },
+  { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to Use' },
+  { class: 'divider pa0' },
   { route: '/api', label: 'API' },
   // { route: { name: 'example', hash: '#date-prototypes' }, label: 'Date prototypes' },
   // { route: { name: 'example', hash: '#css-notes' }, label: 'CSS notes' },
-  { route: '/release-notes', label: 'Release notes' }
+  { route: '/migration-guide', label: 'Migration Guide' },
+  { route: '/road-map', label: 'Road Map' },
+  { class: 'divider pa0' },
+  { route: '/release-notes', label: 'Release Notes' }
 ]
 
 const examples = [
@@ -188,7 +192,9 @@ $lighter-text: #ccc;
   box-sizing: content-box;
   background-color: rgba(#fff, 0.6);
   backdrop-filter: blur(6px);
+  height: 40px;
 
+  &.w-toolbar {border-color: transparent;}
   .w-app &.w-toolbar {z-index: 10;}
 
   h1 {height: 100%;}
@@ -237,7 +243,6 @@ $lighter-text: #ccc;
   &__logo {
     position: relative;
     flex-shrink: 0;
-    margin-right: 15px;
     vertical-align: middle;
     box-sizing: border-box;
     transition: 0.2s 0s ease-in-out;
@@ -290,6 +295,7 @@ $lighter-text: #ccc;
     transition: 0.3s ease-in-out;
     font-size: 30px;
     font-weight: 500;
+    letter-spacing: 2px;
   }
 
   &__logo-title:after {
@@ -347,7 +353,7 @@ $lighter-text: #ccc;
     left: 76px;
     color: #888;
     opacity: 1;
-    transform: translateY(0em);
+    transform: translateY(0);
     transition: 0.3s .4s ease-in-out, 0s 0s top;
     font-size: 12px;
     font-weight: normal;
@@ -375,14 +381,18 @@ $lighter-text: #ccc;
     border-bottom-color: rgba($lighter-text, 0.5);
     position: fixed;
 
-    .top-bar__title {width: 100%;height: 40px;}
+    .top-bar__title {width: 100%;}
     .top-bar__logo {
       width: 32px;
       height: 30px;
       font-size: 0.8em;
-      padding-top: 10px;
+      padding-top: 9px;
     }
-    .top-bar__logo-title {font-size: 0.9em;font-weight: 600;}
+    .top-bar__logo-title {
+      font-size: 0.9em;
+      font-weight: 600;
+      letter-spacing: 0;
+    }
     .top-bar__logo-title:after {opacity: 0;}
     .version {opacity: 1;}
 
@@ -394,7 +404,7 @@ $lighter-text: #ccc;
 
     .intro {
       transition: 0.2s 0s ease-in-out all, 0s 0.3s top;
-      transform: translateY(1em);
+      transform: translateY(-1em);
       opacity: 0;
       top: -5em;
     }
@@ -414,17 +424,22 @@ $lighter-text: #ccc;
   &:focus:before, &:hover:before {opacity: 1;}
 }
 
-@media screen and (max-width: 600px) {
-  .fixed .top-bar__logo {transform: scale(0.7);}
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: $xs) {
+  .fixed .top-bar__logo {transform: scale(0.8);}
 
   .top-bar.fixed,
   .top-bar.fixed .w-toolbar__content,
-  .fixed .top-bar__logo-link {height: 32px;}
+  .fixed .w-flex.top-bar__logo-link {
+    height: 32px;
+    gap: 8px;
+  }
 
   .top-bar__items .w-button {padding: 0 10px;}
 }
 
-@media screen and (max-width: 449px) {
+@media screen and (max-width: $xxs) {
   .theme-switch {top: 4px;right: 4px;}
 
   .top-bar.fixed .top-bar__items {margin-right: 0;}

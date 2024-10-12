@@ -92,8 +92,19 @@ a {
 
 // Media queries.
 // --------------------------------------------------------
+@media screen and (max-width: $sm) {
+  aside {
+    width: 170px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  main {padding-left: 2.5rem;}
+}
+
 @media screen and (max-width: ($page-max-width + (2 * $container-padding-md))) {
   :root {--container-padding: #{$container-padding-md};}
+
   .page-container {
     padding-left: var(--container-padding);
     padding-right: var(--container-padding);

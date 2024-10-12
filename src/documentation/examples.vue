@@ -1,7 +1,5 @@
 <template lang="pug">
-h2.title2.mt12.pt12
-  a(href="#examples") Examples
-  a#examples(name="examples")
+h1.title1 Examples
 
 p.title3.
   In addition to all the examples below, you can try these common use cases on Codepen.
