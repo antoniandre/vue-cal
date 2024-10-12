@@ -34,10 +34,14 @@ This repository contains the active development for **Vue Cal version 5**. Versi
 
 ⚠️ **Note**: Vue Cal v5 is currently in active development and may not be stable for production use. Feel free to try it out and contribute!
 
-To install the v5 version via npm (under development):
+To install the v5 version (soon in NPM) clone the repo, and run:
 ```bash
-npm install vue-cal@next
+pnpm i
+pnpm dev
 ```
+<!-- ```bash
+npm install vue-cal@next
+``` -->
 
 ---
 
