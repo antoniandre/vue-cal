@@ -4,19 +4,22 @@ h1.title1 Release notes
 .mt4
   div.mb1
     strong.mr1 Version 5.0.0
+    p.
+      Vue Cal has been completely #[strong refactored from the ground up], with Composition API and
+      composables, while keeping in mind only two thing: #[strong performance and flexibility].
+      You will still benefit from all the previous versions features, with new hot stuff and improvements.
     ul
-      li Completely refactored from the ground up, with Composition API and composables
-      li Performance-oriented: faster and more efficient than before
-      li Now exposes all the date utilities for external use
-      li Now adapted and convenient to use with Composition API
-      li Easily benefit from Date prototypes and whenever you want, even before the calendar is created/mounted
-      li Externally preload a locale and provide it if you want to avoid a promise handling. (optional)
-      li Easily theme with dark or white theme + CSS variables
-      li Sticky headers + sticky time bar at the same time - only with CSS
-      li New layout with grids, more flexible
-      li New custom view of x days. The grid layout will adapt
-      li New more modern default UI
-      li Rewrote some options for easier use
+      li #[strong Performance-oriented]: faster and more efficient than before
+      li Now very adapted and practical to use with Composition API
+      li Now #[strong exposes all the date utilities] for external use
+      li Benefit (or not) from #[strong Date prototypes whenever and wherever] you want: even before the calendar is created/mounted
+      li #[strong Easily theme] with dark or white theme + CSS variables
+      li You may directly #[strong externally preload a locale and provide it] (avoiding a promise handling)
+      li #[strong All-directions sticky headers]: Sticky headers and sticky time bar at the same time - only with CSS
+      li #[strong New layout with grids], more flexible
+      li #[strong New custom days view] to display a custom amount of days. The grid layout will adapt
+      li New #[strong more modern default UI]
+      li Rewrote some options for #[strong more intuitive] use
 
   div.mb1
     strong.mr1 Version 4.9.0
