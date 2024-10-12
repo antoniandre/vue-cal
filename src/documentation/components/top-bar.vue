@@ -63,8 +63,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
           text
           tile
           color="secondary"
-          href="#examples"
-          :route="{ name: 'examples', hash: '#examples' }"
+          route="/examples"
           height="100%")
           w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
@@ -99,8 +98,8 @@ const docs = [
   { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to Use' },
   { class: 'divider pa0' },
   { route: '/api', label: 'API' },
-  // { route: { name: 'example', hash: '#date-prototypes' }, label: 'Date prototypes' },
-  // { route: { name: 'example', hash: '#css-notes' }, label: 'CSS notes' },
+  // { route: { name: 'examples', hash: '#date-prototypes' }, label: 'Date prototypes' },
+  // { route: { name: 'examples', hash: '#css-notes' }, label: 'CSS notes' },
   { route: '/migration-guide', label: 'Migration Guide' },
   { route: '/road-map', label: 'Road Map' },
   { class: 'divider pa0' },
@@ -108,53 +107,53 @@ const docs = [
 ]
 
 const examples = [
-  { class: 'heading', route: '/example', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
-  { route: { name: 'example', hash: '#ex--basic' }, label: 'Basic, hide weekends' },
-  { route: { name: 'example', hash: '#ex--small-cal' }, label: 'Small calendar, no view selector, custom arrows' },
-  { route: { name: 'example', hash: '#ex--disable-views' }, label: 'Disable views, default view' },
-  { route: { name: 'example', hash: '#ex--min-max-dates' }, label: 'Min / max dates &amp; single click to navigate' },
-  { route: { name: 'example', hash: '#ex--disable-days' }, label: 'Disable days' },
-  { route: { name: 'example', hash: '#ex--calendar-themes' }, label: 'Calendar themes' },
-  { route: { name: 'example', hash: '#ex--hiding-particular-week-days' }, label: 'Hide particular weekdays &amp; show week numbers' },
-  { class: 'heading', route: { name: 'example', hash: '#ex--internationalization' }, label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
-  { route: { name: 'example', hash: '#ex--internationalization' }, label: 'Internationalization' },
-  { class: 'heading', route: { name: 'example', hash: '#ex--timeline' }, label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
-  { route: { name: 'example', hash: '#ex--timeline' }, label: 'Timeline' },
-  { route: { name: 'example', hash: '#ex--special-hours' }, label: 'Business Hours' },
-  { route: { name: 'example', hash: '#ex--today-current-time' }, label: 'Today\'s current time' },
-  { route: { name: 'example', hash: '#ex--adding-a-today-button' }, label: 'Adding a Today button' },
+  { class: 'heading', route: '/examples', label: 'BASIC &amp; VIEW OPTIONS', icon: 'wi-check' },
+  { route: { name: 'examples', hash: '#ex--basic' }, label: 'Basic, hide weekends' },
+  { route: { name: 'examples', hash: '#ex--small-cal' }, label: 'Small calendar, no view selector, custom arrows' },
+  { route: { name: 'examples', hash: '#ex--disable-views' }, label: 'Disable views, default view' },
+  { route: { name: 'examples', hash: '#ex--min-max-dates' }, label: 'Min / max dates &amp; single click to navigate' },
+  { route: { name: 'examples', hash: '#ex--disable-days' }, label: 'Disable days' },
+  { route: { name: 'examples', hash: '#ex--calendar-themes' }, label: 'Calendar themes' },
+  { route: { name: 'examples', hash: '#ex--hiding-particular-week-days' }, label: 'Hide particular weekdays &amp; show week numbers' },
+  { class: 'heading', route: { name: 'examples', hash: '#ex--internationalization' }, label: 'INTERNATIONALIZATION (I18N)', icon: 'mdi mdi-translate' },
+  { route: { name: 'examples', hash: '#ex--internationalization' }, label: 'Internationalization' },
+  { class: 'heading', route: { name: 'examples', hash: '#ex--timeline' }, label: 'TIMELINE, BUSINESS HOURS &amp; TODAY', icon: 'mdi mdi-clock-outline' },
+  { route: { name: 'examples', hash: '#ex--timeline' }, label: 'Timeline' },
+  { route: { name: 'examples', hash: '#ex--special-hours' }, label: 'Business Hours' },
+  { route: { name: 'examples', hash: '#ex--today-current-time' }, label: 'Today\'s current time' },
+  { route: { name: 'examples', hash: '#ex--adding-a-today-button' }, label: 'Adding a Today button' },
 
-  { class: 'heading', route: { name: 'example', hash: '#ex--timeless-events' }, label:'EVENTS', icon: 'mdi mdi-calendar' },
-  { route: { name: 'example', hash: '#ex--timeless-events' }, label: 'Timeless events' },
-  { route: { name: 'example', hash: '#ex--events-with-time' }, label: 'Events with time information' },
-  { route: { name: 'example', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a dialog box on event click / dblclick' },
-  { route: { name: 'example', hash: '#ex--events-indicators' }, label: 'Events indicators' },
-  { route: { name: 'example', hash: '#ex--events-on-month-view' }, label: 'Display events on month view' },
-  { route: { name: 'example', hash: '#ex--edit-and-delete-events' }, label: 'Edit &amp; delete events' },
-  { route: { name: 'example', hash: '#ex--create-events' }, label: 'Create events' },
-  { route: { name: 'example', hash: '#ex--other-event-creation-methods' }, label: 'Other event creation methods' },
-  { route: { name: 'example', hash: '#ex--drag-and-drop' }, label: 'Drag &amp; drop' },
-  { route: { name: 'example', hash: '#ex--external-events-drag-and-drop' }, label: 'External events drag &amp; drop' },
-  { route: { name: 'example', hash: '#ex--multiple-day-events' }, label: 'Multiple day events' },
-  { route: { name: 'example', hash: '#ex--recurring-events' }, label: 'Recurring events' },
-  { route: { name: 'example', hash: '#ex--overlapping-events' }, label: 'Overlapping events' },
-  { route: { name: 'example', hash: '#ex--background-events' }, label: 'Background events' },
-  { route: { name: 'example', hash: '#ex--all-day-events' }, label: 'All day events' },
-  { route: { name: 'example', hash: '#ex--schedules' }, label: 'Day schedules' },
+  { class: 'heading', route: { name: 'examples', hash: '#ex--timeless-events' }, label:'EVENTS', icon: 'mdi mdi-calendar' },
+  { route: { name: 'examples', hash: '#ex--timeless-events' }, label: 'Timeless events' },
+  { route: { name: 'examples', hash: '#ex--events-with-time' }, label: 'Events with time information' },
+  { route: { name: 'examples', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a dialog box on event click / dblclick' },
+  { route: { name: 'examples', hash: '#ex--events-indicators' }, label: 'Events indicators' },
+  { route: { name: 'examples', hash: '#ex--events-on-month-view' }, label: 'Display events on month view' },
+  { route: { name: 'examples', hash: '#ex--edit-and-delete-events' }, label: 'Edit &amp; delete events' },
+  { route: { name: 'examples', hash: '#ex--create-events' }, label: 'Create events' },
+  { route: { name: 'examples', hash: '#ex--other-event-creation-methods' }, label: 'Other event creation methods' },
+  { route: { name: 'examples', hash: '#ex--drag-and-drop' }, label: 'Drag &amp; drop' },
+  { route: { name: 'examples', hash: '#ex--external-events-drag-and-drop' }, label: 'External events drag &amp; drop' },
+  { route: { name: 'examples', hash: '#ex--multiple-day-events' }, label: 'Multiple day events' },
+  { route: { name: 'examples', hash: '#ex--recurring-events' }, label: 'Recurring events' },
+  { route: { name: 'examples', hash: '#ex--overlapping-events' }, label: 'Overlapping events' },
+  { route: { name: 'examples', hash: '#ex--background-events' }, label: 'Background events' },
+  { route: { name: 'examples', hash: '#ex--all-day-events' }, label: 'All day events' },
+  { route: { name: 'examples', hash: '#ex--schedules' }, label: 'Day schedules' },
 
-  { class: 'heading', route: { name: 'example', hash: '#ex--emitted-events' }, label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
-  { route: { name: 'example', hash: '#ex--emitted-events' }, label: 'Vue Cal emitted events' },
-  { route: { name: 'example', hash: '#ex--external-controls' }, label: 'External controls &amp; use of Vue Cal methods' },
-  { route: { name: 'example', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
-  { route: { name: 'example', hash: '#ex--modifying-events-from-outside' }, label: 'Modifying events from outside' },
+  { class: 'heading', route: { name: 'examples', hash: '#ex--emitted-events' }, label: 'COMMUNICATING WITH VUE CAL', icon: 'mdi mdi-swap-horizontal' },
+  { route: { name: 'examples', hash: '#ex--emitted-events' }, label: 'Vue Cal emitted events' },
+  { route: { name: 'examples', hash: '#ex--external-controls' }, label: 'External controls &amp; use of Vue Cal methods' },
+  { route: { name: 'examples', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
+  { route: { name: 'examples', hash: '#ex--modifying-events-from-outside' }, label: 'Modifying events from outside' },
 
-  { class: 'heading', route: { name: 'example', hash: '#ex--timeline-tweaking' }, label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
-  { route: { name: 'example', hash: '#ex--scroll-to-time' }, label: 'Scroll the view to a particular time' },
-  { route: { name: 'example', hash: '#ex--timeline-tweaking' }, label: 'Timeline tweaking' },
-  { route: { name: 'example', hash: '#ex--custom-events-count' }, label: 'Custom events count' },
-  { route: { name: 'example', hash: '#ex--custom-title-and-cells' }, label: 'Custom title &amp; cells' },
-  { route: { name: 'example', hash: '#ex--custom-event-rendering' }, label: 'Custom event rendering' },
-  { route: { name: 'example', hash: '#ex--custom-schedules' }, label: 'Custom day schedules' }
+  { class: 'heading', route: { name: 'examples', hash: '#ex--timeline-tweaking' }, label: 'ADVANCED CUSTOMIZATION', icon: 'mdi mdi-tune' },
+  { route: { name: 'examples', hash: '#ex--scroll-to-time' }, label: 'Scroll the view to a particular time' },
+  { route: { name: 'examples', hash: '#ex--timeline-tweaking' }, label: 'Timeline tweaking' },
+  { route: { name: 'examples', hash: '#ex--custom-events-count' }, label: 'Custom events count' },
+  { route: { name: 'examples', hash: '#ex--custom-title-and-cells' }, label: 'Custom title &amp; cells' },
+  { route: { name: 'examples', hash: '#ex--custom-event-rendering' }, label: 'Custom event rendering' },
+  { route: { name: 'examples', hash: '#ex--custom-schedules' }, label: 'Custom day schedules' }
 
   // w-tag.ml2(color="primary" outline) NEW
   // w-tag.ml2(color="blue" outline) UPDATED
