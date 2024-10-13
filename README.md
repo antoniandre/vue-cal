@@ -56,17 +56,11 @@ npm install vue-cal@v4
 
 <br>
 
-## Installation
+<!-- ## Installation
 
 ```
 npm i vue-cal
-```
-
-**Vue 2 (legacy)**
-
-```
-npm i vue-cal@legacy
-```
+``` -->
 
 ___
 
