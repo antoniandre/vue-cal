@@ -6,30 +6,6 @@
     &.no-bullet {list-style-type: none;}
   }
 
-  h1 {line-height: 1;margin-bottom: 3rem;}
-
-  h2 {
-    font-size: 27px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 30px;
-    padding-bottom: 8px;
-
-    a {color: inherit;}
-  }
-
-  h3 {
-    margin-top: 80px;
-    padding: 10px 0 0;
-  }
-
-  h3 a {
-    font-size: 24px;
-    font-weight: normal;
-    color: #888 !important;
-
-    .w-icon {vertical-align: middle;margin-bottom: 2px;}
-  }
-
   .highlight-box {
     background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
     padding: 16px;
@@ -45,30 +21,6 @@
     }
   }
 
-  .examples {
-    h3 {
-      position: relative;
-      margin-bottom: 40px;
-      padding: 16px 22px;
-      background: rgb(0 189 126 / 5%);
-    }
-    h3:after {
-      content: '';
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      max-width: 400px;
-      width: 4px;
-      background: rgba($primary, 0.5);
-    }
-  }
-
-  h4 {margin: 70px 0 8px;}
-  h3 + h4 {margin-top: 20px;}
-  h4 a {color: inherit !important;}
-  h5 {font-size: 1.1em;color: #555;margin-top: 0.5em;}
-
   .todo .w-tag__content {padding: 0 3px;}
 
   .api-options {
@@ -76,13 +28,6 @@
     margin: 0;
   }
   .api-options > li {margin-top: 2em;}
-  .api-options > li > code {
-    font-weight: bold;
-    font-size: 1rem;
-    padding: 1px 5px;
-    border-radius: 4px;
-    background: #eee;
-  }
   .api-options p {margin-left: 1.5em;margin-top: 0.5em;}
   .api-options > li > ul {margin-left: 2.5em;margin-top: 0.5em;}
 
@@ -92,8 +37,6 @@
     margin: 0;
   }
 
-  .code {font-family: monospace, sans-serif;}
-  span.code {color: black;}
   .ssh-pre {
     margin-top: 12px;
     margin-bottom: 12px;
@@ -173,12 +116,6 @@
     background: linear-gradient(45deg, #2c3730, rgb(255 255 255 / 0%));
 
     .grey {color: #aaa;}
-  }
-
-  .documentation span.code {color: rgba(#fff, 0.85);}
-  .documentation .api-options > li > code {
-    background: #eeeeee26;
-    color: #5fb991;
   }
 }
 

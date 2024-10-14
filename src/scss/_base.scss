@@ -3,15 +3,20 @@
 :root {
   scroll-behavior: smooth;
   --w-base-color-rgb: 44, 62, 80;
+  --code-color: #2399ee;
+  --code-bg-color: rgba(var(--w-contrast-bg-color-rgb), 0.05);
 
-  &[data-theme="dark"] {--w-base-color-rgb: 255, 255, 255, 0.8;}
+  &[data-theme="dark"] {
+    --w-base-color-rgb: 255, 255, 255, 0.8;
+    --code-bg-color: rgba(var(--w-contrast-bg-color-rgb), 0.12);
+  }
 }
 
 .w-app {
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: rgba(var(--w-base-color-rgb));
+  color: rgb(var(--w-base-color-rgb));
   overflow-x: hidden;
 }
 
