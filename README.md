@@ -45,7 +45,7 @@ npm install vue-cal@next
 
 ---
 
-## Latest Stable Legacy Version (v4)
+## Latest Stable Version (v4)
 
 If you're looking for the stable **v4** version of Vue Cal, you can still find it in the [vue-cal-v4 repository](https://github.com/antoniandre/vue-cal-v4). Please note that v4 will no longer be actively maintained, and we encourage users to migrate to v5 when it becomes stable.
 
@@ -54,20 +54,13 @@ To install the v4 version via npm:
 npm install vue-cal@v4
 ```
 
-<br>
-
-<!-- ## Installation
-
-```
-npm i vue-cal
-``` -->
-
 ___
 
 ## Demo & Documentation
-> Will come soon.
-
+> V5 documentation will come soon.
 > You can already have a great overview of the current progress when opening the codebase's `/test` route in the browser :)
+
+> Stable v4 Documentation here: [Vue Cal Official Documentation](https://github.com/antoniandre/vue-cal-v4)
 
 ___
 
@@ -86,9 +79,3 @@ ___
 ## Contributing
 
 If you have any idea, feel free to open an issue to discuss a new feature or fork Vue Cal and submit your changes back to me.
-
-___
-
-## Release Notes
-
-[antoniandre.github.io/vue-cal/#release-notes](https://antoniandre.github.io/vue-cal/#release-notes)
