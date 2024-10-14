@@ -220,7 +220,7 @@ const store = useAppStore()
 </script>
 
 <style lang="scss">
-@media screen and (max-width: 830px) {
-  .w-flex.w-flex.gap4.smd-column {display: block;}
+.main--getting-started {
+  .w-tabs__content-wrap {flex-grow: 1;}
 }
 </style>

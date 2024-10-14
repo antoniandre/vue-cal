@@ -99,5 +99,33 @@ nextTick(() => (ready.value = true))
   aside, nav {padding-top: 0;}
   aside nav {position: static;}
   main {padding-top: 0;}
+
+  .pale-blue {color: #1471b8;}
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 499px) {
+  .page--home {
+    .announcement {
+      margin-bottom: 16px;
+
+      > .w-icon {
+        font-size: 35px;
+        width: 1em;
+        margin-right: 2px;
+      }
+      > svg {
+        font-size: 35px;
+        width: 0.9em;
+        margin-right: 8px;
+      }
+
+      &--github {
+        > .w-icon {margin-right: 6px;font-size: 30px;}
+        a {font-size: 14px;}
+      }
+    }
+  }
 }
 </style>

@@ -139,5 +139,4 @@ provide('locales', [
 
 <style lang="scss">
 @import '@/scss/index.scss';
-@import '@/scss/documentation.scss';
 </style>

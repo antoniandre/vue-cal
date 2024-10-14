@@ -1,7 +1,11 @@
 <template lang="pug">
 h1.title1 Road Map
 
-w-accordion(:model-value="[false, true]" :items="2" expand-icon-right expand-single)
+w-accordion.todo-accordion(
+  :model-value="[false, true]"
+  :items="2"
+  expand-icon-right
+  expand-single)
   template(#item-title.1)
     w-icon.mr2.primary wi-check
     strong.mra Done
@@ -85,4 +89,5 @@ import TodoListItem from './components/todo-list-item.vue'
 </script>
 
 <style lang="scss">
+.todo-accordion .w-tag__content {padding: 0 3px;}
 </style>

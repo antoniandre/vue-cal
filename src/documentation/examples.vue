@@ -3743,4 +3743,18 @@ const onEventDrop = ({ event, originalEvent, external }) => {
 
 <style lang="scss">
 @import '@/scss/examples.scss';
+
+.main--examples {
+  // Yellow theme.
+  .vuecal--yellow-theme {
+    .vuecal__menu, .vuecal__cell-events-count {background-color: rgba(255, 179, 0, 0.8);}
+    .vuecal__menu {color: #fff;}
+    .vuecal__title-bar {background-color: rgba(255, 236, 202, 0.5);}
+    .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
+    &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(255, 236, 202, 0.4);}
+    .vuecal__cell--selected:before {border-color: rgba(235, 216, 182, 0.5);}
+  }
+
+  .vuecal-blue--bg {background-color: rgba(66, 163, 185, 0.8);}
+}
 </style>

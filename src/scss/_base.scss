@@ -8,16 +8,14 @@
 
   &[data-theme="dark"] {
     --w-base-color-rgb: 255, 255, 255, 0.8;
+    --code-color: #84deff;
     --code-bg-color: rgba(var(--w-contrast-bg-color-rgb), 0.12);
   }
-}
 
-.w-app {
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   color: rgb(var(--w-base-color-rgb));
-  overflow-x: hidden;
 }
 
 aside {
@@ -46,6 +44,13 @@ main {
   flex-grow: 1;
 }
 
+.page-container {
+  width: 100%;
+  max-width: $page-max-width;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 footer {
   display: flex;
   flex-grow: 0;
@@ -59,38 +64,92 @@ footer {
     font-size: 1.2em;
 
     &.heart {transition: 1s ease-out;cursor: pointer;}
-    &.heart:hover {animation: pulse 1.8s ease-out infinite;}
+    &.heart:hover {animation: heart-pulse 1.8s ease-out infinite;}
   }
 }
 
-// Shared classes & styles.
+// Common styles.
 // --------------------------------------------------------
 a {
   text-decoration: none;
   color: $primary;
-
-  &[id] {
-    position: relative;
-    top: -3rem;
-  }
 }
 
+ul {
+  margin-left: 16px;
+
+  &.w-list {margin-left: 0;}
+  &.no-bullet {list-style-type: none;}
+}
+
+// Shared classes & styles.
+// --------------------------------------------------------
 .scrollable {
   height: 250px;
   overflow-y: scroll;
   padding-right: 1.8em;
 }
 
-.page-container {
-  width: 100%;
-  max-width: $page-max-width;
-  margin-left: auto;
-  margin-right: auto;
+.highlight-box {
+  background: linear-gradient(45deg, #ecf8f1, rgba(#fff, 0));
+  padding: 16px;
+  border-radius: 8px;
+
+  .w-icon.bolt {
+    width: 68px;
+    height: 68px;
+    background-color: rgba(#000, 0.05);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 }
 
-.w-tabs__content-wrap {flex-grow: 1;}
+.message-box {
+  width: 100%;
+  max-width: 650px;
+  margin: 0;
+}
 
-@keyframes pulse {
+.ssh-pre {
+  margin-top: 12px;
+  margin-bottom: 12px;
+  font-size: 13px;
+  line-height: 1.35;
+
+  &[data-label] {margin-top: 2.5em;}
+  &--dark {background-color: #2d2d2d;}
+}
+
+.important-notes {
+  font-weight: normal;
+  font-size: 15px;
+
+  small {
+    display: block;
+    font-size: 13px;
+    line-height: 19px;
+  }
+}
+
+.example {
+  max-width: 800px;
+  height: 600px;
+
+  &.grow {max-width: none;}
+
+  .vuecal {
+    overflow: hidden;
+    border-radius: 6px;
+  }
+
+  > .w-card__content {
+    padding: 0;
+    height: 100%;
+  }
+}
+
+@keyframes heart-pulse {
   0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
   25%, 40% {transform: scale(1.3);}
 }
