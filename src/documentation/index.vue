@@ -1,7 +1,7 @@
 <template lang="pug">
 top-bar(v-if="$route.name !== 'home'" fixed)
 
-.documentation.page.w-flex.grow.page-container(:class="`page--${$route.name}`" v-scroll="onScroll")
+.page.w-flex.grow.page-container(:class="`page--${$route.name}`" v-scroll="onScroll")
   aside(v-if="$route.name !== 'home'")
     nav.mb12
       ul.size--lg

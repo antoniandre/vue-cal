@@ -7,7 +7,7 @@
   .w-app .amber {color: #ffd865;}
   .w-app .deep-orange {color: #ff9c65;}
 
-  .documentation h2:not(.todo) {
+  h2:not(.todo) {
     color: var(--w-primary-color);
     border-bottom-color: #383838;
   }
