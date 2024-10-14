@@ -2,7 +2,7 @@
 h1.title1 Getting Started
 
 //- Installation
-title-link.mt12(h2 anchor="installation") Installation
+title-link.mt12(tag="h2" anchor="installation") Installation
 p.mt2 You have 2 options: using #[strong NPM] or #[strong.code &lt;script&gt;] tag.
 ul.ml4
   li
@@ -111,7 +111,7 @@ ul.ml4
                 | Vue Cal + Vue 2 (UMD build)
                 w-icon.ml1(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-title-link.mt12.pt12(h2 anchor="how-to-use") How to use
+title-link.mt12.pt12(tag="h2" anchor="how-to-use") How to use
 p Once you've imported the Vue Cal component, it's super simple. In your template just use:
 ssh-pre.my2(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal ... /&gt;
@@ -145,7 +145,7 @@ highlight-message(type="warning")
   vue-cal(small :dark="store.darkMode" :time="false" :views-bar="false" style="height: 250px")
 
 //- CSS notes.
-title-link.mt12.pt12(h2 anchor="css-notes") CSS Notes
+title-link.mt12.pt12(tag="h2" anchor="css-notes") CSS Notes
 p You can easily change the calendar design with CSS.
 
 h3.mt12 # Color themes &amp; rounded theme
@@ -208,7 +208,8 @@ import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import HighlightMessage from './components/highlight-message.vue'
+import TitleLink from '@/documentation/components/title-link.vue'
+import HighlightMessage from '@/documentation/components/highlight-message.vue'
 
 const store = useAppStore()
 </script>

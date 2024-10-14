@@ -3170,9 +3170,10 @@ import { computed, inject, ref } from 'vue'
 import { useAppStore } from '@/store'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
-import HighlightMessage from './components/highlight-message.vue'
 import EnUs from '@/vue-cal/i18n/en-us.json'
 import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
+import TitleLink from '@/documentation/components/title-link.vue'
+import HighlightMessage from '@/documentation/components/highlight-message.vue'
 
 useLocale(EnUs)
 addDatePrototypes()
