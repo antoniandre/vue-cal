@@ -12,67 +12,479 @@ w-accordion(
   content-class="pt0 pb3"
   expand-icon-rotate90)
   template(#item-title="{ item }")
-    code {{ item.label }}
+    strong.code {{ item.label }}
 
-title-link(tag="h2" anchor="options") Options
+h2.w-flex.justify-space-between.mt12.mb2
+  title-link(tag="div" anchor="options") Options
+  w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
+
 p.
-  Here is the list of all the parameters available and their description below this table.#[br]
-  Remember that HTML is case-insensitive and you should therefore use the #[span.code kebab-case]
-  instead of the #[span.code camelCase] for consistency.
-ssh-pre.mt2(language="js" :dark="store.darkMode").
-  activeView:             [String],          default: 'week'
-  allDayBarHeight:        [String, Number],  default: '25px'
-  cellClickHold:          [Boolean],         default: true
-  cellContextmenu:        [Boolean],         default: false
-  clickToNavigate:        [Boolean],         default: false
-  dblclickToNavigate:     [Boolean],         default: true
-  disableDatePrototypes:  [Boolean],         default: false
-  disableDays:            [Array],           default: []
-  disableViews:           [Array],           default: []
-  dragToCreateEvent:      [Boolean],         default: true
-  dragToCreateThreshold:  [Number],          default: 15
-  editableEvents:         [Boolean, Object], default: false
-  events:                 [Array],           default: []
-  eventsCountOnYearView:  [Boolean],         default: false
-  eventsOnMonthView:      [Boolean, String], default: false
-  hideBody:               [Boolean],         default: false
-  hideTitleBar:           [Boolean],         default: false
-  hideViewsBar:           [Boolean],         default: false
-  hideWeekdays:           [Array],           default: []
-  hideWeekends:           [Boolean],         default: false
-  locale:                 [String],          default: 'en'
-  maxDate:                [String, Date],    default: ''
-  minCellWidth:           [Number],          default: 0 // In pixels.
-  minDate:                [String, Date],    default: ''
-  minEventWidth:          [Number],          default: 0 // In percent.
-  minScheduleWidth:       [Number],          default: 0 // In pixels.
-  onEventClick:           [Function],        default: null
-  onEventCreate:          [Function],        default: null
-  onEventDblclick:        [Function],        default: null
-  overlapsPerTimeStep:    [Boolean],         default: false
-  resizeX:                [Boolean],         default: false
-  selectedDate:           [String, Date],    default: ''
-  showAllDayEvents:       [Boolean, String], default: false
-  showTimeInCells:        [Boolean],         default: false
-  showWeekNumbers:        [Boolean, String], default: false
-  small:                  [Boolean],         default: false
-  snapToTime:             [Number],          default: null
-  specialHours:           [Object],          default: {}
-  schedules:              [Array],           default: []
-  startWeekOnSunday:      [Boolean],         default: false
-  time:                   [Boolean],         default: true
-  timeCellHeight:         [Number],          default: 40 // In pixels.
-  timeFormat:             [String],          default: ''
-  timeFrom:               [Number],          default: 0 // In minutes.
-  timeStep:               [Number],          default: 60 // In minutes.
-  timeTo:                 [Number],          default: 24 * 60 // In minutes.
-  todayButton:            [Boolean],         default: false
-  transitions:            [Boolean],         default: true
-  twelveHour:             [Boolean],         default: false
-  xs:                     [Boolean],         default: false
-  watchRealTime:          [Boolean],         default: false
+  All these options can be used with a v-bind bound to an object of configuration in the JS,
+  or can be added one by one in the template.#[br]
+  If you provide all the props directly in the template, both #[code camelCase] and
+  #[code kebab-case] will work.
+w-accordion(expand-icon-rotate90 v-model="expandedOptions")
+  w-accordion-item
+    template(#title)
+      strong.code activeView
+      .type [String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 'week'
+    template(#content)
 
-ul.api-options
+  w-accordion-item
+    template(#title)
+      strong.code allDayBarHeight
+      .type [String, Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code '25px'
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code cellClickHold
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code cellContextmenu
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code clickToNavigate
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code dblclickToNavigate
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code disableDatePrototypes
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code disableDays
+      .type [Array]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code []
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code disableViews
+      .type [Array]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code []
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code dragToCreateEvent
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code dragToCreateThreshold
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 15
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code editableEvents
+      .type [Boolean, Object]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code events
+      .type [Array]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code []
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code eventsCountOnYearView
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code eventsOnMonthView
+      .type [Boolean, String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code hideBody
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code hideTitleBar
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code hideViewsBar
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code hideWeekdays
+      .type [Array]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code []
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code hideWeekends
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code locale
+      .type [String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 'en'
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code maxDate
+      .type [String, Date]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code minCellWidth
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 0 // In pixels.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code minDate
+      .type [String, Date]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code minEventWidth
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 0 // In percent.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code minScheduleWidth
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 0 // In pixels.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code onEventClick
+      .type [Function]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code null
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code onEventCreate
+      .type [Function]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code null
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code onEventDblclick
+      .type [Function]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code null
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code overlapsPerTimeStep
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code resizeX
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code selectedDate
+      .type [String, Date]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code showAllDayEvents
+      .type [Boolean, String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code showTimeInCells
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code showWeekNumbers
+      .type [Boolean, String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code small
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code snapToTime
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code null
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code specialHours
+      .type [Object]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code {}
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code schedules
+      .type [Array]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code []
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code startWeekOnSunday
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code time
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code timeCellHeight
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 40 // In pixels.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code timeFormat
+      .type [String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code timeFrom
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 0 // In minutes.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code timeStep
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 60 // In minutes.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code timeTo
+      .type [Number]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code 24 * 60 // In minutes.
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code todayButton
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code transitions
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code twelveHour
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code xs
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+  w-accordion-item
+    template(#title)
+      strong.code watchRealTime
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+
+
+ul.api-options.mt12
   li
     code.mr2 locale
     span.code [String], default: 'en'
@@ -742,15 +1154,10 @@ addDatePrototypes()
 
 const store = useAppStore()
 const locales = inject('locales')
+
 const now = new Date()
-
-const nowFormatted = computed(() => {
-  return Date.prototype.format && now.format('YYYY{MM}DD')
-})
-
-const todayFormatted = computed(() => {
-  return `${now.format()} ${now.formatTime()}`
-})
+const nowFormatted = computed(() => Date.prototype.format && now.format('YYYY{MM}DD'))
+const todayFormatted = computed(() => `${now.format()} ${now.formatTime()}`)
 
 const views = [
   { label: 'day', content: 'Displays a given single day in a a single cell.' },
@@ -761,7 +1168,23 @@ const views = [
   { label: 'years', content: 'Displays a range of 25 years in a 5x5 cell grid. Usually for date pickers.' }
 ]
 const expandedViews = ref([...views].fill(false))
+const expandedOptions = ref(Array(99).fill(false))
 </script>
 
 <style lang="scss">
+.main--api {
+  .w-accordion__item-title code,
+  .w-accordion__item-title .code {
+    background-color: transparent;
+  }
+  .type {
+    color: #33c;
+    font: 600 0.8em monospace;
+    letter-spacing: -0.5px;
+    word-spacing: -3px;
+  }
+  .default {color: #df5151;}
+  [data-theme="dark"] & .type {color: #e67ad2;}
+  [data-theme="dark"] & .default {color: #adcfa4;}
+}
 </style>
