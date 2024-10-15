@@ -16,7 +16,8 @@
         :transitions="false"
         :events="demoExample.events"
         @cell-click="selectedDate = $event")
-      .grey.code.mt2.text-center(style="font-size: 12px") Selected date: {{ selectedDate.format() }}
+      .code.base-color.transparent--bg.mt2.text-center(style="font-size: 12px").
+        Selected date: {{ selectedDate.format() }}
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
