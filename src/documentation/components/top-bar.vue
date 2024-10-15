@@ -98,7 +98,7 @@ const docs = [
   { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to Use' },
   { class: 'divider pa0' },
   { route: '/api', label: 'API' },
-  // { route: { name: 'examples', hash: '#date-prototypes' }, label: 'Date prototypes' },
+  { route: '/date-prototypes', label: 'Date Prototypes' },
   // { route: { name: 'examples', hash: '#css-notes' }, label: 'CSS notes' },
   { route: '/migration-guide', label: 'Migration Guide' },
   { route: '/road-map', label: 'Road Map' },

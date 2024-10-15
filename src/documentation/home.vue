@@ -13,6 +13,8 @@ hero
         li
           router-link(to="/api") API
         li
+          router-link(to="/date-prototypes") Date Prototypes
+        li
           router-link(to="/examples") Examples
         li
           router-link(to="/migration-guide") Migration Guide

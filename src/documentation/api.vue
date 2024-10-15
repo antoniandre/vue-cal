@@ -18,20 +18,29 @@ h2.w-flex.justify-space-between.mt12.mb2
   title-link(tag="div" anchor="options") Options
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
 
-p.
-  All these options can be used with a v-bind bound to an object of configuration in the JS,
-  or can be added one by one in the template.#[br]
-  If you provide all the props directly in the template, both #[code camelCase] and
-  #[code kebab-case] will work.
-w-accordion(expand-icon-rotate90 v-model="expandedOptions")
+p.caption.size--md.lh1.
+  Options can be provided to &lg;vue-cal&gt; using a v-bind="configObject" or added one by one.#[br]
+  In the latter case, both #[code.base-color camelCase] and #[code.base-color kebab-case] will work.
+
+w-accordion.mt2(
+  expand-icon-rotate90
+  v-model="expandedOptions"
+  title-class="pl0"
+  content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
-      strong.code activeView
+      strong.code view
       .type [String]
       | ,
       .body.grey.mx1 default:
       strong.default.code 'week'
     template(#content)
+      span.code [String], default: 'week'
+      p.
+        Sets a default active view, for the first time you load the calendar.#[br]
+        Then control the active view from outside of Vue Cal.#[br]
+        Accepts one of 'years', 'year', 'month', 'week', 'days', 'day'.#[br]
+        The active view has a two-way binding: you can use a v-model to keep your variable up to date.
 
   w-accordion-item
     template(#title)
@@ -194,6 +203,12 @@ w-accordion(expand-icon-rotate90 v-model="expandedOptions")
       .body.grey.mx1 default:
       strong.default.code []
     template(#content)
+      p.
+        Hide particular days of the week. This option accepts an array of days (day numbers) to hide,
+        #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
+        This option will apply on month &amp; week views.#[br]#[br]
+        If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
+        #[span.code hideWeekends] in supplement of #[span.code hideWeekdays].
 
   w-accordion-item
     template(#title)
@@ -203,6 +218,11 @@ w-accordion(expand-icon-rotate90 v-model="expandedOptions")
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
+      p.
+        Hide the weekend and shows only Monday to Friday on month view and week view.#[br]
+        The weekend are still visible in day view not to break the behavior of the arrows.#[br]
+        Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends
+        is true.
 
   w-accordion-item
     template(#title)
@@ -212,6 +232,44 @@ w-accordion(expand-icon-rotate90 v-model="expandedOptions")
       .body.grey.mx1 default:
       strong.default.code 'en'
     template(#content)
+      p.
+        Allow translation of the calendar texts in a given language.#[br]
+        Use a 2 letter locale code
+        (#[a(href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank") ISO 639-1])
+        unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
+      highlight-message(type="info")
+        | Currently available languages are {{ locales.map(l => l.label).join(', ') }}.#[br]
+        | If you are interested in providing a language support please do a pull request with a json file
+        | into the i18n directory.#[br]
+        | this is what a language json looks like.
+
+        ssh-pre.my2(language="json" :dark="store.darkMode").
+          {
+            "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+            "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
+            "years": "Years",
+            "year": "Year",
+            "month": "Month",
+            "week": "Week",
+            "day": "Day",
+            "today": "Today",
+            "noEvent": "No Event",
+            "allDay": "All day",
+            "deleteEvent": "Delete",
+            "createEvent": "Create an event",
+            "dateFormat": "dddd D MMMM YYYY"
+          }
+        p.
+          Regarding the #[span.code dateFormat] translation, this is the format of the full
+          date you can see in a single day view title.#[br]
+          #[span.code dddd] stands for the full-letter day of week, #[span.code MMMM] stands for
+          full-letter month, #[span.code D] stands for the date of the month (0-31),
+          #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
+
+      highlight-message(type="tips").
+        Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
+        #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
+        #[a(href="#css-notes") CSS Notes].
 
   w-accordion-item
     template(#title)
@@ -311,6 +369,20 @@ w-accordion(expand-icon-rotate90 v-model="expandedOptions")
       .body.grey.mx1 default:
       strong.default.code ''
     template(#content)
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a selected date, for the first time you load the calendar.#[br]
+        This day will be highlighted and the first view will naturally show this date.#[br]
+        E.g. setting a date in year 2000 with a activeView of week, will show you that week of year 2000.#[br]#[br]
+        Updating the #[span.code selectedDate] programmatically after the first calendar load,
+        will update the view if needed to show this date.#[br]
+        Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.#[br]
+        The selected date has a two-way binding: you can use a v-model (or #[code .sync] on Vue 2) on it to
+        keep your variable up to date.
+      highlight-message(type="warning").
+        A correct string date format is #[code {{ todayFormatted }}] or
+        #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't need the time.
+        Only these formats will work as a string. You can also provide a native Javascript Date object.
 
   w-accordion-item
     template(#title)
@@ -484,48 +556,10 @@ w-accordion(expand-icon-rotate90 v-model="expandedOptions")
     template(#content)
 
 
-ul.api-options.mt12
-  li
-    code.mr2 locale
-    span.code [String], default: 'en'
-    p.
-      Allows you to translate the calendar texts in a given language.#[br]
-      Use a 2 letter locale code
-      (#[a(href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank") ISO 639-1])
-      unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
-    highlight-message(type="info")
-      | Currently available languages are {{ locales.map(l => l.label).join(', ') }}.#[br]
-      | If you are interested in providing a language support please do a pull request with a json file
-      | into the i18n directory.#[br]
-      | this is what a language json looks like.
 
-      ssh-pre.my2(language="json" :dark="store.darkMode").
-        {
-          "weekDays": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
-          "months": ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"],
-          "years": "Years",
-          "year": "Year",
-          "month": "Month",
-          "week": "Week",
-          "day": "Day",
-          "today": "Today",
-          "noEvent": "No Event",
-          "allDay": "All day",
-          "deleteEvent": "Delete",
-          "createEvent": "Create an event",
-          "dateFormat": "dddd D MMMM YYYY"
-        }
-      p.
-        Regarding the #[span.code dateFormat] translation, this is the format of the full
-        date you can see in a single day view title.#[br]
-        #[span.code dddd] stands for the full-letter day of week, #[span.code MMMM] stands for
-        full-letter month, #[span.code D] stands for the date of the month (0-31),
-        #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
-    highlight-message(type="tips").
-      Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
-      #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
-      #[a(href="#css-notes") CSS Notes].
+
+
   li
     code.mr2 hideViewsBar
     span.code [Boolean], default: false
@@ -546,23 +580,6 @@ ul.api-options.mt12
     p.
       When set to #[span.code true], the whole calendar body will disappear - cells and timeline.#[br]
       Also means that all the logic usually triggered from the calendar's body won't run at all.
-  li
-    code.mr2 hideWeekends
-    span.code [Boolean], default: false
-    p.
-      Hide the weekend and shows only Monday to Friday on month view and week view.#[br]
-      The weekend are still visible in day view not to break the behavior of the arrows.#[br]
-      Note that by hiding the arrows you won't be able to see a weekend day in day view if hideWeekends
-      is true.
-  li
-    code.mr2 hideWeekdays
-    span.code [Array], default: []
-    p.
-      Hide particular days of the week. This option accepts an array of days (day numbers) to hide,
-      #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
-      This option will apply on month &amp; week views.#[br]#[br]
-      If you want to hide Saturday and Sunday you can put #[span.code 6, 7] in the array or use
-      #[span.code hideWeekends] in supplement of #[span.code hideWeekdays].
   li
     code.mr2 disableDays
     span.code [Array], default: []
@@ -593,15 +610,6 @@ ul.api-options.mt12
       case of slipping cursor while clicking.#[br]
       With option gets to a positive integer, and you can set it to #[span.code 0] to disable it.
       Refer to the #[a(href="#ex--create-events") Create events] example.
-  li
-    code.mr2 activeView
-    span.code [String], default: 'week'
-    p.
-      Allows you to set a default active view, for the first time you load the calendar.#[br]
-      Then control the active view from outside of Vue Cal.#[br]
-      Accepts one of 'years', 'year', 'month', 'week', 'day'.#[br]
-      The active view has a two-way binding: you can use a v-model (or #[code .sync] on Vue 2)
-      on it to keep your variable up to date.
   li
     code.mr2 allDayBarHeight
     span.code [String, Number], default: '25px'
@@ -651,23 +659,6 @@ ul.api-options.mt12
       strong Did you know there can be 53 weeks in the year?#[br]
       | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year.
       | In this case the week number will be 53 instead of 1.
-  li
-    code.mr2 selectedDate
-    span.code [String, Date], default: ''
-    p.
-      Accepts a formatted string or plain JS Date object.#[br]
-      Set a selected date, for the first time you load the calendar.#[br]
-      This day will be highlighted and the first view will naturally show this date.#[br]
-      E.g. setting a date in year 2000 with a activeView of week, will show you that week of year 2000.#[br]#[br]
-      Updating the #[span.code selectedDate] programmatically after the first calendar load,
-      will update the view if needed to show this date.#[br]
-      Refer to the #[a(href="#ex--sync-two-calendars") Sync two vue-cal instances] example.#[br]
-      The selected date has a two-way binding: you can use a v-model (or #[code .sync] on Vue 2) on it to
-      keep your variable up to date.
-    highlight-message(type="warning").
-      A correct string date format is #[code {{ todayFormatted }}] or
-      #[code="{{ todayFormatted.split(' ')[0] }}"] if you don't need the time.
-      Only these formats will work as a string. You can also provide a native Javascript Date object.
   li
     code.mr2 minDate
     span.code [String, Date], default: ''
@@ -906,7 +897,7 @@ ul.api-options.mt12
         li
           | You can set more accurately which edition you want to allow by passing an object.#[br]
           | For instance, this object will allow all the above editions except the drag &amp; drop:
-          div.code.black { title: true, drag: false, resize: true, delete: true, create: true }
+          div.code.base-color { title: true, drag: false, resize: true, delete: true, create: true }
         li.
           You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
   li
@@ -1030,113 +1021,6 @@ ul.api-options.mt12
     p.
       If you really don't want the Date prototypes to be added, you can disable them with this option.#[br]
       Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
-
-title-link.mt12.pt12(tag="h2" anchor="date-prototypes") Date Prototypes
-p
-  | Vue Cal has no dependency and performs date operations through a few notable useful and efficient functions that
-  | have been added to the native #[span.code Date] class for your convenience.#[br]
-  strong.mr2.
-    With this set of functions, you will most likely not need #[em Moment.js] or any other additional Date library!#[br]#[br]
-    Once Vue Cal is loaded, you can access the following functions from anywhere in your code
-    just like a simple #[span.code Date] function.#[br]
-  | E.g. #[span.code (new Date()).addDays(2)]
-
-ul
-  li.mt3
-    code.text-bold.mr2 .addDays(days)
-    | Adds days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code days]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .subtractDays(days)
-    | Subtracts days to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code days]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .addHours(hours)
-    | Adds hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code hours]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .subtractHours(hours)
-    | Subtracts hours to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code hours]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .addMinutes(minutes)
-    | Adds minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code minutes]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .subtractMinutes(minutes)
-    | Subtracts minutes to a Date object and returns it. The original Date stays untouched as a copy is made.#[br]
-    | `#[span.code minutes]` is an integer.
-  li.mt3
-    code.text-bold.mr2 .getWeek()
-    | Returns the week number (1 #[a(href="#there-can-be-53-weeks-in-a-year") to 53]) of a date.
-  li.mt3
-    code.text-bold.mr2 .isToday()
-    | Returns #[span.code true] if the date is Today.
-  li.mt3
-    code.text-bold.mr2 .isLeapYear()
-    | Returns #[span.code true] if the date is in a leap year.
-
-h3.mt4 And because everyone needs a Date/time formatting function...
-p It is now available directly from the Date object, with your loaded locale!
-
-ul
-  li.mt3
-    code.text-bold.mr2 .format(format)
-    div.
-      Returns a formatted date string.
-      Default format is #[span.code 'YYYY-MM-DD'], but you can use any formatting keyword from
-      this list, and add any character not present in this mapping:
-    ul
-      li #[strong.code.black YYYY]: full year. #[span.grey-light1.ml2 // `2019`]
-      li #[strong.code.black YY]: 2 last digits of the year. #[span.grey-light1.ml2 // `19`]
-      li #[strong.code.black MMMM]: month in full. #[span.grey-light1.ml2 // `January`]
-      li #[strong.code.black MMM]: 3 first letters of the month. #[span.grey-light1.ml2 // `Jan`]
-      li #[strong.code.black MM]: month number with leading zero. (01-12) #[span.grey-light1.ml2 // `01`]
-      li #[strong.code.black M]: month number without leading zero. (1-12) #[span.grey-light1.ml2 // `1`]
-      li #[strong.code.black DD]: date of the month with leading zero. (01-31) #[span.grey-light1.ml2 // `01`]
-      li #[strong.code.black D]: date of the month without leading zero. (1-31) #[span.grey-light1.ml2 // `1`]
-      li.
-        #[strong.code.black S]: (usually with surrounding #[span.code `{ }`]) only in English,
-        will output #[span.code `st`], #[span.code `nd`], #[span.code `rd`] or #[span.code `th`].
-      li #[strong.code.black dddd]: day of the week in full. #[span.grey-light1.ml2 // `Monday`]
-      li #[strong.code.black ddd]: 3 first letters of the day of the week. #[span.grey-light1.ml2 // `Mon`]
-      li #[strong.code.black dd]: first letter of the day of the week. #[span.grey-light1.ml2 // `M`]
-      li #[strong.code.black d]: number of the day of the week. (1-7) #[span.grey-light1.ml2 // `1` for Monday]
-      li #[strong.black And also all the keywords from the following #[span.code formatTime()] function.]
-
-  li.mt3
-    code.text-bold.mr2 .formatTime(format)
-    div.
-      Returns a formatted time string.#[br]
-      The #[span.code format()] function can also do this, but this might be a shortcut if you just want
-      the default time formatting.#[br]
-      E.g. `#[span.code formatTime()]`).#[br]
-      This function will also be slightly faster than #[span.code format()] as lighter in functionality.#[br]
-      Default format is #[span.code 'HH:mm'], but you can use any formatting keyword from
-      this list, and add any character not present in this mapping:
-    ul
-      li #[strong.code.black HH]: Hours with leading zero, 24-hour format. (00-24)#[span.grey-light1.ml2 // `20`]
-      li #[strong.code.black H]: Hours without leading zero, 24-hour format. (0-24)#[span.grey-light1.ml2 // `20`]
-      li #[strong.code.black hh]: Hours with leading zero, 12-hour format. #[span.grey-light1.ml2 // `08`]
-      li #[strong.code.black h]: Hours without leading zero, 12-hour format. #[span.grey-light1.ml2 // `8`]
-      li #[strong.code.black mm]: Minutes with leading zero. #[span.grey-light1.ml2 // `08`]
-      li #[strong.code.black m]: Minutes without leading zero. #[span.grey-light1.ml2 // `8`]
-      li #[strong.code.black am]: (usually with surrounding #[span.code `{ }`]) am or pm (also localized if any)
-
-highlight-message.my4(type="tips")
-  ul
-    li.
-      To separate 2 keywords or a keyword and another text not from this list without adding spaces or
-      any separation, you can use the delimiters #[span.code `{ }`].#[br]
-      For instance #[span.code `new Date().format('YYYY{MM}DD')`] (or even #[span.code `{YYYY}{MM}{DD}`]) will produce:
-      "#[span.code {{ nowFormatted }}]".
-    li.mt4.
-      The Date functions are added when Vue Cal loads, you can always check if you have it before you use it:#[br]
-      #[span.code Date.prototype.format &amp;&amp; new Date().format()]
-    li.mt4.
-      If you really don't want the Date prototypes to be added, you can disable them with this option:
-      #[span.code disable-date-prototypes].#[br]
-      Refer to #[a(href="https://github.com/antoniandre/vue-cal/issues/259" target="_blank" style="text-decoration: underline;color: inherit") This Vue Cal issue on Github].
 </template>
 
 <script setup>
@@ -1176,8 +1060,10 @@ const expandedOptions = ref(Array(99).fill(false))
   .w-accordion__item-title code,
   .w-accordion__item-title .code {
     background-color: transparent;
+    padding: 0;
   }
   .type {
+    margin-left: 2px;
     color: #33c;
     font: 600 0.8em monospace;
     letter-spacing: -0.5px;

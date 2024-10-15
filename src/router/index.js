@@ -18,6 +18,11 @@ const routes = [
     component: () => import('@/documentation/api.vue')
   },
   {
+    path: '/date-prototypes',
+    name: 'date-prototypes',
+    component: () => import('@/documentation/date-prototypes.vue')
+  },
+  {
     path: '/examples',
     name: 'examples',
     component: () => import('@/documentation/examples.vue')
