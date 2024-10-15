@@ -328,7 +328,7 @@ h1.title1 Release notes
               strong.
                 To allow formatting both date and time in the same Date prototype function,
                 the formatting keywords have changed, since the month and minutes keywords were
-                both #[strong.code.black mm] but in 2 different functions.#[br]
+                both #[strong.code.base-color mm] but in 2 different functions.#[br]
                 The new formatting keywords are more commonly used, the default format is now
                 #[span.code `YYYY-MM-DD`].#[br]
                 Ref. #[a(href="#date-prototypes") Date prototypes]

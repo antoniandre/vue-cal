@@ -2102,14 +2102,14 @@ h4.title2
   | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
   | body width and it will become scrollable horizontally.
   ul
-    li #[span.code min-cell-width.black] will only be activated on week view, since there is only 1 cell in day view.
+    li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
     li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
 
   | #[br]You can also use the option #[span.code sticky-schedule-labels] to place the schedule labels in the header.#[br]#[br]
 
   | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
 
-  | Refer to the #[span.code min-cell-width.black], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
+  | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
 
   .w-flex.align-center.wrap
     w-button.px2.mr2.my1(
