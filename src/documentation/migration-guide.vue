@@ -9,7 +9,13 @@ ul
       import { VueCal, addDatePrototypes } from '@/vue-cal'
 
       addDatePrototypes()
-  li
+
+      const tomorrow = (new Date()).addDays(1) // Tomorrow at same time.
+      console.log(tomorrow.format()) // outputs: {{ (new Date()).addDays(1).format() }}
+
+      const currentTime = new Date()
+      console.log(currentTime.formatTime()) // outputs: {{ (new Date()).formatTime() }}
+
 
 h2 Props
 ul
@@ -22,13 +28,17 @@ ul
   li specialHours -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li disableWeekdays -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li hideViewsBar renamed viewsBar, default false
-  li
 </template>
 
 <script setup>
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
+import { useAppStore } from '@/store'
 import TitleLink from '@/documentation/components/title-link.vue'
+import { VueCal, addDatePrototypes } from '@/vue-cal'
+
+const store = useAppStore()
+addDatePrototypes()
 </script>
 
 <style lang="scss">
