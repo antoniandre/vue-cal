@@ -1,6 +1,17 @@
 <template lang="pug">
 h1.title1 Migration Guide
 
+h2 Global
+ul
+  li
+    p The Date prototypes are not injected by default anymore, and very easy to add, you control when:
+    ssh-pre(language="js" :dark="store.darkMode").
+      import { VueCal, addDatePrototypes } from '@/vue-cal'
+
+      addDatePrototypes()
+  li
+
+h2 Props
 ul
   li `activeView` renamed `view`
   li removed `hideBody` useless. With so much flexibility, there is no case where you only need the header without the calendar body
@@ -10,10 +21,14 @@ ul
   li x-small renamed xs
   li specialHours -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li disableWeekdays -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
+  li hideViewsBar renamed viewsBar, default false
   li
 </template>
 
 <script setup>
+import SshPre from 'simple-syntax-highlighter'
+import 'simple-syntax-highlighter/dist/sshpre.css'
+import TitleLink from '@/documentation/components/title-link.vue'
 </script>
 
 <style lang="scss">
