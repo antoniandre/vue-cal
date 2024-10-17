@@ -8,9 +8,9 @@ h2.w-flex.justify-space-between.mb2
 w-accordion(
   v-model="expandedViews"
   :items="views"
+  expand-icon-rotate90
   title-class="pl0 bd0"
-  content-class="pt0 pb3"
-  expand-icon-rotate90)
+  content-class="pt0 pb3")
   template(#item-title="{ item }")
     strong.code {{ item.label }}
 
@@ -23,9 +23,9 @@ p.caption.size--md.lh1.
   In the latter case, both #[code.base-color camelCase] and #[code.base-color kebab-case] will work.
 
 w-accordion.mt2(
-  expand-icon-rotate90
   v-model="expandedOptions"
-  title-class="pl0"
+  expand-icon-rotate90
+  title-class="pl0 bd0"
   content-class="pt1 pr0 pb6 pl7")
 
   w-accordion-item
@@ -660,10 +660,6 @@ addDatePrototypes()
 
 const store = useAppStore()
 const locales = inject('locales')
-
-const now = new Date()
-const nowFormatted = computed(() => Date.prototype.format && now.format('YYYY{MM}DD'))
-const todayFormatted = computed(() => `${now.format()} ${now.formatTime()}`)
 
 const views = [
   { label: 'day', content: 'Displays a given single day in a a single cell.' },
