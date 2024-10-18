@@ -10,13 +10,6 @@ ul
 
       addDatePrototypes()
 
-      const tomorrow = (new Date()).addDays(1) // Tomorrow at same time.
-      console.log(tomorrow.format()) // outputs: {{ (new Date()).addDays(1).format() }}
-
-      const currentTime = new Date()
-      console.log(currentTime.formatTime()) // outputs: {{ (new Date()).formatTime() }}
-
-
 h2 Props
 ul
   li `activeView` renamed `view`
