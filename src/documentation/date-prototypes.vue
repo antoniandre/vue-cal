@@ -62,7 +62,7 @@ w-accordion.mt12.mb2(
 
     template(#content)
       ssh-pre(language="js" :dark="store.darkMode").
-        import { VueCal, addDatePrototypes } from '@/vue-cal'
+        import { addDatePrototypes } from '@/vue-cal'
 
         addDatePrototypes()
 
@@ -203,7 +203,7 @@ import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import TitleLink from '@/documentation/components/title-link.vue'
-import { VueCal, addDatePrototypes } from '@/vue-cal'
+import { addDatePrototypes } from '@/vue-cal'
 
 const store = useAppStore()
 

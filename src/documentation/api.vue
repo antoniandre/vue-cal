@@ -651,7 +651,7 @@ import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import EnUs from '@/vue-cal/i18n/fr.json'
-import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
+import { useLocale, addDatePrototypes } from '@/vue-cal'
 import TitleLink from '@/documentation/components/title-link.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
 

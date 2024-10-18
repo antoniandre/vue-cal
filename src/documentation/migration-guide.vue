@@ -6,7 +6,7 @@ ul
   li
     p The Date prototypes are not injected by default anymore, and very easy to add, you control when:
     ssh-pre(language="js" :dark="store.darkMode").
-      import { VueCal, addDatePrototypes } from '@/vue-cal'
+      import { addDatePrototypes } from '@/vue-cal'
 
       addDatePrototypes()
 
@@ -35,7 +35,7 @@ import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import TitleLink from '@/documentation/components/title-link.vue'
-import { VueCal, addDatePrototypes } from '@/vue-cal'
+import { addDatePrototypes } from '@/vue-cal'
 
 const store = useAppStore()
 addDatePrototypes()
