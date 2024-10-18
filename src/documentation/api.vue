@@ -646,7 +646,7 @@ w-accordion.mt2(
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { inject, ref } from 'vue'
 import SshPre from 'simple-syntax-highlighter'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'

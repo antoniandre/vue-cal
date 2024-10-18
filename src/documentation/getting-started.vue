@@ -187,7 +187,7 @@ p.
   of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
 
   If this is not enough for your particular use, you can add your own in your CSS.#[br]
-  Additionally, you can use the options #[span.code small] &amp; #[span.code xs]
+  Additionally, you can use the options #[span.code sm] &amp; #[span.code xs]
   to truncate week days at any size.
 
 h3.mt12 # Disabled text selection
