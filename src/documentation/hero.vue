@@ -26,8 +26,10 @@
         :dark="store.darkMode"
         hide-weekends
         :selected-date="selectedDate"
-        :time-from="8 * 60"
-        :time-to="19 * 60"
+        :time-from="9 * 60"
+        :time-step="20"
+        :time-to="18 * 60"
+        :time-cell-height="25"
         :schedules="demoExample.schedules"
         :editable-events="demoExample.editable"
         :events="demoExample.events"
@@ -58,7 +60,7 @@ useLocale(EnUs)
 addDatePrototypes()
 
 const demoExample = ref({
-  schedules: [{ label: 'John', class: 'john' }, { label: 'Kate', class: 'kate' }],
+  schedules: [{ label: 'Dr. John', class: 'john' }, { label: 'Dr. Kate', class: 'kate' }],
   editable: { title: false, drag: true, resize: true, create: true, delete: true },
   events: []
 })
@@ -156,8 +158,8 @@ const setThemeColor = color => {
 </script>
 
 <style lang="scss">
-$john: #42b983;
-$kate: #ff7fc8;
+$john: #a3d0c8;
+$kate: #bac8e0;
 
 .hero {
   position: relative;
@@ -226,6 +228,7 @@ $kate: #ff7fc8;
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
   &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
+  .vuecal__event {border-color: color-mix(in srgb, currentColor 30%, transparent);}
   .vuecal__event-time {
     margin: 3px 0;
     font-size: 12px;
@@ -236,19 +239,27 @@ $kate: #ff7fc8;
   // John.
   .vuecal__header .john {color: adjust-color($john, $lightness: -5%);}
   .vuecal__body .john {background-color: rgba($john, 0.08);}
-  .john .vuecal__event {background-color: rgba(adjust-color($john, $lightness: 5%), 0.85);color: #fff;}
-  .john .lunch {
+  .john .vuecal__event {
+    background-color: adjust-color($john, $lightness: 5%);
+    color: adjust-color($john, $lightness: -30%, $saturation: -15%);
+  }
+  .john .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
-    color: rgba(adjust-color($john, $lightness: -10%), 0.4);
+    border: none;
+    color: transparent;
   }
 
   // Kate.
   .vuecal__header .kate {color: adjust-color($kate, $lightness: -5%);}
   .vuecal__body .kate {background-color: rgba($kate, 0.08);}
-  .kate .vuecal__event {background-color: rgba(adjust-color($kate, $lightness: 5%), 0.85);color: #fff;}
-  .kate .lunch {
+  .kate .vuecal__event {
+    background-color: adjust-color($kate, $lightness: 5%);
+    color: adjust-color($kate, $lightness: -30%, $saturation: -15%);
+  }
+  .kate .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
-    color: rgba(adjust-color($kate, $lightness: -10%), 0.4);
+    border: none;
+    color: transparent;
   }
   // ------------------------------------------------------
 }
