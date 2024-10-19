@@ -262,6 +262,11 @@ $kate: #bac8e0;
     color: transparent;
   }
   // ------------------------------------------------------
+
+  [data-theme="dark"] & {
+    .kate .vuecal__event:not(.vuecal__event--background) {background-color: rgba(131, 217, 201, 0.15);}
+    .john .vuecal__event:not(.vuecal__event--background) {background-color: rgba(139, 172, 229, 0.15);}
+  }
 }
 
 // Media queries.
