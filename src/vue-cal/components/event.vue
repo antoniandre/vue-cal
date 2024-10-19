@@ -35,8 +35,9 @@ const eventListeners = computed(() => {
 const classes = computed(() => ({
   [`vuecal__event--${props.id}`]: true,
   [event.value.class]: !!event.value.class,
-  'vuecal__event--recurring': !!event.recurring,
-  'vuecal__event--multiday': !!event._?.multiday
+  'vuecal__event--recurring': !!event.value.recurring,
+  'vuecal__event--background': !!event.value.background,
+  'vuecal__event--multiday': !!event.value._?.multiday
 }))
 
 const styles = computed(() => {

@@ -219,6 +219,11 @@
     line-height: 1;
     overflow: hidden;
 
+    &--background {
+      border-radius: 0;
+      overflow: visible;
+      width: 100%;
+    }
     &-time {
       white-space: nowrap;
       line-height: 1;
