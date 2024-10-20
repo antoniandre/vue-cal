@@ -53,6 +53,8 @@ import VueCalHeader from './header.vue'
 import VueCalBody from './body.vue'
 import WeekdaysBar from './weekdays-bar.vue'
 import TimeColumn from './time-column.vue'
+import '../index.scss'
+import '../default-theme.scss'
 
 const props = defineProps(propsDefinitions)
 
@@ -95,92 +97,6 @@ provide('vuecal', vuecal)
 </script>
 
 <style lang="scss">
-.vuecal {
-  --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
-  --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-weekdays-bar-height: 1.6rem;
-  --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
-  // When there are too many day cells to fit in the view, setting a min cell width will help
-  // visualizing and a horizontal scrollbar will be added.
-  --vuecal-min-cell-width: 0;
 
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-
-  &--date-picker {--vuecal-weekdays-bar-height: 1.3rem;}
-  &--has-schedules {--vuecal-weekdays-bar-height: 2.2rem;}
-  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view {--vuecal-weekdays-bar-height: 1.2rem;}
-
-  &, *, :before, :after {box-sizing: border-box;}
-
-  &__scrollable-wrap {
-    position: relative;
-    flex: 1;
-    min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
-  }
-
-  &__scrollable {
-    position: relative; // For the time cells lines to fill up the whole calendar width.
-    overflow: auto;
-    flex: 1;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-
-    &--row {flex-direction: row;}
-  }
-
-  .grow {flex-grow: 1;}
-
-  // Shared in headers and cells.
-  &__cell-schedules {display: flex;}
-  &__cell-schedule {
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    flex-basis: 0;
-    justify-content: center;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  &__cell-schedule--label {
-    font-size: 12px;
-    align-items: center;
-  }
-  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view &__cell-schedule--label {height: var(--vuecal-weekdays-bar-height);}
-}
-
-// Transitions.
-// --------------------------------------------------------
-.vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
-.vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
-  transition: 0.25s ease-in-out;
-}
-
-.vuecal-slide-fade--left-enter-from,
-.vuecal-slide-fade--right-leave-to {
-  transform: translateX(-12px);
-  opacity: 0;
-}
-
-.vuecal-slide-fade--left-leave-to,
-.vuecal-slide-fade--right-enter-from {
-  transform: translateX(12px);
-  opacity: 0;
-}
-
-.vuecal-slide-fade--left-enter-active,
-.vuecal-slide-fade--right-enter-active,
-// When navigating hyper fast, make sure that any left-over 3rd animated container is positioned absolute
-// so it does not briefly appear below the calendar.
-.vuecal-slide-fade--left-leave-active ~ .vuecal-slide-fade--left-leave-active,
-.vuecal-slide-fade--right-leave-active ~ .vuecal-slide-fade--right-leave-active {
-  position: absolute !important;
-  inset: 0;
-}
-
-@import '../default-theme.scss'; // Keep at the end.
+@use '../default-theme.scss'; // Keep at the end.
 </style>
