@@ -1,4 +1,4 @@
-@import './variables';
-@import './base';
-@import './typography';
-@import './dark-theme';
+@forward './variables';
+@forward './base';
+@forward './typography';
+@forward './dark-theme';

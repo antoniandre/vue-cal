@@ -71,6 +71,7 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
 import { provide, ref } from 'vue'
 import { useAppStore } from '@/store'
 import TopBar from '@/documentation/components/top-bar.vue'
+import '@/scss/index.scss'
 
 const store = useAppStore()
 const offsetTop = ref(0)
@@ -138,7 +139,3 @@ provide('locales', [
   { code: 'vi', label: 'Vietnamese' }
 ])
 </script>
-
-<style lang="scss">
-@import '@/scss/index.scss';
-</style>
