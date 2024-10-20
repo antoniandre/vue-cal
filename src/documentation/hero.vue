@@ -241,7 +241,7 @@ $kate: #bac8e0;
   .vuecal__body .john {background-color: rgba($john, 0.08);}
   .john .vuecal__event {
     background-color: adjust-color($john, $lightness: 5%);
-    color: adjust-color($john, $lightness: -30%, $saturation: -15%);
+    color: adjust-color($john, $lightness: -35%, $saturation: -15%);
   }
   .john .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
@@ -254,7 +254,7 @@ $kate: #bac8e0;
   .vuecal__body .kate {background-color: rgba($kate, 0.08);}
   .kate .vuecal__event {
     background-color: adjust-color($kate, $lightness: 5%);
-    color: adjust-color($kate, $lightness: -30%, $saturation: -15%);
+    color: adjust-color($kate, $lightness: -35%, $saturation: -15%);
   }
   .kate .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
@@ -264,8 +264,14 @@ $kate: #bac8e0;
   // ------------------------------------------------------
 
   [data-theme="dark"] & {
-    .kate .vuecal__event:not(.vuecal__event--background) {background-color: rgba(131, 217, 201, 0.15);}
-    .john .vuecal__event:not(.vuecal__event--background) {background-color: rgba(139, 172, 229, 0.15);}
+    .kate .vuecal__event:not(.vuecal__event--background) {
+      background-color: rgba(139, 172, 229, 0.15);
+      color: #b9cff5;
+    }
+    .john .vuecal__event:not(.vuecal__event--background) {
+      background-color: rgba(131, 217, 201, 0.15);
+      color: #a2dfd4;
+    }
   }
 }
 
