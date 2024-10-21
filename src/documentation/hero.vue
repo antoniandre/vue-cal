@@ -158,6 +158,8 @@ const setThemeColor = color => {
 </script>
 
 <style lang="scss">
+@use 'sass:color';
+
 $john: #a3d0c8;
 $kate: #bac8e0;
 
@@ -237,11 +239,11 @@ $kate: #bac8e0;
   }
 
   // John.
-  .vuecal__header .john {color: adjust-color($john, $lightness: -5%);}
+  .vuecal__header .john {color: color.adjust($john, $lightness: -5%);}
   .vuecal__body .john {background-color: rgba($john, 0.08);}
   .john .vuecal__event {
-    background-color: adjust-color($john, $lightness: 5%);
-    color: adjust-color($john, $lightness: -35%, $saturation: -15%);
+    background-color: color.adjust($john, $lightness: 5%);
+    color: color.adjust($john, $lightness: -35%, $saturation: -15%);
   }
   .john .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
@@ -250,11 +252,11 @@ $kate: #bac8e0;
   }
 
   // Kate.
-  .vuecal__header .kate {color: adjust-color($kate, $lightness: -5%);}
+  .vuecal__header .kate {color: color.adjust($kate, $lightness: -5%);}
   .vuecal__body .kate {background-color: rgba($kate, 0.08);}
   .kate .vuecal__event {
-    background-color: adjust-color($kate, $lightness: 5%);
-    color: adjust-color($kate, $lightness: -35%, $saturation: -15%);
+    background-color: color.adjust($kate, $lightness: 5%);
+    color: color.adjust($kate, $lightness: -35%, $saturation: -15%);
   }
   .kate .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
