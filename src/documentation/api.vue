@@ -15,6 +15,119 @@ w-accordion(
     strong.code {{ item.label }}
 
 h2.w-flex.justify-space-between.mt12.mb2
+  title-link(tag="div" anchor="view") The View Object
+  w-switch.my1.body(@update:model-value="expandedViewVars = [...views].fill($event)") Expand All
+p.caption.size--md.
+  You can use the #[code.base-color view] object to access accurate information about the current view at any time.
+  This is what it contains:
+w-accordion.mt3(
+  v-model="expandedViewVars"
+  expand-icon-rotate90
+  title-class="pl0 bd0"
+  content-class="pt1 pr0 pb6 pl7")
+
+  w-accordion-item
+    template(#title)
+      h3.title4.mt0.pt0 ID, Title
+    template(#content)
+      p.
+        The ID of the current view, as well as its computed title that you may use in slots.<br>
+        Example:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          id: "month",
+          title: "October 2024",
+          ...
+        }
+
+  w-accordion-item
+    template(#title)
+      h3.title4.mt0.pt0 Ranges
+    template(#content)
+      p In order to be flexible, straightforward and not confusing, two ranges are available:
+      ul
+        li
+          h4.mt2.mb0 Primary Range (Actual visible/active days):
+          p.
+            What most users will need when fetching events from an API. It will ignore out-of-scope days in the month
+            view and trim the hidden days in the week.
+
+          p Example:
+          ssh-pre.mt0(language="js" :dark="store.darkMode").
+            {
+              start: "2024-09-30T22:00:00.000Z", // Standard JS Date object.
+              end: "2024-10-31T22:59:59.999Z", // Standard JS Date object.
+              ...
+            }
+        li
+          h4.mt2.mb0 Extended full range (including out-of-scope or hidden days):
+          p.
+            It will include out-of-scope days in the month view (e.g., from the previous month or the next
+            month) and return a full 7-day week range in the week view regardless of the hidden days.
+
+          p Example:
+          ssh-pre.mt0(language="js" :dark="store.darkMode").
+            {
+              fullRangeStart: "2024-09-29T22:00:00.000Z", // Standard JS Date object.
+              fullRangeEnd: "2024-11-10T22:59:59.999Z", // Standard JS Date object.
+              ...
+            }
+
+  w-accordion-item
+    template(#title)
+      h3.title4.mt0.pt0 Cell Dates
+    template(#content)
+      p A complete list of all the visible cells dates (start and end).<br>Example:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          cellDates: [
+            {
+              start: "2024-09-29T22:00:00.000Z", // Standard JS Date object.
+              startFormatted: "2024-09-30", // Standard JS Date object.
+              end: "2024-09-30T21:59:59.999Z" // Standard JS Date object.
+            },
+            ...
+          ],
+          ...
+        }
+
+  w-accordion-item
+    template(#title)
+      h3.title4.mt0.pt0 Events
+    template(#content)
+      p All the calendar events that the current view contains.<br>Example:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          events: [],
+          ...
+        }
+
+  w-accordion-item
+    template(#title)
+      h3.title4.mt0.pt0 Other Utilities
+    template(#content)
+      p Other useful variables that you can explore and use.
+      p Example:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          viewDate: "2024-09-30T22:00:00.000Z", // Standard JS Date object.
+          selectedDate: "2024-10-22T19:56:41.104Z", // Standard JS Date object.
+          now: "2024-10-22T19:56:41.107Z", // Standard JS Date object.
+          broaderView: "year",
+          containsToday: true,
+          cols: 7,
+          rows: 6,
+          transitionDirection: "right",
+          isDay: false,
+          isDays: false,
+          isWeek: false,
+          isMonth: true,
+          isYear: false,
+          isYears: false,
+          ...
+        }
+
+h2.w-flex.justify-space-between.mt12.mb2
   title-link(tag="div" anchor="options") Options
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
 
@@ -671,6 +784,7 @@ const views = [
 ]
 const expandedViews = ref([...views].fill(false))
 const expandedOptions = ref(Array(99).fill(false))
+const expandedViewVars = ref(Array(99).fill(false))
 </script>
 
 <style lang="scss">
