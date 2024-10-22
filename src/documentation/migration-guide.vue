@@ -21,6 +21,7 @@ ul
   li specialHours -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li disableWeekdays -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li hideViewsBar renamed viewsBar, default false
+  li todayButton now defaults to true, previously false
 </template>
 
 <script setup>
