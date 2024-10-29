@@ -94,8 +94,7 @@ const store = useAppStore()
 const todayDate = ref((new Date()).getDate())
 
 const docs = [
-  { route: '/getting-started', label: 'Installation' },
-  { route: { name: 'getting-started', hash: '#how-to-use' }, label: 'How to Use' },
+  { route: '/getting-started', label: 'Getting Started' },
   { class: 'divider pa0' },
   { route: '/api', label: 'API' },
   { route: '/date-prototypes', label: 'Date Prototypes' },
