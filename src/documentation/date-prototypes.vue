@@ -4,8 +4,7 @@ h1.title1 Date Prototypes
 w-alert.size--lg.pa3(info).
   Vue Cal has no dependency and internally performs date operations through a set of useful and
   efficient functions that you can choose to add to the JavaScript native #[span.code Date] class
-  for your convenience. They are not altering the Date object, only adding functionality
-  through these 11 functions.
+  for your convenience. They are not altering the Date object but only adding 11 new utility functions.
 
 w-accordion.mt12.mb2(
   :model-value="[false, true, true]"
