@@ -63,8 +63,8 @@ h1.title1 Release notes
   .w-flex.my12.align-center
     .w-divider.primary--bg.px3
     w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
-      w-icon.mr2(:flip-y="!!seeOldReleaseNotes") wi-arrow-down
-      strong Older release notes
+      strong {{ seeOldReleaseNotes ? 'Hide' : 'View' }} older release notes
+      w-icon.ml2(:rotate90a="!seeOldReleaseNotes") wi-arrow-down
     .w-divider.primary--bg.grow
 
   w-transition-expand(y)
