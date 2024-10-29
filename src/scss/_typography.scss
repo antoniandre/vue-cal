@@ -70,3 +70,9 @@ code, .code {
   background: var(--code-bg-color);
 }
 span.code {color: rgb(var(--w-base-color-rgb));}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: $xxs) {
+  code, .code {letter-spacing: -0.3px;}
+}

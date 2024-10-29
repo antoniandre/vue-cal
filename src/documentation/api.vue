@@ -789,6 +789,7 @@ const expandedViewVars = ref(Array(99).fill(false))
 
 <style lang="scss">
 .main--api {
+  .w-accordion__item-title {flex-wrap: wrap;}
   .w-accordion__item-title code,
   .w-accordion__item-title .code {
     background-color: transparent;

@@ -9,6 +9,7 @@ ul
       import { addDatePrototypes } from '@/vue-cal'
 
       addDatePrototypes()
+  li No more header right margin to align with body if there is a scrollbar.
 
 h2 Props
 ul

@@ -135,18 +135,18 @@ p.
       }
 
 
-highlight-message(type="warning")
-  p.
-    Wait! Before you dive in, make sure you place Vue Cal in a container that #[strong has a set height]! (not auto or initial)#[br]
-    By default Vue Cal will take the full width &amp; height of its container if it has a set height.
-  ssh-pre.my2(language="html-vue" :dark="store.darkMode").
-    &lt;!-- If the container has no height, set a height on vue-cal --&gt;
-    &lt;vue-cal style="height: 250px" /&gt;
-  vue-cal(small :dark="store.darkMode" :time="false" :views-bar="false" style="height: 250px")
+w-alert.pl4(border-left)
+  .title3 That's it! You're up and running.
+  p.mt1 Vue Cal comes with a default height of 500px. If you want to change that, you can use CSS. ;)
+
+vue-cal(small :dark="store.darkMode")
 
 //- CSS notes.
 title-link.mt12.pt12(tag="h2" anchor="css-notes") CSS Notes
 p You can easily change the calendar design with CSS.
+
+p.mt1 First off, Vue Cal comes with a default height of 500px. So if you want to change it, that's via CSS. ;)
+
 
 h3.mt12 # Color themes &amp; rounded theme
 p.
@@ -189,13 +189,6 @@ p.
   If this is not enough for your particular use, you can add your own in your CSS.#[br]
   Additionally, you can use the options #[span.code sm] &amp; #[span.code xs]
   to truncate week days at any size.
-
-h3.mt12 # Disabled text selection
-p.
-  Notice that on Windows machines, and on devices where the scrollbar takes some space and
-  pushes the calendar main content (#[span.code week] and #[span.code day] views), the
-  weekdays headings and the all-day bar get an added padding right to align well with the main content.#[br]
-  This is done once, in the #[span.code mounted] hook.
 
 h3.mt12 # Disabled text selection
 p.
