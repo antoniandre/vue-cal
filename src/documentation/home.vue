@@ -6,22 +6,22 @@ hero
 
 .w-flex
   aside
-    nav
+    nav.nav
       ul.size--lg
         li
-          router-link(to="/getting-started") Getting Started
+          router-link.nav__item(to="/getting-started") Getting Started
         li
-          router-link(to="/api") API
+          router-link.nav__item(to="/api") API
         li
-          router-link(to="/date-prototypes") Date Prototypes
+          router-link.nav__item(to="/date-prototypes") Date Prototypes
         li
-          router-link(to="/examples") Examples
+          router-link.nav__item(to="/examples") Examples
         li
-          router-link(to="/migration-guide") Migration Guide
+          router-link.nav__item(to="/migration-guide") Migration Guide
         li
-          router-link(to="/road-map") Road Map
+          router-link.nav__item(to="/road-map") Road Map
         li
-          router-link(to="/release-notes") Release Notes
+          router-link.nav__item(to="/release-notes") Release Notes
 
   main
     //- Github project.
