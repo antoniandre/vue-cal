@@ -4,7 +4,7 @@ top-bar(v-if="$route.name !== 'home'" fixed)
 .page.w-flex.grow.page-container(:class="`page--${$route.name}`" v-scroll="onScroll")
   aside(v-if="$route.name !== 'home'")
     nav.nav.mb12
-      ul.size--lg
+      ul
         li
           router-link.nav__item(to="/") Home
         li

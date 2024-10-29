@@ -34,14 +34,12 @@ aside {
     margin-right: -1px;
     overflow: hidden;
   }
-  li {
-    list-style-type: none;
-  }
+  ul {margin-left: 0;list-style-type: none;}
 
   .nav__item {
     position: relative;
     display: flex;
-    padding: 4px 2rem;
+    padding: 4px 2rem 4px 0;
     justify-content: flex-end;
     font-size: 1.1rem;
 
@@ -202,6 +200,12 @@ ul {
   }
 
   main {padding-left: 2.5rem;}
+}
+
+@media screen and (max-width: 750px) {
+  aside {display: none;}
+
+  main {padding-left: 0;border-left: none;}
 }
 
 @media screen and (max-width: ($page-max-width + (2 * $container-padding-md))) {

@@ -7,7 +7,7 @@ hero
 .w-flex
   aside
     nav.nav
-      ul.size--lg
+      ul
         li
           router-link.nav__item(to="/getting-started") Getting Started
         li

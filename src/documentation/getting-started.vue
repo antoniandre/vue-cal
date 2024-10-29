@@ -13,7 +13,7 @@ ul.ml4
       ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@legacy # Vue 2
 
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
-    .w-flex.gap6.smd-column
+    .w-flex.gap6.smd-column.wrap
       w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
         template(#item-title.1) Options API
         template(#item-content.1)
@@ -87,14 +87,14 @@ ul.ml4
     p.
       Then define the component to use in your template if you are not using the Vue composition
       API:
-    .w-flex.gap6.smd-column
-      ssh-pre.grow.ma0.mt4.pa3.bdrs2(language="js" :dark="store.darkMode").
+    .w-flex.gap6.smd-column.wrap.mt4
+      ssh-pre.grow.ma0.pa3.bdrs2(language="js" :dark="store.darkMode").
         // In your Vue.js component.
         export default {
           components: { VueCal: vuecal },
           ...
         }
-      .highlight-box.grow.mt4
+      .highlight-box.grow
         .title2 Demos on Codepen
         p.body.mb4.grey Check the different setups for direct browser use
         .w-flex.align-center
