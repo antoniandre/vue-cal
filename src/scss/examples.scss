@@ -57,7 +57,7 @@
     position: absolute;
     top: 0;
     right: 0;
-    color: $primary;
+    color: var(--w-primary-color);
     font-size: 1.2em;
     padding: 0 4px;
     text-decoration: underline;
@@ -113,7 +113,7 @@
 
 .ex--events-indicators {
   .vuecal__cell-events-count span {
-    background: $primary;
+    background: var(--w-primary-color);
     height: 100%;
     border-radius: 12px;
     display: block;
@@ -184,7 +184,7 @@
 }
 .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
-.vuecal__time-cell-line.hours:before {border-color: $primary;}
+.vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
 
 .ex--multiple-day-events .vuecal__event {
   border-radius: 5px;

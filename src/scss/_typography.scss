@@ -48,7 +48,7 @@ h3 {
     left: 0;
     max-width: 400px;
     width: 4px;
-    background: rgba($primary, 0.5);
+    background: color-mix(in srgb, var(--w-primary-color) 50%, transparent);
   }
 }
 

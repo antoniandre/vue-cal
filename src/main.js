@@ -15,7 +15,7 @@ app.use(pinia)
 app.use(WaveUI, {
   colors: {
     light: {
-      primary: '#42b983',
+      primary: '#40b07d',
       secondary: '#2c3e50',
       lightgrey: '#eee'
     },

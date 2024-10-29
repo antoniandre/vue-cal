@@ -22,16 +22,36 @@
 
 aside {
   width: 220px;
-  flex-grow: 1;
+  flex-grow: 0;
   flex-shrink: 0;
-  padding: 1.5rem 2rem 2rem;
+  padding: 1.5rem 0 2rem;
+  display: flex;
+  justify-content: flex-end;
 
   nav {
     position: fixed;
     top: 70px;
   }
+  ul {margin-left: 0;}
 
-  ul {margin-left: 20px;}
+  li {
+    list-style-type: none;
+    text-align: right;
+    padding: 4px 2rem;
+    margin-right: -1px;
+    border-right: 2px solid transparent;
+    font-size: 1.1rem;
+
+    &:hover {
+      border-right-color: rgba(var(--w-contrast-bg-color-rgb), 0.2);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(var(--w-contrast-bg-color-rgb), 0.06) 50%);
+    }
+    &:has(.router-link-active) {
+      font-weight: bold;
+      border-right-color: var(--w-primary-color);
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(128, 231, 172, 0.15) 50%);
+    }
+  }
 }
 
 .page {
@@ -74,7 +94,7 @@ footer {
 // --------------------------------------------------------
 a {
   text-decoration: none;
-  color: $primary;
+  color: var(--w-primary-color);
 }
 
 ul {

@@ -168,7 +168,6 @@ const version = computed(() => {
 </script>
 
 <style lang="scss">
-$primary: #42b983;
 $secondary: #2c3e50;
 $lighter-text: #ccc;
 
@@ -230,7 +229,7 @@ $lighter-text: #ccc;
 
     &:before {
       margin-top: -1px;
-      border: 2px solid $primary;
+      border: 2px solid var(--w-primary-color);
     }
 
     &:after {
@@ -245,7 +244,7 @@ $lighter-text: #ccc;
     vertical-align: middle;
     box-sizing: border-box;
     transition: 0.2s 0s ease-in-out;
-    background-color: $primary;
+    background-color: var(--w-primary-color);
     width: 38px;
     height: 36px;
     border-radius: 4px;
