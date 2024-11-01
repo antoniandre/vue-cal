@@ -2,7 +2,7 @@
 top-bar(v-if="$route.name !== 'home'" fixed)
 
 .page.w-flex.grow.page-container(:class="`page--${$route.name}`" v-scroll="onScroll")
-  aside(v-if="$route.name !== 'home'")
+  aside(v-if="!['test', 'home'].includes($route.name)")
     nav.nav.mb12
       ul
         li

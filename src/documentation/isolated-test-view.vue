@@ -1,6 +1,6 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
-div.test-view
+.test-view
   .w-flex.align-center.gap6.no-grow
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
