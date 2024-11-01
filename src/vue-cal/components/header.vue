@@ -38,12 +38,14 @@
       template(v-if="config.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"
-          @click="view.goToToday"
-          :class="{ 'vuecal__nav--active': view.containsToday }"
+          @click="!view.containsToday && !(view.isWeek && view.fullRangeContainsToday) && view.goToToday()"
+          :disabled="!!view.containsToday"
+          :class="{ 'vuecal__nav--active': view.containsToday || (view.isWeek && view.fullRangeContainsToday) }"
           type="button")
           slot(name="today-button")
         button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
-          @click="view.goToToday"
+          @click="!view.containsToday && view.goToToday()"
+          :disabled="!!view.containsToday"
           :class="{ 'vuecal__nav--active': view.containsToday }"
           type="button"
           v-html="vuecal.texts.today")
@@ -140,6 +142,8 @@ const titleEventHandlers = computed(() => config.clickToNavigate ? { click: onTi
     position: relative;
     align-items: center;
     display: flex;
+
+    &[disabled] {cursor: default;}
 
     &.vuecal__nav--default {text-transform: uppercase;}
   }
