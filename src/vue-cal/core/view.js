@@ -164,10 +164,26 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
         return `${startDateFormatted} - ${endDateFormatted}`
       }
       case 'week': {
-        const weekNumber = dateUtils.getWeek(firstCellDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
+        let weekNumber = dateUtils.getWeek(firstCellDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
+        weekNumber = ` <small>${texts.week} ${weekNumber}</small>`
+
+        const startMonth = firstCellDate.value.getMonth()
+        const startYear = firstCellDate.value.getFullYear()
+        const endMonth = lastCellDate.value.getMonth()
+        const endYear = lastCellDate.value.getFullYear()
+        const crossingMonth = startMonth !== endMonth
+        const crossingYear = crossingMonth && startYear !== endYear
         // Shorten month if xs and the locale doesn't forbid it.
-        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(firstCellDate.value, format) + ` <small>${texts.week} ${weekNumber}</small>`
+        const truncate = truncations !== false && (config.xs || crossingMonth)
+        const m1 = texts.months[startMonth][truncate ? 'substring' : 'toString'](0, 3)
+
+        if (crossingMonth) {
+          const m2 = texts.months[endMonth][truncate ? 'substring' : 'toString'](0, 3)
+
+          if (crossingYear) return `${m1} ${startYear} - ${m2} ${endYear} ${weekNumber}`
+          else return `${m1} - ${m2} ${startYear} ${weekNumber}`
+        }
+        else return `${m1} ${startYear} ${weekNumber}`
       }
       case 'month': {
         // Shorten month if xs and the locale doesn't forbid it.
