@@ -14,62 +14,17 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   // E.g. [start, ..., viewDate, ..., end]
   const viewDate = ref(new Date(config.viewDate || now.value))
   viewDate.value.setHours(0, 0, 0, 0)
-  const start = ref(viewDate)
-  const end = ref(null)
+  // The starting point of all the calculations.
+  // on created and on navigation, two date ranges are computed:
+  // [start-end]: the common date range to use.
+  // [firstCellDate-endCellDate]: the full visible range including out-of-scope days in month view.
+  const startTheoretical = ref(viewDate)
+
   // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   let timeTickerId = null
 
   // Transition when switching view. Left when going toward the past, right when going toward future.
   const transitionDirection = ref('right')
-
-  /**
-   * {String|undefined} The next available broader view from the current view.
-   */
-  const broaderView = computed(() => {
-    const availableViews = Object.keys(config.availableViews)
-    return availableViews[availableViews.indexOf(viewId.value) + 1]
-  })
-
-  /**
-   * {String|undefined} The next available narrower view from the current view.
-   */
-  const narrowerView = computed(() => {
-    const availableViews = Object.keys(config.availableViews)
-    return availableViews[availableViews.indexOf(viewId.value) - 1]
-  })
-
-  const title = computed(() => {
-    const { dateFormat, truncations } = texts
-
-    switch (viewId.value) {
-      case 'day':
-        return dateUtils.formatDate(start.value, dateFormat)
-      case 'days': {
-        let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
-        // Always shorten month if the locale doesn't forbid it.
-        if (truncations !== false) format = format.replace('MMMM', 'MMM')
-        const startDateFormatted = dateUtils.formatDate(firstCellDate.value, format)
-        const endDateFormatted = dateUtils.formatDate(lastCellDate.value, format)
-
-        return `${startDateFormatted} - ${endDateFormatted}`
-      }
-      case 'week': {
-        const weekNumber = dateUtils.getWeek(start.value, config.startWeekOnSunday && !config.hideWeekdays[7])
-        // Shorten month if xs and the locale doesn't forbid it.
-        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(start.value, format) + ` <small>${texts.week} ${weekNumber}</small>`
-      }
-      case 'month': {
-        // Shorten month if xs and the locale doesn't forbid it.
-        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
-        return dateUtils.formatDate(start.value, format)
-      }
-      case 'year':
-        return start.value.getFullYear()
-      case 'years':
-        return `${start.value.getFullYear()} - ${end.value.getFullYear()}`
-    }
-  })
 
   const cols = computed(() => {
     // Includes all the weekdays, but some may need to be hidden.
@@ -90,11 +45,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
       // previous month. E.g.
       // M  T  W  T  F  S  S
       // 28 29 30 1  2  3  4
-      let weekday = start.value.getDay() || 7 // 1-7, starting from Monday.
+      let weekday = startTheoretical.value.getDay() || 7 // 1-7, starting from Monday.
 
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) weekday += 1
       if (config.viewDayOffset) weekday -= config.viewDayOffset
-      return dateUtils.subtractDays(start.value, weekday - 1)
+      return dateUtils.subtractDays(startTheoretical.value, weekday - 1)
     }
     else if (viewId.value === 'week') {
       const visibleDays = '1234567'.split('').filter(day => !Object.keys(config.hideWeekdays).includes(day))
@@ -102,10 +57,10 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) firstVisibleDay = 1
       if (config.viewDayOffset) firstVisibleDay += config.viewDayOffset
 
-      return dateUtils.addDays(start.value, firstVisibleDay - 1)
+      return dateUtils.addDays(startTheoretical.value, firstVisibleDay - 1)
     }
 
-    else return start.value
+    else return startTheoretical.value
   })
 
   // Generates an array of dates for each cell in the view: 1 cell = 1 date range [start, end].
@@ -166,7 +121,65 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
 
   const lastCellDate = computed(() => cellDates.value[cellDates.value.length - 1].end)
 
+  const start = computed(() => {
+    if (viewId.value === 'month') return startTheoretical.value
+    return firstCellDate.value
+  })
+  const end = computed(() => {
+    if (viewId.value === 'month') return new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth() + 1, 0, 23, 59, 59, 999)
+    return lastCellDate.value
+  })
+
   const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
+
+  /**
+   * {String|undefined} The next available broader view from the current view.
+   */
+  const broaderView = computed(() => {
+    const availableViews = Object.keys(config.availableViews)
+    return availableViews[availableViews.indexOf(viewId.value) + 1]
+  })
+
+  /**
+   * {String|undefined} The next available narrower view from the current view.
+   */
+  const narrowerView = computed(() => {
+    const availableViews = Object.keys(config.availableViews)
+    return availableViews[availableViews.indexOf(viewId.value) - 1]
+  })
+
+  const title = computed(() => {
+    const { dateFormat, truncations } = texts
+
+    switch (viewId.value) {
+      case 'day':
+        return dateUtils.formatDate(firstCellDate.value, dateFormat)
+      case 'days': {
+        let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
+        // Always shorten month if the locale doesn't forbid it.
+        if (truncations !== false) format = format.replace('MMMM', 'MMM')
+        const startDateFormatted = dateUtils.formatDate(firstCellDate.value, format)
+        const endDateFormatted = dateUtils.formatDate(lastCellDate.value, format)
+
+        return `${startDateFormatted} - ${endDateFormatted}`
+      }
+      case 'week': {
+        const weekNumber = dateUtils.getWeek(firstCellDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
+        // Shorten month if xs and the locale doesn't forbid it.
+        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
+        return dateUtils.formatDate(firstCellDate.value, format) + ` <small>${texts.week} ${weekNumber}</small>`
+      }
+      case 'month': {
+        // Shorten month if xs and the locale doesn't forbid it.
+        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
+        return dateUtils.formatDate(start.value, format)
+      }
+      case 'year':
+        return firstCellDate.value.getFullYear()
+      case 'years':
+        return `${firstCellDate.value.getFullYear()} - ${end.value.getFullYear()}`
+    }
+  })
 
   // Array of IDs inside an object indexed by cell dates.
   const events = computed(() => {
@@ -181,40 +194,31 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
    * scope dates.
    */
   function updateView () {
-    start.value = new Date(viewDate.value || now.value)
-    start.value.setHours(0, 0, 0, 0)
+    startTheoretical.value = new Date(viewDate.value || now.value)
+    startTheoretical.value.setHours(0, 0, 0, 0)
 
     switch (viewId.value) {
       case 'day':
-        end.value = new Date(start.value)
-        end.value.setHours(23, 59, 59, 999)
         break
       case 'days':
-        end.value = dateUtils.addDays(start.value, cellsCount.value)
-        end.value.setMilliseconds(-1)
         break
       case 'week':
-        start.value = dateUtils.getPreviousFirstDayOfWeek(start.value, config.startWeekOnSunday && !config.hideWeekdays[7])
-        end.value = dateUtils.addDays(start.value, 7)
-        end.value.setMilliseconds(-1)
+        startTheoretical.value = dateUtils.getPreviousFirstDayOfWeek(startTheoretical.value, config.startWeekOnSunday && !config.hideWeekdays[7])
         break
       case 'month':
-        start.value = new Date(start.value.getFullYear(), start.value.getMonth(), 1, 0, 0, 0, 0)
-        end.value = new Date(start.value.getFullYear(), start.value.getMonth() + 1, 0, 23, 59, 59, 999)
+        startTheoretical.value = new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth(), 1, 0, 0, 0, 0)
         break
       case 'year':
-        start.value = new Date(start.value.getFullYear(), 0, 1, 0, 0, 0, 0)
-        end.value = new Date(start.value.getFullYear() + 1, 0, 0, 23, 59, 59, 999)
+        startTheoretical.value = new Date(startTheoretical.value.getFullYear(), 0, 1, 0, 0, 0, 0)
         break
       case 'years':
         // The modulo is only here to always cut off at the same years regardless of the current year.
         // E.g. always [1975-1999], [2000-2024], [2025-2099] for the default 5*5 grid.
-        start.value = new Date(start.value.getFullYear() - (start.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
-        end.value = new Date(start.value.getFullYear() + cellsCount.value, 0, 0, 23, 59, 59, 999)
+        startTheoretical.value = new Date(startTheoretical.value.getFullYear() - (startTheoretical.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
         break
     }
 
-    console.log('🙆‍♂️', 'updateView', { start: start.value, end: end.value })
+    console.log('🙆‍♂️', 'updateView', startTheoretical.value)
   }
 
   function switchView (id, emitUpdate = true) {
@@ -341,7 +345,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
    * @param {Boolean} bool start the week on Sunday or not.
    */
   function switchWeekStart (bool) {
-    if (!bool && !start.value.getDay()) updateViewDate(dateUtils.addDays(start.value, 1), true, true)
+    if (!bool && !startTheoretical.value.getDay()) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
     else {
       transitionDirection.value = 'left'
       updateView()
@@ -354,9 +358,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
    * @param {Boolean} hide hide weekends or not.
    */
   function toggleWeekends (hide) {
-    console.log('😮', hide, config.startWeekOnSunday, start.value)
-    if (hide && config.startWeekOnSunday && !start.value.getDay()) updateViewDate(dateUtils.addDays(start.value, 1), true, true)
-    else if (!hide && config.startWeekOnSunday && start.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(start.value, 1), true, true)
+    console.log('😮', hide, config.startWeekOnSunday, startTheoretical.value)
+    if (hide && config.startWeekOnSunday && !startTheoretical.value.getDay()) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
+    else if (!hide && config.startWeekOnSunday && startTheoretical.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(startTheoretical.value, 1), true, true)
   }
 
   /**
