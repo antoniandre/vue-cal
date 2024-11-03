@@ -130,7 +130,21 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     return lastCellDate.value
   })
 
-  const containsToday = computed(() => firstCellDate.value.getTime() <= now.value.getTime() && now.value.getTime() <= lastCellDate.value.getTime())
+  const containsToday = computed(() => {
+    const nowTime = now.value.getTime()
+
+    if (viewId.value === 'week') {
+      const firstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(firstCellDate.value, config.startWeekOnSunday)
+      firstDayOfWeek.setHours(0, 0, 0, 0)
+      const endWeek = dateUtils.addDays(firstDayOfWeek, 7)
+      endWeek.setMilliseconds(-1)
+      return firstDayOfWeek.getTime() <= nowTime && nowTime <= endWeek.getTime()
+    }
+
+    const firstCellTime = firstCellDate.value.getTime()
+    const lastCellTime = lastCellDate.value.getTime()
+    return firstCellTime <= nowTime && nowTime <= lastCellTime
+  })
 
   /**
    * {String|undefined} The next available broader view from the current view.
