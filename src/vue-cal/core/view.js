@@ -296,11 +296,12 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
       case 'days':
         // In days view, hiding weekdays will extend the date range of as many skipped days, so
         // navigating to the next range should take in account the last calculated cell date.
-        newViewDate = new Date(dateUtils[forward ? 'addDays' : 'subtractDays'](forward ? lastCellDate.value : firstCellDate.value, 1))
+        if (forward) newViewDate = dateUtils.addDays(lastCellDate.value, 1)
+        else newViewDate = dateUtils.subtractDays(firstCellDate.value, cellsCount.value)
         break
       case 'week': {
         const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, config.startWeekOnSunday && !config.hideWeekdays[7])
-        newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](prevFirstDayOfWeek, cols * rows)
+        newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](prevFirstDayOfWeek, cellsCount.value)
         break
       }
       case 'month': {
@@ -314,7 +315,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
         break
       }
       case 'years': {
-        const increment = forward ? cols * rows : - (cols * rows)
+        const increment = forward ? cellsCount.value : - (cellsCount.value)
         newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
         break
       }
