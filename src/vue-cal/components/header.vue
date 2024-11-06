@@ -38,9 +38,9 @@
       template(v-if="config.todayButton")
         button.vuecal__nav.vuecal__nav--today(
           v-if="$slots['today-button']"
-          @click="!view.containsToday && !(view.isWeek && view.fullRangeContainsToday) && view.goToToday()"
+          @click="!view.containsToday && view.goToToday()"
           :disabled="!!view.containsToday"
-          :class="{ 'vuecal__nav--active': view.containsToday || (view.isWeek && view.fullRangeContainsToday) }"
+          :class="{ 'vuecal__nav--active': view.containsToday }"
           type="button")
           slot(name="today-button")
         button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
