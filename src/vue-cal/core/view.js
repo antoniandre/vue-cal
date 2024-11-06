@@ -5,6 +5,20 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)
 
+  // const dates = {
+
+  // }
+
+  // const cells = {
+
+  // }
+
+  // const navigation = {
+
+  // }
+
+  // Dates.
+  // ------------------------------------------------------
   // Preset at now date on load, but updated every minute if watchRealTime,
   // or updated at least on each cells rerender, in order to keep Today's date accurate.
   let now = ref(new Date())
@@ -23,9 +37,56 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   let timeTickerId = null
 
-  // Transition when switching view. Left when going toward the past, right when going toward future.
-  const transitionDirection = ref('right')
+  const start = computed(() => {
+    if (viewId.value === 'month') return startTheoretical.value
+    return firstCellDate.value
+  })
+  const end = computed(() => {
+    if (viewId.value === 'month') return new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth() + 1, 0, 23, 59, 59, 999)
+    return lastCellDate.value
+  })
 
+  const extendedStart = computed(() => {
+    if (viewId.value === 'week') return dateUtils.getPreviousFirstDayOfWeek(firstCellDate.value, config.startWeekOnSunday)
+    else if (viewId.value === 'month') return firstCellDate.value
+    return start.value
+  })
+  const extendedEnd = computed(() => {
+    if (viewId.value === 'week') {
+      const endWeek = dateUtils.addDays(extendedStart.value, 7)
+      endWeek.setMilliseconds(-1)
+      return endWeek
+    }
+    else if (viewId.value === 'month') return lastCellDate.value
+    return end.value
+  })
+
+  const containsToday = computed(() => {
+    const nowTime = now.value.getTime()
+
+    if (viewId.value === 'week') {
+      return extendedStart.value.getTime() <= nowTime && nowTime <= extendedEnd.value.getTime()
+    }
+
+    const firstCellTime = firstCellDate.value.getTime()
+    const lastCellTime = lastCellDate.value.getTime()
+    return firstCellTime <= nowTime && nowTime <= lastCellTime
+  })
+
+  /**
+   * Only if watchRealTime is true.
+   * Pull the current time from user machine every minute to keep vue-cal accurate even when idle.
+   * This will redraw the now line every minute and ensure that Today's date is always accurate.
+   */
+  function timeTick () {
+    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+    now.value = new Date()
+    timeTickerId = setTimeout(timeTick, 60 * 1000) // Every minute.
+  }
+  // ------------------------------------------------------
+
+  // Cells.
+  // ------------------------------------------------------
   const cols = computed(() => {
     // Includes all the weekdays, but some may need to be hidden.
     let cols = config.availableViews[viewId.value].cols
@@ -120,31 +181,12 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   })
 
   const lastCellDate = computed(() => cellDates.value[cellDates.value.length - 1].end)
+  // ------------------------------------------------------
 
-  const start = computed(() => {
-    if (viewId.value === 'month') return startTheoretical.value
-    return firstCellDate.value
-  })
-  const end = computed(() => {
-    if (viewId.value === 'month') return new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth() + 1, 0, 23, 59, 59, 999)
-    return lastCellDate.value
-  })
-
-  const containsToday = computed(() => {
-    const nowTime = now.value.getTime()
-
-    if (viewId.value === 'week') {
-      const firstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(firstCellDate.value, config.startWeekOnSunday)
-      firstDayOfWeek.setHours(0, 0, 0, 0)
-      const endWeek = dateUtils.addDays(firstDayOfWeek, 7)
-      endWeek.setMilliseconds(-1)
-      return firstDayOfWeek.getTime() <= nowTime && nowTime <= endWeek.getTime()
-    }
-
-    const firstCellTime = firstCellDate.value.getTime()
-    const lastCellTime = lastCellDate.value.getTime()
-    return firstCellTime <= nowTime && nowTime <= lastCellTime
-  })
+  // Navigation.
+  // ------------------------------------------------------
+  // Transition when switching view. Left when going toward the past, right when going toward future.
+  const transitionDirection = ref('right')
 
   /**
    * {String|undefined} The next available broader view from the current view.
@@ -209,12 +251,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
       case 'years':
         return `${firstCellDate.value.getFullYear()} - ${end.value.getFullYear()}`
     }
-  })
-
-  // Array of IDs inside an object indexed by cell dates.
-  const events = computed(() => {
-    if (viewId.value === 'month' && !config.eventsOnMonthView) return []
-    return eventsManager.getViewEvents(cellDates.value)
   })
 
   /**
@@ -300,8 +336,14 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
         else newViewDate = dateUtils.subtractDays(firstCellDate.value, cellsCount.value)
         break
       case 'week': {
-        const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, config.startWeekOnSunday && !config.hideWeekdays[7])
-        newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](prevFirstDayOfWeek, cellsCount.value)
+        // const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, config.startWeekOnSunday && !config.hideWeekdays[7])
+        // newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](extendedStart.value, cellsCount.value)
+        // console.log('🤙', prevFirstDayOfWeek, newViewDate)
+        if (forward) {
+          newViewDate = dateUtils.addDays(extendedEnd.value, 1)
+          newViewDate.setHours(0, 0, 0, 0)
+        }
+        else newViewDate = dateUtils.subtractDays(extendedStart.value, cellsCount.value)
         break
       }
       case 'month': {
@@ -400,17 +442,14 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   function toggleWeekdays () {
     console.log('toggling weekdays', config.hideWeekdays)
   }
+  // ------------------------------------------------------
 
-  /**
-   * Only if watchRealTime is true.
-   * Pull the current time from user machine every minute to keep vue-cal accurate even when idle.
-   * This will redraw the now line every minute and ensure that Today's date is always accurate.
-   */
-  function timeTick () {
-    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
-    now.value = new Date()
-    timeTickerId = setTimeout(timeTick, 60 * 1000) // Every minute.
-  }
+  // Array of IDs inside an object indexed by cell dates.
+  const events = computed(() => {
+    if (viewId.value === 'month' && !config.eventsOnMonthView) return []
+    return eventsManager.getViewEvents(cellDates.value)
+  })
+  // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
   watch(() => config.availableViews, updateView)
@@ -443,6 +482,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     viewDate,
     start,
     end,
+    extendedStart, // Full range, including out of scope month days, and hidden leading/trailing days.
+    extendedEnd, // Full range, including out of scope month days, and hidden leading/trailing days.
     firstCellDate,
     lastCellDate,
     containsToday,
