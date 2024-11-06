@@ -186,8 +186,14 @@ const log = (...args) => console.log(...args)
 </script>
 
 <style lang="scss">
+.main--test {
+  padding-top: 38px;
+  padding-left: 0;
+  border-left: none;
+  overflow: hidden;
+}
+
 .test-view {
-  height: 100vh;
   overflow: auto;
   display: flex;
   flex-direction: column;
