@@ -10,6 +10,12 @@ ul
 
       addDatePrototypes()
   li No more header right margin to align with body if there is a scrollbar.
+  li.
+    The selected date and view date are now 2 separated variables: #[code selectedDate] and
+    #[code viewDate], so they can be updated distinctly without the side effect of the other.
+  li.
+    You can now directly attach any valid DOM event you want to the events and cells.
+    It should only start respectively with #[code event-] or #[code cell-] to be forwarded.
 
 h2 Props
 ul
