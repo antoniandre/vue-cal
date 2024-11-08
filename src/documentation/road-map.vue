@@ -97,13 +97,12 @@ import TodoListItem from './components/todo-list-item.vue'
 
 <style lang="scss">
 .page--road-map {
-  overflow-y: auto;
   height: calc(100dvh - 71px); // 71px = footer height + footer margins.
 }
+
 .main--road-map {
   display: flex;
   flex-direction: column;
-  overflow-y: auto;
 }
 
 .kanban {
@@ -127,7 +126,6 @@ import TodoListItem from './components/todo-list-item.vue'
       font-size: 1.2rem;
       color: var(--w-base-color);
       padding: 4px 8px;
-      // border-bottom: 3px solid var(--w-base-bg-color);
       display: flex;
       align-items: center;
       position: sticky;
