@@ -33,25 +33,6 @@ h3 {
   }
 }
 
-.examples {
-  h3 {
-    position: relative;
-    margin-bottom: 40px;
-    padding: 16px 22px;
-    background: rgb(0 189 126 / 5%);
-  }
-  h3:after {
-    content: '';
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    max-width: 400px;
-    width: 4px;
-    background: color-mix(in srgb, var(--w-primary-color) 50%, transparent);
-  }
-}
-
 h4 {margin: 70px 0 8px;}
 h3 + h4 {margin-top: 20px;}
 h4 a {color: inherit;}

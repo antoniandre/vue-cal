@@ -70,6 +70,10 @@ p
           strong Browse the full Vue Cal Codepen collection
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
+title-link(h2 anchor="view-examples")
+  w-icon.mr2 mdi mdi-done
+  | View Examples
+
 view-examples
 </template>
 
@@ -92,4 +96,22 @@ const locales = inject('locales')
 </script>
 
 <style lang="scss">
+.main--examples {
+  h2 {
+    position: relative;
+    margin-bottom: 40px;
+    padding: 16px 22px;
+    background: rgb(0 189 126 / 5%);
+  }
+  h2:after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    max-width: 400px;
+    width: 4px;
+    background: color-mix(in srgb, var(--w-primary-color) 50%, transparent);
+  }
+}
 </style>

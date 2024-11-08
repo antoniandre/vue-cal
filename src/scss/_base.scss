@@ -168,23 +168,6 @@ ul {
   }
 }
 
-.example {
-  max-width: 800px;
-  height: 600px;
-
-  &.grow {max-width: none;}
-
-  .vuecal {
-    overflow: hidden;
-    border-radius: 6px;
-  }
-
-  > .w-card__content {
-    padding: 0;
-    height: 100%;
-  }
-}
-
 @keyframes heart-pulse {
   0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
   25%, 40% {transform: scale(1.3);}

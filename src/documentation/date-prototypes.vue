@@ -1,7 +1,7 @@
 <template lang="pug">
 h1.title1 Date Prototypes
 
-w-alert.size--lg.pa3(info).
+w-alert.info.size--lg.pa3.pl4(border-left).
   Vue Cal has no dependency and internally performs date operations through a set of useful and
   efficient functions that you can choose to add to the JavaScript native #[span.code Date] class
   for your convenience. They are not altering the Date object but only adding 11 new utility functions.
@@ -14,7 +14,7 @@ w-accordion.mt12.mb2(
   //- What is this and what for.
   w-accordion-item
     template(#title)
-      title-link.ma0.pa0.bd0(tag="h2" anchor="what-is-it") What is this and what for?
+      title-link.ma0.pa0.bd0(h2 anchor="what-is-it") What is this and what for?
     template(#content)
       ul
         li A #[span.code Date] prototype is an injected function to the native JavaScript #[span.code Date] class.
@@ -57,7 +57,7 @@ w-accordion.mt12.mb2(
   //- How to use.
   w-accordion-item.mt12.mb2
     template(#title)
-      title-link.ma0.pa0.bd0(tag="h2" anchor="how-to-use") How to use
+      title-link.ma0.pa0.bd0(h2 anchor="how-to-use") How to use
 
     template(#content)
       ssh-pre(language="js" :dark="store.darkMode").
@@ -74,7 +74,7 @@ w-accordion.mt12.mb2(
   //- Prototypes.
   w-accordion-item.mt12.mb2
     template(#title)
-      title-link.ma0.pa0.bd0(tag="h2" anchor="prototypes") Prototypes
+      title-link.ma0.pa0.bd0(h2 anchor="prototypes") Prototypes
 
     template(#content)
       w-accordion(
