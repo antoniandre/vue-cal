@@ -1,93 +1,170 @@
 <template lang="pug">
-h1.title1 Road Map
+h1.title1.mb4 Road Map
 
-w-accordion.todo-accordion(
-  :model-value="[false, true]"
-  :items="2"
-  expand-icon-right
-  expand-single)
-  template(#item-title.1)
-    w-icon.mr2.primary wi-check
-    strong.mra Done
-  template(#item-content.1)
-    .w-flex.wrap.align-center
-      todo-list-item default active view
-      todo-list-item Enable / disable views
-      todo-list-item Hide / show weekends
-      todo-list-item Add timeline w/ time range &amp; increment
-      todo-list-item Add timeline
-      todo-list-item time format 12/24 h
-      todo-list-item Support for i18n
-      todo-list-item Day schedules
-      todo-list-item Support events
-      todo-list-item Background events
-      todo-list-item Overlap events
-      todo-list-item Keep only default style in CSS
-      todo-list-item Allow custom arrows
-      todo-list-item Default active date
-      todo-list-item Double tap on touch devices
-      todo-list-item 1st NPM Release!
-      todo-list-item Built-in themes
-      todo-list-item Resize events
-      todo-list-item Delete events
-      todo-list-item Emit DOM events
-      todo-list-item Event indicator on month view
-      todo-list-item Custom time format
-      todo-list-item Highlight current time
-      todo-list-item Show events on month view
-      todo-list-item sync 2 vue-cal instances
-      todo-list-item Add CSS transitions
-      todo-list-item Multiple day events
-      todo-list-item Custom events rendering
-      todo-list-item Custom callback on event click
-      todo-list-item Option to start week on Sunday
-      todo-list-item All day events in top bar
-      todo-list-item Custom cell rendering
-      todo-list-item Events count on year(s) views
-      todo-list-item Create new event
-      todo-list-item min &amp; max dates
-      todo-list-item Today button
-      todo-list-item Externalize locales
-      todo-list-item Support more simultaneous events
-      todo-list-item Hide particular weekdays
-      todo-list-item Optional week number
-      todo-list-item Date prototypes
-      todo-list-item Business hours
-      todo-list-item Drag &amp; drop events
-      todo-list-item Resize events snap to time
-      todo-list-item Drag events snap to time
-      todo-list-item Drag &amp; drop ext. events into Vue Cal
-      todo-list-item Disable days
-      todo-list-item Support Vue 3
-  template(#item-title.2)
-    w-icon.mr2.orange mdi mdi-clock-outline
-    strong.mra Backlog
-  template(#item-content.2)
-    .w-flex.wrap
-      todo-list-item(status="doing") Recurring events
-      todo-list-item(status="todo") Drag &amp; drop multiple day events
-      todo-list-item(status="todo") Drag &amp; drop events on touch devices
-      todo-list-item(status="todo")
+ul.kanban
+  li.kanban__column.kanban__column--todo
+    .title 🎯 To Do
+    .w-flex.column.gap1.pa1
+      .task view.deleteEvent(id)
+      .task v-model="events"
+      .task check if the event is overlapping with another #398 #80
+      .task accepting/rejecting the resizing events to check for overlaps.
+      .task redo the transitions like in v4
+
+      .task Recurring events
+      .task Drag &amp; drop multiple day events
+      .task Drag &amp; drop events on touch devices
+      .task
         a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
-      todo-list-item(status="todo")
+      .task
         a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
-      todo-list-item(status="todo") Improve multiple day events Month view
-      todo-list-item(status="todo") Prevent event intersect. on drag/resize
-      todo-list-item(status="todo") Horizontal timeline
-      //- TODO:
-        General
-        - do all the @todo in the codebase
-        - check overlaps only on the cell that has changed on event create/drag/background change
-        Multiple-day events:
-        - Fix event segments when dragging too fast on x axis.
-        - multiple days on month view like google calendar
-        - if more than 24 hour duration, consider as all-day
+      .task Improve multiple day events Month view
+      .task Prevent event intersect. on drag/resize
+      .task Horizontal timeline
+        //- TODO:
+          General
+          - check overlaps only on the cell that has changed on event create/drag/background change
+          Multiple-day events:
+          - Fix event segments when dragging too fast on x axis.
+          - multiple days on month view like google calendar
+          - if more than 24 hour duration, consider as all-day
+
+  li.kanban__column.kanban__column--doing
+    .title 🚧 Doing
+    .w-flex.column.gap1.pa1
+
+  li.kanban__column.kanban__column--done
+    .title ✅ Done
+    .w-flex.column.gap1.pa1
+      .task default active view
+      .task Enable / disable views
+      .task Hide / show weekends
+      .task Add timeline w/ time range &amp; increment
+      .task Add timeline
+      .task time format 12/24 h
+      .task Support for i18n
+      .task Day schedules
+      .task Support events
+      .task Background events
+      .task Overlap events
+      .task Keep only default style in CSS
+      .task Allow custom arrows
+      .task Default active date
+      .task Double tap on touch devices
+      .task 1st NPM Release!
+      .task Built-in themes
+      .task Resize events
+      .task Delete events
+      .task Emit DOM events
+      .task Event indicator on month view
+      .task Custom time format
+      .task Highlight current time
+      .task Show events on month view
+      .task sync 2 vue-cal instances
+      .task Add CSS transitions
+      .task Multiple day events
+      .task Custom events rendering
+      .task Custom callback on event click
+      .task Option to start week on Sunday
+      .task All day events in top bar
+      .task Custom cell rendering
+      .task Events count on year(s) views
+      .task Create new event
+      .task min &amp; max dates
+      .task Today button
+      .task Externalize locales
+      .task Support more simultaneous events
+      .task Hide particular weekdays
+      .task Optional week number
+      .task Date prototypes
+      .task Business hours
+      .task Drag &amp; drop events
+      .task Resize events snap to time
+      .task Drag events snap to time
+      .task Drag &amp; drop ext. events into Vue Cal
+      .task Disable days
+      .task Support Vue 3
+
+  li.kanban__column.kanban__column--later
+    .title 🕔 Later
+    .w-flex.column.gap1.pa1
 </template>
 
 <script setup>
+import TitleLink from '@/documentation/components/title-link.vue'
 import TodoListItem from './components/todo-list-item.vue'
 </script>
 
 <style lang="scss">
-.todo-accordion .w-tag__content {padding: 0 3px;}
+.page--road-map {
+  overflow-y: auto;
+  height: calc(100dvh - 71px); // 71px = footer height + footer margins.
+}
+.main--road-map {
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+}
+
+.kanban {
+  list-style-type: none;
+  margin: 0;
+  display: flex;
+  flex-grow: 1;
+  gap: 8px;
+  overflow-y: auto;
+  align-items: flex-start;
+
+  &__column {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    flex-basis: 0;
+    border-radius: 8px;
+    min-height: 100%;
+
+    .title {
+      font-size: 1.2rem;
+      color: var(--w-base-color);
+      padding: 4px 8px;
+      // border-bottom: 3px solid var(--w-base-bg-color);
+      display: flex;
+      align-items: center;
+      position: sticky;
+      top: 0;
+      z-index: 1;
+      border: 1px solid inherit;
+      background-color: var(--w-base-bg-color);
+
+      &:before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-top-left-radius: 6px;
+        border-top-right-radius: 6px;
+        background-color: var(--w-base-bg-color);
+        z-index: -1;
+      }
+    }
+    .column {
+      border-bottom-left-radius: inherit;
+      border-bottom-right-radius: inherit;
+      border: 1px solid;
+    }
+
+    &--todo .column, &--todo .title:before {background-color: hsla(0, 0%, 75%, 0.06);border-color: hsla(0, 0%, 75%, 0.12);}
+    &--doing .column, &--doing .title:before {background-color: hsla(70, 100%, 75%, 0.08);border-color: hsla(70, 100%, 75%, 0.16);}
+    &--done .column, &--done .title:before {background-color: hsla(140, 100%, 75%, 0.08);border-color: hsla(140, 100%, 75%, 0.16);}
+    &--later .column, &--later .title:before {background-color: hsla(300, 100%, 75%, 0.06);border-color: hsla(300, 100%, 75%, 0.12);}
+  }
+
+  .task {
+    padding: 6px 8px;
+    border-radius: 6px;
+    line-height: 1.2;
+    font-size: 13px;
+    border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
+    background-color: color-mix(in srgb, var(--w-base-bg-color) 90%, transparent);
+  }
+}
 </style>
