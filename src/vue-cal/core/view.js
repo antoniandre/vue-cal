@@ -453,6 +453,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
 
   watch(() => config.view, view => switchView(view, false))
   watch(() => config.availableViews, updateView)
+  watch(() => config.datePicker, () => switchView('month', false))
   watch(() => config.viewDate, date => updateViewDate(date, false))
   watch(() => config.selectedDate, date => updateSelectedDate(date, false))
   watch(() => config.startWeekOnSunday, bool => switchWeekStart(bool))

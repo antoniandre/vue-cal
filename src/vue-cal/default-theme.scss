@@ -237,10 +237,39 @@
     padding-bottom: 1px;
   }
 
+  // Sm and xs layouts.
+  // ------------------------------------------------------
+  &.vuecal--sm {
+    .vuecal__view-button,
+    .vuecal__nav,
+    .vuecal__title button,
+    .vuecal__nav--today {padding-left: 8px;padding-right: 8px;}
+  }
+  &.vuecal--xs {
+    width: 350px;
+    height: 250px;
+
+    .vuecal__view-button,
+    .vuecal__nav,
+    .vuecal__title button,
+    .vuecal__nav--today {padding-left: 4px;padding-right: 4px;}
+
+    .vuecal__title {gap: 4px;}
+    .vuecal__title small {padding-left: 3px;padding-right: 3px;}
+
+    .vuecal__body {width: 100%;}
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+    .vuecal__scrollable--year-view .vuecal__body,
+    .vuecal__scrollable--years-view .vuecal__body {margin: auto;}
+  }
+
   // Date picker.
   // ------------------------------------------------------
   &.vuecal--date-picker {
     font-size: 12px;
+    width: 210px;
+
+    &:has(.vuecal__views-bar) {height: 260px;}
 
     .vuecal__views-bar, .vuecal__title-bar {
       padding-top: 2px;
@@ -286,30 +315,5 @@
     .vuecal__cell--current-month,
     .vuecal__cell--current-year {background-color: color-mix(in srgb, var(--vuecal-primary-color) 12%, transparent);}
     .vuecal__cell--selected {background-color: color-mix(in srgb, var(--vuecal-primary-color) 28%, transparent);}
-  }
-
-  // Sm and xs layouts.
-  // ------------------------------------------------------
-  &.vuecal--sm {
-    .vuecal__view-button,
-    .vuecal__nav,
-    .vuecal__title button,
-    .vuecal__nav--today {padding-left: 8px;padding-right: 8px;}
-  }
-  &.vuecal--xs {
-    width: 210px;
-    height: 250px;
-
-    .vuecal__view-button,
-    .vuecal__nav,
-    .vuecal__title button,
-    .vuecal__nav--today {padding-left: 4px;padding-right: 4px;}
-
-    .vuecal__title {gap: 4px;}
-    .vuecal__title small {padding-left: 3px;padding-right: 3px;}
-
-    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-    .vuecal__scrollable--year-view .vuecal__body,
-    .vuecal__scrollable--years-view .vuecal__body {margin: auto;}
   }
 }
