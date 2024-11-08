@@ -233,7 +233,7 @@ $lighter-text: #ccc;
 
     &:after {
       margin-top: 5px;
-      border: 1px solid rgb(var(--w-contrast-bg-color-rgb));
+      border: 1px solid var(--w-contrast-bg-color);
     }
   }
 
@@ -414,7 +414,7 @@ $lighter-text: #ccc;
   color: #888;
   margin-top: 20px;
   padding: 8px 0;
-  border-top: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.1);
+  border-top: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
   background: linear-gradient(90deg, rgba(128, 231, 172, 0.12), rgba(255, 255, 255, 0));
 
   &:before {background: inherit;}

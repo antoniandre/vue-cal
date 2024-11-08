@@ -69,7 +69,7 @@ code, .code {
   color: var(--code-color);
   background: var(--code-bg-color);
 }
-span.code {color: rgb(var(--w-base-color-rgb));}
+span.code {color: var(--w-base-color);}
 
 // Media queries.
 // --------------------------------------------------------

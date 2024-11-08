@@ -176,7 +176,7 @@ $kate: #bac8e0;
   }
   &:after {
     bottom: 0;
-    border-bottom: 2px solid rgba(var(--w-contrast-bg-color-rgb), 0.8);
+    border-bottom: 2px solid color-mix(in srgb, var(--w-contrast-bg-color) 80%, transparent);
   }
 
   .tagline {

@@ -4,20 +4,20 @@
 // --------------------------------------------------------
 :root {
   scroll-behavior: smooth;
-  --w-base-color-rgb: 44, 62, 80;
+  --w-base-color: #2c3e50;
   --code-color: #2399ee;
-  --code-bg-color: rgba(var(--w-contrast-bg-color-rgb), 0.05);
+  --code-bg-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
 
   &[data-theme="dark"] {
-    --w-base-color-rgb: 255, 255, 255, 0.8;
+    --w-base-color: rgba(#fff, 0.8);
     --code-color: #84deff;
-    --code-bg-color: rgba(var(--w-contrast-bg-color-rgb), 0.12);
+    --code-bg-color: color-mix(in srgb, var(--w-contrast-bg-color) 12%, transparent);
   }
 
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  color: rgb(var(--w-base-color-rgb));
+  color: var(--w-base-color);
 }
 
 aside {
@@ -54,10 +54,10 @@ aside {
       transform: scaleX(0);
       transition: 0.25s transform;
       z-index: 1;
-      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), rgba(var(--w-contrast-bg-color-rgb), 0.06) 50%);
+      background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 50%);
     }
     &:hover:after {
-      border-right-color: rgba(var(--w-contrast-bg-color-rgb), 0.2);
+      border-right-color: color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
       transform: scaleX(1);
     }
     &.router-link-active:after {
@@ -76,7 +76,7 @@ aside {
 main {
   padding-top: 65px; // 40 for the top bar height, + arbitrary 25 for spacing out.
   padding-left: 4rem;
-  border-left: 1px solid rgba(var(--w-contrast-bg-color-rgb), 0.2);
+  border-left: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
   flex-grow: 1;
 }
 
