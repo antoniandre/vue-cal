@@ -33,7 +33,7 @@ ul.kanban
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
 
-  li.kanban__column.kanban__column--done
+  li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
       .task default active view
@@ -85,7 +85,7 @@ ul.kanban
       .task Disable days
       .task Support Vue 3
 
-  li.kanban__column.kanban__column--later
+  li.kanban__column.kanban__column--later.smd-hide
     .title 🕔 Later
     .w-flex.column.gap1.pa1
 </template>
