@@ -1,5 +1,5 @@
 <template lang="pug">
-example(title="Basic view options" anchor="basic")
+example(title="Basic view options" anchor="basic" v-bind="$attrs")
   template(#desc)
     p Let's first present some basic views options. Toggle options and view the result and the updated code.
     .w-flex.wrap.gap3.my2
@@ -38,7 +38,6 @@ import { reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import 'simple-syntax-highlighter/dist/sshpre.css'
 import { VueCal } from '@/vue-cal'
-import TitleLink from '@/documentation/components/title-link.vue'
 import Example from '@/documentation/components/example.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
