@@ -26,7 +26,7 @@ example(title="Layouts" anchor="layouts")
         inline)
       p #[code datePicker] is a shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   template(#code).
-    &lt;vue-cal{{ exLayouts.size === 'sm' ? ' sm' : '' }}{{ exLayouts.size === 'xs' ? ' xs' : '' }}{{ exLayouts.size === 'date-picker' ? ' date-picker' : '' }} /&gt;
+    &lt;vue-cal{{ exLayouts.size === 'sm' ? ' sm' : '' }}{{ exLayouts.size === 'xs' ? ' xs' : '' }}{{ exLayouts.size === 'datePicker' ? ' date-picker' : '' }} /&gt;
   vue-cal.example.my2.mxa(
     v-bind="{ [exLayouts.size]: true }"
     :dark="store.darkMode")
