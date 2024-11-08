@@ -25,7 +25,7 @@ const routes = [
   {
     path: '/examples',
     name: 'examples',
-    component: () => import('@/documentation/examples.vue')
+    component: () => import('@/documentation/examples/index.vue')
   },
   {
     path: '/migration-guide',

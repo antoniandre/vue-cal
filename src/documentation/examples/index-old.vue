@@ -70,12 +70,9 @@ p
           strong Browse the full Vue Cal Codepen collection
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-h3
-  a(href="#ex--basic")
-    w-icon.mr2 mdi mdi-done
-    | Basic
-//- Example.
-title-link(tag="h4" anchor="ex--basic") # Basic with no timeline &amp; hidden weekends
+view-examples
+
+
 p
   | Double click cell to go to a narrower view and click the title to go to a broader view.#[br]
   | By default the calendar theme is grey to match with most of web pages.#[br]
@@ -92,7 +89,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
+title-link(h4 anchor="ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
 p.
   Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
   With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
@@ -124,7 +121,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
+title-link(h4 anchor="ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
 p.
   You can easily change the calendar color theme or use the rounded-cells theme
   by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
@@ -189,7 +186,7 @@ p.
 highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
 
 //- Example.
-title-link(tag="h4" anchor="ex--disable-views") # Disable views, active view
+title-link(h4 anchor="ex--disable-views") # Disable views, active view
 p.
   To hide views, you can use the #[span.code disable-views] option and provide an array of views
   to disable.#[br]
@@ -206,7 +203,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;vue-cal :time="false" view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
 //- Example.
-title-link(tag="h4" anchor="ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
+title-link(h4 anchor="ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
 p.
   With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
   time range of selectable cells. All the cells before and after are still visible but
@@ -261,7 +258,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--disable-days") # Disable days
+title-link(h4 anchor="ex--disable-days") # Disable days
 p.
   You can use the #[span.code disable-days] option to provide an array of formatted dates
   (e.g. #[span.code 2020-09-18]) to disable.#[br]
@@ -297,7 +294,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
+title-link(h4 anchor="ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
 p.
   If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
   option.#[br]It accepts an array of days to hide (day numbers),
@@ -379,7 +376,7 @@ h3
     | Timeline, business hours &amp; Today
 
 //- Example.
-title-link(tag="h4" anchor="ex--timeline") # Timeline
+title-link(h4 anchor="ex--timeline") # Timeline
 p.
   Timelines are only visible on #[span.code week] and #[span.code day] views.#[br]
   This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
@@ -402,7 +399,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--show-time-in-cells") # Showing time labels in cells
+title-link(h4 anchor="ex--show-time-in-cells") # Showing time labels in cells
 p.
   You can choose to display the time labels in every cells by enabling the
   #[span.code showTimeInCells] option.
@@ -426,7 +423,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 highlight-message For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
-title-link(tag="h4" anchor="ex--special-hours") # Special hours (or business hours)
+title-link(h4 anchor="ex--special-hours") # Special hours (or business hours)
 p.
   The special hours are visible on #[span.code week] and #[span.code day] views and allow
   you to highlight a particular time range on each day of the week individually.#[br]
@@ -565,7 +562,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   }
 
 //- Example.
-title-link(tag="h4" anchor="ex--today-current-time") # Today's current time
+title-link(h4 anchor="ex--today-current-time") # Today's current time
 p.mb0.
   When you choose to show the time in vue-cal, the current time of today's date will
   be marked with a line (scroll to the current time to see it).#[br]
@@ -592,7 +589,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;vue-cal xs active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
 //- Example.
-title-link(tag="h4" anchor="ex--adding-a-today-button") # Adding a Today button
+title-link(h4 anchor="ex--adding-a-today-button") # Adding a Today button
 p.
   By default the selected date is today. But if you get lost in time travel, you can add
   a Today button to select Today's date with the option #[span.code today-button].#[br]
@@ -671,7 +668,7 @@ h3
     | Events
 
 //- Example.
-title-link(tag="h4" anchor="ex--timeless-events") # Timeless events
+title-link(h4 anchor="ex--timeless-events") # Timeless events
 p.
   The events have associated dates but no time information.#[br]
   Timeless events cannot be resized as they have no time or duration information.#[br]
@@ -724,7 +721,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--events-with-time") # Events with time information
+title-link(h4 anchor="ex--events-with-time") # Events with time information
 p.
   Read-only events (by default events are not editable) with custom HTML content and css class (for event types).#[br]
   Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
@@ -764,7 +761,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   ]
 
 //- Example.
-title-link(tag="h4" anchor="ex--open-dialog-on-event-click") # Open a dialog box on event click / dblclick
+title-link(h4 anchor="ex--open-dialog-on-event-click") # Open a dialog box on event click / dblclick
 p.mb2.
   By passing a function to the option #[span.code on-event-click] or #[span.code on-event-dblclick],
   you can control what happens when you click or double click an event - on any view where the events are displayed.#[br]
@@ -870,7 +867,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   }
 
 //- Example.
-title-link(tag="h4" anchor="ex--events-indicators") # Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views
+title-link(h4 anchor="ex--events-indicators") # Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views
 p.mb0.
   When you define events the #[span.code month] view will display an events count per day.#[br]
   You can use the option #[span.code eventsCountOnYearView] to show the events count on
@@ -941,7 +938,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__cell-events-count {display: none;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--events-on-month-view") # Display events on month view
+title-link(h4 anchor="ex--events-on-month-view") # Display events on month view
 p.
   With the option #[span.code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
   #[span.code events-on-month-view] accepts a Boolean to show or hide, or the string '#[span.code short]' to show only the event's title.#[br]
@@ -982,7 +979,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal--month-view .vuecal__no-event {display: none;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--edit-and-delete-events") # Edit &amp; delete events
+title-link(h4 anchor="ex--edit-and-delete-events") # Edit &amp; delete events
 p.mb2.
   The #[span.code editable-events] option allows or prevent all these actions when it is set to
   #[span.code true] or #[span.code false]:
@@ -1060,7 +1057,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
 
 //- Example.
-title-link(tag="h4" anchor="ex--create-events") # Create events
+title-link(h4 anchor="ex--create-events") # Create events
 
 p.
   The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
@@ -1137,7 +1134,7 @@ p try to double click on a cell to go to the day view with both #[span.code drag
     :drag-to-create-threshold="dragToCreateThreshold")
 
 //- Example.
-title-link(tag="h4" anchor="ex--other-event-creation-methods") # Other event creation methods
+title-link(h4 anchor="ex--other-event-creation-methods") # Other event creation methods
 
 p.
   There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
@@ -1409,7 +1406,7 @@ ol.pl3
     }
 
 //- Example.
-title-link(tag="h4" anchor="ex--drag-and-drop") # Event drag &amp; drop
+title-link(h4 anchor="ex--drag-and-drop") # Event drag &amp; drop
   a#ex--drag-and-drop(name="ex--drag-and-drop")
 p.mb2.
   In addition to the obvious event dragging itself, there are quite a few things that are good
@@ -1519,7 +1516,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
 //- Example.
-title-link(tag="h4" anchor="ex--external-events-drag-and-drop") # External events drag &amp; drop
+title-link(h4 anchor="ex--external-events-drag-and-drop") # External events drag &amp; drop
   a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
 p.mb2.
   You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
@@ -1636,7 +1633,7 @@ ssh-pre(language="js" label="Javascript - Vue Component" :dark="store.darkMode")
   }
 
 //- Example.
-title-link(tag="h4" anchor="ex--multiple-day-events") # Multiple day events
+title-link(h4 anchor="ex--multiple-day-events") # Multiple day events
 p.
   Multiple day events work like a set of single day events linked together.#[br]
   Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
@@ -1699,7 +1696,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   })
 
 //- Example.
-title-link(tag="h4" anchor="ex--recurring-events")
+title-link(h4 anchor="ex--recurring-events")
   w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
   | ex--recurring-events
 .mt4 #[strong When it will be ready, this is how it will work.]
@@ -1814,7 +1811,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   })
 
 //- Example.
-title-link(tag="h4" anchor="ex--overlapping-events") # Overlapping events
+title-link(h4 anchor="ex--overlapping-events") # Overlapping events
 p.
   Overlapping, editable &amp; deletable events.#[br]
   Try to resize &amp; delete events to see the overlapping redrawn.
@@ -1888,7 +1885,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   })
 
 //- Example.
-title-link(tag="h4" anchor="ex--background-events") # Background events
+title-link(h4 anchor="ex--background-events") # Background events
 p.
   Just add the property #[span.code background: true] to your events.#[br]
   The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
@@ -1946,7 +1943,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--all-day-events") # All day events
+title-link(h4 anchor="ex--all-day-events") # All day events
 
 ul
   li.mb2.
@@ -2037,7 +2034,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--schedules") # schedules &amp; schedule events
+title-link(h4 anchor="ex--schedules") # schedules &amp; schedule events
 .mb6
   | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
   br
@@ -2183,7 +2180,7 @@ h3
     | Communicating with Vue Cal
 
 //- Example.
-title-link(tag="h4" anchor="ex--emitted-events") # Vue Cal emitted events
+title-link(h4 anchor="ex--emitted-events") # Vue Cal emitted events
 p.mb0.
   Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
   If you are not familiar with Vue JS events, you should read about it here:
@@ -2369,7 +2366,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;/vue-cal&gt;
 
 //- Example.
-title-link(tag="h4" anchor="ex--external-controls") # External controls &amp; use of Vue Cal methods
+title-link(h4 anchor="ex--external-controls") # External controls &amp; use of Vue Cal methods
 p.
   You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
   This example shows how to control the Previous, Next and Today functions and the view selections
@@ -2471,7 +2468,7 @@ highlight-message(type="tips")
     #[a(href="date-prototypes") #[span.code Date] prototypes section].
 
 //- Example.
-title-link(tag="h4" anchor="ex--sync-two-calendars") # Sync two vue-cal instances
+title-link(h4 anchor="ex--sync-two-calendars") # Sync two vue-cal instances
 p.
   In this example the right calendar is used as a date picker and the selected date is
   updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
@@ -2524,7 +2521,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   })
 
 //- Example.
-title-link(tag="h4" anchor="ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
+title-link(h4 anchor="ex--modifying-events-from-outside") # Modifying the array of events outside of Vue Cal
 highlight-message.mb4(type="tips").
   It is possible to modify the array of events like adding or removing an event
   after the first load, but be aware that by doing so all the events in Vue Cal
@@ -2604,7 +2601,7 @@ highlight-message.mt6
     li #[span.code event]
 
 //- Example.
-title-link(tag="h4" anchor="ex--scroll-to-time") # Scroll the view to a particular time
+title-link(h4 anchor="ex--scroll-to-time") # Scroll the view to a particular time
 p.mb0.
   It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal.
 highlight-message(type="tips")
@@ -2649,7 +2646,7 @@ w-button.mt2.mr2(@click="scrollToTop('.ex--scroll-to-time')")
       }
 
 //- Example.
-title-link(tag="h4" anchor="ex--timeline-tweaking") # Timeline tweaking
+title-link(h4 anchor="ex--timeline-tweaking") # Timeline tweaking
 p.mb0.
   If you want to have more fancy time cells, you can override them with the
   #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
@@ -2693,7 +2690,7 @@ ssh-pre.mt6(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__time-cell-line.hours:before {border-color: #42b983;}
 
 //- Example.
-title-link(tag="h4" anchor="ex--custom-events-count") # Custom events count
+title-link(h4 anchor="ex--custom-events-count") # Custom events count
 
 highlight-message(type="tips").
   Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
@@ -2771,7 +2768,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   }
 
 //- Example.
-title-link(tag="h4" anchor="ex--custom-title-and-cells") # Custom title &amp; cells
+title-link(h4 anchor="ex--custom-title-and-cells") # Custom title &amp; cells
 highlight-message(type="tips").
   Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
   If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
@@ -2903,7 +2900,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;/vue-cal&gt;
 
 //- Example.
-title-link(tag="h4" anchor="ex--custom-event-rendering") # Custom event rendering
+title-link(h4 anchor="ex--custom-event-rendering") # Custom event rendering
 p.mb2 Using Vue.js scoped slots, you can override the events rendering.
 
 highlight-message.my2(type="tips").
@@ -3003,7 +3000,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
   ]
 
 //- Example.
-title-link(tag="h4" anchor="ex--custom-schedule-labels") # Custom day schedule labels
+title-link(h4 anchor="ex--custom-schedule-labels") # Custom day schedule labels
 p.mb6 You can provide a custom schedule label when a simple label is not enough.
 
 .example.my2.mxa(style="height: 250px")
@@ -3098,6 +3095,7 @@ import EnUs from '@/vue-cal/i18n/en-us.json'
 import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
 import TitleLink from '@/documentation/components/title-link.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
+import ViewExamples from './view.vue'
 
 useLocale(EnUs)
 addDatePrototypes()
@@ -3667,7 +3665,7 @@ const onEventDrop = ({ event, originalEvent, external }) => {
 </script>
 
 <style lang="scss">
-@import '@/scss/examples.scss';
+@use '@/scss/examples.scss';
 
 .main--examples {
   // Yellow theme.

@@ -2,7 +2,7 @@
 h1.title1 API
 
 h2.w-flex.justify-space-between.mb2
-  title-link(tag="div" anchor="views") Calendar Views
+  title-link(div anchor="views") Calendar Views
   w-switch.my1.body(@update:model-value="expandedViews = [...views].fill($event)") Expand All
 
 w-accordion(
@@ -15,7 +15,7 @@ w-accordion(
     strong.code {{ item.label }}
 
 h2.w-flex.justify-space-between.mt12.mb2
-  title-link(tag="div" anchor="view") The View Object
+  title-link(div anchor="view") The View Object
   w-switch.my1.body(@update:model-value="expandedViewVars = [...views].fill($event)") Expand All
 p.caption.size--md.
   You can use the #[code.base-color view] object to access accurate information about the current view at any time.
@@ -128,7 +128,7 @@ w-accordion.mt3(
         }
 
 h2.w-flex.justify-space-between.mt12.mb2
-  title-link(tag="div" anchor="options") Options
+  title-link(div anchor="options") Options
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
 
 p.caption.size--md.lh1.

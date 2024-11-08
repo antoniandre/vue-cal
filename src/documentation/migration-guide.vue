@@ -39,6 +39,7 @@ ul
   li todayButton now defaults to true, previously false
   li clickToNavigate -> removed, you can attach your own DOM events to cells.
   li dblClickToNavigate -> removed, you can attach your own DOM events to cells.
+  li day-splits -> renamed `schedules`
 </template>
 
 <script setup>
