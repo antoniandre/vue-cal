@@ -27,10 +27,24 @@ example(title="Layouts" anchor="layouts")
       p #[code datePicker] is a shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   template(#code).
     &lt;vue-cal{{ exLayouts.size === 'sm' ? ' sm' : '' }}{{ exLayouts.size === 'xs' ? ' xs' : '' }}{{ exLayouts.size === 'datePicker' ? ' date-picker' : '' }} /&gt;
-  vue-cal.example.my2.mxa(
+  vue-cal.mxa(
     v-bind="{ [exLayouts.size]: true }"
     :dark="store.darkMode")
 
+//- Example.
+example(title="Hide Elements" anchor="hide-elements")
+  template(#desc)
+    .w-flex.wrap.gap3.my2
+      w-switch(v-model="exHideElements.todayButton") Show Today Button
+      w-switch(v-model="exHideElements.viewsBar") Show Views Bar
+      w-switch(v-model="exHideElements.titleBar") Show Title bar
+  template(#code).
+    &lt;vue-cal{{ exHideElements.todayButton ? '' : ' :today-button="false"' }}{{ exHideElements.viewsBar ? '' : ' :views-bar="false"' }}{{ exHideElements.titleBar ? '' : ' :title-bar="false"' }} /&gt;
+  vue-cal.mxa(
+    :views-bar="exHideElements.viewsBar"
+    :today-button="exHideElements.todayButton"
+    :title-bar="exHideElements.titleBar"
+    :dark="store.darkMode")
 </template>
 
 <script setup>
@@ -53,4 +67,14 @@ const exBasicView = ref({
 const exLayouts = ref({
   size: 'normal'
 })
+
+const exHideElements = ref({
+  todayButton: true,
+  viewsBar: true,
+  titleBar: true
+})
 </script>
+
+<style lang="scss" scoped>
+.example .vuecal:not(.vuecal--date-picker) {height: 300px;}
+</style>

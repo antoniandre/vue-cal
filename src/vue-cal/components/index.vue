@@ -95,8 +95,3 @@ watch(() => config.locale, newLocale => config.loadTexts(newLocale))
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
 </script>
-
-<style lang="scss">
-
-@use '../default-theme.scss'; // Keep at the end.
-</style>
