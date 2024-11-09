@@ -7,9 +7,10 @@
   .w-app .amber {color: #ffd865;}
   .w-app .deep-orange {color: #ff9c65;}
 
-  h2:not(.todo) {
-    color: var(--w-primary-color);
-    border-bottom-color: #383838;
+  h2 {
+    // color: var(--w-primary-color);
+    // border-bottom-color: #383838;
+    // background-color: #273134;
   }
   .message-box:after {opacity: 0.15;}
   .message-box.pink {color: #ffa9c6;}
@@ -19,9 +20,5 @@
   }
   .message-box.pale-blue {color: #65bcff;}
 
-  .highlight-box {
-    background: linear-gradient(45deg, #2c3730, rgb(255 255 255 / 0%));
-
-    .grey {color: #aaa;}
-  }
+  .highlight-box .grey {color: #aaa;}
 }

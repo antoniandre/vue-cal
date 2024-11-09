@@ -101,7 +101,7 @@ const locales = inject('locales')
     position: relative;
     margin-top: 100px;
     padding: 16px 22px;
-    background: rgb(0 189 126 / 5%);
+    background: color-mix(in srgb, var(--highlight-color) 60%, transparent);
   }
   h2:after {
     content: '';
@@ -115,5 +115,10 @@ const locales = inject('locales')
   }
 
   h2 + .example h3 {margin-top: 20px;}
+
+  h3.title-link {
+    border-bottom: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 12%, transparent);
+    margin-bottom: 12px;
+  }
 }
 </style>

@@ -15,6 +15,7 @@ const props = defineProps({
   h4: Boolean,
   h5: Boolean,
   h6: Boolean,
+  div: Boolean,
   label: String,
   anchor: { type: String, required: true }
 })

@@ -233,7 +233,7 @@ $lighter-text: #ccc;
 
     &:after {
       margin-top: 5px;
-      border: 1px solid var(--w-contrast-bg-color);
+      border: 1px solid color-mix(in srgb, var(--w-primary-color) 100%, var(--w-contrast-bg-color) 50%);
     }
   }
 
@@ -415,8 +415,8 @@ $lighter-text: #ccc;
   margin-top: 20px;
   padding: 8px 0;
   border-top: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
-  background: linear-gradient(90deg, rgba(128, 231, 172, 0.12), rgba(255, 255, 255, 0));
-
+  background: //linear-gradient(90deg, rgba(128, 231, 172, 0.12), rgba(255, 255, 255, 0));
+  linear-gradient(90deg, var(--highlight-color), rgba(255, 255, 255, 0));
   &:before {background: inherit;}
   &:focus:before, &:hover:before {opacity: 1;}
 }
