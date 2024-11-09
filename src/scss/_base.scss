@@ -8,12 +8,14 @@
   --code-color: #2399ee;
   --code-bg-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
   --highlight-color: #ecf3f8;
+  --headline-color: #2c456d;
 
   &[data-theme="dark"] {
     --w-base-color: rgba(#fff, 0.8);
     --code-color: #84deff;
     --code-bg-color: color-mix(in srgb, var(--w-contrast-bg-color) 12%, transparent);
     --highlight-color: #273134b5;
+    --headline-color: #7292c5;
   }
 
   font: 15px 'Avenir', Helvetica, Arial, sans-serif;
@@ -44,8 +46,12 @@ aside {
     padding: 4px 2rem 4px 0;
     justify-content: flex-end;
     font-size: 1.1rem;
+    transition: 0.25s font-weight;
 
-    &.router-link-active {font-weight: bold;}
+    &.router-link-active {
+      font-weight: bold;
+      text-transform: uppercase;
+    }
 
     &:after {
       content: '';
