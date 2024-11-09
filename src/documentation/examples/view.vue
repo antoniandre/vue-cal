@@ -49,7 +49,7 @@ example(title="Themes" anchor="themes")
       w-switch(v-model="exThemes.default") Default Theme
       w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
   template(#code).
-    &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark ? ' dark' : '' }} /&gt;
+    &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark && exThemes.default ? ' dark' : '' }} /&gt;
   vue-cal.mxa(
     ref="vuecalEl"
     :theme="exThemes.default && 'default'"
