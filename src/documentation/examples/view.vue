@@ -1,24 +1,8 @@
 <template lang="pug">
-example(title="Basic view options" anchor="basic" v-bind="$attrs")
-  template(#desc)
-    p Let's first present some basic views options. Toggle options and view the result and the updated code.
-    .w-flex.wrap.gap3.my2
-      w-switch(v-model="exBasicView.startOnSunday") Start week on Sunday
-      w-switch(v-model="exBasicView.hideWeekends") Hide weekends {{exBasicView.hideWeekends}}
-      w-switch(v-model="exBasicView.time") Time
-  template(#code).
-    &lt;vue-cal{{ exBasicView.time ? '' : ' :time="false"' }}{{ exBasicView.hideWeekends ? ' hide-weekends' : '' }}{{ exBasicView.startOnSunday ? ' start-week-on-sunday' : '' }} /&gt;
-
-  vue-cal(
-    :time="exBasicView.time"
-    :hide-weekends="exBasicView.hideWeekends"
-    :start-week-on-sunday="exBasicView.startOnSunday"
-    :dark="store.darkMode"
-    style="height: 300px")
-
 //- Example.
 example(title="Layouts" anchor="layouts")
   template(#desc)
+    p Let's first present the different layouts. Toggle the options and view the updated code and result.
     .w-flex.wrap.gap3.my2
       w-radios(
         v-model="exLayouts.size"
@@ -32,19 +16,43 @@ example(title="Layouts" anchor="layouts")
     :dark="store.darkMode")
 
 //- Example.
-example(title="Hide Elements" anchor="hide-elements")
+example(title="Hide Elements & toggles" anchor="hide-elements")
   template(#desc)
+    p.caption Toggle options and view the updated code and result.
     .w-flex.wrap.gap3.my2
       w-switch(v-model="exHideElements.todayButton") Show Today Button
       w-switch(v-model="exHideElements.viewsBar") Show Views Bar
       w-switch(v-model="exHideElements.titleBar") Show Title bar
+    .w-flex.wrap.gap3.my2
+      w-switch(v-model="exHideElements.startOnSunday") Start week on Sunday
+      w-switch(v-model="exHideElements.hideWeekends") Hide weekends
+      w-switch(v-model="exHideElements.time") Time
   template(#code).
-    &lt;vue-cal{{ exHideElements.todayButton ? '' : ' :today-button="false"' }}{{ exHideElements.viewsBar ? '' : ' :views-bar="false"' }}{{ exHideElements.titleBar ? '' : ' :title-bar="false"' }} /&gt;
+    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }} /&gt;
   vue-cal.mxa(
     :views-bar="exHideElements.viewsBar"
     :today-button="exHideElements.todayButton"
     :title-bar="exHideElements.titleBar"
+    :time="exHideElements.time"
+    :hide-weekends="exHideElements.hideWeekends"
+    :start-week-on-sunday="exHideElements.startOnSunday"
     :dark="store.darkMode")
+
+//- Example.
+example(title="Themes" anchor="themes")
+  template(#desc)
+    p.
+      You have already seen the default theme. It comes with a bunch of CSS rules and variables that
+      you can easily override, and it also offers a light and dark mode.
+    p But if you prefer to do your own styles from scratch, you can disable the default theme.
+    .w-flex.wrap.gap3.mt2
+      w-switch(v-model="exThemes.default") Default Theme
+      w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
+  template(#code).
+    &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark ? ' dark' : '' }} /&gt;
+  vue-cal.mxa(
+    :theme="exThemes.default && 'default'"
+    :dark="exThemes.dark")
 </template>
 
 <script setup>
@@ -58,12 +66,6 @@ import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
-const exBasicView = ref({
-  startOnSunday: false,
-  hideWeekends: false,
-  time: true
-})
-
 const exLayouts = ref({
   size: 'normal'
 })
@@ -71,7 +73,15 @@ const exLayouts = ref({
 const exHideElements = ref({
   todayButton: true,
   viewsBar: true,
-  titleBar: true
+  titleBar: true,
+  startOnSunday: false,
+  hideWeekends: false,
+  time: true
+})
+
+const exThemes = ref({
+  default: true,
+  dark: store.darkMode
 })
 </script>
 
