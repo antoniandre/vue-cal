@@ -51,8 +51,17 @@ example(title="Themes" anchor="themes")
   template(#code).
     &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark ? ' dark' : '' }} /&gt;
   vue-cal.mxa(
+    ref="vuecalEl"
     :theme="exThemes.default && 'default'"
     :dark="exThemes.dark")
+  template(#desc2)
+    .mt2
+      | You can change the whole color theme by only setting the #[code --vuecal-primary-color] CSS variable.#[br]
+      | Look, pick your favorite color:
+      input.ml1(
+        @input="e => exThemes.setThemeColor(e.target.value)"
+        :value="store.darkMode ? '#316191' : '#1976d2'"
+        type="color" )
 </template>
 
 <script setup>
@@ -79,10 +88,14 @@ const exHideElements = ref({
   time: true
 })
 
-const exThemes = ref({
+const exThemes = reactive({
   default: true,
-  dark: store.darkMode
+  dark: store.darkMode,
+  setThemeColor: color => {
+    vuecalEl.value.$el.style.setProperty('--vuecal-primary-color', color)
+  }
 })
+const vuecalEl = ref(null)
 </script>
 
 <style lang="scss" scoped>
