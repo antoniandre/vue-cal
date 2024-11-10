@@ -92,7 +92,7 @@ const vScroll = {
 const onScroll = () => {
   const { scrollTop, offsetHeight } = document.documentElement
   offsetTop.value = window.scrollY || scrollTop
-  goTopHidden.value = offsetTop.value < 200 || (offsetHeight - scrollTop - window.innerHeight <= 100)
+  goTopHidden.value = offsetTop.value < 200
 }
 
 provide('locales', [
