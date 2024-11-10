@@ -127,6 +127,12 @@ export const useConfig = (vuecal, props, attrs) => {
     else return Object.keys(availableViews.value)[0]
   })
 
+  const selectedDate = computed(() => {
+    if (typeof props.selectedDate === 'string') return dateUtils.stringToDate(props.selectedDate)
+    else if (props.selectedDate instanceof Date) return props.selectedDate
+    else console.warn('Vue Cal: The provided selected date is invalid.', props.selectedDate)
+  })
+
   const schedules = computed(() => {
     const { view } = vuecal
     return (props.schedules.length && (view.isDay || view.isDays || view.isWeek) && props.schedules)
@@ -199,6 +205,7 @@ export const useConfig = (vuecal, props, attrs) => {
     hideWeekdays,
     hideWeekends,
     schedules,
+    selectedDate,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },
