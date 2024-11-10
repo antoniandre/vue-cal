@@ -408,7 +408,6 @@ export const useDateUtils = initTexts => {
     addDatePrototypes,
     removeDatePrototypes,
     updateTexts,
-    _todayFormatted,
     addDays,
     subtractDays,
     addHours,

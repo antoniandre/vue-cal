@@ -285,7 +285,11 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code ''
     template(#content)
-      p
+      p.
+        Accepts a JavaScript Date or a formatted string like #[code {{ (new Date()).format() }}].#[br]
+        Preselects a date and navigates to it on calendar load or whenever it changes.#[br]
+        The selected date is a two-way binding: you can use it in a v-model to keep your variable
+        up to date.
 
   w-accordion-item
     template(#title)
@@ -349,7 +353,17 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code () => []
     template(#content)
-      p Split a day in different persons/rooms/locations schedules.
+      p.
+        Split a day and its events in different persons/rooms/locations schedules.#[br]
+        Each calendar event is exclusively owned and displayed in one of them.
+        Accepts an array of objects defined like follows, where all attributes are optional:#[br]
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          id: {Integer | String}, // All ids must be set if using `hide`.
+          class: {String},
+          label: {String},
+          hide: {Boolean} // You can toggle the column on and of with this.
+        }
 
   w-accordion-item
     template(#title)
@@ -451,7 +465,7 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code true
     template(#content)
-      p Show or hide the header today button.
+      p Show or hide the header today button that allows to quickly navigate to Today's date.
 
   w-accordion-item
     template(#title)
@@ -471,7 +485,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p 12 or 24 hour format are respectively written like 1pm and 13:00.
+      p.
+        12-hour or 24-hour formats are respectively written like 7am and 07:00 or like 1pm and 13:00.#[br]
+        The default time format is 24-hour.
 
   w-accordion-item
     template(#title)
@@ -515,7 +531,21 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code ['day', 'days', 'week', 'month', 'year', 'years']
     template(#content)
-      p
+      p.
+        Accepts an array of strings among these values: 'day', 'days', 'week', 'month', 'year', 'years'.#[br]
+        It will dictate which view is available and can be navigated to.
+        You can also provide an object with the same keys ('day', 'days', 'week', 'month', 'year', 'years')
+        if you want to override its default grid layout.
+        For instance, this is the defaults:
+      ssh-pre(language="js" :dark="store.darkMode").
+        availableViews: {
+          day: { cols: 1, rows: 1 },
+          days: { cols: 10, rows: 1 },
+          week: { cols: 7, rows: 1 },
+          month: { cols: 7, rows: 6 },
+          year: { cols: 4, rows: 3 },
+          years: { cols: 5, rows: 5 } // Arbitrary range of quarters of century (25y).
+        }
 
   w-accordion-item
     template(#title)

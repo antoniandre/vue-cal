@@ -17,7 +17,7 @@ ul
     #[code viewDate], so they can be updated distinctly without the side effect of the other.
   li.
     You can now directly attach any valid DOM event you want to the events and cells.
-    It should only start respectively with #[code event-] or #[code cell-] to be forwarded.
+    It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.
   li.
     Navigation by clicking or double-clicking cell has been removed, you can add this yourself
     now that you can directly attach any valid DOM event to the cell.
@@ -28,6 +28,7 @@ ul
 h2.mt12 Props
 ul
   li `activeView` renamed `view`
+  li the selectedDate does not necessary control the view navigation anymore,
   li removed `hideBody` useless. With so much flexibility, there is no case where you only need the header without the calendar body
   li cellContextmenu -> removed, you can attach from outside
   li disableViews -> removed, replaced with `views` which is defining the available views instead
@@ -35,11 +36,18 @@ ul
   li x-small renamed xs
   li specialHours -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
   li disableWeekdays -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
-  li hideViewsBar renamed viewsBar, default false
+  li hideViewsBar renamed viewsBar, default true
+  li hideTitleBar renamed titleBar, default true
   li todayButton now defaults to true, previously false
   li clickToNavigate -> removed, you can attach your own DOM events to cells.
   li dblClickToNavigate -> removed, you can attach your own DOM events to cells.
   li day-splits -> renamed `schedules`
+  li onEventClick -> removed, you can attach from outside
+  li onEventDblclick -> removed, you can attach from outside
+  li cellClickHold -> removed, you can attach from outside
+  li.
+    disableDatePrototypes -> removed: the prototypes are now disabled by default and you control whether you
+    want to benefit from it or not.
 </template>
 
 <script setup>
