@@ -20,7 +20,7 @@ p.
   Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
   With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
 .example.my2.mxa(style="width: 250px;height: 260px")
-  vue-cal.vuecal--default-theme(
+  vue-cal(
     :dark="store.darkMode"
     :views-bar="false"
     :time="false"
@@ -120,7 +120,7 @@ p.
   even when navigating from cells and title bar clicks.#[br]#[br]
   By default all the views are visible and the default active view is the #[span.code week] view.
 .example.mxa.mt2(style="height: 350px")
-  vue-cal.vuecal--default-theme.ex--disable-views(
+  vue-cal.ex--disable-views(
     :dark="store.darkMode"
     :time="false"
     view="month"
@@ -145,7 +145,7 @@ highlight-message.my4(type="tips")
       2 different CSS class are available on out of range cells: #[span.code .before-min]
       &amp; #[span.code .after-max].
 .example.my2.mxa(style="width: 250px;height: 260px")
-  vue-cal.vuecal--default-theme.ex--min-max-dates(
+  vue-cal.ex--min-max-dates(
     :dark="store.darkMode"
     xs
     :views-bar="false"
@@ -189,7 +189,7 @@ p.
   You can use the #[span.code disable-days] option to provide an array of formatted dates
   (e.g. #[span.code 2020-09-18]) to disable.#[br]
 .example.my2.mxa(style="width: 250px;height: 260px")
-  vue-cal.vuecal--default-theme.ex--disable-days(
+  vue-cal.ex--disable-days(
     :dark="store.darkMode"
     xs
     :views-bar="false"
@@ -235,7 +235,7 @@ highlight-message.
   Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
 .example.mxa(style="height: 350px")
-  vue-cal.vuecal--default-theme(
+  vue-cal(
     :dark="store.darkMode"
     :time="false"
     show-week-numbers
@@ -281,7 +281,7 @@ p.
   Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
   Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
 .example.my2.mxa(style="width: 500px;height: 340px;max-width: 100%")
-  vue-cal.vuecal--default-theme(
+  vue-cal(
     :dark="store.darkMode"
     :time="false"
     small
@@ -322,7 +322,7 @@ p.
   This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
   24-hour format, and hidden weekends.
 .example.my2.mxa(style="height: 450px")
-  vue-cal.vuecal--default-theme(
+  vue-cal(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="19 * 60"
@@ -344,7 +344,7 @@ p.
   You can choose to display the time labels in every cells by enabling the
   #[span.code showTimeInCells] option.
 .example.my2.mxa(style="height: 450px")
-  vue-cal.vuecal--default-theme(
+  vue-cal(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="19 * 60"
@@ -371,7 +371,7 @@ highlight-message.
   Refer to the #[a(href="#api") API] section to read more about the
   #[span.code special-hours] option.
 .example.my2.mxa(style="height: 450px")
-  vue-cal.vuecal--default-theme.ex--special-hours(
+  vue-cal.ex--special-hours(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="20 * 60"
@@ -408,7 +408,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 
 p With the same principle, you could also build a lot more complex layout such as the following one.
 .example.my2.mxa(style="height: 550px")
-  vue-cal.vuecal--default-theme.ex--doctor-hours(
+  vue-cal.ex--doctor-hours(
     :dark="store.darkMode"
     :disable-views="['years', 'year', 'month']"
     :time-from="7 * 60"
@@ -518,7 +518,7 @@ p.
   If you want the now line to keep accurate position even while your calendar is idle, you can use the option
   #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
 .example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
-  vue-cal.vuecal--default-theme.ex--today-current-time(
+  vue-cal.ex--today-current-time(
     :dark="store.darkMode"
     xs
     :time-cell-height="26"
@@ -544,7 +544,7 @@ p
   w-icon(color="green lighten-2") mdi mdi-codepen
 .w-flex.justify-center.wrap
   .example.my2.mr3(style="max-width: 280px;height: 250px")
-    vue-cal.vuecal--default-theme.ex--adding-a-today-button(
+    vue-cal.ex--adding-a-today-button(
       :dark="store.darkMode"
       ref="vuecal2"
       xs
@@ -555,7 +555,7 @@ p
       view="month"
       :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
   .example.my2(style="max-width: 280px;height: 250px")
-    vue-cal.vuecal--default-theme.ex--adding-a-today-button(
+    vue-cal.ex--adding-a-today-button(
       :dark="store.darkMode"
       ref="vuecal2"
       xs

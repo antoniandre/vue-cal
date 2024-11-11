@@ -8,7 +8,7 @@
 
 
 //- Example.
-example(title="Vue Cal emitted events" anchor="ex--emitted-events")
+example(title="Vue Cal emitted events" anchor="emitted-events")
   template(#desc)
     p.mb0.
       Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
@@ -139,7 +139,7 @@ example(title="Vue Cal emitted events" anchor="ex--emitted-events")
           strong.mr1 {{ l.name }}:
           span {{ l.args.replace(/,/g, m => ', ').replace(/":(?=["\w\[\{])/g, m => '": ') }}
     .example.mt6.mb2.mxa
-      vue-cal.vuecal--default-theme(
+      vue-cal(
         :dark="store.darkMode"
         :selected-date="stringToDate('2018-11-19')"
         :time-from="7 * 60"
@@ -195,7 +195,7 @@ example(title="Vue Cal emitted events" anchor="ex--emitted-events")
     &lt;/vue-cal&gt;
 
 //- Example.
-example(title="External controls &amp; use of Vue Cal methods" anchor="ex--external-controls")
+example(title="External controls &amp; use of Vue Cal methods" anchor="external-controls")
   template(#desc)
     p.
       You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
@@ -244,7 +244,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="ex--exter
         | Next
         w-icon.ml1 mdi mdi-arrow-right
     .w-flex.align-center.justify-center
-      vue-cal.vuecal--default-theme(
+      vue-cal(
         :dark="store.darkMode"
         small
         ref="vuecal4"
@@ -299,7 +299,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="ex--exter
         #[a(href="date-prototypes") #[span.code Date] prototypes section].
 
 //- Example.
-example(title="Sync two vue-cal instances" anchor="ex--sync-two-calendars")
+example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
   template(#desc)
     p.
       In this example the right calendar is used as a date picker and the selected date is
@@ -354,7 +354,7 @@ example(title="Sync two vue-cal instances" anchor="ex--sync-two-calendars")
       })
 
 //- Example.
-example(title="Modifying the array of events outside of Vue Cal" anchor="ex--modifying-events-from-outside")
+example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
   template(#desc)
   template(#code).
     highlight-message.mb4(type="tips").
@@ -372,7 +372,7 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="ex--mod
     pre {{ eventsCopy.map(e => e.title) }}
 
     .example.my4.mxa
-      vue-cal.vuecal--default-theme(
+      vue-cal(
         :dark="store.darkMode"
         :selected-date="stringToDate('2018-11-19')"
         :time-from="9 * 60"
