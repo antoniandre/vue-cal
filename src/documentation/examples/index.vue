@@ -70,11 +70,25 @@ p
           strong Browse the full Vue Cal Codepen collection
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-title-link.mt12.mb0(h2 anchor="view-examples")
+title-link(h2 anchor="view-examples")
   w-icon.mr2 mdi mdi-done
   | View Examples
-
 view-examples
+
+title-link(h2 anchor="events-examples")
+  w-icon.mr2 mdi mdi-calendar
+  | Calendar Events Examples
+//- calendar-events-examples
+
+title-link(h2 anchor="dom-events-examples")
+  w-icon.mr2 mdi mdi-swap_horizontal
+  | DOM Events Examples
+//- dom-events-examples
+
+title-link(h2 anchor="customization-examples")
+  w-icon.mr2 mdi mdi-tune
+  | Customization Examples
+//- customization-examples
 </template>
 
 <script setup>
@@ -87,6 +101,9 @@ import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
 import TitleLink from '@/documentation/components/title-link.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
+import CustomizationExamples from './customization.vue'
+import CalendarEventsExamples from './calendar-events.vue'
+import DomEventsExamples from './dom-events.vue'
 
 useLocale(EnUs)
 addDatePrototypes()
@@ -99,7 +116,7 @@ const locales = inject('locales')
 .main--examples {
   h2 {
     position: relative;
-    margin-top: 100px;
+    margin-top: 120px;
     padding: 16px 22px;
     background: color-mix(in srgb, var(--highlight-color) 60%, transparent);
   }
