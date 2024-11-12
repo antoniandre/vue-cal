@@ -2,7 +2,7 @@
 //- Example.
 //- example(title="" anchor="")
   template(#desc)
-  template(#code).
+  template(#code-html).
 
 
 
@@ -14,7 +14,7 @@ example(title="Timeless events" anchor="timeless-events")
       The events have associated dates but no time information.#[br]
       Timeless events cannot be resized as they have no time or duration information.#[br]
       Refer to the #[span.code events] option in the #[a(href="#api") API] section.
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time="false"
@@ -67,7 +67,7 @@ example(title="Events with time information" anchor="events-with-time")
       Read-only events (by default events are not editable) with custom HTML content and css class (for event types).#[br]
       Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
       The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
@@ -112,7 +112,7 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
       li #[span.code event]: the clicked calendar event's object
       li #[span.code e]: the associated javascript DOM event
     highlight-message.mt3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
@@ -222,7 +222,7 @@ example(title="Events indicators - #[span.code years], #[span.code year] &amp; #
         inline
         label-color="grey"
         :items="indicatorStyleOptions")
-  template(#code).
+  template(#code-html).
 .w-flex.maa.justify-center.wrap
   .example.ma2.my2(style="width: 300px;height: 360px")
     vue-cal(
@@ -289,7 +289,7 @@ example(title="Display events on month view" anchor="events-on-month-view")
       If #[span.code events-on-month-view] is set to #[span.code true], all the informations are displayed, you can then hide
       any event information via CSS.#[br]
       If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  template(#code).
+  template(#code-html).
   vue-cal.vuecal--full-height-delete.ex--events-on-month-view(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -326,7 +326,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 //- Example.
 example(title="Edit &amp; delete events" anchor="edit-and-delete-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 p.mb2.
   The #[span.code editable-events] option allows or prevent all these actions when it is set to
   #[span.code true] or #[span.code false]:
@@ -406,7 +406,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 //- Example.
 example(title="Create events" anchor="create-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 
 p.
   The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
@@ -430,7 +430,7 @@ highlight-message.
     @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
     | Clear all the events
 .example.mxa.mt3(style="height: 280px")
-  vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
+  vue-cal.ex--create-events.vuecal--full-height-delete(
     :dark="store.darkMode"
     ref="vuecalCreateEx"
     :views-bar="false"
@@ -473,7 +473,7 @@ p try to double click on a cell to go to the day view with both #[span.code drag
     template(#item="{ item }")
       code {{ item.label }}
 .example.grow.mt3(style="height: 280px")
-  vue-cal.ex--create-events.vuecal--default-theme.vuecal--full-height-delete(
+  vue-cal.ex--create-events.vuecal--full-height-delete(
     :dark="store.darkMode"
     :time-from="10 * 60"
     :time-to="16 * 60"
@@ -485,7 +485,7 @@ p try to double click on a cell to go to the day view with both #[span.code drag
 //- Example.
 example(title="Other event creation methods" anchor="other-event-creation-methods")
   template(#desc)
-  template(#code).
+  template(#code-html).
 
 p.
   There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
@@ -635,7 +635,7 @@ ol.pl3
       The dialog box will allow you to set all the event attributes.
     .w-flex.wrap
       .example.grow.my2.mr3(style="height: 280px")
-        vue-cal.grow.vuecal--default-theme.vuecal--full-height-delete(
+        vue-cal.grow.vuecal--full-height-delete(
           :dark="store.darkMode"
           small
           :time-from="10 * 60"
@@ -759,7 +759,7 @@ ol.pl3
 //- Example.
 example(title="Event drag &amp; drop" anchor="drag-and-drop")
   template(#desc)
-  template(#code).
+  template(#code-html).
   a#ex--drag-and-drop(name="ex--drag-and-drop")
 p.mb2.
   In addition to the obvious event dragging itself, there are quite a few things that are good
@@ -871,7 +871,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 //- Example.
 example(title="External events drag &amp; drop" anchor="external-events-drag-and-drop")
   template(#desc)
-  template(#code).
+  template(#code-html).
   a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
 p.mb2.
   You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
@@ -907,7 +907,7 @@ highlight-message(type="tips")
     editable-events
     @event-drop="onEventDrop"
     :dark="store.darkMode")
-  vue-cal.ml1.grow.external-events-drag-and-drop.vuecal--default-theme(
+  vue-cal.ml1.grow.external-events-drag-and-drop(
     :dark="store.darkMode"
     small
     :views-bar="false"
@@ -990,7 +990,7 @@ ssh-pre(language="js" label="Javascript - Vue Component" :dark="store.darkMode")
 //- Example.
 example(title="Multiple day events" anchor="multiple-day-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 p.
   Multiple day events work like a set of single day events linked together.#[br]
   Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
@@ -1170,7 +1170,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
 //- Example.
 example(title="Overlapping events" anchor="overlapping-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 p.
   Overlapping, editable &amp; deletable events.#[br]
   Try to resize &amp; delete events to see the overlapping redrawn.
@@ -1246,7 +1246,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
 //- Example.
 example(title="Background events" anchor="background-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 p.
   Just add the property #[span.code background: true] to your events.#[br]
   The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
@@ -1306,7 +1306,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 //- Example.
 example(title="All day events" anchor="all-day-events")
   template(#desc)
-  template(#code).
+  template(#code-html).
 
 ul
   li.mb2.
@@ -1399,7 +1399,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 //- Example.
 example(title="schedules &amp; schedule events" anchor="schedules")
   template(#desc)
-  template(#code).
+  template(#code-html).
 .mb6
   | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
   br

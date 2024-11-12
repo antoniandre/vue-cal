@@ -2,7 +2,7 @@
 //- Example.
 //- example(title="" anchor="")
   template(#desc)
-  template(#code).
+  template(#code-html).
 
 
 
@@ -166,7 +166,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
         @event-drag-create="logEvents('event-drag-create', $event)"
         @event-delete="logEvents('event-delete', $event)")
 
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
@@ -258,7 +258,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="external-
     ul
       li #[code activeView]: #[strong.code {{ activeView }} ],
       li #[code selectedDate]: #[strong.code {{ selectedDate && selectedDate.format() }} ]
-  template(#code).
+  template(#code-html).
     &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
     &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
     &lt;button @click="activeView = 'month'"&gt;Month&lt;/button&gt;
@@ -306,7 +306,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       updated on the left calendar via the #[span.code @cell-focus] event listener.#[br]
       To know more about emitted events refer to the
       #[a(href="#ex--emitted-events") emitted events example].
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       small
       :time="false"
@@ -356,7 +356,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
 //- Example.
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
   template(#desc)
-  template(#code).
+  template(#code-html).
     highlight-message.mb4(type="tips").
       It is possible to modify the array of events like adding or removing an event
       after the first load, but be aware that by doing so all the events in Vue Cal

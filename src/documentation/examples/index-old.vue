@@ -68,7 +68,7 @@ p.
       :disable-views="['week']"
       :dark="store.darkMode")
   .example.ma2(style="width: 270px;height: 300px")
-    vue-cal.vuecal--rounded-theme.vuecal--default-theme(
+    vue-cal.vuecal--rounded-theme(
       :dark="store.darkMode"
       xs
       :views-bar="false"

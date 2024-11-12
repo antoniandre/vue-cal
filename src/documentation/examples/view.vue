@@ -9,14 +9,12 @@ example(title="Layouts" anchor="layouts")
         :items="[{ label: 'normal'}, { label: 'sm'}, { label: 'xs'}, { label: 'datePicker' }]"
         inline)
       p #[code datePicker] is a shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
-  template(#code).
+  template(#code-html).
     &lt;vue-cal{{ exLayouts.size === 'sm' ? ' sm' : '' }}{{ exLayouts.size === 'xs' ? ' xs' : '' }}{{ exLayouts.size === 'datePicker' ? ' date-picker' : '' }} /&gt;
-  vue-cal.mxa(
-    v-bind="{ [exLayouts.size]: true }"
-    :dark="store.darkMode")
+  vue-cal.mxa(v-bind="{ [exLayouts.size]: true }" :dark="store.darkMode")
 
 //- Example.
-example(title="Hide Elements & toggles" anchor="hide-elements")
+example(title="Hide Elements & Toggles" anchor="hide-elements")
   template(#desc)
     p.caption Toggle options and view the updated code and result.
     .w-flex.wrap.gap3.my2
@@ -27,7 +25,7 @@ example(title="Hide Elements & toggles" anchor="hide-elements")
       w-switch(v-model="exHideElements.startOnSunday") Start week on Sunday
       w-switch(v-model="exHideElements.hideWeekends") Hide weekends
       w-switch(v-model="exHideElements.time") Time
-  template(#code).
+  template(#code-html).
     &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }} /&gt;
   vue-cal.mxa(
     :views-bar="exHideElements.viewsBar"
@@ -48,7 +46,7 @@ example(title="Themes" anchor="themes")
     .w-flex.wrap.gap3.mt2
       w-switch(v-model="exThemes.default") Default Theme
       w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
-  template(#code).
+  template(#code-html).
     &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark && exThemes.default ? ' dark' : '' }} /&gt;
   vue-cal.mxa(
     ref="vuecalEl"

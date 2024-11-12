@@ -35,6 +35,11 @@ const tag = computed(() => {
 .title-link {
   position: relative;
 
+  a {
+    display: inline-flex;
+    align-items: center;
+  }
+
   a[id] {
     position: absolute;
     display: block;

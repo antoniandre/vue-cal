@@ -75,6 +75,11 @@ title-link(h2 anchor="view-examples")
   | View Examples
 view-examples
 
+title-link(h2 anchor="date-and-time-examples")
+  w-icon.mr2 mdi mdi-clock-outline
+  | Date and Time Examples
+//- calendar-events-examples
+
 title-link(h2 anchor="events-examples")
   w-icon.mr2 mdi mdi-calendar
   | Calendar Events Examples
@@ -118,6 +123,7 @@ const locales = inject('locales')
     position: relative;
     margin-top: 120px;
     padding: 16px 22px;
+    line-height: 1;
     background: color-mix(in srgb, var(--highlight-color) 60%, transparent);
   }
   h2:after {

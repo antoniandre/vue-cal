@@ -16,100 +16,6 @@ highlight-message.mt6
     li #[span.code event]
 
 //- Example.
-example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
-  template(#desc)
-    p.mb0.
-      It is quite easy to scroll to a particular time, and the user has the choice to add this outside of Vue Cal.
-    highlight-message(type="tips")
-      | Bear in mind that IE11 needs a polyfill before you can use the scrollTo method on a DOM element, this single line will do.
-      ssh-pre.mt2.mb0.grow(language="js" :dark="store.darkMode").
-        // For IE11. Adds this to your page once (in `created` hook for instance).
-        if (!HTMLElement.prototype.scrollTo) HTMLElement.prototype.scrollTo = function ({ top }) { this.scrollTop = top }
-
-    w-button.mt2.mr2(@click="scrollToCurrentTime('.ex--scroll-to-time')")
-      w-icon mdi mdi-format-vertical-align-bottom
-      | Scroll to current time
-    w-button.mt2.mr2(@click="scrollToTop('.ex--scroll-to-time')")
-      w-icon mdi mdi-format-vertical-align-top
-      | Scroll to top
-  template(#code).
-    &lt;vue-cal
-      id="vuecal"
-      :time-cell-height="timeCellHeight"
-      @ready="scrollToCurrentTime"&gt;
-    &lt;/vue-cal&gt;
-  template(#desc2)
-    .w-flex.wrap
-      vue-cal.ex--scroll-to-time.vuecal--default-theme(
-        :dark="store.darkMode"
-        small
-        view="day"
-        :disable-views="['years', 'year', 'month', 'week']"
-        :views-bar="false"
-        :time-cell-height="timeCellHeight"
-        @ready="scrollToCurrentTime('.ex--scroll-to-time')"
-        style="width: 360px;height: 360px;max-width: 100%")
-      .grow
-        ssh-pre.mt4.grow(language="js" label="Javascript" :dark="store.darkMode").
-          // `timeCellHeight` is set to 26 in the component data.
-          scrollToCurrentTime () {
-            const calendar = document.querySelector('#vuecal .vuecal__bg')
-            const hours = this.now.getHours() + this.now.getMinutes() / 60
-            calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
-          },
-          scrollToTop () {
-            const calendar = document.querySelector('#vuecal .vuecal__bg')
-            calendar.scrollTo({ top: 0, behavior: 'smooth' })
-          }
-
-//- Example.
-example(title="Timeline Tweaking" anchor="timeline-tweaking")
-  template(#desc)
-    p.mb0.
-      If you want to have more fancy time cells, you can override them with the
-      #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
-      For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
-      So if you don't set this class you are free to paint the lines yourself or not.
-  template(#code).
-    &lt;vue-cal
-      small
-      :time-from="5 * 60"
-      :time-step="15"
-      :time-cell-height="18"
-      view="day"
-      :disable-views="['years', 'year', 'month']"
-      hide-weekends&gt;
-      &lt;template #time-cell="{ hours, minutes }"&gt;
-        &lt;div :class="{ 'vuecal__time-cell-line': true, hours: !minutes }"&gt;
-          &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
-          &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
-        &lt;/div&gt;
-      &lt;/template&gt;
-    &lt;/vue-cal&gt;
-  template(#desc2)
-    highlight-message.mt6(type="tips").
-      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
-
-    ssh-pre.mt6(language="css" label="CSS" :dark="store.darkMode").
-      .vuecal__time-cell-line.hours:before {border-color: #42b983;}
-
-  vue-cal(
-    style="width: 360px;height: 360px;max-width: 100%"
-    :dark="store.darkMode"
-    small
-    :time-from="5 * 60"
-    :time-step="15"
-    :time-cell-height="18"
-    view="day"
-    :disable-views="['years', 'year', 'month']"
-    hide-weekends)
-    template(#time-cell="{ hours, minutes }")
-      .vuecal__time-cell-line(:class="{ hours: !minutes }")
-        strong.primary(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
-        span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
-
-//- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
   template(#desc)
     highlight-message(type="tips").
@@ -119,7 +25,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
     p.
       In the following example, we only count the events which have the custom
       #[span.code leisure] CSS class (orange color).
-  template(#code).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       xs
@@ -191,7 +97,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
 //- Example.
 example(title="Custom Title & Cells" anchor="custom-title-and-cells")
   template(#desc)
-  template(#code).
+  template(#code-html).
   template(#desc2)
 
 highlight-message(type="tips").
@@ -327,7 +233,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 //- Example.
 example(title="Custom event Rendering" anchor="custom-event-rendering")
   template(#desc)
-  template(#code).
+  template(#code-html).
   template(#desc2)
 
 p.mb2 Using Vue.js scoped slots, you can override the events rendering.
@@ -431,13 +337,13 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
 //- Example.
 example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
   template(#desc)
-  template(#code).
+  template(#code-html).
   template(#desc2)
 
 p.mb6 You can provide a custom schedule label when a simple label is not enough.
 
 .example.my2.mxa(style="height: 250px")
-  vue-cal.ex--custom-schedule-labels.vuecal--default-theme(
+  vue-cal.ex--custom-schedule-labels(
     :dark="store.darkMode"
     :disable-views="['years', 'year', 'month']"
     view="day"

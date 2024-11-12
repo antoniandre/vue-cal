@@ -5,7 +5,12 @@
     slot(name="desc")
 
   ssh-pre.example__source.mt3(language="html-vue" :dark="store.darkMode")
-    slot(name="code")
+    slot(name="code-html")
+  ssh-pre.example__source.mt3(
+    v-if="$slots['code-js']"
+    language="html-vue"
+    :dark="store.darkMode")
+    slot(name="code-js")
 
   .example__render.mt2
     slot
