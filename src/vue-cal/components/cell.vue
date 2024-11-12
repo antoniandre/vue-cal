@@ -364,8 +364,7 @@ const cellEventListeners = computed(() => {
   width: 100%;
   height: 0;
   border-top: 1px solid;
-  border-color: red;
-  opacity: 0.6;
+  border-color: rgba(red, 0.6);
   z-index: 1;
 
   &:before {
