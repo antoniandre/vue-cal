@@ -201,7 +201,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="external-
       You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
       This example shows how to control the Previous, Next and Today functions and the view selections
       from external buttons.#[br]
-      One important thing to notice is that you can use a v-model on the #[span.code active-view] (or #[span.code :active-view.sync] for Vue 2)
+      One important thing to notice is that you can use a v-model on the #[span.code view] (or #[span.code :view.sync] for Vue 2)
       in order to keep your variable updated when Vue Cal changes the view internally. For instance when you click the title to go
       to a broader view.#[br]
       A v-model can also be used on the #[span.code selected-date] (or #[span.code :selected-date.sync] for Vue 2)
@@ -248,7 +248,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="external-
         :dark="store.darkMode"
         small
         ref="vuecal4"
-        v-model:active-view="activeView"
+        v-model:view="activeView"
         :time="false"
         :views-bar="false"
         v-model:selected-date="selectedDate"
@@ -271,7 +271,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="external-
 
     &lt;vue-cal
       ref="vuecal"
-      v-model:active-view="activeView"
+      v-model:view="activeView"
       v-model:selected-date="selectedDate"
       :time="false"
       :views-bar="false"

@@ -289,7 +289,7 @@ p.
     :locale="locale"
     @ready="overrideDateTexts")
 ssh-pre(language="html-vue" label="Vue Template" reactive :dark="store.darkMode").
-  &lt;vue-cal :time="false" small active-view="year" locale="{{ locale }}" /&gt;
+  &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
 
 highlight-message.
   For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),

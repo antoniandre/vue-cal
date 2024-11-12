@@ -24,6 +24,12 @@ ul
   li.
     The default theme is used by default. No need to add the class anymore, but you can disable and
     style from scratch by setting the #[code theme] prop to false or a different class string.
+  li
+    | Scrolling to time is now built-in and accessible from the view object. 3 functions are available:
+    ul
+      li scrollTop()
+      li scrollToTime(minutes)
+      li scrollToCurrentTime()
 
 h2.mt12 Props
 ul
