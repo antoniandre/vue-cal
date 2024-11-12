@@ -1,5 +1,6 @@
 <template lang="pug">
 .vuecal(
+  ref="vuecal-el"
   :data-locale="locale"
   :class="wrapperClasses"
   :style="wrapperStyles")
@@ -46,7 +47,7 @@
 </template>
 
 <script setup>
-import { computed, provide, useAttrs, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, useAttrs, useTemplateRef, watch } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
@@ -62,9 +63,10 @@ const props = defineProps(propsDefinitions)
 // to specific components, allowing the user to have full flexibility and control on their own events:
 // cell-click, cell-xxxx, where xxxx is an existing DOM event name given by the end user;
 // event-click, event-xxxx, where xxxx is an existing DOM event name given by the end user.
-const emit = defineEmits(['update:view', 'update:selectedDate', 'update:viewDate'])
+const emit = defineEmits(['ready', 'update:view', 'update:selectedDate', 'update:viewDate'])
 
-const vuecal = useVueCal(props, emit, useAttrs())
+const vuecalEl = useTemplateRef('vuecal-el')
+const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
 const { config, view } = vuecal
 
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
@@ -89,6 +91,11 @@ const scrollableElClasses = computed(() => ({
   'vuecal__scrollable--row': hasTimeColumn.value,
   [`vuecal__scrollable--${view.id}-view`]: true
 }))
+
+onMounted(async () => {
+  await nextTick()
+  emit('ready', { config, view })
+})
 
 watch(() => config.locale, newLocale => config.loadTexts(newLocale))
 

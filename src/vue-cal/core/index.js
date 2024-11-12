@@ -31,7 +31,7 @@ export const globalState = reactive({
  * @param {object} props The Vue props definition from the root VueCal component (index.vue).
  * @param {function} emit The Vue emit function from the root VueCal component (index.vue).
  */
-export const useVueCal = (props, emit, attrs) => {
+export const useVueCal = (props, emit, attrs, vuecalEl) => {
   // This reactive store is the one and only source of truth.
   const state = reactive({
     emit,
@@ -49,7 +49,7 @@ export const useVueCal = (props, emit, attrs) => {
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts))
   state.config = useConfig(state, props, attrs)
   state.eventsManager = useEvents(state)
-  state.view = useView(state)
+  state.view = useView(state, vuecalEl)
 
   return state
 }

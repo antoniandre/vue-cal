@@ -1,6 +1,6 @@
 import { ref, computed, watch, onBeforeUnmount } from 'vue'
 
-export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
+export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vuecalEl) => {
   const { availableViews } = config
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)
@@ -442,6 +442,21 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
   function toggleWeekdays () {
     console.log('toggling weekdays', config.hideWeekdays)
   }
+
+  function scrollToTime (minutes) {
+    const scrollableEl = vuecalEl.value.querySelector('.vuecal__scrollable')
+    const anchor = minutes ? minutes * config.timeCellHeight / config.timeStep : 0
+    scrollableEl?.scrollTo({ top: anchor, behavior: 'smooth' })
+  }
+
+  function scrollToCurrentTime () {
+    const now = new Date()
+    scrollToTime(now.getHours() * 60 + now.getMinutes())
+  }
+
+  function scrollTop () {
+    scrollToTime(0)
+  }
   // ------------------------------------------------------
 
   // Array of IDs inside an object indexed by cell dates.
@@ -496,6 +511,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     // The following events array is only a subset of visible ones, plus any potential recurring
     // and multi-day events.
     events,
+    transitionDirection,
     switch: switchView,
     broader: switchToBroaderView,
     narrower: switchToNarrowerView,
@@ -505,7 +521,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }) => {
     goToToday,
     updateViewDate,
     updateSelectedDate,
-    transitionDirection,
+    scrollToCurrentTime,
+    scrollToTime,
+    scrollTop,
     // Getters.
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },
