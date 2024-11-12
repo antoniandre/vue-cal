@@ -4,13 +4,21 @@
   .example__desc(v-if="$slots.desc")
     slot(name="desc")
 
-  ssh-pre.example__source.mt3(language="html-vue" :dark="store.darkMode")
+  ssh-pre.example__source.mt3(
+    v-if="$slots['code-html']"
+    language="html-vue"
+    :dark="store.darkMode")
     slot(name="code-html")
   ssh-pre.example__source.mt3(
     v-if="$slots['code-js']"
-    language="html-vue"
+    language="js"
     :dark="store.darkMode")
     slot(name="code-js")
+  ssh-pre.example__source.mt3(
+    v-if="$slots['code-css']"
+    language="js"
+    :dark="store.darkMode")
+    slot(name="code-css")
 
   .example__render.mt2
     slot
