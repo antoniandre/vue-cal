@@ -426,9 +426,8 @@ w-dialog(
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useAppStore } from '@/store'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { VueCal } from '@/vue-cal'
 import Example from '@/documentation/components/example.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
@@ -436,8 +435,7 @@ import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
-const exLayouts = ref({
-  size: 'normal'
+const ex = ref({
 })
 </script>
 

@@ -78,7 +78,7 @@ view-examples
 title-link(h2 anchor="date-and-time-examples")
   w-icon.mr2 mdi mdi-clock-outline
   | Date and Time Examples
-//- calendar-events-examples
+date-and-time-examples
 
 title-link(h2 anchor="events-examples")
   w-icon.mr2 mdi mdi-calendar
@@ -99,13 +99,12 @@ title-link(h2 anchor="customization-examples")
 <script setup>
 import { inject } from 'vue'
 import { useAppStore } from '@/store'
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import EnUs from '@/vue-cal/i18n/en-us.json'
-import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
+import { addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
 import TitleLink from '@/documentation/components/title-link.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
+import DateAndTimeExamples from './date-and-time.vue'
 import CustomizationExamples from './customization.vue'
 import CalendarEventsExamples from './calendar-events.vue'
 import DomEventsExamples from './dom-events.vue'

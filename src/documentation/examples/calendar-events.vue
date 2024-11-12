@@ -22,6 +22,35 @@ example(title="Timeless events" anchor="timeless-events")
       hide-weekends
       :events="events"&gt;
     &lt;/vue-cal&gt;
+  template(#code-js).
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-21',
+          end: '2018-11-21',
+          title: 'Need to go shopping',
+          content: '&lt;i class="icon mdi mdi-cart-outline"&gt;&lt;/i&gt;',
+          class: 'leisure'
+        },
+        {
+          start: '2018-11-21',
+          end: '2018-11-21',
+          title: 'Golf with John',
+          content: '&lt;i class="icon mdi mdi-golf"&gt;&lt;/i&gt;',
+          class: 'sport'
+        },
+        {
+          start: '2018-11-22',
+          end: '2018-11-22',
+          title: 'Dad\'s birthday!',
+          content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
+          class: 'sport'
+        }
+      ]
+  template(#code-css).
+    /* Different color for different event types. */
+    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
+    .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -29,36 +58,6 @@ example(title="Timeless events" anchor="timeless-events")
     :disable-views="['years', 'year', 'month']"
     hide-weekends
     :events="timelessEvents")
-  template(#desc2)
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
-      data: () => ({
-        events: [
-          {
-            start: '2018-11-21',
-            end: '2018-11-21',
-            title: 'Need to go shopping',
-            content: '&lt;i class="icon mdi mdi-cart-outline"&gt;&lt;/i&gt;',
-            class: 'leisure'
-          },
-          {
-            start: '2018-11-21',
-            end: '2018-11-21',
-            title: 'Golf with John',
-            content: '&lt;i class="icon mdi mdi-golf"&gt;&lt;/i&gt;',
-            class: 'sport'
-          },
-          {
-            start: '2018-11-22',
-            end: '2018-11-22',
-            title: 'Dad\'s birthday!',
-            content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
-            class: 'sport'
-          }
-        ]
-    ssh-pre(language="css" label="CSS" :dark="store.darkMode").
-      /* Different color for different event types. */
-      .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-      .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 
 //- Example.
 example(title="Events with time information" anchor="events-with-time")
@@ -76,7 +75,20 @@ example(title="Events with time information" anchor="events-with-time")
       hide-weekends
       :events="events"&gt;
     &lt;/vue-cal&gt;
-
+  template(#code-js).
+    events: [
+      {
+        start: '2018-11-16 10:30',
+        end: '2018-11-16 11:30',
+        // You can also define event dates with Javascript Date objects:
+        // start: new Date(2018, 11 - 1, 16, 10, 30),
+        // end: new Date(2018, 11 - 1, 16, 11, 30),
+        title: 'Doctor appointment',
+        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
+        class: 'health'
+      },
+      ...
+    ]
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -85,21 +97,6 @@ example(title="Events with time information" anchor="events-with-time")
     :disable-views="['years', 'year', 'month']"
     hide-weekends
     :events="events")
-  template(#desc2)
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
-      events: [
-        {
-          start: '2018-11-16 10:30',
-          end: '2018-11-16 11:30',
-          // You can also define event dates with Javascript Date objects:
-          // start: new Date(2018, 11 - 1, 16, 10, 30),
-          // end: new Date(2018, 11 - 1, 16, 11, 30),
-          title: 'Doctor appointment',
-          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-          class: 'health'
-        },
-        ...
-      ]
 
 //- Example.
 example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-on-event-click")
@@ -142,6 +139,58 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
         &lt;/v-card-text&gt;
       &lt;/v-card&gt;
     &lt;/v-dialog&gt;
+  template(#code-js).
+    data: () => ({
+      selectedEvent: {},
+      showDialog: false,
+      events: [
+        {
+          start: '2018-11-20 14:00',
+          end: '2018-11-20 18:00',
+          title: 'Need to go shopping',
+          icon: 'mdi mdi-cart-outline', // Custom attribute.
+          content: 'Click to see my shopping list',
+          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
+          class: 'leisure'
+        },
+        {
+          start: '2018-11-22 10:00',
+          end: '2018-11-22 15:00',
+          title: 'Golf with John',
+          icon: 'mdi mdi-golf', // Custom attribute.
+          content: 'Do I need to tell how many holes?',
+          contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom attribute.
+          class: 'sport'
+        }
+      ]
+    }),
+    methods: {
+      onEventClick (event, e) {
+        this.selectedEvent = event
+        this.showDialog = true
+
+        // Prevent navigating to narrower view (default vue-cal behavior).
+        e.stopPropagation()
+      }
+    }
+  template(#code-css).
+    .vuecal__event {cursor: pointer;}
+
+    .vuecal__event-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 4px 0 8px;
+    }
+
+    .vuecal__event-time {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .vuecal__event-content {font-style: italic;}
+
   vue-cal.ex--open-dialog-on-event-click(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -151,61 +200,6 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
     hide-weekends
     :events="eventsToPop"
     :on-event-click="onEventClick")
-  template(#desc2)
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
-      data: () => ({
-        selectedEvent: {},
-        showDialog: false,
-        events: [
-          {
-            start: '2018-11-20 14:00',
-            end: '2018-11-20 18:00',
-            title: 'Need to go shopping',
-            icon: 'mdi mdi-cart-outline', // Custom attribute.
-            content: 'Click to see my shopping list',
-            contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
-            class: 'leisure'
-          },
-          {
-            start: '2018-11-22 10:00',
-            end: '2018-11-22 15:00',
-            title: 'Golf with John',
-            icon: 'mdi mdi-golf', // Custom attribute.
-            content: 'Do I need to tell how many holes?',
-            contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom attribute.
-            class: 'sport'
-          }
-        ]
-      }),
-      methods: {
-        onEventClick (event, e) {
-          this.selectedEvent = event
-          this.showDialog = true
-
-          // Prevent navigating to narrower view (default vue-cal behavior).
-          e.stopPropagation()
-        }
-      }
-
-    ssh-pre(language="css" label="CSS" :dark="store.darkMode").
-      .vuecal__event {cursor: pointer;}
-
-      .vuecal__event-title {
-        font-size: 1.2em;
-        font-weight: bold;
-        margin: 4px 0 8px;
-      }
-
-      .vuecal__event-time {
-        display: inline-block;
-        margin-bottom: 12px;
-        padding-bottom: 12px;
-        border-bottom: 1px solid rgba(0, 0, 0, 0.2);
-      }
-
-      .vuecal__event-content {
-        font-style: italic;
-      }
 
 //- Example.
 example(title="Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views" anchor="events-indicators")
@@ -223,62 +217,59 @@ example(title="Events indicators - #[span.code years], #[span.code year] &amp; #
         label-color="grey"
         :items="indicatorStyleOptions")
   template(#code-html).
-.w-flex.maa.justify-center.wrap
-  .example.ma2.my2(style="width: 300px;height: 360px")
-    vue-cal(
-      :dark="store.darkMode"
-      :class="'event-indicator--' + indicatorStyle"
-      :selected-date="stringToDate('2018-11-19')"
-      xs
-      :time-from="10 * 60"
-      view="month"
-      date-picker
-      events-count-on-year-view
-      :events="events")
-  .example.ma2.my2(style="width: 300px;height: 360px")
-    vue-cal.vuecal--yellow-theme(
-      :class="'event-indicator--' + indicatorStyle"
+    &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       xs
       :time-from="10 * 60"
       date-picker
       events-count-on-year-view
       view="month"
-      :events="events"
-      :dark="store.darkMode")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    xs
-    :time-from="10 * 60"
-    date-picker
-    events-count-on-year-view
-    view="month"
-    :events="events"&gt;
-  &lt;/vue-cal&gt;
+      :events="events"&gt;
+  template(#code-css).
+    /* Default indicator is count, but you can override it with one of the following rules. */
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
-  /* Default indicator is count, but you can override it with one of the following rules. */
+    /* Dash indicator */
+    .vuecal__cell-events-count {
+      width: 18px;
+      height: 2px;
+      color: transparent;
+    }
 
-  /* Dash indicator */
-  .vuecal__cell-events-count {
-    width: 18px;
-    height: 2px;
-    color: transparent;
-  }
+    /* Dot indicator */
+    .vuecal__cell-events-count {
+      width: 4px;
+      min-width: 0;
+      height: 4px;
+      padding: 0;
+      color: transparent;
+    }
 
-  /* Dot indicator */
-  .vuecal__cell-events-count {
-    width: 4px;
-    min-width: 0;
-    height: 4px;
-    padding: 0;
-    color: transparent;
-  }
-
-  /* Cell background indicator */
-  .vuecal__cell--has-events {background-color: #fffacd;}
-  .vuecal__cell-events-count {display: none;}
+    /* Cell background indicator */
+    .vuecal__cell--has-events {background-color: #fffacd;}
+    .vuecal__cell-events-count {display: none;}
+  .w-flex.maa.justify-center.wrap
+    .example.ma2.my2(style="width: 300px;height: 360px")
+      vue-cal(
+        :dark="store.darkMode"
+        :class="'event-indicator--' + indicatorStyle"
+        :selected-date="stringToDate('2018-11-19')"
+        xs
+        :time-from="10 * 60"
+        view="month"
+        date-picker
+        events-count-on-year-view
+        :events="events")
+    .example.ma2.my2(style="width: 300px;height: 360px")
+      vue-cal.vuecal--yellow-theme(
+        :class="'event-indicator--' + indicatorStyle"
+        :selected-date="stringToDate('2018-11-19')"
+        xs
+        :time-from="10 * 60"
+        date-picker
+        events-count-on-year-view
+        view="month"
+        :events="events"
+        :dark="store.darkMode")
 
 //- Example.
 example(title="Display events on month view" anchor="events-on-month-view")
@@ -897,7 +888,7 @@ highlight-message(type="tips")
         strong.mr2 {{ item.title }}
         span ({{ item.duration ? `${item.duration} min` : 'no duration' }})
         div {{ item.content }}
-  vue-cal.mr1.grow.external-events-drag-and-drop.vuecal--blue-theme(
+  vue-cal.mr1.grow.external-events-drag-and-drop(
     small
     :views-bar="false"
     hide-weekends
@@ -1391,10 +1382,10 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__cell-content {align-self: flex-start;}
   .vuecal__cell-date {text-align: right;padding: 4px;}
 
-  .vuecal--week-view .vuecal__bg .vuecal__event--all-day.pink-event,
-  .vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
-  .vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
-  .vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
+  .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
+  .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
+  .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
+  .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
 
 //- Example.
 example(title="schedules &amp; schedule events" anchor="schedules")
@@ -1541,9 +1532,8 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useAppStore } from '@/store'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { VueCal } from '@/vue-cal'
 import Example from '@/documentation/components/example.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
@@ -1551,8 +1541,7 @@ import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
-const exLayouts = ref({
-  size: 'normal'
+const ex = ref({
 })
 </script>
 

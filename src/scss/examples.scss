@@ -245,10 +245,10 @@
     padding: 4px;
   }
 
-  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.pink-event,
-  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.pink-event {right: 50%;}
-  &.vuecal--week-view .vuecal__bg .vuecal__event--all-day.leisure,
-  &.vuecal--day-view .vuecal__bg .vuecal__event--all-day.leisure {left: 50%;}
+  &.vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
+  &.vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
+  &.vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
+  &.vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
 }
 
 // Schedules labels example.

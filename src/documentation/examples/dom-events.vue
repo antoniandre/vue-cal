@@ -329,7 +329,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
     &lt;/vue-cal&gt;
   template(#desc2)
     .w-flex.align-center.justify-center.wrap
-      vue-cal.vuecal--blue-theme(
+      vue-cal(
         :dark="store.darkMode"
         small
         :time="false"
@@ -338,7 +338,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
         :disable-views="['years', 'year', 'month']"
         :selected-date="selectedDate"
         style="max-width: 360px;height: 260px")
-      vue-cal.vuecal--blue-theme.vuecal--rounded-theme(
+      vue-cal.vuecal--rounded-theme(
         xs
         :time="false"
         :views-bar="false"
@@ -415,9 +415,8 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { ref } from 'vue'
 import { useAppStore } from '@/store'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { VueCal } from '@/vue-cal'
 import Example from '@/documentation/components/example.vue'
 import HighlightMessage from '@/documentation/components/highlight-message.vue'
@@ -425,8 +424,7 @@ import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
-const exLayouts = ref({
-  size: 'normal'
+const ex = ref({
 })
 </script>
 

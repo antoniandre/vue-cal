@@ -60,7 +60,7 @@ p.
 
 .w-flex.maa.justify-center.wrap
   .example.ma2(style="width: 270px;height: 300px")
-    vue-cal.vuecal--rounded-theme.vuecal--blue-theme(
+    vue-cal.vuecal--rounded-theme(
       xs
       :views-bar="false"
       :time="false"
@@ -500,33 +500,6 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
       );
     color: #f6984c;
   }
-
-//- Example.
-title-link(h4 anchor="ex--today-current-time") # Today's current time
-p.mb0.
-  When you choose to show the time in vue-cal, the current time of today's date will
-  be marked with a line (scroll to the current time to see it).#[br]
-  The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
-  You can easily customize the now-line as you wish via CSS.
-  Changing the line and arrow color is as easy as:#[br]
-ssh-pre.mt6(language="css" label="CSS" :dark="store.darkMode") .vuecal__now-line {color: #06c;}
-p.mt4.
-  If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
-  This feature has no impact on performance.
-
-p.
-  If you want the now line to keep accurate position even while your calendar is idle, you can use the option
-  #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
-.example.my2.mxa(style="width: 360px;height: 360px;max-width: 100%")
-  vue-cal.ex--today-current-time(
-    :dark="store.darkMode"
-    xs
-    :time-cell-height="26"
-    view="day"
-    :disable-views="['years', 'year', 'month']"
-    @ready="scrollToCurrentTime('.ex--today-current-time')")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
-  &lt;vue-cal xs active-view="day" :disable-views="['years', 'year', 'month']" /&gt;
 
 //- Example.
 title-link(h4 anchor="ex--adding-a-today-button") # Adding a Today button
@@ -1118,15 +1091,6 @@ const logEvents = (emittedEventName, params) => {
 const clearEventsLog = () => (logs.value = [])
 
 const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
-const scrollToCurrentTime = vuecal => {
-  const calendar = document.querySelector(`${vuecal} .vuecal__bg`)
-  const hours = now.value.getHours() + now.value.getMinutes() / 60
-  calendar.scrollTo({ top: hours * this.timeCellHeight, behavior: 'smooth' })
-}
-const scrollToTop = vuecal => {
-  const calendar = document.querySelector(`${vuecal} .vuecal__bg`)
-  calendar.scrollTo({ top: 0, behavior: 'smooth' })
-}
 
 const onEventClick = (event, e) => {
   selectedEvent.value = event
