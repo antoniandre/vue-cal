@@ -38,31 +38,31 @@ top-bar(v-if="$route.name !== 'home'" fixed)
         xl)
 
 footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
-  .text-center.smu-text-left.copyright
+  .w-flex.text-center.smu-text-left.copyright.align-end
     | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
   .made-with.text-right.smd-text-center.no-grow
     .w-flex.gap1.mb1.justify-end.smd-justify-center
       | This documentation is made with
-      w-tooltip
+      w-tooltip(top)
         template(#activator="{ on }")
-          w-icon(v-on="on") mdi mdi-vuejs
+          w-icon.caption(v-on="on" size="1rem") mdi mdi-vuejs
         | Vue
-      w-tooltip
+      w-tooltip(top)
         template(#activator="{ on }")
-          w-icon(v-on="on") mdi mdi-language-html5
+          w-icon.caption(v-on="on" size="1rem") mdi mdi-language-html5
         | HTML5 &amp; Pug
-      w-tooltip
+      w-tooltip(top)
         template(#activator="{ on }")
-          w-icon.ml1(v-on="on") mdi mdi-language-css3
+          w-icon.caption(v-on="on" size="1rem") mdi mdi-language-css3
         | CSS3
-      w-tooltip
+      w-tooltip(top)
         template(#activator="{ on }")
-          w-icon.ml1(v-on="on") mdi mdi-sass
+          w-icon.caption(v-on="on" size="1rem") mdi mdi-sass
         | SCSS
-      span.ml2.mr1 &amp;
-      w-tooltip
+      span &amp;
+      w-tooltip(top align-right)
         template(#activator="{ on }")
-          w-icon(v-on="on").heart mdi mdi-heart
+          w-icon.caption(v-on="on" size="1rem").heart mdi mdi-heart
         | Love
     | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
 </template>
