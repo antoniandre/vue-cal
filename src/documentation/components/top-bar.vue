@@ -224,6 +224,7 @@ $lighter-text: #ccc;
       z-index: -1;
       border-left: none;
       border-right: none;
+      border-radius: 99em;
     }
 
     &:before {

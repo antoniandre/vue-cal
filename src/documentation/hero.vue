@@ -101,40 +101,40 @@ demoExample.value.events.push(
   {
     start: `${monday} 15:30`,
     end: `${monday} 17:30`,
-    title: 'Tennis',
-    content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
+    title: 'Health Checkup',
+    content: '<i class="w-icon mdi mdi-stethoscope mt1"></i>',
     resizable: false,
     schedule: 1
   },
   {
-    start: `${monday} 15:30`,
-    end: `${monday} 17:30`,
-    title: 'Tennis',
-    content: '<i class="w-icon mdi mdi-tennis mt1"></i>',
+    start: `${monday} 14:30`,
+    end: `${monday} 16:30`,
+    title: 'Hip Surgery',
+    content: '<i class="w-icon mdi mdi-knife mt1"></i>',
     resizable: false,
     schedule: 2
   },
   {
     start: `${tuesday} 08:00`,
     end: `${tuesday} 10:00`,
-    title: 'Volleyball',
-    content: '<i class="w-icon mdi mdi-volleyball mt1"></i>',
+    title: 'Eye Surgery',
+    content: '<i class="w-icon mdi mdi-knife mt1"></i>',
     resizable: false,
     schedule: 2
   },
   {
     start: `${thursday} 09:00`,
     end: `${thursday} 11:30`,
-    title: 'Golf',
-    content: '<i class="w-icon mdi mdi-golf mt2"></i>',
+    title: 'Follow Up',
+    content: '<i class="w-icon mdi mdi-stethoscope mt2"></i>',
     resizable: false,
     schedule: 1
   },
   {
-    start: `${friday} 16:45`,
-    end: `${friday} 18:45`,
-    title: 'Movie',
-    content: '<i class="w-icon mdi mdi-ticket mt1"></i>',
+    start: `${friday} 16:30`,
+    end: `${friday} 18:30`,
+    title: 'Eye Surgery',
+    content: '<i class="w-icon mdi mdi-knife mt1"></i>',
     resizable: false,
     schedule: 2
   }
@@ -225,12 +225,17 @@ $kate: #406fbf;
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
   &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
-  .vuecal__event {border-color: color-mix(in srgb, currentColor 20%, transparent);}
+  .vuecal__event {
+    border-color: color-mix(in srgb, currentColor 20%, transparent);
+    text-align: center;
+  }
+
   .vuecal__event-time {
     margin: 3px 0;
     font-size: 12px;
     font-weight: 500;
     line-height: 1.2;
+    white-space: unset;
   }
 
   // John.

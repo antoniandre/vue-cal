@@ -1,6 +1,6 @@
 <template lang="pug">
-w-alert(:class="`w-alert--${type}`" icon-outside)
-  w-icon(v-if="icon && !noIcon") {{ icon }}
+w-alert(:class="`w-alert--${type}`" :icon-outside="!!icon")
+  w-icon(v-if="icon") {{ icon }}
   slot
 </template>
 
@@ -26,6 +26,8 @@ const type = computed(() => {
 })
 
 const icon = computed(() => {
+  if (props.noIcon) return null
+
   switch (type.value) {
     case 'success': return 'wi-check'
     case 'error': return 'wi-cross'
@@ -91,7 +93,7 @@ const icon = computed(() => {
     width: 18px;
     height: 18px;
     font-size: 13px;
-    top: 0.5em;
+    top: 0.6em;
   }
 
   &--info > .w-icon {background: color-mix(in srgb, var(--info-color) 70%, var(--w-base-bg-color));font-size: 22px;}
