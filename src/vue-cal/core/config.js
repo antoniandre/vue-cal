@@ -138,6 +138,20 @@ export const useConfig = (vuecal, props, attrs) => {
     return (props.schedules.length && (view.isDay || view.isDays || view.isWeek) && props.schedules)
   })
 
+  const editableEvents = computed(() => {
+    const defaults = {
+      title: true,
+      drag: true,
+      resize: true,
+      delete: true,
+      create: true,
+      dragCreate: true
+    }
+    if (props.editableEvents === true) return defaults
+    else if (props.editableEvents === false) return Object.keys(defaults).forEach(key => defaults[key] = false)
+    return { ...defaults, ...props.editableEvents }
+  })
+
   /**
    * Asynchronously loads translation texts for the given locale.
    *
@@ -206,6 +220,7 @@ export const useConfig = (vuecal, props, attrs) => {
     hideWeekends,
     schedules,
     selectedDate,
+    editableEvents,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },
