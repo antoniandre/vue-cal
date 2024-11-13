@@ -10,6 +10,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import { minutesToPercentage } from '@/vue-cal/utils/cell'
 
 const { config, eventsManager, view } = inject('vuecal')
 
@@ -37,16 +38,22 @@ const classes = computed(() => ({
   [event.value.class]: !!event.value.class,
   'vuecal__event--recurring': !!event.value.recurring,
   'vuecal__event--background': !!event.value.background,
-  'vuecal__event--multiday': !!event.value._?.multiday
+  'vuecal__event--multiday': !!event.value._?.multiday,
+  'vuecal__event--cut-top': event.value._?.startMinutes < config.timeFrom,
+  'vuecal__event--cut-bottom': event.value._?.endMinutes > config.timeTo
 }))
 
 const styles = computed(() => {
   if (!config.time || view.isMonth) return false
-  const deltaTimeScale = config.timeTo - config.timeFrom
-  return {
-    top: `${(event.value._.startMinutes - config.timeFrom) * 100 / deltaTimeScale}%`,
-    height: `${event.value._.duration * 100 / deltaTimeScale}%`
-  }
+
+  // Ensure that the event start and end stay in range.
+  const from = Math.max(config.timeFrom, event.value._.startMinutes)
+  const to = Math.min(config.timeTo, event.value._.endMinutes)
+
+  const top = minutesToPercentage(from, config)
+  const height = minutesToPercentage(to, config) - top
+
+  return { top: `${top}%`, height: `${height}%` }
 })
 </script>
 

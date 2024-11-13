@@ -63,6 +63,7 @@
 <script setup>
 import { computed, inject, reactive, ref } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
+import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/cell'
 import Event from './event.vue'
 
 const props = defineProps({
@@ -99,8 +100,8 @@ const touch = reactive({
 const eventPlaceholder = computed(() => {
   const startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
   const endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
-  const startMinutes = percentageToMinutes(startPercentage)
-  const endMinutes = percentageToMinutes(endPercentage)
+  const startMinutes = percentageToMinutes(startPercentage, config)
+  const endMinutes = percentageToMinutes(endPercentage, config)
 
   return {
     style: {
@@ -194,11 +195,11 @@ const specialHours = computed(() => {
     from = Math.max(config.timeFrom, from) // Ensure that from is in range.
     to = Math.min(config.timeTo, to) // Ensure that to is in range.
 
-    const top = minutesToPercentage(from)
-    const height = minutesToPercentage(to) - top
+    const top = minutesToPercentage(from, config)
+    const height = minutesToPercentage(to, config) - top
 
     return {
-      style: { top: top + '%', height: height + '%' },
+      style: { top: `${top}%`, height: `${height}%` },
       label,
       class: classes
     }
@@ -215,30 +216,10 @@ const nowLine = reactive({
     return true
   }),
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
-  todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes)),
+  todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
   style: computed(() => `top: ${nowLine.todaysTimePosition}%`),
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
-
-/**
- * Converts minutes in the day to a percentage position.
- *
- * @param {Number} minutes time in minutes
- */
-const minutesToPercentage = minutes => {
-  const dayRangeMinutes = config.timeTo - config.timeFrom
-  return (minutes - config.timeFrom) * 100 / dayRangeMinutes
-}
-
-/**
- * Converts percentage position to minutes in the day.
- *
- * @param {Number} percentage time in percentage
- */
-const percentageToMinutes = percentage => {
-  const dayRangeMinutes = config.timeTo - config.timeFrom
-  return ~~((percentage * dayRangeMinutes / 100) + config.timeFrom)
-}
 
 const onCellClick = () => {
   view.updateSelectedDate(props.start)

@@ -224,6 +224,17 @@
       overflow: visible;
       width: 100%;
     }
+    &--cut-top {
+      border-top: none;
+      border-top-left-radius: 0;
+      border-top-right-radius: 0;
+    }
+    &--cut-bottom {
+      border-bottom: none;
+      border-bottom-left-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
     &-time {
       white-space: nowrap;
       line-height: 1;
