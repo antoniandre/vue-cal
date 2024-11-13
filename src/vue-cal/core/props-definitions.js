@@ -6,6 +6,9 @@ export const props = {
   dark: { type: Boolean, default: false }, // Dark theme.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   datePrototypes: { type: Boolean, default: true }, // Wether or not to add some useful methods to the native Date class.
+  // Can be true false or a finer grain permissions object like:
+  // { title: bool, drag: bool, resize: bool, create: bool, delete: bool, dragToCreate: bool }
+  editableEvents: { type: [Boolean, Object], default: false },
   // The array of events to display in Vue Cal.
   // Can hold just the view events and be updated or the full array of all events available.
   events: { type: Array, default: () => [] },
@@ -45,19 +48,15 @@ export const props = {
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO NEXT:
-  dblclickToNavigate: { type: Boolean, default: true },
-  disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
-  cellClickHold: { type: Boolean, default: true },
-  dragToCreateEvent: { type: Boolean, default: true },
   dragToCreateThreshold: { type: Number, default: 15 },
-  editableEvents: { type: [Boolean, Object], default: false },
   onEventCreate: { type: [Function, null], default: null },
-  showWeekNumbers: { type: [Boolean, String], default: false },
   snapToTime: { type: Number, default: 0 },
+  showWeekNumbers: { type: [Boolean, String], default: false },
 
   // TODO:
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
+  disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
   eventsCountOnYearView: { type: Boolean, default: false },
   maxDate: { type: [String, Date], default: '' },
   minDate: { type: [String, Date], default: '' },
