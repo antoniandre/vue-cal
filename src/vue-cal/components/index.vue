@@ -4,19 +4,24 @@
   :data-locale="locale"
   :class="wrapperClasses"
   :style="wrapperStyles")
-  slot(v-if="$slots.diy" name="diy" :view="view" :vuecal="vuecal")
+  slot(
+    v-if="$slots.diy"
+    name="diy"
+    :vuecal="vuecal"
+    :view="view"
+    :available-views="config.availableViews")
   template(v-else)
     VueCalHeader
-      template(v-if="$slots.header" #header="{ view, availableViews, vuecal }")
-        slot(name="header" :view="view" :available-views="availableViews" :vuecal="vuecal")
+      template(v-if="$slots.header" #header="header")
+        slot(name="header" v-bind="header")
       template(v-if="!$slots.header && $slots['previous-button']" #previous-button)
         slot(name="previous-button")
       template(v-if="!$slots.header && $slots['next-button']" #next-button)
         slot(name="next-button")
       template(v-if="!$slots.header && $slots['today-button']" #today-button)
         slot(name="today-button")
-      template(v-if="!$slots.header && $slots.title" #title)
-        slot(name="title" v-bind="view")
+      template(v-if="!$slots.header && $slots.title" #title="title")
+        slot(name="title" v-bind="title")
 
     .vuecal__scrollable-wrap
       transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
@@ -24,8 +29,8 @@
           :class="scrollableElClasses"
           :key="view.id + view.start.getTime()")
           TimeColumn(v-if="hasTimeColumn")
-            template(v-if="$slots['time-cell']" #time-cell="{ index, minutes, format12, format24 }")
-              slot(name="time-cell" :index="index" :minutes="minutes" :format12="format12" :format24="format24")
+            template(v-if="$slots['time-cell']" #time-cell="timeCell")
+              slot(name="time-cell" v-bind="timeCell")
           .w-flex.column.grow
             WeekdaysBar
             .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
@@ -36,14 +41,14 @@
                 v-html="schedule.label")
 
             VueCalBody
-              template(v-if="$slots.cell" #cell="{ start, end, index, events }")
-                slot(name="cell" :start="start" :end="end" :index="index" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="{ start, end, events }")
-                slot(name="cell-date" :start="start" :end="end" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="{ start, end, events }")
-                slot(name="cell-content" :start="start" :end="end" :events="events")
-              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="{ start, end, events }")
-                slot(name="cell-events" :start="start" :end="end" :events="events")
+              template(v-if="$slots.cell" #cell="cell")
+                slot(name="cell" v-bind="cell")
+              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="cellDate")
+                slot(name="cell-date" v-bind="cellDate")
+              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="cellContent")
+                slot(name="cell-content" v-bind="cellContent")
+              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="cellEvents")
+                slot(name="cell-events" v-bind="cellEvents")
 </template>
 
 <script setup>

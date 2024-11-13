@@ -5,6 +5,8 @@
       name="time-cell"
       :index="i"
       :minutes="time.minutes"
+      :hours="time.hours"
+      :minutes-sum="time.minutesSum"
       :format12="time.formatted12"
       :format24="time.formatted24")
       label {{ config.twelveHour ? time.formatted12 : time.formatted24 }}
@@ -20,12 +22,14 @@ const timeCells = computed(() => {
   const cells = []
   const noon = 12 * 60
   for (let i = config.timeFrom; i < config.timeTo; i += config.timeStep) {
-    const hours = ~~(i / 60)
+    const hours = ~~(i / 60) // 0 to 23.
     const mins = i % 60
     const amPm = texts[i < noon ? 'am' : 'pm']
 
     cells.push({
-      minutes: i,
+      minutesSum: i, // The sum of hours + minutes in minutes.
+      hours,
+      minutes: mins,
       formatted12: `${!(hours % 12) ? 12 : (hours % 12)}${mins ? ':' + mins.toString().padStart(2, 0) : ''}${amPm}`,
       formatted24: `${hours.toString().padStart(2, 0)}:${mins.toString().padStart(2, 0)}`
     })

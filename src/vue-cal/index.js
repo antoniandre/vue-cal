@@ -32,7 +32,8 @@ const {
   formatDate,
   formatDateLite,
   formatTime,
-  formatTimeLite
+  formatTimeLite,
+  formatMinutes
 } = globalState.dateUtils
 
 export {
@@ -61,5 +62,6 @@ export {
   formatDate,
   formatDateLite,
   formatTime,
-  formatTimeLite
+  formatTimeLite,
+  formatMinutes
 }
