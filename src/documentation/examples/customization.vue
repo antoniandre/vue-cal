@@ -1,5 +1,5 @@
 <template lang="pug">
-highlight-message.mt6
+alert.mt6
   | Here is the list of available slots:
   ul
     li #[span.code title]
@@ -18,7 +18,7 @@ highlight-message.mt6
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
   template(#desc)
-    highlight-message(type="tips").
+    alert(tip).
       Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
@@ -100,7 +100,7 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
   template(#code-html).
   template(#desc2)
 
-highlight-message(type="tips").
+alert(tip).
   Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
   If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
   #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
@@ -156,7 +156,7 @@ ul
   li #[span.code schedule], when schedules, object containing the current schedule info.
   li #[span.code events], array containing all the events of the current cell or schedule.
   li #[span.code goNarrower], function to navigate to narrower view if possible.
-highlight-message.my3(type="info")
+alert.my3(info)
   | By default a cell is rendered as follows.#[br]
   | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
   ssh-pre.mt3.mb1(language="html-vue" :dark="store.darkMode").
@@ -238,10 +238,10 @@ example(title="Custom event Rendering" anchor="custom-event-rendering")
 
 p.mb2 Using Vue.js scoped slots, you can override the events rendering.
 
-highlight-message.my2(type="tips").
+alert.my2(tip).
   If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
   #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]].
-highlight-message.my3(type="info")
+alert.my3(info)
   | By default an event is rendered as follows.#[br]
   | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
   ssh-pre.mt3.mb1(language="html-vue" :dark="store.darkMode").
@@ -429,8 +429,6 @@ w-dialog(
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import Example from '@/documentation/components/example.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
 
 const store = useAppStore()

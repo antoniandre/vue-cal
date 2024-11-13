@@ -42,7 +42,7 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       li.mt3
         code view.scrollToCurrentTime()
         p Scrolls the calendar body to the current time.
-    w-alert.pl4.my2.d-iblock(border-left) You can store the functions from #[code @ready] for later use.
+    alert.my2.d-iblock You can store the functions from #[code @ready] for later use.
     .mb2
       w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
         w-icon mdi mdi-format-vertical-align-top
@@ -91,7 +91,7 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
   template(#code-css).
     .vuecal__time-cell-line.hours:before {border-color: #42b983;}
   template(#desc2)
-    highlight-message.mt6(type="tips").
+    alert.mt6(tip).
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
 
@@ -110,7 +110,6 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
         strong.primary(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
         span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
 
-
 //- Example.
 //- example(title="" anchor="")
   template(#desc)
@@ -121,19 +120,11 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
 
 <script setup>
 import { reactive, ref } from 'vue'
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import Example from '@/documentation/components/example.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
 
 const store = useAppStore()
-
-const exLayouts = ref({
-  size: 'normal'
-})
 
 const exHideElements = ref({
   todayButton: true,

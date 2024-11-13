@@ -175,7 +175,7 @@ h1.title1 Release notes
       div.mt2.grey #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
       div
         strong Version 3.1.0
-        highlight-message(type="warning").
+        alert(warning).
           The event properties #[span.code startDate] and #[span.code endDate] have been merged into
           #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
           #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
@@ -190,13 +190,13 @@ h1.title1 Release notes
         p.mb0.
           Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
           on Vue.js, 100% designed for Vue, and still no dependency!
-        highlight-message.mb0(type="warning")
+        alert.mb0(warning)
           h3.mt0.pt0.
             Like the native HTML5 drag &amp; drop it's built with, Vue Cal's drag &amp; drop is not
             available on touch screens
           p.mb0 Vue Cal will support touch screen drag &amp; drop later on, using an alternative technology.
 
-        highlight-message.mb6(type="success")
+        alert.mb6(success)
           h3.mt0.pt0 New Features
           ul
             li
@@ -318,7 +318,7 @@ h1.title1 Release notes
           li New Date prototype functions, refer to: #[a(href="#date-prototypes") Date prototypes]
           li Scroll the view to a particular time: #[a(href="#ex--scroll-to-time") see the example]
           li Fix bug where timeless and all-day events were displaying time
-        highlight-message.mb2(type="warning")
+        alert.mb2(warning)
           ul
             li.
               #[strong The big "recurring event" feature is coming soon!]#[br]
@@ -355,8 +355,8 @@ h1.title1 Release notes
         &amp; #[span.code cell-focus] emitted events
 
       div #[strong Version 2.0.0]
-        highlight-message(type="warning") Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
-        highlight-message(type="success")
+        alert(warning) Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
+        alert(success)
           h3.mt0.pt0 New features
           ul
             li
@@ -450,14 +450,14 @@ h1.title1 Release notes
       div #[strong Version 1.59.0] Added Czech language
       div #[strong Version 1.58.0] Added Ukrainian language
       div #[strong Version 1.57.0] Added an option to display a Today button
-        highlight-message(type="success").
+        alert(success).
           The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
           The class #[span.code .vuecal__title] is now only wrapping the title, inside the #[span.code .vuecal__title-bar].#[br]
-        highlight-message(type="tips").
+        alert(tip).
           If you have a custom theme, you will need to update it as per the theme example in the #[a(href="#css-notes") CSS Notes].
       div #[strong Version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
       div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
-        highlight-message(type="success")
+        alert(success)
           ul
             li This update ensures the coverage of the full range of days when fetching your events from an AJAX call.
             li.
@@ -467,7 +467,7 @@ h1.title1 Release notes
             li Adaptive width on events-count (for count numbers on more than 1 digit)
             li On month view, removed redundant css classes from events (classes related to event overlaps)
       div #[strong Version 1.54.0] Added min &amp; max dates for cell selection
-        highlight-message(type="success")
+        alert(success)
           ul
             li.
               The CSS class #[span.code .splitted] (appearing on the #[span.code .vuecal__cell] element
@@ -477,7 +477,7 @@ h1.title1 Release notes
               plain JS Date Object.
       div #[strong Version 1.53.0] Added click/dblclick ability on weekdays headings on week view
       div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
-        highlight-message(type="success").
+        alert(success).
           In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
           now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array
       div #[strong Version 1.51.0] Added Bosnian &amp; Serbian languages
@@ -485,11 +485,11 @@ h1.title1 Release notes
       div #[strong Version 1.49.0] Added Hebrew language
       div #[strong Version 1.48.0] Added Bulgarian language
       div #[strong Version 1.47.0] Added events count on #[span.code years] &amp; #[span.code year] views
-        highlight-message(type="success").
+        alert(success).
           As it can now be used on #[span.code years] &amp; #[span.code year] views, the former
           #[span.code events-count-month-view] slot is now renamed to #[span.code events-count].
       div #[strong Version 1.46.0] Allow cell customization
-        highlight-message(type="success").
+        alert(success).
           For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
           are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
 
@@ -502,7 +502,7 @@ h1.title1 Release notes
       div #[strong Version 1.38.0] #[span.code showAllDayEvents] now also accepts string 'short'
       div #[strong Version 1.37.0] Added text 'All day' in all i18n files
       div #[strong Version 1.36.0] Added out of scope events in month view
-        highlight-message(type="success").
+        alert(success).
           On a month view, the events from the out of scope days
           (cells before and after the current month) are now also be displayed when using
           the #[span.code eventsOnMonthView] option, and returned in the array of events in
@@ -511,14 +511,14 @@ h1.title1 Release notes
       div #[strong Version 1.34.0] Allow starting week on Sunday
       div
         | #[strong Version 1.33.0] Minor internal structure improvements
-        highlight-message(type="success").
+        alert(success).
           In order to make the internal structure less verbose, the #[span.code events-count] slot
           use has been simplified.#[br]
           Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
           A few default CSS rules have also been updated.#[br]
       div
         | #[strong Version 1.32.0] Allow Syncing 2 vue-cal instances
-        highlight-message(type="success").
+        alert(success).
           The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
           Refer to the #[span.code selectedDate] option in the #[a(href="#api") API] section.
       div #[strong Version 1.31.0] Added CSS transitions option
@@ -527,14 +527,14 @@ h1.title1 Release notes
       div #[strong Version 1.28.0] Added Polish language
       div
         | #[strong Version 1.27.0] Allow overriding 'No event' text
-        highlight-message(type="success").
+        alert(success).
           The #[span.code events-on-month-view] option now also accepts the string '#[span.code short]'.#[br]
           Refer to the #[a(href="#ex--events-on-month-view") Display events on month view] example.
       div #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
       div #[strong Version 1.25.0] Support multiple day events
       div
         | #[strong Version 1.24.0] Allow hiding the calendar body
-        highlight-message(type="success").
+        alert(success).
           Week days headings now have a today CSS class when equals to today's date.
       div #[strong Version 1.22.0] Added Slovak language
       div #[strong Version 1.21.0] Added Georgian language
@@ -546,7 +546,7 @@ h1.title1 Release notes
       div #[strong Version 1.15.0] Added German language
       div
         | #[strong Version 1.14.0] Added custom time format &amp; emit event on #[span.code cell-focus]
-        highlight-message(type="success")
+        alert(success)
           ul
             li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
             li The emitted events-related events now also return native JS Date objects.
@@ -555,10 +555,10 @@ h1.title1 Release notes
       div #[strong Version 1.12.0] Added Croatian language
       div
         | #[strong Version 1.11.0] Added events indicators in month view
-        highlight-message(type="tips").
+        alert(tip).
           If you have created a custom theme, you will need to update it adding the new indicator
           #[span.code .vuecal__cell-events-count], as per the theme example in the #[a(href="#css-notes") CSS Notes].
-        highlight-message(type="success").
+        alert(success).
           The default #[span.code time-step] option value is now 60 minutes (previously 30).
       div #[strong Version 1.10.0] Allow no event overlaps
       div #[strong Version 1.9.0] Added Dutch language
@@ -568,7 +568,7 @@ h1.title1 Release notes
       div #[strong Version 1.5.0] Added Russian language
       div
         | #[strong Version 1.4.0] Allow editing events title
-        highlight-message(type="success")
+        alert(success)
           ul
             li The delete button now appears on click and hold.
             li All the events are now read-only by default you can add the option #[span.code editableEvents] to allow edition.
@@ -578,7 +578,7 @@ h1.title1 Release notes
       div #[strong Version 1.3.0] Added Simplified Chinese language &amp; bug fixes
       div
         | #[strong Version 1.2.0] Allow event deletion
-        highlight-message(type="success").
+        alert(success).
           You now have the ability to select an event independently of a cell.#[br]
           On event focus the event z-index is increased and a delete button appears to delete the event.#[br]
           Hovering an event also increases its z-index so you can see the event more easily in case of overlaps.
@@ -588,7 +588,7 @@ h1.title1 Release notes
 
 <script setup>
 import { ref } from 'vue'
-import HighlightMessage from './components/highlight-message.vue'
+import HighlightMessage from './components/alert.vue'
 
 const seeOldReleaseNotes = ref(false)
 </script>

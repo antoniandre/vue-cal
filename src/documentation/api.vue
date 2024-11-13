@@ -243,7 +243,7 @@ w-accordion.mt2(
         Use a 2 letter locale code
         (#[a(href="https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes" target="_blank") ISO 639-1])
         unless a distinction is needed. E.g. #[span.code 'pt-br'] for Portuguese-Brasilian.
-      highlight-message(type="info")
+      alert(info)
         | Currently available languages are {{ locales.map(l => l.label).join(', ') }}.#[br]
         | If you are interested in providing a language support please do a pull request with a json file
         | into the i18n directory.#[br]
@@ -272,7 +272,7 @@ w-accordion.mt2(
           full-letter month, #[span.code D] stands for the date of the month (0-31),
           #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
-      highlight-message(type="tips").
+      alert(tip).
         Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
         #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
         #[a(href="#css-notes") CSS Notes].
@@ -790,13 +790,9 @@ w-accordion.mt2(
 
 <script setup>
 import { inject, ref } from 'vue'
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import EnUs from '@/vue-cal/i18n/fr.json'
 import { useLocale, addDatePrototypes } from '@/vue-cal'
-import TitleLink from '@/documentation/components/title-link.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 
 useLocale(EnUs)
 addDatePrototypes()

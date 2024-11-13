@@ -81,7 +81,6 @@ hero
 <script setup>
 import { ref, nextTick, inject } from 'vue'
 import TopBar from '@/documentation/components/top-bar.vue'
-import TitleLink from '@/documentation/components/title-link.vue'
 import Hero from './hero.vue'
 
 defineProps({

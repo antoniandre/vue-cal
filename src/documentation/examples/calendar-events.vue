@@ -108,7 +108,7 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
     ul
       li #[span.code event]: the clicked calendar event's object
       li #[span.code e]: the associated javascript DOM event
-    highlight-message.mt3(type="tips") You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
+    alert.mt3(tip) You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
@@ -342,7 +342,7 @@ div.mt4
   div For instance this object only denies the drag action:
 ssh-pre.mt1(language="js" :dark="store.darkMode").
   { title: true, drag: false, resize: true, delete: true, create: true }
-highlight-message(type="tips")
+alert(tip)
   ul
     li.mb2.
       On top of the global actions allowance, you can deny each of these actions individually for each event with the event
@@ -404,7 +404,7 @@ p.
   There are multiple ways to create an event, let's start with the default one.#[br]#[br]
   You may also want to observe the emitted events in the
   #[a(href="#ex--emitted-events") emitted events example].
-highlight-message.
+alert.
   With the #[span.code snapToTime] option, you can make sure the event starts and end at specific
   intervals of minutes.#[br]
   E.g. #[span.code :snap-to-time="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.#[br]
@@ -481,7 +481,7 @@ example(title="Other event creation methods" anchor="other-event-creation-method
 p.
   There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
   or programmatically.
-highlight-message Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
+alert Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
 p Let's see the 3 cases in order of complexity:
 
 ol.pl3
@@ -756,7 +756,7 @@ p.mb2.
   In addition to the obvious event dragging itself, there are quite a few things that are good
   to know about the drag &amp; drop.
 
-highlight-message(type="warning")
+alert(warning)
   ul
     li.
       Drag &amp; drop is a module (to keep Vue Cal light weight).#[br]
@@ -870,7 +870,7 @@ p.mb2.
   In the external event, you can set a #[span.code duration] property: it will be used to represent the duration of the event on Vue Cal when it has no date.#[br]
   If the #[span.code duration] is missing, the default will be 2 hours.
 
-highlight-message(type="tips")
+alert(tip)
   strong Important note when dragging external events into Vue Cal:
   div.
     With HTML5 drag &amp; drop, when you drop a DOM element to another location, you have to move
@@ -990,7 +990,7 @@ p.
   the option #[span.code resize-x].
 strong Drag &amp; drop is not available on multiple day events for now.
 
-highlight-message(type="tips").
+alert(tip).
   3 CSS classes are available to target the event first day, the last day and all the days in between:
   #[span.code event-start], #[span.code event-middle], #[span.code event-end].
 .example.my2.mxa
@@ -1176,7 +1176,7 @@ div(style="min-height: 40px")
     .grey(v-if="minEventWidth").
       #[span.code min-event-width="50"] will only apply a min width of 50% on simultaneous
       events that would be smaller than that (e.g. with 3 events side by side)
-highlight-message.mb6.
+alert.mb6.
   In some cases you may want to set the events overlaps calculation only per same time step
   (default time step is 1 hour), like in
   #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
@@ -1319,7 +1319,7 @@ ul
     #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
     #[span.code 'short'], to display only the event title.
 
-highlight-message.
+alert.
   Multiple-day events feature will be improved in a future version to display across
   multiple cells in the all day bar.
 
@@ -1535,8 +1535,6 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import Example from '@/documentation/components/example.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
 
 const store = useAppStore()

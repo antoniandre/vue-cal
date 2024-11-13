@@ -134,8 +134,7 @@ p.
         ...
       }
 
-
-w-alert.pl4(border-left)
+alert
   .title3 That's it! You're up and running.
   p.mt1 Vue Cal comes with a default height of 500px. If you want to change that, you can use CSS. ;)
 
@@ -197,12 +196,8 @@ p.
 </template>
 
 <script setup>
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import TitleLink from '@/documentation/components/title-link.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 
 const store = useAppStore()
 </script>

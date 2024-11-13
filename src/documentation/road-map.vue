@@ -91,8 +91,6 @@ ul.kanban
 </template>
 
 <script setup>
-import TitleLink from '@/documentation/components/title-link.vue'
-import TodoListItem from './components/todo-list-item.vue'
 </script>
 
 <style lang="scss">

@@ -28,10 +28,7 @@
 </template>
 
 <script setup>
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
-import TitleLink from '@/documentation/components/title-link.vue'
 
 const store = useAppStore()
 

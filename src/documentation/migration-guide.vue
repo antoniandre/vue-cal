@@ -57,10 +57,7 @@ ul
 </template>
 
 <script setup>
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
-import TitleLink from '@/documentation/components/title-link.vue'
 import { addDatePrototypes } from '@/vue-cal'
 
 const store = useAppStore()

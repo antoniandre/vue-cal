@@ -24,7 +24,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
       li #[code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
       li #[code cell-keypress-enter] - returns a JS native #[span.code Date] object
       li #[code cell-focus] - returns a JS native #[span.code Date] object
-    highlight-message(type="tips")
+    alert(tip)
       ul
         li.
           #[span.code cell-click] is fired every time you click a day, whereas
@@ -38,7 +38,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
           If schedules is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
           and #[span.code cell-focus] emitted events will return an object containing the date and the clicked schedule id.
 
-    highlight-message
+    alert
       | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
       ssh-pre.mt2(language="js" :dark="store.darkMode").
         {
@@ -88,7 +88,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
           li #[span.code _eid], the calendar event internal id.
           li #[span.code end], the calendar event new end Date.
           li #[span.code endTimeMinutes], the calendar event new end time in minutes.
-        highlight-message(type="warning").
+        alert(warning).
           You should only listen to this event if you have no choice. In most of cases you should
           listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
       li.mt2
@@ -107,7 +107,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
             #[span.code originalEvent], the same calendar event before the change
             (#[span.code null] when creating event)
 
-    highlight-message(type="tips")
+    alert(tip)
       ul
         li.
           The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
@@ -280,7 +280,7 @@ example(title="External controls &amp; use of Vue Cal methods" anchor="external-
 
   template(#desc2).
     h5.subtitle-1.font-weight-bold Other useful Vue Cal internal methods &amp; Date prototypes
-    highlight-message(type="tips")
+    alert(tip)
       | Along with these Vue Cal internal methods that you can use externally,
       | you can also call other useful Vue Cal methods.
       ul
@@ -357,7 +357,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
   template(#desc)
   template(#code-html).
-    highlight-message.mb4(type="tips").
+    alert.mb4(tip).
       It is possible to modify the array of events like adding or removing an event
       after the first load, but be aware that by doing so all the events in Vue Cal
       will be replaced by the new array of events. You may lose your changes if you
@@ -418,8 +418,6 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import Example from '@/documentation/components/example.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
 
 const store = useAppStore()

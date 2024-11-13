@@ -12,7 +12,7 @@ p
   vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends :dark="store.darkMode")
 ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;vue-cal :time="false" hide-weekends /&gt;
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
@@ -44,7 +44,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;/template&gt;
   &lt;/vue-cal&gt;
 
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
@@ -109,7 +109,7 @@ p.
         :disable-views="['week']"
         style="width: 210px;height: 230px"&gt;
     &lt;/vue-cal&gt;
-highlight-message Refer to the #[a(href="#api") API] section to read more about all the options.
+alert Refer to the #[a(href="#api") API] section to read more about all the options.
 
 //- Example.
 title-link(h4 anchor="ex--disable-views") # Disable views, active view
@@ -137,7 +137,7 @@ p.
   You can still navigate through them with arrows.#[br]
   In this example, the minimum date is set to 10 days behind and the maximum date to
   10 days ahead.
-highlight-message.my4(type="tips")
+alert.my4(tip)
   strong Notes
   ul
     li the min and max options accept a formatted string or plain Javascript Date object.
@@ -181,7 +181,7 @@ ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__cell--before-min {color: #b6d6c7;}
   .vuecal__cell--after-max {color: #008b8b;}
 
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--disable-days") # Disable days
@@ -217,7 +217,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
 ssh-pre(language="css" label="CSS" :dark="store.darkMode").
   .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
 
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
@@ -231,7 +231,7 @@ p.
   You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
   You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
 
-highlight-message.
+alert.
   Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
 
 .example.mxa(style="height: 350px")
@@ -291,7 +291,7 @@ p.
 ssh-pre(language="html-vue" label="Vue Template" reactive :dark="store.darkMode").
   &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
 
-highlight-message.
+alert.
   For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
   the locale file must be loaded separately: #[br]#[span.code import 'vue-cal/dist/i18n/{{ locale }}.js'].
 
@@ -336,7 +336,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :time-step="30"
     hide-weekends&gt;
   &lt;/vue-cal&gt;
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--show-time-in-cells") # Showing time labels in cells
@@ -360,14 +360,14 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     hide-weekends
     show-time-in-cells&gt;
   &lt;/vue-cal&gt;
-highlight-message For all the options details, refer to the #[a(href="#api") API] section.
+alert For all the options details, refer to the #[a(href="#api") API] section.
 
 //- Example.
 title-link(h4 anchor="ex--special-hours") # Special hours (or business hours)
 p.
   The special hours are visible on #[span.code week] and #[span.code day] views and allow
   you to highlight a particular time range on each day of the week individually.#[br]
-highlight-message.
+alert.
   Refer to the #[a(href="#api") API] section to read more about the
   #[span.code special-hours] option.
 .example.my2.mxa(style="height: 450px")
@@ -579,12 +579,8 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
 <script setup>
 import { computed, inject, ref } from 'vue'
 import { useAppStore } from '@/store'
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import EnUs from '@/vue-cal/i18n/en-us.json'
 import { VueCal, addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
-import TitleLink from '@/documentation/components/title-link.vue'
-import HighlightMessage from '@/documentation/components/highlight-message.vue'
 import ViewExamples from './view.vue'
 
 useLocale(EnUs)

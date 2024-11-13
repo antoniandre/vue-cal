@@ -1,7 +1,7 @@
 <template lang="pug">
 h1.title1 Date Prototypes
 
-w-alert.info.size--lg.pa3.pl4(border-left).
+alert.size--lg.pa3(info).
   Vue Cal has no dependency and internally performs date operations through a set of useful and
   efficient functions that you can choose to add to the JavaScript native #[span.code Date] class
   for your convenience. They are not altering the Date object but only adding 11 new utility functions.
@@ -23,10 +23,10 @@ w-accordion.mt12.mb2(
           but some useful methods are missing and since Vue Cal already has them implemented and in use internally,
           it exposes them in any #[span.code Date] object for you to use without any overhead.
 
-        w-alert.yellow(border-left)
+        alert(tip)
           .base-color
-            .title3 Keeping you informed
-            p.
+            .title3.lh0 Keeping you informed
+            p.mt1.
               Injecting methods in a native JavaScript class is possible but usually discouraged for the
               following reasons:
             ul
@@ -183,7 +183,7 @@ w-accordion.mt12.mb2(
             li #[strong.code.base-color m]: Minutes without leading zero. #[span.grey-light1.ml2 // `8`]
             li #[strong.code.base-color am]: (usually with surrounding #[span.code `{ }`]) am or pm (also localized if any)
 
-      w-alert.info.mt4.pl4(border-left)
+      alert.mt4(info)
         ul
           li.
             To separate 2 keywords or a keyword and another text not from this list without adding spaces or
@@ -198,10 +198,7 @@ w-accordion.mt12.mb2(
 </template>
 
 <script setup>
-import SshPre from 'simple-syntax-highlighter'
-import 'simple-syntax-highlighter/dist/sshpre.css'
 import { useAppStore } from '@/store'
-import TitleLink from '@/documentation/components/title-link.vue'
 import { addDatePrototypes } from '@/vue-cal'
 
 const store = useAppStore()
