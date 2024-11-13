@@ -45,6 +45,7 @@ const icon = computed(() => {
   margin: 8px 0;
   border-left: 4px solid color-mix(in srgb, currentColor 40%, transparent);
   padding-left: 16px;
+  color: var(--w-base-color);
 
   --info-color: #65a9d6;
   --success-color: #6c0;
@@ -57,6 +58,7 @@ const icon = computed(() => {
   &--default {
     background-color: color-mix(in srgb, var(--w-primary-color) 6%, transparent);
     filter: contrast(1.5);
+    color: var(--w-primary-color);
   }
 
   &--info {

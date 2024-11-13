@@ -247,7 +247,6 @@ $kate: #406fbf;
   }
   .john .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.06) 10px, rgba($john, 0.06) 20px);
-    border: none;
     color: transparent;
   }
 
@@ -260,7 +259,6 @@ $kate: #406fbf;
   }
   .kate .vuecal__event--background {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.06) 10px, rgba($kate, 0.06) 20px);
-    border: none;
     color: transparent;
   }
   // ------------------------------------------------------
