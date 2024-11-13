@@ -58,28 +58,28 @@ const icon = computed(() => {
   }
 
   &--info {
-    background-color: color-mix(in srgb, var(--info-color) 08%, transparent);
-    border-color: var(--info-color);
+    background-color: color-mix(in srgb, var(--info-color) 8%, transparent);
+    border-color: color-mix(in srgb, var(--info-color) 40%, transparent);
   }
 
   &--success {
-    background-color: color-mix(in srgb, var(--success-color) 1%, transparent);
-    border-color: var(--success-color);
+    background-color: color-mix(in srgb, var(--success-color) 10%, transparent);
+    border-color: color-mix(in srgb, var(--success-color) 40%, transparent);
   }
 
   &--tip {
     background-color: color-mix(in srgb, var(--tip-color) 15%, transparent);
-    border-color: var(--tip-color);
+    border-color: color-mix(in srgb, var(--tip-color) 40%, transparent);
   }
 
   &--warning {
     background-color: color-mix(in srgb, var(--warning-color) 10%, transparent);
-    border-color: var(--warning-color);
+    border-color: color-mix(in srgb, var(--warning-color) 40%, transparent);
   }
 
   &--error {
     background-color: color-mix(in srgb, var(--error-color) 8%, transparent);
-    border-color: var(--error-color);
+    border-color: color-mix(in srgb, var(--error-color) 40%, transparent);
   }
 
   &:before, &:after {display: none;}
@@ -88,15 +88,16 @@ const icon = computed(() => {
     position: absolute;
     left: -12px;
     color: var(--w-contrast-color);
-    width: 20px;
-    height: 20px;
+    width: 18px;
+    height: 18px;
+    font-size: 13px;
     top: 0.5em;
   }
 
-  &--info > .w-icon {background: var(--info-color);font-size: 25px;}
-  &--success > .w-icon {background-color: var(--success-color);}
-  &--error > .w-icon {background-color: var(--error-color);}
-  &--tip > .w-icon {background-color: var(--tip-color);}
-  &--warning > .w-icon {background-color: var(--warning-color);font-size: 15px;}
+  &--info > .w-icon {background: color-mix(in srgb, var(--info-color) 70%, var(--w-base-bg-color));font-size: 22px;}
+  &--success > .w-icon {background-color: color-mix(in srgb, var(--success-color) 70%, var(--w-base-bg-color));}
+  &--error > .w-icon {background-color: color-mix(in srgb, var(--error-color) 70%, var(--w-base-bg-color));}
+  &--tip > .w-icon {background-color: color-mix(in srgb, var(--tip-color) 80%, var(--w-base-bg-color));}
+  &--warning > .w-icon {background-color: color-mix(in srgb, var(--warning-color) 70%, var(--w-base-bg-color));}
 }
 </style>

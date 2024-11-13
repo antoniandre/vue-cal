@@ -8,7 +8,7 @@
   --code-color: #2399ee;
   --code-bg-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
   --highlight-color: #ecf3f8;
-  --headline-color: #2c456d;
+  --headline-color: #376591;
 
   &[data-theme="dark"] {
     --w-base-color: rgba(#fff, 0.8);
@@ -155,6 +155,8 @@ ul {
   width: 100%;
   max-width: 650px;
   margin: 0;
+
+  &.w-alert {padding-left: 20px;}
 }
 
 .ssh-pre {
