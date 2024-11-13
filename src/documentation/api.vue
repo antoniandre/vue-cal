@@ -106,7 +106,7 @@ w-accordion.mt3(
     template(#title)
       h3.title4.mt0.pt0 Other Utilities
     template(#content)
-      p Other useful variables that you can explore and use.
+      p Other utilities that you may find useful.
       p Example:
       ssh-pre(language="js" :dark="store.darkMode").
         {
@@ -124,7 +124,11 @@ w-accordion.mt3(
           isMonth: true,
           isYear: false,
           isYears: false,
-          ...
+
+          // Methods.
+          scrollToCurrentTime, // Scrolls the calendar body to the current time.
+          scrollToTime, // Scrolls the calendar body to the given time in minutes.
+          scrollTop // Scrolls the calendar body to the top.
         }
 
 h2.w-flex.justify-space-between.mt12.mb2

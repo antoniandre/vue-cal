@@ -54,6 +54,9 @@ ul
   li.
     disableDatePrototypes -> removed: the prototypes are now disabled by default and you control whether you
     want to benefit from it or not.
+  li dblclickToNavigate -> removed: can be done externally if needed
+  li dragToCreateEvent -> moved into the editableEvents object definition, allowed by default when events are editable
+  li cellClickHold -> removed: can be done externally if needed
 </template>
 
 <script setup>
