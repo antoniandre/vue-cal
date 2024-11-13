@@ -72,19 +72,27 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
     p.mb0.
       For more fancy time cells, you can set a #[code time-cell-height] (in pixels)
       and use the #[code #time-cell] slot.#[br]
-      For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
-      So if you don't set this class you are free to paint the lines yourself or not.
+      It will give you access to:
+    ul
+      li #[code hours]: the integer hours from #[code 0] to #[code 23].
+      li #[code minutes]: the integer minutes from #[code 0] to #[code 59].
+      li.
+        #[code minutesSum]:
+        the integer sum of minutes from #[code 0] to #[code 1439]. E.g. for 17:30 #[i.mdi.mdi-arrow-right] #[span.code 17 * 60 + 30 = 1050].
+
+      li #[code format12]: the 12-hour formatted time. E.g. #[code 09:00] or #[code 23:45].
+      li #[code format24]: the 24-hour formatted time. E.g. #[code 9am] or #[code 11:45pm].
+
   template(#code-html).
     &lt;vue-cal
       :time-from="5 * 60"
       :time-step="15"
       :time-cell-height="18"
-      :disable-views="['years', 'year', 'month']"
-      hide-weekends&gt;
+      :views="['day']"&gt;
       &lt;template #time-cell="{ hours, minutes }"&gt;
-        &lt;div :class="{ 'vuecal__time-cell-line': true, hours: !minutes }"&gt;
+        &lt;div style="margin-top: -8px"&gt;
           &lt;strong v-if="!minutes" style="font-size: 15px"&gt;{{ '\{\{ hours \}\}' }}&lt;/strong&gt;
-          &lt;span v-else style="font-size: 11px"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
+          &lt;span v-else style="font-size: 11px;color: grey;"&gt;{{ '\{\{ minutes \}\}' }}&lt;/span&gt;
         &lt;/div&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
@@ -92,25 +100,23 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
     .vuecal__time-cell-line.hours:before {border-color: #42b983;}
   template(#desc2)
     alert.mt6(tip).
-      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
+      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it in the
+      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
 
   vue-cal(
-    :dark="store.darkMode"
-    sm
     :time-from="5 * 60"
     :time-step="15"
     :time-cell-height="18"
-    view="day"
     :views="['day']"
     style="width: 320px;height: 200px"
-    hide-weekends
     :views-bar="false"
-    :today-button="false")
-    template(#time-cell="{ hours, minutes }")
-      .vuecal__time-cell-line(:class="{ hours: !minutes }")
-        strong.primary(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
-        span(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
+    :today-button="false"
+    :dark="store.darkMode"
+    sm)
+    template(#time-cell="{ hours, minutes, index }")
+      .mt-2(v-show="index" :class="{ hours: !minutes }")
+        strong.primary.px2(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
+        span.grey.px2(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
 
 //- Example.
 //- example(title="" anchor="")
@@ -123,7 +129,7 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
 <script setup>
 import { reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal } from '@/vue-cal'
+import { VueCal, formatMinutes } from '@/vue-cal'
 import ViewExamples from './view.vue'
 
 const store = useAppStore()

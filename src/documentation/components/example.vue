@@ -7,16 +7,19 @@
   ssh-pre.example__source.mt3(
     v-if="$slots['code-html']"
     language="html-vue"
+    data-label="HTML"
     :dark="store.darkMode")
     slot(name="code-html")
   ssh-pre.example__source.mt3(
     v-if="$slots['code-js']"
     language="js"
+    data-label="JS"
     :dark="store.darkMode")
     slot(name="code-js")
   ssh-pre.example__source.mt3(
     v-if="$slots['code-css']"
-    language="js"
+    language="css"
+    data-label="CSS"
     :dark="store.darkMode")
     slot(name="code-css")
 

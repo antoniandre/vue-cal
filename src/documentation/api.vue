@@ -329,14 +329,14 @@ w-accordion.mt2(
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
         span.ml3 With a single range of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
             3: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml3 With multiple ranges of special hours:
-        ssh-pre.mt1.ml3(language="js" label="JavaScript" :dark="store.darkMode").
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
             3: [

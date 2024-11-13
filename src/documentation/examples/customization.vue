@@ -15,6 +15,10 @@ alert.mt6
     li #[span.code events-count]
     li #[span.code event]
 
+alert.mt6(tip).
+  If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it in the
+  #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
+
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
   template(#desc)
@@ -47,7 +51,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
       instead of the #[span.code events-count] slot to perform the same task:#[br]
       (Refer to the next example to know more:
       #[a(href="#ex--custom-title-and-cells") Custom title &amp; cells])
-    ssh-pre.mt2(language="html-vue" label="Vue Template" :dark="store.darkMode").
+    ssh-pre.mt2(language="html-vue" :dark="store.darkMode").
       &lt;template #cell-content="{ cell, view, events }"&gt;
         &lt;span class="vuecal__cell-date"&gt;
           {{ '\{\{ cell.content \}\}' }}
@@ -59,7 +63,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
         &lt;/span&gt;
       &lt;/template&gt;
 
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre(language="js" :dark="store.darkMode").
       // In your Vue component.
       methods: {
         customEventsCount: events => {
@@ -67,7 +71,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
         }
       }
 
-    ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+    ssh-pre(language="css" :dark="store.darkMode").
       .vuecal__cell-events-count {background: transparent;}
       .vuecal__cell-events-count span {
         background: #fd9c42;
@@ -197,7 +201,7 @@ alert.my3(info)
       .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
       .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :time="false"
     :dblclick-to-navigate="false"
@@ -291,7 +295,7 @@ p.mt2.
         br
         strong.mr1 Event end:
         span {{ event.end.formatTime('h O\'clock') }}
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
@@ -316,7 +320,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;/template&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   events: [
     {
       start: '2018-11-20 14:00',
@@ -355,7 +359,7 @@ p.mb6 You can provide a custom schedule label when a simple label is not enough.
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
 
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :disable-views="['years', 'year', 'month']"
     view="day"
@@ -368,7 +372,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     &lt;/template&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // In data.
   customDayScheduleLabels: [
     { label: 'John', color: 'blue', class: 'schedule1' },
@@ -377,7 +381,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     { label: 'Jess', color: 'red', class: 'schedule4' }
   ]
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal .schedule-header {font-size: 11px;}
   .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
   .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}

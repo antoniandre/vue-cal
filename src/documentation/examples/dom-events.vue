@@ -346,9 +346,9 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
         :views="['month']"
         @cell-focus="selectedDate = $event"
         style="max-width: 270px;height: 290px;transform: scale(0.9)")
-    ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+    ssh-pre(language="html-vue" :dark="store.darkMode").
 
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre(language="js" :dark="store.darkMode").
       data: () => ({
         selectedDate: null
       })
@@ -380,7 +380,7 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
         :disable-views="['years', 'year', 'month']"
         hide-weekends
         :events="eventsCopy")
-    ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+    ssh-pre(language="html-vue" :dark="store.darkMode").
       &lt;button
         @click="events.push({
           start: '2018-11-20 12:00',
@@ -399,7 +399,7 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
         :events="events"&gt;
       &lt;/vue-cal&gt;
 
-    ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre(language="js" :dark="store.darkMode").
       data: () => ({
         events: [
           {

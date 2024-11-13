@@ -291,7 +291,7 @@ example(title="Display events on month view" anchor="events-on-month-view")
     events-on-month-view="short"
     :events="events"
     style="height: 600px")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
@@ -302,7 +302,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events="events"
     style="height: 600px"&gt;
   &lt;/vue-cal&gt;
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal--month-view .vuecal__cell {height: 80px;}
 
   .vuecal--month-view .vuecal__cell-content {
@@ -365,7 +365,7 @@ p In this example, the event creation and drag ability are disabled to focus on 
     hide-weekends
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
     :events="editableEvents")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :selected-date="stringToDate('2018-11-19')"
             :time-from="10 * 60"
             :time-to="23 * 60"
@@ -376,7 +376,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
             :events="events"
             class="vuecal--full-height-delete"&gt;
   &lt;/vue-cal&gt;
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // In data.
   events: [
     {
@@ -391,7 +391,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     },
     // other events.
   ]
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
 
 //- Example.
@@ -573,7 +573,7 @@ ol.pl3
           :drag-to-create-event="false"&gt;
         &lt;/vue-cal&gt;
     p Then you can give custom event attributes as you wish:
-    ssh-pre.mt3(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre.mt3(language="js" :dark="store.darkMode").
       // In methods.
       customEventCreation () {
           const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
@@ -595,7 +595,7 @@ ol.pl3
     h5.subtitle-1.font-weight-bold Adding a dialog box to the #[strong cell click &amp; hold] behavior
     p.mt3.
       By default, event will be created with these attributes:
-    ssh-pre.mt0(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre.mt0(language="js" :dark="store.darkMode").
       {
           start: {Date}, // Starting from the cursor position in the clicked day cell.
           end: {Date}, // Event start + 2 hours.
@@ -607,7 +607,7 @@ ol.pl3
     p.
       If you want to customize those attributes you can modify the event directly through
       the callback function that you provide to #[span.code :on-event-create] as follows:#[br]
-    ssh-pre.mt6(language="js" label="Javascript" :dark="store.darkMode").
+    ssh-pre.mt6(language="js" :dark="store.darkMode").
       // :on-event-create="onEventCreate", in template.
 
       /**
@@ -651,7 +651,7 @@ ol.pl3
             :drag-to-create-event="false"
             :on-event-create="onEventCreate"&gt;
         &lt;/vue-cal&gt;
-  ssh-pre(language="html-vue" label="Vue Template - dialog box" :dark="store.darkMode").
+  ssh-pre(language="html-vue" :dark="store.darkMode").
     &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
     &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
       &lt;v-card&gt;
@@ -675,7 +675,7 @@ ol.pl3
         &lt;/v-card-text&gt;
       &lt;/v-card&gt;
 
-  ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+  ssh-pre(language="js" :dark="store.darkMode").
     data: () => ({
       selectedEvent: null,
       showEventCreationDialog: false,
@@ -718,7 +718,7 @@ ol.pl3
     #[span.code closeCreationDialog] functions as the previous example.#[br]
     Note that #[span.code event-drag-create] gets fired on mouseup of the drag-create,
     whereas #[span.code onEventCreate] gets called as soon as the event appears on screen, while dragging.
-  ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+  ssh-pre(language="html-vue" :dark="store.darkMode").
     &lt;vue-cal
       small
       :time-from="10 * 60"
@@ -731,7 +731,7 @@ ol.pl3
       :on-event-create="onEventCreate"
       @event-drag-create="showEventCreationDialog = true"&gt;
     &lt;/vue-cal&gt;
-  ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+  ssh-pre(language="js" :dark="store.darkMode").
     data: () => ({
       selectedEvent: null,
       showEventCreationDialog: false
@@ -843,7 +843,7 @@ ul
     editable-events
     :events="eventsToDrag"
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     today-button
@@ -856,7 +856,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
     class="vuecal--full-height-delete"&gt;
   &lt;/vue-cal&gt;
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
 //- Example.
@@ -909,7 +909,7 @@ alert(tip)
     editable-events
     @event-drop="onEventDrop")
 
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;!-- Three HTML5 draggable events. --&gt;
   &lt;div class="external-event"
         v-for="(item, i) in draggables"
@@ -930,7 +930,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
             editable-events
             @event-drop="onEventDrop"&gt;
   &lt;/vue-cal&gt;
-ssh-pre(language="js" label="Javascript - Vue Component" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   export default {
     data: () => ({
       draggables: [
@@ -1004,7 +1004,7 @@ alert(tip).
     editable-events
     resize-x
     :events="multipleDayEvents")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
@@ -1016,7 +1016,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events="events"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     events: [
       {
@@ -1058,7 +1058,7 @@ ul
   li Every `x` days - by providing a #[span.code every: x] property, with #[span.code x] being an integer.
   li Forever; Or until an expiry date if you provide an #[span.code until: {String | Date}] property.
   li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
-ssh-pre(language="js" label="Still to do..." :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // month view event count => OK.
   // @todo: check years/year views event counts.
   // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
@@ -1072,7 +1072,7 @@ p.
   That means, deleting, resizing or editing one of the day will apply to all the other days.
 w-card.my4.maa.py12.grey-light5.elevation-1
   .text-center.title1.grey Demo coming soon.
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
@@ -1084,7 +1084,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events="events"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     events: [
       {
@@ -1193,7 +1193,7 @@ alert.mb6.
     editable-events
     :min-event-width="minEventWidth"
     :events="overlappingEvents")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
@@ -1205,7 +1205,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events="events"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     minEventWidth: 0,
     events: [
@@ -1253,7 +1253,7 @@ p.
     :disable-views="['years', 'year', 'month']"
     hide-weekends
     :events="backgroundEvents")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="7 * 60"
@@ -1263,7 +1263,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events="events"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     events: [
       {
@@ -1284,7 +1284,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     ]
   })
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__event.lunch {
     background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
     color: #999;
@@ -1338,7 +1338,7 @@ w-button.ma1.code(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
     :show-all-day-events="['short', true, false][showAllDayEvents]"
     :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
     :events="allDayEvents")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
     :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
   &lt;/button&gt;
@@ -1355,7 +1355,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
     :events="events"&gt;
   &lt;/vue-cal&gt;
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   showAllDayEvents: 0,
   shortEventsOnMonthView: false,
   events: [
@@ -1378,7 +1378,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     ...
   ]
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__cell-content {align-self: flex-start;}
   .vuecal__cell-date {text-align: right;padding: 4px;}
 
@@ -1446,7 +1446,7 @@ example(title="schedules &amp; schedule events" anchor="schedules")
     :sticky-schedule-labels="schedulesExample.stickyScheduleLabels"
     :min-cell-width="schedulesExample.minCellWidth"
     :min-schedule-width="schedulesExample.minScheduleWidth")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
     {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
   &lt;/button&gt;
@@ -1473,7 +1473,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :min-schedule-width="minScheduleWidth"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     stickyScheduleLabels: false,
     minCellWidth: 400,
@@ -1516,7 +1516,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     ]
   })
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   /* You can easily set a different style for each schedule of your days. */
   .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
   .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}

@@ -10,7 +10,7 @@ p
     | {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
 .example.my2.mxa(style="height: 450px")
   vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends :dark="store.darkMode")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :time="false" hide-weekends /&gt;
 alert For all the options details, refer to the #[a(href="#api") API] section.
 
@@ -30,7 +30,7 @@ p.
       w-icon mdi mdi-arrow-left
     template(#arrow-next)
       w-icon mdi mdi-arrow-right
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :views-bar="false"
     :time="false"
@@ -88,7 +88,7 @@ p.
       w-icon.pr1(style="padding-bottom: 2px") mdi mdi-arrow-up
       | Date picker layout, no transition
 .w-flex.wrap
-  ssh-pre.grow.mr2(language="html-vue" label="Vue Template - Rounded Cell" :dark="store.darkMode").
+  ssh-pre.grow.mr2(language="html-vue" :dark="store.darkMode").
     &lt;vue-cal
         class="vuecal--rounded-theme vuecal--green-theme"
         xs
@@ -98,7 +98,7 @@ p.
         :disable-views="['week']"
         style="width: 270px;height: 300px"&gt;
     &lt;/vue-cal&gt;
-  ssh-pre.grow(language="html-vue" label="Vue Template - Date Picker" :dark="store.darkMode").
+  ssh-pre.grow(language="html-vue" :dark="store.darkMode").
     &lt;vue-cal
         class="vuecal--date-picker"
         xs
@@ -125,7 +125,7 @@ p.
     :time="false"
     view="month"
     :disable-views="['years', 'year', 'week']")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :time="false" view="month" :disable-views="['years', 'year', 'week']" /&gt;
 
 //- Example.
@@ -154,7 +154,7 @@ alert.my4(tip)
     view="month"
     :min-date="minDate"
     :max-date="maxDate")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     xs
     :views-bar="false"
@@ -165,7 +165,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     :max-date="maxDate"&gt;
   &lt;/vue-cal&gt;
 
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // Using Vue Cal Date Prototypes (activated by default).
   computed: {
     minDate () {
@@ -176,7 +176,7 @@ ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
     }
   }
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__cell--disabled {text-decoration: line-through;}
   .vuecal__cell--before-min {color: #b6d6c7;}
   .vuecal__cell--after-max {color: #008b8b;}
@@ -198,7 +198,7 @@ p.
     view="month"
     :disable-views="['week']"
     :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
   &lt;vue-cal
     xs
@@ -214,7 +214,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
     ]"
   &gt;&lt;/vue-cal&gt;
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
 
 alert For all the options details, refer to the #[a(href="#api") API] section.
@@ -241,7 +241,7 @@ alert.
     show-week-numbers
     :hide-weekdays="[2, 3, 5]"
     :disable-views="['years', 'year']")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :time="false"
             show-week-numbers
             :hide-weekdays="[2, 3, 5]"
@@ -288,7 +288,7 @@ p.
     view="year"
     :locale="locale"
     @ready="overrideDateTexts")
-ssh-pre(language="html-vue" label="Vue Template" reactive :dark="store.darkMode").
+ssh-pre(language="html-vue" reactive :dark="store.darkMode").
   &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
 
 alert.
@@ -328,7 +328,7 @@ p.
     :time-to="19 * 60"
     :time-step="30"
     hide-weekends)
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
   &lt;vue-cal
     :time-from="8 * 60"
@@ -352,7 +352,7 @@ p.
     show-time-in-cells
     hide-weekends)
     template(#no-event) &nbsp;
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :time-from="8 * 60"
     :time-to="19 * 60"
@@ -377,13 +377,13 @@ alert.
     :time-to="20 * 60"
     :disable-views="['years', 'year', 'month']"
     :special-hours="specialHours")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :disable-views="['years', 'year', 'month']"
     :time-from="8 * 60"
     :time-to="20 * 60"
     :special-hours="specialHours" /&gt;
-ssh-pre(language="js" label="JavaScript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // `from` and `to` are expected in minutes.
   const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
@@ -399,7 +399,7 @@ ssh-pre(language="js" label="JavaScript" :dark="store.darkMode").
     thu: dailyHours,
     fri: dailyHours
   }
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .business-hours {
     background-color: rgba(255, 255, 0, 0.15);
     border: solid rgba(255, 210, 0, 0.3);
@@ -414,13 +414,13 @@ p With the same principle, you could also build a lot more complex layout such a
     :time-from="7 * 60"
     :time-to="20 * 60"
     :special-hours="specialDoctorHours")
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :disable-views="['years', 'year', 'month']"
     :time-from="7 * 60"
     :time-to="20 * 60"
     :special-hours="specialHours" /&gt;
-ssh-pre(language="js" label="JavaScript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   // In your component's data, special hours from Monday to Sunday (1 to 7).
   // Note that you can provide an array of multiple blocks for the same day.
   specialHours: {
@@ -475,7 +475,7 @@ ssh-pre(language="js" label="JavaScript" :dark="store.darkMode").
       label: '<strong>Closed</strong>'
     }
   }
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__special-hours {
     display: flex;
     justify-content: center;
@@ -544,7 +544,7 @@ p
             w-button(x-Programmatically fab text v-on="on")
               w-icon(color="primary" size="20") mdi mdi-map-marker-outline
           span Go to Today's date
-ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
+ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     ref="vuecal"
     xs
@@ -569,7 +569,7 @@ ssh-pre(language="html-vue" label="Vue Template" :dark="store.darkMode").
   &lt;/vue-cal&gt;
 
   &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
-ssh-pre(language="js" label="Javascript" :dark="store.darkMode").
+ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
     // Default to next new year eve.
     selectedDate: new Date(new Date().getFullYear(), 11, 31)

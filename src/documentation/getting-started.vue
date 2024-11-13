@@ -158,7 +158,7 @@ p.
   You can copy and change any color to quickly get a nice render.#[br]
   If that is still not doing what you want you can change even more in your own CSS.
 
-ssh-pre(language="css" label="CSS" :dark="store.darkMode").
+ssh-pre(language="css" :dark="store.darkMode").
   /* Green-theme. */
   .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
   .vuecal__title-bar {background-color: #e4f5ef;}
