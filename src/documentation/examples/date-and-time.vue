@@ -3,20 +3,16 @@
 example(title="Today's current time" anchor="today-current-time")
   template(#desc)
     p.
-      When you choose to show the time in vue-cal, the current time of today's date will
-      be marked with a line (scroll to the current time to see it).#[br]
-      The line position will be updated every time the calendar current view is re-rendered (by interacting).#[br]
-      You can easily customize the now-line as you wish via CSS.
-      Changing the line and arrow color is as easy as:
-    ssh-pre.mt6(language="css" label="CSS" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
-    p.mt4.
-      If you don't want this feature you can simply hide it: #[span.code .vuecal__now-line {display: none}].#[br]
-      This feature has no impact on performance.
-    p.
-      If you want the now line to keep accurate position even while your calendar is idle, you can use the option
-      #[span.code watchRealTime] (see more in the #[a(href="#api") API] section).
-  template(#code-html).
-    &lt;vue-cal xs view="day" :disable-views="['years', 'year', 'month']" /&gt;
+      When the time column is visible, the current time of today's date will
+      be marked with a line.#[br]
+      The line position will be updated every time the calendar current view is re-rendered (by interacting)
+      or following the real time if #[code watchRealTime] is set to true (more expensive).#[br]
+      You can easily customize the now-line via CSS, for instance, changing the line and arrow color is as
+      easy as:
+    ssh-pre.my1.d-iblock(language="css" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
+    div
+      p.d-iblock Or you can also hide it:
+      ssh-pre.mt0.d-iblock(language="css" :dark="store.darkMode") .vuecal__now-line {display: none;}
 
   vue-cal(
     :time-cell-height="26"
@@ -24,25 +20,39 @@ example(title="Today's current time" anchor="today-current-time")
     :views="['day']"
     :views-bar="false"
     :today-button="false"
-    @ready="$event.view && $event.view.scrollToCurrentTime"
+    @ready="({ view }) => view.scrollToCurrentTime()"
     :dark="store.darkMode"
-    xs)
+    xs
+    style="width: 320px;height: 200px")
 
 //- Example.
 example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
   template(#desc)
     p.mb0.
-      It is quite easy to scroll the calendar view to a particular time from outside of Vue Cal.
-    w-button.mt2.mr2(@click="exScrollToTime.scrollToCurrentTime")
-      w-icon mdi mdi-format-vertical-align-bottom
-      | Scroll to current time
-    w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
-      w-icon mdi mdi-format-vertical-align-top
-      | Scroll top
-    w-button.mt2.mr2(@click="exScrollToTime.scrollToTime(12 * 60)")
-      w-icon mdi mdi-format-vertical-align-center
-      | Scroll to 12:00
-  template(#desc2)
+      It can be useful to scroll to the current time or a particular time in the calendar for a better
+      user experience.
+      3 view functions are available for that (you can get the #[code view] object from #[code @ready="({ view }) => {}"]):
+    ul
+      li.mt3
+        code view.scrollTop()
+        p Scrolls the calendar body to the top.
+      li.mt3
+        code view.scrollToTime(minutes)
+        p Scrolls the calendar body to the given time in minutes. E.g. #[code view.scrollToCurrentTime(13 * 60)].
+      li.mt3
+        code view.scrollToCurrentTime()
+        p Scrolls the calendar body to the current time.
+    w-alert.pl4.my2.d-iblock(border-left) You can store the functions from #[code @ready] for later use.
+    .mb2
+      w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
+        w-icon mdi mdi-format-vertical-align-top
+        | Scroll top
+      w-button.mt2.mr2(@click="exScrollToTime.scrollToTime(12 * 60)")
+        w-icon mdi mdi-format-vertical-align-center
+        | Scroll to 12:00
+      w-button.mt2.mr2(@click="exScrollToTime.scrollToCurrentTime")
+        w-icon mdi mdi-format-vertical-align-bottom
+        | Scroll to current time
     vue-cal.ex--scroll-to-time(
       :dark="store.darkMode"
       view="day"
@@ -51,17 +61,17 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       :today-button="false"
       :time-cell-height="exScrollToTime.timeCellHeight"
       @ready="exScrollToTime.onReady"
-      xs)
-    ssh-pre(language="html-vue" :dark="store.darkMode").
-      &lt;vue-cal @ready="scrollToCurrentTime"&gt;
-      &lt;/vue-cal&gt;
+      xs
+      style="width: 320px;height: 200px")
+  template(#code-html).
+    &lt;vue-cal @ready="({ view }) => view.scrollToCurrentTime()" /&gt;
 
 //- Example.
 example(title="Timeline Tweaking" anchor="timeline-tweaking")
   template(#desc)
     p.mb0.
-      If you want to have more fancy time cells, you can override them with the
-      #[span.code time-cell-height] option (in pixels) and scoped slots.#[br]
+      For more fancy time cells, you can set a #[code time-cell-height] (in pixels)
+      and use the #[code #time-cell] slot.#[br]
       For even more flexibility, the horizontal lines are painted when you set the CSS class #[span.code line] on the tag you choose.
       So if you don't set this class you are free to paint the lines yourself or not.
   template(#code-html).
