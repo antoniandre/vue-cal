@@ -425,7 +425,7 @@ alert.
     :dark="store.darkMode"
     ref="vuecalCreateEx"
     :views-bar="false"
-    hide-title-bar
+    :title-bar="false"
     hide-weekends
     :time-from="10 * 60"
     :time-to="16 * 60"
@@ -436,7 +436,7 @@ alert.
 ssh-pre.my2(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :views-bar="false"
-    hide-title-bar
+    :title-bar="false"
     hide-weekends
     :time-from="10 * 60"
     :time-to="16 * 60"
@@ -500,7 +500,7 @@ ol.pl3
           ref="vuecal3"
           small
           :views-bar="false"
-          hide-title-bar
+          :title-bar="false"
           hide-weekends
           :time-from="10 * 60"
           :time-to="16 * 60"
@@ -515,7 +515,7 @@ ol.pl3
           small
           :views-bar="false"
           hide-weekends
-          hide-title-bar
+          :title-bar="false"
           :time-from="10 * 60"
           :time-to="16 * 60"
           :disable-views="['years', 'year']"
@@ -549,7 +549,7 @@ ol.pl3
           :time-to="16 * 60"
           :disable-views="['years', 'year']"
           :views-bar="false"
-          hide-title-bar
+          :title-bar="false"
           hide-weekends
           editable-events
           :cell-click-hold="false"
@@ -566,7 +566,7 @@ ol.pl3
           :time-to="16 * 60"
           :disable-views="['years', 'year']"
           :views-bar="false"
-          hide-title-bar
+          :title-bar="false"
           hide-weekends
           editable-events
           :cell-click-hold="false"
@@ -633,7 +633,7 @@ ol.pl3
           :time-to="16 * 60"
           :disable-views="['years', 'year']"
           :views-bar="false"
-          hide-title-bar
+          :title-bar="false"
           hide-weekends
           editable-events
           :drag-to-create-event="false"
@@ -645,7 +645,7 @@ ol.pl3
             :time-to="16 * 60"
             :disable-views="['years', 'year']"
             :views-bar="false"
-            hide-title-bar
+            :title-bar="false"
             hide-weekends
             editable-events
             :drag-to-create-event="false"
@@ -708,7 +708,7 @@ ol.pl3
       :time-to="16 * 60"
       :disable-views="['years', 'year']"
       :views-bar="false"
-      hide-title-bar
+      :title-bar="false"
       hide-weekends
       editable-events
       :on-event-create="onEventDragStartCreate"
@@ -725,7 +725,7 @@ ol.pl3
       :time-to="16 * 60"
       :disable-views="['years', 'year']"
       :views-bar="false"
-      hide-title-bar
+      :title-bar="false"
       hide-weekends
       editable-events
       :on-event-create="onEventCreate"

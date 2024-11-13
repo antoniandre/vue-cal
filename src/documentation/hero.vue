@@ -3,8 +3,8 @@
   .mb10.tagline
     .title2.grey-dark1 Go for the date picker...
     .title1.text-right.primary-dark1 or unleash the full potential!
-  .w-flex.wrap.align-center.justify-center
-    .ma4
+  .w-flex.wrap.align-center.justify-center.hero-calendars
+    .datepicker-wrap.ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
         :dark="store.darkMode"
@@ -16,7 +16,7 @@
         :events="demoExample.events"
         @cell-click="selectedDate = $event")
       .code.base-color.transparent--bg.mt2.text-center(style="font-size: 12px").
-        Selected date: {{ selectedDate.format() }}
+        Selected date: {{ formatDate(selectedDate) }}
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
@@ -47,13 +47,9 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
-import EnUs from '@/vue-cal/i18n/fr.json'
-import { VueCal, useLocale, addDatePrototypes } from '@/vue-cal'
+import { VueCal, formatDate, addDays } from '@/vue-cal'
 
 const store = useAppStore()
-
-useLocale(EnUs)
-addDatePrototypes()
 
 const demoExample = ref({
   schedules: [{ label: 'Dr. John', class: 'john' }, { label: 'Dr. Kate', class: 'kate' }],
@@ -70,7 +66,7 @@ const previousFirstDayOfWeek = computed(() => {
 
 // Place all the events in the real time current week.
 for (let i = 0; i < 5; i++) {
-  const day = previousFirstDayOfWeek.value.addDays(i).format()
+  const day = formatDate(addDays(previousFirstDayOfWeek.value, i))
 
   demoExample.value.events.push(
     {
@@ -96,11 +92,10 @@ for (let i = 0; i < 5; i++) {
   )
 }
 
-// Date.format() and Date.addDays() are helper methods added by Vue Cal.
-const monday = previousFirstDayOfWeek.value.format()
-const tuesday = previousFirstDayOfWeek.value.addDays(1).format()
-const thursday = previousFirstDayOfWeek.value.addDays(3).format()
-const friday = previousFirstDayOfWeek.value.addDays(4).format()
+const monday = formatDate(previousFirstDayOfWeek.value)
+const tuesday = formatDate(addDays(previousFirstDayOfWeek.value, 1))
+const thursday = formatDate(addDays(previousFirstDayOfWeek.value, 3))
+const friday = formatDate(addDays(previousFirstDayOfWeek.value, 4))
 
 demoExample.value.events.push(
   {
@@ -149,19 +144,25 @@ demoExample.value.events.push(
 <style lang="scss">
 @use 'sass:color';
 
-$john: #a3d0c8;
-$kate: #bac8e0;
+$john: #40bfa8;
+$kate: #406fbf;
 
 .hero {
   position: relative;
-  height: 850px;
+  padding-bottom: 8rem;
   margin-bottom: 8rem;
 
+  // Section separation at the bottom.
   &:before, &:after {
     content: '';
     position: absolute;
-    inset: auto 15% 5px;
+    bottom: 5px;
+    left: 50%;
+    width: 100%;
+    max-width: 250px;
     border-bottom: 4px solid var(--w-primary-color);
+    border-radius: 99em;
+    transform: translateX(-50%);
   }
   &:after {
     bottom: 0;
@@ -174,6 +175,8 @@ $kate: #bac8e0;
 
     .title1 {letter-spacing: normal;}
   }
+
+  .hero-calendars {position: relative;}
 }
 
 .demo {
@@ -214,12 +217,15 @@ $kate: #bac8e0;
       color: #fff;
     }
   }
-  &.full-cal .weekday-label {opacity: 0.4;font-weight: 500;}
-  .vuecal__header .w-icon {color: inherit;}
+  &.full-cal .vuecal__weekday {
+    color: color-mix(in srgb, var(--w-base-color) 50%, transparent);
+    font-weight: 500;
+  }
+  .vuecal__weekday .w-icon {color: inherit;}
   &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
   &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
-  .vuecal__event {border-color: color-mix(in srgb, currentColor 30%, transparent);}
+  .vuecal__event {border-color: color-mix(in srgb, currentColor 20%, transparent);}
   .vuecal__event-time {
     margin: 3px 0;
     font-size: 12px;
@@ -228,27 +234,27 @@ $kate: #bac8e0;
   }
 
   // John.
-  .vuecal__header .john {color: color.adjust($john, $lightness: -5%);}
-  .vuecal__body .john {background-color: rgba($john, 0.08);}
+  .vuecal__body .john {background-color: rgba($john, 0.04);}
+  .vuecal__weekday .john {color: $john;}
   .john .vuecal__event {
-    background-color: color.adjust($john, $lightness: 5%);
-    color: color.adjust($john, $lightness: -35%, $saturation: -15%);
+    background-color: color.adjust($john, $lightness: 40%);
+    color: color.adjust($john, $lightness: -10%, $saturation: -20%);
   }
   .john .vuecal__event--background {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.15) 10px, rgba($john, 0.15) 20px);
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($john, 0.06) 10px, rgba($john, 0.06) 20px);
     border: none;
     color: transparent;
   }
 
   // Kate.
-  .vuecal__header .kate {color: color.adjust($kate, $lightness: -5%);}
-  .vuecal__body .kate {background-color: rgba($kate, 0.08);}
+  .vuecal__body .kate {background-color: rgba($kate, 0.04);}
+  .vuecal__weekday .kate {color: $kate;}
   .kate .vuecal__event {
-    background-color: color.adjust($kate, $lightness: 5%);
-    color: color.adjust($kate, $lightness: -35%, $saturation: -15%);
+    background-color: color.adjust($kate, $lightness: 40%);
+    color: color.adjust($kate, $lightness: -10%, $saturation: -20%);
   }
   .kate .vuecal__event--background {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.15) 10px, rgba($kate, 0.15) 20px);
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, rgba($kate, 0.06) 10px, rgba($kate, 0.06) 20px);
     border: none;
     color: transparent;
   }
@@ -268,7 +274,21 @@ $kate: #bac8e0;
 
 // Media queries.
 // --------------------------------------------------------
+@media screen and (max-width: $sm) {
+  .datepicker-wrap {
+    position: absolute;
+    z-index: 3;
+    background-color: var(--w-base-bg-color);
+    border-radius: 6px;
+    bottom: -60px;
+    left: -32px;
+
+    .vuecal {box-shadow: 0 0 12px rgba(#000, 0.12);}
+  }
+}
+
 @media screen and (max-width: 499px) {
+  .datepicker-wrap {display: none;}
   .hero .schedule-header strong {display: none;}
 }
 </style>

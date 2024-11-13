@@ -35,7 +35,7 @@ hero
     .announcement.w-flex.align-center
       w-icon.ml-1.mr4(size="50" color="amber-light3") mdi mdi-information-outline
       w-alert.message-box.important-notes(border-left color="orange-dark1" bg-color="yellow-light5")
-        ul.ml6
+        ul
           li.mb2
             strong Always check the #[router-link(to="/release-notes") Release Notes] when you upgrade
           li
@@ -79,7 +79,7 @@ hero
 </template>
 
 <script setup>
-import { ref, nextTick, inject } from 'vue'
+import { ref, nextTick } from 'vue'
 import TopBar from '@/documentation/components/top-bar.vue'
 import Hero from './hero.vue'
 

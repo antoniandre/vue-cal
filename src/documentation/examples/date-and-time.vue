@@ -102,9 +102,11 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
     :time-step="15"
     :time-cell-height="18"
     view="day"
-    :disable-views="['years', 'year', 'month']"
-    style="width: 360px;height: 360px;max-width: 100%"
-    hide-weekends)
+    :views="['day']"
+    style="width: 320px;height: 200px"
+    hide-weekends
+    :views-bar="false"
+    :today-button="false")
     template(#time-cell="{ hours, minutes }")
       .vuecal__time-cell-line(:class="{ hours: !minutes }")
         strong.primary(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
