@@ -5,10 +5,10 @@
 
   template(v-else-if="config.schedules")
     .vuecal__cell-schedule(
-      v-for="(schedule, i) in config.schedules"
-      :key="i"
+      v-for="schedule in config.schedules"
+      :key="schedule.id"
       :class="schedule.class"
-      :data-schedule="i + 1")
+      :data-schedule="schedule.id")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events" :start="start" :end="end" :events="cellEvents")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -23,8 +23,13 @@
           :end="end"
           :events="cellEvents")
         template(v-else)
-          event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
-      .vuecal__event-placeholder(v-if="touch.dragging && touch.schedule === i + 1" :style="eventPlaceholder.style")
+          event(
+            v-for="eventId in cellEventsPerSchedule[schedule.id]"
+            :key="eventId"
+            :id="eventId")
+      .vuecal__event-placeholder(
+        v-if="canDragToCreateEvent && touch.schedule === schedule.id"
+        :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   template(v-else-if="!config.schedules")
@@ -43,7 +48,7 @@
         :events="cellEvents")
       template(v-else)
         event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
-    .vuecal__event-placeholder(v-if="touch.dragging" :style="eventPlaceholder.style")
+    .vuecal__event-placeholder(v-if="canDragToCreateEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   template(v-if="specialHours")
@@ -116,6 +121,8 @@ const eventPlaceholder = computed(() => {
   }
 })
 
+const canDragToCreateEvent = computed(() => touch.dragging && config.editableEvents?.dragToCreate)
+
 const classes = computed(() => {
   const now = new Date()
   const viewYear = view.start.getFullYear()
@@ -169,6 +176,19 @@ const formattedCellDate = computed(() => {
 const cellEvents = computed(() => {
   if (config.datePicker || config.xs) return []
   return view.events[dateUtils.formatDate(props.start)] || []
+})
+
+/**
+ * Generates an object containing events grouped by schedule ID.
+ *
+ * @returns {Object} An object where keys are schedule IDs, and values are arrays of event IDs
+ *                   that correspond to each schedule.
+ */
+const cellEventsPerSchedule = computed(() => {
+  return config.schedules?.reduce((obj, schedule) => {
+    obj[schedule.id] = cellEvents.value.filter(eid => eventsManager.getEvent(eid).schedule === schedule.id)
+    return obj
+  }, {})
 })
 
 /**

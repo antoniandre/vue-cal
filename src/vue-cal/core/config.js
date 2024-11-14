@@ -1,4 +1,4 @@
-import { computed, ref, unref, toRefs } from 'vue'
+import { computed, toRefs } from 'vue'
 import path from 'path'
 
 export const defaults = {
@@ -135,7 +135,9 @@ export const useConfig = (vuecal, props, attrs) => {
 
   const schedules = computed(() => {
     const { view } = vuecal
-    return (props.schedules.length && (view.isDay || view.isDays || view.isWeek) && props.schedules)
+    const show = props.schedules.length && (view.isDay || view.isDays || view.isWeek)
+    // Inject an id in each schedule if not present.
+    return show && props.schedules.map((s, i) => ({ ...s, id: s.id ?? (i + 1) }))
   })
 
   const editableEvents = computed(() => {
@@ -145,7 +147,7 @@ export const useConfig = (vuecal, props, attrs) => {
       resize: true,
       delete: true,
       create: true,
-      dragCreate: true
+      dragToCreate: true
     }
     if (props.editableEvents === true) return defaults
     else if (props.editableEvents === false) return Object.keys(defaults).forEach(key => defaults[key] = false)
