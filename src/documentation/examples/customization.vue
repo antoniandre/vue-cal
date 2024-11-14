@@ -349,7 +349,7 @@ p.mb6 You can provide a custom schedule label when a simple label is not enough.
 .example.my2.mxa(style="height: 250px")
   vue-cal.ex--custom-schedule-labels(
     :dark="store.darkMode"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     view="day"
     :schedules="customDayScheduleLabels"
     :hide-weekdays="[5, 6, 7]"
@@ -361,7 +361,7 @@ p.mb6 You can provide a custom schedule label when a simple label is not enough.
 
 ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     view="day"
     :schedules="schedules"
     :hide-weekdays="[5, 6, 7]"

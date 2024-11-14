@@ -18,7 +18,7 @@ example(title="Timeless events" anchor="timeless-events")
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time="false"
-      :disable-views="['years', 'year', 'month']"
+      :views="['day', 'week']"
       hide-weekends
       :events="events"&gt;
     &lt;/vue-cal&gt;
@@ -55,7 +55,7 @@ example(title="Timeless events" anchor="timeless-events")
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time="false"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     :events="timelessEvents")
 
@@ -71,7 +71,7 @@ example(title="Events with time information" anchor="events-with-time")
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year', 'month']"
+      :views="['day', 'week']"
       hide-weekends
       :events="events"&gt;
     &lt;/vue-cal&gt;
@@ -94,7 +94,7 @@ example(title="Events with time information" anchor="events-with-time")
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     :events="events")
 
@@ -114,7 +114,7 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="19 * 60"
-      :disable-views="['years', 'year']"
+      :views="['day', 'week', 'month']"
       hide-weekends
       :events="events"
       :on-event-click="onEventClick"&gt;
@@ -196,7 +196,7 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
     :time-to="19 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     hide-weekends
     :events="eventsToPop"
     :on-event-click="onEventClick")
@@ -281,11 +281,11 @@ example(title="Display events on month view" anchor="events-on-month-view")
       any event information via CSS.#[br]
       If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   template(#code-html).
-  vue-cal.vuecal--full-height-delete.ex--events-on-month-view(
+  vue-cal.ex--events-on-month-view(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     view="month"
     hide-weekends
     events-on-month-view="short"
@@ -295,7 +295,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     view="month"
     hide-weekends
     events-on-month-view="short"
@@ -348,19 +348,15 @@ alert(tip)
       On top of the global actions allowance, you can deny each of these actions individually for each event with the event
       attributes #[span.code titleEditable: false], #[span.code deletable: false],
       #[span.code draggable: false] &amp; #[span.code resizable: false].
-    li.
-      By default the delete button only appears at the top of the event with a set height (1.4em).
-      If you want a full-height delete button like in this example, you can apply the CSS class
-      #[span.code .vuecal--full-height-delete] to your &lt;vue-cal&gt; tag.
 
 p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
 .example.my2.mxa
-  vue-cal.vuecal--full-height-delete(
+  vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     :views-bar="false"
     hide-weekends
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
@@ -369,12 +365,11 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :selected-date="stringToDate('2018-11-19')"
             :time-from="10 * 60"
             :time-to="23 * 60"
-            :disable-views="['years', 'year']"
+            :views="['day', 'week', 'month']"
             :views-bar="false"
             hide-weekends
             :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
-            :events="events"
-            class="vuecal--full-height-delete"&gt;
+            :events="events"&gt;
   &lt;/vue-cal&gt;
 ssh-pre(language="js" :dark="store.darkMode").
   // In data.
@@ -421,7 +416,7 @@ alert.
     @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
     | Clear all the events
 .example.mxa.mt3(style="height: 280px")
-  vue-cal.ex--create-events.vuecal--full-height-delete(
+  vue-cal.ex--create-events(
     :dark="store.darkMode"
     ref="vuecalCreateEx"
     :views-bar="false"
@@ -430,7 +425,7 @@ alert.
     :time-from="10 * 60"
     :time-to="16 * 60"
     :snap-to-time="snapToTime15 ? 15 : 0"
-    :disable-views="['years', 'year', 'month', 'day']"
+    :views="['week']"
     :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
     :drag-to-create-threshold="0")
 ssh-pre.my2(language="html-vue" :dark="store.darkMode").
@@ -440,7 +435,7 @@ ssh-pre.my2(language="html-vue" :dark="store.darkMode").
     hide-weekends
     :time-from="10 * 60"
     :time-to="16 * 60"
-    :disable-views="['years', 'year', 'month', 'day']"
+    :views="['week']"
     :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
     :drag-to-create-threshold="0"&gt;
   &lt;/vue-cal&gt;
@@ -464,12 +459,12 @@ p try to double click on a cell to go to the day view with both #[span.code drag
     template(#item="{ item }")
       code {{ item.label }}
 .example.grow.mt3(style="height: 280px")
-  vue-cal.ex--create-events.vuecal--full-height-delete(
+  vue-cal.ex--create-events(
     :dark="store.darkMode"
     :time-from="10 * 60"
     :time-to="16 * 60"
     hide-weekends
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
     :drag-to-create-threshold="dragToCreateThreshold")
 
@@ -495,7 +490,7 @@ ol.pl3
       away from #[span.code cell-dblclick]:
     .w-flex.wrap
       .example.grow.my2.mr3(style="height: 280px")
-        vue-cal.vuecal--full-height-delete(
+        vue-cal(
           :dark="store.darkMode"
           ref="vuecal3"
           small
@@ -504,7 +499,7 @@ ol.pl3
           hide-weekends
           :time-from="10 * 60"
           :time-to="16 * 60"
-          :disable-views="['years', 'year', 'month', 'day']"
+          :views="['week']"
           :cell-click-hold="false"
           :drag-to-create-event="false"
           editable-events
@@ -518,7 +513,7 @@ ol.pl3
           :title-bar="false"
           :time-from="10 * 60"
           :time-to="16 * 60"
-          :disable-views="['years', 'year']"
+          :views="['day', 'week', 'month']"
           :cell-click-hold="false"
           :drag-to-create-event="false"
           editable-events
@@ -541,13 +536,13 @@ ol.pl3
 
     .w-flex.align-top.wrap
       .example.grow.my2.mr3(style="height: 280px")
-        vue-cal.vuecal--full-height-delete(
+        vue-cal(
           :dark="store.darkMode"
           ref="vuecalEl"
           small
           :time-from="10 * 60"
           :time-to="16 * 60"
-          :disable-views="['years', 'year']"
+          :views="['day', 'week', 'month']"
           :views-bar="false"
           :title-bar="false"
           hide-weekends
@@ -564,7 +559,7 @@ ol.pl3
           small
           :time-from="10 * 60"
           :time-to="16 * 60"
-          :disable-views="['years', 'year']"
+          :views="['day', 'week', 'month']"
           :views-bar="false"
           :title-bar="false"
           hide-weekends
@@ -626,12 +621,12 @@ ol.pl3
       The dialog box will allow you to set all the event attributes.
     .w-flex.wrap
       .example.grow.my2.mr3(style="height: 280px")
-        vue-cal.grow.vuecal--full-height-delete(
+        vue-cal.grow(
           :dark="store.darkMode"
           small
           :time-from="10 * 60"
           :time-to="16 * 60"
-          :disable-views="['years', 'year']"
+          :views="['day', 'week', 'month']"
           :views-bar="false"
           :title-bar="false"
           hide-weekends
@@ -643,7 +638,7 @@ ol.pl3
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
-            :disable-views="['years', 'year']"
+            :views="['day', 'week', 'month']"
             :views-bar="false"
             :title-bar="false"
             hide-weekends
@@ -701,12 +696,12 @@ ol.pl3
 
   p With the same method, you can open a dialog at the end of the event drag-creation.
   .example.grow.my2(style="height: 280px")
-    vue-cal.vuecal--full-height-delete(
+    vue-cal(
       :dark="store.darkMode"
       small
       :time-from="10 * 60"
       :time-to="16 * 60"
-      :disable-views="['years', 'year']"
+      :views="['day', 'week', 'month']"
       :views-bar="false"
       :title-bar="false"
       hide-weekends
@@ -723,7 +718,7 @@ ol.pl3
       small
       :time-from="10 * 60"
       :time-to="16 * 60"
-      :disable-views="['years', 'year']"
+      :views="['day', 'week', 'month']"
       :views-bar="false"
       :title-bar="false"
       hide-weekends
@@ -832,7 +827,7 @@ ul
     You can use that class to give it a different style.
 
 .example.my4.mxa
-  vue-cal.vuecal--full-height-delete(
+  vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     today-button
@@ -853,8 +848,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     :snap-to-time="15"
     editable-events
     :events="events"
-    :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
-    class="vuecal--full-height-delete"&gt;
+    :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
   &lt;/vue-cal&gt;
 ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
@@ -892,7 +886,7 @@ alert(tip)
     small
     :views-bar="false"
     hide-weekends
-    :disable-views="['years', 'year', 'month', 'day']"
+    :views="['week']"
     :time-from="9 * 60"
     :time-to="16 * 60"
     editable-events
@@ -903,7 +897,7 @@ alert(tip)
     small
     :views-bar="false"
     hide-weekends
-    :disable-views="['years', 'year', 'month', 'day']"
+    :views="['week']"
     :time-from="9 * 60"
     :time-to="16 * 60"
     editable-events
@@ -924,7 +918,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal small
             :views-bar="false"
             hide-weekends
-            :disable-views="['years', 'year', 'month', 'day']"
+            :views="['week']"
             :time-from="9 * 60"
             :time-to="16 * 60"
             editable-events
@@ -994,7 +988,7 @@ alert(tip).
   3 CSS classes are available to target the event first day, the last day and all the days in between:
   #[span.code event-start], #[span.code event-middle], #[span.code event-end].
 .example.my2.mxa
-  vue-cal.ex--multiple-day-events.vuecal--full-height-delete(
+  vue-cal.ex--multiple-day-events(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
@@ -1009,7 +1003,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     editable-events
     resize-x
@@ -1183,12 +1177,12 @@ alert.mb6.
   You can achieve this event overlaps grouping with the option #[span.code overlaps-per-time-step].
 
 .example.my2.mxa
-  vue-cal.vuecal--full-height-delete(
+  vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     editable-events
     :min-event-width="minEventWidth"
@@ -1198,7 +1192,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     editable-events
     :min-event-width="minEventWidth"
@@ -1250,7 +1244,7 @@ p.
     :selected-date="stringToDate('2018-11-19')"
     :time-from="7 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     :events="backgroundEvents")
 ssh-pre(language="html-vue" :dark="store.darkMode").
@@ -1258,7 +1252,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     :selected-date="stringToDate('2018-11-19')"
     :time-from="7 * 60"
     :time-to="23 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     hide-weekends
     :events="events"&gt;
   &lt;/vue-cal&gt;
@@ -1333,7 +1327,7 @@ w-button.ma1.code(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
     :dark="store.darkMode"
     :selected-date="stringToDate('2019-02-11')"
     :time-from="7 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     hide-weekends
     :show-all-day-events="['short', true, false][showAllDayEvents]"
     :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
@@ -1349,7 +1343,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2019-02-11')"
     :time-from="7 * 60"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     hide-weekends
     :show-all-day-events="['short', true, false][showAllDayEvents]"
     :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
@@ -1439,7 +1433,7 @@ example(title="schedules &amp; schedule events" anchor="schedules")
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
     :time-step="30"
-    :disable-views="['years', 'year']"
+    :views="['day', 'week', 'month']"
     editable-events
     :events="scheduleEvents"
     :schedules="schedulesExample.schedules"
@@ -1464,7 +1458,7 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
     :time-step="30"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     editable-events
     :events="events"
     :schedules="schedules"

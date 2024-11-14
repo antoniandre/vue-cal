@@ -144,7 +144,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
         :selected-date="stringToDate('2018-11-19')"
         :time-from="7 * 60"
         :time-to="23 * 60"
-        :disable-views="['years', 'year']"
+        :views="['day', 'week', 'month']"
         hide-weekends
         editable-events
         :events="eventsCopy3"
@@ -171,7 +171,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
       :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="23 * 60"
-      :disable-views="['years', 'year']"
+      :views="['day', 'week', 'month']"
       hide-weekends
       editable-events
       :events="events"
@@ -312,7 +312,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       :time="false"
       :views-bar="false"
       view="week"
-      :disable-views="['years', 'year', 'month']"
+      :views="['day', 'week']"
       :selected-date="selectedDate"
       class="vuecal--blue-theme"
       style="max-width: 360px;height: 260px"&gt;
@@ -335,7 +335,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
         :time="false"
         :views-bar="false"
         view="week"
-        :disable-views="['years', 'year', 'month']"
+        :views="['day', 'week']"
         :selected-date="selectedDate"
         style="max-width: 360px;height: 260px")
       vue-cal.vuecal--rounded-theme(
@@ -377,7 +377,7 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
         :selected-date="stringToDate('2018-11-19')"
         :time-from="9 * 60"
         :time-to="23 * 60"
-        :disable-views="['years', 'year', 'month']"
+        :views="['day', 'week']"
         hide-weekends
         :events="eventsCopy")
     ssh-pre(language="html-vue" :dark="store.darkMode").
@@ -394,7 +394,7 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
         :selected-date="stringToDate('2018-11-19')"
         :time-from="9 * 60"
         :time-to="23 * 60"
-        :disable-views="['years', 'year', 'month']"
+        :views="['day', 'week']"
         hide-weekends
         :events="events"&gt;
       &lt;/vue-cal&gt;

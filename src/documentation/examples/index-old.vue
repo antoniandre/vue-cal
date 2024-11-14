@@ -124,9 +124,9 @@ p.
     :dark="store.darkMode"
     :time="false"
     view="month"
-    :disable-views="['years', 'year', 'week']")
+    :views="['day', 'month']")
 ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal :time="false" view="month" :disable-views="['years', 'year', 'week']" /&gt;
+  &lt;vue-cal :time="false" view="month" :views="['day', 'month']" /&gt;
 
 //- Example.
 title-link(h4 anchor="ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
@@ -240,12 +240,12 @@ alert.
     :time="false"
     show-week-numbers
     :hide-weekdays="[2, 3, 5]"
-    :disable-views="['years', 'year']")
+    :views="['day', 'week', 'month']")
 ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal :time="false"
             show-week-numbers
             :hide-weekdays="[2, 3, 5]"
-            :disable-views="['years', 'year']"&gt;
+            :views="['day', 'week', 'month']"&gt;
   &lt;/vue-cal&gt;
 
 
@@ -375,11 +375,11 @@ alert.
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="20 * 60"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     :special-hours="specialHours")
 ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     :time-from="8 * 60"
     :time-to="20 * 60"
     :special-hours="specialHours" /&gt;
@@ -410,13 +410,13 @@ p With the same principle, you could also build a lot more complex layout such a
 .example.my2.mxa(style="height: 550px")
   vue-cal.ex--doctor-hours(
     :dark="store.darkMode"
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     :time-from="7 * 60"
     :time-to="20 * 60"
     :special-hours="specialDoctorHours")
 ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
-    :disable-views="['years', 'year', 'month']"
+    :views="['day', 'week']"
     :time-from="7 * 60"
     :time-to="20 * 60"
     :special-hours="specialHours" /&gt;

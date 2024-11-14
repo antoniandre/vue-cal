@@ -30,6 +30,7 @@ ul
       li scrollTop()
       li scrollToTime(minutes)
       li scrollToCurrentTime()
+  li .vuecal--full-height-delete class is removed
 
 h2.mt12 Props
 ul

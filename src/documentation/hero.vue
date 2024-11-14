@@ -20,7 +20,7 @@
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
-      vue-cal.demo.full-cal.vuecal--full-height-delete(
+      vue-cal.demo.full-cal(
         :dark="store.darkMode"
         hide-weekends
         :selected-date="selectedDate"
