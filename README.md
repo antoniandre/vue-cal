@@ -11,7 +11,7 @@ Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features,
 - 🎨 **Customizable**: Tailor colors, any kind of slots, and views to your needs. Attach all DOM events that you want.
 - 🗓️ **Multiple Views**: Choose between day, week, and month views (and more!).
 - 📌 **Event Management**: Add, edit, drag-and-drop, and resize events with ease.
-- 🚀 **Lightweight & Fast**: Built with performance in mind.
+- ⚡️ **Lightweight & Fast**: Built with performance in mind.
 
 ___
 
@@ -19,14 +19,10 @@ ___
 
 This project is in active development, with new features, enhancements, and bug fixes being added every day! Every line of code is crafted with care to ensure it meets the highest standards and provides value to our community.
 
+We are pushing to pre-release the v5 this year! And your support can supercharge development! Sponsorships help us dedicate more time to accelerating feature releases, improving documentation and usability and ensuring robust testing and long-term stability.
+
 #### 💡 Any Sponsorship Matters
-We are pushing to pre-release the v5 this year! And your support can supercharge development! Sponsorships help us dedicate more time and resources to:
-
--	Accelerating feature releases.
--	Improving documentation and usability.
--	Ensuring robust testing and long-term stability.
-
-🌟 Whether you’re using this project for a hobby, a commercial product, or simply to explore new technologies, your sponsorship makes a direct impact on the speed and quality of our progress.
+🌟 Whether you’re using this project for a hobby, a commercial product, or simply to explore new technologies, Your sponsorship — big or small — makes a direct impact, helping the project thrive and stay lush and green. 🥦
 
 
 ---
