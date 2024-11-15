@@ -1,5 +1,10 @@
+[![Latest Version on NPM](https://img.shields.io/npm/v/vue-cal.svg)](https://npmjs.com/package/vue-cal)
+[![Software License](https://img.shields.io/badge/license-MIT-brightgreen.svg)](LICENSE.md)
+[![npm](https://img.shields.io/npm/dt/vue-cal.svg)](https://www.npmjs.com/package/vue-cal)
+[![npm](https://img.shields.io/npm/dw/vue-cal.svg)](https://www.npmjs.com/package/vue-cal)
+[![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
-# Vue Cal - A Flexible and Beautiful Vue 3 Calendar 📅✨
+# Vue Cal v5 - A Flexible and Beautiful Vue 3 Calendar 📅✨
 
 Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable.
 
@@ -15,7 +20,7 @@ Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features,
 
 ___
 
-## 🚀 We’re Building This From the Ground Up!
+## 🚧 WIP: We’re Building This From the Ground Up!
 
 This project is in active development, with new features, enhancements, and bug fixes being added every day! Every line of code is crafted with care to ensure it meets the highest standards and provides value to our community.
 
@@ -31,8 +36,8 @@ We are pushing to pre-release the v5 this year! And your support can supercharge
 
 Experience Vue Cal in action or dive into the docs for setup instructions and API details.
 
-- [**Demo**](https://antoniandre.github.io/vue-cal) (Stable v4)
-- [**Documentation**](https://antoniandre.github.io/vue-cal-v4) (Stable v4)
+- [**Demo & Documentation**](https://antoniandre.github.io/vue-cal) (Stable v4)
+- [**V4 stable repo**](https://antoniandre.github.io/vue-cal-v4)
 
 ---
 
@@ -64,7 +69,7 @@ Vue Cal is a labor of love, built and maintained by passionate developers to sav
 - **Fix bugs** quickly and efficiently.
 - **Keep the project free and open-source** for everyone.
 
-### **How You Can Help** 🙌
+#### **How You Can Help** 🙌
 
 - ⭐ **Star this repo** to show your appreciation!
 - 💬 **Share Vue Cal** with your network.
@@ -74,7 +79,7 @@ Every contribution—big or small—makes a huge difference. Join us on this jou
 
 ---
 
-## ❤️ Special Thanks to Our Sponsors
+### ❤️ Special Thanks to Our Sponsors
 
 A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see your name here? [Become a sponsor today!](https://github.com/sponsors/antoniandre)
 
