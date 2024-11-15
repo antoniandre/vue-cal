@@ -58,6 +58,7 @@ ul
   li dblclickToNavigate -> removed: can be done externally if needed
   li dragToCreateEvent -> moved into the editableEvents object definition, allowed by default when events are editable
   li cellClickHold -> removed: can be done externally if needed
+  li minSplitWidth -> renamed minScheduleWidth
 </template>
 
 <script setup>

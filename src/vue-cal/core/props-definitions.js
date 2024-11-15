@@ -5,7 +5,6 @@ export const props = {
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   dark: { type: Boolean, default: false }, // Dark theme.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
-  datePrototypes: { type: Boolean, default: true }, // Wether or not to add some useful methods to the native Date class.
   // Can be true false or a finer grain permissions object like:
   // { title: bool, drag: bool, resize: bool, create: bool, delete: bool, dragToCreate: bool }
   editableEvents: { type: [Boolean, Object], default: false },

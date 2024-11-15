@@ -151,16 +151,16 @@ w-accordion.mt2(
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
-      strong.default.code undefined
+      strong.default.code false
     template(#content)
-      p Setting to false will force it off on date-picker.
       p.
         When set to #[span.code true] a single click (or tap for touch devices) will take you to a
         narrower view if available.#[br]
         You can always go back to a broader view by clicking the view title or selecting another view
         from the view selector if enabled.#[br]
-        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate]
-        and #[span.code dblclickToNavigate] to false.
+        The navigation to narrower view can be disabled by setting #[span.code clickToNavigate]
+        to false.
+      p Setting to false will force it off on date-picker where it is on by default.
 
   w-accordion-item
     template(#title)
@@ -180,17 +180,10 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
-
-  w-accordion-item
-    template(#title)
-      strong.code datePrototypes
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code true
-    template(#content)
-      p Wether or not to add some useful methods to the native Date class.
+      p.
+        Sets the date picker format CSS-wise and logic as well.
+        This option act like a shorthand for:
+        #[code="{ xs: true, views: ['month', 'year', 'years'], clickToNavigate: true }"].
 
   w-accordion-item
     template(#title)
@@ -200,7 +193,68 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code () => []
     template(#content)
-      p
+      p.
+        Allows you to place events in the calendar.#[br]
+        Accepts an array of event objects.#[br]
+        This is what an event object must look like:
+      div
+        ssh-pre.mt2(language="js" :dark="store.darkMode").
+          {
+            start: '2018-11-19 12:00', // Required.
+            end: '2018-11-19 14:00', // Required.
+            // Instead of formatted dates, you can also provide Javascript Date objects:
+            // start: new Date(2018, 11 - 1, 19, 12, 0),
+            // end: new Date(2018, 11 - 1, 19, 14, 0),
+            title: {String}, // Optional.
+            content: {String}, // Optional.
+            class: {String}, // Optional - space-separated css classes.
+            background: {Boolean} // Optional. (Event type not CSS property)
+            schedule: {Number|String} // Optional.
+            allDay: {Boolean} // Optional.
+            deletable: false // optional - force undeletable when events are editable.
+            resizable: false // optional - force unresizable when events are editable.
+          }
+        ul
+          li If no #[span.code title] is provided, no title will be displayed.
+          li.
+            #[span.code content] accepts free HTML, for instance:
+            '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;'.#[br]
+            If no #[span.code content] is provided, no content will be displayed.
+          li.
+            You may need an event CSS #[span.code class] to handle different event types
+            for instance. With different classes you can apply different styles to the events.#[br]
+            E.g. backgrounds, images, borders, etc.
+          li.
+            The #[span.code background] attribute sets an event as a background event,
+            which allows overlapping and disable the ability to drag &amp; resize.
+          li.
+            When using #[span.code schedules], the #[span.code schedule] attribute accepts a number,
+            starting from 1, corresponding to the schedule you want the event to appear in.#[br]
+            Optionally, if you have set the #[span.code id] property in #[span.code schedules],
+            you have to use the same #[span.code id] here (Integer or String).
+          li.
+            When the #[span.code showAllDayEvents] and #[span.code time] options are set to
+            #[span.code true], all the events with an attribute #[span.code allDay] set to
+            #[span.code true] will show up in a fixed bar (week &amp; day views).
+
+      alert(warning)
+        strong Important notes
+        ul
+          li.
+            The events are internally identified by the key #[span.code `_eid`].
+            #[strong This is a reserved keyword.]
+          li.mt2
+            | Correct date formats are #[code {{ (new Date()).format() }} {{ (new Date()).formatTime() }}],
+            | or #[code="{{ (new Date()).format() }}"] if you don't want any time in the whole calendar,
+            | or a JavaScript #[code Date] object. Only these formats will work.#[br]
+            strong.
+              You can't mix events with time and events without, and you can only remove time if the #[span.code time]
+              option is set to #[span.code false].
+          li.mt2.
+            You can set an event end at #[span.code 24:00] or #[span.code 00:00] (for the next midnight),
+            #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
+            of natural behavior of taking the next day at #[span.code 00:00:00].#[br]
+            When returned from emitted events, this event #[span.code end] will contain a date ending at #[span.code 23:59:59].
 
   w-accordion-item
     template(#title)
@@ -210,7 +264,10 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p Allows displaying all events on month view.
+      p.
+        When set to #[span.code true], the events will also be displayed on month view
+        (excluding events of out-of-scope days).#[br]
+        When set to the string '#[span.code short]', only the events titles will be displayed.
 
   w-accordion-item
     template(#title)
@@ -221,7 +278,7 @@ w-accordion.mt2(
       strong.default.code () => []
     template(#content)
       p Accepts an array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
-      p Hide specific weekdays in month &amp; week and days views.
+      p Hide specific weekdays in month, week and days views.
 
   w-accordion-item
     template(#title)
@@ -279,7 +336,7 @@ w-accordion.mt2(
       alert(tip).
         Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
         #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
-        #[a(href="#css-notes") CSS Notes].
+        #[router-link(to="/getting-started#css-notes") CSS Notes].
 
   w-accordion-item
     template(#title)
@@ -290,7 +347,7 @@ w-accordion.mt2(
       strong.default.code ''
     template(#content)
       p.
-        Accepts a JavaScript Date or a formatted string like #[code {{ (new Date()).format() }}].#[br]
+        Accepts a JavaScript Date or a formatted string like #[code {{ (new Date()).format() }} {{ (new Date()).formatTime() }}].#[br]
         Preselects a date and navigates to it on calendar load or whenever it changes.#[br]
         The selected date is a two-way binding: you can use it in a v-model to keep your variable
         up to date.
@@ -308,7 +365,7 @@ w-accordion.mt2(
         When set to #[span.code true], the days of the week headings will be truncated to 3 letters.#[br]
         Does not apply to the title of the day view.#[br]
         2 media queries are truncating the days of the week below 450px,
-        read on in the #[a(href="#css-notes") CSS Notes].
+        read on in the #[router-link(to="/getting-started#css-notes") CSS Notes].
 
   w-accordion-item
     template(#title)
@@ -322,7 +379,7 @@ w-accordion.mt2(
       p.
         Allows an individual highlighted time range for each day of the week.#[br]
         For instance, it could represent the business hours.#[br]
-        The object must contain indexed days, #[strong from 1 for Monday to 7 for Sunday], of the
+        The object must contain days definitions indexed by a 3-letter day ID in English, #[strong from #[code mon] to #[code sun]], of the
         days you want to highlight.#[br]
         Each day must contain an object with a #[span.code from] and #[span.code to] properties
         defining the beginning and the end of the time range #[strong in minutes].#[br]
@@ -336,14 +393,14 @@ w-accordion.mt2(
         ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
-            3: { from: 8 * 60, to: 20 * 60, class: 'open' }
+            wed: { from: 8 * 60, to: 20 * 60, class: 'open' }
           }
         br
         span.ml3 With multiple ranges of special hours:
         ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
           // In the component's data.
           specialHours: {
-            3: [
+            wed: [
               { from: 8 * 60, to: 12 * 60, class: 'open' },
               { from: 14 * 60, to: 20 * 60, class: 'open' }
             ]
@@ -569,7 +626,11 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p More expensive, so only trigger on demand.
+      p.
+        More expensive, so only trigger on demand.#[br]
+        When set to #[span.code true], the current time line in today's cell, on #[span.code week] and
+        #[span.code day] views, will stay in sync with real time.#[br]
+        #[span.grey (This requires a #[span.code setTimeout] every minute)]
 
   w-accordion-item
     template(#title)
@@ -597,22 +658,6 @@ w-accordion.mt2(
 
 
   //- TO DO NEXT.
-  w-accordion-item
-    template(#title)
-      strong.code dblclickToNavigate
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code true
-    template(#content)
-      p.
-        When set to #[span.code true] a double click (or double tap for touch devices) will take you to a
-        narrower view if available.#[br]
-        You can always go back to a broader view by clicking the view title or selecting another view
-        from the view selector if enabled.#[br]
-        The navigation to narrower view can be disabled by setting both #[span.code clickToNavigate]
-        and #[span.code dblclickToNavigate] to false.
-
   w-accordion-item
     template(#title)
       strong.code disableDays
@@ -651,7 +696,13 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 15
     template(#content)
-      p
+      p.
+        When events are editable and #[span.code time] and #[span.code dragToCreateEvent] are set to
+        #[span.code true], this option controls the minimum dragging distance before an event is created.#[br]
+        This option might be useful when you can navigate with cell click to prevent unwanted event creation in
+        case of slipping cursor while clicking.#[br]
+        With option gets to a positive integer, and you can set it to #[span.code 0] to disable it.
+        Refer to the #[a(href="#ex--create-events") Create events] example.
 
   w-accordion-item
     template(#title)
@@ -661,7 +712,28 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      p When #[span.code editableEvents] is set to #[span.code true], it allows:
+      ul
+        li Dragging and dropping events
+        li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
+        li Deleting events by click and hold an event.
+        li Editing events title
+      alert
+        ul
+          li
+            | You can set more accurately which edition you want to allow by passing an object.#[br]
+            | For instance, this object will allow all the above editions except the drag &amp; drop:
+            div.code.base-color { title: true, drag: false, resize: true, delete: true, create: true }
+          li.
+            You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
+      ul
+        li
+          code.mr2 dragToCreate
+          p.
+            When events are editable and if #[span.code time] and #[span.code dragToCreateEvent] are set to
+            #[span.code true], clicking and dragging on a cell will create an event.#[br]
+            Note: if this option is set to true, it will prevent event creation from cell click &amp; hold.#[br]
+            Refer to the #[a(href="#ex--create-events") Create events] example.
 
   w-accordion-item
     template(#title)
@@ -681,7 +753,16 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      p.
+        When set to #[span.code true], the weeks numbers will show in the first column on the
+        #[span.code month] view (only).#[br]
+        You can also provide a custom renderer to the weeks numbers cells through the
+        #[span.code week-number-cell] slot.
+      alert
+        a#there-can-be-53-weeks-in-a-year
+        strong Did you know there can be 53 weeks in the year?#[br]
+        | This happens every time the year starts a Thursday, or starts a Wednesday of a leap year.
+        | In this case the week number will be 53 instead of 1.
 
   w-accordion-item
     template(#title)
@@ -691,7 +772,11 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 0
     template(#content)
-      p
+      p.
+        Accepts a number of minutes from 0 to 60 to snap a dropped event or an event end time while resizing.#[br]
+        For instance, with a #[span.code snapToTime] of 15 min, an event dropped at a start of 10:05,
+        will snap to 10:00, and dropped at 10:11 will snap to 10:15.#[br]
+        This option affects event resizing, event drag &amp; dropping, and event drag-creation.
 
 
 
@@ -719,7 +804,11 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code ''
     template(#content)
-      p
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a maximum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you
+        customize this.
 
   w-accordion-item
     template(#title)
@@ -729,7 +818,10 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code ''
     template(#content)
-      p
+      p.
+        Accepts a formatted string or plain JS Date object.#[br]
+        Set a minimum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
 
   w-accordion-item
     template(#title)
@@ -739,7 +831,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 0
     template(#content)
-      p
+      p.
+        When a number is set, in percent, each event within a cell will have a minimum width.#[br]
+        If the provided percentage is bigger than what it would naturally be, the events will partially overlap.
 
   w-accordion-item
     template(#title)
@@ -749,7 +843,13 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 0
     template(#content)
-      p
+      p.
+        This is for day schedules only, and it applies to the
+        #[strong #[span.code week] and #[span.code day] views (only)].#[br]
+        When a number is set, in pixels, each schedule of each cell will have this minimum width.#[br]
+        If it does not fit in the calendar body, the overflow will be scrollable.#[br]
+        If #[span.code minCellWidth] is also set, #[span.code minScheduleWidth] will override it on
+        #[span.code week] view.
 
   w-accordion-item
     template(#title)
@@ -759,7 +859,10 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      p.
+        When set to #[span.code true], each event of the same cell will have a width of
+        #[span.code 100% / [number of simultaneous events]] only if these events are within the same time step.#[br]
+        Refer to #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].
 
   w-accordion-item
     template(#title)
@@ -769,7 +872,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      p.
+        When set to #[span.code true], allows resizing an event across multiple days.#[br]
+        Resizing on the X axis is only available on #[span.code week] view.
 
   w-accordion-item
     template(#title)
@@ -779,7 +884,25 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      ul
+        li.mb2.
+          When the #[span.code showAllDayEvents] is set to #[span.code true] the events with an
+          #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
+          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          The all day events bar will only show up if the options #[span.code showAllDayEvents] &amp;
+          #[span.code time] are set to #[span.code true].#[br]
+          #[span.code time] is important since without time information every event is an all-day
+          event there is no point in separating them then.
+        li.mb2.
+          When #[span.code showAllDayEvents] is set to #[span.code false], all the all day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
+          background event.
+        li.mb2.
+          On month view, switching #[span.code showAllDayEvents] on and off will not have any impact
+          since both should display the all day events.
+        li.mb2.
+          #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
+          #[span.code 'short'], to display only the event title.
 
   w-accordion-item
     template(#title)
