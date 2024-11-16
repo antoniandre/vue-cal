@@ -476,7 +476,21 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code ''
     template(#content)
-      p
+      p.mb2.
+        When defined, overrides the default time format in time cells and events.#[br]
+        Formatted time can contain any character but the following characters will be replaced:
+      ul.ml3
+        li #[strong.code H]: Hours no leading zero, 24-hour format
+        li #[strong.code HH]: Hours with leading zero, 24-hour format
+        li #[strong.code h]: Hours no leading zero, 12-hour format
+        li #[strong.code hh]: Hours with leading zero, 12-hour format
+        li #[strong.code m]: Minutes no leading zero
+        li #[strong.code mm]: Minutes with leading zero
+        li #[strong.code {am}]: am or pm
+        li.
+          The characters `#[strong.code {]` and `#[strong.code }]` are removed and used only to
+          delimit keywords when there is no space.#[br]
+          E.g. #[span.code "h:mm{am}"].
 
   w-accordion-item
     template(#title)
@@ -486,7 +500,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 0
     template(#content)
-      p Start time of the time column, in minutes.
+      p.
+        Start time (in minutes) displayed in the timeline for each day in the schedule
+        view. By default it starts at midnight.
 
   w-accordion-item
     template(#title)
@@ -496,7 +512,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code 60
     template(#content)
-      p Step amount for the time in the time column, in minutes.
+      p.
+       Granularity of the time intervals (in minutes) displayed in the timeline for each day in the
+       schedule view.
 
   w-accordion-item
     template(#title)
@@ -504,10 +522,11 @@ w-accordion.mt2(
       .type [Number]
       | ,
       .body.grey.mx1 default:
-      strong.default.code minutesInADay
+      strong.default.code 24 * 60
     template(#content)
-      p End time of the time column, in minutes.
-
+      p.
+        Final time (in minutes) displayed in the timeline for each day in the schedule
+        view. By default it ends at midnight.
   w-accordion-item
     template(#title)
       strong.code titleBar
@@ -743,7 +762,12 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code null
     template(#content)
-      p
+      p.
+        A callback function to execute when an event is created.#[br]
+        This function receives 2 parameters: #[span.code event], the created event,
+        and #[span.code deleteEvent], a function to delete the created event.#[br]
+        You can modify and override the received #[span.code event] and return it to vue-cal.#[br]
+        If this function returns #[span.code false], the event creation will be cancelled.
 
   w-accordion-item
     template(#title)
@@ -794,7 +818,9 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p
+      p.
+        When set to #[span.code true], the events count will also be displayed on #[span.code years]
+        &amp; #[span.code year] views.
 
   w-accordion-item
     template(#title)
@@ -835,21 +861,6 @@ w-accordion.mt2(
         When a number is set, in percent, each event within a cell will have a minimum width.#[br]
         If the provided percentage is bigger than what it would naturally be, the events will partially overlap.
 
-  w-accordion-item
-    template(#title)
-      strong.code minScheduleWidth
-      .type [Number]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code 0
-    template(#content)
-      p.
-        This is for day schedules only, and it applies to the
-        #[strong #[span.code week] and #[span.code day] views (only)].#[br]
-        When a number is set, in pixels, each schedule of each cell will have this minimum width.#[br]
-        If it does not fit in the calendar body, the overflow will be scrollable.#[br]
-        If #[span.code minCellWidth] is also set, #[span.code minScheduleWidth] will override it on
-        #[span.code week] view.
 
   w-accordion-item
     template(#title)
@@ -912,7 +923,13 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-    p
+      p.
+        When set to #[span.code true], the time labels will be visible in
+        each cell, in each time slot of the #[code day] and #[code week] views.
+        You can then use CSS to style to taste.
+        For instance, you could hide all the labels and show only the one that
+        is being hovered.#[br]
+        Will have no effect if #[span.code time] is set to false.
 </template>
 
 <script setup>

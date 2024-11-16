@@ -147,7 +147,7 @@ p You can easily change the calendar design with CSS.
 p.mt1 First off, Vue Cal comes with a default height of 500px. So if you want to change it, that's via CSS. ;)
 
 
-h3.mt12 # Color themes &amp; rounded theme
+title-link.mt12(h3 anchor="themes") Themes
 p.
   Currently 2 color themes (green &amp; blue) are available, in addition to the standard grey theme.#[br]
   You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme]
@@ -177,7 +177,25 @@ p
   | #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
   | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
 
-h3.mt12 # Responsiveness &amp; media queries
+title-link.mt12(h3 anchor="css-variables") CSS Variables
+ul
+  li
+    code.mr2 allDayBarHeight
+    p.
+      When the all day bar is visible and Vue Cal is also scrollable horizontally (due to
+      #[span.code --vuecal-min-cell-width] or day schedules with #[span.code --vuecal-min-schedule-width]),
+      the all-day bar must have a fixed height for this particular layout.#[br]
+      Only if these conditions are fulfilled, the height provided through this option will be
+      used. If none is provided the default height will be used.#[br]
+      The height can be any valid CSS height (as a string) or an integer for an amount of pixels.
+
+  li
+    code.mr2 timeCellHeight
+    p.
+      If #[span.code time] is enabled, set the time cell height in pixels.#[br]
+      this is very important as it is used to calculate the events position in the day.
+
+title-link.mt12(h3 anchor="responsiveness-media-queries") Responsiveness &amp; Media Queries
 p.
   This calendar is fully responsive.#[br]
   To help you in making the calendar always look perfect,

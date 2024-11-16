@@ -58,7 +58,9 @@ ul
   li dblclickToNavigate -> removed: can be done externally if needed
   li dragToCreateEvent -> moved into the editableEvents object definition, allowed by default when events are editable
   li cellClickHold -> removed: can be done externally if needed
-  li minSplitWidth -> renamed minScheduleWidth
+  li minCellWidth -> moved to a CSS variable: --vuecal-min-cell-width: 0;
+  li minSplitWidth -> renamed min-schedule-width and moved to a CSS variable: --vuecal-min-schedule-width: 0;
+  li allDayBarHeight -> moved to a CSS variable: --vuecal-all-day-bar-height.
 </template>
 
 <script setup>
