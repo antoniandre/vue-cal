@@ -9,10 +9,10 @@ example(title="Today's current time" anchor="today-current-time")
       or following the real time if #[code watchRealTime] is set to true (more expensive).#[br]
       You can easily customize the now-line via CSS, for instance, changing the line and arrow color is as
       easy as:
-    ssh-pre.my1.d-iblock(language="css" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
+    ssh-pre.my1.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
     div
       p.d-iblock Or you can also hide it:
-      ssh-pre.mt0.d-iblock(language="css" :dark="store.darkMode") .vuecal__now-line {display: none;}
+      ssh-pre.mt0.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {display: none;}
 
   vue-cal(
     :time-cell-height="26"
@@ -64,7 +64,7 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       xs
       style="width: 320px;height: 200px")
   template(#code-html).
-    &lt;vue-cal @ready="({ view }) => view.scrollToCurrentTime()" /&gt;
+    &lt;vue-cal @ready="({ view }) =&#65310; view.scrollToCurrentTime()" /&gt;
 
 //- Example.
 example(title="Timeline Tweaking" anchor="timeline-tweaking")

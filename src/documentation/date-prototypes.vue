@@ -6,6 +6,12 @@ alert.size--lg.pa3(info).
   efficient functions that you can choose to add to the JavaScript native #[span.code Date] class
   for your convenience. They are not altering the Date object but only adding 11 new utility functions.
 
+title-link.mt12.mb2(h2 anchor="tldr") TLDR;
+alert(info no-icon)
+  p In short, Date prototypes allow you to do things like this:
+  ssh-pre(language="js" :dark="store.darkMode").
+    new Date().addDays(3).format() // Returns '{{ new Date().addDays(3).format() }}'
+
 //- What is this and what for.
 w-accordion.mt12.mb4.root-accordion(
   :model-value="[false, true, true]"
@@ -19,13 +25,13 @@ w-accordion.mt12.mb4.root-accordion(
       ul
         li A #[span.code Date] prototype is an injected function to the native JavaScript #[span.code Date] class.
         li.
-          The #[span.code Date] class offers crucial methods that allows one to manipulate dates in JavaScript,
+          The #[span.code Date] class offers crucial methods that allow one to manipulate dates in JavaScript,
           but some useful methods are missing and since Vue Cal already has them implemented and in use internally,
           it exposes them in any #[span.code Date] object for you to use without any overhead.
 
-        alert(tip)
+        alert(info)
           .base-color
-            .title3.lh0 Keeping you informed
+            .title3.lh0 Good to Know
             p.mt1.
               Injecting methods in a native JavaScript class is possible but usually discouraged for the
               following reasons:
@@ -43,6 +49,10 @@ w-accordion.mt12.mb4.root-accordion(
                   strong.mr1 How to address:
                   | Ensure that you don't use another Date library that would also inject in Date, furthermore with colliding names.
                   | This is extremely unlikely to happen, but just be aware.
+            p.
+              If you know these conditions will not be a problem in your project, you can benefit from
+              these awesome functions right where it makes sense: in the Date object.#[br]
+              If you're not convinced, you can still use the methods by importing them from vue-cal.
 
         h3.mt0 Motivation for use
         p Here are some convincing key points:
