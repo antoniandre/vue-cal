@@ -9,6 +9,8 @@
   --vuecal-events-border-color: currentColor;
   --vuecal-border-radius: 6px;
   --vuecal-height: 500px;
+  --vuecal-min-schedule-width: 0;
+  --vuecal-min-cell-width: 0;
 
   position: relative;
   border-radius: var(--vuecal-border-radius);

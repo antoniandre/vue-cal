@@ -51,21 +51,27 @@ const domEvents = {
 </script>
 
 <style lang="scss">
-.vuecal__weekdays-bar {
-  position: sticky;
-  top: 0;
-  display: flex;
-  flex-shrink: 0;
-  align-items: center;
-  z-index: 1;
-  background-color: var(--vuecal-secondary-color);
-  height: var(--vuecal-weekdays-bar-height);
-  white-space: nowrap;
-}
+.vuecal {
+  &__weekdays-bar {
+    position: sticky;
+    top: 0;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    z-index: 1;
+    background-color: var(--vuecal-secondary-color);
+    height: var(--vuecal-weekdays-bar-height);
+    white-space: nowrap;
+  }
 
-.vuecal__weekday {
-  flex: 1 1 0;
-  text-align: center;
-  opacity: 0.8;
+  &__weekday {
+    flex: 1 1 0;
+    text-align: center;
+    opacity: 0.8;
+    background-color: inherit;
+
+    .vuecal__scrollable--days-view &,
+    .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+  }
 }
 </style>

@@ -31,7 +31,7 @@
           TimeColumn(v-if="hasTimeColumn")
             template(v-if="$slots['time-cell']" #time-cell="timeCell")
               slot(name="time-cell" v-bind="timeCell")
-          .w-flex.column.grow
+          .vuecal__body-wrap
             WeekdaysBar
             .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
               .vuecal__cell-schedule.vuecal__cell-schedule--label(
@@ -107,3 +107,18 @@ watch(() => config.locale, newLocale => config.loadTexts(newLocale))
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
 </script>
+
+<style lang="scss">
+.vuecal {
+  &__body-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    // Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
+    min-width: 0;
+  }
+
+  &__scrollable--days-view &__cell-schedule,
+  &__scrollable--week-view &__cell-schedule {min-width: var(--vuecal-min-schedule-width, 0);}
+}
+</style>
