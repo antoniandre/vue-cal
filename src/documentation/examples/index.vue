@@ -1,7 +1,7 @@
 <template lang="pug">
 h1.title1
   | Examples
-  template(v-if="$route.name !== 'introduction'")
+  template(v-if="$route.name !== 'examples-intro'")
     w-icon.caption.mx1(lg) wi-chevron-right
     span(v-html="$route.meta.title")
 
@@ -10,17 +10,14 @@ h1.title1
 </template>
 
 <script setup>
-import { inject } from 'vue'
-import { useAppStore } from '@/store'
-import { addDatePrototypes, useLocale } from '@/vue-cal'
+import { addDatePrototypes } from '@/vue-cal'
 
 addDatePrototypes()
-
-const store = useAppStore()
-const locales = inject('locales')
 </script>
 
 <style lang="scss">
+@use '@/scss/examples.scss';
+
 .main--examples {
   h2 {
     position: relative;

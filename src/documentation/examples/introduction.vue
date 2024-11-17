@@ -94,20 +94,10 @@ ul.w-flex.gap4.basis-zero.ml0.mt12.wrap
 </template>
 
 <script setup>
-import { inject } from 'vue'
-import { useAppStore } from '@/store'
-import EnUs from '@/vue-cal/i18n/en-us.json'
-import { addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
-
-useLocale(EnUs)
-addDatePrototypes()
-
-const store = useAppStore()
-const locales = inject('locales')
 </script>
 
 <style lang="scss">
-.main--examples-intro {
+main.main--examples-intro {
   h2 {background: none;padding-left: 0;}
   h2:after {display: none;}
 
@@ -137,7 +127,7 @@ const locales = inject('locales')
 }
 
 @media screen and (max-width: $sm) {
-  .main--examples-intro {
+  main.main--examples-intro {
     .md-break,
     .md-break + li {flex-basis: 48%;}
 
