@@ -15,6 +15,20 @@ top-bar(v-if="$route.name !== 'home'" fixed)
           router-link.nav__item(to="/date-prototypes") Date Prototypes
         li
           router-link.nav__item(to="/examples") Examples
+          w-transition-expand(y)
+            ul(v-if="$route.fullPath.includes('/examples')")
+              li
+                router-link.nav__item(to="/examples/introduction") Introduction
+              li
+                router-link.nav__item(to="/examples/view") View
+              li
+                router-link.nav__item(to="/examples/date-and-time") Date and Time
+              li
+                router-link.nav__item(to="/examples/calendar-events") Calendar Events
+              li
+                router-link.nav__item(to="/examples/dom-events") DOM Events
+              li
+                router-link.nav__item(to="/examples/customization") Customization
         li
           router-link.nav__item(to="/migration-guide") Migration Guide
         li

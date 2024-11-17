@@ -20,6 +20,113 @@ alert.mt6(tip).
   #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
 
 //- Example.
+example(title="Custom Today Button" anchor="custom-today-button")
+  template(#desc)
+    p.
+      By default the selected date is today. But if you get lost in time travel, you can add
+      a Today button to select Today's date with the option #[span.code today-button].#[br]
+      Like navigation arrows, there is also a slot to customize as you want.#[br]
+      below are the default Today button on the left and a custom one with icon and tooltip on the right.
+    p
+      | You can also place the button outside of Vue Cal like so:
+      w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+      | #[br]You might want to change view as well when going to Today's date, here is an example how:
+      a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
+      w-icon(color="green lighten-2") mdi mdi-codepen
+
+  template(#code-html).
+    &lt;vue-cal
+      ref="vuecal"
+      xs
+      hide-weekends
+      :disable-views="['years']"
+      :time="false"
+      today-button
+      view="month"
+      :selected-date="selectedDate"&gt;
+      &lt;!-- Optional slot for the custom button. --&gt;
+      &lt;template #today-button&gt;
+        &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
+        &lt;v-tooltip&gt;
+          &lt;template #activator="{ on }"&gt;
+            &lt;v-btn v-on="on"&gt;
+              &lt;v-icon&gt;my_location&lt;/v-icon&gt;
+            &lt;/v-btn&gt;
+            &lt;span&gt;Go to Today's date&lt;/span&gt;
+          &lt;/template&gt;
+        &lt;/v-tooltip&gt;
+      &lt;/template&gt;
+    &lt;/vue-cal&gt;
+
+    &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
+  template(#code-js).
+    data: () => ({
+      // Default to next new year eve.
+      selectedDate: new Date(new Date().getFullYear(), 11, 31)
+    })
+
+  .w-flex.justify-center.wrap
+    vue-cal.ex--adding-a-today-button(
+      :dark="store.darkMode"
+      ref="vuecal2"
+      xs
+      hide-weekends
+      :disable-views="['years']"
+      :time="false"
+      today-button
+      view="month"
+      :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)"
+      style="max-width: 280px;height: 250px")
+    vue-cal.ex--adding-a-today-button(
+      :dark="store.darkMode"
+      ref="vuecal2"
+      xs
+      hide-weekends
+      :disable-views="['years']"
+      :time="false"
+      today-button
+      view="month"
+      :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)"
+      style="max-width: 280px;height: 250px")
+      template(#today-button)
+        w-tooltip(bottom)
+          template(#activator="{ on }")
+            w-button(x-Programmatically fab text v-on="on")
+              w-icon(color="primary" size="20") mdi mdi-map-marker-outline
+          span Go to Today's date
+
+//- Example.
+example(title="Custom arrows" anchor="custom-arrows")
+  template(#desc)
+    p.
+      Custom arrows using the #[span.code arrow-prev] &amp; #[span.code arrow-next] slots.#[br]
+  template(#code-html).
+    &lt;vue-cal
+      :views-bar="false"
+      :time="false"
+      view="month"
+      xs&gt;
+      &lt;template #arrow-prev&gt;
+        &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
+      &lt;/template&gt;
+      &lt;template #arrow-next&gt;
+        &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
+      &lt;/template&gt;
+    &lt;/vue-cal&gt;
+  template(#desc2)
+    vue-cal(
+      :views-bar="false"
+      :time="false"
+      view="month"
+      xs
+      :dark="store.darkMode"
+      style="width: 250px;height: 260px")
+      template(#arrow-prev)
+        w-icon mdi mdi-arrow-left
+      template(#arrow-next)
+        w-icon mdi mdi-arrow-right
+
+//- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
   template(#desc)
     alert(tip).

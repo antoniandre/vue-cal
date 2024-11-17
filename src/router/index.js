@@ -25,7 +25,45 @@ const routes = [
   {
     path: '/examples',
     name: 'examples',
-    component: () => import('@/documentation/examples/index.vue')
+    component: () => import('@/documentation/examples/index.vue'),
+    redirect: '/examples/introduction',
+    children: [
+      {
+        path: 'introduction',
+        name: 'introduction',
+        component: () => import('@/documentation/examples/introduction.vue')
+      },
+      {
+        path: 'view',
+        name: 'view-examples',
+        component: () => import('@/documentation/examples/view.vue'),
+        meta: { title: 'View' }
+      },
+      {
+        path: 'date-and-time',
+        name: 'date-and-time-examples',
+        component: () => import('@/documentation/examples/date-and-time.vue'),
+        meta: { title: 'Date and Time' }
+      },
+      {
+        path: 'calendar-events',
+        name: 'calendar-events-examples',
+        component: () => import('@/documentation/examples/calendar-events.vue'),
+        meta: { title: 'Calendar Events' }
+      },
+      {
+        path: 'dom-events',
+        name: 'dom-events-examples',
+        component: () => import('@/documentation/examples/dom-events.vue'),
+        meta: { title: 'DOM Events' }
+      },
+      {
+        path: 'customization',
+        name: 'customization-examples',
+        component: () => import('@/documentation/examples/customization.vue'),
+        meta: { title: 'Customization' }
+      },
+    ]
   },
   {
     path: '/migration-guide',

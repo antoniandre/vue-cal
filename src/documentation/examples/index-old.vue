@@ -1,579 +1,240 @@
 <template lang="pug">
-p
-  | Double click cell to go to a narrower view and click the title to go to a broader view.#[br]
-  | By default the calendar theme is grey to match with most of web pages.#[br]
-  | You can easily change the color theme (#[a(href="#css-notes") learn how]): try this
-  w-button.ma1(
-    :bg-color="example1theme === 'green' ? 'vuecal-blue' : 'primary'"
-    color="white"
-    @click="example1theme = example1theme === 'green' ? 'blue' : 'green'")
-    | {{ example1theme === "green" ? 'blue theme' : 'green theme' }}
-.example.my2.mxa(style="height: 450px")
-  vue-cal(:class="`vuecal--${example1theme}-theme`" :time="false" hide-weekends :dark="store.darkMode")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal :time="false" hide-weekends /&gt;
-alert For all the options details, refer to the #[a(href="#api") API] section.
+
 
 //- Example.
-title-link(h4 anchor="ex--small-cal") # Small calendar, no time, hidden view selector &amp; custom arrows
-p.
-  Extra-small, no timeline, hidden view selector &amp; custom arrows (using the reserved slots #[span.code arrow-prev] &amp; #[span.code arrow-next]).#[br]
-  With a hidden view selector, you can still navigate between the different views: double click cell to go to a narrower view, click title to go to a broader view.
-.example.my2.mxa(style="width: 250px;height: 260px")
+example(title="Internationalization" anchor="internationalization")
+  template(#desc)
+    p.
+      Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
+      Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
+      Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
+    .w-flex.no-grow.align-center.wrap
+      w-icon.mr2(color="primary") mdi mdi-translate
+      span.mr2 Current language:
+      w-select.pa0.mla.no-grow(
+        v-model="locale"
+        :items="locales"
+        item-value-key="code"
+        style="width: 200px")
+        template(#selection="{ item }")
+          span.mr2 {{ item.label }}
+          w-tag.code.ma0(bg-color="grey-light5" round) {{ item.code }}
+
+  template(#code-html).
+    &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
+
   vue-cal(
-    :dark="store.darkMode"
-    :views-bar="false"
-    :time="false"
-    view="month"
-    xs)
-    template(#arrow-prev)
-      w-icon mdi mdi-arrow-left
-    template(#arrow-next)
-      w-icon mdi mdi-arrow-right
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :views-bar="false"
-    :time="false"
-    view="month"
-    xs&gt;
-    &lt;template #arrow-prev&gt;
-      &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
-    &lt;/template&gt;
-    &lt;template #arrow-next&gt;
-      &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
-    &lt;/template&gt;
-  &lt;/vue-cal&gt;
-
-alert For all the options details, refer to the #[a(href="#api") API] section.
-
-//- Example.
-title-link(h4 anchor="ex--calendar-themes") # Calendar themes - Rounded cells &amp; date picker
-p.
-  You can easily change the calendar color theme or use the rounded-cells theme
-  by applying the corresponding CSS class on the #[span.code &lt;vuecal&gt;] tag.#[br]
-  E.g. #[span.code vuecal--rounded-theme], #[span.code vuecal--green-theme], #[span.code vuecal--blue-theme].#[br]
-  Read more about calendar themes in the #[a(href="#css-notes") CSS Notes] section.
-p.
-  Because Vue Cal has the potential out of the box, you can also use it as a date picker.#[br]
-  Apply the css class #[span.code vuecal--date-picker] to have the date picker layout below.#[br]
-  you can also disable the transitions to have a faster effect.
-
-.w-flex.maa.justify-center.wrap
-  .example.ma2(style="width: 270px;height: 300px")
-    vue-cal.vuecal--rounded-theme(
-      xs
-      :views-bar="false"
-      :time="false"
-      view="month"
-      :disable-views="['week']"
-      :dark="store.darkMode")
-  .example.ma2(style="width: 270px;height: 300px")
-    vue-cal.vuecal--rounded-theme(
-      :dark="store.darkMode"
-      xs
-      :views-bar="false"
-      :time="false"
-      view="month"
-      :disable-views="['week']")
-  .w-flex.column.justify-center.no-grow.pl5
-    .example.ma2(style="width: 210px;height: 230px")
-      vue-cal.vuecal--date-picker(
-        xs
-        :views-bar="false"
-        :time="false"
-        :transitions="false"
-        view="month"
-        :disable-views="['week']")
-    .grey.text-center
-      w-icon.pr1(style="padding-bottom: 2px") mdi mdi-arrow-up
-      | Date picker layout, no transition
-.w-flex.wrap
-  ssh-pre.grow.mr2(language="html-vue" :dark="store.darkMode").
-    &lt;vue-cal
-        class="vuecal--rounded-theme vuecal--green-theme"
-        xs
-        :views-bar="false"
-        :time="false"
-        view="month"
-        :disable-views="['week']"
-        style="width: 270px;height: 300px"&gt;
-    &lt;/vue-cal&gt;
-  ssh-pre.grow(language="html-vue" :dark="store.darkMode").
-    &lt;vue-cal
-        class="vuecal--date-picker"
-        xs
-        :views-bar="false"
-        :time="false"
-        :transitions="false"
-        view="month"
-        :disable-views="['week']"
-        style="width: 210px;height: 230px"&gt;
-    &lt;/vue-cal&gt;
-alert Refer to the #[a(href="#api") API] section to read more about all the options.
-
-//- Example.
-title-link(h4 anchor="ex--disable-views") # Disable views, active view
-p.
-  To hide views, you can use the #[span.code disable-views] option and provide an array of views
-  to disable.#[br]
-  The views are not only hidden from the menu bar, they are totally disabled,
-  even when navigating from cells and title bar clicks.#[br]#[br]
-  By default all the views are visible and the default active view is the #[span.code week] view.
-.example.mxa.mt2(style="height: 350px")
-  vue-cal.ex--disable-views(
-    :dark="store.darkMode"
-    :time="false"
-    view="month"
-    :views="['day', 'month']")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal :time="false" view="month" :views="['day', 'month']" /&gt;
-
-//- Example.
-title-link(h4 anchor="ex--min-max-dates") # Minimum / maximum dates &amp; single click to navigate
-p.
-  With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
-  time range of selectable cells. All the cells before and after are still visible but
-  will be disabled and not selectable.#[br]
-  You can still navigate through them with arrows.#[br]
-  In this example, the minimum date is set to 10 days behind and the maximum date to
-  10 days ahead.
-alert.my4(tip)
-  strong Notes
-  ul
-    li the min and max options accept a formatted string or plain Javascript Date object.
-    li.
-      2 different CSS class are available on out of range cells: #[span.code .before-min]
-      &amp; #[span.code .after-max].
-.example.my2.mxa(style="width: 250px;height: 260px")
-  vue-cal.ex--min-max-dates(
-    :dark="store.darkMode"
-    xs
-    :views-bar="false"
-    click-to-navigate
-    :time="false"
-    view="month"
-    :min-date="minDate"
-    :max-date="maxDate")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    xs
-    :views-bar="false"
-    click-to-navigate
-    :time="false"
-    view="month"
-    :min-date="minDate"
-    :max-date="maxDate"&gt;
-  &lt;/vue-cal&gt;
-
-ssh-pre(language="js" :dark="store.darkMode").
-  // Using Vue Cal Date Prototypes (activated by default).
-  computed: {
-    minDate () {
-      return new Date().subtractDays(10)
-    },
-    maxDate () {
-      return new Date().addDays(10)
-    }
-  }
-
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__cell--disabled {text-decoration: line-through;}
-  .vuecal__cell--before-min {color: #b6d6c7;}
-  .vuecal__cell--after-max {color: #008b8b;}
-
-alert For all the options details, refer to the #[a(href="#api") API] section.
-
-//- Example.
-title-link(h4 anchor="ex--disable-days") # Disable days
-p.
-  You can use the #[span.code disable-days] option to provide an array of formatted dates
-  (e.g. #[span.code 2020-09-18]) to disable.#[br]
-.example.my2.mxa(style="width: 250px;height: 260px")
-  vue-cal.ex--disable-days(
-    :dark="store.darkMode"
-    xs
-    :views-bar="false"
-    click-to-navigate
-    :time="false"
-    view="month"
-    :disable-views="['week']"
-    :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
-  &lt;vue-cal
-    xs
-    :views-bar="false"
-    click-to-navigate
-    :time="false"
-    view="month"
-    :disable-views="['week']"
-    :disable-days="[
-      new Date().subtractDays(2).format(),
-      new Date().format(),
-      new Date().addDays(2).format()
-    ]"
-  &gt;&lt;/vue-cal&gt;
-
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
-
-alert For all the options details, refer to the #[a(href="#api") API] section.
-
-//- Example.
-title-link(h4 anchor="ex--hiding-particular-week-days") # Hide particular week days &amp; show the weeks numbers
-p.
-  If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
-  option.#[br]It accepts an array of days to hide (day numbers),
-  #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
-  This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
-  If you want to hide Saturday and Sunday you can put `#[span.code 6, 7]` in the array or use
-  #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
-  You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
-  You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
-
-alert.
-  Refer to the #[a(href="#api") API] section to read more about all the options.#[br]
-
-.example.mxa(style="height: 350px")
-  vue-cal(
-    :dark="store.darkMode"
-    :time="false"
-    show-week-numbers
-    :hide-weekdays="[2, 3, 5]"
-    :views="['day', 'week', 'month']")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal :time="false"
-            show-week-numbers
-            :hide-weekdays="[2, 3, 5]"
-            :views="['day', 'week', 'month']"&gt;
-  &lt;/vue-cal&gt;
-
-
-
-
-
-
-
-
-//- Example.
-h3
-  a(href="#ex--internationalization")
-    w-icon.mr2 mdi mdi-translate
-    | Internationalization (i18n)
-.w-flex.align-end.wrap
-  h4.title2.mt6
-    a(href="#ex--internationalization") # Internationalization
-  .spacer
-  .w-flex.no-grow.align-center.wrap
-    w-icon.mr2(color="primary") mdi mdi-translate
-    span.mr2 Current language:
-    w-select.pa0.mla.no-grow(
-      v-model="locale"
-      :items="locales"
-      item-value-key="code"
-      style="width: 200px")
-      template(#selection="{ item }")
-        span.mr2 {{ item.label }}
-        w-tag.code.ma0(bg-color="grey-light5" round) {{ item.code }}
-a#ex--internationalization(name="ex--internationalization")
-p.
-  Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
-  Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
-  Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
-.example.my2.mxa(style="width: 500px;height: 340px;max-width: 100%")
-  vue-cal(
-    :dark="store.darkMode"
     :time="false"
     small
     view="year"
     :locale="locale"
-    @ready="overrideDateTexts")
-ssh-pre(language="html-vue" reactive :dark="store.darkMode").
-  &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
+    @ready="overrideDateTexts"
+    :dark="store.darkMode"
+    style="width: 500px;height: 340px;max-width: 100%")
 
-alert.
-  For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
-  the locale file must be loaded separately: #[br]#[span.code import 'vue-cal/dist/i18n/{{ locale }}.js'].
-
-h4 Alternative
-p.
-  If you need full control on the texts, you can alternatively provide an object containing all the
-  texts (start from the locale JSON file matching your language).#[br]
-  Keep in mind this is not the recommended way: texts may be added / modified / removed in the library
-  and your provided custom texts may not work anymore.#[br]
-  Always prefer the standard locales!
+  template(#desc2)
+    h4 Alternative
+    p.
+      If you need full control on the texts, you can alternatively provide an object containing all the
+      texts (start from the locale JSON file matching your language).#[br]
+      Keep in mind this is not the recommended way: texts may be added / modified / removed in the library
+      and your provided custom texts may not work anymore.#[br]
+      Always prefer the standard locales!
 
 
-
-
-
-
-
-
-h3
-  a(href="#ex--timeline")
-    w-icon.mr2 mdi mdi-clock-outline
-    | Timeline, business hours &amp; Today
 
 //- Example.
-title-link(h4 anchor="ex--timeline") # Timeline
-p.
-  Timelines are only visible on #[span.code week] and #[span.code day] views.#[br]
-  This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
-  24-hour format, and hidden weekends.
-.example.my2.mxa(style="height: 450px")
+example(title="Timeline & Business Hours" anchor="timeline")
+  template(#desc)
+    p.
+      Timelines are only visible on #[span.code week] and #[span.code day] views.#[br]
+      This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
+      24-hour format, and hidden weekends.
+
+  template(#code-html).
+    &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
+    &lt;vue-cal
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends /&gt;
+
   vue-cal(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="19 * 60"
     :time-step="30"
-    hide-weekends)
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-  &lt;vue-cal
-    :time-from="8 * 60"
-    :time-to="19 * 60"
-    :time-step="30"
-    hide-weekends&gt;
-  &lt;/vue-cal&gt;
-alert For all the options details, refer to the #[a(href="#api") API] section.
+    hide-weekends
+    style="height: 450px")
 
 //- Example.
-title-link(h4 anchor="ex--show-time-in-cells") # Showing time labels in cells
-p.
-  You can choose to display the time labels in every cells by enabling the
-  #[span.code showTimeInCells] option.
-.example.my2.mxa(style="height: 450px")
+example(title="Showing Time Labels in Cells" anchor="show-time-in-cells")
+  template(#desc)
+    p.
+      You can choose to display the time labels in every cells by enabling the
+      #[span.code showTimeInCells] option.
+
+  template(#code-html).
+    &lt;vue-cal
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends
+      show-time-in-cells /&gt;
+
   vue-cal(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="19 * 60"
     :time-step="30"
     show-time-in-cells
-    hide-weekends)
-    template(#no-event) &nbsp;
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :time-from="8 * 60"
-    :time-to="19 * 60"
-    :time-step="30"
     hide-weekends
-    show-time-in-cells&gt;
-  &lt;/vue-cal&gt;
-alert For all the options details, refer to the #[a(href="#api") API] section.
+    style="height: 450px")
+    template(#no-event) &nbsp;
+
 
 //- Example.
-title-link(h4 anchor="ex--special-hours") # Special hours (or business hours)
-p.
-  The special hours are visible on #[span.code week] and #[span.code day] views and allow
-  you to highlight a particular time range on each day of the week individually.#[br]
-alert.
-  Refer to the #[a(href="#api") API] section to read more about the
-  #[span.code special-hours] option.
-.example.my2.mxa(style="height: 450px")
+example(title="Special hours (or business hours)" anchor="special-hours")
+  template(#desc)
+    p.
+      The special hours are visible on #[span.code week] and #[span.code day] views and allow
+      you to highlight a particular time range on each day of the week individually.#[br]
+    alert.
+      Refer to the #[a(href="#api") API] section to read more about the
+      #[span.code special-hours] option.
+
+  template(#code-html).
+    &lt;vue-cal
+      :views="['day', 'week']"
+      :time-from="8 * 60"
+      :time-to="20 * 60"
+      :special-hours="specialHours" /&gt;
+  template(#code-js).
+    // `from` and `to` are expected in minutes.
+    const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+
+    // In your component's data, special hours from Monday to Friday.
+    // Note that you can provide an array of multiple blocks for the same day.
+    specialHours: {
+      mon: dailyHours,
+      tue: dailyHours,
+      wed: [
+        { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+        { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+      ],
+      thu: dailyHours,
+      fri: dailyHours
+    }
+  template(#code-css).
+    .business-hours {
+      background-color: rgba(255, 255, 0, 0.15);
+      border: solid rgba(255, 210, 0, 0.3);
+      border-width: 2px 0;
+    }
+
   vue-cal.ex--special-hours(
     :dark="store.darkMode"
     :time-from="8 * 60"
     :time-to="20 * 60"
     :views="['day', 'week']"
-    :special-hours="specialHours")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :views="['day', 'week']"
-    :time-from="8 * 60"
-    :time-to="20 * 60"
-    :special-hours="specialHours" /&gt;
-ssh-pre(language="js" :dark="store.darkMode").
-  // `from` and `to` are expected in minutes.
-  const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+    :special-hours="specialHours"
+    style="height: 450px")
 
-  // In your component's data, special hours from Monday to Friday.
-  // Note that you can provide an array of multiple blocks for the same day.
-  specialHours: {
-    mon: dailyHours,
-    tue: dailyHours,
-    wed: [
-      { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
-      { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-    ],
-    thu: dailyHours,
-    fri: dailyHours
-  }
-ssh-pre(language="css" :dark="store.darkMode").
-  .business-hours {
-    background-color: rgba(255, 255, 0, 0.15);
-    border: solid rgba(255, 210, 0, 0.3);
-    border-width: 2px 0;
-  }
-
-p With the same principle, you could also build a lot more complex layout such as the following one.
-.example.my2.mxa(style="height: 550px")
-  vue-cal.ex--doctor-hours(
-    :dark="store.darkMode"
-    :views="['day', 'week']"
-    :time-from="7 * 60"
-    :time-to="20 * 60"
-    :special-hours="specialDoctorHours")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :views="['day', 'week']"
-    :time-from="7 * 60"
-    :time-to="20 * 60"
-    :special-hours="specialHours" /&gt;
-ssh-pre(language="js" :dark="store.darkMode").
-  // In your component's data, special hours from Monday to Sunday (1 to 7).
-  // Note that you can provide an array of multiple blocks for the same day.
-  specialHours: {
-    mon: {
-      from: 8 * 60,
-      to: 17 * 60,
-      class: 'doctor-1',
-      label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
-    },
-    tue: {
-      from: 9 * 60,
-      to: 18 * 60,
-      class: 'doctor-2',
-      label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
-    },
-    wed: [
-      {
-        from: 8 * 60,
-        to: 12 * 60,
-        class: 'doctor-1',
-        label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
-      },
-      {
-        from: 14 * 60,
-        to: 19 * 60,
-        class: 'doctor-3',
-        label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
+  template(#desc2)
+    p With the same principle, you could also build a lot more complex layout such as the following one.
+    vue-cal.ex--doctor-hours(
+      :dark="store.darkMode"
+      :views="['day', 'week']"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      :special-hours="specialDoctorHours"
+      style="height: 550px")
+    ssh-pre(language="html-vue" :dark="store.darkMode").
+      &lt;vue-cal
+        :views="['day', 'week']"
+        :time-from="7 * 60"
+        :time-to="20 * 60"
+        :special-hours="specialHours" /&gt;
+    ssh-pre(language="js" :dark="store.darkMode").
+      // In your component's data, special hours from Monday to Sunday (1 to 7).
+      // Note that you can provide an array of multiple blocks for the same day.
+      specialHours: {
+        mon: {
+          from: 8 * 60,
+          to: 17 * 60,
+          class: 'doctor-1',
+          label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+        },
+        tue: {
+          from: 9 * 60,
+          to: 18 * 60,
+          class: 'doctor-2',
+          label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+        },
+        wed: [
+          {
+            from: 8 * 60,
+            to: 12 * 60,
+            class: 'doctor-1',
+            label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
+          },
+          {
+            from: 14 * 60,
+            to: 19 * 60,
+            class: 'doctor-3',
+            label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
+          }
+        ],
+        thu: {
+          from: 8 * 60,
+          to: 17 * 60,
+          class: 'doctor-1',
+          label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+        },
+        fri: {
+          from: 9 * 60,
+          to: 18 * 60,
+          class: 'doctor-3',
+          label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
+        },
+        sat: {
+          from: 9 * 60,
+          to: 18 * 60,
+          class: 'doctor-2',
+          label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+        },
+        sun: {
+          from: 7 * 60,
+          to: 20 * 60,
+          class: 'closed',
+          label: '<strong>Closed</strong>'
+        }
       }
-    ],
-    thu: {
-      from: 8 * 60,
-      to: 17 * 60,
-      class: 'doctor-1',
-      label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
-    },
-    fri: {
-      from: 9 * 60,
-      to: 18 * 60,
-      class: 'doctor-3',
-      label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
-    },
-    sat: {
-      from: 9 * 60,
-      to: 18 * 60,
-      class: 'doctor-2',
-      label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
-    },
-    sun: {
-      from: 7 * 60,
-      to: 20 * 60,
-      class: 'closed',
-      label: '<strong>Closed</strong>'
-    }
-  }
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__special-hours {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 4px;
+    ssh-pre(language="css" :dark="store.darkMode").
+      .vuecal__special-hours {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 4px;
 
-    em {font-size: 0.9em;color: #999;}
-  }
+        em {font-size: 0.9em;color: #999;}
+      }
 
-  .doctor-1 {background-color: #f0fff1;color: #81d58b;}
-  .doctor-2 {background-color: #f0f6ff;color: #689bee;}
-  .doctor-3 {background-color: #fcf0ff;color: #d168ee;}
-  .closed {
-    background:
-      #fff7f0
-      repeating-linear-gradient(
-        -45deg,
-        rgba(255, 162, 87, 0.25),
-        rgba(255, 162, 87, 0.25) 5px,
-        rgba(255, 255, 255, 0) 5px,
-        rgba(255, 255, 255, 0) 15px
-      );
-    color: #f6984c;
-  }
-
-//- Example.
-title-link(h4 anchor="ex--adding-a-today-button") # Adding a Today button
-p.
-  By default the selected date is today. But if you get lost in time travel, you can add
-  a Today button to select Today's date with the option #[span.code today-button].#[br]
-  Like navigation arrows, there is also a slot to customize as you want.#[br]
-  below are the default Today button on the left and a custom one with icon and tooltip on the right.
-p
-  | If you are not satisfied with the position of this button, you can also place it
-  | outside of Vue Cal like so:
-  w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
-  | #[br]You might want to change view as well when going to Today's date, here is an example how:
-  a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
-  w-icon(color="green lighten-2") mdi mdi-codepen
-.w-flex.justify-center.wrap
-  .example.my2.mr3(style="max-width: 280px;height: 250px")
-    vue-cal.ex--adding-a-today-button(
-      :dark="store.darkMode"
-      ref="vuecal2"
-      xs
-      hide-weekends
-      :disable-views="['years']"
-      :time="false"
-      today-button
-      view="month"
-      :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
-  .example.my2(style="max-width: 280px;height: 250px")
-    vue-cal.ex--adding-a-today-button(
-      :dark="store.darkMode"
-      ref="vuecal2"
-      xs
-      hide-weekends
-      :disable-views="['years']"
-      :time="false"
-      today-button
-      view="month"
-      :selected-date="selectedDate || new Date(new Date().getFullYear(), 11, 31)")
-      template(#today-button)
-        w-tooltip(bottom)
-          template(#activator="{ on }")
-            w-button(x-Programmatically fab text v-on="on")
-              w-icon(color="primary" size="20") mdi mdi-map-marker-outline
-          span Go to Today's date
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    ref="vuecal"
-    xs
-    hide-weekends
-    :disable-views="['years']"
-    :time="false"
-    today-button
-    view="month"
-    :selected-date="selectedDate"&gt;
-    &lt;!-- Optional slot for the custom button. --&gt;
-    &lt;template #today-button&gt;
-      &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
-      &lt;v-tooltip&gt;
-        &lt;template #activator="{ on }"&gt;
-          &lt;v-btn v-on="on"&gt;
-            &lt;v-icon&gt;my_location&lt;/v-icon&gt;
-          &lt;/v-btn&gt;
-          &lt;span&gt;Go to Today's date&lt;/span&gt;
-        &lt;/template&gt;
-      &lt;/v-tooltip&gt;
-    &lt;/template&gt;
-  &lt;/vue-cal&gt;
-
-  &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    // Default to next new year eve.
-    selectedDate: new Date(new Date().getFullYear(), 11, 31)
-  })
+      .doctor-1 {background-color: #f0fff1;color: #81d58b;}
+      .doctor-2 {background-color: #f0f6ff;color: #689bee;}
+      .doctor-3 {background-color: #fcf0ff;color: #d168ee;}
+      .closed {
+        background:
+          #fff7f0
+          repeating-linear-gradient(
+            -45deg,
+            rgba(255, 162, 87, 0.25),
+            rgba(255, 162, 87, 0.25) 5px,
+            rgba(255, 255, 255, 0) 5px,
+            rgba(255, 255, 255, 0) 15px
+          );
+        color: #f6984c;
+      }
 </template>
 
 <script setup>

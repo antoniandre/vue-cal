@@ -38,12 +38,17 @@ aside {
     margin-right: -1px;
     overflow: hidden;
   }
-  ul {margin-left: 0;list-style-type: none;}
+
+  ul {
+    position: relative;
+    margin-left: 0;
+    list-style-type: none;
+  }
 
   .nav__item {
     position: relative;
     display: flex;
-    padding: 4px 2rem 4px 0;
+    padding: 6px 2rem 6px 0;
     justify-content: flex-end;
     font-size: 1.1rem;
     transition: 0.25s font-weight;
@@ -53,7 +58,7 @@ aside {
       text-transform: uppercase;
     }
 
-    &:after {
+    &:after, & ~ ul:after {
       content: '';
       position: absolute;
       inset: 0;
@@ -64,15 +69,46 @@ aside {
       z-index: 1;
       background-image: linear-gradient(90deg, rgba(255, 255, 255, 0), color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 50%);
     }
-    &:hover:after {
+    &:hover:after, &:hover ~ ul:after {
       border-right-color: color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
       transform: scaleX(1);
     }
-    &.router-link-active:after {
+    &.router-link-active:after, &.router-link-active ~ ul:after {
       border-right-color: var(--w-primary-color);
       background-image: linear-gradient(-90deg, var(--highlight-color), rgba(255, 255, 255, 0));
       transform: scaleX(-1) rotateY(180deg);
       z-index: -1;
+    }
+  }
+
+  ul ul:after {
+    border: 0.5px solid var(--w-primary-color);
+    mask: linear-gradient(90deg, transparent, black 100%);
+  }
+  ul ul .nav__item {
+    padding-top: 2px;
+    padding-bottom: 2px;
+    font-size: 1rem;
+
+    &.router-link-active {
+      text-transform: initial;
+      background-image: linear-gradient(-90deg, var(--w-primary-color) -400%, rgba(255, 255, 255, 0));
+    }
+    &.router-link-active:before {
+      content: '';
+      position: absolute;
+      inset: 0 0 0 auto;
+      border: 12px solid transparent;
+      border-right-color: var(--w-primary-color);
+    }
+    &.router-link-active:after {
+      transition: none;
+      content: '';
+      position: absolute;
+      inset: 0 -3px 0 auto;
+      border: 12px solid transparent;
+      border-right-color: var(--w-base-bg-color);
+      z-index: 1;
     }
   }
 }

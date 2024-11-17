@@ -1038,7 +1038,7 @@ ssh-pre(language="js" :dark="store.darkMode").
   })
 
 //- Example.
-example(anchor="ex--recurring-events")
+example(anchor="recurring-events")
   w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
   | ex--recurring-events
 .mt4 #[strong When it will be ready, this is how it will work.]

@@ -124,6 +124,117 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
   template(#code-html).
     &lt;vue-cal{{}} /&gt;
   vue-cal()
+
+//- Example.
+example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-max-dates")
+  template(#desc)
+    p.
+      With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
+      time range of selectable cells. All the cells before and after are still visible but
+      will be disabled and not selectable.#[br]
+      You can still navigate through them with arrows.#[br]
+      In this example, the minimum date is set to 10 days behind and the maximum date to
+      10 days ahead.
+    alert.my4(tip)
+      strong Notes
+      ul
+        li the min and max options accept a formatted string or plain Javascript Date object.
+        li.
+          2 different CSS class are available on out of range cells: #[span.code .before-min]
+          &amp; #[span.code .after-max].
+  template(#code-html).
+    &lt;vue-cal
+      :views-bar="false"
+      click-to-navigate
+      :time="false"
+      view="month"
+      :min-date="minDate"
+      :max-date="maxDate"
+      xs /&gt;
+  template(#code-js).
+    // Using Vue Cal Date Prototypes (activated by default).
+    computed: {
+      minDate () {
+        return new Date().subtractDays(10)
+      },
+      maxDate () {
+        return new Date().addDays(10)
+      }
+    }
+  template(#code-css).
+    .vuecal__cell--disabled {text-decoration: line-through;}
+    .vuecal__cell--before-min {color: #b6d6c7;}
+    .vuecal__cell--after-max {color: #008b8b;}
+  .example.my2.mxa(style="width: 250px;height: 260px")
+    vue-cal.ex--min-max-dates(
+      :dark="store.darkMode"
+      xs
+      :views-bar="false"
+      click-to-navigate
+      :time="false"
+      view="month"
+      :min-date="minDate"
+      :max-date="maxDate")
+
+//- Example.
+example(title="Disable Days" anchor="disable-days")
+  template(#desc)
+    p.
+      You can use the #[span.code disable-days] option to provide an array of formatted dates
+      (e.g. #[span.code 2020-09-18]) to disable.
+  template(#code-html).
+    &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
+    &lt;vue-cal
+      xs
+      :views-bar="false"
+      click-to-navigate
+      :time="false"
+      view="month"
+      :disable-views="['week']"
+      :disable-days="[
+        new Date().subtractDays(2).format(),
+        new Date().format(),
+        new Date().addDays(2).format()
+      ]" /&gt;
+  template(#code-css).
+    .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
+
+  vue-cal(
+    :dark="store.darkMode"
+    xs
+    :views-bar="false"
+    click-to-navigate
+    :time="false"
+    view="month"
+    :disable-views="['week']"
+    :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]"
+    style="width: 250px;height: 260px")
+
+//- Example.
+example(title="Hide Particular Week Days &amp; Show the Weeks Numbers" anchor="hiding-particular-week-days")
+  template(#desc)
+    p.
+      If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
+      option.#[br]It accepts an array of days to hide (day numbers),
+      #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
+      This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
+      If you want to hide Saturday and Sunday you can put `#[span.code 6, 7]` in the array or use
+      #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
+      You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
+      You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+  template(#code-html).
+    &lt;vue-cal
+      :time="false"
+      show-week-numbers
+      :hide-weekdays="[2, 3, 5]"
+      :views="['day', 'week', 'month']" /&gt;
+  vue-cal(
+    :dark="store.darkMode"
+    :time="false"
+    show-week-numbers
+    :hide-weekdays="[2, 3, 5]"
+    :views="['day', 'week', 'month']"
+    style="height: 350px")
 </template>
 
 <script setup>

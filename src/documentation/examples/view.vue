@@ -14,6 +14,25 @@ example(title="Layouts" anchor="layouts")
   vue-cal.mxa(v-bind="{ [exLayouts.size]: true }" :dark="store.darkMode")
 
 //- Example.
+example(title="Views" anchor="views")
+  template(#desc)
+    p.
+      To specify which view should be available, you can use the #[code views] option and provide an
+      array of strings.#[br]
+      To set a view by default, use the #[code view] option and provide a string.
+      By default all the views are visible and the default active view is the #[code week] view.
+
+  template(#code-html).
+    &lt;vue-cal view="month" :views="['day', 'month']" /&gt;
+
+  vue-cal.ex--disable-views(
+    :dark="store.darkMode"
+    :time="false"
+    view="month"
+    :views="['day', 'month']"
+    style="height: 350px")
+
+//- Example.
 example(title="Hide Elements & Toggles" anchor="hide-elements")
   template(#desc)
     p.caption Toggle options and view the updated code and result.
