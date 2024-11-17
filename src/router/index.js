@@ -30,36 +30,36 @@ const routes = [
     children: [
       {
         path: 'introduction',
-        name: 'introduction',
+        name: 'examples-intro',
         component: () => import('@/documentation/examples/introduction.vue')
       },
       {
         path: 'view',
-        name: 'view-examples',
+        name: 'examples-view',
         component: () => import('@/documentation/examples/view.vue'),
         meta: { title: 'View' }
       },
       {
         path: 'date-and-time',
-        name: 'date-and-time-examples',
+        name: 'examples-date-and-time',
         component: () => import('@/documentation/examples/date-and-time.vue'),
         meta: { title: 'Date and Time' }
       },
       {
         path: 'calendar-events',
-        name: 'calendar-events-examples',
+        name: 'examples-calendar-events',
         component: () => import('@/documentation/examples/calendar-events.vue'),
         meta: { title: 'Calendar Events' }
       },
       {
         path: 'dom-events',
-        name: 'dom-events-examples',
+        name: 'examples-dom-events',
         component: () => import('@/documentation/examples/dom-events.vue'),
         meta: { title: 'DOM Events' }
       },
       {
         path: 'customization',
-        name: 'customization-examples',
+        name: 'examples-customization',
         component: () => import('@/documentation/examples/customization.vue'),
         meta: { title: 'Customization' }
       },

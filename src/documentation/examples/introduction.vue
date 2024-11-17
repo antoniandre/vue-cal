@@ -66,30 +66,30 @@ p.lh1.
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
 title-link.mt12(h2 anchor="categories") Categories
-ul.w-flex.wrap.gap4.basis-zero.ml0.mt12
+ul.w-flex.gap4.basis-zero.ml0.mt12.wrap
   li.category.highlight-box
     router-link(to="/examples/view")
-      w-icon.mr2(size="2.5rem") mdi mdi-calendar-blank-outline
+      w-icon(size="2.3rem") mdi mdi-calendar-blank-outline
       | View
 
   li.category.highlight-box
     router-link(to="/examples/date-and-time")
-      w-icon.mr2(size="2.5rem") mdi mdi-clock-outline
+      w-icon(size="2.3rem") mdi mdi-clock-outline
       | Date and Time
 
   li.category.highlight-box
     router-link(to="/examples/calendar-events")
-      w-icon.mr2(size="2.5rem") mdi mdi-calendar-today-outline
+      w-icon(size="2.3rem") mdi mdi-calendar-today-outline
       | Calendar Events
 
-  li.category.highlight-box
+  li.category.highlight-box.md-break
     router-link(to="/examples/dom-events")
-      w-icon.mr2(size="2.5rem") mdi mdi-gesture-double-tap
+      w-icon(size="2.6rem") mdi mdi-gesture-double-tap
       | DOM Events
 
   li.category.highlight-box
     router-link(to="/examples/customization")
-      w-icon.mr2(size="2.5rem") mdi mdi-tune
+      w-icon(size="2.2rem") mdi mdi-tune
       | Customization
 </template>
 
@@ -107,17 +107,46 @@ const locales = inject('locales')
 </script>
 
 <style lang="scss">
-.category {
-  display: flex;
-  align-items: center;
+.main--examples-intro {
+  h2 {background: none;padding-left: 0;}
+  h2:after {display: none;}
 
-  a {
+  .category {
     display: flex;
     align-items: center;
-    justify-content: center;
-    align-items: center;
-    line-height: 1;
+    padding: 0;
+
+    a {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      line-height: 1;
+      flex-grow: 1;
+      gap: 12px;
+      z-index: 1;
+      padding: 16px 3px;
+      text-align: center;
+    }
+
+    .w-icon {
+      width: 3rem;
+      color: var(--w-base-color);
+      opacity: 0.5;
+    }
   }
-  .w-icon {width: 3rem;}
+}
+
+@media screen and (max-width: $sm) {
+  .main--examples-intro {
+    .md-break,
+    .md-break + li {flex-basis: 48%;}
+
+    .category a {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 6px;
+    }
+  }
 }
 </style>

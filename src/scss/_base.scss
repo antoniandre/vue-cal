@@ -183,6 +183,15 @@ ul {
   padding: 16px;
   border-radius: 8px;
 
+  &:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
+    mask: linear-gradient(-145deg, #000 -40%, transparent 30%);
+  }
+
   &:after {
     content: '';
     position: absolute;
