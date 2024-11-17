@@ -5,7 +5,8 @@ h1.title1
     w-icon.caption.mx1(lg) wi-chevron-right
     span(v-html="$route.meta.title")
 
-router-view
+.main--examples
+  router-view
 </template>
 
 <script setup>

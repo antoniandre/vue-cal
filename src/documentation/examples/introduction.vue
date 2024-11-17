@@ -67,28 +67,28 @@ p.lh1.
 
 title-link.mt12(h2 anchor="categories") Categories
 ul.w-flex.wrap.gap4.basis-zero.ml0.mt12
-  li.highlight-box.w-flex.align-center
-    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/view")
+  li.category.highlight-box
+    router-link(to="/examples/view")
       w-icon.mr2(size="2.5rem") mdi mdi-calendar-blank-outline
       | View
 
-  li.highlight-box.w-flex.align-center
-    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/date-and-time")
+  li.category.highlight-box
+    router-link(to="/examples/date-and-time")
       w-icon.mr2(size="2.5rem") mdi mdi-clock-outline
       | Date and Time
 
-  li.highlight-box.w-flex.align-center
-    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/calendar-events")
+  li.category.highlight-box
+    router-link(to="/examples/calendar-events")
       w-icon.mr2(size="2.5rem") mdi mdi-calendar-today-outline
       | Calendar Events
 
-  li.highlight-box.w-flex.align-center
-    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/dom-events")
-      w-icon.mr2(size="2.5rem") mdi mdi-swap_horizontal
+  li.category.highlight-box
+    router-link(to="/examples/dom-events")
+      w-icon.mr2(size="2.5rem") mdi mdi-gesture-double-tap
       | DOM Events
 
-  li.highlight-box.w-flex.align-center
-    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/customization")
+  li.category.highlight-box
+    router-link(to="/examples/customization")
       w-icon.mr2(size="2.5rem") mdi mdi-tune
       | Customization
 </template>
@@ -98,11 +98,6 @@ import { inject } from 'vue'
 import { useAppStore } from '@/store'
 import EnUs from '@/vue-cal/i18n/en-us.json'
 import { addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
-// import ViewExamples from './view.vue'
-// import DateAndTimeExamples from './date-and-time.vue'
-// import CustomizationExamples from './customization.vue'
-// import CalendarEventsExamples from './calendar-events.vue'
-// import DomEventsExamples from './dom-events.vue'
 
 useLocale(EnUs)
 addDatePrototypes()
@@ -112,4 +107,17 @@ const locales = inject('locales')
 </script>
 
 <style lang="scss">
+.category {
+  display: flex;
+  align-items: center;
+
+  a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+  }
+  .w-icon {width: 3rem;}
+}
 </style>

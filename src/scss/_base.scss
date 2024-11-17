@@ -81,9 +81,14 @@ aside {
     }
   }
 
-  ul ul:after {
-    border: 0.5px solid var(--w-primary-color);
-    mask: linear-gradient(90deg, transparent, black 100%);
+  ul ul {
+    padding-top: 4px;
+    padding-bottom: 4px;
+
+    &:after {
+      border: 0.5px solid var(--w-primary-color);
+      mask: linear-gradient(90deg, transparent, black 100%);
+    }
   }
   ul ul .nav__item {
     padding-top: 2px;
@@ -173,9 +178,19 @@ ul {
 }
 
 .highlight-box {
+  position: relative;
   background: linear-gradient(45deg, var(--highlight-color), rgba(255, 255, 255, 0));
   padding: 16px;
   border-radius: 8px;
+
+  &:after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
+    mask: linear-gradient(45deg, #000, transparent 30%);
+  }
 
   .w-icon.bolt {
     width: 68px;
