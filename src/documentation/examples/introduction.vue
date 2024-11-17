@@ -1,7 +1,7 @@
 <template lang="pug">
 p.lh1.
   In this section, you will find all the examples about possible usage of Vue Cal.#[br]
-  Let's start by mention some common use cases on Codepen.
+  Let's start by mentioning some common use cases on Codepen.
 
 .highlight-box.grow.mt4
   .title2 Demos on Codepen
@@ -65,42 +65,32 @@ p.lh1.
           strong Browse the full Vue Cal Codepen collection
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-title-link(h2 anchor="view-examples")
-  w-icon.mr2 mdi mdi-done
-  | View Examples
-//- view-examples
+title-link.mt12(h2 anchor="categories") Categories
+ul.w-flex.wrap.gap4.basis-zero.ml0.mt12
+  li.highlight-box.w-flex.align-center
+    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/view")
+      w-icon.mr2(size="2.5rem") mdi mdi-calendar-blank-outline
+      | View
 
-title-link(h2 anchor="date-and-time-examples")
-  w-icon.mr2 mdi mdi-clock-outline
-  | Date and Time Examples
-//- date-and-time-examples
+  li.highlight-box.w-flex.align-center
+    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/date-and-time")
+      w-icon.mr2(size="2.5rem") mdi mdi-clock-outline
+      | Date and Time
 
-title-link(h2 anchor="events-examples")
-  w-icon.mr2 mdi mdi-calendar
-  | Calendar Events Examples
-//- calendar-events-examples
+  li.highlight-box.w-flex.align-center
+    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/calendar-events")
+      w-icon.mr2(size="2.5rem") mdi mdi-calendar-today-outline
+      | Calendar Events
 
-title-link(h2 anchor="dom-events-examples")
-  w-icon.mr2 mdi mdi-swap_horizontal
-  | DOM Events Examples
-//- dom-events-examples
+  li.highlight-box.w-flex.align-center
+    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/dom-events")
+      w-icon.mr2(size="2.5rem") mdi mdi-swap_horizontal
+      | DOM Events
 
-title-link(h2 anchor="customization-examples")
-  w-icon.mr2 mdi mdi-tune
-  | Customization Examples
-//- customization-examples
-
-ul
-  li
-    router-link.nav__item(to="/examples/view") View
-  li
-    router-link.nav__item(to="/examples/date-and-time") Date and Time
-  li
-    router-link.nav__item(to="/examples/calendar-events") Calendar Events
-  li
-    router-link.nav__item(to="/examples/dom-events") DOM Events
-  li
-    router-link.nav__item(to="/examples/customization") Customization
+  li.highlight-box.w-flex.align-center
+    router-link.w-flex.column.justify-center.align-center.text-center.lh1(to="/examples/customization")
+      w-icon.mr2(size="2.5rem") mdi mdi-tune
+      | Customization
 </template>
 
 <script setup>

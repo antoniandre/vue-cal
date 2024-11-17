@@ -11,10 +11,8 @@ router-view
 <script setup>
 import { inject } from 'vue'
 import { useAppStore } from '@/store'
-import EnUs from '@/vue-cal/i18n/en-us.json'
-import { addDatePrototypes, useLocale, stringToDate } from '@/vue-cal'
+import { addDatePrototypes, useLocale } from '@/vue-cal'
 
-useLocale(EnUs)
 addDatePrototypes()
 
 const store = useAppStore()
