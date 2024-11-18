@@ -17,6 +17,7 @@
   color: var(--vuecal-base-color);
   height: var(--vuecal-height);
 
+  &.vuecal--dragging {cursor: ns-resize;}
   // Dark theme.
   // ------------------------------------------------------
   &.vuecal--dark {

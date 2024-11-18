@@ -79,6 +79,8 @@ const props = defineProps({
   index: { type: Number, required: true }
 })
 
+const emit = defineEmits(['drag-start', 'drag-end'])
+
 const vuecal = inject('vuecal')
 const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
@@ -261,6 +263,7 @@ const trackMousemove = e => {
   touch.startPercentageX = touch.startX * 100 / rect.width
   touch.startPercentageY = touch.startY * 100 / rect.height
 
+  emit('drag-start') // Internal emit to the root to add a CSS class on wrapper while dragging.
   document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
   document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 }
@@ -299,6 +302,7 @@ const onDocMouseup = async e => {
 
   // If there's a @cell-drag-end listener, call it.
   cellEventListeners.value.dragEnd?.(e, { start: props.start, end: props.end, events: cellEvents })
+  emit('drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
 
   touch.dragging = false
   touch.startX = 0
