@@ -272,18 +272,33 @@ const onDocMousemove = e => {
   touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.movePercentageX = touch.moveX * 100 / rect.width
   touch.movePercentageY = touch.moveY * 100 / rect.height
+
+  // If there's a @cell-drag listener, call it.
+  cellEventListeners.value.drag?.(e, { start: props.start, end: props.end, events: cellEvents })
 }
 
-const onDocMouseup = e => {
+const onDocMouseup = async e => {
   let { start, end, startMinutes, endMinutes, style, schedule } = eventPlaceholder.value
   start = new Date(props.start)
   start.setMinutes(startMinutes)
   end = new Date(props.start)
   end.setMinutes(endMinutes)
 
-  const eventToEmit = { start, end, style }
-  if (config.schedules) eventToEmit.schedule = schedule
-  vuecal.emit('event-create', e, eventToEmit)
+  if (canDragToCreateEvent.value) {
+    const eventToEmit = { start, end, style }
+    if (config.schedules) eventToEmit.schedule = schedule
+
+    // If there's a @event-create listener, call it,
+    // and check if it returns true to accept the event creation
+    // or false to cancel it. If no listener, create the event.
+    const createListener = typeof config.eventListeners.event.create === 'function' && config.eventListeners.event.create
+    const doCreate = !!createListener && await new Promise(resolve => createListener(e, eventToEmit, resolve)) || true
+
+    if (doCreate) console.log('@todo: Create event!')
+  }
+
+  // If there's a @cell-drag-end listener, call it.
+  cellEventListeners.value.dragEnd?.(e, { start: props.start, end: props.end, events: cellEvents })
 
   touch.dragging = false
   touch.startX = 0

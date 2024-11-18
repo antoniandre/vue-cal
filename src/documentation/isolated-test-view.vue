@@ -8,6 +8,7 @@
     w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
     w-switch.mb4.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
+    w-switch.mb4.no-grow(v-model="mainVuecalConfig.editableEvents") editable Events
 
     w-input(v-model="mainVuecalConfig.viewDayOffset" type="number") View Day Offset
 
@@ -40,8 +41,15 @@
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-create.stop="(e, event) => log('event-create', { e, event })")
-    //- @event-click.stop="(e, event) => log('event-click', { e, event })"
+    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve('super@!') })"
+    @event-click="(e, event) => log('event-click', { e, event })"
+    @event-drag="(e, event) => log('event-drag', { e, event })"
+    @event-drag-end="(e, event) => log('event-drag', { e, event })"
+    @event-drop="(e, event) => log('event-drop', { e, event })"
+    @event-resize="(e, event) => log('event-resize', { e, event })"
+    @event-resize-end="(e, event) => log('event-resize-end', { e, event })"
+    @cell-drag="(e, event) => log('cell-drag', { e, event })"
+    @cell-drag-end="(e, event) => log('cell-drag-end', { e, event })")
     //- @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
     //- @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
     //- @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
@@ -145,7 +153,8 @@ const mainVuecalConfig = reactive({
     fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
     sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
     sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  }
+  },
+  editableEvents: ref(false)
 })
 
 // Pretend a call to a backend.

@@ -48,7 +48,6 @@ export const props = {
 
   // TODO NEXT:
   dragToCreateThreshold: { type: Number, default: 15 },
-  onEventCreate: { type: [Function, null], default: null },
   snapToTime: { type: Number, default: 0 },
   showWeekNumbers: { type: [Boolean, String], default: false },
 
