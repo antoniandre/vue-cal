@@ -1,6 +1,7 @@
 <template lang="pug">
 .example(:class="`example--${anchor}`")
-  title-link.mb2(h3 :anchor="`ex--${anchor}`") {{ title }}
+  title-link.mb2(h3 :anchor="`ex--${anchor}`")
+    slot(name="title") {{ title }}
   .example__desc(v-if="$slots.desc")
     slot(name="desc")
 

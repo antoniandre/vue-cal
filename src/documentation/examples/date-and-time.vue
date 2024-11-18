@@ -275,6 +275,9 @@ const exScrollToTime = reactive({
     view.scrollToCurrentTime()
   }
 })
+
+const minDate = computed(() => new Date().subtractDays(10))
+const maxDate = computed(() => new Date().addDays(10))
 </script>
 
 <style lang="scss">

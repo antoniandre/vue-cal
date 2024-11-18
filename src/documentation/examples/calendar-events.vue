@@ -276,7 +276,7 @@ example(title="Display events on month view" anchor="events-on-month-view")
     p.
       With the option #[span.code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
       #[span.code events-on-month-view] accepts a Boolean to show or hide, or the string '#[span.code short]' to show only the event's title.#[br]
-      If #[span.code events-on-month-view] is set to #[span.code true], all the informations are displayed, you can then hide
+      If #[span.code events-on-month-view] is set to #[span.code true], all the information is displayed, you can then hide
       any event information via CSS.#[br]
       If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
   template(#code-html).
@@ -1038,44 +1038,47 @@ ssh-pre(language="js" :dark="store.darkMode").
 
 //- Example.
 example(anchor="recurring-events")
-  w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
-  | ex--recurring-events
-.mt4 #[strong When it will be ready, this is how it will work.]
-.mb2 You can repeat an event:
-ul
-  li Every day - by providing a #[span.code every: "day"] property.
-  li Every week - by providing a #[span.code every: "week"] property.
-  li Every month - by providing a #[span.code every: "month"] property.
-  li Every year - by providing a #[span.code every: "year"] property.
-  li Every specific week days - by providing a #[span.code weekdays] array containing the weekdays numbers (1 to 7 for Sunday).
-  li Every `x` days - by providing a #[span.code every: x] property, with #[span.code x] being an integer.
-  li Forever; Or until an expiry date if you provide an #[span.code until: {String | Date}] property.
-  li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
-ssh-pre(language="js" :dark="store.darkMode").
-  // month view event count => OK.
-  // @todo: check years/year views event counts.
-  // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
-  // @todo: on month view with show events, occurrences don't appear on out of scope days.
-  // @todo: overlapping does not work.
-  // @todo: if 2 occurences are in the same day (multiple-day events), only one is shown.
-  // @todo: check all the above points one by one.
+  template(#title)
+    | Recurring Events
+    w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
+  template(#desc)
+    .mt4.text-bold When it will be ready, this is how it will work.
+    .mb2 You can repeat an event:
+    ul
+      li Every day - by providing a #[span.code every: "day"] property.
+      li Every week - by providing a #[span.code every: "week"] property.
+      li Every month - by providing a #[span.code every: "month"] property.
+      li Every year - by providing a #[span.code every: "year"] property.
+      li Every specific week days - by providing a #[span.code weekdays] array containing the weekdays numbers (1 to 7 for Sunday).
+      li Every `x` days - by providing a #[span.code every: x] property, with #[span.code x] being an integer.
+      li Forever; Or until an expiry date if you provide an #[span.code until: {String | Date}] property.
+      li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
+  template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      hide-weekends
+      events-count-on-year-view
+      editable-events
+      show-all-day-events
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    // month view event count => OK.
+    // @todo: check years/year views event counts.
+    // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
+    // @todo: on month view with show events, occurrences don't appear on out of scope days.
+    // @todo: overlapping does not work.
+    // @todo: if 2 occurrences are in the same day (multiple-day events), only one is shown.
+    // @todo: check all the above points one by one.
 
-p.
-  Recurrring events work like a set of single day events linked together.#[br]
-  That means, deleting, resizing or editing one of the day will apply to all the other days.
-w-card.my4.maa.py12.grey-light5.elevation-1
-  .text-center.title1.grey Demo coming soon.
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-to="23 * 60"
-    hide-weekends
-    events-count-on-year-view
-    editable-events
-    show-all-day-events
-    :events="events"&gt;
-  &lt;/vue-cal&gt;
+  template(#desc2)
+    p.
+      Recurring events work like a set of single day events linked together.#[br]
+      That means, deleting, resizing or editing one of the day will apply to all the other days.
+    w-card.my4.maa.py12.grey-light5.elevation-1
+      .text-center.title1.grey Demo coming soon.
 
 ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
@@ -1219,7 +1222,7 @@ ssh-pre(language="js" :dark="store.darkMode").
       {
         start: '2018-11-20 18:30',
         end: '2018-11-20 20:30',
-        title: 'Crossfit',
+        title: 'Cross-fit',
         content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
         class: 'sport'
       },
@@ -1500,7 +1503,7 @@ ssh-pre(language="js" :dark="store.darkMode").
       {
         start: '2018-11-20 18:30',
         end: '2018-11-20 20:30',
-        title: 'Crossfit',
+        title: 'Cross-fit',
         content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
         class: 'sport',
         schedule: 1
@@ -1525,7 +1528,7 @@ ssh-pre(language="css" :dark="store.darkMode").
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, inject, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 import ViewExamples from './view.vue'
@@ -1563,37 +1566,15 @@ const indicatorStyleOptions = ref([
   { label: 'cell background', value: 'cell' }
 ])
 const now = ref(new Date())
-const logs = ref([])
 const showDialog = ref(false)
 const showEventCreationDialog = ref(false)
 const showAllDayEvents = ref(0)
 const shortEventsOnMonthView = ref(false)
 const selectedEvent = ref({})
 const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
-const selectedDate = ref(null)
-const activeView = ref('week')
-const logMouseEvents = ref(false)
-const customDayScheduleLabels = [
-  { label: 'John', color: 'blue', class: 'schedule1' },
-  { label: 'Tom', color: 'green', class: 'schedule2' },
-  { label: 'Kate', color: 'orange', class: 'schedule3' },
-  { label: 'Jess', color: 'red', class: 'schedule4' }
-]
 
 const deleteEventFunction = ref(null)
 const deleteDragEventFunction = ref(null)
-const specialDoctorHours = {
-  mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  wed: [
-    { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
-    { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
-  ],
-  thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
-  sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-}
 
 const events = [
   {
@@ -1631,7 +1612,7 @@ const events = [
   {
     start: '2018-11-20 18:30',
     end: '2018-11-20 20:30',
-    title: 'Crossfit',
+    title: 'Cross-fit',
     content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
     schedule: 2
@@ -1821,7 +1802,7 @@ const allDayEvents = [
   {
     start: '2019-02-12 18:30',
     end: '2019-02-12 20:30',
-    title: 'Crossfit',
+    title: 'Cross-fit',
     content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
     schedule: 1
@@ -2009,36 +1990,14 @@ const dragToCreateThreshold = ref(15)
 const dragToCreateThresholdOpts = ref([{ label: '0' }, { label: '15' }])
 
 // Computed.
-const reversedLogs = computed(() => logs.value.slice(0).reverse())
 const todayFormattedNotWeekend = computed(() => {
   let today = new Date(new Date().setHours(13, 15))
   // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
   if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
   return today.format('YYYY-MM-DD HH:mm')
 })
-const minDate = computed(() => new Date().subtractDays(10))
-const maxDate = computed(() => new Date().addDays(10))
-const specialHours = computed(() => ({
-  mon: dailyHours,
-  tue: dailyHours,
-  wed: [
-    { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
-    { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-  ],
-  thu: dailyHours,
-  fri: dailyHours
-}))
 
 // Methods.
-const logEvents = (emittedEventName, params) => {
-  if (!logMouseEvents && emittedEventName.includes('event-mouse')) return
-
-  logs.value.push({ name: emittedEventName, args: JSON.stringify(params) })
-}
-const clearEventsLog = () => (logs.value = [])
-
-const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
-
 const onEventClick = (event, e) => {
   selectedEvent.value = event
   showDialog.value = true
@@ -2074,11 +2033,6 @@ const customEventCreation = () => {
     vuecalEl.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
   }
   else if (dateTime) alert('Wrong date format.')
-}
-const overrideDateTexts = () => {
-  // In Vue Cal documentation Chinese texts are loaded last.
-  // Override Date texts with english for prototype formatting functions.
-  setTimeout(vuecalEl.value.updateDateTexts, 3000)
 }
 const onEventDragStart = (e, draggable) => {
   e.dataTransfer.setData('event', JSON.stringify(draggable))

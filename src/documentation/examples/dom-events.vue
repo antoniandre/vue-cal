@@ -418,12 +418,23 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import ViewExamples from './view.vue'
 
 const store = useAppStore()
+const logs = ref([])
+const activeView = ref('week')
+const logMouseEvents = ref(false)
+const selectedDate = ref(null)
 
-const ex = ref({
-})
+// Computed.
+const reversedLogs = computed(() => logs.value.slice(0).reverse())
+
+// Methods.
+const logEvents = (emittedEventName, params) => {
+  if (!logMouseEvents && emittedEventName.includes('event-mouse')) return
+
+  logs.value.push({ name: emittedEventName, args: JSON.stringify(params) })
+}
+const clearEventsLog = () => (logs.value = [])
 </script>
 
 <style lang="scss" scoped>

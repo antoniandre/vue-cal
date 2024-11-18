@@ -540,12 +540,18 @@ w-dialog(
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
-const ex = ref({
-})
+const customDayScheduleLabels = [
+  { label: 'John', color: 'blue', class: 'schedule1' },
+  { label: 'Tom', color: 'green', class: 'schedule2' },
+  { label: 'Kate', color: 'orange', class: 'schedule3' },
+  { label: 'Jess', color: 'red', class: 'schedule4' }
+]
+const selectedDate = ref(null)
+
+const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
 </script>
 
 <style lang="scss" scoped>

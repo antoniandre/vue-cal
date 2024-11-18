@@ -236,3 +236,33 @@ example(title="Special hours (or business hours)" anchor="special-hours")
         color: #f6984c;
       }
 </template>
+
+const overrideDateTexts = () => {
+  // In Vue Cal documentation Chinese texts are loaded last.
+  // Override Date texts with english for prototype formatting functions.
+  setTimeout(vuecalEl.value.updateDateTexts, 3000)
+}
+
+const specialHours = computed(() => ({
+  mon: dailyHours,
+  tue: dailyHours,
+  wed: [
+    { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+    { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+  ],
+  thu: dailyHours,
+  fri: dailyHours
+}))
+
+const specialDoctorHours = {
+  mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+  tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+  wed: [
+    { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
+    { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
+  ],
+  thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+  fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+  sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+  sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+}
