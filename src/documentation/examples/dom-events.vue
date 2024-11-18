@@ -8,7 +8,7 @@
 
 
 //- Example.
-example(title="Vue Cal emitted events" anchor="emitted-events")
+example(title="Vue Cal Emitted Events" anchor="emitted-events")
   template(#desc)
     p.mb0.
       Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
@@ -147,7 +147,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
         :views="['day', 'week', 'month']"
         hide-weekends
         editable-events
-        :events="eventsCopy3"
+        :events="events"
         cell-contextmenu
         @ready="logEvents('ready', $event)"
         @view-change="logEvents('view-change', $event)"
@@ -195,7 +195,7 @@ example(title="Vue Cal emitted events" anchor="emitted-events")
     &lt;/vue-cal&gt;
 
 //- Example.
-example(title="External controls &amp; use of Vue Cal methods" anchor="external-controls")
+example(title="External Controls & use of Vue Cal Methods" anchor="external-controls")
   template(#desc)
     p.
       You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
@@ -327,36 +327,34 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       class="vuecal--blue-theme vuecal--rounded-theme"
       style="max-width: 270px;height: 290px"&gt;
     &lt;/vue-cal&gt;
+  template(#code-js).
+      data: () => ({
+        selectedDate: null
+      })
   template(#desc2)
     .w-flex.align-center.justify-center.wrap
       vue-cal(
-        :dark="store.darkMode"
-        small
         :time="false"
         :views-bar="false"
         view="week"
         :views="['day', 'week']"
         :selected-date="selectedDate"
+        :dark="store.darkMode"
+        small
         style="max-width: 360px;height: 260px")
       vue-cal.vuecal--rounded-theme(
-        xs
         :time="false"
         :views-bar="false"
         view="month"
         :views="['month']"
         @cell-focus="selectedDate = $event"
+        :dark="store.darkMode"
+        xs
         style="max-width: 270px;height: 290px;transform: scale(0.9)")
-    ssh-pre(language="html-vue" :dark="store.darkMode").
-
-    ssh-pre(language="js" :dark="store.darkMode").
-      data: () => ({
-        selectedDate: null
-      })
 
 //- Example.
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
   template(#desc)
-  template(#code-html).
     alert.mb4(tip).
       It is possible to modify the array of events like adding or removing an event
       after the first load, but be aware that by doing so all the events in Vue Cal
@@ -370,36 +368,26 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
       | Remove last event
     p.mb0 Here is the live array of event titles:
     pre {{ eventsCopy.map(e => e.title) }}
+  template(#code-html).
+    &lt;button
+      @click="events.push({
+        start: '2018-11-20 12:00',
+        end: '2018-11-20 17:00',
+        title: 'A new event',
+        class: 'blue-event'
+      })"&gt;Add an event&lt;/button&gt;
+    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
-    .example.my4.mxa
-      vue-cal(
-        :dark="store.darkMode"
-        :selected-date="stringToDate('2018-11-19')"
-        :time-from="9 * 60"
-        :time-to="23 * 60"
-        :views="['day', 'week']"
-        hide-weekends
-        :events="eventsCopy")
-    ssh-pre(language="html-vue" :dark="store.darkMode").
-      &lt;button
-        @click="events.push({
-          start: '2018-11-20 12:00',
-          end: '2018-11-20 17:00',
-          title: 'A new event',
-          class: 'blue-event'
-        })"&gt;Add an event&lt;/button&gt;
-      &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="9 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week']"
+      hide-weekends
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
 
-      &lt;vue-cal
-        :selected-date="stringToDate('2018-11-19')"
-        :time-from="9 * 60"
-        :time-to="23 * 60"
-        :views="['day', 'week']"
-        hide-weekends
-        :events="events"&gt;
-      &lt;/vue-cal&gt;
-
-    ssh-pre(language="js" :dark="store.darkMode").
+  template(#code-js).
       data: () => ({
         events: [
           {
@@ -412,12 +400,20 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
           ...
         ]
       })
+  vue-cal(
+    :selected-date="stringToDate('2018-11-19')"
+    :time-from="9 * 60"
+    :time-to="23 * 60"
+    :views="['day', 'week']"
+    hide-weekends
+    :events="eventsCopy"
+    :dark="store.darkMode")
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal } from '@/vue-cal'
+import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 const logs = ref([])
@@ -435,6 +431,92 @@ const logEvents = (emittedEventName, params) => {
   logs.value.push({ name: emittedEventName, args: JSON.stringify(params) })
 }
 const clearEventsLog = () => (logs.value = [])
+
+const events = [
+  {
+    start: '2018-10-30 10:30',
+    end: '2018-10-30 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-16 10:30',
+    end: '2018-11-16 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-19 10:35',
+    end: '2018-11-19 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-19 18:30',
+    end: '2018-11-19 19:15',
+    title: 'Dentist appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 2
+  },
+  {
+    start: '2018-11-20 18:30',
+    end: '2018-11-20 20:30',
+    title: 'Cross-fit',
+    content: '<i class="w-icon mdi mdi-dumbbell"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: '2018-11-21 11:00',
+    end: '2018-11-21 13:00',
+    title: 'Brunch with Jane',
+    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
+    class: 'leisure',
+    schedule: 1,
+    background: false
+  },
+  {
+    start: '2018-11-21 19:30',
+    end: '2018-11-21 23:00',
+    title: 'Swimming lesson',
+    content: '<i class="w-icon mdi mdi-pool"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: '2018-11-23 12:30',
+    end: '2018-11-23 13:00',
+    title: 'Macca\'s with Mark',
+    content: '<i class="w-icon mdi mdi-food"></i>',
+    class: 'leisure',
+    schedule: 2
+  },
+  {
+    start: '2018-11-23 21:00',
+    end: '2018-11-23 23:30',
+    title: 'Movie time',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
+    class: 'leisure',
+    schedule: 1
+  },
+  {
+    start: '2018-11-30 21:00',
+    end: '2018-11-30 23:30',
+    title: 'Another movie tonight',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
+    class: 'leisure',
+    schedule: 1
+  }
+]
+
+const eventsCopy = events.slice(0)
 </script>
 
 <style lang="scss" scoped>

@@ -238,7 +238,7 @@ example(title="Hide Particular Week Days &amp; Show the Weeks Numbers" anchor="h
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, formatMinutes } from '@/vue-cal'
 import ViewExamples from './view.vue'

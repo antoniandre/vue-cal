@@ -1731,9 +1731,6 @@ const eventsCopy = [
 const eventsCopy2 = [
   ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
 ]
-const eventsCopy3 = [
-  ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
-]
 const multipleDayEvents = [
   {
     start: '2018-11-16 10:00',

@@ -392,7 +392,7 @@ p.mt2.
     :time-from="9 * 60"
     :time-to="19 * 60"
     hide-weekends
-    :events="eventsToPop")
+    :events="eventsCopy")
     template(#event="{ event, view }")
       w-icon.mt2(color="white" xl) {{ event.icon }}
       .vuecal__event-title.mb6(v-html="event.title")
@@ -539,7 +539,7 @@ w-dialog(
 <script setup>
 import { ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal } from '@/vue-cal'
+import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
@@ -550,7 +550,100 @@ const customDayScheduleLabels = [
   { label: 'Jess', color: 'red', class: 'schedule4' }
 ]
 const selectedDate = ref(null)
+const selectedEvent = ref({})
+const showDialog = ref(false)
+const showEventCreationDialog = ref(false)
+const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
 
+const events = [
+  {
+    start: '2018-10-30 10:30',
+    end: '2018-10-30 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-16 10:30',
+    end: '2018-11-16 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-19 10:35',
+    end: '2018-11-19 11:30',
+    title: 'Doctor appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 1
+  },
+  {
+    start: '2018-11-19 18:30',
+    end: '2018-11-19 19:15',
+    title: 'Dentist appointment',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 2
+  },
+  {
+    start: '2018-11-20 18:30',
+    end: '2018-11-20 20:30',
+    title: 'Cross-fit',
+    content: '<i class="w-icon mdi mdi-dumbbell"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: '2018-11-21 11:00',
+    end: '2018-11-21 13:00',
+    title: 'Brunch with Jane',
+    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
+    class: 'leisure',
+    schedule: 1,
+    background: false
+  },
+  {
+    start: '2018-11-21 19:30',
+    end: '2018-11-21 23:00',
+    title: 'Swimming lesson',
+    content: '<i class="w-icon mdi mdi-pool"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: '2018-11-23 12:30',
+    end: '2018-11-23 13:00',
+    title: 'Macca\'s with Mark',
+    content: '<i class="w-icon mdi mdi-food"></i>',
+    class: 'leisure',
+    schedule: 2
+  },
+  {
+    start: '2018-11-23 21:00',
+    end: '2018-11-23 23:30',
+    title: 'Movie time',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
+    class: 'leisure',
+    schedule: 1
+  },
+  {
+    start: '2018-11-30 21:00',
+    end: '2018-11-30 23:30',
+    title: 'Another movie tonight',
+    content: '<i class="w-icon mdi mdi-ticket"></i>',
+    class: 'leisure',
+    schedule: 1
+  }
+]
+const eventsCopy = events.slice(0)
+
+const cancelEventCreation = () => {
+  closeCreationDialog()
+  (deleteEventFunction.value || deleteDragEventFunction.value)()
+}
 const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
 </script>
 
