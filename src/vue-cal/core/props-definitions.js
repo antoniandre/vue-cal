@@ -49,7 +49,7 @@ export const props = {
   // TODO NEXT:
   dragToCreateThreshold: { type: Number, default: 15 },
   snapToTime: { type: Number, default: 0 },
-  showWeekNumbers: { type: [Boolean, String], default: false },
+  weekNumbers: { type: [Boolean, String], default: false },
 
   // TODO:
   // Start a drag creation after dragging a certain amount of pixels.
@@ -62,6 +62,6 @@ export const props = {
   minScheduleWidth: { type: Number, default: 0 },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
-  showAllDayEvents: { type: [Boolean, String], default: false },
-  showTimeInCells: { type: Boolean, default: false },
+  allDayEvents: { type: [Boolean, String], default: false },
+  timeInCells: { type: Boolean, default: false }
 }

@@ -50,6 +50,7 @@ ul
   li dblClickToNavigate -> removed, you can attach your own DOM events to cells.
   li day-splits -> renamed `schedules`
   li onEventClick -> removed, you can attach from outside
+  li onEventCreate -> removed, you can attach from outside and control whether to create the event or reject the creation.
   li onEventDblclick -> removed, you can attach from outside
   li cellClickHold -> removed, you can attach from outside
   li.
@@ -61,6 +62,9 @@ ul
   li minCellWidth -> moved to a CSS variable: --vuecal-min-cell-width: 0;
   li minSplitWidth -> renamed min-schedule-width and moved to a CSS variable: --vuecal-min-schedule-width: 0;
   li allDayBarHeight -> moved to a CSS variable: --vuecal-all-day-bar-height.
+  li showWeekNumbers -> renamed weekNumbers
+  li showAllDayEvents -> renamed allDayEvents
+  li showTimeInCells -> renamed timeInCells
 </template>
 
 <script setup>
