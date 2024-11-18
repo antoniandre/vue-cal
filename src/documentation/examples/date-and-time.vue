@@ -185,12 +185,10 @@ example(title="Disable Days" anchor="disable-days")
   template(#code-html).
     &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
     &lt;vue-cal
-      xs
+      date-picker
       :views-bar="false"
-      click-to-navigate
-      :time="false"
       view="month"
-      :disable-views="['week']"
+      :views="['day', 'week', 'year']"
       :disable-days="[
         new Date().subtractDays(2).format(),
         new Date().format(),
@@ -201,47 +199,37 @@ example(title="Disable Days" anchor="disable-days")
 
   vue-cal(
     :dark="store.darkMode"
-    xs
+    date-picker
     :views-bar="false"
-    click-to-navigate
-    :time="false"
     view="month"
-    :disable-views="['week']"
-    :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]"
-    style="width: 250px;height: 260px")
+    :views="['day', 'week', 'year']"
+    :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
 
 //- Example.
-example(title="Hide Particular Week Days &amp; Show the Weeks Numbers" anchor="hiding-particular-week-days")
+example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hiding-particular-week-days")
   template(#desc)
     p.
       If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
-      option.#[br]It accepts an array of days to hide (day numbers),
-      #[strong starting at #[span.code 1] for Monday, to #[span.code 7] for Sunday].#[br]
-      This option will apply on #[span.code month] &amp; #[span.code week] views.#[br]#[br]
-      If you want to hide Saturday and Sunday you can put `#[span.code 6, 7]` in the array or use
-      #[span.code hide-weekends] in supplement of #[span.code hide-weekdays].#[br]#[br]
+      option.#[br]It accepts an array of strings for the days to hide as follows:
+      #[code="['mon', 'tue', 'wed', 'fri', 'sat', 'sun']"].#[br]
+      This option will apply on #[span.code days], #[span.code week] &amp; #[span.code month] views.#[br]
       You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
       You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
   template(#code-html).
     &lt;vue-cal
-      :time="false"
       show-week-numbers
-      :hide-weekdays="[2, 3, 5]"
-      :views="['day', 'week', 'month']" /&gt;
+      :hide-weekdays="['tue', 'wed', 'fri']" /&gt;
   vue-cal(
-    :dark="store.darkMode"
-    :time="false"
     show-week-numbers
-    :hide-weekdays="[2, 3, 5]"
-    :views="['day', 'week', 'month']"
+    :hide-weekdays="['tue', 'wed', 'fri']"
+    :dark="store.darkMode"
     style="height: 350px")
 </template>
 
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal, formatMinutes } from '@/vue-cal'
-import ViewExamples from './view.vue'
+import { VueCal } from '@/vue-cal'
 
 const store = useAppStore()
 
