@@ -18,7 +18,7 @@ export const useEvents = vuecal => {
 
       // Inject a unique ID in each event.
       if (!event._) event._ = {}
-      event._.id = event.id || event._.id || ++uid
+      event._.id = event._.id || event.id || ++uid
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -78,10 +78,20 @@ export const useEvents = vuecal => {
     return events
   }
 
+  const createEvent = newEvent => {
+    if (!newEvent.start || !newEvent.end) {
+      console.error('Vue Cal: Cannot create an event without valid start and end dates.')
+      return
+    }
+
+    vuecal.config.events.push(newEvent) // Add the new event to the main events list.
+  }
+
   return {
     events,
     getEvent,
     getEventsByDate,
-    getViewEvents
+    getViewEvents,
+    createEvent
   }
 }

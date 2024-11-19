@@ -28,8 +28,9 @@
       v-model="hideWeekdays"
       :items="weekdays"
       multiple)
-  .w-flex
-    w-button(@click="addEvent") Add event
+  .w-flex.gap2
+    w-button(@click="addEventFromOutside") Add event
+    w-button(@click="addEventFromVueCal") Add event
 
   VueCal.no-shrink(
     date-picker
@@ -37,6 +38,7 @@
     v-bind="mainVuecalConfig")
 
   VueCal.no-shrink(
+    ref="vueCalRef"
     v-model:view="view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
@@ -84,6 +86,7 @@ useLocale(EnUs)
 addDatePrototypes()
 
 const store = useAppStore()
+const vueCalRef = ref(null)
 
 const locales = [
   { value: 'ko', label: 'ko' },
@@ -165,8 +168,16 @@ setTimeout(() => {
   ]
 }, 1000)
 
-const addEvent = () => {
+const addEventFromOutside = () => {
   mainVuecalConfig.events.push({ title: 'Event 1', start: (new Date()).subtractHours(4), end: (new Date()).subtractHours(3) })
+}
+
+const addEventFromVueCal = () => {
+  vueCalRef.value.view.createEvent({
+    title: 'Event New!!',
+    start: '2024-11-20 10:00',
+    end: '2024-11-20 10:30'
+  })
 }
 
 const log = (...args) => console.log(...args)

@@ -452,6 +452,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     if (viewId.value === 'month' && !config.eventsOnMonthView) return []
     return eventsManager.getViewEvents(cellDates.value)
   })
+
+  function createEvent(event) {
+    const { start, end, title, id } = event
+    eventsManager.createEvent(event)
+  }
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
@@ -512,6 +517,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     scrollToCurrentTime,
     scrollToTime,
     scrollTop,
+    createEvent,
     // Getters.
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },

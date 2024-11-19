@@ -113,6 +113,8 @@ watch(() => config.locale, newLocale => config.loadTexts(newLocale))
 
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
+
+defineExpose({ view: vuecal.view })
 </script>
 
 <style lang="scss">
