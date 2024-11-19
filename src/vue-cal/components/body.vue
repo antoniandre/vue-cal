@@ -6,8 +6,10 @@
     :start="date.start"
     :end="date.end"
     :index="i"
-    @drag-start="emit('drag-start')"
-    @drag-end="emit('drag-end')")
+    @cell-drag-start="emit('cell-drag-start')"
+    @cell-drag-end="emit('cell-drag-end')"
+    @event-drag-start="emit('event-drag-start')"
+    @event-drag-end="emit('event-drag-end')")
     template(v-if="$slots.cell" #cell="{ start, end, index, events }")
       slot(name="cell" :start="date.start" :end="date.end" :index="index" :events="events")
     template(v-if="$slots['cell-date']" #cell-date="{ start, end, events }")
@@ -22,7 +24,7 @@
 import { computed, inject } from 'vue'
 import VueCalCell from './cell.vue'
 
-const emit = defineEmits(['drag-start', 'drag-end'])
+const emit = defineEmits(['cell-drag-start', 'cell-drag-end', 'event-drag-start', 'event-drag-end'])
 
 const vuecal = inject('vuecal')
 let { view, config } = vuecal

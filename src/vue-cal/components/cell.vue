@@ -26,7 +26,9 @@
           event(
             v-for="eventId in cellEventsPerSchedule[schedule.id]"
             :key="eventId"
-            :id="eventId")
+            :id="eventId"
+            @event-drag-start="emit('event-drag-start')"
+            @event-drag-end="emit('event-drag-end')")
       .vuecal__event-placeholder(
         v-if="canDragToCreateEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -47,7 +49,12 @@
         :end="end"
         :events="cellEvents")
       template(v-else)
-        event(v-for="eventId in cellEvents" :key="eventId" :id="eventId")
+        event(
+          v-for="eventId in cellEvents"
+          :key="eventId"
+          :id="eventId"
+          @event-drag-start="emit('event-drag-start')"
+          @event-drag-end="emit('event-drag-end')")
     .vuecal__event-placeholder(v-if="canDragToCreateEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -79,7 +86,7 @@ const props = defineProps({
   index: { type: Number, required: true }
 })
 
-const emit = defineEmits(['drag-start', 'drag-end'])
+const emit = defineEmits(['cell-drag-start', 'cell-drag-end', 'event-drag-start', 'event-drag-end'])
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils, eventsManager } = vuecal
@@ -263,7 +270,7 @@ const trackMousemove = e => {
   touch.startPercentageX = touch.startX * 100 / rect.width
   touch.startPercentageY = touch.startY * 100 / rect.height
 
-  emit('drag-start') // Internal emit to the root to add a CSS class on wrapper while dragging.
+  emit('cell-drag-start') // Internal emit to the root to add a CSS class on wrapper while dragging.
   document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
   document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 }
@@ -302,7 +309,7 @@ const onDocMouseup = async e => {
 
   // If there's a @cell-drag-end listener, call it.
   cellEventListeners.value.dragEnd?.(e, { start: props.start, end: props.end, events: cellEvents })
-  emit('drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+  emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
 
   touch.dragging = false
   touch.startX = 0

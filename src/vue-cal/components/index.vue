@@ -40,7 +40,11 @@
                 :class="schedule.class"
                 v-html="schedule.label")
 
-            VueCalBody(@drag-start="isDragging = true" @drag-end="isDragging = false")
+            VueCalBody(
+              @cell-drag-start="isDraggingCell = true"
+              @cell-drag-end="isDraggingCell = false"
+              @event-drag-start="isDraggingEvent = true"
+              @event-drag-end="isDraggingEvent = false")
               template(v-if="$slots.cell" #cell="cell")
                 slot(name="cell" v-bind="cell")
               template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="cellDate")
@@ -73,7 +77,8 @@ const emit = defineEmits(['ready', 'update:view', 'update:selectedDate', 'update
 const vuecalEl = useTemplateRef('vuecal-el')
 const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
 const { config, view } = vuecal
-const isDragging = ref(false)
+const isDraggingCell = ref(false)
+const isDraggingEvent = ref(false)
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
 
 const wrapperClasses = computed(() => ({
@@ -85,7 +90,8 @@ const wrapperClasses = computed(() => ({
   'vuecal--light': !config.dark,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value,
-  'vuecal--dragging': isDragging.value,
+  'vuecal--dragging-cell': isDraggingCell.value,
+  'vuecal--dragging-event': isDraggingEvent.value,
   'vuecal--has-schedules': config.schedules
 }))
 

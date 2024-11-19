@@ -41,7 +41,7 @@
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve('super@!') })"
+    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve(false) })"
     @event-click="(e, event) => log('event-click', { e, event })"
     @event-drag="(e, event) => log('event-drag', { e, event })"
     @event-drag-end="(e, event) => log('event-drag', { e, event })"
