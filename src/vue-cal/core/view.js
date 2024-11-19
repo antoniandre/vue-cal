@@ -5,18 +5,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
   const selectedDate = ref(config.selectedDate || null)
 
-  // const dates = {
-
-  // }
-
-  // const cells = {
-
-  // }
-
-  // const navigation = {
-
-  // }
-
   // Dates.
   // ------------------------------------------------------
   // Preset at now date on load, but updated every minute if watchRealTime,

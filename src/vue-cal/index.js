@@ -1,14 +1,14 @@
 import { globalState } from './core'
 import { defaults } from './core/config'
-import { useDateUtils } from './utils/date'
 import VueCal from './components/index.vue'
 
 const useLocale = texts => {
-  globalState.texts = Object.assign({}, defaults.texts, texts)
+  globalState.texts = { ...defaults.texts, ...texts }
   globalState.dateUtils.updateTexts(globalState.texts)
 }
 
-const {
+// Export the required functions directly from `globalState.dateUtils`
+export const {
   addDatePrototypes,
   removeDatePrototypes,
   updateTexts,
@@ -28,7 +28,7 @@ const {
   dateToMinutes,
   countDays,
   datesInSameTimeStep,
-  isValid,
+  isValid: isValidDate,
   formatDate,
   formatDateLite,
   formatTime,
@@ -36,32 +36,4 @@ const {
   formatMinutes
 } = globalState.dateUtils
 
-export {
-  VueCal,
-  useLocale,
-  addDatePrototypes,
-  removeDatePrototypes,
-  updateTexts,
-  addDays,
-  subtractDays,
-  addHours,
-  subtractHours,
-  addMinutes,
-  subtractMinutes,
-  getWeek,
-  isToday,
-  isSameDate,
-  isInRange,
-  isLeapYear,
-  getPreviousFirstDayOfWeek,
-  stringToDate,
-  dateToMinutes,
-  countDays,
-  datesInSameTimeStep,
-  isValid as isValidDate,
-  formatDate,
-  formatDateLite,
-  formatTime,
-  formatTimeLite,
-  formatMinutes
-}
+export { VueCal, useLocale }
