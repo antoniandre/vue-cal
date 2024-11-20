@@ -1,7 +1,43 @@
 <template lang="pug">
 p.lh1.
-  In this section, you will find all the examples about possible usage of Vue Cal.#[br]
-  Let's start by mentioning some common use cases on Codepen.
+  In this section, you will find all the examples about possible usage of Vue Cal organized by
+  categories.
+
+title-link.mt4(h2 anchor="categories") Categories
+w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
+  .category.highlight-box
+    router-link(to="/examples/view")
+      w-icon(size="2.3rem") mdi mdi-calendar-blank-outline
+      | View
+
+  .category.highlight-box
+    router-link(to="/examples/date-and-time")
+      w-icon(size="2.3rem") mdi mdi-clock-outline
+      | Date and Time
+
+  .category.highlight-box
+    router-link(to="/examples/schedules")
+      w-icon(size="2.3rem") mdi mdi-account-multiple
+      | Schedules
+
+  .category.highlight-box
+    router-link(to="/examples/calendar-events")
+      w-icon(size="2.3rem") mdi mdi-calendar-today-outline
+      | Calendar Events
+
+  .category.highlight-box
+    router-link(to="/examples/dom-events")
+      w-icon(size="2.6rem") mdi mdi-gesture-double-tap
+      | DOM Events
+
+  .category.highlight-box
+    router-link(to="/examples/customization")
+      w-icon(size="2.2rem") mdi mdi-tune
+      | Customization
+
+p.lh1.mt12.pt12.
+  In addition to all the documentation examples, you may want to explore these other use cases or
+  user questions about usage of Vue Cal.#[br]
 
 .highlight-box.grow.mt4
   .title2 Demos on Codepen
@@ -64,38 +100,6 @@ p.lh1.
         a.ml2(href="https://codepen.io/collection/AMvOgd" target="_blank")
           strong Browse the full Vue Cal Codepen collection
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
-
-title-link.mt12(h2 anchor="categories") Categories
-w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
-  .category.highlight-box
-    router-link(to="/examples/view")
-      w-icon(size="2.3rem") mdi mdi-calendar-blank-outline
-      | View
-
-  .category.highlight-box
-    router-link(to="/examples/date-and-time")
-      w-icon(size="2.3rem") mdi mdi-clock-outline
-      | Date and Time
-
-  .category.highlight-box
-    router-link(to="/examples/schedules")
-      w-icon(size="2.3rem") mdi mdi-account-multiple
-      | Schedules
-
-  .category.highlight-box
-    router-link(to="/examples/calendar-events")
-      w-icon(size="2.3rem") mdi mdi-calendar-today-outline
-      | Calendar Events
-
-  .category.highlight-box
-    router-link(to="/examples/dom-events")
-      w-icon(size="2.6rem") mdi mdi-gesture-double-tap
-      | DOM Events
-
-  .category.highlight-box
-    router-link(to="/examples/customization")
-      w-icon(size="2.2rem") mdi mdi-tune
-      | Customization
 </template>
 
 <script setup>
