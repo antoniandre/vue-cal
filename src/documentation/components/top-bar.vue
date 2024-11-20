@@ -18,6 +18,15 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
+    w-button(
+      v-if="!isProduction"
+      route="/test"
+      text
+      tile
+      color="secondary"
+      height="100%")
+      w-icon.mr2.green(lg) mdi mdi-needle
+      span.green TESTS
     w-menu(
       show-on-hover
       hide-on-menu-click
@@ -92,6 +101,7 @@ const props = defineProps({
 
 const store = useAppStore()
 const todayDate = ref((new Date()).getDate())
+const isProduction = import.meta.env.PROD
 
 const docs = [
   { route: '/getting-started', label: 'Getting Started' },
