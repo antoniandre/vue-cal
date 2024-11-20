@@ -1382,180 +1382,16 @@ ssh-pre(language="css" :dark="store.darkMode").
   .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
   .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
   .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
-
-//- Example.
-example(title="schedules &amp; schedule events" anchor="schedules")
-  template(#desc)
-  template(#code-html).
-.mb6
-  | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
-  br
-  br
-  | By default the body of the calendar will fit the container.#[br]
-  | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
-  | body width and it will become scrollable horizontally.
-  ul
-    li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
-    li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
-
-  | #[br]You can also use the option #[span.code sticky-schedule-labels] to place the schedule labels in the header.#[br]#[br]
-
-  | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
-
-  | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
-
-  .w-flex.align-center.wrap
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.minCellWidth"
-      @click="schedulesExample.minCellWidth = schedulesExample.minCellWidth ? 0 : 400")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.minCellWidth ? 'close' : 'plus' }}
-      | {{ schedulesExample.minCellWidth ? `Min cell width: ${schedulesExample.minCellWidth}px` : 'Add min cell width' }}
-
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.minScheduleWidth"
-      @click="schedulesExample.minScheduleWidth = schedulesExample.minScheduleWidth ? 0 : 200")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
-      | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
-
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.stickyScheduleLabels"
-      @click="schedulesExample.stickyScheduleLabels = !schedulesExample.stickyScheduleLabels")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.stickyScheduleLabels ? 'close' : 'plus' }}
-      | Sticky Schedule Labels
-
-    w-button.px2.my1(
-      :outline="schedulesExample.schedules[1].hide"
-      @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.schedules[1].hide ? 'plus' : 'close' }}
-      | {{ schedulesExample.schedules[1].hide ? 'Show' : 'Hide' }} Dad
-
-.example.grow.my2(style="height: 600px")
-  vue-cal(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-step="30"
-    :views="['day', 'week', 'month']"
-    editable-events
-    :events="scheduleEvents"
-    :schedules="schedulesExample.schedules"
-    :sticky-schedule-labels="schedulesExample.stickyScheduleLabels"
-    :min-cell-width="schedulesExample.minCellWidth"
-    :min-schedule-width="schedulesExample.minScheduleWidth")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-    {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
-  &lt;/button&gt;
-  &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
-    {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
-  &lt;/button&gt;
-  &lt;button @click="stickyScheduleLabels = !stickyScheduleLabels"&gt;
-    Sticky Schedule Labels
-  &lt;/button&gt;
-  &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
-    Show/Hide Dad
-  &lt;/button&gt;
-
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-step="30"
-    :views="['day', 'week']"
-    editable-events
-    :events="events"
-    :schedules="schedules"
-    :sticky-schedule-labels="stickyScheduleLabels"
-    :min-cell-width="minCellWidth"
-    :min-schedule-width="minScheduleWidth"&gt;
-  &lt;/vue-cal&gt;
-
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    stickyScheduleLabels: false,
-    minCellWidth: 400,
-    minScheduleWidth: 0,
-    schedules: [
-      // The id property is added automatically if none (starting from 1), but you can set a custom one.
-      // If you need to toggle the schedules, you must set the id explicitly.
-      { id: 1, class: 'mom', label: 'Mom' },
-      { id: 2, class: 'dad', label: 'Dad', hide: false },
-      { id: 3, class: 'kid1', label: 'Kid 1' },
-      { id: 4, class: 'kid2', label: 'Kid 2' },
-      { id: 5, class: 'kid3', label: 'Kid 3' }
-    ]
-    events: [
-      {
-        start: '2018-11-19 10:35',
-        end: '2018-11-19 11:30',
-        title: 'Doctor appointment',
-        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-        class: 'health',
-        schedule: 1 // Has to match the id of the schedule you have set (or integers if none).
-      },
-      {
-        start: '2018-11-19 18:30',
-        end: '2018-11-19 19:15',
-        title: 'Dentist appointment',
-        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-        class: 'health',
-        schedule: 2
-      },
-      {
-        start: '2018-11-20 18:30',
-        end: '2018-11-20 20:30',
-        title: 'Cross-fit',
-        content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
-        class: 'sport',
-        schedule: 1
-      },
-      ...
-    ]
-  })
-
-ssh-pre(language="css" :dark="store.darkMode").
-  /* You can easily set a different style for each schedule of your days. */
-  .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-  .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-  .vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-  .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-  .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
-
-  /* Different color for different event types. */
-  .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-  .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-  .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
-import ViewExamples from './view.vue'
-
-// import EnUs from '@/vue-cal/i18n/en-us.json'
-// addDatePrototypes()
-
 
 const store = useAppStore()
-const locales = inject('locales')
-const locale = ref('zh-cn')
-const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
 
 const vuecalEl = ref(null)
-const schedulesExample = ref({
-  minCellWidth: 400,
-  minScheduleWidth: 0,
-  stickyScheduleLabels: false,
-  schedules: [
-    { id: 1, class: 'mom', label: 'Mom' },
-    { id: 2, class: 'dad', label: 'Dad', hide: false },
-    { id: 3, class: 'kid1', label: 'Kid 1' },
-    { id: 4, class: 'kid2', label: 'Kid 2' },
-    { id: 5, class: 'kid3', label: 'Kid 3' }
-  ]
-})
-const example1theme = ref('green')
 const minEventWidth = ref(0)
 const timeCellHeight = ref(26)
 const indicatorStyle = ref('count')
@@ -1835,33 +1671,6 @@ const allDayEvents = [
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
     schedule: 1
-  }
-]
-const scheduleEvents = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-21 12:00',
-    end: '2018-11-21 12:30',
-    title: 'Recall Dave',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-    class: 'leisure',
-    schedule: 1
-  },
-  {
-    start: '2018-11-21 20:00',
-    end: '2018-11-21 22:00',
-    title: 'Salsa',
-    content: '<i class="w-icon mdi mdi-walk"></i>',
-    class: 'sport',
-    schedule: 1
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Movie time',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure',
-    schedule: 2
   }
 ]
 const backgroundEvents = [

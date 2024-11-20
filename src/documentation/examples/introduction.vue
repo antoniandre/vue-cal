@@ -66,28 +66,33 @@ p.lh1.
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
 title-link.mt12(h2 anchor="categories") Categories
-ul.w-flex.gap4.basis-zero.ml0.mt12.wrap
-  li.category.highlight-box
+w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
+  .category.highlight-box
     router-link(to="/examples/view")
       w-icon(size="2.3rem") mdi mdi-calendar-blank-outline
       | View
 
-  li.category.highlight-box
+  .category.highlight-box
     router-link(to="/examples/date-and-time")
       w-icon(size="2.3rem") mdi mdi-clock-outline
       | Date and Time
 
-  li.category.highlight-box
+  .category.highlight-box
+    router-link(to="/examples/schedules")
+      w-icon(size="2.3rem") mdi mdi-account-multiple
+      | Schedules
+
+  .category.highlight-box
     router-link(to="/examples/calendar-events")
       w-icon(size="2.3rem") mdi mdi-calendar-today-outline
       | Calendar Events
 
-  li.category.highlight-box.md-break
+  .category.highlight-box
     router-link(to="/examples/dom-events")
       w-icon(size="2.6rem") mdi mdi-gesture-double-tap
       | DOM Events
 
-  li.category.highlight-box
+  .category.highlight-box
     router-link(to="/examples/customization")
       w-icon(size="2.2rem") mdi mdi-tune
       | Customization
@@ -128,9 +133,6 @@ main.main--examples-intro {
 
 @media screen and (max-width: $sm) {
   main.main--examples-intro {
-    .md-break,
-    .md-break + li {flex-basis: 48%;}
-
     .category a {
       display: flex;
       flex-direction: row;

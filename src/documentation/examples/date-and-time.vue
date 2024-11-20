@@ -126,6 +126,31 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
   vue-cal()
 
 //- Example.
+example(title="Showing Time Labels in Cells" anchor="show-time-in-cells")
+  template(#desc)
+    p.
+      You can choose to display the time labels in every cells by enabling the
+      #[span.code showTimeInCells] option.
+
+  template(#code-html).
+    &lt;vue-cal
+      :time-from="8 * 60"
+      :time-to="19 * 60"
+      :time-step="30"
+      hide-weekends
+      show-time-in-cells /&gt;
+
+  vue-cal(
+    :dark="store.darkMode"
+    :time-from="8 * 60"
+    :time-to="19 * 60"
+    :time-step="30"
+    show-time-in-cells
+    hide-weekends
+    style="height: 450px")
+    template(#no-event) &nbsp;
+
+//- Example.
 example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-max-dates")
   template(#desc)
     p.

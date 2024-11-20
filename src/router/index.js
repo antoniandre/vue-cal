@@ -46,6 +46,12 @@ const routes = [
         meta: { title: 'Date and Time' }
       },
       {
+        path: 'schedules',
+        name: 'examples-schedules',
+        component: () => import('@/documentation/examples/schedules.vue'),
+        meta: { title: 'schedules' }
+      },
+      {
         path: 'calendar-events',
         name: 'examples-calendar-events',
         component: () => import('@/documentation/examples/calendar-events.vue'),
@@ -62,7 +68,7 @@ const routes = [
         name: 'examples-customization',
         component: () => import('@/documentation/examples/customization.vue'),
         meta: { title: 'Customization' }
-      },
+      }
     ]
   },
   {

@@ -24,6 +24,8 @@ top-bar(v-if="$route.name !== 'home'" fixed)
               li
                 router-link.nav__item(to="/examples/date-and-time") Date and Time
               li
+                router-link.nav__item(to="/examples/schedules") Schedules
+              li
                 router-link.nav__item(to="/examples/calendar-events") Calendar Events
               li
                 router-link.nav__item(to="/examples/dom-events") DOM Events
@@ -83,11 +85,9 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
 
 <script setup>
 import { provide, ref } from 'vue'
-import { useAppStore } from '@/store'
 import TopBar from '@/documentation/components/top-bar.vue'
 import '@/scss/index.scss'
 
-const store = useAppStore()
 const offsetTop = ref(0)
 const goTopHidden = ref(true)
 
