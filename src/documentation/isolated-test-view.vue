@@ -42,34 +42,34 @@
         .w-flex.gap2
           w-button(@click="addEventFromOutside") Add event
           w-button(@click="addEventFromVueCal") Add event
-        w-radios.mb2(
+        w-radios(
           v-model="mainVuecalConfig.view"
           :items="viewsArray"
           return-values
           inline)
 
-  .w-flex.gap2
-    .no-shrink.no-grow
-      VueCal.no-shrink(
+  .w-flex.gap2.mt4.ovh
+    aside.no-shrink.no-grow
+      VueCal.no-shrink.no-grow(
         v-model:selected-date="pickerConfig.selectedDate"
         v-bind="pickerConfig")
 
-      .w-flex.align-center.gap1.body
+      .w-flex.align-center.gap1.body.wrap.no-grow
         span View Date:
         template(v-if="mainVuecalConfig.viewDate")
-          span.code {{ mainVuecalConfig.viewDate.format() }}
-          w-icon.grey(sm) mdi mdi-clock-outline
+          span.code {{ mainVuecalConfig.viewDate.format('DD/MM/YYYY') }}
+          w-icon.grey.mx-1(xs) mdi mdi-clock-outline
           span.code {{ mainVuecalConfig.viewDate.formatTime() }}
         .grey(v-else) N/A
-      .w-flex.align-center.gap1.body
+      .w-flex.align-center.gap1.wrap.size--sm.no-grow
         span Selected Date:
         template(v-if="mainVuecalConfig.selectedDate")
-          span.code {{ mainVuecalConfig.selectedDate.format() }}
-          w-icon.grey(sm) mdi mdi-clock-outline
+          span.code {{ mainVuecalConfig.selectedDate.format('DD/MM/YYYY') }}
+          w-icon.grey.mx-1(xs) mdi mdi-clock-outline
           span.code {{ mainVuecalConfig.selectedDate.formatTime() }}
         .grey(v-else) N/A
 
-    VueCal.no-shrink.grow(
+    VueCal.grow(
       ref="vueCalRef"
       v-model:view="view"
       v-model:selected-date="mainVuecalConfig.selectedDate"
@@ -251,6 +251,14 @@ const log = (...args) => console.log(...args)
   padding-left: 0;
   border-left: none;
   overflow: hidden;
+}
+
+aside {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  width: 215px;
 }
 
 .test-view {
