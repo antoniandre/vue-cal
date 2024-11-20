@@ -1,79 +1,108 @@
 <template lang="pug">
 //- This is an isolated test view. Just for testing purpose.
 .test-view
-  .w-flex.align-center.gap6.no-grow
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
-    w-select.mb4.no-grow(v-model="mainVuecalConfig.locale" :items="locales") Locale:
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
-    w-switch.mb4.no-grow(v-model="mainVuecalConfig.editableEvents") editable Events
+  .w-flex.gap6.no-grow
+    .w-flex.column.gap1.no-grow
+      w-switch.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
+      w-switch.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
+      w-switch.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
+      w-switch.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
+      w-switch.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
+      w-switch.no-grow(v-model="mainVuecalConfig.editableEvents") Editable Events
 
-    w-input(v-model="mainVuecalConfig.viewDayOffset" type="number") View Day Offset
+    .w-flex.column.grow
+      .w-flex.gap2.align-center.justify-end.no-grow
+        w-radios(
+          v-model="size"
+          :items="sizes"
+          return-values
+          inline)
+        w-icon.grey mdi mdi-translate
+        .grey Locale
+        w-select.no-grow(
+          v-model="mainVuecalConfig.locale"
+          :items="locales"
+          style="width: 60px")
 
-    w-radios.mb4(
-      v-model="mainVuecalConfig.view"
-      :items="viewsArray"
-      return-values
-      inline)
+      .w-flex.gap2.align-center.justify-end.no-grow
+          .grey View Day Offset
+          w-input(
+            v-model="mainVuecalConfig.viewDayOffset"
+            type="number"
+            label-position="left"
+            style="max-width: 30px")
+          .grey Week Days
+          w-select.mb4(
+            v-model="hideWeekdays"
+            :items="weekdays"
+            multiple
+            fit-to-content)
 
-    w-radios.mb4(
-      v-model="size"
-      :items="sizes"
-      return-values
-      inline)
+      .mta.w-flex.justify-space-between.no-grow
+        .w-flex.gap2
+          w-button(@click="addEventFromOutside") Add event
+          w-button(@click="addEventFromVueCal") Add event
+        w-radios.mb2(
+          v-model="mainVuecalConfig.view"
+          :items="viewsArray"
+          return-values
+          inline)
 
-    w-select.mb4(
-      v-model="hideWeekdays"
-      :items="weekdays"
-      multiple)
   .w-flex.gap2
-    w-button(@click="addEventFromOutside") Add event
-    w-button(@click="addEventFromVueCal") Add event
+    .no-shrink.no-grow
+      VueCal.no-shrink(
+        v-model:selected-date="pickerConfig.selectedDate"
+        v-bind="pickerConfig")
 
-  VueCal.no-shrink(
-    date-picker
-    v-model:selected-date="mainVuecalConfig.selectedDate"
-    v-bind="mainVuecalConfig")
+      .w-flex.align-center.gap1.body
+        span View Date:
+        template(v-if="mainVuecalConfig.viewDate")
+          span.code {{ mainVuecalConfig.viewDate.format() }}
+          w-icon.grey(sm) mdi mdi-clock-outline
+          span.code {{ mainVuecalConfig.viewDate.formatTime() }}
+        .grey(v-else) N/A
+      .w-flex.align-center.gap1.body
+        span Selected Date:
+        template(v-if="mainVuecalConfig.selectedDate")
+          span.code {{ mainVuecalConfig.selectedDate.format() }}
+          w-icon.grey(sm) mdi mdi-clock-outline
+          span.code {{ mainVuecalConfig.selectedDate.formatTime() }}
+        .grey(v-else) N/A
 
-  VueCal.no-shrink(
-    ref="vueCalRef"
-    v-model:view="view"
-    v-model:selected-date="mainVuecalConfig.selectedDate"
-    v-model:view-date="mainVuecalConfig.viewDate"
-    v-bind="mainVuecalConfig"
-    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve(false) })"
-    @event-click="(e, event) => log('event-click', { e, event })"
-    @event-drag="(e, event) => log('event-drag', { e, event })"
-    @event-drag-end="(e, event) => log('event-drag', { e, event })"
-    @event-drop="(e, event) => log('event-drop', { e, event })"
-    @event-resize="(e, event) => log('event-resize', { e, event })"
-    @event-resize-end="(e, event) => log('event-resize-end', { e, event })"
-    @cell-drag="(e, event) => log('cell-drag', { e, event })"
-    @cell-drag-end="(e, event) => log('cell-drag-end', { e, event })")
-    //- @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
-    //- @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
-    //- @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
-    //- @event-contextmenu.prevent="(e, event) => log('event-contextmenu', { e, event })"
-    //- @cell-click="(e, cell) => log('cell-click', { e, cell })"
-    //- @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
-    //- @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
-    //- @cell-mouseover="(e, cell) => log('cell-mouseover', { e, cell })"
-    //- @cell-mouseout="(e, cell) => log('cell-mouseout', { e, cell })")
+    VueCal.no-shrink.grow(
+      ref="vueCalRef"
+      v-model:view="view"
+      v-model:selected-date="mainVuecalConfig.selectedDate"
+      v-model:view-date="mainVuecalConfig.viewDate"
+      v-bind="mainVuecalConfig"
+      @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve(false) })"
+      @event-click="(e, event) => log('event-click', { e, event })"
+      @event-drag="(e, event) => log('event-drag', { e, event })"
+      @event-drag-end="(e, event) => log('event-drag', { e, event })"
+      @event-drop="(e, event) => log('event-drop', { e, event })"
+      @event-resize="(e, event) => log('event-resize', { e, event })"
+      @event-resize-end="(e, event) => log('event-resize-end', { e, event })"
+      @cell-drag="(e, event) => log('cell-drag', { e, event })"
+      @cell-drag-end="(e, event) => log('cell-drag-end', { e, event })")
+      //- @event-dblclick.stop="(e, event) => log('event-dblclick', { e, event })"
+      //- @event-mouseover.stop="(e, event) => log('event-mouseover', { e, event })"
+      //- @event-mouseout.stop="(e, event) => log('event-mouseout', { e, event })"
+      //- @event-contextmenu.prevent="(e, event) => log('event-contextmenu', { e, event })"
+      //- @cell-click="(e, cell) => log('cell-click', { e, cell })"
+      //- @cell-mousedown="(e, cell) => log('cell-mousedown', { e, cell })"
+      //- @cell-touchstart="(e, cell) => log('cell-touchstart', { e, cell })"
+      //- @cell-mouseover="(e, cell) => log('cell-mouseover', { e, cell })"
+      //- @cell-mouseout="(e, cell) => log('cell-mouseout', { e, cell })")
 
-    //- template(#title="view") {{ view }}
-    //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
-    //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
-    //- template(#header="{ view, availableViews, vuecal }")
-      w-button.ma1(
-        v-for="(grid, viewName) in availableViews"
-        type="button"
-        @click="vuecal.switchView(viewName)"
-        :outline="view !== viewName") {{ viewName }}
-
-  p selected Date: {{ mainVuecalConfig.selectedDate }}
-  p View Date: {{ mainVuecalConfig.viewDate }}
+      //- template(#title="view") {{ view }}
+      //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
+      //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
+      //- template(#header="{ view, availableViews, vuecal }")
+        w-button.ma1(
+          v-for="(grid, viewName) in availableViews"
+          type="button"
+          @click="vuecal.switchView(viewName)"
+          :outline="view !== viewName") {{ viewName }}
 </template>
 
 <script setup>
@@ -120,6 +149,17 @@ const sizes = [
 const weekdays = [{ label: 'mon' }, { label: 'tue' }, { label: 'wed' }, { label: 'thu' }, { label: 'fri' }, { label: 'sat' }, { label: 'sun' }]
 const hideWeekdays = ref([])
 
+const pickerConfig = reactive({
+  datePicker: true,
+  dark: computed(() => store.darkMode),
+  selectedDate: computed(() => mainVuecalConfig.selectedDate),
+  locale: computed(() => mainVuecalConfig.locale),
+  startWeekOnSunday: computed(() => mainVuecalConfig.startWeekOnSunday),
+  todayButton: computed(() => mainVuecalConfig.todayButton),
+  hideWeekends: computed(() => mainVuecalConfig.hideWeekends),
+  hideWeekdays: computed(() => mainVuecalConfig.hideWeekdays),
+  viewDayOffset: computed(() => mainVuecalConfig.viewDayOffset)
+})
 const mainVuecalConfig = reactive({
   views,
   dark: computed(() => store.darkMode),
@@ -207,7 +247,7 @@ const log = (...args) => console.log(...args)
 
 <style lang="scss">
 .main--test {
-  padding-top: 38px;
+  padding-top: 60px;
   padding-left: 0;
   border-left: none;
   overflow: hidden;
@@ -217,13 +257,11 @@ const log = (...args) => console.log(...args)
   overflow: auto;
   display: flex;
   flex-direction: column;
-  padding: 2rem;
-  gap: 4px;
 }
 
 // Global.
 .w-app {margin: 0;padding: 0;}
-.top-bar, footer {display: none !important;}
+footer {display: none !important;}
 
 // Min cell width example.
 // --------------------------------------------------------
@@ -246,18 +284,6 @@ const log = (...args) => console.log(...args)
   }
 
   em {font-size: 0.9em;color: #999;}
-}
-
-.theme-switch {
-  position: absolute;
-  top: 10px;
-  right: 24px;
-
-  .w-switch__thumb {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
 }
 
 .vuecal__cell-schedule {
