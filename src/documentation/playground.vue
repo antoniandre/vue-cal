@@ -242,7 +242,7 @@ const log = (...args) => console.log(...args)
 </script>
 
 <style lang="scss">
-.page--examples-playground {
+.page--playground {
   padding-top: 60px;
   padding-left: 12px;
   padding-right: 12px;
@@ -251,7 +251,7 @@ const log = (...args) => console.log(...args)
   max-width: none;
 
   // Global.
-  ~ footer, aside, h1 {display: none;}
+  ~ footer, aside {display: none;}
 
   main {
     overflow: auto;

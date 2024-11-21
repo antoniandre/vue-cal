@@ -68,14 +68,13 @@ const routes = [
         name: 'examples-customization',
         component: () => import('@/documentation/examples/customization.vue'),
         meta: { title: 'Customization' }
-      },
-      {
-        path: 'playground',
-        name: 'examples-playground',
-        component: () => import('@/documentation/examples/playground.vue'),
-        meta: { title: 'Playground' }
       }
     ]
+  },
+  {
+    path: '/playground',
+    name: 'playground',
+    component: () => import('@/documentation/playground.vue')
   },
   {
     path: '/migration-guide',
