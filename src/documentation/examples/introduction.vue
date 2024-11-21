@@ -35,9 +35,16 @@ w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
       w-icon(size="2.2rem") mdi mdi-tune
       | Customization
 
-p.lh1.mt12.pt12.
-  In addition to all the documentation examples, you may want to explore these other use cases or
-  user questions about usage of Vue Cal.#[br]
+title-link(h2 anchor="playground") Playground &amp; Other Demos
+p.
+  In addition to all the documentation examples, you may want to test the playground for a good
+  overview, or for reference when troubleshooting your app.#[br]
+  you may want to explore these other use cases or user questions about usage of Vue Cal.#[br]
+
+.w-flex.justify-center.my6
+  router-link.highlight-box.no-grow.w-flex.align-center.pa12.gap3(to="/examples/playground")
+    w-icon.mt-5.grey(size="2.5rem") mdi mdi-seesaw
+    | PLAYGROUND
 
 .highlight-box.grow.mt4
   .title2 Demos on Codepen

@@ -121,7 +121,7 @@ p.
 .w-flex.gap4.smd-column
   div
     p &bull; As direct props like this:
-    ssh-pre.my2.ml3(language="html-vue" :dark="store.darkMode").
+    ssh-pre.my2.ml3.pt4(language="html-vue" :dark="store.darkMode").
       &lt;vue-cal hide-weekends time ... /&gt;
   div
     p &bull; Or bind all the props via v-bind like this:

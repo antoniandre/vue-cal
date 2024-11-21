@@ -9,7 +9,7 @@ alert.size--lg.pa3(info).
 title-link.mt12.mb2(h2 anchor="tldr") TLDR;
 alert(info no-icon)
   p In short, Date prototypes allow you to do things like this:
-  ssh-pre(language="js" :dark="store.darkMode").
+  ssh-pre.d-iflex.pr6(language="js" :dark="store.darkMode").
     new Date().addDays(3).format() // Returns '{{ new Date().addDays(3).format() }}'
 
 //- What is this and what for.
