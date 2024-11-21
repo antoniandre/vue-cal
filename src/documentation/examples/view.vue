@@ -86,7 +86,7 @@ example(title="Themes" anchor="themes")
 
   template(#code-css v-if="exThemes.pickColorSwitch").
     .vuecal {
-      --vuecal-primary: {{ exThemes.color }};
+      --vuecal-primary-color: {{ exThemes.color }};
     }
   vue-cal.mxa(
     ref="vuecalEl"
