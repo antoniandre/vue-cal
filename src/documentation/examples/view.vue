@@ -61,31 +61,100 @@ example(title="Themes" anchor="themes")
     p.
       You have already seen the default theme. It comes with a bunch of CSS rules and variables that
       you can easily override, and it also offers a light and dark mode.
-    p But if you prefer to do your own styles from scratch, you can disable the default theme.
+    p.
+      But if you prefer to do your own styles from scratch, you can disable the default theme: it will
+      only set the critical layout styles.
     .w-flex.wrap.gap3.mt2
-      w-switch(v-model="exThemes.default") Default Theme
+      w-switch(
+        v-model="exThemes.default"
+        @update:model-value="exThemes.onDefaultThemeSwitch") Default Theme
       w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
+      .mla.w-flex.align-center
+        w-switch.mr1(
+          v-model="exThemes.pickColorSwitch"
+          @update:model-value="exThemes.onColorPickSwitch"
+          :disabled="!exThemes.default")
+        .w-flex.align-center(:class="{ disabled: !exThemes.default || !exThemes.pickColorSwitch }")
+          .primary Or even pick a color!
+          input.ml2(
+            @input="e => exThemes.setThemeColor(e.target.value, true)"
+            v-model="exThemes.color"
+            type="color")
+
   template(#code-html).
     &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark && exThemes.default ? ' dark' : '' }} /&gt;
+
+  template(#code-css v-if="exThemes.pickColorSwitch").
+    .vuecal {
+      --vuecal-primary: {{ exThemes.color }};
+    }
   vue-cal.mxa(
     ref="vuecalEl"
     :theme="exThemes.default && 'default'"
     :dark="exThemes.dark")
+
+//- Example.
+example(title="Internationalization" anchor="internationalization")
+  template(#desc)
+    p.
+      Translate your calendar in any of the {{ exI18n.locales.length }} existing locales.#[br]
+      You can raise a PR if you don't find the locale translation you want in this list.
+    .text-right
+      .w-flex.no-grow.align-center.justify-end
+        w-icon.mr2.caption(sm) mdi mdi-translate
+        span.mr2 Locale:
+        w-select.no-grow(
+          v-model="exI18n.locale"
+          :items="exI18n.locales"
+          item-value-key="code"
+          style="max-width: 200px"
+          :menu-props="{ alignRight: true }")
+          template(#selection="{ item }")
+            span.mr2 {{ item.label }}
+            w-tag.code.ma0(round sm) {{ item.code }}
+          template(#item="{ item }")
+            span.mr2 {{ item.label }}
+            w-tag.code.ma0(round sm) {{ item.code }}
+      .w-flex.no-grow.align-center.justify-end.mt2
+        w-icon.mr2.caption(sm) mdi mdi-clock-outline
+        span.mr2 Request:
+        w-radios(
+          v-model="exI18n.preload"
+          :items="[{ value: 'preload', label: 'Preload' }, { value: '', label: 'On the Fly' }]"
+          inline)
+
+  template(#code-html).
+    &lt;vue-cal locale="{{ exI18n.locale }}" /&gt;
+  template(#code-js v-if="exI18n.preload").
+    import { VueCal, useLocale } from '@/vue-cal'
+    import Translations from '@/vue-cal/i18n/{{ exI18n.locale }}.json'
+
+    useLocale(Translations)
+  alert(v-if="exI18n.preload")
+    | When preloading, the locale is loaded upfront, so we don't need to preload the default English
+    | locale first.
+    ul
+      li Saves 1 request of less than ~1kb
+      li.
+        Can potentially avoid a blink of texts while switching locales when Vue Cal renders and
+        your locale file is not yet loaded.
+
+  vue-cal(
+    :locale="exI18n.locale"
+    @ready="exI18n.updateDateTexts"
+    :dark="store.darkMode")
+
   template(#desc2)
-    .mt2
-      | You can change the whole color theme by only setting the #[code --vuecal-primary-color] CSS variable.#[br]
-      | Look, pick your favorite color:
-      input.ml1(
-        @input="e => exThemes.setThemeColor(e.target.value)"
-        :value="store.darkMode ? '#316191' : '#1976d2'"
-        type="color" )
+    .w-flex.justify-end.mt1
+      a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank")
+        | Try it in Codepen
+        w-icon.ml1(sm) mdi mdi-open-in-new
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { inject, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
-import ViewExamples from './view.vue'
 
 const store = useAppStore()
 
@@ -105,13 +174,42 @@ const exHideElements = ref({
 const exThemes = reactive({
   default: true,
   dark: store.darkMode,
-  setThemeColor: color => {
+  pickColorSwitch: ref(false),
+  defaultColor: ref(store.darkMode ? '#316191' : '#1976d2'),
+  color: ref(store.darkMode ? '#316191' : '#1976d2'),
+  setThemeColor: (color, switchOn = false) => {
     vuecalEl.value.$el.style.setProperty('--vuecal-primary-color', color)
+    if (switchOn) exThemes.pickColorSwitch = true
+  },
+  onDefaultThemeSwitch: bool => {
+    if (bool) {
+      exThemes.setThemeColor(exThemes.defaultColor)
+    }
+    else {
+      exThemes.setThemeColor(exThemes.defaultColor)
+      exThemes.pickColorSwitch = false
+    }
+  },
+  onColorPickSwitch: () => {
+    // if (!exThemes.pickColorSwitch) exThemes.color = exThemes.defaultColor
+    exThemes.setThemeColor(exThemes.pickColorSwitch ? exThemes.color : exThemes.defaultColor)
   }
 })
 const vuecalEl = ref(null)
+
+const exI18n = reactive({
+  locales: inject('locales'),
+  locale: ref('zh-cn'),
+  preload: ref(''),
+  updateDateTexts: () => {
+    // In Vue Cal documentation Chinese texts are loaded last.
+    // Override Date texts with english for prototype formatting functions.
+    setTimeout(vuecalEl.value.updateTexts, 3000)
+  }
+})
 </script>
 
 <style lang="scss" scoped>
 .example .vuecal:not(.vuecal--date-picker) {height: 300px;}
+.example--themes .disabled input {opacity: 0.5;}
 </style>

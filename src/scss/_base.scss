@@ -219,13 +219,14 @@ ul {
   &.w-alert {padding-left: 20px;}
 }
 
-.ssh-pre {
+div.ssh-pre {
   margin-top: 12px;
   margin-bottom: 12px;
   font-size: 13px;
   line-height: 1.35;
 
   &[data-label] {
+    margin-top: 12px;
     padding-top: 8px;
   }
   // Always add the label, even when not provided.

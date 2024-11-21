@@ -1,47 +1,5 @@
 <template lang="pug">
 //- Example.
-example(title="Internationalization" anchor="internationalization")
-  template(#desc)
-    p.
-      Let you translate the calendar texts into your own language (#[span.code locale]).#[br]
-      Refer to the #[span.code locale] option in the #[a(href="#api") API] section to know more or if you want to provide a translation.#[br]
-      Try it in Codepen: #[a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank") Vue Cal - Internationalization].
-    .w-flex.no-grow.align-center.wrap
-      w-icon.mr2(color="primary") mdi mdi-translate
-      span.mr2 Current language:
-      w-select.pa0.mla.no-grow(
-        v-model="locale"
-        :items="locales"
-        item-value-key="code"
-        style="width: 200px")
-        template(#selection="{ item }")
-          span.mr2 {{ item.label }}
-          w-tag.code.ma0(bg-color="grey-light5" round) {{ item.code }}
-
-  template(#code-html).
-    &lt;vue-cal :time="false" small view="year" locale="{{ locale }}" /&gt;
-
-  vue-cal(
-    :time="false"
-    small
-    view="year"
-    :locale="locale"
-    @ready="overrideDateTexts"
-    :dark="store.darkMode"
-    style="width: 500px;height: 340px;max-width: 100%")
-
-  template(#desc2)
-    h4 Alternative
-    p.
-      If you need full control on the texts, you can alternatively provide an object containing all the
-      texts (start from the locale JSON file matching your language).#[br]
-      Keep in mind this is not the recommended way: texts may be added / modified / removed in the library
-      and your provided custom texts may not work anymore.#[br]
-      Always prefer the standard locales!
-
-
-
-//- Example.
 example(title="Timeline & Business Hours" anchor="timeline")
   template(#desc)
     p.
@@ -354,23 +312,13 @@ ssh-pre(language="css" :dark="store.darkMode").
 </template>
 
 <script setup>
-import { computed, inject, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
-// import EnUs from '@/vue-cal/i18n/en-us.json'
-// addDatePrototypes()
-const locales = inject('locales')
-const locale = ref('zh-cn')
 const vuecalEl = ref(null)
-
-const overrideDateTexts = () => {
-  // In Vue Cal documentation Chinese texts are loaded last.
-  // Override Date texts with english for prototype formatting functions.
-  setTimeout(vuecalEl.value.updateDateTexts, 3000)
-}
 
 const schedulesExample = ref({
   minCellWidth: 400,
