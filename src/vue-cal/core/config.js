@@ -130,7 +130,8 @@ export const useConfig = (vuecal, props, attrs) => {
   const selectedDate = computed(() => {
     if (typeof props.selectedDate === 'string') return dateUtils.stringToDate(props.selectedDate)
     else if (props.selectedDate instanceof Date) return props.selectedDate
-    else console.warn('Vue Cal: The provided selected date is invalid.', props.selectedDate)
+    else if (!props.selectedDate) console.log('Vue Cal: Info - The provided selected date is undefined.')
+    else console.warn('Vue Cal: The provided selected date is invalid:', props.selectedDate)
   })
 
   const schedules = computed(() => {
