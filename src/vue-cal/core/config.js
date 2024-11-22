@@ -44,6 +44,15 @@ const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun
 export const useConfig = (vuecal, props, attrs) => {
   const { dateUtils } = vuecal
   const ready = false
+  const view = computed(() => {
+    if (availableViews.value[props.view]) return props.view
+    else {
+      console.warn(
+        `Vue Cal: the provided view \`${props.view}\` is either invalid or not in the list of available views.` +
+        ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
+      return Object.keys(availableViews.value)[0]
+    }
+  })
   const sm = computed(() => props.sm && !props.xs)
   const xs = computed(() => props.xs || props.datePicker)
   const clickToNavigate = computed(() => props.clickToNavigate || (props.datePicker && props.clickToNavigate !== false))
@@ -79,12 +88,11 @@ export const useConfig = (vuecal, props, attrs) => {
   })
   const hideWeekends = computed(() => props.hideWeekends || (hideWeekdays.value[6] && hideWeekdays.value[7]))
 
-  const views = props.views
-
   const availableViews = computed(() => {
     const datePicker = props.datePicker
     let invalidViews = 0
     let availViews = {} // The new object to return.
+    const views = props.views
 
     if (datePicker) return {
       month: { ...defaults.availableViews.month },
@@ -113,6 +121,7 @@ export const useConfig = (vuecal, props, attrs) => {
       }
       if (!Object.keys(availViews).length) {
         console.warn('Vue Cal: No valid view in the provided `views` prop. Falling back to default views.')
+        availViews = { ...defaults.availableViews }
       }
     }
     else availViews = { ...defaults.availableViews }
@@ -224,6 +233,7 @@ export const useConfig = (vuecal, props, attrs) => {
     schedules,
     selectedDate,
     editableEvents,
+    view,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
     get size () { return xs.value ? 'xs' : (sm.value ? 'sm' : 'lg') },
