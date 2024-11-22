@@ -21,16 +21,16 @@ example(title="Views" anchor="views")
       array of strings.#[br]
       To set a view by default, use the #[code view] option and provide a string.
       By default all the views are visible and the default active view is the #[code week] view.
-
+    .w-flex.wrap.gap3.justify-end.my2
+      span Views:
+      w-checkboxes(v-model="exViews.enabledViews" :items="exViews.views" inline round)
   template(#code-html).
-    &lt;vue-cal view="month" :views="['day', 'month']" /&gt;
+    &lt;vue-cal view="month" :views="['{{ exViews.enabledViews.join('\', \'') }}']" /&gt;
 
   vue-cal.ex--disable-views(
     :dark="store.darkMode"
-    :time="false"
     view="month"
-    :views="['day', 'month']"
-    style="height: 350px")
+    :views="exViews.enabledViews")
 
 //- Example.
 example(title="Hide Elements & Toggles" anchor="hide-elements")
@@ -160,6 +160,11 @@ const store = useAppStore()
 
 const exLayouts = ref({
   size: 'normal'
+})
+
+const exViews = reactive({
+  views: [{ value: 'day', label: 'Day' }, { value: 'days', label: 'Days' }, { value: 'month', label: 'Month' }, { value: 'year', label: 'Year' }, { value: 'years', label: 'Years' }],
+  enabledViews: ref(['day', 'month'])
 })
 
 const exHideElements = ref({
