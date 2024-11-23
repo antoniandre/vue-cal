@@ -275,6 +275,19 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     console.log('🙆‍♂️', 'updateView', startTheoretical.value)
   }
 
+  /**
+   * Only call the updateView function (which redraws the cells) if the current view changes.
+   *
+   * @param {Object} views the new available views object.
+   */
+  function updateViewIfNeeded (views) {
+    const currView = viewId.value
+    const currViewLayout = config.availableViews[currView] // cols * rows.
+    if (!(views[currView] && JSON.stringify(views[currView]) === JSON.stringify(currViewLayout))) {
+      updateView()
+    }
+  }
+
   function switchView (id, emitUpdate = true) {
     const availableViews = Object.keys(config.availableViews)
 
@@ -460,7 +473,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
-  watch(() => config.availableViews, updateView)
+  watch(() => config.availableViews, updateViewIfNeeded)
   watch(() => config.datePicker, () => switchView('month', false))
   watch(() => config.viewDate, date => updateViewDate(date, false))
   watch(() => config.selectedDate, date => updateSelectedDate(date, false))

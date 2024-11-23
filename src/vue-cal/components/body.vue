@@ -34,7 +34,7 @@ let { view, config } = vuecal
 // transition. In other terms, there can be 2 vuecal__scrollable elements that are animated with
 // different values of these CSS variables at the same time. Beautiful :)
 const bodyStyles = computed(() => {
-  console.log('recomputing bodyStyles', config.availableViews, view.id)
+  console.log('recomputing bodyStyles', view.id)
   return {
     '--vuecal-grid-columns': view.cols,
     '--vuecal-grid-rows': view.rows
