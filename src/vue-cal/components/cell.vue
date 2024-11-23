@@ -30,7 +30,7 @@
             @event-drag-start="emit('event-drag-start')"
             @event-drag-end="emit('event-drag-end')")
       .vuecal__event-placeholder(
-        v-if="canDragToCreateEvent && touch.schedule === schedule.id"
+        v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -55,7 +55,7 @@
           :id="eventId"
           @event-drag-start="emit('event-drag-start')"
           @event-drag-end="emit('event-drag-end')")
-    .vuecal__event-placeholder(v-if="canDragToCreateEvent" :style="eventPlaceholder.style")
+    .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   template(v-if="specialHours")
@@ -108,6 +108,7 @@ const touch = reactive({
   movePercentageY: 0,
   schedule: null
 })
+const awaitingEventCreation = ref(false)
 
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
 // The calendar creation could be canceled for different wanted reasons at the end of dragging.
@@ -130,7 +131,7 @@ const eventPlaceholder = computed(() => {
   }
 })
 
-const canDragToCreateEvent = computed(() => touch.dragging && config.editableEvents?.dragToCreate)
+const isCreatingEvent = computed(() => config.editableEvents?.dragToCreate && (touch.dragging || awaitingEventCreation.value))
 
 const classes = computed(() => {
   const now = new Date()
@@ -288,30 +289,18 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = async e => {
-  let { start, end, startMinutes, endMinutes, style, schedule } = eventPlaceholder.value
-  start = new Date(props.start)
-  start.setMinutes(startMinutes)
-  end = new Date(props.start)
-  end.setMinutes(endMinutes)
-
-  if (canDragToCreateEvent.value) {
-    const eventToEmit = { start, end, style }
-    if (config.schedules) eventToEmit.schedule = schedule
-
-    // If there's a @event-create listener, call it,
-    // and check if it returns true to accept the event creation
-    // or false to cancel it. If no listener, create the event.
-    const createListener = typeof config.eventListeners.event.create === 'function' && config.eventListeners.event.create
-    const doCreate = !!createListener && await new Promise(resolve => createListener(e, eventToEmit, resolve)) || true
-
-    if (doCreate) console.log('@todo: Create event!')
-  }
-
   // If there's a @cell-drag-end listener, call it.
   cellEventListeners.value.dragEnd?.(e, { start: props.start, end: props.end, events: cellEvents })
   emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
-
+  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
   touch.dragging = false
+
+  if (config.editableEvents?.dragToCreate) {
+    awaitingEventCreation.value = true
+    await createEventIfAllowed(e)
+    awaitingEventCreation.value = false
+  }
+
   touch.startX = 0
   touch.startY = 0
   touch.moveX = 0
@@ -321,8 +310,25 @@ const onDocMouseup = async e => {
   touch.movePercentageX = 0
   touch.movePercentageY = 0
   touch.schedule = null
+}
 
-  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+const createEventIfAllowed = async e => {
+  let { start, end, startMinutes, endMinutes } = eventPlaceholder.value
+  start = new Date(props.start)
+  start.setMinutes(startMinutes)
+  end = new Date(props.start)
+  end.setMinutes(endMinutes)
+
+  const eventToCreate = { ...eventPlaceholder.value, start, end }
+  // if (config.schedules) eventToCreate.schedule = schedule
+
+  // If there's a @event-create listener, call it and check if it returns true to accept the event
+  // creation or false to cancel it. If no listener, create the event.
+  const createListener = typeof config.eventListeners.event.create === 'function' && config.eventListeners.event.create
+  let doCreate = false
+  if (!!createListener) doCreate = await new Promise(resolve => createListener(e, eventToCreate, resolve))
+
+  if (!createListener || doCreate) view.createEvent(eventToCreate)
 }
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
