@@ -1,8 +1,4 @@
 <template lang="pug">
-p.lh1.
-  In this section, you will find all the examples about possible usage of Vue Cal organized by
-  categories.
-
 title-link.mt4(h2 anchor="categories") Categories
 w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
   .category.highlight-box

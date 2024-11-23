@@ -64,7 +64,7 @@ ul
   li allDayBarHeight -> moved to a CSS variable: --vuecal-all-day-bar-height.
   li showWeekNumbers -> renamed weekNumbers
   li showAllDayEvents -> renamed allDayEvents
-  li showTimeInCells -> renamed timeInCells
+  li showTimeInCells -> removed: if you need to render time in cells, you can use cells slots.
 </template>
 
 <script setup>

@@ -915,21 +915,6 @@ w-accordion.mt2(
           #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
           #[span.code 'short'], to display only the event title.
 
-  w-accordion-item
-    template(#title)
-      strong.code showTimeInCells
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code false
-    template(#content)
-      p.
-        When set to #[span.code true], the time labels will be visible in
-        each cell, in each time slot of the #[code day] and #[code week] views.
-        You can then use CSS to style to taste.
-        For instance, you could hide all the labels and show only the one that
-        is being hovered.#[br]
-        Will have no effect if #[span.code time] is set to false.
 </template>
 
 <script setup>

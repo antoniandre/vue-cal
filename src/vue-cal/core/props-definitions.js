@@ -62,6 +62,5 @@ export const props = {
   minScheduleWidth: { type: Number, default: 0 },
   overlapsPerTimeStep: { type: Boolean, default: false },
   resizeX: { type: Boolean, default: false },
-  allDayEvents: { type: [Boolean, String], default: false },
-  timeInCells: { type: Boolean, default: false }
+  allDayEvents: { type: [Boolean, String], default: false }
 }

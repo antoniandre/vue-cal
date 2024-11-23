@@ -132,7 +132,7 @@ example(title="Internationalization" anchor="internationalization")
     useLocale(Translations)
   alert(v-if="exI18n.preload")
     | When preloading, the locale is loaded upfront, so we don't need to preload the default English
-    | locale first.
+    | locale first. No big deal, but:
     ul
       li Saves 1 request of less than ~1kb
       li.
