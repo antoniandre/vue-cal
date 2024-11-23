@@ -324,11 +324,12 @@ const createEventIfAllowed = async e => {
 
   // If there's a @event-create listener, call it and check if it returns true to accept the event
   // creation or false to cancel it. If no listener, create the event.
-  const createListener = typeof config.eventListeners.event.create === 'function' && config.eventListeners.event.create
-  let doCreate = false
-  if (!!createListener) doCreate = await new Promise(resolve => createListener(e, eventToCreate, resolve))
-
-  if (!createListener || doCreate) view.createEvent(eventToCreate)
+  const { create: createListener } = config.eventListeners.event
+  let shouldCreateEvent = true
+  if (typeof createListener === 'function') {
+    shouldCreateEvent = await new Promise(resolve => createListener(e, eventToCreate, resolve))
+  }
+  if (shouldCreateEvent) view.createEvent(eventToCreate)
 }
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
