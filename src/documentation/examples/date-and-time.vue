@@ -215,8 +215,7 @@ example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hidin
   vue-cal(
     show-week-numbers
     :hide-weekdays="['tue', 'wed', 'fri']"
-    :dark="store.darkMode"
-    style="height: 350px")
+    :dark="store.darkMode")
 </template>
 
 <script setup>

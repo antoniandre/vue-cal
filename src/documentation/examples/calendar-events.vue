@@ -1,18 +1,27 @@
 <template lang="pug">
-//- Example.
-//- example(title="" anchor="")
-  template(#desc)
-  template(#code-html).
-
-
+alert(info)
+  h3.mt-2.mb2 Read First
+  p Events are always rendered in cells, whether a time column is displayed or not.
+  ul
+    li.
+      Events are defined essentially with #[code start] and #[code end] attributes, but can contain a
+      lot more, even custom attributes.
+    li.
+      #[code start] and #[code end] can be defined (by you) as both a native JavaScript Date or a
+      Formatted date time such as #[code {{ new Date().format() }} {{ new Date().formatTime() }}].
+      But when Vue Cal gives you details about an appointment, the #[code start] and #[code end] will
+      always be JavaScript Dates.
+    li.
+      When the events are editable, they can be created, deleted, drag and dropped to a different
+      date and time, resized and their content can be edited (externally). There's also a more granular
+      control on what exactly should be editable.
 
 //- Example.
 example(title="Timeless Events" anchor="timeless-events")
   template(#desc)
     p.
       The events have associated dates but no time information.#[br]
-      Timeless events cannot be resized as they have no time or duration information.#[br]
-      Refer to the #[span.code events] option in the #[a(href="#api") API] section.
+      Timeless events cannot be resized as they have no time or duration information.
   template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
@@ -54,9 +63,9 @@ example(title="Timeless Events" anchor="timeless-events")
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time="false"
-    :views="['day', 'week']"
-    hide-weekends
-    :events="timelessEvents")
+    :view-date="new Date().subtractDays(1)"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    :events="exTimelessEvents.events")
 
 //- Example.
 example(title="Events with time information" anchor="events-with-time")
@@ -70,8 +79,7 @@ example(title="Events with time information" anchor="events-with-time")
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
       :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
+      :views="['days']"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -1385,11 +1393,51 @@ ssh-pre(language="css" :dark="store.darkMode").
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
+
+const exTimelessEvents = reactive({
+  events: [
+    {
+      start: new Date().subtractDays(1),
+      end: new Date().subtractDays(1),
+      title: 'Salsa Class',
+      content: '<i class="w-icon mdi mdi-dance-ballroom"></i>',
+      class: 'leisure'
+    },
+    {
+      start: new Date(),
+      end: new Date(),
+      title: 'Grocery Shopping',
+      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
+      class: 'leisure'
+    },
+    {
+      start: new Date(),
+      end: new Date(),
+      title: 'Golf with John',
+      content: '<i class="w-icon mdi mdi-golf"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date().addDays(1),
+      end: new Date().addDays(1),
+      title: 'Dad\'s Birthday!',
+      content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date().addDays(2),
+      end: new Date().addDays(2),
+      title: 'Black Friday',
+      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
+      class: 'leisure'
+    }
+  ]
+})
 
 const vuecalEl = ref(null)
 const minEventWidth = ref(0)
@@ -1711,36 +1759,7 @@ const backgroundEvents = [
     background: true
   }
 ]
-const timelessEvents = [
-  {
-    start: '2018-11-21',
-    end: '2018-11-21',
-    title: 'Need to go shopping',
-    content: '<i class="w-icon mdi mdi-cart-outline"></i>',
-    class: 'leisure'
-  },
-  {
-    start: '2018-11-21',
-    end: '2018-11-21',
-    title: 'Golf with John',
-    content: '<i class="w-icon mdi mdi-golf"></i>',
-    class: 'sport'
-  },
-  {
-    start: '2018-11-22',
-    end: '2018-11-22',
-    title: 'Dad\'s birthday!',
-    content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
-    class: 'sport'
-  },
-  {
-    start: '2018-11-23',
-    end: '2018-11-23',
-    title: 'Black Friday',
-    content: '<i class="w-icon mdi mdi-cart-outline"></i>',
-    class: 'leisure'
-  }
-]
+
 const eventsToDrag = [
   {
     start: '2018-11-21 14:00',

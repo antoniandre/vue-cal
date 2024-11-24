@@ -69,11 +69,11 @@
 
   vue-cal.grow(
     ref="vueCalRef"
-    v-model:view="view"
+    v-model:view="mainVuecalConfig.view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: resolve(false) })"
+    @event-create="(e, event, resolve) => log('event-create', { e, event, resolve: eventCreation.open(event, resolve) })"
     @event-click="(e, event) => log('event-click', { e, event })"
     @event-drag="(e, event) => log('event-drag', { e, event })"
     @event-drag-end="(e, event) => log('event-drag', { e, event })"
@@ -101,6 +101,17 @@
         type="button"
         @click="vuecal.switchView(viewName)"
         :outline="view !== viewName") {{ viewName }}
+
+w-dialog(
+  v-model="eventCreation.show"
+  width="300"
+  @close="eventCreation.cancel")
+  w-input(v-model="eventCreation.event.title") Event Title
+  w-input(v-model="eventCreation.event.class") Event class
+  w-switch.my2(v-model="eventCreation.event.background") Background
+  .w-flex.justify-end.mt2.gap2
+    w-button(@click="eventCreation.cancel") Cancel
+    w-button(@click="eventCreation.save") OK
 </template>
 
 <script setup>
@@ -133,7 +144,6 @@ const views = {
   years: { label: 'Years' }
 }
 const viewsArray = Object.entries(views).map(([viewId, obj]) => ({ ...obj, value: viewId }))
-const view = ref('week')
 
 const size = ref(null)
 const sizes = [
@@ -156,8 +166,10 @@ const pickerConfig = reactive({
   hideWeekdays: computed(() => mainVuecalConfig.hideWeekdays),
   viewDayOffset: computed(() => mainVuecalConfig.viewDayOffset)
 })
+
 const mainVuecalConfig = reactive({
   views,
+  view: ref('week'),
   dark: computed(() => store.darkMode),
   selectedDate: ref(null),
   viewDate: ref(new Date()),
@@ -239,6 +251,29 @@ const log = (...args) => console.log(...args)
 //     schedule: 2
 //   }
 // ]
+
+const eventCreation = reactive({
+  show: ref(false),
+  resolve: null,
+  event: {
+    title: '',
+    background: false,
+    class: ''
+  },
+  open: (event, resolve) => {
+    eventCreation.show = true
+    eventCreation.event = event
+    eventCreation.resolve = resolve
+  },
+  cancel: () => {
+    eventCreation.resolve(false)
+    eventCreation.show = false
+  },
+  save: () => {
+    eventCreation.resolve(eventCreation.event)
+    eventCreation.show = false
+  }
+})
 </script>
 
 <style lang="scss">
