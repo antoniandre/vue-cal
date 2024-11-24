@@ -43,5 +43,7 @@ addDatePrototypes()
     border-bottom: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 12%, transparent);
     margin-bottom: 12px;
   }
+
+  .example .vuecal:not(.vuecal--date-picker) {height: 300px;}
 }
 </style>

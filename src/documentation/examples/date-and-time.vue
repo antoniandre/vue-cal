@@ -268,5 +268,4 @@ const maxDate = computed(() => new Date().addDays(10))
 </style>
 
 <style lang="scss" scoped>
-.example .vuecal:not(.vuecal--date-picker) {height: 300px;}
 </style>

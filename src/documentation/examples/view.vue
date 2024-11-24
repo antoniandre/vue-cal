@@ -215,6 +215,5 @@ const exI18n = reactive({
 </script>
 
 <style lang="scss" scoped>
-.example .vuecal:not(.vuecal--date-picker) {height: 300px;}
 .example--themes .disabled input {opacity: 0.5;}
 </style>
