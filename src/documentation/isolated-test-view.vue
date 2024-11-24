@@ -71,7 +71,7 @@
 
     VueCal.grow(
       ref="vueCalRef"
-      v-model:view="view"
+      v-model:view="mainVuecalConfig.view"
       v-model:selected-date="mainVuecalConfig.selectedDate"
       v-model:view-date="mainVuecalConfig.viewDate"
       v-bind="mainVuecalConfig"
@@ -145,7 +145,6 @@ const views = {
   years: { label: 'Years' }
 }
 const viewsArray = Object.entries(views).map(([viewId, obj]) => ({ ...obj, value: viewId }))
-const view = ref('week')
 
 const size = ref(null)
 const sizes = [
@@ -170,6 +169,7 @@ const pickerConfig = reactive({
 })
 const mainVuecalConfig = reactive({
   views,
+  view: ref('week'),
   dark: computed(() => store.darkMode),
   selectedDate: ref(null),
   viewDate: ref(new Date()),

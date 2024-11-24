@@ -324,6 +324,8 @@ const createEventIfAllowed = async e => {
 
   // If there's a @event-create listener, call it and check if it returns true to accept the event
   // creation or false to cancel it. If no listener, create the event.
+  // The call to the handler is wrapped in a promise so the user may open an event editor and modify
+  // the event before sending in back and resolving the promise.
   const { create: createListener } = config.eventListeners.event
   let shouldCreateEvent = true
   if (typeof createListener === 'function') {
