@@ -3,7 +3,7 @@
   .vuecal__event-title
     | {{ event.title }}
   .vuecal__event-content(v-html="event.content")
-  .vuecal__event-time
+  .vuecal__event-time(v-if="config.time")
     | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
     | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
 </template>
@@ -61,7 +61,7 @@ const styles = computed(() => {
 .vuecal__event {
   position: absolute;
   left: 0;
-  width: 90%;
+  right: 0;
 
   .vuecal__scrollable--month-view & {position: relative;}
 }

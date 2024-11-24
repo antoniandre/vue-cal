@@ -90,6 +90,7 @@ const wrapperClasses = computed(() => ({
   'vuecal--light': !config.dark,
   [`vuecal--${view.id}-view`]: true,
   'vuecal--view-has-time': hasTimeColumn.value,
+  'vuecal--timeless': !config.time,
   'vuecal--dragging-cell': isDraggingCell.value,
   'vuecal--dragging-event': isDraggingEvent.value,
   'vuecal--has-schedules': config.schedules
