@@ -24,44 +24,35 @@ example(title="Timeless Events" anchor="timeless-events")
       Timeless events cannot be resized as they have no time or duration information.
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
       :time="false"
-      :views="['day', 'week']"
-      hide-weekends
+      :view-date="new Date().subtractDays(1)"
+      :views="{ days: { cols: 5, rows: 1 } }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-    data: () => ({
-      events: [
-        {
-          start: '2018-11-21',
-          end: '2018-11-21',
-          title: 'Need to go shopping',
-          content: '&lt;i class="icon mdi mdi-cart-outline"&gt;&lt;/i&gt;',
-          class: 'leisure'
-        },
-        {
-          start: '2018-11-21',
-          end: '2018-11-21',
-          title: 'Golf with John',
-          content: '&lt;i class="icon mdi mdi-golf"&gt;&lt;/i&gt;',
-          class: 'sport'
-        },
-        {
-          start: '2018-11-22',
-          end: '2018-11-22',
-          title: 'Dad\'s birthday!',
-          content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
-          class: 'sport'
-        }
-      ]
+    const events = [
+      {
+        start: new Date().subtractDays(1),
+        end: new Date().subtractDays(1),
+        title: 'Salsa Class',
+        content: '&lt;i class="icon mdi mdi-dance-ballroom"&gt;&lt;/i&gt;',
+        class: 'leisure'
+      },
+      {
+        start: new Date(),
+        end: new Date(),
+        title: 'Dad\'s Birthday!',
+        content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
+        class: 'sport'
+      },
+      ...
+    ]
   template(#code-css).
     /* Different color for different event types. */
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
     .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
   vue-cal(
     :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
     :time="false"
     :view-date="new Date().subtractDays(1)"
     :views="{ days: { cols: 5, rows: 1 } }"
@@ -1435,6 +1426,13 @@ const exTimelessEvents = reactive({
       title: 'Black Friday',
       content: '<i class="w-icon mdi mdi-cart-outline"></i>',
       class: 'leisure'
+    },
+    {
+      start: new Date().addDays(2),
+      end: new Date().addDays(2),
+      title: 'Doctor Appointment',
+      content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+      class: 'health'
     }
   ]
 })
@@ -1872,4 +1870,9 @@ const onEventDrop = ({ event, originalEvent, external }) => {
 </script>
 
 <style lang="scss" scoped>
+::v-deep(.vuecal__event) {
+  text-align: center;
+
+  i {margin: 4px 0;font-size: 23px;}
+}
 </style>
