@@ -305,10 +305,10 @@ ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
   .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
-  /* Different color for different event types. */
-  .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-  .vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-  .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+  .vuecal__event {color: #fff;border: 1px solid;}
+  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
+  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
 </template>
 
 <script setup>

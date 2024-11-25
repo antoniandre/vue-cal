@@ -139,7 +139,7 @@
   .vuecal__cell-date {padding: 3px 4px;}
 }
 
-.event-indicator--cell .vuecal__cell--has-events {background-color: #fffacd;}
+.event-indicator--cell .vuecal__cell--has-events:before {background-color: #fffacd;}
 .event-indicator--cell .vuecal__cell-events-count {display: none;}
 
 .vuecal--month-view .vuecal__no-event {display: none;}
@@ -162,22 +162,6 @@
 .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
 .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
 .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
-
-.vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border: 1px solid rgb(233, 136, 46);color: #fff;}
-.vuecal__event.health {background-color: rgba(164, 230, 210, 0.9);border: 1px solid rgb(144, 210, 190);}
-.vuecal__event.sport {background-color: rgba(255, 102, 102, 0.85);border: 1px solid rgb(235, 82, 82);color: #fff;}
-.vuecal__event.pink-event {background-color: rgba(255, 58, 143, 0.7);border: 1px solid rgb(235, 38, 123);color: #fff;}
-.vuecal__event.blue-event {background-color: rgba(100, 200, 255, 0.8);border: 1px solid rgb(80, 180, 235);color: #fff;}
-.vuecal__event.yellow-event {background-color: rgba(255, 200, 90, 0.75);border: 1px solid #ffc356;}
-
-.vuecal__event.lunch {
-  background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
-  color: #999;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
 .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
 

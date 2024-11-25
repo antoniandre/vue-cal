@@ -20,8 +20,9 @@ alert(info)
 example(title="Timeless Events" anchor="timeless-events")
   template(#desc)
     p.
-      The events have associated dates but no time information.#[br]
-      Timeless events cannot be resized as they have no time or duration information.
+      When #[code time] is set to #[code false], the calendar and the events are timeless. The events can't be
+      resized.
+    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
   template(#code-html).
     &lt;vue-cal
       :time="false"
@@ -48,9 +49,10 @@ example(title="Timeless Events" anchor="timeless-events")
       ...
     ]
   template(#code-css).
-    /* Different color for different event types. */
-    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.9);border: 1px solid rgb(233, 136, 46);color: #fff;}
-    .vuecal__event.sport {background-color: rgba(255, 102, 102, 0.9);border: 1px solid rgb(235, 82, 82);color: #fff;}
+    .vuecal__event {color: #fff;border: 1px solid;}
+    .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+    .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
+    .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
   vue-cal(
     :dark="store.darkMode"
     :time="false"
@@ -1869,10 +1871,29 @@ const onEventDrop = ({ event, originalEvent, external }) => {
 }
 </script>
 
-<style lang="scss" scoped>
-::v-deep(.vuecal__event) {
-  text-align: center;
+<style lang="scss">
+.main--examples-calendar-events {
+  .vuecal__event {
+    text-align: center;
 
-  i {margin: 4px 0;font-size: 23px;}
+    i {margin: 4px 0;font-size: 23px;}
+  }
+
+  .vuecal__event {color: #fff;border: 1px solid;}
+  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
+  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
+  .vuecal__event.pink-event {background-color: #ff3a8fb3;border-color: #eb267b;}
+  .vuecal__event.blue-event {background-color: #64c8ffcc;border-color: #50b4eb;}
+  .vuecal__event.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
+
+  .vuecal__event.lunch {
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
+    color: #999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 }
 </style>
