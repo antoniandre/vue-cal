@@ -153,16 +153,15 @@ example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-m
     .vuecal__cell--disabled {text-decoration: line-through;}
     .vuecal__cell--before-min {color: #b6d6c7;}
     .vuecal__cell--after-max {color: #008b8b;}
-  .example.my2.mxa(style="width: 250px;height: 260px")
-    vue-cal.ex--min-max-dates(
-      :dark="store.darkMode"
-      xs
-      :views-bar="false"
-      click-to-navigate
-      :time="false"
-      view="month"
-      :min-date="minDate"
-      :max-date="maxDate")
+  vue-cal(
+    :dark="store.darkMode"
+    xs
+    :views-bar="false"
+    click-to-navigate
+    :time="false"
+    view="month"
+    :min-date="minDate"
+    :max-date="maxDate")
 
 //- Example.
 example(title="Disable Days" anchor="disable-days")
@@ -260,18 +259,14 @@ const maxDate = computed(() => new Date().addDays(10))
 .example--today-current-time {
   .vuecal__now-line {border-color: #06c;}
 }
-</style>
 
-<style lang="scss">
-.main--examples-date-and-time {
-  .ex--disable-days {
-    .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
-  }
+.example--disable-days {
+  .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
+}
 
-  .ex--min-max-dates {
-    .vuecal__cell--disabled {text-decoration: line-through;}
-    .vuecal__cell--before-min {color: #b6d6c7;}
-    .vuecal__cell--after-max {color: #008b8b;}
-  }
+.example--min-max-dates {
+  .vuecal__cell--disabled .vuecal__cell-date {text-decoration: line-through;opacity: 1;}
+  .vuecal__cell--before-min {color: #b6d6c7;}
+  .vuecal__cell--after-max {color: #008b8b;}
 }
 </style>
