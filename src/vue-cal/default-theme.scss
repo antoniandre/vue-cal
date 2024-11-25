@@ -158,13 +158,23 @@
 
   &.vuecal--light .vuecal__cell:before {filter: saturate(2);}
 
-  .vuecal__cell--selected:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 25%, transparent);}
-  .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year):before,
-  &.vuecal--light .vuecal__cell--selected:before {
+  .vuecal__cell--today:before,
+  .vuecal__cell--current-month:before,
+  .vuecal__cell--current-year:before {
     background-color: color-mix(in srgb, var(--vuecal-primary-color) 10%, transparent);
   }
-  &.vuecal--light .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year):before {
-    background-color: color-mix(in srgb, var(--vuecal-primary-color) 5%, transparent);
+  .vuecal__cell--selected:before {
+    background-color: color-mix(in srgb, var(--vuecal-primary-color) 25%, transparent);
+  }
+  &.vuecal--light {
+    .vuecal__cell--today:before,
+    .vuecal__cell--current-month:before,
+    .vuecal__cell--current-year:before {
+      background-color: color-mix(in srgb, var(--vuecal-primary-color) 5%, transparent);
+    }
+    .vuecal__cell--selected:before {
+      background-color: color-mix(in srgb, var(--vuecal-primary-color) 10%, transparent);
+    }
   }
 
   .vuecal__cell-date {
