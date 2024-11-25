@@ -1895,5 +1895,157 @@ const onEventDrop = ({ event, originalEvent, external }) => {
     align-items: center;
   }
   .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
+
+  .vuecal__event--dragging {
+    background-color: rgba(grey, 0.3) !important;
+    border: none !important;
+  }
+
+  .vuecal__event-title {font-weight: bold;}
+
+  // Create events example.
+  .ex--create-events {
+    .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
+  }
+
+  // External events drag and drop example.
+  .external-events-drag-and-drop {
+    flex-basis: 0 !important;
+    min-width: 285px;
+  }
+  .external-events-drag-and-drop .vuecal__event, .external-event {
+    background-color: rgba(160, 220, 255, 0.5);
+    border: 1px solid rgba(0, 100, 150, 0.15);
+    padding: 0.2em 0.4em;
+    cursor: move;
+    cursor: grab;
+  }
+
+  .external-event {
+    margin-bottom: 0.5em;
+    width: 12.5em;
+
+    span {color: #777;font-size: 0.9em;}
+  }
+
+  // Events on month view example.
+  .event-indicator--dash .vuecal__cell-events-count {
+    top: 70%;
+    width: 14px;
+    height: 2px;
+    color: transparent;
+  }
+
+  .event-indicator--dot .vuecal__cell-events-count {
+    top: 70%;
+    width: 4px;
+    min-width: 0;
+    height: 4px;
+    padding: 0;
+    color: transparent;
+  }
+
+  .ex--events-indicators {
+    .vuecal__cell-events-count span {
+      background: var(--w-primary-color);
+      height: 100%;
+      border-radius: 12px;
+      display: block;
+    }
+  }
+
+  .ex--custom-events-count {
+    .vuecal__cell-events-count span {
+      background-color: #fd9c42;
+      height: 100%;
+      min-width: 12px;
+      padding: 0 3px;
+      border-radius: 12px;
+      display: block;
+    }
+    .vuecal__cell-events-count {background: transparent;}
+  }
+
+  .ex--events-on-month-view.vuecal--month-view {
+    .vuecal__cell {height: 80px;}
+
+    .vuecal__cell-content {
+      justify-content: flex-start;
+      height: 100%;
+      align-items: flex-end;
+    }
+
+    .vuecal__cell-date {padding: 3px 4px;}
+  }
+
+  .event-indicator--cell .vuecal__cell--has-events:before {background-color: #fffacd;}
+  .event-indicator--cell .vuecal__cell-events-count {display: none;}
+
+  .vuecal--month-view .vuecal__no-event {display: none;}
+
+  .ex--multiple-day-events .vuecal__event {
+    border-radius: 5px;
+
+    &.sport {
+      background-color: rgba(255, 185, 185, 0.8);
+      border: none;
+      border-left: 3px solid rgba(230, 55, 55, 0.3);
+      color: #c55656;
+    }
+    &.leisure {
+      background-color: rgba(255, 202, 154, 0.8);
+      border: none;
+      border-left: 3px solid rgba(250, 118, 36, 0.3);
+      color: #b57335;
+    }
+    &.health {
+      background-color: rgba(200, 248, 233, 0.8);
+      border: none;
+      border-left: 3px solid rgba(99, 186, 139, 0.4);
+      color: #219671;
+    }
+
+    &.event-start {border-radius: 5px 5px 0 0;}
+    &.event-middle {border-radius: 0;}
+    &.event-end {border-radius: 0 0 5px 5px;}
+    &.drink-water {font-size: 0.85em;line-height: 1;padding-top: 0.2em;}
+  }
+
+  .ex--open-dialog-on-event-click {
+    .vuecal__event {cursor: pointer;}
+
+    .vuecal__event-title {
+      font-size: 1.2em;
+      font-weight: bold;
+      margin: 4px 0 8px;
+    }
+
+    .vuecal__event-time {
+      display: inline-block;
+      margin-bottom: 12px;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.2);
+    }
+
+    .vuecal__event-content {
+      font-style: italic;
+    }
+  }
+
+  .ex--all-day-events {
+    .vuecal__cell-content {
+      justify-content: flex-start;
+    }
+
+    .vuecal__cell-date {
+      text-align: right;
+      padding: 4px;
+    }
+
+    &.vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
+    &.vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
+    &.vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
+    &.vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
+  }
 }
 </style>

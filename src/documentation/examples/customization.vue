@@ -647,5 +647,39 @@ const cancelEventCreation = () => {
 const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.main--examples-customization {
+  // Today button example.
+  .ex--adding-a-today-button {
+    .today-button {
+      // font-size: 0.7em;
+      min-width: 0;
+      height: auto;
+      padding: 1px 8px;
+    }
+    .w-button {width: 26px;height: 26px;background-color: transparent !important;}
+  }
+
+  // Custom vue-cal title & "no event" text example.
+  .ex--custom-title-and-cells {
+    .vuecal__cell-events-count {margin-top: -2px;}
+
+    .vuecal__cell .clickable {display: block;}
+
+    .vuecal__cell .clickable.month {
+      position: absolute;
+      top: 0;
+      right: 0;
+      color: var(--w-primary-color);
+      font-size: 1.2em;
+      padding: 0 4px;
+      text-decoration: underline;
+      display: inline-block;
+    }
+
+    .vuecal__cell .vuecal__cell-content {height: 100%;}
+
+    .vuecal__no-event {padding-top: 3em;}
+  }
+}
 </style>

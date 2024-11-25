@@ -470,3 +470,66 @@ const scheduleEvents = [
   }
 ]
 </script>
+
+<style lang="scss">
+.main--examples-schedules {
+  .ex--special-hours {
+    .business-hours {
+      background-color: rgba(255, 255, 0, 0.15);
+      border: solid rgba(255, 210, 0, 0.3);
+      border-width: 2px 0;
+    }
+  }
+
+  .ex--doctor-hours {
+    .vuecal__special-hours {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 4px;
+
+      em {font-size: 0.9em;color: #999;}
+    }
+
+    .doctor-1 {background-color: rgb(240, 255, 241);color: rgb(129, 213, 139);}
+    .doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
+    .doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 69%);}
+    .closed {
+      background: hsl(27, 100%, 97%) repeating-linear-gradient(-45deg, hsla(27, 100%, 67%, 0.25), hsla(27, 100%, 67%, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
+      color: hsl(27, 90%, 63%);
+    }
+  }
+  // Schedules example.
+  .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+  .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+  .vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+  .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+  .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+  .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
+
+  .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
+
+  // Schedules labels example.
+  .ex--custom-schedule-labels {
+    .schedule-header {font-size: 11px;}
+    .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
+    .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
+    .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
+    .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
+  }
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: 800px) {
+  .main--examples-schedules {
+    .vuecal--week-view.ex--custom-schedule-labels .schedule-header .w-icon {display: none;}
+    .ex--custom-schedule-labels .schedule-header strong {
+      overflow: hidden;
+      width: 0.9em;
+      font-size: 13px;
+      letter-spacing: 10px;
+    }
+  }
+}
+</style>

@@ -267,5 +267,16 @@ const maxDate = computed(() => new Date().addDays(10))
 }
 </style>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.main--examples-date-and-time {
+  .ex--disable-days {
+    .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
+  }
+
+  .ex--min-max-dates {
+    .vuecal__cell--disabled {text-decoration: line-through;}
+    .vuecal__cell--before-min {color: #b6d6c7;}
+    .vuecal__cell--after-max {color: #008b8b;}
+  }
+}
 </style>

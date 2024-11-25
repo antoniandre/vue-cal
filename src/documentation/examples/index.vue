@@ -16,8 +16,6 @@ addDatePrototypes()
 </script>
 
 <style lang="scss">
-@use '@/scss/examples.scss';
-
 .main--examples {
   h2 {
     position: relative;

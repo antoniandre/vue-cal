@@ -519,5 +519,8 @@ const events = [
 const eventsCopy = events.slice(0)
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.main--examples-dom-events {
+  .logs-box {white-space: pre-wrap;}
+}
 </style>
