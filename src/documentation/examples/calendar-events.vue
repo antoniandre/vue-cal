@@ -17,38 +17,51 @@ alert(info)
       control on what exactly should be editable.
 
 //- Example.
-example(title="Classical Events" anchor="events")
+example(title="Events & Background Events" anchor="events")
   template(#desc)
     p.
-      Events are defined by a #[code start] and #[code end] dates, given as a
-      JavaScript Date or formatted date and time. To that you can optionally add a title, content and
-      CSS class.
+      Events are defined by a #[code start] and #[code end] dates, provided as a JavaScript Date object
+      or a formatted date and time. Additionally, you can optionally add a title, content, and a CSS class.
+    .w-flex.justify-end.my2
+      w-switch(v-model="exEvents.showBgEvents") Show Background Events
   template(#code-html).
     &lt;vue-cal :events="events" /&gt;
-  template(#code-js).
-    const events = [
-      {
-        start: new Date(new Date().setHours(10, 30, 0, 0)),
-        end: new Date(new Date().setHours(11, 30, 0, 0)),
-        title: 'Doctor Appt.',
-        content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
-        class: 'health'
-      },
-      ...
-    ]
+  template(#code-js)
+    | const events = [
+    |   {
+    |     start: new Date(new Date().setHours(10, 30, 0, 0)),
+    |     end: new Date(new Date().setHours(11, 30, 0, 0)),
+    |     title: 'Doctor Appt.',
+    |     content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
+    |     class: 'health'
+    |   },
+    |
+    span(v-if="exEvents.showBgEvents")
+      |   {
+      |     start: new Date(new Date().setHours(12, 0, 0, 0)),
+      |     end: new Date(new Date().setHours(14, 0, 0, 0)),
+      |     class: 'lunch',
+      |     background: true
+      |   },
+      |
+    span(v-else)
+    |   ...
+    | ]
+
   template(#code-css).
     .vuecal__event {color: #fff;border: 1px solid;}
     .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
     .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
     .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
+    .vuecal__event.lunch {background-color: repeating-linear-gradient(45deg, transparent, transparent 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 20px);border: none;}
   vue-cal(
-    :dark="store.darkMode"
     :time-from="9 * 60"
     :time-to="14 * 60"
-    :events="events"
+    :events="exEvents.events"
     :views="{ days: { cols: 5, rows: 1 } }"
     :view-date="new Date()"
     :views-bar="false"
+    :dark="store.darkMode"
     style="height: 260px")
 
 //- Example.
@@ -1372,81 +1385,6 @@ import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
-const exTimelessEvents = reactive({
-  events: [
-    {
-      start: new Date(),
-      end: new Date(),
-      title: 'Salsa Dance Class',
-      content: '<i class="w-icon mdi mdi-dance-ballroom"></i>',
-      class: 'sport'
-    },
-    {
-      start: new Date(),
-      end: new Date(),
-      title: 'Dentist Appt.',
-      content: '<i class="w-icon mdi mdi-tooth"></i>',
-      class: 'health'
-    },
-    {
-      start: new Date().addDays(1),
-      end: new Date().addDays(1),
-      title: 'Golf with John',
-      content: '<i class="w-icon mdi mdi-golf"></i>',
-      class: 'sport'
-    },
-    {
-      start: new Date().addDays(2),
-      end: new Date().addDays(2),
-      title: 'Grocery Shopping',
-      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
-      class: 'leisure'
-    },
-    {
-      start: new Date().addDays(2),
-      end: new Date().addDays(2),
-      title: 'Dad\'s Birthday!',
-      content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
-      class: 'sport'
-    },
-    {
-      start: new Date().addDays(3),
-      end: new Date().addDays(3),
-      title: 'Doctor Appt.',
-      content: '<i class="w-icon mdi mdi-stethoscope"></i>',
-      class: 'health'
-    },
-    {
-      start: new Date().addDays(4),
-      end: new Date().addDays(4),
-      title: 'Burger King',
-      content: '<i class="w-icon mdi mdi-food"></i>',
-      class: 'leisure'
-    }
-  ]
-})
-
-const vuecalEl = ref(null)
-const minEventWidth = ref(0)
-const timeCellHeight = ref(26)
-const indicatorStyle = ref('count')
-const indicatorStyleOptions = ref([
-  { label: 'count (default)', value: 'count' },
-  { label: 'dash', value: 'dash' },
-  { label: 'dot', value: 'dot' },
-  { label: 'cell background', value: 'cell' }
-])
-const now = ref(new Date())
-const showDialog = ref(false)
-const showEventCreationDialog = ref(false)
-const showAllDayEvents = ref(0)
-const shortEventsOnMonthView = ref(false)
-const selectedEvent = ref({})
-const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
-
-const deleteEventFunction = ref(null)
-const deleteDragEventFunction = ref(null)
-
 const events = [
   {
     start: new Date(new Date().setHours(11, 0)).subtractDays(2),
@@ -1538,6 +1476,95 @@ const events = [
     schedule: 1
   }
 ]
+
+const exEvents = reactive({
+  showBgEvents: ref(false),
+  bgEvents: computed(() => Array(5).fill({}).map((event, i) => ({
+    start: new Date(new Date().setHours(12, 0)).addDays(i),
+    end: new Date(new Date().setHours(14, 0)).addDays(i),
+    class: 'lunch',
+    background: true
+  }))),
+  events: computed(() => [
+    ...events,
+    ...(exEvents.showBgEvents ? exEvents.bgEvents : [])
+  ])
+})
+
+const exTimelessEvents = reactive({
+  events: [
+    {
+      start: new Date(),
+      end: new Date(),
+      title: 'Salsa Dance Class',
+      content: '<i class="w-icon mdi mdi-dance-ballroom"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date(),
+      end: new Date(),
+      title: 'Dentist Appt.',
+      content: '<i class="w-icon mdi mdi-tooth"></i>',
+      class: 'health'
+    },
+    {
+      start: new Date().addDays(1),
+      end: new Date().addDays(1),
+      title: 'Golf with John',
+      content: '<i class="w-icon mdi mdi-golf"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date().addDays(2),
+      end: new Date().addDays(2),
+      title: 'Grocery Shopping',
+      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
+      class: 'leisure'
+    },
+    {
+      start: new Date().addDays(2),
+      end: new Date().addDays(2),
+      title: 'Dad\'s Birthday!',
+      content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date().addDays(3),
+      end: new Date().addDays(3),
+      title: 'Doctor Appt.',
+      content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+      class: 'health'
+    },
+    {
+      start: new Date().addDays(4),
+      end: new Date().addDays(4),
+      title: 'Burger King',
+      content: '<i class="w-icon mdi mdi-food"></i>',
+      class: 'leisure'
+    }
+  ]
+})
+
+const vuecalEl = ref(null)
+const minEventWidth = ref(0)
+const timeCellHeight = ref(26)
+const indicatorStyle = ref('count')
+const indicatorStyleOptions = ref([
+  { label: 'count (default)', value: 'count' },
+  { label: 'dash', value: 'dash' },
+  { label: 'dot', value: 'dot' },
+  { label: 'cell background', value: 'cell' }
+])
+const now = ref(new Date())
+const showDialog = ref(false)
+const showEventCreationDialog = ref(false)
+const showAllDayEvents = ref(0)
+const shortEventsOnMonthView = ref(false)
+const selectedEvent = ref({})
+const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
+
+const deleteEventFunction = ref(null)
+const deleteDragEventFunction = ref(null)
 
 const editableEvents = [
   ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
@@ -1884,13 +1911,12 @@ const onEventDrop = ({ event, originalEvent, external }) => {
   .vuecal__event.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
 
   .vuecal__event.lunch {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);
-    color: #999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 20px);
+    border: none;
+    z-index: -1;
+
+    .vuecal__event-time {display: none;}
   }
-  .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
   .vuecal__event--dragging {
     background-color: rgba(grey, 0.3) !important;

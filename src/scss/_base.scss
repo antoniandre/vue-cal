@@ -52,10 +52,12 @@ aside {
     justify-content: flex-end;
     font-size: 1.1rem;
     transition: 0.25s font-weight;
+    // color: var(--w-base-color);
 
     &.router-link-active {
       font-weight: bold;
       text-transform: uppercase;
+      color: var(--w-primary-color);
     }
 
     &:after, & ~ ul:after {
@@ -94,6 +96,7 @@ aside {
     padding-top: 2px;
     padding-bottom: 2px;
     font-size: 1rem;
+    color: color-mix(in srgb, var(--w-base-color) 70%, transparent);
 
     &.router-link-active {
       text-transform: initial;
