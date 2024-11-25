@@ -128,10 +128,12 @@ example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-m
       You can still navigate through them with arrows.#[br]
       In this example, the minimum date is set to 10 days behind and the maximum date to
       10 days ahead.
+    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
+
     alert.my4(tip)
       strong Notes
       ul
-        li the min and max options accept a formatted string or plain Javascript Date object.
+        li The min and max options accept a formatted string or plain Javascript Date object.
         li.
           2 different CSS class are available on out of range cells: #[span.code .before-min]
           &amp; #[span.code .after-max].
@@ -145,15 +147,8 @@ example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-m
       :max-date="maxDate"
       xs /&gt;
   template(#code-js).
-    // Using Vue Cal Date Prototypes (activated by default).
-    computed: {
-      minDate () {
-        return new Date().subtractDays(10)
-      },
-      maxDate () {
-        return new Date().addDays(10)
-      }
-    }
+    const minDate = new Date().subtractDays(10)
+    const maxDate = new Date().addDays(10)
   template(#code-css).
     .vuecal__cell--disabled {text-decoration: line-through;}
     .vuecal__cell--before-min {color: #b6d6c7;}

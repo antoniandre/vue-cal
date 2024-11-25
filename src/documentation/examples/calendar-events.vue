@@ -70,7 +70,6 @@ example(title="Timeless Events" anchor="timeless-events")
     p.
       When #[code time] is set to #[code false], the calendar and the events are timeless. The events can't be
       resized.
-    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
   template(#code-html).
     &lt;vue-cal :time="false" :events="events" /&gt;
   template(#code-js).
@@ -91,7 +90,7 @@ example(title="Timeless Events" anchor="timeless-events")
     :view-date="new Date()"
     :views-bar="false"
     :events="exTimelessEvents.events")
-
+    template
 //- Example.
 example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-on-event-click")
   template(#desc)
@@ -114,25 +113,22 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
       :on-event-click="onEventClick"&gt;
     &lt;/vue-cal&gt;
 
-    &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
-    &lt;v-dialog v-model="showDialog"&gt;
-      &lt;v-card&gt;
-        &lt;v-card-title&gt;
-          &lt;v-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/v-icon&gt;
-          &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
-          &lt;v-spacer/&gt;
-          &lt;strong&gt;{{ "\{\{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
-        &lt;/v-card-title&gt;
-        &lt;v-card-text&gt;
-          &lt;p v-html="selectedEvent.contentFull"/&gt;
-          &lt;strong&gt;Event details:&lt;/strong&gt;
-          &lt;ul&gt;
-            &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.start && selectedEvent.start.formatTime() \}\}' }}&lt;/li&gt;
-            &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.end && selectedEvent.end.formatTime() \}\}' }}&lt;/li&gt;
-          &lt;/ul&gt;
-        &lt;/v-card-text&gt;
-      &lt;/v-card&gt;
-    &lt;/v-dialog&gt;
+    &lt;!-- Using Wave UI --&gt;
+    &lt;w-dialog v-model="showDialog"&gt;
+      &lt;template #title&gt;
+        &lt;w-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/w-icon&gt;
+        &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
+        &lt;w-spacer/&gt;
+        &lt;strong&gt;{{ "\{\{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
+      &lt;/template&gt;
+
+      &lt;p v-html="selectedEvent.contentFull" /&gt;
+      &lt;strong&gt;Event details:&lt;/strong&gt;
+      &lt;ul&gt;
+        &lt;li&gt;Event starts at: {{ '\{\{ selectedEvent.start && selectedEvent.start.formatTime() \}\}' }}&lt;/li&gt;
+        &lt;li&gt;Event ends at: {{ '\{\{ selectedEvent.end && selectedEvent.end.formatTime() \}\}' }}&lt;/li&gt;
+      &lt;/ul&gt;
+    &lt;/w-dialog&gt;
   template(#code-js).
     data: () => ({
       selectedEvent: {},
