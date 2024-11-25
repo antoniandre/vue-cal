@@ -9,7 +9,7 @@ alert(info)
     li.
       #[code start] and #[code end] can be defined (by you) as both a native JavaScript Date or a
       Formatted date time such as #[code {{ new Date().format() }} {{ new Date().formatTime() }}].
-      But when Vue Cal gives you details about an appointment, the #[code start] and #[code end] will
+      But when Vue Cal gives you details about an appt., the #[code start] and #[code end] will
       always be JavaScript Dates.
     li.
       When the events are editable, they can be created, deleted, drag and dropped to a different
@@ -17,34 +17,22 @@ alert(info)
       control on what exactly should be editable.
 
 //- Example.
-example(title="Timeless Events" anchor="timeless-events")
+example(title="Classical Events" anchor="events")
   template(#desc)
     p.
-      When #[code time] is set to #[code false], the calendar and the events are timeless. The events can't be
-      resized.
-    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
+      Events are defined by a #[code start] and #[code end] dates, given as a
+      JavaScript Date or formatted date and time. To that you can optionally add a title, content and
+      CSS class.
   template(#code-html).
-    &lt;vue-cal
-      :time="false"
-      :view-date="new Date().subtractDays(1)"
-      :views="{ days: { cols: 5, rows: 1 } }"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
+    &lt;vue-cal :events="events" /&gt;
   template(#code-js).
     const events = [
       {
-        start: new Date().subtractDays(1),
-        end: new Date().subtractDays(1),
-        title: 'Salsa Class',
-        content: '&lt;i class="icon mdi mdi-dance-ballroom"&gt;&lt;/i&gt;',
-        class: 'leisure'
-      },
-      {
-        start: new Date(),
-        end: new Date(),
-        title: 'Dad\'s Birthday!',
-        content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;',
-        class: 'sport'
+        start: new Date(new Date().setHours(10, 30, 0, 0)),
+        end: new Date(new Date().setHours(11, 30, 0, 0)),
+        title: 'Doctor Appt.',
+        content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
+        class: 'health'
       },
       ...
     ]
@@ -55,48 +43,41 @@ example(title="Timeless Events" anchor="timeless-events")
     .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
   vue-cal(
     :dark="store.darkMode"
-    :time="false"
-    :view-date="new Date().subtractDays(1)"
+    :time-from="9 * 60"
+    :time-to="14 * 60"
+    :events="events"
     :views="{ days: { cols: 5, rows: 1 } }"
-    :events="exTimelessEvents.events")
+    :view-date="new Date()"
+    :views-bar="false"
+    style="height: 260px")
 
 //- Example.
-example(title="Events with time information" anchor="events-with-time")
+example(title="Timeless Events" anchor="timeless-events")
   template(#desc)
     p.
-      Read-only events (by default events are not editable) with custom HTML content and css class (for event types).#[br]
-      Note that the events are always selectable (drop shadow and higher z-index), even when uneditable.
-      The difference with timeless events is that a time is set in the #[span.code start] and #[span.code end] attributes of the events.
+      When #[code time] is set to #[code false], the calendar and the events are timeless. The events can't be
+      resized.
+    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
   template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :time-to="23 * 60"
-      :views="['days']"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
+    &lt;vue-cal :time="false" :events="events" /&gt;
   template(#code-js).
-    events: [
+    const events = [
       {
-        start: '2018-11-16 10:30',
-        end: '2018-11-16 11:30',
-        // You can also define event dates with Javascript Date objects:
-        // start: new Date(2018, 11 - 1, 16, 10, 30),
-        // end: new Date(2018, 11 - 1, 16, 11, 30),
-        title: 'Doctor appointment',
-        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-        class: 'health'
+        start: new Date(),
+        end: new Date(),
+        title: 'Salsa Dance Class',
+        content: '&lt;i class="icon mdi mdi-dance-ballroom"&gt;&lt;/i&gt;',
+        class: 'sport'
       },
       ...
     ]
   vue-cal(
     :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="9 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    :events="events")
+    :time="false"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    :view-date="new Date()"
+    :views-bar="false"
+    :events="exTimelessEvents.events")
 
 //- Example.
 example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-on-event-click")
@@ -147,7 +128,7 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
         {
           start: '2018-11-20 14:00',
           end: '2018-11-20 18:00',
-          title: 'Need to go shopping',
+          title: 'Grocery Shopping',
           icon: 'mdi mdi-cart-outline', // Custom attribute.
           content: 'Click to see my shopping list',
           contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
@@ -289,8 +270,7 @@ example(title="Display events on month view" anchor="events-on-month-view")
     view="month"
     hide-weekends
     events-on-month-view="short"
-    :events="events"
-    style="height: 600px")
+    :events="events")
 ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal
     :selected-date="stringToDate('2018-11-19')"
@@ -299,10 +279,10 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     view="month"
     hide-weekends
     events-on-month-view="short"
-    :events="events"
-    style="height: 600px"&gt;
+    :events="events"&gt;
   &lt;/vue-cal&gt;
 ssh-pre(language="css" :dark="store.darkMode").
+  .vuecal--month-view {height: 500px;}
   .vuecal--month-view .vuecal__cell {height: 80px;}
 
   .vuecal--month-view .vuecal__cell-content {
@@ -1395,46 +1375,53 @@ const store = useAppStore()
 const exTimelessEvents = reactive({
   events: [
     {
-      start: new Date().subtractDays(1),
-      end: new Date().subtractDays(1),
-      title: 'Salsa Class',
+      start: new Date(),
+      end: new Date(),
+      title: 'Salsa Dance Class',
       content: '<i class="w-icon mdi mdi-dance-ballroom"></i>',
-      class: 'leisure'
+      class: 'sport'
     },
     {
       start: new Date(),
       end: new Date(),
-      title: 'Grocery Shopping',
-      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
-      class: 'leisure'
+      title: 'Dentist Appt.',
+      content: '<i class="w-icon mdi mdi-tooth"></i>',
+      class: 'health'
     },
     {
-      start: new Date(),
-      end: new Date(),
+      start: new Date().addDays(1),
+      end: new Date().addDays(1),
       title: 'Golf with John',
       content: '<i class="w-icon mdi mdi-golf"></i>',
       class: 'sport'
     },
     {
-      start: new Date().addDays(1),
-      end: new Date().addDays(1),
-      title: 'Dad\'s Birthday!',
-      content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
-      class: 'sport'
-    },
-    {
       start: new Date().addDays(2),
       end: new Date().addDays(2),
-      title: 'Black Friday',
+      title: 'Grocery Shopping',
       content: '<i class="w-icon mdi mdi-cart-outline"></i>',
       class: 'leisure'
     },
     {
       start: new Date().addDays(2),
       end: new Date().addDays(2),
-      title: 'Doctor Appointment',
+      title: 'Dad\'s Birthday!',
+      content: '<i class="w-icon mdi mdi-cake-variant-outline"></i>',
+      class: 'sport'
+    },
+    {
+      start: new Date().addDays(3),
+      end: new Date().addDays(3),
+      title: 'Doctor Appt.',
       content: '<i class="w-icon mdi mdi-stethoscope"></i>',
       class: 'health'
+    },
+    {
+      start: new Date().addDays(4),
+      end: new Date().addDays(4),
+      title: 'Burger King',
+      content: '<i class="w-icon mdi mdi-food"></i>',
+      class: 'leisure'
     }
   ]
 })
@@ -1462,84 +1449,92 @@ const deleteDragEventFunction = ref(null)
 
 const events = [
   {
-    start: '2018-10-30 10:30',
-    end: '2018-10-30 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    start: new Date(new Date().setHours(11, 0)).subtractDays(2),
+    end: new Date(new Date().setHours(13, 0)).subtractDays(2),
+    title: 'Salsa Dance Class',
+    content: '<i class="w-icon mdi mdi-dance-ballroom"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: new Date(new Date().setHours(12, 30)),
+    end: new Date(new Date().setHours(13, 30)),
+    title: 'Doctor Appt.',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
     class: 'health',
     schedule: 1
   },
   {
-    start: '2018-11-16 10:30',
-    end: '2018-11-16 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2018-11-19 10:35',
-    end: '2018-11-19 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2018-11-19 18:30',
-    end: '2018-11-19 19:15',
-    title: 'Dentist appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    start: new Date(new Date().setHours(11, 30)).addDays(1),
+    end: new Date(new Date().setHours(12, 30)).addDays(1),
+    title: 'Dentist Appt.',
+    content: '<i class="w-icon mdi mdi-tooth"></i>',
     class: 'health',
     schedule: 2
   },
   {
-    start: '2018-11-20 18:30',
-    end: '2018-11-20 20:30',
+    start: new Date(new Date().setHours(13, 0)).addDays(1),
+    end: new Date(new Date().setHours(14, 0)).addDays(1),
     title: 'Cross-fit',
     content: '<i class="w-icon mdi mdi-dumbbell"></i>',
     class: 'sport',
     schedule: 2
   },
   {
-    start: '2018-11-21 11:00',
-    end: '2018-11-21 13:00',
+    start: new Date(new Date().setHours(10, 0)).addDays(3),
+    end: new Date(new Date().setHours(11, 30)).addDays(3),
+    title: 'Swimming Class',
+    content: '<i class="w-icon mdi mdi-swim"></i>',
+    class: 'sport',
+    schedule: 2
+  },
+  {
+    start: new Date(new Date().setHours(11, 35)).addDays(3),
+    end: new Date(new Date().setHours(12, 30)).addDays(3),
     title: 'Brunch with Jane',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
+    content: '<i class="w-icon mdi mdi-food-croissant"></i>',
     class: 'leisure',
     schedule: 1,
     background: false
   },
   {
-    start: '2018-11-21 19:30',
-    end: '2018-11-21 23:00',
-    title: 'Swimming lesson',
-    content: '<i class="w-icon mdi mdi-pool"></i>',
-    class: 'sport',
-    schedule: 2
+    start: new Date(new Date().setHours(9, 0)).addDays(4),
+    end: new Date(new Date().setHours(10, 0)).addDays(4),
+    title: 'Doctor Appt.',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+    class: 'health',
+    schedule: 1
   },
   {
-    start: '2018-11-23 12:30',
-    end: '2018-11-23 13:00',
-    title: 'Macca\'s with Mark',
+    start: new Date(new Date().setHours(11, 30)).addDays(4),
+    end: new Date(new Date().setHours(12, 25)).addDays(4),
+    title: 'BK with Mark',
     content: '<i class="w-icon mdi mdi-food"></i>',
     class: 'leisure',
     schedule: 2
   },
   {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Movie time',
+    start: new Date(new Date().setHours(12, 30)).addDays(4),
+    end: new Date(new Date().setHours(14, 30)).addDays(4),
+    title: 'Movie Theater',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
     schedule: 1
   },
   {
-    start: '2018-11-30 21:00',
-    end: '2018-11-30 23:30',
-    title: 'Another movie tonight',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
+    start: new Date(new Date().setHours(11, 30, 21, 0)).addDays(5),
+    end: new Date(new Date().setHours(12, 30, 23, 30)).addDays(5),
+    title: 'Movie Night',
+    content: '<i class="w-icon mdi mdi-popcorn"></i>',
     class: 'leisure',
+    schedule: 1
+  },
+  {
+    start: new Date(new Date().setHours(10, 0)).addDays(7),
+    end: new Date(new Date().setHours(11, 0)).addDays(7),
+    title: 'Doctor Appt.',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+    class: 'health',
     schedule: 1
   }
 ]
@@ -1659,7 +1654,7 @@ const allDayEvents = [
   {
     start: '2019-02-14',
     end: '2019-02-14',
-    title: 'Need to go shopping',
+    title: 'Grocery Shopping',
     content: '<i class="w-icon mdi mdi-cart-outline"></i>',
     class: 'leisure',
     allDay: true
@@ -1667,16 +1662,16 @@ const allDayEvents = [
   {
     start: '2019-02-11 10:35',
     end: '2019-02-11 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    title: 'Doctor Appt.',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
     class: 'health',
     schedule: 1
   },
   {
     start: '2019-02-11 18:30',
     end: '2019-02-11 19:15',
-    title: 'Dentist appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    title: 'Dentist Appt.',
+    content: '<i class="w-icon mdi mdi-tooth"></i>',
     class: 'health',
     schedule: 2
   },
@@ -1699,15 +1694,15 @@ const allDayEvents = [
   {
     start: '2019-02-13 19:30',
     end: '2019-02-13 23:00',
-    title: 'Swimming lesson',
-    content: '<i class="w-icon mdi mdi-pool"></i>',
+    title: 'Swimming Class',
+    content: '<i class="w-icon mdi mdi-swim"></i>',
     class: 'sport',
     schedule: 2
   },
   {
     start: '2019-02-15 12:30',
     end: '2019-02-15 13:00',
-    title: 'Macca\'s with Mark',
+    title: 'BK with Mark',
     content: '<i class="w-icon mdi mdi-food"></i>',
     class: 'leisure',
     schedule: 2
@@ -1715,7 +1710,7 @@ const allDayEvents = [
   {
     start: '2019-02-15 21:00',
     end: '2019-02-15 23:30',
-    title: 'Movie time',
+    title: 'Movie Theater',
     content: '<i class="w-icon mdi mdi-ticket"></i>',
     class: 'leisure',
     schedule: 1
@@ -1774,7 +1769,7 @@ const eventsToPop = [
   {
     start: '2018-11-20 14:00',
     end: '2018-11-20 18:00',
-    title: 'Need to go shopping',
+    title: 'Grocery Shopping',
     icon: 'mdi mdi-cart-outline',
     content: 'Click to see my shopping list',
     contentFull: 'My shopping list is rather long:<br><ul><li>Avocados</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
@@ -1875,11 +1870,12 @@ const onEventDrop = ({ event, originalEvent, external }) => {
 .main--examples-calendar-events {
   .vuecal__event {
     text-align: center;
+    color: #fff;
+    border: 1px solid;
 
-    i {margin: 4px 0;font-size: 23px;}
+    i {margin: 2px 0;font-size: 23px;}
   }
 
-  .vuecal__event {color: #fff;border: 1px solid;}
   .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
   .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
   .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
@@ -1967,6 +1963,7 @@ const onEventDrop = ({ event, originalEvent, external }) => {
   }
 
   .ex--events-on-month-view.vuecal--month-view {
+    height: 500px;
     .vuecal__cell {height: 80px;}
 
     .vuecal__cell-content {
