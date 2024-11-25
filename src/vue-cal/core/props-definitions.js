@@ -17,6 +17,8 @@ export const props = {
   // en-us is the default and fallback if locale is not supported.
   // The locale can also be provided externally to avoid using Promises.
   locale: { type: String, default: '' }, // A language to use for all the texts.
+  maxDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a maximum date for cell interactions.
+  minDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a minimum date for cell interactions.
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate: { type: [String, Date], default: '' },
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
@@ -56,8 +58,6 @@ export const props = {
   // This prevents drag creation by mistake when you want to navigate.
   disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
   eventsCountOnYearView: { type: Boolean, default: false },
-  maxDate: { type: [String, Date], default: '' },
-  minDate: { type: [String, Date], default: '' },
   minEventWidth: { type: Number, default: 0 },
   minScheduleWidth: { type: Number, default: 0 },
   overlapsPerTimeStep: { type: Boolean, default: false },

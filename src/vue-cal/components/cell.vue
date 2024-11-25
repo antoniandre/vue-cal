@@ -149,6 +149,9 @@ const classes = computed(() => {
     'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
     'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
     'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
+    'vuecal__cell--before-min': isDisabled.value && isBeforeMinDate.value,
+    'vuecal__cell--after-max': isDisabled.value && isAfterMaxDate.value,
+    'vuecal__cell--disabled': isDisabled.value,
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
     'vuecal__cell--has-schedules': config.schedules?.length,
     'vuecal__cell--dragging': touch.dragging,
@@ -234,6 +237,22 @@ const specialHours = computed(() => {
       class: classes
     }
   }).filter(specialRanges => !!specialRanges)
+})
+
+const isBeforeMinDate = computed(() => {
+  return config.minTimestamp !== null && config.minTimestamp > props.end.getTime()
+})
+
+const isAfterMaxDate = computed(() => {
+  return config.maxTimestamp && config.maxTimestamp < props.start.getTime()
+})
+
+// Is the current cell disabled or not (disabled date or before min date or after max date).
+const isDisabled = computed(() => {
+  const { disableDays } = config
+  const isYearsOrYearView = view.isYear || view.isYears
+  if (disableDays.length && disableDays.includes(dateUtils.formatDate(props.start)) && !isYearsOrYearView) return true
+  return isBeforeMinDate.value || isAfterMaxDate.value
 })
 
 // Draw a line in today's cell at the exact current time.
@@ -336,6 +355,8 @@ const createEventIfAllowed = async e => {
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
 const cellEventListeners = computed(() => {
+  if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
+
   const eventListeners = { ...config.eventListeners.cell }
 
   // Inject the cell details in each eventListener handler call as 2nd param.
@@ -381,6 +402,7 @@ const cellEventListeners = computed(() => {
 
   &--has-schedules {align-items: stretch;}
   &--out-of-range {opacity: 0.5;}
+  &--disabled {cursor: not-allowed;}
 }
 
 .vuecal__special-hours {

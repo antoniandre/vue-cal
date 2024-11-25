@@ -143,6 +143,26 @@ export const useConfig = (vuecal, props, attrs) => {
     else console.warn('Vue Cal: The provided selected date is invalid:', props.selectedDate)
   })
 
+  /**
+   * Mostly for date pickers, sets a minimum date for cell interactions.
+   */
+  const minTimestamp = computed(() => {
+    let date = null
+    if (props.minDate && typeof props.minDate === 'string') date = dateUtils.stringToDate(props.minDate)
+    else if (props.minDate && props.minDate instanceof Date) date = props.minDate
+    return date?.getTime() || null
+  })
+
+  /**
+   * Mostly for date pickers, sets a maximum date for cell interactions.
+   */
+  const maxTimestamp = computed(() => {
+    let date = null
+    if (props.maxDate && typeof props.maxDate === 'string') date = dateUtils.stringToDate(props.maxDate)
+    else if (props.maxDate && props.maxDate instanceof Date) date = props.maxDate
+    return date?.getTime() || null
+  })
+
   const schedules = computed(() => {
     const { view } = vuecal
     const show = props.schedules.length && (view.isDay || view.isDays || view.isWeek)
@@ -230,6 +250,8 @@ export const useConfig = (vuecal, props, attrs) => {
     clickToNavigate,
     hideWeekdays,
     hideWeekends,
+    minTimestamp,
+    maxTimestamp,
     schedules,
     selectedDate,
     editableEvents,

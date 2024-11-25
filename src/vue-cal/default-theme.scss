@@ -182,6 +182,7 @@
     top: 0;
     font-weight: bold;
   }
+  .vuecal__cell--disabled .vuecal__cell-date {opacity: 0.5;}
 
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   &:is(.vuecal--sm, .vuecal--lg) .vuecal__scrollable--month-view {
