@@ -139,6 +139,12 @@
     justify-content: flex-end;
     align-items: flex-start;
   }
+  .vuecal__cell:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+  }
   &.vuecal--timeless .vuecal__cell-events {
     display: flex;
     width: 100%;
@@ -150,14 +156,14 @@
     gap: 4px;
   }
 
-  &.vuecal--light .vuecal__cell {filter: saturate(2);}
+  &.vuecal--light .vuecal__cell:before {filter: saturate(2);}
 
-  .vuecal__cell--selected {background-color: color-mix(in srgb, var(--vuecal-primary-color) 25%, transparent);}
-  .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year),
-  &.vuecal--light .vuecal__cell--selected {
+  .vuecal__cell--selected:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 25%, transparent);}
+  .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year):before,
+  &.vuecal--light .vuecal__cell--selected:before {
     background-color: color-mix(in srgb, var(--vuecal-primary-color) 10%, transparent);
   }
-  &.vuecal--light .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year) {
+  &.vuecal--light .vuecal__cell:is(.vuecal__cell--today, .vuecal__cell--current-month, .vuecal__cell--current-year):before {
     background-color: color-mix(in srgb, var(--vuecal-primary-color) 5%, transparent);
   }
 
@@ -169,7 +175,7 @@
 
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   &:is(.vuecal--sm, .vuecal--lg) .vuecal__scrollable--month-view {
-    .vuecal__cell {background-color: transparent;}
+    .vuecal__cell:before {display: none;}
     .vuecal__cell-date {
       padding: 4px;
       border-radius: 99em;
@@ -336,16 +342,16 @@
     .vuecal__scrollable--years-view .vuecal__cell {font-size: 0.9em;}
     .vuecal__cell-date {font-weight: bold;}
 
-    &.vuecal--dark .vuecal__cell--today,
-    &.vuecal--dark .vuecal__cell--current-month,
-    &.vuecal--dark .vuecal__cell--current-year {background-color: color-mix(in srgb, var(--vuecal-primary-color) 50%, transparent)}
-    &.vuecal--dark .vuecal__cell--selected {background-color: var(--vuecal-primary-color);}
+    &.vuecal--dark .vuecal__cell--today:before,
+    &.vuecal--dark .vuecal__cell--current-month:before,
+    &.vuecal--dark .vuecal__cell--current-year:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 50%, transparent)}
+    &.vuecal--dark .vuecal__cell--selected:before {background-color: var(--vuecal-primary-color);}
   }
 
   &.vuecal--date-picker.vuecal--light {
-    .vuecal__cell--today,
-    .vuecal__cell--current-month,
-    .vuecal__cell--current-year {background-color: color-mix(in srgb, var(--vuecal-primary-color) 12%, transparent);}
-    .vuecal__cell--selected {background-color: color-mix(in srgb, var(--vuecal-primary-color) 28%, transparent);}
+    .vuecal__cell--today:before,
+    .vuecal__cell--current-month:before,
+    .vuecal__cell--current-year:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 12%, transparent);}
+    .vuecal__cell--selected:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 28%, transparent);}
   }
 }
