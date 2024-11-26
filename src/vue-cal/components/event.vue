@@ -27,7 +27,7 @@ const eventListeners = computed(() => {
 
   // Inject the cell details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => handler(e, event.value)
+    eventListeners[eventListener] = e => handler({ e, event: event.value })
   })
 
   return eventListeners

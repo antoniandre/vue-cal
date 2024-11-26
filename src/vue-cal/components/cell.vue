@@ -361,7 +361,7 @@ const cellEventListeners = computed(() => {
 
   // Inject the cell details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => handler(e, { start: props.start, end: props.end, events: cellEvents })
+    eventListeners[eventListener] = e => handler({ e, event: { start: props.start, end: props.end, events: cellEvents } })
   })
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
@@ -369,18 +369,18 @@ const cellEventListeners = computed(() => {
   const externalHandlers = { ...eventListeners }
 
   eventListeners.click = e => {
-    onCellClick({ start: props.start, end: props.end }, e)
-    externalHandlers.click?.(e)
+    onCellClick()
+    externalHandlers.click?.({ e })
   }
 
   if (config.time && view.isDay || view.isDays || view.isWeek) {
     eventListeners.touchstart = e => {
       trackMousemove(e)
-      externalHandlers.touchstart?.(e)
+      externalHandlers.touchstart?.({ e })
     }
     eventListeners.mousedown = e => {
       trackMousemove(e)
-      externalHandlers.mousedown?.(e)
+      externalHandlers.mousedown?.({ e })
     }
   }
 
