@@ -90,37 +90,41 @@ example(title="Timeless Events" anchor="timeless-events")
     :view-date="new Date()"
     :views-bar="false"
     :events="exTimelessEvents.events")
-    template
+
 //- Example.
-example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-on-event-click")
+example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click")
   template(#desc)
     p.mb2.
-      By passing a function to the option #[span.code on-event-click] or #[span.code on-event-dblclick],
-      you can control what happens when you click or double click an event - on any view where the events are displayed.#[br]
-      The callback function you provide will receive 2 arguments:
+      You can attach whatever event listener you want to the events: it only needs to start with
+      #[code @event-].#[br]
+      For instance, let's open a dialog on event click #[code @event-click]. When it's called, your
+      callback function will receive in parameter an object containing:
     ul
       li #[span.code event]: the clicked calendar event's object
       li #[span.code e]: the associated javascript DOM event
-    alert.mt3(tip) You can set any custom attribute you want on an event, you will then be able to access it in the dialog box!#[br]
   template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :time-to="19 * 60"
-      :views="['day', 'week', 'month']"
-      hide-weekends
-      :events="events"
-      :on-event-click="onEventClick"&gt;
-    &lt;/vue-cal&gt;
+    &lt;vue-cal :events="events" @event-click="openDialog" /&gt;
 
     &lt;!-- Using Wave UI --&gt;
-    &lt;w-dialog v-model="showDialog"&gt;
-      &lt;template #title&gt;
-        &lt;w-icon&gt;{{ '\{\{ selectedEvent.icon \}\}' }}&lt;/w-icon&gt;
+
+      .w-flex.align-center.justify-center.title1.mt6.mb4(v-html="exOpenEventDetails.event.content")
+      p.lh1.
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
+        labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
+
+    &lt;w-dialog
+      v-if="exOpenEventDetails.event"
+      v-model="exOpenEventDetails.showDialog"
+      :title="exOpenEventDetails.event.title"
+      width="300"&gt;
+      &lt;w-flex align-center justify-end gap2&gt;
+        &lt;w-icon class="grey"&gt;mdi mdi-calendar&lt;/w-icon&gt;
+        &lt;small&gt;{{ '\{\{ selectedEvent.start.format() \}\}' }}&lt;/small&gt;
+        &lt;w-icon class="grey ml2"&gt;mdi mdi-clock-outline&lt;/w-icon&gt;
+        &lt;small&gt;{{ '\{\{ selectedEvent.start.formatTime() \}\}' }} - {{ '\{\{ selectedEvent.end.formatTime() \}\}' }}&lt;/small&gt;
+      &lt;/w-flex&gt;
         &lt;span&gt;{{ '\{\{ selectedEvent.title \}\}' }}&lt;/span&gt;
-        &lt;w-spacer/&gt;
         &lt;strong&gt;{{ "\{\{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') \}\}" }}&lt;/strong&gt;
-      &lt;/template&gt;
 
       &lt;p v-html="selectedEvent.contentFull" /&gt;
       &lt;strong&gt;Event details:&lt;/strong&gt;
@@ -182,14 +186,28 @@ example(title="Open a dialog box on event click / dblclick" anchor="open-dialog-
     .vuecal__event-content {font-style: italic;}
 
   vue-cal.ex--open-dialog-on-event-click(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
+    :events="exOpenEventDetails.events"
     :time-from="9 * 60"
-    :time-to="19 * 60"
-    :views="['day', 'week', 'month']"
-    hide-weekends
-    :events="eventsToPop"
-    :on-event-click="onEventClick")
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    :view-date="new Date()"
+    :views-bar="false"
+    :dark="store.darkMode"
+    @event-click="exOpenEventDetails.openDialog")
+  w-dialog(
+    v-if="exOpenEventDetails.event"
+    v-model="exOpenEventDetails.showDialog"
+    :title="exOpenEventDetails.event.title"
+    width="300")
+    .w-flex.align-center.justify-end.gap2
+      w-icon.grey mdi mdi-calendar
+      small {{ exOpenEventDetails.event.start.format() }}
+      w-icon.grey.ml2 mdi mdi-clock-outline
+      small {{ exOpenEventDetails.event.start.formatTime() }} - {{ exOpenEventDetails.event.end.formatTime() }}
+    .w-flex.align-center.justify-center.title1.mt6.mb4(v-html="exOpenEventDetails.event.content")
+    p.lh1.
+      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
+      labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
 
 //- Example.
 example(title="Events indicators - #[span.code years], #[span.code year] &amp; #[span.code month] views" anchor="events-indicators")
@@ -1539,6 +1557,15 @@ const exTimelessEvents = reactive({
       class: 'leisure'
     }
   ]
+})
+
+const exOpenEventDetails = reactive({
+  showDialog: false,
+  openDialog: ({ event }) => {
+    exOpenEventDetails.event = event
+    exOpenEventDetails.showDialog = true
+  },
+  events: [...events]
 })
 
 const vuecalEl = ref(null)

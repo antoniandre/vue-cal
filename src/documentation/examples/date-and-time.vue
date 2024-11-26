@@ -1,6 +1,25 @@
 <template lang="pug">
 //- Example.
-example(title="Today's current time" anchor="today-current-time")
+example(title="Timeline" anchor="timeline")
+  template(#desc)
+    p.
+      Timelines are only visible on #[span.code day], #[span.code days] and #[span.code week] views.#[br]
+      This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
+      24-hour format.
+
+  template(#code-html).
+    &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
+    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" /&gt;
+
+  vue-cal(
+    :dark="store.darkMode"
+    :time-from="8 * 60"
+    :time-to="19 * 60"
+    :time-step="30"
+    hide-weekends)
+
+//- Example.
+example(title="Today's Current Time" anchor="today-current-time")
   template(#desc)
     p.
       When the time column is visible, the current time of today's date will
@@ -119,15 +138,14 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
         span.grey.px2(v-else style="font-size: 11px;line-height: 18px") {{ minutes }}
 
 //- Example.
-example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-max-dates")
+example(title="Minimum / Maximum Dates" anchor="min-max-dates")
   template(#desc)
     p.
       With the options #[span.code minDate] &amp; #[span.code maxDate], you can set a
       time range of selectable cells. All the cells before and after are still visible but
-      will be disabled and not selectable.#[br]
-      You can still navigate through them with arrows.#[br]
+      will be disabled and not selectable (you can still navigate through them with arrows).#[br]
       In this example, the minimum date is set to 10 days behind and the maximum date to
-      10 days ahead.
+      10 days ahead of today's date.
     p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
 
     alert.my4(tip)
@@ -138,14 +156,7 @@ example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-m
           2 different CSS class are available on out of range cells: #[span.code .before-min]
           &amp; #[span.code .after-max].
   template(#code-html).
-    &lt;vue-cal
-      :views-bar="false"
-      click-to-navigate
-      :time="false"
-      view="month"
-      :min-date="minDate"
-      :max-date="maxDate"
-      xs /&gt;
+    &lt;vue-cal date-picker :min-date="minDate" :max-date="maxDate" /&gt;
   template(#code-js).
     const minDate = new Date().subtractDays(10)
     const maxDate = new Date().addDays(10)
@@ -158,8 +169,8 @@ example(title="Minimum / Maximum Dates & Single Click to Navigate" anchor="min-m
     xs
     :views-bar="false"
     click-to-navigate
-    :time="false"
     view="month"
+    :views="['day', 'month', 'year', 'years']"
     :min-date="minDate"
     :max-date="maxDate")
 

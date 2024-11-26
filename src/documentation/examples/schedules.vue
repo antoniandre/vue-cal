@@ -1,29 +1,5 @@
 <template lang="pug">
 //- Example.
-example(title="Timeline & Business Hours" anchor="timeline")
-  template(#desc)
-    p.
-      Timelines are only visible on #[span.code week] and #[span.code day] views.#[br]
-      This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
-      24-hour format, and hidden weekends.
-
-  template(#code-html).
-    &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-    &lt;vue-cal
-      :time-from="8 * 60"
-      :time-to="19 * 60"
-      :time-step="30"
-      hide-weekends /&gt;
-
-  vue-cal(
-    :dark="store.darkMode"
-    :time-from="8 * 60"
-    :time-to="19 * 60"
-    :time-step="30"
-    hide-weekends
-    style="height: 450px")
-
-//- Example.
 example(title="Special Hours (or Business Hours)" anchor="special-hours")
   template(#desc)
     p.
