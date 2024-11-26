@@ -32,15 +32,15 @@
       v-model:selected-date="mainVuecalConfig.selectedDate"
       v-model:view-date="mainVuecalConfig.viewDate"
       v-bind="mainVuecalConfig"
-      @event-create="(e, event, resolve) => log('event-create', { e, event })"
-      @event-click="(e, event) => log('event-click', { e, event })"
-      @event-drag="(e, event) => log('event-drag', { e, event })"
-      @event-drag-end="(e, event) => log('event-drag', { e, event })"
-      @event-drop="(e, event) => log('event-drop', { e, event })"
-      @event-resize="(e, event) => log('event-resize', { e, event })"
-      @event-resize-end="(e, event) => log('event-resize-end', { e, event })"
-      @cell-drag="(e, event) => log('cell-drag', { e, event })"
-      @cell-drag-end="(e, event) => log('cell-drag-end', { e, event })")
+      @event-create="log('event-create', $event)"
+      @event-click="log('event-click', $event)"
+      @event-drag="log('event-drag', $event)"
+      @event-drag-end="log('event-drag', $event)"
+      @event-drop="log('event-drop', $event)"
+      @event-resize="log('event-resize', $event)"
+      @event-resize-end="log('event-resize-end', $event)"
+      @cell-drag="log('cell-drag', $event)"
+      @cell-drag-end="log('cell-drag-end', $event)")
 </template>
 
 <script setup>

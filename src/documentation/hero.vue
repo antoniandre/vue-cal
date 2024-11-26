@@ -222,8 +222,6 @@ $kate: #406fbf;
     font-weight: 500;
   }
   .vuecal__weekday .w-icon {color: inherit;}
-  &:not(.vuecal--day-view) .vuecal__cell--selected {background-color: transparent;}
-  &:not(.vuecal--day-view).full-cal .vuecal__cell--selected:before {border: 1px solid rgba($john, 0.8);}
 
   .vuecal__event {
     border-color: color-mix(in srgb, currentColor 20%, transparent);
