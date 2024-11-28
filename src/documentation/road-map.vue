@@ -28,6 +28,7 @@ ul.kanban
           - Fix event segments when dragging too fast on x axis.
           - multiple days on month view like google calendar
           - if more than 24 hour duration, consider as all-day
+          - #events-count
 
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
@@ -36,6 +37,7 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task view.createEvent()
       .task default active view
       .task Enable / disable views
       .task Hide / show weekends

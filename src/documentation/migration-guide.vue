@@ -34,37 +34,38 @@ ul
 
 h2.mt12 Props
 ul
-  li `activeView` renamed `view`
-  li the selectedDate does not necessary control the view navigation anymore,
-  li removed `hideBody` useless. With so much flexibility, there is no case where you only need the header without the calendar body
-  li cellContextmenu -> removed, you can attach from outside
-  li disableViews -> removed, replaced with `views` which is defining the available views instead
-  li small renamed sm
-  li x-small renamed xs
-  li specialHours -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
-  li disableWeekdays -> days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
-  li hideViewsBar renamed viewsBar, default true
-  li hideTitleBar renamed titleBar, default true
-  li todayButton now defaults to true, previously false
-  li clickToNavigate -> removed, you can attach your own DOM events to cells.
-  li dblClickToNavigate -> removed, you can attach your own DOM events to cells.
-  li day-splits -> renamed `schedules`
-  li onEventClick -> removed, you can attach from outside
-  li onEventCreate -> removed, you can attach from outside and control whether to create the event or reject the creation.
-  li onEventDblclick -> removed, you can attach from outside
-  li cellClickHold -> removed, you can attach from outside
+  li #[code activeView] was renamed #[code view].
+  li #[code selectedDate] does not necessary control the view navigation anymore.
+  li #[code hideBody] was removed as useless. With so much flexibility, there is no case where you only need the header without the calendar body.
+  li #[code cellContextmenu] was removed, you can attach from outside.
+  li #[code disableViews] was removed, replaced with #[code views] which is defining the available views instead.
+  li #[code small] was renamed #[code sm].
+  li #[code x-small] was renamed #[code xs].
+  li #[code specialHours] was days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
+  li #[code disableWeekdays] was days indexes should now be provided as 3 letter strings like 'mon', 'tue', 'wed', etc.
+  li #[code hideViewsBar] was renamed #[code viewsBar], default true.
+  li #[code hideTitleBar] was renamed #[code titleBar], default true.
+  li #[code todayButton] now defaults to true, previously false.
+  li #[code clickToNavigate] was removed, you can attach your own DOM events to cells.
+  li #[code dblClickToNavigate] was removed, you can attach your own DOM events to cells.
+  li #[code day-splits] was renamed #[code schedules].
+  li #[code onEventClick] was removed, you can attach from outside.
+  li #[code onEventCreate] was removed, you can attach from outside and control whether to create the event or reject the creation.
+  li #[code onEventDblclick] was removed, you can attach from outside.
+  li #[code cellClickHold] was removed, you can attach from outside.
   li.
-    disableDatePrototypes -> removed: the prototypes are now disabled by default and you control whether you
+    #[code disableDatePrototypes] was removed: the prototypes are now disabled by default and you control whether you
     want to benefit from it or not.
-  li dblclickToNavigate -> removed: can be done externally if needed
-  li dragToCreateEvent -> moved into the editableEvents object definition, allowed by default when events are editable
-  li cellClickHold -> removed: can be done externally if needed
-  li minCellWidth -> moved to a CSS variable: --vuecal-min-cell-width: 0;
-  li minSplitWidth -> renamed min-schedule-width and moved to a CSS variable: --vuecal-min-schedule-width: 0;
-  li allDayBarHeight -> moved to a CSS variable: --vuecal-all-day-bar-height.
-  li showWeekNumbers -> renamed weekNumbers
-  li showAllDayEvents -> renamed allDayEvents
-  li showTimeInCells -> removed: if you need to render time in cells, you can use cells slots.
+  li #[code dblclickToNavigate] was removed: can be done externally if needed.
+  li #[code dragToCreateEvent] was moved into the editableEvents object definition, allowed by default when events are editable
+  li #[code cellClickHold] was removed: can be done externally if needed.
+  li #[code minCellWidth] was moved to a CSS variable: #[code --vuecal-min-cell-width: 0;].
+  li #[code minSplitWidth] was renamed min-schedule-width and moved to a CSS variable: #[code --vuecal-min-schedule-width: 0;]
+  li #[code allDayBarHeight] was moved to a CSS variable: #[code --vuecal-all-day-bar-height].
+  li #[code showWeekNumbers] was renamed #[code weekNumbers].
+  li #[code showAllDayEvents] was renamed #[code allDayEvents].
+  li #[code showTimeInCells] was removed: if you need to render time in cells, you can use cells slots.
+  li #[code eventsCountOnYearView] was renamed #[code eventsCount].
 </template>
 
 <script setup>

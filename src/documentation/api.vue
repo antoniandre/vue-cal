@@ -812,15 +812,16 @@ w-accordion.mt2(
   //- TO DO LATER.
   w-accordion-item
     template(#title)
-      strong.code eventsCountOnYearView
+      strong.code eventsCount
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
       p.
-        When set to #[span.code true], the events count will also be displayed on #[span.code years]
-        &amp; #[span.code year] views.
+        When set to #[code true], the events will be counted on #[code month], #[code year] &amp;
+        #[code years] views and a number will appear in each cell that contain one or more events.#[br]
+        You can customize the events count via CSS or via the #[code #events-count] slot.
 
   w-accordion-item
     template(#title)
