@@ -37,7 +37,7 @@ import { useAppStore } from '@/store'
 const store = useAppStore()
 
 defineProps({
-  title: { type: String, required: true },
+  title: { type: String },
   anchor: { type: String, required: true }
 })
 </script>

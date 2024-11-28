@@ -202,7 +202,7 @@ w-accordion.mt2(
           {
             start: '2018-11-19 12:00', // Required.
             end: '2018-11-19 14:00', // Required.
-            // Instead of formatted dates, you can also provide Javascript Date objects:
+            // Instead of formatted dates, you can also provide JavaScript Date objects:
             // start: new Date(2018, 11 - 1, 19, 12, 0),
             // end: new Date(2018, 11 - 1, 19, 14, 0),
             title: {String}, // Optional.
@@ -337,6 +337,33 @@ w-accordion.mt2(
         Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
         #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
         #[router-link(to="/getting-started#css-notes") CSS Notes].
+
+  w-accordion-item
+    template(#title)
+      strong.code maxDate
+      .type [String, Date]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+      p.
+        Accepts a formatted string or plain JavaScript Date object.#[br]
+        Set a maximum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you
+        customize this.
+
+  w-accordion-item
+    template(#title)
+      strong.code minDate
+      .type [String, Date]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+      p.
+        Accepts a formatted string or plain JavaScript Date object.#[br]
+        Set a minimum date for the cells to be selectable.#[br]
+        By default the cell will be grayed out when out of range but CSS classes let you customize this.
 
   w-accordion-item
     template(#title)
@@ -527,6 +554,7 @@ w-accordion.mt2(
       p.
         Final time (in minutes) displayed in the timeline for each day in the schedule
         view. By default it ends at midnight.
+
   w-accordion-item
     template(#title)
       strong.code titleBar
@@ -822,33 +850,6 @@ w-accordion.mt2(
         When set to #[code true], the events will be counted on #[code month], #[code year] &amp;
         #[code years] views and a number will appear in each cell that contain one or more events.#[br]
         You can customize the events count via CSS or via the #[code #events-count] slot.
-
-  w-accordion-item
-    template(#title)
-      strong.code maxDate
-      .type [String, Date]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code ''
-    template(#content)
-      p.
-        Accepts a formatted string or plain JS Date object.#[br]
-        Set a maximum date for the cells to be selectable.#[br]
-        By default the cell will be grayed out when out of range but CSS classes let you
-        customize this.
-
-  w-accordion-item
-    template(#title)
-      strong.code minDate
-      .type [String, Date]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code ''
-    template(#content)
-      p.
-        Accepts a formatted string or plain JS Date object.#[br]
-        Set a minimum date for the cells to be selectable.#[br]
-        By default the cell will be grayed out when out of range but CSS classes let you customize this.
 
   w-accordion-item
     template(#title)
