@@ -21,7 +21,14 @@ example(title="Events & Background Events" anchor="events")
   template(#desc)
     p.
       Events are defined by a #[code start] and #[code end] dates, provided as a JavaScript Date object
-      or a formatted date and time. Additionally, you can optionally add a title, content, and a CSS class.
+      or a formatted date and time. Additionally, you can optionally add a title, content, and a CSS class.#[br]
+
+      Adding a #[code background: true] property to the event object will make it behave like a background event:
+      it can be overlapped without contstraint, and cannot be interacted with.#[br]
+      The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
+      They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
+      Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
+
     .w-flex.justify-end.my2
       w-switch(v-model="exEvents.showBgEvents") Show Background Events
   template(#code-html).
@@ -113,53 +120,39 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
       width="300"&gt;
       &lt;w-flex align-center justify-end gap2&gt;
         &lt;w-icon class="grey"&gt;mdi mdi-calendar&lt;/w-icon&gt;
-        &lt;small&gt;{{ '\{\{ selectedEvent.start.format() \}\}' }}&lt;/small&gt;
+        &lt;small&gt;{{ '\{\{ exOpenEventDetails.event.start.format() \}\}' }}&lt;/small&gt;
         &lt;w-icon class="grey ml2"&gt;mdi mdi-clock-outline&lt;/w-icon&gt;
-        &lt;small&gt;{{ '\{\{ selectedEvent.start.formatTime() \}\}' }} - {{ '\{\{ selectedEvent.end.formatTime() \}\}' }}&lt;/small&gt;
+        &lt;small&gt;
+          {{ '\{\{ exOpenEventDetails.event.start.formatTime() \}\}' }}
+          - {{ '\{\{ exOpenEventDetails.event.end.formatTime() \}\}' }}
+        &lt;/small&gt;
       &lt;/w-flex&gt;
       &lt;w-flex
         class="align-center justify-center title1 mt6 mb4"
         v-html="exOpenEventDetails.event.content"&gt;
       &lt;/w-flex&gt;
-      &lt;p&gt;
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
-        labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
-      &lt;/p&gt;
+      &lt;p&gt;{{ '\{\{ exOpenEventDetails.event.contentFull \}\}' }}&lt;/p&gt;
     &lt;/w-dialog&gt;
   template(#code-js).
-    data: () => ({
-      selectedEvent: {},
+    const exOpenEventDetails = reactive({
       showDialog: false,
+      openDialog: ({ event }) => {
+        exOpenEventDetails.event = event
+        exOpenEventDetails.showDialog = true
+      },
       events: [
         {
-          start: '2018-11-20 14:00',
-          end: '2018-11-20 18:00',
-          title: 'Grocery Shopping',
-          icon: 'mdi mdi-cart-outline', // Custom attribute.
-          content: 'Click to see my shopping list',
-          contentFull: 'My shopping list is rather long:&lt;br&gt;&lt;ul&gt;&lt;li&gt;Avocados&lt;/li&gt;&lt;li&gt;Tomatoes&lt;/li&gt;&lt;li&gt;Potatoes&lt;/li&gt;&lt;li&gt;Mangoes&lt;/li&gt;&lt;/ul&gt;', // Custom attribute.
-          class: 'leisure'
+          start: new Date(new Date().setHours(10, 30, 0, 0)),
+          end: new Date(new Date().setHours(11, 30, 0, 0)),
+          title: 'Doctor Appt.',
+          content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
+          contentFull: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti, labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.'
+          class: 'health'
         },
-        {
-          start: '2018-11-22 10:00',
-          end: '2018-11-22 15:00',
-          title: 'Golf with John',
-          icon: 'mdi mdi-golf', // Custom attribute.
-          content: 'Do I need to tell how many holes?',
-          contentFull: 'Okay.&lt;br&gt;It will be a 18 hole golf course.', // Custom attribute.
-          class: 'sport'
-        }
-      ]
-    }),
-    methods: {
-      onEventClick (event, e) {
-        this.selectedEvent = event
-        this.showDialog = true
-
-        // Prevent navigating to narrower view (default vue-cal behavior).
-        e.stopPropagation()
-      }
-    }
+        ...
+      ],
+      event: null
+    })
 
   vue-cal.ex--open-dialog-on-event-click(
     :events="exOpenEventDetails.events"
@@ -445,169 +438,73 @@ example(title="Create Events" anchor="create-events")
 //- Example.
 example(title="Other Event Creation Methods" anchor="other-event-creation-methods")
   template(#desc)
+    p.
+      There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
+      or programmatically.
+    alert Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
+    p Let's see the 3 cases in order of complexity:
   template(#code-html).
 
-p.
-  There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
-  or programmatically.
-alert Event creation will not trigger with a single/double click or click &amp; hold #[strong if your cursor is on an event].
-p Let's see the 3 cases in order of complexity:
+  template(#desc2)
+    ol.pl3
+      li.mt3
+        h5.subtitle-1.font-weight-bold On cell single or double click
+        p.
+          As the #[code cell-click] &amp; #[code cell-dblclick] emitted
+          events return a date and time at cursor position (refer to the
+          #[a(href="#ex--emitted-events") emitted events example]),
+          you simply need to call the #[code createEvent()] function straight
+          away from #[code cell-dblclick]:
+        .w-flex.wrap
+          .example.grow.my2.mr3(style="height: 280px")
+            vue-cal(
+              :dark="store.darkMode"
+              ref="vuecal3"
+              small
+              :views-bar="false"
+              :title-bar="false"
+              hide-weekends
+              :time-from="10 * 60"
+              :time-to="16 * 60"
+              :views="['week']"
+              :cell-click-hold="false"
+              :drag-to-create-event="false"
+              editable-events
+              @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
+          ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
+            &lt;vue-cal
+              ref="vuecal"
+              small
+              :views-bar="false"
+              hide-weekends
+              :title-bar="false"
+              :time-from="10 * 60"
+              :time-to="16 * 60"
+              :views="['day', 'week', 'month']"
+              :cell-click-hold="false"
+              :drag-to-create-event="false"
+              editable-events
+              @cell-dblclick="$refs.vuecal.createEvent(
+                $event,
+                120,
+                { title: 'New Event', class: 'blue-event' }
+              )"&gt;
+            &lt;/vue-cal&gt;
+        p You may then want to disable the default event creation on cell click &amp; hold by setting #[code :cell-click-hold="false"]
+      li.mt12
+        h5.subtitle-1.font-weight-bold Programmatically &amp; externally
+        p.my2.
+          To allow an external button to create events, you will need to call the
+          vue-cal #[code createEvent()] function from a Vue ref.
+        .w-flex.mb3.align-center
+          | This
+          w-button.mx1(sm @click="customEventCreation") button
+          | will prompt you to choose a date and time as the event start.
 
-ol.pl3
-  li.mt3
-    h5.subtitle-1.font-weight-bold On cell single or double click
-    p.
-      As the #[code cell-click] &amp; #[code cell-dblclick] emitted
-      events return a date and time at cursor position (refer to the
-      #[a(href="#ex--emitted-events") emitted events example]),
-      you simply need to call the #[code createEvent()] function straight
-      away from #[code cell-dblclick]:
-    .w-flex.wrap
-      .example.grow.my2.mr3(style="height: 280px")
-        vue-cal(
-          :dark="store.darkMode"
-          ref="vuecal3"
-          small
-          :views-bar="false"
-          :title-bar="false"
-          hide-weekends
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['week']"
-          :cell-click-hold="false"
-          :drag-to-create-event="false"
-          editable-events
-          @cell-dblclick="$refs.vuecal3.createEvent($event, 120, { title: 'New Event', class: 'blue-event' })")
-      ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
-        &lt;vue-cal
-          ref="vuecal"
-          small
-          :views-bar="false"
-          hide-weekends
-          :title-bar="false"
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['day', 'week', 'month']"
-          :cell-click-hold="false"
-          :drag-to-create-event="false"
-          editable-events
-          @cell-dblclick="$refs.vuecal.createEvent(
-            $event,
-            120,
-            { title: 'New Event', class: 'blue-event' }
-          )"&gt;
-        &lt;/vue-cal&gt;
-    p You may then want to disable the default event creation on cell click &amp; hold by setting #[code :cell-click-hold="false"]
-  li.mt12
-    h5.subtitle-1.font-weight-bold Programmatically &amp; externally
-    p.my2.
-      To allow an external button to create events, you will need to call the
-      vue-cal #[code createEvent()] function from a Vue ref.
-    .w-flex.mb3.align-center
-      | This
-      w-button.mx1(sm @click="customEventCreation") button
-      | will prompt you to choose a date and time as the event start.
-
-    .w-flex.align-top.wrap
-      vue-cal(
-        :dark="store.darkMode"
-        ref="exEventCreateVuecalRef"
-        small
-        :time-from="10 * 60"
-        :time-to="16 * 60"
-        :views="['day', 'week', 'month']"
-        :views-bar="false"
-        :title-bar="false"
-        hide-weekends
-        editable-events
-        :cell-click-hold="false"
-        :drag-to-create-event="false")
-      ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
-        &lt;button @click="customEventCreation"&gt;
-          button
-        &lt;/button&gt;
-
-        &lt;vue-cal
-          ref="vuecal"
-          small
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['day', 'week', 'month']"
-          :views-bar="false"
-          :title-bar="false"
-          hide-weekends
-          editable-events
-          :cell-click-hold="false"
-          :drag-to-create-event="false"&gt;
-        &lt;/vue-cal&gt;
-    p Then you can give custom event attributes as you wish:
-    ssh-pre.mt3(language="js" :dark="store.darkMode").
-      // In methods.
-      customEventCreation () {
-          const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
-
-          // Check if date format is correct before creating event.
-          if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-            this.$refs.vuecal.createEvent(
-              // Formatted start date and time or JavaScript Date object.
-              dateTime,
-              // Event duration in minutes (Integer).
-              120,
-              // Custom event props (optional).
-              { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' }
-            )
-          } else if (dateTime) alert('Wrong date format.')
-      }
-
-  li.mt12
-    h5.subtitle-1.font-weight-bold Adding a dialog box to the #[strong cell click &amp; hold] behavior
-    p.mt3.
-      By default, event will be created with these attributes:
-    ssh-pre.mt0(language="js" :dark="store.darkMode").
-      {
-          start: {Date}, // Starting from the cursor position in the clicked day cell.
-          end: {Date}, // Event start + 2 hours.
-          title: '',
-          content: '',
-          schedule /* if any */: {Integer | String} // The current day schedule id that was clicked.
-      }
-
-    p.
-      If you want to customize those attributes you can modify the event directly through
-      the callback function that you provide to #[code :on-event-create] as follows:#[br]
-    ssh-pre.mt6(language="js" :dark="store.darkMode").
-      // :on-event-create="onEventCreate", in template.
-
-      /**
-      * @param event {Object} The newly created event that you can override.
-      * @param deleteEventFunction {Function} Allows you to delete this event programmatically.
-      * @return {Object | false} The event to be passed back to Vue Cal, or false to reject creation.
-      */
-      onEventCreate (event, deleteEventFunction) {
-          // You can modify event here and return it.
-          // You can also return false to reject the event creation.
-          return event
-      }
-
-    p.
-      In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
-      The dialog box will allow you to set all the event attributes.
-    .w-flex.wrap
-      .example.grow.my2.mr3(style="height: 280px")
-        vue-cal.grow(
-          :dark="store.darkMode"
-          small
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['day', 'week', 'month']"
-          :views-bar="false"
-          :title-bar="false"
-          hide-weekends
-          editable-events
-          :drag-to-create-event="false"
-          :on-event-create="onEventCreate")
-      ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
-        &lt;vue-cal
+        .w-flex.align-top.wrap
+          vue-cal(
+            :dark="store.darkMode"
+            ref="exEventCreateVuecalRef"
             small
             :time-from="10 * 60"
             :time-to="16 * 60"
@@ -616,104 +513,201 @@ ol.pl3
             :title-bar="false"
             hide-weekends
             editable-events
-            :drag-to-create-event="false"
-            :on-event-create="onEventCreate"&gt;
-        &lt;/vue-cal&gt;
-  ssh-pre(language="html-vue" :dark="store.darkMode").
-    &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
-    &lt;v-dialog v-model="showEventCreationDialog" :persistent="true" max-width="420"&gt;
-      &lt;v-card&gt;
-        &lt;v-card-title&gt;
-          &lt;v-input v-model="selectedEvent.title" placeholder="Event Title" /&gt;
-        &lt;/v-card-title&gt;
-        &lt;v-card-text&gt;
-          &lt;v-textarea v-model="selectedEvent.content" placeholder="Event Content" /&gt;
-          &lt;v-flex&gt;
-            &lt;v-select
+            :cell-click-hold="false"
+            :drag-to-create-event="false")
+          ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
+            &lt;button @click="customEventCreation"&gt;
+              button
+            &lt;/button&gt;
+
+            &lt;vue-cal
+              ref="vuecal"
+              small
+              :time-from="10 * 60"
+              :time-to="16 * 60"
+              :views="['day', 'week', 'month']"
+              :views-bar="false"
+              :title-bar="false"
+              hide-weekends
+              editable-events
+              :cell-click-hold="false"
+              :drag-to-create-event="false"&gt;
+            &lt;/vue-cal&gt;
+        p Then you can give custom event attributes as you wish:
+        ssh-pre.mt3(language="js" :dark="store.darkMode").
+          // In methods.
+          customEventCreation () {
+              const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
+
+              // Check if date format is correct before creating event.
+              if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
+                this.$refs.vuecal.createEvent(
+                  // Formatted start date and time or JavaScript Date object.
+                  dateTime,
+                  // Event duration in minutes (Integer).
+                  120,
+                  // Custom event props (optional).
+                  { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' }
+                )
+              } else if (dateTime) alert('Wrong date format.')
+          }
+
+      li.mt12
+        h5.subtitle-1.font-weight-bold Adding a dialog box to the #[strong cell click &amp; hold] behavior
+        p.mt3.
+          By default, event will be created with these attributes:
+        ssh-pre.mt0(language="js" :dark="store.darkMode").
+          {
+              start: {Date}, // Starting from the cursor position in the clicked day cell.
+              end: {Date}, // Event start + 2 hours.
+              title: '',
+              content: '',
+              schedule /* if any */: {Integer | String} // The current day schedule id that was clicked.
+          }
+
+        p.
+          If you want to customize those attributes you can modify the event directly through
+          the callback function that you provide to #[code :on-event-create] as follows:#[br]
+        ssh-pre.mt6(language="js" :dark="store.darkMode").
+          // :on-event-create="onEventCreate", in template.
+
+          /**
+          * @param event {Object} The newly created event that you can override.
+          * @param deleteEventFunction {Function} Allows you to delete this event programmatically.
+          * @return {Object | false} The event to be passed back to Vue Cal, or false to reject creation.
+          */
+          onEventCreate (event, deleteEventFunction) {
+              // You can modify event here and return it.
+              // You can also return false to reject the event creation.
+              return event
+          }
+
+        p.
+          In this example, we are adding a dialog box to the cell click &amp; hold.#[br]
+          The dialog box will allow you to set all the event attributes.
+        .w-flex.wrap
+          .example.grow.my2.mr3(style="height: 280px")
+            vue-cal.grow(
+              :dark="store.darkMode"
+              small
+              :time-from="10 * 60"
+              :time-to="16 * 60"
+              :views="['day', 'week', 'month']"
+              :views-bar="false"
+              :title-bar="false"
+              hide-weekends
+              editable-events
+              :drag-to-create-event="false"
+              :on-event-create="onEventCreate")
+          ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
+            &lt;vue-cal
+                small
+                :time-from="10 * 60"
+                :time-to="16 * 60"
+                :views="['day', 'week', 'month']"
+                :views-bar="false"
+                :title-bar="false"
+                hide-weekends
+                editable-events
+                :drag-to-create-event="false"
+                :on-event-create="onEventCreate"&gt;
+            &lt;/vue-cal&gt;
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;!-- Using Wave UI --&gt;
+        &lt;w-dialog
+          v-model="showEventCreationDialog"
+          :persistent="true"
+          max-width="420"&gt;
+          &lt;template #title&gt;
+            &lt;w-input v-model="selectedEvent.title" placeholder="Event Title" /&gt;
+          &lt;/template&gt;
+
+          &lt;w-textarea v-model="selectedEvent.content" placeholder="Event Content" /&gt;
+          &lt;w-flex&gt;
+            &lt;w-select
               :items="eventsCssClasses"
               placeholder="Event CSS Class"
               @change="selectedEvent.class = $event"
               :value="selectedEvent.class" /&gt;
-            &lt;v-switch v-model="selectedEvent.background" label="background Event" /&gt;
-          &lt;/v-flex&gt;
-          &lt;v-flex&gt;
-            &lt;v-btn @click="cancelEventCreation()"&gt;Cancel&lt;/v-btn&gt;
-            &lt;v-btn @click="closeCreationDialog()"&gt;Save&lt;/v-btn&gt;
-          &lt;/v-flex&gt;
-        &lt;/v-card-text&gt;
-      &lt;/v-card&gt;
+            &lt;w-switch v-model="selectedEvent.background" label="background Event" /&gt;
+          &lt;/w-flex&gt;
+          &lt;w-flex&gt;
+            &lt;w-btn @click="cancelEventCreation()"&gt;Cancel&lt;/w-btn&gt;
+            &lt;w-btn @click="closeCreationDialog()"&gt;Save&lt;/w-btn&gt;
+          &lt;/w-flex&gt;
+        &lt;/w-dialog&gt;
 
-  ssh-pre(language="js" :dark="store.darkMode").
-    data: () => ({
-      selectedEvent: null,
-      showEventCreationDialog: false,
-      eventsCssClasses: ['leisure', 'sport', 'health']
-    }),
-    methods: {
-      onEventCreate (event, deleteEventFunction) {
-        this.selectedEvent = event
-        this.showEventCreationDialog = true
-        this.deleteEventFunction = deleteEventFunction
+      ssh-pre(language="js" :dark="store.darkMode").
+        data: () => ({
+          selectedEvent: null,
+          showEventCreationDialog: false,
+          eventsCssClasses: ['leisure', 'sport', 'health']
+        }),
+        methods: {
+          onEventCreate (event, deleteEventFunction) {
+            this.selectedEvent = event
+            this.showEventCreationDialog = true
+            this.deleteEventFunction = deleteEventFunction
 
-        return event
-      },
-      cancelEventCreation () {
-        this.closeCreationDialog()
-        this.deleteEventFunction()
-      },
-      closeCreationDialog () {
-        this.showEventCreationDialog = false
-        this.selectedEvent = {}
-      }
-    }
+            return event
+          },
+          cancelEventCreation () {
+            this.closeCreationDialog()
+            this.deleteEventFunction()
+          },
+          closeCreationDialog () {
+            this.showEventCreationDialog = false
+            this.selectedEvent = {}
+          }
+        }
 
-  p With the same method, you can open a dialog at the end of the event drag-creation.
-  .example.grow.my2(style="height: 280px")
-    vue-cal(
-      :dark="store.darkMode"
-      small
-      :time-from="10 * 60"
-      :time-to="16 * 60"
-      :views="['day', 'week', 'month']"
-      :views-bar="false"
-      :title-bar="false"
-      hide-weekends
-      editable-events
-      :on-event-create="onEventDragStartCreate"
-      @event-drag-create="showEventCreationDialog = true")
-  p.
-    This example uses the same dialog box and #[code cancelEventCreation] &amp;
-    #[code closeCreationDialog] functions as the previous example.#[br]
-    Note that #[code event-drag-create] gets fired on mouseup of the drag-create,
-    whereas #[code onEventCreate] gets called as soon as the event appears on screen, while dragging.
-  ssh-pre(language="html-vue" :dark="store.darkMode").
-    &lt;vue-cal
-      small
-      :time-from="10 * 60"
-      :time-to="16 * 60"
-      :views="['day', 'week', 'month']"
-      :views-bar="false"
-      :title-bar="false"
-      hide-weekends
-      editable-events
-      :on-event-create="onEventCreate"
-      @event-drag-create="showEventCreationDialog = true"&gt;
-    &lt;/vue-cal&gt;
-  ssh-pre(language="js" :dark="store.darkMode").
-    data: () => ({
-      selectedEvent: null,
-      showEventCreationDialog: false
-    }),
-    methods: {
-      // Called when drag-create threshold is reached (when the event appears on screen),
-      // but before releasing the drag; so, it should not open the dialog box yet.
-      onEventCreate (event, deleteEventFunction) {
-        this.selectedEvent = event
-        this.deleteEventFunction = deleteEventFunction
+      p With the same method, you can open a dialog at the end of the event drag-creation.
+      .example.grow.my2(style="height: 280px")
+        vue-cal(
+          :dark="store.darkMode"
+          small
+          :time-from="10 * 60"
+          :time-to="16 * 60"
+          :views="['day', 'week', 'month']"
+          :views-bar="false"
+          :title-bar="false"
+          hide-weekends
+          editable-events
+          :on-event-create="onEventDragStartCreate"
+          @event-drag-create="showEventCreationDialog = true")
+      p.
+        This example uses the same dialog box and #[code cancelEventCreation] &amp;
+        #[code closeCreationDialog] functions as the previous example.#[br]
+        Note that #[code event-drag-create] gets fired on mouseup of the drag-create,
+        whereas #[code onEventCreate] gets called as soon as the event appears on screen, while dragging.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;vue-cal
+          small
+          :time-from="10 * 60"
+          :time-to="16 * 60"
+          :views="['day', 'week', 'month']"
+          :views-bar="false"
+          :title-bar="false"
+          hide-weekends
+          editable-events
+          :on-event-create="onEventCreate"
+          @event-drag-create="showEventCreationDialog = true"&gt;
+        &lt;/vue-cal&gt;
+      ssh-pre(language="js" :dark="store.darkMode").
+        data: () => ({
+          selectedEvent: null,
+          showEventCreationDialog: false
+        }),
+        methods: {
+          // Called when drag-create threshold is reached (when the event appears on screen),
+          // but before releasing the drag; so, it should not open the dialog box yet.
+          onEventCreate (event, deleteEventFunction) {
+            this.selectedEvent = event
+            this.deleteEventFunction = deleteEventFunction
 
-        return event
-      }
-    }
+            return event
+          }
+        }
 
 //- Example.
 example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
@@ -1196,63 +1190,6 @@ example(title="Overlapping events" anchor="overlapping-events")
     :events="overlappingEvents")
 
 //- Example.
-example(title="Background events" anchor="background-events")
-  template(#desc)
-    p.
-      Just add the property #[code background: true] to your events.#[br]
-      The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
-      They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
-      Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
-      Refer to the #[code events] option in the #[a(href="#api") API] section.
-  template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="7 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  template(#code-js).
-    data: () => ({
-      events: [
-        {
-          start: '2018-11-19 12:00',
-          end: '2018-11-19 14:00',
-          title: 'LUNCH',
-          class: 'lunch',
-          background: true
-        },
-        {
-          start: '2018-11-20 12:00',
-          end: '2018-11-20 14:00',
-          title: 'LUNCH',
-          class: 'lunch',
-          background: true
-        },
-        ...
-      ]
-    })
-  template(#code-css).
-    .vuecal__event.lunch {
-      background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
-      color: #999;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
-    .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
-
-  vue-cal(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="7 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    :events="backgroundEvents")
-
-//- Example.
 example(title="All day events" anchor="all-day-events")
   template(#desc)
     ul
@@ -1519,11 +1456,19 @@ const exOpenEventDetails = reactive({
 })
 
 const exEventsIndicators = reactive({
-
+  indicatorStyle: ref('count'),
+  indicatorStyleOptions: ref([
+    { label: 'count (default)', value: 'count' },
+    { label: 'dash', value: 'dash' },
+    { label: 'dot', value: 'dot' },
+    { label: 'cell background', value: 'cell' }
+  ])
 })
+
 const exEventsOnMonthView = reactive({
 
 })
+
 const exEditAndDeleteEvents = reactive({
 
 })
@@ -1547,7 +1492,42 @@ const exEditEvents = reactive({
 
 const exEventCreateVuecalRef = ref(null)
 const exEventCreate = reactive({
+  onEventCreate: (event, deleteEventFunction) => {
+    selectedEvent.value = event
+    showEventCreationDialog.value = true
+    deleteEventFunction.value = deleteEventFunction
 
+    return event
+  },
+  snapToTime15: ref(false),
+  dragToCreateThreshold: ref(15),
+  dragToCreateThresholdOpts: ref([{ label: '0' }, { label: '15' }]),
+  deleteEventFunction: ref(null),
+  deleteDragEventFunction: ref(null),
+  cancelEventCreation: () => {
+    closeCreationDialog()
+    (deleteEventFunction.value || deleteDragEventFunction.value)()
+  },
+  closeCreationDialog: () => {
+    showEventCreationDialog.value = false
+    selectedEvent.value = {}
+  },
+  onEventDragStartCreate: (event, deleteEventFunction) => {
+    selectedEvent.value = event
+    deleteEventFunction.value = deleteEventFunction
+
+    return event
+  },
+  customEventCreation: () => {
+    let today = new Date(new Date().setHours(13, 15))
+    // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
+    if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
+    const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', today.format('YYYY-MM-DD HH:mm'))
+    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
+      exEventCreateVuecalRef.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
+    }
+    else if (dateTime) alert('Wrong date format.')
+  }
 })
 
 const exDragAndDrop = reactive({
@@ -1563,12 +1543,62 @@ const exDragAndDrop = reactive({
   ]
 })
 
-const exExternalEventsDragAndDrop = reactive({
-
+const exExternalEventsDragDrop = reactive({
+  events: ref([
+    {
+      id: 1,
+      title: 'Ext. Event 1',
+      content: 'content 1',
+      duration: 60
+    },
+    {
+      id: 2,
+      title: 'Ext. Event 2',
+      content: 'content 2',
+      duration: 30
+    },
+    {
+      id: 3,
+      title: 'Ext. Event 3',
+      content: 'content 3'
+    }
+  ]),
+  onEventDragStart: (e, draggable) => {
+    e.dataTransfer.setData('event', JSON.stringify(draggable))
+    e.dataTransfer.setData('cursor-grab-at', e.offsetY)
+  },
+  onEventDrop: ({ event, originalEvent, external }) => {
+    if (external) {
+      const extEventToDeletePos = exExternalEventsDragDrop.events.value.findIndex(item => item.id === originalEvent.id)
+      if (extEventToDeletePos > -1) exExternalEventsDragDrop.events.value.splice(extEventToDeletePos, 1)
+    }
+  }
 })
 
 const exMultipleDayEvents = reactive({
-
+  events: [
+    {
+      start: '2018-11-16 10:00',
+      end: '2018-11-20 12:37',
+      title: 'Running Marathon',
+      content: '<i class="w-icon mdi mdi-run"></i>',
+      class: 'sport'
+    },
+    {
+      start: '2018-11-20 10:00',
+      end: '2018-11-20 10:25',
+      title: 'Drink water!',
+      content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
+      class: 'health drink-water'
+    },
+    {
+      start: '2018-11-21 19:00',
+      end: '2018-11-23 11:30',
+      title: 'Trip to India',
+      content: '<i class="w-icon mdi mdi-airplane"></i>',
+      class: 'leisure'
+    }
+  ]
 })
 
 const exRecurringEvents = reactive({
@@ -1576,7 +1606,38 @@ const exRecurringEvents = reactive({
 })
 
 const exOverlappingEvents = reactive({
-
+  events: [
+    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+    {
+      start: '2018-11-21 14:00',
+      end: '2018-11-21 22:00',
+      title: 'A big thing',
+      content: '<i class="w-icon mdi mdi-emoticon-outline"></i>',
+      class: 'health'
+    },
+    {
+      start: '2018-11-21 16:00',
+      end: '2018-11-21 19:00',
+      title: 'Another thing',
+      content: '<i class="w-icon mdi mdi-thumb-up-outline"></i>',
+      class: 'blue-event'
+    },
+    {
+      start: '2018-11-23 21:00',
+      end: '2018-11-23 23:30',
+      title: 'Eat pop corns',
+      content: '<i class="w-icon mdi mdi-ticket"></i>',
+      class: 'leisure'
+    },
+    {
+      start: '2018-11-23 21:00',
+      end: '2018-11-23 23:30',
+      title: 'Enjoy the movie',
+      content: '<i class="w-icon mdi mdi-ticket"></i>',
+      class: 'leisure'
+    }
+  ],
+  minEventWidth: ref(0)
 })
 
 const exAllDayEvents = reactive({
@@ -1662,192 +1723,15 @@ const exAllDayEvents = reactive({
       class: 'leisure',
       schedule: 1
     }
-  ]
+  ],
+  shortEventsOnMonthView: ref(false)
 })
 
-const minEventWidth = ref(0)
-const timeCellHeight = ref(26)
-const indicatorStyle = ref('count')
-const indicatorStyleOptions = ref([
-  { label: 'count (default)', value: 'count' },
-  { label: 'dash', value: 'dash' },
-  { label: 'dot', value: 'dot' },
-  { label: 'cell background', value: 'cell' }
-])
 const now = ref(new Date())
-const showDialog = ref(false)
 const showEventCreationDialog = ref(false)
-const shortEventsOnMonthView = ref(false)
 const selectedEvent = ref({})
 const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
 
-const deleteEventFunction = ref(null)
-const deleteDragEventFunction = ref(null)
-
-const overlappingEvents = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-21 14:00',
-    end: '2018-11-21 22:00',
-    title: 'A big thing',
-    content: '<i class="w-icon mdi mdi-emoticon-outline"></i>',
-    class: 'health'
-  },
-  {
-    start: '2018-11-21 16:00',
-    end: '2018-11-21 19:00',
-    title: 'Another thing',
-    content: '<i class="w-icon mdi mdi-thumb-up-outline"></i>',
-    class: 'blue-event'
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Eat pop corns',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure'
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Enjoy the movie',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure'
-  }
-]
-const eventsCopy = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-21 12:00',
-    end: '2018-11-21 12:30',
-    title: 'Recall Dave',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-    class: 'leisure'
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Eat pop corns',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure'
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Enjoy the movie',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure'
-  }
-]
-const eventsCopy2 = [
-  ...events.map(e => ({ ...e })) // Clone when reusing, so events are independent.
-]
-const multipleDayEvents = [
-  {
-    start: '2018-11-16 10:00',
-    end: '2018-11-20 12:37',
-    title: 'Running Marathon',
-    content: '<i class="w-icon mdi mdi-run"></i>',
-    class: 'sport'
-  },
-  {
-    start: '2018-11-20 10:00',
-    end: '2018-11-20 10:25',
-    title: 'Drink water!',
-    content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
-    class: 'health drink-water'
-  },
-  {
-    start: '2018-11-21 19:00',
-    end: '2018-11-23 11:30',
-    title: 'Trip to India',
-    content: '<i class="w-icon mdi mdi-airplane"></i>',
-    class: 'leisure'
-  }
-]
-const recurringEvents = []
-const backgroundEvents = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-19 12:00',
-    end: '2018-11-19 14:00',
-    title: 'LUNCH',
-    class: 'lunch',
-    background: true
-  },
-  {
-    start: '2018-11-20 12:00',
-    end: '2018-11-20 14:00',
-    title: 'LUNCH',
-    class: 'lunch',
-    background: true
-  },
-  {
-    start: '2018-11-21 12:00',
-    end: '2018-11-21 14:00',
-    title: 'LUNCH',
-    class: 'lunch',
-    background: true
-  },
-  {
-    start: '2018-11-22 12:00',
-    end: '2018-11-22 14:00',
-    title: 'LUNCH',
-    class: 'lunch',
-    background: true
-  },
-  {
-    start: '2018-11-23 12:00',
-    end: '2018-11-23 14:00',
-    title: 'LUNCH',
-    class: 'lunch',
-    background: true
-  }
-]
-
-const eventsToPop = [
-  {
-    start: '2018-11-20 14:00',
-    end: '2018-11-20 18:00',
-    title: 'Grocery Shopping',
-    icon: 'mdi mdi-cart-outline',
-    content: 'Click to see my shopping list',
-    contentFull: 'My shopping list is rather long:<br><ul><li>Avocados</li><li>Tomatoes</li><li>Potatoes</li><li>Mangoes</li></ul>',
-    class: 'leisure'
-  },
-  {
-    start: '2018-11-22 10:00',
-    end: '2018-11-22 15:00',
-    title: 'Golf with John',
-    icon: 'mdi mdi-golf',
-    content: 'Do I need to tell how many holes?',
-    contentFull: 'Okay.<br>It will be a 18 hole golf course.',
-    class: 'sport'
-  }
-]
-const draggables = ref([
-  {
-    id: 1,
-    title: 'Ext. Event 1',
-    content: 'content 1',
-    duration: 60
-  },
-  {
-    id: 2,
-    title: 'Ext. Event 2',
-    content: 'content 2',
-    duration: 30
-  },
-  {
-    id: 3,
-    title: 'Ext. Event 3',
-    content: 'content 3'
-  }
-])
-
-const snapToTime15 = ref(false)
-const dragToCreateThreshold = ref(15)
-const dragToCreateThresholdOpts = ref([{ label: '0' }, { label: '15' }])
 
 // Computed.
 const todayFormattedNotWeekend = computed(() => {
@@ -1856,54 +1740,6 @@ const todayFormattedNotWeekend = computed(() => {
   if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
   return today.format('YYYY-MM-DD HH:mm')
 })
-
-// Methods.
-const onEventClick = (event, e) => {
-  selectedEvent.value = event
-  showDialog.value = true
-  e.stopPropagation()
-}
-const cancelEventCreation = () => {
-  closeCreationDialog()
-  (deleteEventFunction.value || deleteDragEventFunction.value)()
-}
-const closeCreationDialog = () => {
-  showEventCreationDialog.value = false
-  selectedEvent.value = {}
-}
-const onEventCreate = (event, deleteEventFunction) => {
-  selectedEvent.value = event
-  showEventCreationDialog.value = true
-  deleteEventFunction.value = deleteEventFunction
-
-  return event
-}
-const onEventDragStartCreate = (event, deleteEventFunction) => {
-  selectedEvent.value = event
-  deleteEventFunction.value = deleteEventFunction
-
-  return event
-}
-const customEventCreation = () => {
-  let today = new Date(new Date().setHours(13, 15))
-  // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
-  if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
-  const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', today.format('YYYY-MM-DD HH:mm'))
-  if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-    exEventCreateVuecalRef.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
-  }
-  else if (dateTime) alert('Wrong date format.')
-}
-const onEventDragStart = (e, draggable) => {
-  e.dataTransfer.setData('event', JSON.stringify(draggable))
-  e.dataTransfer.setData('cursor-grab-at', e.offsetY)
-}
-const onEventDrop = ({ event, originalEvent, external }) => {
-  if (external) {
-    const extEventToDeletePos = draggables.value.findIndex(item => item.id === originalEvent.id)
-    if (extEventToDeletePos > -1) draggables.value.splice(extEventToDeletePos, 1)
-  }
-}
 </script>
 
 <style lang="scss">
