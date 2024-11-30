@@ -353,6 +353,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     ]
 
   vue-cal(
+    ref="exEditEventsVuecalRef"
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
@@ -361,7 +362,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :views-bar="false"
     hide-weekends
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
-    :events="editableEvents")
+    :events="exEditEvents.events")
 
 //- Example.
 example(title="Create Events" anchor="create-events")
@@ -508,20 +509,19 @@ ol.pl3
       | will prompt you to choose a date and time as the event start.
 
     .w-flex.align-top.wrap
-      .example.grow.my2.mr3(style="height: 280px")
-        vue-cal(
-          :dark="store.darkMode"
-          ref="vuecalEl"
-          small
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['day', 'week', 'month']"
-          :views-bar="false"
-          :title-bar="false"
-          hide-weekends
-          editable-events
-          :cell-click-hold="false"
-          :drag-to-create-event="false")
+      vue-cal(
+        :dark="store.darkMode"
+        ref="exEventCreateVuecalRef"
+        small
+        :time-from="10 * 60"
+        :time-to="16 * 60"
+        :views="['day', 'week', 'month']"
+        :views-bar="false"
+        :title-bar="false"
+        hide-weekends
+        editable-events
+        :cell-click-hold="false"
+        :drag-to-create-event="false")
       ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
         &lt;button @click="customEventCreation"&gt;
           button
@@ -721,84 +721,95 @@ example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
     p.mb2.
       In addition to the obvious event dragging itself, there are quite a few things that are good
       to know about the drag &amp; drop.
-  template(#code-html).
-
-alert(warning)
-  ul
-    li.
-      Drag &amp; drop is a module (to keep Vue Cal light weight).#[br]
-      For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
-      it must be loaded separately: #[br]#[code import 'vue-cal/dist/drag-and-drop.js'].
-    li
-      strong Drag &amp; drop is only available on single day events.
-h5 Dragging over header
-ul
-  li.
-    While you drag an event over the view selector buttons, or the previous and next arrows,
-    or even the today button, they will get into a highlighted state and if you hold over for
-    a few milliseconds they will change the view so you can drop the event you are holding
-    on another date of the calendar.
-  li.
-    while dragged over, the previous and next buttons will keep changing the view until you go
-    away from the button.
-  li.
-    Dragging an event over the today button will take you to Today's date, and if you're in
-    a #[code years] or #[code year] view it will also go to the next available
-    narrower view from #[code month] downwards.
-h5 Dragging over a cell
-ul
-  li.
-    If you drag an event over a cell or a day schedule
-    (ref. #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
-    highlighted state, showing you where the event would go if you drop it.
-  li.
-    You can drop an event in any cell. But because it does not make much sense to drop it into a
-    #[code years] or #[code year] view, if you hold over a cell
-    in these views or in #[code month] view, it will go to the next available narrower
-    view so you can at least see a day cell.
-h5 Dropping the event into a cell or somewhere not allowed
-ul
-  li.
-    If you drop the event outside of the calendar or anywhere it's not possible,
-    it will snap back to its original place and the original view will be restored if it
-    was changed by navigating away.
-  li.
-    If you drop the event in a cell and it would start before midnight (00:00), it is placed at
-    midnight, keeping its duration.
-  li.
-    If you drop the event in a cell and it would end after midnight (24:00), its duration will
-    be truncated to end at midnight (24:00).
-  li.
-    By default, when you drop the event it will start exactly where you dropped it,
-    but if you prefer you can use the #[code snapToTime] option to dictate where it should
-      snap to (refer to #[code snapToTime] in the #[a(href="#api") API section]).#[br]
-    If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
-    the native HTML5 drag &amp; drop.
-h5 Emitted events
-ul
-  li
-    | When dropping an event into a cell, the
-    a.ml1(href="#ex--emitted-events") #[code event-drop] and #[code event-change] events are emitted.
-h5 CSS styles
-ul
-  li
-    | You can change the highlighted style of the header buttons or cells through these CSS classes:
+    alert(warning)
+      ul
+        li.
+          Drag &amp; drop is a module (to keep Vue Cal light weight).#[br]
+          For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
+          it must be loaded separately: #[br]#[code import 'vue-cal/dist/drag-and-drop.js'].
+        li
+          strong Drag &amp; drop is only available on single day events.
+    h5 Dragging over header
     ul
-      li #[code .vuecal__view-btn--highlighted]
-      li #[code .vuecal__today-btn--highlighted]
-      li #[code .vuecal__arrow--highlighted]
-      li #[code .vuecal__cell--highlighted]
-      li #[code .vuecal__cell-schedule--highlighted]
-  li.
-    You can change the style of the event being dragged through the
-    #[code .vuecal__event--dragging] CSS class.
-  li.
-    While dragging, a copy of the original event is made and that's what you drag
-    (native HTML5 drag &amp; drop behavior). The original event receive the
-    #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
-    You can use that class to give it a different style.
+      li.
+        While you drag an event over the view selector buttons, or the previous and next arrows,
+        or even the today button, they will get into a highlighted state and if you hold over for
+        a few milliseconds they will change the view so you can drop the event you are holding
+        on another date of the calendar.
+      li.
+        while dragged over, the previous and next buttons will keep changing the view until you go
+        away from the button.
+      li.
+        Dragging an event over the today button will take you to Today's date, and if you're in
+        a #[code years] or #[code year] view it will also go to the next available
+        narrower view from #[code month] downwards.
+    h5 Dragging over a cell
+    ul
+      li.
+        If you drag an event over a cell or a day schedule
+        (ref. #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
+        highlighted state, showing you where the event would go if you drop it.
+      li.
+        You can drop an event in any cell. But because it does not make much sense to drop it into a
+        #[code years] or #[code year] view, if you hold over a cell
+        in these views or in #[code month] view, it will go to the next available narrower
+        view so you can at least see a day cell.
+    h5 Dropping the event into a cell or somewhere not allowed
+    ul
+      li.
+        If you drop the event outside of the calendar or anywhere it's not possible,
+        it will snap back to its original place and the original view will be restored if it
+        was changed by navigating away.
+      li.
+        If you drop the event in a cell and it would start before midnight (00:00), it is placed at
+        midnight, keeping its duration.
+      li.
+        If you drop the event in a cell and it would end after midnight (24:00), its duration will
+        be truncated to end at midnight (24:00).
+      li.
+        By default, when you drop the event it will start exactly where you dropped it,
+        but if you prefer you can use the #[code snapToTime] option to dictate where it should
+          snap to (refer to #[code snapToTime] in the #[a(href="#api") API section]).#[br]
+        If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
+        the native HTML5 drag &amp; drop.
+    h5 Emitted events
+    ul
+      li
+        | When dropping an event into a cell, the
+        a.ml1(href="#ex--emitted-events") #[code event-drop] and #[code event-change] events are emitted.
+    h5 CSS styles
+    ul
+      li
+        | You can change the highlighted style of the header buttons or cells through these CSS classes:
+        ul
+          li #[code .vuecal__view-btn--highlighted]
+          li #[code .vuecal__today-btn--highlighted]
+          li #[code .vuecal__arrow--highlighted]
+          li #[code .vuecal__cell--highlighted]
+          li #[code .vuecal__cell-schedule--highlighted]
+      li.
+        You can change the style of the event being dragged through the
+        #[code .vuecal__event--dragging] CSS class.
+      li.
+        While dragging, a copy of the original event is made and that's what you drag
+        (native HTML5 drag &amp; drop behavior). The original event receive the
+        #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
+        You can use that class to give it a different style.
+  template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      today-button
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      hide-weekends
+      :snap-to-time="15"
+      editable-events
+      :events="events"
+      :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-css).
+    .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
-.example.my4.mxa
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -808,141 +819,128 @@ ul
     hide-weekends
     :snap-to-time="15"
     editable-events
-    :events="eventsToDrag"
+    :events="exDragAndDrop.events"
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    today-button
-    :time-from="10 * 60"
-    :time-to="23 * 60"
-    hide-weekends
-    :snap-to-time="15"
-    editable-events
-    :events="events"
-    :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
-  &lt;/vue-cal&gt;
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
 //- Example.
 example(title="External Events Drag &amp; Drop" anchor="external-events-drag-and-drop")
   template(#desc)
-  template(#code-html).
-  a#ex--external-events-drag-and-drop(name="ex--external-events-drag-and-drop")
-p.mb2.
-  You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
-  It is also possible to move an event from one calendar to another.#[br]#[br]
-  In the external event, you can set a #[code duration] property: it will be used to represent the duration of the event on Vue Cal when it has no date.#[br]
-  If the #[code duration] is missing, the default will be 2 hours.
+    p.mb2.
+      You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
+      It is also possible to move an event from one calendar to another.#[br]#[br]
+      In the external event, you can set a #[code duration] property: it will be used to represent the duration of the event on Vue Cal when it has no date.#[br]
+      If the #[code duration] is missing, the default will be 2 hours.
 
-alert(tip)
-  strong Important note when dragging external events into Vue Cal:
-  div.
-    With HTML5 drag &amp; drop, when you drop a DOM element to another location, you have to move
-    the element yourself. Now especially because Vue is data driven and a DOM update does not
-    modify the data, you will also have to remove the event from its original data source yourself
-    - unless you want to create a copy.#[br]
-    Learn how in the example source code below.
-.w-flex.mt4.wrap
-  div.mr2
-    .external-event(
+    alert(tip)
+      strong Important note when dragging external events into Vue Cal:
+      div.
+        With HTML5 drag &amp; drop, when you drop a DOM element to another location, you have to move
+        the element yourself. Now especially because Vue is data driven and a DOM update does not
+        modify the data, you will also have to remove the event from its original data source yourself
+        - unless you want to create a copy.#[br]
+        Learn how in the example source code below.
+  template(#code-html).
+    &lt;!-- Three HTML5 draggable events. --&gt;
+    &lt;div
+      class="external-event"
       v-for="(item, i) in draggables"
       :key="i"
       draggable="true"
-      @dragstart="onEventDragStart($event, item)")
-        strong.mr2 {{ item.title }}
-        span ({{ item.duration ? `${item.duration} min` : 'no duration' }})
-        div {{ item.content }}
-  vue-cal.mr1.grow.external-events-drag-and-drop(
-    small
-    :views-bar="false"
-    hide-weekends
-    :views="['week']"
-    :time-from="9 * 60"
-    :time-to="16 * 60"
-    editable-events
-    @event-drop="onEventDrop"
-    :dark="store.darkMode")
-  vue-cal.ml1.grow.external-events-drag-and-drop(
-    :dark="store.darkMode"
-    small
-    :views-bar="false"
-    hide-weekends
-    :views="['week']"
-    :time-from="9 * 60"
-    :time-to="16 * 60"
-    editable-events
-    @event-drop="onEventDrop")
+      @dragstart="onEventDragStart($event, item)"&gt;
+      &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
+      ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
+      &lt;div&gt;{{ '\{\{ item.content \}\}' }}&lt;/div&gt;
+    &lt;/div&gt;
 
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;!-- Three HTML5 draggable events. --&gt;
-  &lt;div class="external-event"
-        v-for="(item, i) in draggables"
-        :key="i"
-        draggable="true"
-        @dragstart="onEventDragStart($event, item)"&gt;
-        &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
-        ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
-    &lt;div&gt;{{ '\{\{ item.content \}\}' }}&lt;/div&gt;
-  &lt;/div&gt;
+    &lt;vue-cal
+      small
+      :views-bar="false"
+      hide-weekends
+      :views="['week']"
+      :time-from="9 * 60"
+      :time-to="16 * 60"
+      editable-events
+      @event-drop="onEventDrop"&gt;
+    &lt;/vue-cal&gt;
 
-  &lt;vue-cal small
-            :views-bar="false"
-            hide-weekends
-            :views="['week']"
-            :time-from="9 * 60"
-            :time-to="16 * 60"
-            editable-events
-            @event-drop="onEventDrop"&gt;
-  &lt;/vue-cal&gt;
-ssh-pre(language="js" :dark="store.darkMode").
-  export default {
-    data: () => ({
-      draggables: [
-        {
-          // The id (or however you name it), will help you find which event to delete
-          // from the callback triggered on drop into Vue Cal.
-          id: 1,
-          title: 'Ext. Event 1',
-          content: 'content 1',
-          duration: 60
+  template(#code-js).
+    export default {
+      data: () => ({
+        draggables: [
+          {
+            // The id (or however you name it), will help you find which event to delete
+            // from the callback triggered on drop into Vue Cal.
+            id: 1,
+            title: 'Ext. Event 1',
+            content: 'content 1',
+            duration: 60
+          },
+          {
+            id: 2,
+            title: 'Ext. Event 2',
+            content: 'content 2',
+            duration: 30
+          },
+          {
+            id: 3,
+            title: 'Ext. Event 3',
+            content: 'content 3'
+            // No defined duration here: will default to 2 hours.
+          }
+        ]
+      }),
+      methods: {
+        onEventDragStart (e, draggable) {
+          // Passing the event's data to Vue Cal through the DataTransfer object.
+          e.dataTransfer.setData('event', JSON.stringify(draggable))
+          e.dataTransfer.setData('cursor-grab-at', e.offsetY)
         },
-        {
-          id: 2,
-          title: 'Ext. Event 2',
-          content: 'content 2',
-          duration: 30
-        },
-        {
-          id: 3,
-          title: 'Ext. Event 3',
-          content: 'content 3'
-          // No defined duration here: will default to 2 hours.
-        }
-      ]
-    }),
-    methods: {
-      onEventDragStart (e, draggable) {
-        // Passing the event's data to Vue Cal through the DataTransfer object.
-        e.dataTransfer.setData('event', JSON.stringify(draggable))
-        e.dataTransfer.setData('cursor-grab-at', e.offsetY)
-      },
-      // The 3 parameters are destructured from the passed $event in @event-drop="onEventDrop".
-      // `event` is the final event as Vue Cal understands it.
-      // `originalEvent` is the event that was dragged into Vue Cal, it can come from the same
-      //  Vue Cal instance, another one, or an external source.
-      // `external` is a boolean that lets you know if the event is not coming from any Vue Cal.
-      onEventDrop ({ event, originalEvent, external }) {
-        // If the event is external, delete it from the data source on drop into Vue Cal.
-        // If the event comes from another Vue Cal instance, it will be deleted automatically in there.
-        if (external) {
-          const extEventToDeletePos = this.draggables.findIndex(item => item.id === originalEvent.id)
-          if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
+        // The 3 parameters are destructured from the passed $event in @event-drop="onEventDrop".
+        // `event` is the final event as Vue Cal understands it.
+        // `originalEvent` is the event that was dragged into Vue Cal, it can come from the same
+        //  Vue Cal instance, another one, or an external source.
+        // `external` is a boolean that lets you know if the event is not coming from any Vue Cal.
+        onEventDrop ({ event, originalEvent, external }) {
+          // If the event is external, delete it from the data source on drop into Vue Cal.
+          // If the event comes from another Vue Cal instance, it will be deleted automatically in there.
+          if (external) {
+            const extEventToDeletePos = this.draggables.findIndex(item => item.id === originalEvent.id)
+            if (extEventToDeletePos > -1) this.draggables.splice(extEventToDeletePos, 1)
+          }
         }
       }
     }
-  }
+
+  .w-flex.mt4.wrap
+    div.mr2
+      .external-event(
+        v-for="(item, i) in draggables"
+        :key="i"
+        draggable="true"
+        @dragstart="onEventDragStart($event, item)")
+          strong.mr2 {{ item.title }}
+          span ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+          div {{ item.content }}
+    vue-cal.mr1.grow.external-events-drag-and-drop(
+      small
+      :views-bar="false"
+      hide-weekends
+      :views="['week']"
+      :time-from="9 * 60"
+      :time-to="16 * 60"
+      editable-events
+      @event-drop="onEventDrop"
+      :dark="store.darkMode")
+    vue-cal.ml1.grow.external-events-drag-and-drop(
+      :dark="store.darkMode"
+      small
+      :views-bar="false"
+      hide-weekends
+      :views="['week']"
+      :time-from="9 * 60"
+      :time-to="16 * 60"
+      editable-events
+      @event-drop="onEventDrop")
 
 //- Example.
 example(title="Multiple Day Events" anchor="multiple-day-events")
@@ -1050,105 +1048,142 @@ example(anchor="recurring-events")
     w-card.my4.maa.py12.grey-light5.elevation-1
       .text-center.title1.grey Demo coming soon.
 
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    events: [
-      {
-        start: '2018-11-19 22:00',
-        end: '2018-11-20 11:00',
-        title: 'Nightclub',
-        content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
-        class: 'leisure',
-        repeat: {
-          weekdays: [1, 3], // You can repeat on multiple days of the week.
-          until: '2020-11-30' // Don't need a time here as it will take the same as original event date.
-        }
-      },
-      {
-        start: '2018-11-23', // You can put time or not, will be discarded if all-day.
-        end: '2018-11-23',
-        title: 'Pizza day!',
-        content: '&lt;i class="icon mdi mdi-pizza"&gt;&lt;/i&gt;',
-        class: 'pink-event',
-        allDay: true,
-        repeat: {
-          weekdays: [5] // If original event day is not in these days, original event will still show up.
-          // Without `until` property, it will go on forever.
-        }
-      },
-      {
-        start: '2018-11-22 10:00',
-        end: '2018-11-22 12:00',
-        title: 'Piano lesson',
-        content: '&lt;i class="icon mdi mdi-music"&gt;&lt;/i&gt;',
-        class: 'leisure',
-        repeat: {
-          every: 'week',
-          until: new Date('2019/06/01') // You can also use a Javascript Date.
-        }
-      },
-      {
-        start: '2018-11-20 18:00',
-        end: '2018-11-20 20:00',
-        title: 'Tennis tournament',
-        content: '&lt;i class="icon mdi mdi-tennis"&gt;&lt;/i&gt;',
-        class: 'sport',
-        repeat: {
-          every: 14,
-          until: '2019-01-20'
-        }
-      },
-      {
-        start: '2018-11-01',
-        end: '2018-11-01',
-        title: 'Crêpes day',
-        content: '&lt;i class="icon mdi silverware-fork-knife"&gt;&lt;/i&gt;',
-        class: 'yellow-event',
-        allDay: true,
-        repeat: {
-          every: 'month',
-          until: '2019-12-26'
-        }
-      },
-      {
-        start: '2015-06-15',
-        end: '2015-06-15',
-        title: 'My Birthday',
-        content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;&lt;br&gt;I am 4.',
-        class: 'blue-event',
-        allDay: true,
-        repeat: {
-          every: 'year'
-        }
-      }
-    ]
-  })
+    ssh-pre(language="js" :dark="store.darkMode").
+      data: () => ({
+        events: [
+          {
+            start: '2018-11-19 22:00',
+            end: '2018-11-20 11:00',
+            title: 'Nightclub',
+            content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
+            class: 'leisure',
+            repeat: {
+              weekdays: [1, 3], // You can repeat on multiple days of the week.
+              until: '2020-11-30' // Don't need a time here as it will take the same as original event date.
+            }
+          },
+          {
+            start: '2018-11-23', // You can put time or not, will be discarded if all-day.
+            end: '2018-11-23',
+            title: 'Pizza day!',
+            content: '&lt;i class="icon mdi mdi-pizza"&gt;&lt;/i&gt;',
+            class: 'pink-event',
+            allDay: true,
+            repeat: {
+              weekdays: [5] // If original event day is not in these days, original event will still show up.
+              // Without `until` property, it will go on forever.
+            }
+          },
+          {
+            start: '2018-11-22 10:00',
+            end: '2018-11-22 12:00',
+            title: 'Piano lesson',
+            content: '&lt;i class="icon mdi mdi-music"&gt;&lt;/i&gt;',
+            class: 'leisure',
+            repeat: {
+              every: 'week',
+              until: new Date('2019/06/01') // You can also use a Javascript Date.
+            }
+          },
+          {
+            start: '2018-11-20 18:00',
+            end: '2018-11-20 20:00',
+            title: 'Tennis tournament',
+            content: '&lt;i class="icon mdi mdi-tennis"&gt;&lt;/i&gt;',
+            class: 'sport',
+            repeat: {
+              every: 14,
+              until: '2019-01-20'
+            }
+          },
+          {
+            start: '2018-11-01',
+            end: '2018-11-01',
+            title: 'Crêpes day',
+            content: '&lt;i class="icon mdi silverware-fork-knife"&gt;&lt;/i&gt;',
+            class: 'yellow-event',
+            allDay: true,
+            repeat: {
+              every: 'month',
+              until: '2019-12-26'
+            }
+          },
+          {
+            start: '2015-06-15',
+            end: '2015-06-15',
+            title: 'My Birthday',
+            content: '&lt;i class="icon mdi mdi-cake-variant-outline"&gt;&lt;/i&gt;&lt;br&gt;I am 4.',
+            class: 'blue-event',
+            allDay: true,
+            repeat: {
+              every: 'year'
+            }
+          }
+        ]
+      })
 
 //- Example.
 example(title="Overlapping events" anchor="overlapping-events")
   template(#desc)
+    p.
+      Overlapping, editable &amp; deletable events.#[br]
+      Try to resize &amp; delete events to see the overlapping redrawn.
+
+    .w-flex.mb3.align-center
+      | Optionally you can set a min width (in percent) to the events:
+      w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
+        w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
+        | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
+    div(style="min-height: 40px")
+      w-transition-expand(y)
+        .grey(v-if="minEventWidth").
+          #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
+          events that would be smaller than that (e.g. with 3 events side by side)
+    alert.mb6.
+      In some cases you may want to set the events overlaps calculation only per same time step
+      (default time step is 1 hour), like in
+      #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
+      You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
   template(#code-html).
-p.
-  Overlapping, editable &amp; deletable events.#[br]
-  Try to resize &amp; delete events to see the overlapping redrawn.
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week']"
+      hide-weekends
+      editable-events
+      :min-event-width="minEventWidth"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    data: () => ({
+      minEventWidth: 0,
+      events: [
+        {
+          start: '2018-11-21 14:00',
+          end: '2018-11-21 22:00',
+          title: 'A big thing',
+          content: '&lt;i class="icon mdi mdi-emoticon-outline"&gt;&lt;/i&gt;',
+          class: 'health'
+        },
+        {
+          start: '2018-11-21 16:00',
+          end: '2018-11-21 19:00',
+          title: 'Another thing',
+          content: '&lt;i class="icon mdi mdi-thumb-up-outline"&gt;&lt;/i&gt;',
+          class: 'blue-event'
+        },
+        {
+          start: '2018-11-20 18:30',
+          end: '2018-11-20 20:30',
+          title: 'Cross-fit',
+          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
+          class: 'sport'
+        },
+        ...
+      ]
+    })
 
-.w-flex.mb3.align-center
-  | Optionally you can set a min width (in percent) to the events:
-  w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
-    w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
-    | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
-div(style="min-height: 40px")
-  w-transition-expand(y)
-    .grey(v-if="minEventWidth").
-      #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
-      events that would be smaller than that (e.g. with 3 events side by side)
-alert.mb6.
-  In some cases you may want to set the events overlaps calculation only per same time step
-  (default time step is 1 hour), like in
-  #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
-  You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
-
-.example.my2.mxa
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -1159,58 +1194,55 @@ alert.mb6.
     editable-events
     :min-event-width="minEventWidth"
     :events="overlappingEvents")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="10 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    editable-events
-    :min-event-width="minEventWidth"
-    :events="events"&gt;
-  &lt;/vue-cal&gt;
-
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    minEventWidth: 0,
-    events: [
-      {
-        start: '2018-11-21 14:00',
-        end: '2018-11-21 22:00',
-        title: 'A big thing',
-        content: '&lt;i class="icon mdi mdi-emoticon-outline"&gt;&lt;/i&gt;',
-        class: 'health'
-      },
-      {
-        start: '2018-11-21 16:00',
-        end: '2018-11-21 19:00',
-        title: 'Another thing',
-        content: '&lt;i class="icon mdi mdi-thumb-up-outline"&gt;&lt;/i&gt;',
-        class: 'blue-event'
-      },
-      {
-        start: '2018-11-20 18:30',
-        end: '2018-11-20 20:30',
-        title: 'Cross-fit',
-        content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
-        class: 'sport'
-      },
-      ...
-    ]
-  })
 
 //- Example.
 example(title="Background events" anchor="background-events")
   template(#desc)
+    p.
+      Just add the property #[code background: true] to your events.#[br]
+      The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
+      They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
+      Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
+      Refer to the #[code events] option in the #[a(href="#api") API] section.
   template(#code-html).
-p.
-  Just add the property #[code background: true] to your events.#[br]
-  The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
-  They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
-  Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
-  Refer to the #[code events] option in the #[a(href="#api") API] section.
-.example.my2.mxa
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="7 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week']"
+      hide-weekends
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-19 12:00',
+          end: '2018-11-19 14:00',
+          title: 'LUNCH',
+          class: 'lunch',
+          background: true
+        },
+        {
+          start: '2018-11-20 12:00',
+          end: '2018-11-20 14:00',
+          title: 'LUNCH',
+          class: 'lunch',
+          background: true
+        },
+        ...
+      ]
+    })
+  template(#code-css).
+    .vuecal__event.lunch {
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
+      color: #999;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
+
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -1219,139 +1251,95 @@ p.
     :views="['day', 'week']"
     hide-weekends
     :events="backgroundEvents")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="7 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    :events="events"&gt;
-  &lt;/vue-cal&gt;
-
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    events: [
-      {
-        start: '2018-11-19 12:00',
-        end: '2018-11-19 14:00',
-        title: 'LUNCH',
-        class: 'lunch',
-        background: true
-      },
-      {
-        start: '2018-11-20 12:00',
-        end: '2018-11-20 14:00',
-        title: 'LUNCH',
-        class: 'lunch',
-        background: true
-      },
-      ...
-    ]
-  })
-
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__event.lunch {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f2f2f2 10px, #f2f2f2 20px);/* IE 10+ */
-    color: #999;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .vuecal__event.lunch .vuecal__event-time {display: none;align-items: center;}
 
 //- Example.
 example(title="All day events" anchor="all-day-events")
   template(#desc)
+    ul
+      li.mb2.
+        When the #[code showAllDayEvents] is set to #[code true] the events with an
+        #[code allDay] attribute set to #[code true] will be displayed in a fixed top
+        bar on the #[code week] &amp; #[code day] views.#[br]
+        The all day events bar will only show up if the options #[code showAllDayEvents] &amp;
+        #[code time] are set to #[code true].#[br]
+        #[code time] is important since without time information every event is an all-day
+        event there is no point in separating them then.
+      li.mb2.
+        When #[code showAllDayEvents] is set to #[code false], all the all day events
+        (#[code allDay] attribute set to #[code true]), will show up as a normal
+        #[strong background event].
+      li.mb2.
+        On month view, switching #[code showAllDayEvents] on and off will not have any impact
+        since both should display the all day events.
+      li.mb2.
+        #[code showAllDayEvents] accepts a #[code Boolean] or the string
+        #[code 'short'], to display only the event title.
+
+    alert.
+      Multiple-day events feature will be improved in a future version to display across
+      multiple cells in the all day bar.
+
+    w-button.ma1.code(@click="exAllDayEvents.showAllDayEvents = (exAllDayEvents.showAllDayEvents + 1) % 3")
+      span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][exAllDayEvents.showAllDayEvents] }}"
+    w-button.ma1.code(@click="exAllDayEvents.shortEventsOnMonthView = !exAllDayEvents.shortEventsOnMonthView")
+      span.white :events-on-month-views="{{ ['true', "'short'"][exAllDayEvents.shortEventsOnMonthView * 1] }}"
   template(#code-html).
+    &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
+      :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
+    &lt;/button&gt;
+    &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
+      :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
+    &lt;/button&gt;
 
-ul
-  li.mb2.
-    When the #[code showAllDayEvents] is set to #[code true] the events with an
-    #[code allDay] attribute set to #[code true] will be displayed in a fixed top
-    bar on the #[code week] &amp; #[code day] views.#[br]
-    The all day events bar will only show up if the options #[code showAllDayEvents] &amp;
-    #[code time] are set to #[code true].#[br]
-    #[code time] is important since without time information every event is an all-day
-    event there is no point in separating them then.
-  li.mb2.
-    When #[code showAllDayEvents] is set to #[code false], all the all day events
-    (#[code allDay] attribute set to #[code true]), will show up as a normal
-    #[strong background event].
-  li.mb2.
-    On month view, switching #[code showAllDayEvents] on and off will not have any impact
-    since both should display the all day events.
-  li.mb2.
-    #[code showAllDayEvents] accepts a #[code Boolean] or the string
-    #[code 'short'], to display only the event title.
+    &lt;vue-cal
+      :selected-date="stringToDate('2019-02-11')"
+      :time-from="7 * 60"
+      :views="['day', 'week', 'month']"
+      hide-weekends
+      :show-all-day-events="['short', true, false][showAllDayEvents]"
+      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    showAllDayEvents: 0,
+    shortEventsOnMonthView: false,
+    events: [
+      {
+        start: '2019-02-12',
+        end: '2019-02-12',
+        title: 'Day off!',
+        content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
+        class: 'yellow-event',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Valentine\'s day',
+        content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
+        class: 'pink-event',
+        allDay: true
+      },
+      ...
+    ]
+  template(#code-css).
+    .vuecal__cell-content {align-self: flex-start;}
+    .vuecal__cell-date {text-align: right;padding: 4px;}
 
-alert.
-  Multiple-day events feature will be improved in a future version to display across
-  multiple cells in the all day bar.
+    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
+    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
+    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
+    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
 
-w-button.ma1.code(@click="showAllDayEvents = (showAllDayEvents + 1) % 3")
-  span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][showAllDayEvents] }}"
-w-button.ma1.code(@click="shortEventsOnMonthView = !shortEventsOnMonthView")
-  span.white :events-on-month-views="{{ ['true', "'short'"][shortEventsOnMonthView * 1] }}"
-
-.example.my2.mxa
   vue-cal.ex--all-day-events(
     :dark="store.darkMode"
     :selected-date="stringToDate('2019-02-11')"
     :time-from="7 * 60"
     :views="['day', 'week', 'month']"
     hide-weekends
-    :show-all-day-events="['short', true, false][showAllDayEvents]"
-    :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
-    :events="allDayEvents")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
-    :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
-  &lt;/button&gt;
-  &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
-    :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
-  &lt;/button&gt;
-
-  &lt;vue-cal
-    :selected-date="stringToDate('2019-02-11')"
-    :time-from="7 * 60"
-    :views="['day', 'week', 'month']"
-    hide-weekends
-    :show-all-day-events="['short', true, false][showAllDayEvents]"
-    :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
-    :events="events"&gt;
-  &lt;/vue-cal&gt;
-ssh-pre(language="js" :dark="store.darkMode").
-  showAllDayEvents: 0,
-  shortEventsOnMonthView: false,
-  events: [
-    {
-      start: '2019-02-12',
-      end: '2019-02-12',
-      title: 'Day off!',
-      content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
-      class: 'yellow-event',
-      allDay: true
-    },
-    {
-      start: '2019-02-14',
-      end: '2019-02-14',
-      title: 'Valentine\'s day',
-      content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
-      class: 'pink-event',
-      allDay: true
-    },
-    ...
-  ]
-
-ssh-pre(language="css" :dark="store.darkMode").
-  .vuecal__cell-content {align-self: flex-start;}
-  .vuecal__cell-date {text-align: right;padding: 4px;}
-
-  .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
-  .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
-  .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
-  .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
+    :show-all-day-events="['short', true, false][exAllDayEvents.showAllDayEvents]"
+    :events-on-month-view="[true, 'short'][exAllDayEvents.shortEventsOnMonthView * 1]"
+    :events="exAllDayEvents.events")
 </template>
 
 <script setup>
@@ -1530,7 +1518,153 @@ const exOpenEventDetails = reactive({
   events: [...events]
 })
 
-const vuecalEl = ref(null)
+const exEventsIndicators = reactive({
+
+})
+const exEventsOnMonthView = reactive({
+
+})
+const exEditAndDeleteEvents = reactive({
+
+})
+
+const exEditEventsVuecalRef = ref(null)
+const exEditEvents = reactive({
+  events: [
+    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+    {
+      start: '2018-11-20 14:00',
+      end: '2018-11-20 17:30',
+      title: 'Boring event',
+      content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
+      class: 'blue-event',
+      deletable: false,
+      resizable: false,
+      draggable: false
+    }
+  ]
+})
+
+const exEventCreateVuecalRef = ref(null)
+const exEventCreate = reactive({
+
+})
+
+const exDragAndDrop = reactive({
+  events: [
+    {
+      start: '2018-11-21 14:00',
+      end: '2018-11-21 16:30',
+      title: 'Surgery',
+      content: '<i class="w-icon mdi silverware-fork-knife"></i>',
+      class: 'health',
+      schedule: 2
+    }
+  ]
+})
+
+const exExternalEventsDragAndDrop = reactive({
+
+})
+
+const exMultipleDayEvents = reactive({
+
+})
+
+const exRecurringEvents = reactive({
+
+})
+
+const exOverlappingEvents = reactive({
+
+})
+
+const exAllDayEvents = reactive({
+  showAllDayEvents: ref(0),
+  events: [
+    {
+      start: '2019-02-12',
+      end: '2019-02-12',
+      title: 'Day off!',
+      content: '<i class="w-icon mdi mdi-umbrella-beach-outline"></i>',
+      class: 'yellow-event',
+      allDay: true
+    },
+    {
+      start: '2019-02-14',
+      end: '2019-02-14',
+      title: 'Valentine\'s day',
+      content: '<i class="w-icon mdi mdi-heart-outline"></i>',
+      class: 'pink-event',
+      allDay: true
+    },
+    {
+      start: '2019-02-14',
+      end: '2019-02-14',
+      title: 'Grocery Shopping',
+      content: '<i class="w-icon mdi mdi-cart-outline"></i>',
+      class: 'leisure',
+      allDay: true
+    },
+    {
+      start: '2019-02-11 10:35',
+      end: '2019-02-11 11:30',
+      title: 'Doctor Appt.',
+      content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+      class: 'health',
+      schedule: 1
+    },
+    {
+      start: '2019-02-11 18:30',
+      end: '2019-02-11 19:15',
+      title: 'Dentist Appt.',
+      content: '<i class="w-icon mdi mdi-tooth"></i>',
+      class: 'health',
+      schedule: 2
+    },
+    {
+      start: '2019-02-12 18:30',
+      end: '2019-02-12 20:30',
+      title: 'Cross-fit',
+      content: '<i class="w-icon mdi mdi-dumbbell"></i>',
+      class: 'sport',
+      schedule: 1
+    },
+    {
+      start: '2019-02-13 11:00',
+      end: '2019-02-13 13:00',
+      title: 'Brunch with Jane',
+      content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
+      class: 'leisure',
+      schedule: 1
+    },
+    {
+      start: '2019-02-13 19:30',
+      end: '2019-02-13 23:00',
+      title: 'Swimming Class',
+      content: '<i class="w-icon mdi mdi-swim"></i>',
+      class: 'sport',
+      schedule: 2
+    },
+    {
+      start: '2019-02-15 12:30',
+      end: '2019-02-15 13:00',
+      title: 'BK with Mark',
+      content: '<i class="w-icon mdi mdi-food"></i>',
+      class: 'leisure',
+      schedule: 2
+    },
+    {
+      start: '2019-02-15 21:00',
+      end: '2019-02-15 23:30',
+      title: 'Movie Theater',
+      content: '<i class="w-icon mdi mdi-ticket"></i>',
+      class: 'leisure',
+      schedule: 1
+    }
+  ]
+})
+
 const minEventWidth = ref(0)
 const timeCellHeight = ref(26)
 const indicatorStyle = ref('count')
@@ -1543,7 +1677,6 @@ const indicatorStyleOptions = ref([
 const now = ref(new Date())
 const showDialog = ref(false)
 const showEventCreationDialog = ref(false)
-const showAllDayEvents = ref(0)
 const shortEventsOnMonthView = ref(false)
 const selectedEvent = ref({})
 const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
@@ -1551,19 +1684,6 @@ const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label:
 const deleteEventFunction = ref(null)
 const deleteDragEventFunction = ref(null)
 
-const editableEvents = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-20 14:00',
-    end: '2018-11-20 17:30',
-    title: 'Boring event',
-    content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
-    class: 'blue-event',
-    deletable: false,
-    resizable: false,
-    draggable: false
-  }
-]
 const overlappingEvents = [
   ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
   {
@@ -1646,88 +1766,6 @@ const multipleDayEvents = [
   }
 ]
 const recurringEvents = []
-const allDayEvents = [
-  {
-    start: '2019-02-12',
-    end: '2019-02-12',
-    title: 'Day off!',
-    content: '<i class="w-icon mdi mdi-umbrella-beach-outline"></i>',
-    class: 'yellow-event',
-    allDay: true
-  },
-  {
-    start: '2019-02-14',
-    end: '2019-02-14',
-    title: 'Valentine\'s day',
-    content: '<i class="w-icon mdi mdi-heart-outline"></i>',
-    class: 'pink-event',
-    allDay: true
-  },
-  {
-    start: '2019-02-14',
-    end: '2019-02-14',
-    title: 'Grocery Shopping',
-    content: '<i class="w-icon mdi mdi-cart-outline"></i>',
-    class: 'leisure',
-    allDay: true
-  },
-  {
-    start: '2019-02-11 10:35',
-    end: '2019-02-11 11:30',
-    title: 'Doctor Appt.',
-    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2019-02-11 18:30',
-    end: '2019-02-11 19:15',
-    title: 'Dentist Appt.',
-    content: '<i class="w-icon mdi mdi-tooth"></i>',
-    class: 'health',
-    schedule: 2
-  },
-  {
-    start: '2019-02-12 18:30',
-    end: '2019-02-12 20:30',
-    title: 'Cross-fit',
-    content: '<i class="w-icon mdi mdi-dumbbell"></i>',
-    class: 'sport',
-    schedule: 1
-  },
-  {
-    start: '2019-02-13 11:00',
-    end: '2019-02-13 13:00',
-    title: 'Brunch with Jane',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-    class: 'leisure',
-    schedule: 1
-  },
-  {
-    start: '2019-02-13 19:30',
-    end: '2019-02-13 23:00',
-    title: 'Swimming Class',
-    content: '<i class="w-icon mdi mdi-swim"></i>',
-    class: 'sport',
-    schedule: 2
-  },
-  {
-    start: '2019-02-15 12:30',
-    end: '2019-02-15 13:00',
-    title: 'BK with Mark',
-    content: '<i class="w-icon mdi mdi-food"></i>',
-    class: 'leisure',
-    schedule: 2
-  },
-  {
-    start: '2019-02-15 21:00',
-    end: '2019-02-15 23:30',
-    title: 'Movie Theater',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure',
-    schedule: 1
-  }
-]
 const backgroundEvents = [
   ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
   {
@@ -1767,16 +1805,6 @@ const backgroundEvents = [
   }
 ]
 
-const eventsToDrag = [
-  {
-    start: '2018-11-21 14:00',
-    end: '2018-11-21 16:30',
-    title: 'Surgery',
-    content: '<i class="w-icon mdi silverware-fork-knife"></i>',
-    class: 'health',
-    schedule: 2
-  }
-]
 const eventsToPop = [
   {
     start: '2018-11-20 14:00',
@@ -1862,7 +1890,7 @@ const customEventCreation = () => {
   if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
   const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', today.format('YYYY-MM-DD HH:mm'))
   if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-    vuecalEl.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
+    exEventCreateVuecalRef.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
   }
   else if (dateTime) alert('Wrong date format.')
 }
