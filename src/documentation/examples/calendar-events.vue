@@ -66,6 +66,7 @@ example(title="Events & Background Events" anchor="events")
     :time-to="14 * 60"
     :events="exEvents.events"
     :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
     :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
@@ -94,6 +95,7 @@ example(title="Timeless Events" anchor="timeless-events")
     :dark="store.darkMode"
     :time="false"
     :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
     :view-date="new Date()"
     :views-bar="false"
     :events="exTimelessEvents.events")
@@ -114,51 +116,52 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
 
     &lt;!-- Using Wave UI --&gt;
     &lt;w-dialog
-      v-if="exOpenEventDetails.event"
-      v-model="exOpenEventDetails.showDialog"
-      :title="exOpenEventDetails.event.title"
+      v-if="demo.event"
+      v-model="showDialog"
+      :title="selectedEvent.title"
       width="300"&gt;
       &lt;w-flex align-center justify-end gap2&gt;
         &lt;w-icon class="grey"&gt;mdi mdi-calendar&lt;/w-icon&gt;
-        &lt;small&gt;{{ '\{\{ exOpenEventDetails.event.start.format() \}\}' }}&lt;/small&gt;
+        &lt;small&gt;{{ '\{\{ selectedEvent.start.format() \}\}' }}&lt;/small&gt;
         &lt;w-icon class="grey ml2"&gt;mdi mdi-clock-outline&lt;/w-icon&gt;
         &lt;small&gt;
-          {{ '\{\{ exOpenEventDetails.event.start.formatTime() \}\}' }}
-          - {{ '\{\{ exOpenEventDetails.event.end.formatTime() \}\}' }}
+          {{ '\{\{ selectedEvent.start.formatTime() \}\}' }}
+          - {{ '\{\{ selectedEvent.end.formatTime() \}\}' }}
         &lt;/small&gt;
       &lt;/w-flex&gt;
       &lt;w-flex
         class="align-center justify-center title1 mt6 mb4"
-        v-html="exOpenEventDetails.event.content"&gt;
+        v-html="selectedEvent.content"&gt;
       &lt;/w-flex&gt;
-      &lt;p&gt;{{ '\{\{ exOpenEventDetails.event.contentFull \}\}' }}&lt;/p&gt;
+      &lt;p&gt;{{ '\{\{ selectedEvent.contentFull \}\}' }}&lt;/p&gt;
     &lt;/w-dialog&gt;
   template(#code-js).
-    const exOpenEventDetails = reactive({
-      showDialog: false,
-      openDialog: ({ event }) => {
-        exOpenEventDetails.event = event
-        exOpenEventDetails.showDialog = true
+    const showDialog = ref(false)
+    const selectedEvent = ref(null)
+
+    const events = [
+      {
+        start: new Date(new Date().setHours(10, 30, 0, 0)),
+        end: new Date(new Date().setHours(11, 30, 0, 0)),
+        title: 'Doctor Appt.',
+        content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
+        contentFull: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti, labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.'
+        class: 'health'
       },
-      events: [
-        {
-          start: new Date(new Date().setHours(10, 30, 0, 0)),
-          end: new Date(new Date().setHours(11, 30, 0, 0)),
-          title: 'Doctor Appt.',
-          content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
-          contentFull: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti, labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.'
-          class: 'health'
-        },
-        ...
-      ],
-      event: null
-    })
+      ...
+    ]
+
+    const openDialog = ({ event }) => {
+      selectedEvent.value = event
+      showDialog.value = true
+    }
 
   vue-cal.ex--open-dialog-on-event-click(
     :events="exOpenEventDetails.events"
     :time-from="9 * 60"
     :time-to="15 * 60"
     :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
     :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
@@ -179,7 +182,7 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
       labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
 
 //- Example.
-example(title="Events Indicators" anchor="events-indicators")
+//- example(title="Events Indicators" anchor="events-indicators")
   template(#desc)
     p.mb0.
       When #[code eventsCount] is set to #[code true], the events will be counted on #[code month],
@@ -247,7 +250,7 @@ example(title="Events Indicators" anchor="events-indicators")
       :dark="store.darkMode")
 
 //- Example.
-example(title="Events on Month View" anchor="events-on-month-view")
+//- example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
     p.
       With the option #[code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
@@ -358,7 +361,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :events="exEditEvents.events")
 
 //- Example.
-example(title="Create Events" anchor="create-events")
+//- example(title="Create Events" anchor="create-events")
   template(#desc)
     p.
       The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
@@ -436,7 +439,7 @@ example(title="Create Events" anchor="create-events")
         :drag-to-create-threshold="dragToCreateThreshold")
 
 //- Example.
-example(title="Other Event Creation Methods" anchor="other-event-creation-methods")
+//- example(title="Other Event Creation Methods" anchor="other-event-creation-methods")
   template(#desc)
     p.
       There are 3 other ways to create an event: on cell click &amp; hold, on cell single/double click,
@@ -710,7 +713,7 @@ example(title="Other Event Creation Methods" anchor="other-event-creation-method
         }
 
 //- Example.
-example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
+//- example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
   template(#desc)
     p.mb2.
       In addition to the obvious event dragging itself, there are quite a few things that are good
@@ -817,7 +820,7 @@ example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
 
 //- Example.
-example(title="External Events Drag &amp; Drop" anchor="external-events-drag-and-drop")
+//- example(title="External Events Drag &amp; Drop" anchor="external-events-drag-and-drop")
   template(#desc)
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
@@ -937,7 +940,7 @@ example(title="External Events Drag &amp; Drop" anchor="external-events-drag-and
       @event-drop="onEventDrop")
 
 //- Example.
-example(title="Multiple Day Events" anchor="multiple-day-events")
+//- example(title="Multiple Day Events" anchor="multiple-day-events")
   template(#desc)
     p.
       Multiple day events work like a set of single day events linked together.#[br]
@@ -999,7 +1002,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     :events="multipleDayEvents")
 
 //- Example.
-example(anchor="recurring-events")
+//- example(anchor="recurring-events")
   template(#title)
     | Recurring Events
     w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
@@ -1117,7 +1120,7 @@ example(anchor="recurring-events")
       })
 
 //- Example.
-example(title="Overlapping events" anchor="overlapping-events")
+//- example(title="Overlapping events" anchor="overlapping-events")
   template(#desc)
     p.
       Overlapping, editable &amp; deletable events.#[br]
@@ -1190,7 +1193,7 @@ example(title="Overlapping events" anchor="overlapping-events")
     :events="overlappingEvents")
 
 //- Example.
-example(title="All day events" anchor="all-day-events")
+//- example(title="All day events" anchor="all-day-events")
   template(#desc)
     ul
       li.mb2.
@@ -1527,7 +1530,14 @@ const exEventCreate = reactive({
       exEventCreateVuecalRef.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
     }
     else if (dateTime) alert('Wrong date format.')
-  }
+  },
+  todayFormattedNotWeekend: computed(() => {
+    let today = new Date(new Date().setHours(13, 15))
+    // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
+    if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
+    return today.format('YYYY-MM-DD HH:mm')
+  }),
+  eventsCssClasses: [{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }]
 })
 
 const exDragAndDrop = reactive({
@@ -1730,16 +1740,6 @@ const exAllDayEvents = reactive({
 const now = ref(new Date())
 const showEventCreationDialog = ref(false)
 const selectedEvent = ref({})
-const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
-
-
-// Computed.
-const todayFormattedNotWeekend = computed(() => {
-  let today = new Date(new Date().setHours(13, 15))
-  // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
-  if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
-  return today.format('YYYY-MM-DD HH:mm')
-})
 </script>
 
 <style lang="scss">
