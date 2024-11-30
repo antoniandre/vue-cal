@@ -131,7 +131,7 @@ const eventPlaceholder = computed(() => {
   }
 })
 
-const isCreatingEvent = computed(() => config.editableEvents?.dragToCreate && (touch.dragging || awaitingEventCreation.value))
+const isCreatingEvent = computed(() => config.editableEvents?.create && (touch.dragging || awaitingEventCreation.value))
 
 const classes = computed(() => {
   const now = new Date()
@@ -314,7 +314,7 @@ const onDocMouseup = async e => {
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
   touch.dragging = false
 
-  if (config.editableEvents?.dragToCreate) {
+  if (config.editableEvents?.create) {
     awaitingEventCreation.value = true
     await createEventIfAllowed(e)
     awaitingEventCreation.value = false

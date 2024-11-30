@@ -48,7 +48,7 @@ export const useConfig = (vuecal, props, attrs) => {
     if (availableViews.value[props.view]) return props.view
     else {
       console.warn(
-        `Vue Cal: the provided view \`${props.view}\` is either invalid or not in the list of available views.` +
+        `Vue Cal: the provided or default view \`${props.view}\` is either invalid or not in the list of available views.` +
         ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
       return Object.keys(availableViews.value)[0]
     }
@@ -176,8 +176,7 @@ export const useConfig = (vuecal, props, attrs) => {
       drag: true,
       resize: true,
       delete: true,
-      create: true,
-      dragToCreate: true
+      create: true
     }
     if (props.editableEvents === true) return defaults
     else if (props.editableEvents === false) return Object.keys(defaults).forEach(key => defaults[key] = false)
