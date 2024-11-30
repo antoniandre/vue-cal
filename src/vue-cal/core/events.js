@@ -84,7 +84,19 @@ export const useEvents = vuecal => {
       return
     }
 
-    vuecal.config.events.push(newEvent) // Add the new event to the main events list.
+    vuecal.config.events.push(newEvent) // Add the new event to the source of truth.
+  }
+
+  const deleteEvent = eventId => {
+    if (!eventId) {
+      console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
+      return
+    }
+
+    // Remove the event from the source of truth.
+    const index = vuecal.config.events.findIndex(item => item._.id === eventId)
+    if (index === -1) console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
+    else vuecal.config.events.splice(index, 1)
   }
 
   return {
@@ -92,6 +104,7 @@ export const useEvents = vuecal => {
     getEvent,
     getEventsByDate,
     getViewEvents,
-    createEvent
+    createEvent,
+    deleteEvent
   }
 }

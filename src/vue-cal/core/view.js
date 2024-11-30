@@ -470,6 +470,10 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     const { start, end, title, id } = event
     eventsManager.createEvent(event)
   }
+
+  function deleteEvent(eventId) {
+    eventsManager.deleteEvent(eventId)
+  }
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
@@ -531,6 +535,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     scrollToTime,
     scrollTop,
     createEvent,
+    deleteEvent,
     // Getters.
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },
