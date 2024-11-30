@@ -57,7 +57,7 @@ ul
     #[code disableDatePrototypes] was removed: the prototypes are now disabled by default and you control whether you
     want to benefit from it or not.
   li #[code dblclickToNavigate] was removed: can be done externally if needed.
-  li #[code dragToCreateEvent] was moved into the editableEvents object definition, allowed by default when events are editable
+  li #[code dragToCreateEvent] was removed and replaced by the #[code editableEvents.create] which now controls the ability to drag to create an event and is on by default when events are editable
   li #[code cellClickHold] was removed: can be done externally if needed.
   li #[code minCellWidth] was moved to a CSS variable: #[code --vuecal-min-cell-width: 0;].
   li #[code minSplitWidth] was renamed min-schedule-width and moved to a CSS variable: #[code --vuecal-min-schedule-width: 0;]

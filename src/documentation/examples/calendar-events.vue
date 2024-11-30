@@ -358,7 +358,8 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :views-bar="false"
     hide-weekends
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
-    :events="exEditEvents.events")
+    :events="exEditEvents.events"
+    @event-dblclick="exEditEvents.deleteEvent")
 
 //- Example.
 //- example(title="Create Events" anchor="create-events")
@@ -406,7 +407,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :time-to="16 * 60"
     :snap-to-time="snapToTime15 ? 15 : 0"
     :views="['week']"
-    :editable-events="{ title: false, drag: false, dragToCreate: false, resize: true, delete: true, create: true }"
+    :editable-events="{ title: false, drag: false, create: false, resize: true, delete: true, create: true }"
     :drag-to-create-threshold="0")
 
   template(#desc2)
@@ -1490,7 +1491,10 @@ const exEditEvents = reactive({
       resizable: false,
       draggable: false
     }
-  ]
+  ],
+  deleteEvent: ({ e, event }) => {
+    exEditEventsVuecalRef.value.view.deleteEvent(event._.id)
+  }
 })
 
 const exEventCreateVuecalRef = ref(null)

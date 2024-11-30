@@ -717,26 +717,6 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code cellClickHold
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code true
-    template(#content)
-      p
-
-  w-accordion-item
-    template(#title)
-      strong.code dragToCreateEvent
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code true
-    template(#content)
-      p
-
-  w-accordion-item
-    template(#title)
       strong.code dragToCreateThreshold
       .type [Number]
       | ,
@@ -744,7 +724,7 @@ w-accordion.mt2(
       strong.default.code 15
     template(#content)
       p.
-        When events are editable and #[span.code time] and #[span.code dragToCreateEvent] are set to
+        When events are editable and #[span.code time] and #[span.code editableEvents.create] are set to
         #[span.code true], this option controls the minimum dragging distance before an event is created.#[br]
         This option might be useful when you can navigate with cell click to prevent unwanted event creation in
         case of slipping cursor while clicking.#[br]
@@ -775,10 +755,10 @@ w-accordion.mt2(
             You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
       ul
         li
-          code.mr2 dragToCreate
+          code.mr2 create
           p.
-            When events are editable and if #[span.code time] and #[span.code dragToCreateEvent] are set to
-            #[span.code true], clicking and dragging on a cell will create an event.#[br]
+            When events are editable and if #[span.code time] is set to #[span.code true],
+            clicking and dragging on a cell will create an event.#[br]
             Note: if this option is set to true, it will prevent event creation from cell click &amp; hold.#[br]
             Refer to the #[a(href="#ex--create-events") Create events] example.
 
