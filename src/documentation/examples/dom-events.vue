@@ -206,79 +206,78 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
       to a broader view.#[br]
       A v-model can also be used on the #[span.code selected-date] (or #[span.code :selected-date.sync] for Vue 2)
 
-    .w-flex.my2.mxa.align-center(style="max-width: 500px")
-      w-button.mx1.px2.grow(
-        v-bind="{ [activeView === 'day' ? 'bg-color' : 'color']: 'primary-dark1' }"
-        :outline="activeView !== 'day'"
-        @click="activeView = 'day'")
-        | Day
-      w-button.mx1.px2.grow(
-        v-bind="{ [activeView === 'week' ? 'bg-color' : 'color']: 'primary-dark1' }"
-        :outline="activeView !== 'week'"
-        @click="activeView = 'week'")
-        | Week
-      w-button.mx1.px2.grow(
-        v-bind="{ [activeView === 'month' ? 'bg-color' : 'color']: 'primary-dark1' }"
-        :outline="activeView !== 'month'"
-        @click="activeView = 'month'")
-        | Month
-      w-button.mx1.px2.grow(
-        v-bind="{ [activeView === 'year' ? 'bg-color' : 'color']: 'primary-dark1' }"
-        :outline="activeView !== 'year'"
-        @click="activeView = 'year'")
-        | Year
-      w-button.mx1.px2.grow(
-        v-bind="{ [activeView === 'years' ? 'bg-color' : 'color']: 'primary-dark1' }"
-        :outline="activeView !== 'years'"
-        @click="activeView = 'years'")
-        | Years
+    .mxa.my2(style="max-width: 500px")
+      .w-flex.gap2.basis-zero
+        w-button.px2.grow(
+          v-bind="{ [view === 'day' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          :outline="view !== 'day'"
+          @click="view = 'day'")
+          | Day
+        w-button.px2.grow(
+          v-bind="{ [view === 'week' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          :outline="view !== 'week'"
+          @click="view = 'week'")
+          | Week
+        w-button.px2.grow(
+          v-bind="{ [view === 'month' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          :outline="view !== 'month'"
+          @click="view = 'month'")
+          | Month
+        w-button.px2.grow(
+          v-bind="{ [view === 'year' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          :outline="view !== 'year'"
+          @click="view = 'year'")
+          | Year
+        w-button.px2.grow(
+          v-bind="{ [view === 'years' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          :outline="view !== 'years'"
+          @click="view = 'years'")
+          | Years
 
-    .w-flex.mt2.mb6.mxa.justify-center(style="max-width: 500px")
-      w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.previous()")
-        w-icon.mr1 mdi mdi-arrow-left
-        | Previous
-      w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.switchView('day', new Date())")
-        w-icon.mr1 mdi mdi-map-marker-outline
-        | Today
-      w-button.mx1.grow(bg-color="primary" @click="$refs.vuecal4.next()")
-        | Next
-        w-icon.ml1 mdi mdi-arrow-right
-    .w-flex.align-center.justify-center
+      .w-flex.gap2.my2.basis-zero
+        w-button.grow(bg-color="primary" @click="$refs.vuecal4.view.previous()")
+          w-icon.mr1 mdi mdi-arrow-left
+          | Previous
+        w-button.grow(bg-color="primary" @click="$refs.vuecal4.view.switch('day', new Date())")
+          w-icon.mr1 mdi mdi-map-marker-outline
+          | Today
+        w-button.grow(bg-color="primary" @click="$refs.vuecal4.view.next()")
+          | Next
+          w-icon.ml1 mdi mdi-arrow-right
       vue-cal(
-        :dark="store.darkMode"
-        small
         ref="vuecal4"
-        v-model:view="activeView"
+        v-model:view="view"
+        v-model:selected-date="selectedDate"
         :time="false"
         :views-bar="false"
-        v-model:selected-date="selectedDate"
-        style="max-width: 500px;height: 260px")
+        :dark="store.darkMode"
+        small)
     p
       strong Variables kept in sync thanks to v-model:
     ul
-      li #[code activeView]: #[strong.code {{ activeView }} ],
+      li #[code view]: #[strong.code {{ view }} ],
       li #[code selectedDate]: #[strong.code {{ selectedDate && selectedDate.format() }} ]
   template(#code-html).
-    &lt;button @click="activeView = 'day'"&gt;Day&lt;/button&gt;
-    &lt;button @click="activeView = 'week'"&gt;Week&lt;/button&gt;
-    &lt;button @click="activeView = 'month'"&gt;Month&lt;/button&gt;
-    &lt;button @click="activeView = 'year'"&gt;Year&lt;/button&gt;
-    &lt;button @click="activeView = 'years'"&gt;Years&lt;/button&gt;
+    &lt;button @click="view = 'day'"&gt;Day&lt;/button&gt;
+    &lt;button @click="view = 'week'"&gt;Week&lt;/button&gt;
+    &lt;button @click="view = 'month'"&gt;Month&lt;/button&gt;
+    &lt;button @click="view = 'year'"&gt;Year&lt;/button&gt;
+    &lt;button @click="view = 'years'"&gt;Years&lt;/button&gt;
     &lt;br /&gt;
-    &lt;button @click="$refs.vuecal.previous()"&gt;Previous&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.switchView('day', new Date())"&gt;Today&lt;/button&gt;
-    &lt;button @click="$refs.vuecal.next()"&gt;Next&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.view.previous()"&gt;Previous&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.view.switch('day', new Date())"&gt;Today&lt;/button&gt;
+    &lt;button @click="$refs.vuecal.view.next()"&gt;Next&lt;/button&gt;
 
     &lt;vue-cal
       ref="vuecal"
-      v-model:view="activeView"
+      v-model:view="view"
       v-model:selected-date="selectedDate"
       :time="false"
       :views-bar="false"
       small&gt;
     &lt;/vue-cal&gt;
 
-  template(#desc2).
+  template(#desc2)
     h5.subtitle-1.font-weight-bold Other useful Vue Cal internal methods &amp; Date prototypes
     alert(tip)
       | Along with these Vue Cal internal methods that you can use externally,
@@ -333,6 +332,14 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       })
   template(#desc2)
     .w-flex.align-center.justify-center.wrap
+      vue-cal.vuecal--rounded-theme(
+        :time="false"
+        :views-bar="false"
+        date-picker
+        @cell-focus="selectedDate = $event"
+        :dark="store.darkMode"
+        xs
+        style="max-width: 270px;height: 290px;transform: scale(0.9)")
       vue-cal(
         :time="false"
         :views-bar="false"
@@ -342,15 +349,6 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
         :dark="store.darkMode"
         small
         style="max-width: 360px;height: 260px")
-      vue-cal.vuecal--rounded-theme(
-        :time="false"
-        :views-bar="false"
-        view="month"
-        :views="['month']"
-        @cell-focus="selectedDate = $event"
-        :dark="store.darkMode"
-        xs
-        style="max-width: 270px;height: 290px;transform: scale(0.9)")
 
 //- Example.
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
@@ -417,7 +415,7 @@ import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 const logs = ref([])
-const activeView = ref('week')
+const view = ref('week')
 const logMouseEvents = ref(false)
 const selectedDate = ref(null)
 
