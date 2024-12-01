@@ -37,9 +37,9 @@ export const props = {
   todayButton: { type: Boolean, default: true }, // Show or hide the header today button.
   transitions: { type: Boolean, default: true }, // Enables/disables the navigation transitions.
   twelveHour: { type: Boolean, default: false }, // 12 or 24 hour format are respectively written like 1pm and 13:00.
-  // Tells the first view to show among 'day', 'days', 'week', 'month', 'year', 'years'.
-  // Also a 2-way binding that gets updated with the new view on navigation.
-  view: { type: String, default: 'week' },
+  // Sets the calendar view to one of: 'day', 'days', 'week', 'month', 'year', 'years'. Default 'week' or 'month' if datePicker.
+  // Gets updated on view navigation.
+  view: { type: String, default: '' },
   viewDate: { type: [String, Date], default: '' }, // The view will automatically set its start and end to present this date.
   // Only available for month and day views, this will shift the start of the view (left or right) by x days (signed integer).
   viewDayOffset: { type: Number, default: 0 },

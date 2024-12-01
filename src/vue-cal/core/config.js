@@ -47,10 +47,15 @@ export const useConfig = (vuecal, props, attrs) => {
   const view = computed(() => {
     if (availableViews.value[props.view]) return props.view
     else {
-      console.warn(
-        `Vue Cal: the provided or default view \`${props.view}\` is either invalid or not in the list of available views.` +
-        ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
-      return Object.keys(availableViews.value)[0]
+      const fallbackView = props.datePicker ? 'month' : 'week'
+      const view = props.view || fallbackView
+      if (availableViews.value[view]) return view
+      else {
+        console.warn(
+          `Vue Cal: the provided or default view \`${view}\` is either invalid or not in the list of available views.` +
+          ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
+        return Object.keys(availableViews.value)[0]
+      }
     }
   })
   const sm = computed(() => props.sm && !props.xs)
