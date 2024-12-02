@@ -24,7 +24,7 @@
     :dark="store.darkMode")
     slot(name="code-css")
 
-  .example__render.mt2
+  .example__render.w-flex.justify-center.mt2
     slot
   .example__desc
     slot(name="desc2")
