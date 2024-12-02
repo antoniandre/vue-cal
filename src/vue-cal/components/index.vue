@@ -12,16 +12,16 @@
     :available-views="config.availableViews")
   template(v-else)
     VueCalHeader
-      template(v-if="$slots.header" #header="header")
-        slot(name="header" v-bind="header")
-      template(v-if="!$slots.header && $slots['previous-button']" #previous-button)
-        slot(name="previous-button")
-      template(v-if="!$slots.header && $slots['next-button']" #next-button)
-        slot(name="next-button")
-      template(v-if="!$slots.header && $slots['today-button']" #today-button)
-        slot(name="today-button")
-      template(v-if="!$slots.header && $slots.title" #title="title")
-        slot(name="title" v-bind="title")
+      template(v-if="$slots.header" #header="params")
+        slot(name="header" v-bind="params")
+      template(v-if="!$slots.header && $slots['previous-button']" #previous-button="params")
+        slot(name="previous-button" v-bind="params")
+      template(v-if="!$slots.header && $slots['next-button']" #next-button="params")
+        slot(name="next-button" v-bind="params")
+      template(v-if="!$slots.header && $slots['today-button']" #today-button="params")
+        slot(name="today-button" v-bind="params")
+      template(v-if="!$slots.header && $slots.title" #title="params")
+        slot(name="title" v-bind="params")
 
     .vuecal__scrollable-wrap
       transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
@@ -29,8 +29,8 @@
           :class="scrollableElClasses"
           :key="view.id + view.start.getTime()")
           TimeColumn(v-if="hasTimeColumn")
-            template(v-if="$slots['time-cell']" #time-cell="timeCell")
-              slot(name="time-cell" v-bind="timeCell")
+            template(v-if="$slots['time-cell']" #time-cell="params")
+              slot(name="time-cell" v-bind="params")
           .vuecal__body-wrap
             WeekdaysBar
             .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
@@ -45,14 +45,14 @@
               @cell-drag-end="isDraggingCell = false"
               @event-drag-start="isDraggingEvent = true"
               @event-drag-end="isDraggingEvent = false")
-              template(v-if="$slots.cell" #cell="cell")
-                slot(name="cell" v-bind="cell")
-              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="cellDate")
-                slot(name="cell-date" v-bind="cellDate")
-              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="cellContent")
-                slot(name="cell-content" v-bind="cellContent")
-              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="cellEvents")
-                slot(name="cell-events" v-bind="cellEvents")
+              template(v-if="$slots.cell" #cell="params")
+                slot(name="cell" v-bind="params")
+              template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="params")
+                slot(name="cell-date" v-bind="params")
+              template(v-if="!$slots.cell && $slots['cell-content']" #cell-content="params")
+                slot(name="cell-content" v-bind="params")
+              template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="params")
+                slot(name="cell-events" v-bind="params")
 </template>
 
 <script setup>

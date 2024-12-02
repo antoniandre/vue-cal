@@ -28,7 +28,7 @@
               v-if="$slots.title"
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers")
-              slot(name="title")
+              slot(name="title" :title="view.title")
             component.vuecal__title(
               v-else
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
@@ -36,14 +36,13 @@
               v-html="view.title"
               :key="view.id + view.start.getTime()")
       template(v-if="config.todayButton")
-        button.vuecal__nav.vuecal__nav--today(
+        slot(
           v-if="$slots['today-button']"
-          @click="!view.containsToday && view.goToToday()"
-          :disabled="!!view.containsToday"
-          :class="{ 'vuecal__nav--active': view.containsToday }"
-          type="button")
-          slot(name="today-button")
+          name="today-button"
+          :navigate="() => !view.containsToday && view.goToToday()"
+          :active="view.containsToday")
         button.vuecal__nav.vuecal__nav--today.vuecal__nav--default(
+          v-else
           @click="!view.containsToday && view.goToToday()"
           :disabled="!!view.containsToday"
           :class="{ 'vuecal__nav--active': view.containsToday }"
