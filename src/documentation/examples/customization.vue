@@ -20,19 +20,17 @@ alert.mt6(tip).
   #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
 
 //- Example.
-example(title="Custom Today Button" anchor="custom-today-button")
+example(title="Easy Slots" anchor="slots")
   template(#desc)
     p.
-      By default the selected date is today. But if you get lost in time travel, you can add
-      a Today button to select Today's date with the option #[span.code today-button].#[br]
-      Like navigation arrows, there is also a slot to customize as you want.#[br]
-      below are the default Today button on the left and a custom one with icon and tooltip on the right.
-    p
-      | You can also place the button outside of Vue Cal like so:
-      w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
-      | #[br]You might want to change view as well when going to Today's date, here is an example how:
-      a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
-      w-icon(color="green lighten-2") mdi mdi-codepen
+      Vue Cal is designed to be as flexible and customizable as possible, offering a variety of slots to
+      help you go beyond the standard features and tailor it to your needs.#[br]
+      This example highlights the simplest and most commonly used slots.
+
+    .w-flex.column.gap1
+      w-switch(v-model="exSlots.title") Custom title via #[code.mx1 title] slot
+      w-switch(v-model="exSlots.prevNextButtons") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
+      w-switch(v-model="exSlots.todayButton") Custom today button via #[code.mx1 today-button] slot
 
   template(#code-html).
     &lt;vue-cal
@@ -44,62 +42,60 @@ example(title="Custom Today Button" anchor="custom-today-button")
       :selected-date="selectedDate"&gt;
       &lt;!-- Optional slot for the custom button. --&gt;
       &lt;template #today-button&gt;
-        &lt;!-- Using Vuetify (but we prefer Wave UI 🤘) --&gt;
-        &lt;v-tooltip&gt;
+        &lt;!-- Using Wave UI --&gt;
+        &lt;w-tooltip&gt;
           &lt;template #activator="{ on }"&gt;
-            &lt;v-btn v-on="on"&gt;
-              &lt;v-icon&gt;my_location&lt;/v-icon&gt;
-            &lt;/v-btn&gt;
+            &lt;w-btn v-on="on" icon="mdi mdi-calendar-today"&gt;
+            &lt;/w-btn&gt;
             &lt;span&gt;Go to Today's date&lt;/span&gt;
           &lt;/template&gt;
-        &lt;/v-tooltip&gt;
+        &lt;/w-tooltip&gt;
+      &lt;/template&gt;
+
+      &lt;template #title="{ title }"&gt;
+        &lt;code v-html="title"&gt;&lt;/code&gt;
+      &lt;/template&gt;
+
+      &lt;template #previous-button&gt;
+        &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
+      &lt;/template&gt;
+
+      &lt;template #next-button&gt;
+        &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
-    &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
   template(#code-js).
     data: () => ({
       // Default to next new year eve.
       selectedDate: new Date(new Date().getFullYear(), 11, 31)
     })
 
-  vue-cal(
-    ref="vuecal2"
-    :views="['day', 'month', 'year']"
-    :dark="store.darkMode"
-    xs)
-    template(#today-button="item")
-      p {{item}}
-      w-tooltip(bottom)
+  vue-cal.grow(ref="vuecal2" :dark="store.darkMode")
+    template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
+      w-tooltip(left)
         template(#activator="{ on }")
           w-button(
             v-on="{ ...on, click: navigate }"
+            @click="navigate"
+            :disabled="active"
+            color="orange-light2"
             text
-            icon="mdi mdi-map-marker-outline")
+            icon="mdi mdi-calendar-today"
+            :icon-props="{ size: '1.2rem' }")
         span Go to Today's date
+    template(#title="{ title }" v-if="exSlots.title")
+      code.orange-light2(v-html="title")
+    template(#previous-button v-if="exSlots.prevNextButtons")
+      w-icon.orange-light2(md) mdi mdi-arrow-left
+    template(#next-button v-if="exSlots.prevNextButtons")
+      w-icon.orange-light2(md) mdi mdi-arrow-right
 
 //- Example.
 example(title="Custom arrows" anchor="custom-arrows")
   template(#desc)
     p.
       Custom arrows using the #[span.code previous-button] &amp; #[span.code next-button] slots.#[br]
-  template(#code-html).
-    &lt;vue-cal :views-bar="false" date-picker&gt;
-      &lt;template #previous-button&gt;
-        &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
-      &lt;/template&gt;
-      &lt;template #next-button&gt;
-        &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
-      &lt;/template&gt;
-    &lt;/vue-cal&gt;
-  vue-cal(
-    :views-bar="false"
-    date-picker
-    :dark="store.darkMode")
-    template(#previous-button)
-      w-icon mdi mdi-arrow-left
-    template(#next-button)
-      w-icon mdi mdi-arrow-right
 
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
@@ -488,14 +484,33 @@ example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
       .spacer
       w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
       w-button.ma1(@click="closeCreationDialog") Save
+
+//- Example.
+example(title="External Controls" anchor="external-controls")
+  template(#desc)
+    p
+    | You can also place the button outside of Vue Cal like so:
+    w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+    | #[br]You might want to change view as well when going to Today's date, here is an example how:
+    a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
+    w-icon(color="green lighten-2") mdi mdi-codepen
+  template(#code-html).
+    &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
+
+const cl = (...args) => console.log(...args)
+const exSlots = reactive({
+  todayButton: ref(false),
+  prevNextButtons: ref(false),
+  nextButton: ref(false)
+})
 
 const customDayScheduleLabels = [
   { label: 'John', color: 'blue', class: 'schedule1' },
