@@ -11,7 +11,6 @@ alert.mt6
     li #[span.code time-cell]
     li #[span.code week-number-cell]
     li #[span.code cell-content]
-    li #[span.code no-event]
     li #[span.code events-count]
     li #[span.code event]
 
@@ -20,7 +19,7 @@ alert.mt6(tip).
   #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
 
 //- Example.
-example(title="Easy Slots" anchor="slots")
+example(title="Simple Slots" anchor="slots")
   template(#desc)
     p.
       Vue Cal is designed to be as flexible and customizable as possible, offering a variety of slots to
@@ -31,6 +30,9 @@ example(title="Easy Slots" anchor="slots")
       w-switch(v-model="exSlots.title") Custom title via #[code.mx1 title] slot
       w-switch(v-model="exSlots.prevNextButtons") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
       w-switch(v-model="exSlots.todayButton") Custom today button via #[code.mx1 today-button] slot
+      w-switch(v-model="exSlots.weekdayHeading") Custom weekday labels via #[code.mx1 weekday-heading] slot
+      w-switch(v-model="exSlots.timeCell") Custom weekday labels via #[code.mx1 time-cell] slot
+      w-switch(v-model="exSlots.cellContent") Custom weekday labels via #[code.mx1 cell-content] slot
 
   template(#code-html).
     &lt;vue-cal
@@ -71,7 +73,11 @@ example(title="Easy Slots" anchor="slots")
       selectedDate: new Date(new Date().getFullYear(), 11, 31)
     })
 
-  vue-cal.grow(ref="vuecal2" :dark="store.darkMode")
+  vue-cal.grow(
+    ref="vuecal2"
+    :dark="store.darkMode"
+    :time-from="9 * 60"
+    :time-to="14 * 60")
     template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
       w-tooltip(left)
         template(#activator="{ on }")
@@ -86,16 +92,16 @@ example(title="Easy Slots" anchor="slots")
         span Go to Today's date
     template(#title="{ title }" v-if="exSlots.title")
       code.orange-light2(v-html="title")
+    template(#weekday-heading="{ label, id }" v-if="exSlots.weekdayHeading")
+      strong.orange-light2(v-html="label" :class="id")
     template(#previous-button v-if="exSlots.prevNextButtons")
       w-icon.orange-light2(md) mdi mdi-arrow-left
     template(#next-button v-if="exSlots.prevNextButtons")
       w-icon.orange-light2(md) mdi mdi-arrow-right
-
-//- Example.
-example(title="Custom arrows" anchor="custom-arrows")
-  template(#desc)
-    p.
-      Custom arrows using the #[span.code previous-button] &amp; #[span.code next-button] slots.#[br]
+    template(#time-cell="{ format24 }" v-if="exSlots.timeCell")
+      strong.orange-light2(md) {{ format24 }}
+    template(#cell-content v-if="exSlots.cellContent")
+      w-icon.orange-light2(lg) mdi mdi-party-popper
 
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
@@ -168,7 +174,6 @@ example(title="Custom Events Count" anchor="custom-events-count")
     template(#events-count="{ events, view }"
     style="width: 300px;height: 360px;max-width: 100%")
       span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
-
 
 //- Example.
 example(title="Custom Title & Cells" anchor="custom-title-and-cells")
@@ -243,8 +248,6 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
         &lt;div class="vuecal__cell-date" /&gt;
         &lt;!-- Will be added on month view --&gt;
         &lt;div class="vuecal__cell-events-count" /&gt;
-        &lt;!-- Will be added on week and day view if no event --&gt;
-        &lt;div class="vuecal__no-event" /&gt;
       ssh-pre.my1(language="html-vue" :dark="store.darkMode").
             &lt;div class="vuecal__cell-events" /&gt;
         &lt;/div&gt;
@@ -276,9 +279,6 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
         &lt;span class="vuecal__cell-events-count" v-if="view.id === 'month' &amp;&amp; events.length"&gt;{{ '\{\{ events.length \}\}' }}&lt;/span&gt;
         &lt;span class="vuecal__no-event" v-if="['week', 'day'].includes(view.id) &amp;&amp; !events.length"&gt;Nothing here 👌&lt;/span&gt;
       &lt;/template&gt;
-
-      &lt;!-- Alternatively to custom cells if you just want custom no-event text: --&gt;
-      &lt;!-- &lt;template #no-event&gt;Nothing here 👌&lt;/template&gt; --&gt;
     &lt;/vue-cal&gt;
   template(#desc2)
 
@@ -300,7 +300,6 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
     //- template(#cell-content="{ cell, view, events, goNarrower }")
       span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
       .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
-      .vuecal__no-event(v-if="['week', 'day'].includes(view.id) && !events.length") Nothing here 👌
 
 //- Example.
 example(title="Custom event Rendering" anchor="custom-event-rendering")
@@ -432,7 +431,6 @@ example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
     .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
     .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
     .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
-    .vuecal__no-event {display: none;}
 
   vue-cal.ex--custom-schedule-labels(
     :dark="store.darkMode"
@@ -441,7 +439,6 @@ example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
     :schedules="customDayScheduleLabels"
     :hide-weekdays="['fri', 'sat', 'sun']"
     sticky-schedule-labels)
-    template(#no-event) &nbsp;
     template(#schedule-label="{ schedule, view }")
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
@@ -509,7 +506,10 @@ const cl = (...args) => console.log(...args)
 const exSlots = reactive({
   todayButton: ref(false),
   prevNextButtons: ref(false),
-  nextButton: ref(false)
+  nextButton: ref(false),
+  weekdayHeading: ref(false),
+  timeCell: ref(false),
+  cellContent: ref(false)
 })
 
 const customDayScheduleLabels = [
@@ -636,8 +636,6 @@ const customEventsCount = events => events ? events.filter(e => e.class === 'lei
     }
 
     .vuecal__cell .vuecal__cell-content {height: 100%;}
-
-    .vuecal__no-event {padding-top: 3em;}
   }
 }
 </style>

@@ -279,7 +279,6 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     }
 
     .vuecal--month-view .vuecal__cell-date {padding: 4px;}
-    .vuecal--month-view .vuecal__no-event {display: none;}
   vue-cal.ex--events-on-month-view(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -1856,8 +1855,6 @@ const selectedEvent = ref({})
 
   .event-indicator--cell .vuecal__cell--has-events:before {background-color: #fffacd;}
   .event-indicator--cell .vuecal__cell-events-count {display: none;}
-
-  .vuecal--month-view .vuecal__no-event {display: none;}
 
   .ex--multiple-day-events .vuecal__event {
     border-radius: 5px;
