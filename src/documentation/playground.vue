@@ -73,7 +73,7 @@
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-create="log('event-create', $event, eventCreation.open($event.event, $event.resolve) })"
+    @event-create="log('event-create', $event, eventCreation.open($event.event, $event.resolve))"
     @event-click="log('event-click', $event)"
     @event-drag="log('event-drag', $event)"
     @event-drag-end="log('event-drag', $event)"
@@ -103,6 +103,7 @@
         :outline="view !== viewName") {{ viewName }}
 
 w-dialog(
+  v-if="eventCreation.event"
   v-model="eventCreation.show"
   width="300"
   @close="eventCreation.cancel")

@@ -1,5 +1,11 @@
 <template lang="pug">
-alert.mt6
+alert(tip)
+  .text-bold Heads Up
+  | A good understanding of slots and scoped slots is required. Read about it in the
+  a.ml1(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]
+  | .
+
+alert
   | Here is the list of available slots:
   ul
     li #[span.code title]
@@ -13,10 +19,6 @@ alert.mt6
     li #[span.code cell-content]
     li #[span.code events-count]
     li #[span.code event]
-
-alert.mt6(tip).
-  If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it in the
-  #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]]
 
 //- Example.
 example(title="Simple Slots" anchor="slots")
