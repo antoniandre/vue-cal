@@ -3,7 +3,8 @@
   .vuecal__weekday(
     v-for="(day, i) in weekDays"
     :key="i"
-    @click="domEvents.click(day.date)") {{ day[labelsSize] }}
+    @click="domEvents.click(day.date)")
+    slot(name="weekday-heading" :label="day[labelsSize]" :id="day.id") {{ day[labelsSize] }}
     .vuecal__cell-schedules(v-if="config.schedules")
       .vuecal__cell-schedule.vuecal__cell-schedule--label(
         v-for="(schedule, i) in config.schedules"
@@ -14,6 +15,7 @@
 
 <script setup>
 import { computed, inject } from 'vue'
+import { weekdays } from '../core/config'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
@@ -35,6 +37,7 @@ const weekDays = computed(() => {
     const dateNumber = view.rows === 1 ? ' ' + start.getDate() : ''
 
     return {
+      id: weekdays[start.getDay()],
       date: start,
       label: dateUtils.formatDate(start, 'dddd') + dateNumber,
       'label-sm': dateUtils.formatDate(start, 'ddd') + dateNumber,

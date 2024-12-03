@@ -33,6 +33,8 @@
               slot(name="time-cell" v-bind="params")
           .vuecal__body-wrap
             WeekdaysBar
+              template(#weekday-heading="params")
+                slot(name="weekday-heading" v-bind="params")
             .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
               .vuecal__cell-schedule.vuecal__cell-schedule--label(
                 v-for="(schedule, i) in config.schedules"
