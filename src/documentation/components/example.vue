@@ -52,9 +52,7 @@ const sourceWrapNoScroll = ref(false)
 
 onMounted(async () => {
   await nextTick()
-  await new Promise(resolve => setTimeout(resolve, 1000))
 
-  console.log(sourceWrapEl.value.scrollHeight, sourceWrapEl.value.clientHeight)
   if (sourceWrapEl.value.scrollHeight <= sourceWrapEl.value.clientHeight) {
     sourceWrapNoScroll.value = true
   }
@@ -69,12 +67,11 @@ onMounted(async () => {
     max-height: 250px;
     border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
     border-radius: 6px;
-    transition: all 0.35s ease-in-out, overflow 0s 0.4s;
+    transition: 0.25s ease-out;
 
     &.expanded {
-      max-height: 900px;
-      overflow: auto;
-      transition: all 0.35s ease-in-out, overflow 0s 0.4s;
+      max-height: 1200px; // Should stay bigger than likely height.
+      transition: 0.35s ease-in-out;
     }
 
     &:after {
