@@ -3,8 +3,13 @@
   .vuecal__weekday(
     v-for="(day, i) in weekDays"
     :key="i"
-    @click="domEvents.click(day.date)")
-    slot(name="weekday-heading" :label="day[labelsSize]" :id="day.id") {{ day[labelsSize] }}
+    @click="domEvents.click(day.date)"
+    :class="{ 'vuecal__weekday--today': day.isToday }")
+    slot(
+      name="weekday-heading"
+      :label="day[labelsSize]"
+      :id="day.id"
+      :Date="day.date") {{ day[labelsSize] }}
     .vuecal__cell-schedules(v-if="config.schedules")
       .vuecal__cell-schedule.vuecal__cell-schedule--label(
         v-for="(schedule, i) in config.schedules"
@@ -41,7 +46,8 @@ const weekDays = computed(() => {
       date: start,
       label: dateUtils.formatDate(start, 'dddd') + dateNumber,
       'label-sm': dateUtils.formatDate(start, 'ddd') + dateNumber,
-      'label-xs': dateUtils.formatDate(start, 'dd') + dateNumber
+      'label-xs': dateUtils.formatDate(start, 'dd') + dateNumber,
+      isToday: dateUtils.isToday(start)
     }
   })
 })
@@ -72,6 +78,11 @@ const domEvents = {
     text-align: center;
     opacity: 0.8;
     background-color: inherit;
+
+    &--today {
+      color: color-mix(in srgb, var(--vuecal-primary-color) 80%, var(--vuecal-base-color));
+      font-weight: bold;
+    }
 
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
