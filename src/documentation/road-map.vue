@@ -5,13 +5,13 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task view.deleteEvent(id)
       .task v-model="events"
       .task check if the event is overlapping with another #398 #80
-      .task accepting/rejecting the resizing events to check for overlaps.
+      .task accept/reject the resizing events to check for overlaps.
       .task redo the transitions like in v4
 
       .task Recurring events
+      .task Drag &amp; drop events
       .task Drag &amp; drop multiple day events
       .task Drag &amp; drop events on touch devices
       .task
@@ -37,6 +37,10 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task custom days view
+      .task view day offset
+      .task accept/reject event creation
+      .task view.deleteEvent(id)
       .task view.createEvent()
       .task default active view
       .task Enable / disable views
