@@ -1,7 +1,44 @@
 <template lang="pug">
 h1.title1 Migration Guide
 
-h2 Global
+p
+  | Welcome to the
+  strong.mx1 Migration Guide
+  | for transitioning to the latest version of Vue Cal. This guide is designed to help you smoothly upgrade your project by outlining the changes, enhancements, and potential breaking updates introduced in the new version.
+
+p.mt4 In this document, you’ll find:
+ul
+  li
+    strong Key Differences
+    | : An overview of major updates and improvements.
+  li
+    strong Breaking Changes
+    | : Details about deprecated features and necessary adjustments.
+
+p.mt4 We recommend reading through this guide completely before beginning the migration process. Doing so will help ensure a seamless upgrade while taking full advantage of the new features and optimizations available in this version.
+
+p Let’s get started! 🚀
+
+title-link.mt12(h2 anchor="new") New Features &amp; Improvements
+p.
+  Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
+  composables, while focusing on two key aspects: #[strong performance and flexibility].
+  You will continue to benefit from all the features of previous versions, now enhanced with new functionality and improvements.
+ul
+  li #[strong Performance-oriented]: faster and more efficient than ever.
+  li Highly adapted and practical for use with the Composition API.
+  li #[strong Exposes the view] for external use.
+  li #[strong Exposes all date utilities] for external use.
+  li Take advantage of #[strong Date prototypes whenever and wherever] you want, even before the calendar is created or mounted.
+  li #[strong Modernized default UI] for a more contemporary appearance, designed to save you time and effort in customization and usability.
+  li #[strong Custom days view] to display a custom number of days with an adaptive grid layout.
+  li #[strong Flexible grid-based layout] for enhanced customization.
+  li #[strong Easy theming] with support for dark and light themes, plus CSS variables.
+  li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
+  li Directly #[strong preload a locale externally] to avoid handling Promises.
+  li Reworked options for #[strong more intuitive usage].
+
+title-link.mt12(h2 anchor="global-changes") Global Changes
 ul
   li
     p The Date prototypes are not injected by default anymore, and very easy to add, you control when:
@@ -33,7 +70,7 @@ ul
   li #[code .vuecal--full-height-delete] class was removed
   li #[code #no-event] slot was removed
 
-h2.mt12 Props
+title-link.mt12(h2 anchor="props-changes") Props Changes
 ul
   li #[code activeView] was renamed #[code view].
   li #[code selectedDate] does not necessary control the view navigation anymore.

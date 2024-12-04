@@ -5,21 +5,22 @@ h1.title1 Release notes
   div.mb1
     strong.mr1 Version 5.0.0
     p.
-      Vue Cal has been completely #[strong refactored from the ground up], with Composition API and
-      composables, while keeping in mind only two thing: #[strong performance and flexibility].
-      You will still benefit from all the previous versions features, with new hot stuff and improvements.
+      Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
+      composables, while focusing on two key aspects: #[strong performance and flexibility].
+      You will continue to benefit from all the features of previous versions, now enhanced with new functionality and improvements.
     ul
-      li #[strong Performance-oriented]: faster and more efficient than before
-      li Now very adapted and practical to use with Composition API
-      li Now #[strong exposes all the date utilities] for external use
-      li Benefit (or not) from #[strong Date prototypes whenever and wherever] you want: even before the calendar is created/mounted
-      li #[strong Easily theme] with dark or white theme + CSS variables
-      li You may directly #[strong externally preload a locale and provide it] (avoiding a promise handling)
-      li #[strong All-directions sticky headers]: Sticky headers and sticky time bar at the same time - only with CSS
-      li #[strong New layout with grids], more flexible
-      li #[strong New custom days view] to display a custom amount of days. The grid layout will adapt
-      li New #[strong more modern default UI]
-      li Rewrote some options for #[strong more intuitive] use
+      li #[strong Performance-oriented]: faster and more efficient than ever.
+      li Highly adapted and practical for use with the Composition API.
+      li #[strong Exposes the view] for external use.
+      li #[strong Exposes all date utilities] for external use.
+      li Take advantage of #[strong Date prototypes whenever and wherever] you want, even before the calendar is created or mounted.
+      li #[strong Modernized default UI] for a more contemporary appearance, designed to save you time and effort in customization and usability.
+      li #[strong Custom days view] to display a custom number of days with an adaptive grid layout.
+      li #[strong Flexible grid-based layout] for enhanced customization.
+      li #[strong Easy theming] with support for dark and light themes, plus CSS variables.
+      li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
+      li Directly #[strong preload a locale externally] to avoid handling Promises.
+      li Reworked options for #[strong more intuitive usage].
 
   div.mb1
     strong.mr1 Version 4.9.0
