@@ -348,7 +348,7 @@ const createEventIfAllowed = async e => {
   const { create: createListener } = config.eventListeners.event
   let shouldCreateEvent = true
   if (typeof createListener === 'function') {
-    shouldCreateEvent = await new Promise(resolve => createListener(e, eventToCreate, resolve))
+    shouldCreateEvent = await new Promise(resolve => createListener({ e, event: eventToCreate, resolve }))
   }
   if (shouldCreateEvent) view.createEvent(eventToCreate)
 }

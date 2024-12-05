@@ -38,8 +38,8 @@
 
     .mta.w-flex.justify-space-between.no-grow
       .w-flex.gap2
-        w-button(@click="addEventFromOutside") Add event
-        w-button(@click="addEventFromVueCal") Add event
+        w-button(@click="addEventFromOutside") Add event Externally
+        w-button(@click="addEventFromVueCal") Add event Internally
       w-radios(
         v-model="mainVuecalConfig.view"
         :items="viewsArray"
@@ -73,7 +73,7 @@
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
     v-bind="mainVuecalConfig"
-    @event-create="log('event-create', $event, eventCreation.open($event.event, $event.resolve))"
+    @event-create="eventCreation.open"
     @event-click="log('event-click', $event)"
     @event-drag="log('event-drag', $event)"
     @event-drag-end="log('event-drag', $event)"
@@ -218,14 +218,18 @@ setTimeout(() => {
 }, 1000)
 
 const addEventFromOutside = () => {
-  mainVuecalConfig.events.push({ title: 'Event 1', start: (new Date()).subtractHours(4), end: (new Date()).subtractHours(3) })
+  mainVuecalConfig.events.push({
+    title: 'Event 1',
+    start: (new Date()).subtractHours(4),
+    end: (new Date()).subtractHours(3)
+  })
 }
 
 const addEventFromVueCal = () => {
   vueCalRef.value.view.createEvent({
     title: 'Event New!!',
-    start: '2024-11-20 10:00',
-    end: '2024-11-20 10:30'
+    start: (new Date()).subtractHours(4),
+    end: (new Date()).subtractHours(3)
   })
 }
 
@@ -261,10 +265,11 @@ const eventCreation = reactive({
     background: false,
     class: ''
   },
-  open: (event, resolve) => {
+  open: ({ event, resolve }) => {
     eventCreation.show = true
     eventCreation.event = event
     eventCreation.resolve = resolve
+    log('event-create', { event, resolve })
   },
   cancel: () => {
     eventCreation.resolve(false)
