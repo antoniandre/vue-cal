@@ -81,7 +81,8 @@
     @event-resize="log('event-resize', $event)"
     @event-resize-end="log('event-resize-end', $event)"
     @cell-drag="log('cell-drag', $event)"
-    @cell-drag-end="log('cell-drag-end', $event)")
+    @cell-drag-end="log('cell-drag-end', $event)"
+    @cell-hold="log('cell-hold', $event)")
     //- @event-dblclick.stop="log('event-dblclick', $event)"
     //- @event-mouseover.stop="log('event-mouseover', $event)"
     //- @event-mouseout.stop="log('event-mouseout', $event)"
