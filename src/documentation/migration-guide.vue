@@ -70,8 +70,8 @@ ul
         @cell-hold="log('cell-hold', $event)"
         @cell-mousedown="log('cell-mousedown', $event)"
         @cell-touchstart="log('cell-touchstart', $event)"
-        @cell-mouseover="log('cell-mouseover', $event)"
-        @cell-mouseout="log('cell-mouseout', $event)"
+        @cell-mouseenter="log('cell-mouseenter', $event)"
+        @cell-mouseleave="log('cell-mouseleave', $event)"
         @cell-contextmenu="log('cell-contextmenu', $event)"
         @event-create="eventCreation.open"
         @event-click="log('event-click', $event)"
@@ -82,8 +82,8 @@ ul
         @event-drop="log('event-drop', $event)"
         @event-resize="log('event-resize', $event)"
         @event-resize-end="log('event-resize-end', $event)"
-        @event-mouseover="log('event-mouseover', $event)"
-        @event-mouseout="log('event-mouseout', $event)"
+        @event-mouseenter="log('event-mouseenter', $event)"
+        @event-mouseleave="log('event-mouseleave', $event)"
         @event-contextmenu="log('event-contextmenu', $event)"&gt;
       &lt;/vue-cal&gt;
 
