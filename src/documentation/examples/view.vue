@@ -149,6 +149,24 @@ example(title="Internationalization" anchor="internationalization")
       a(href="https://codepen.io/antoniandre/pen/dxXvwv" target="_blank")
         | Try it in Codepen
         w-icon.ml1(sm) mdi mdi-open-in-new
+
+//- Example.
+example(title="CSS Control" anchor="css-variables")
+  template(#desc)
+    p When you're using the default theme, a few CSS variables will help you easily customize the calendar.
+  template(#code-css).
+    --vuecal-primary-color: #1976D2;
+    --vuecal-secondary-color: #fff;
+    --vuecal-base-color: #000;
+    --vuecal-contrast-color: #fff;
+    --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
+    --vuecal-header-color: var(--vuecal-secondary-color);
+    --vuecal-events-color: var(--vuecal-contrast-color);
+    --vuecal-events-border-color: currentColor;
+    --vuecal-border-radius: 6px;
+    --vuecal-height: 500px;
+    --vuecal-min-schedule-width: 0;
+    --vuecal-min-cell-width: 1em;
 </template>
 
 <script setup>

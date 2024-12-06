@@ -209,35 +209,5 @@ const log = (...args) => console.log(...args)
   // Global.
   .w-app {margin: 0;padding: 0;}
   footer {display: none !important;}
-
-  // Min cell width example.
-  // --------------------------------------------------------
-  // .vuecal__weekdays-bar {margin: auto;} // So it will fill up the whole available space.
-  // .vuecal__weekday,
-  // .vuecal--week-view .vuecal__cell,
-  // .vuecal--days-view .vuecal__cell {min-width: 300px;}
-  // .vuecal--week-view .vuecal__cell,
-  // .vuecal--days-view .vuecal__cell {min-height: 3000px;}
-  // --------------------------------------------------------
-
-  .vuecal__special-hours {
-    // .business-hours {background-color: rgba(117, 176, 255, 0.2);color: hsl(217, 80%, 67%);}
-    &.doctor-1 {background-color: hsl(127deg 43% 60% / 15%);color: hsl(127, 50%, 67%);}
-    &.doctor-2 {background-color: hsl(217deg 43% 60% / 15%);color: hsl(217, 80%, 67%);}
-    &.doctor-3 {background-color: hsl(287deg 43% 60% / 15%);color: hsl(287, 80%, 67%);}
-    &.closed {
-      background: repeating-linear-gradient(-45deg, rgba(#fff, 0) 0 6px, rgba(#ffa257, 0.15) 6px 20px);
-      color: hsl(27, 90%, 63%);
-    }
-
-    em {font-size: 0.9em;color: #999;}
-  }
-
-  .vuecal__cell-schedule {
-    &.dr-1 {background-color: rgba(134, 192, 253, 0.1);}
-    &.dr-2 {background-color: rgba(187, 148, 255, 0.15);}
-    .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}
-    .vuecal--dark &.dr-2 {background-color: rgba(131, 184, 255, 0.1);}
-  }
 }
 </style>

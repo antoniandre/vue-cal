@@ -44,16 +44,15 @@
         w-button(
           @click="addEventFromVueCal"
           tooltip="Add event via<br><code>$refs.vuecal.view.createEvent()</code>") Add Event Internally
-      w-radios(
+      w-radios.justify-end(
         v-model="mainVuecalConfig.view"
         :items="viewsArray"
-        return-values
         inline)
 
 .w-flex.gap2.mt2.mx2.ovh
   aside.no-shrink.no-grow
     vue-cal.no-shrink.no-grow(
-      v-model:selected-date="pickerConfig.selectedDate"
+      v-model:selected-date="mainVuecalConfig.selectedDate"
       v-bind="pickerConfig")
 
     .w-flex.align-center.gap1.body.wrap.no-grow
@@ -339,6 +338,8 @@ const eventCreation = reactive({
   // --------------------------------------------------------
 
   .vuecal__special-hours {
+    text-align: center;
+
     // .business-hours {background-color: rgba(117, 176, 255, 0.2);color: hsl(217, 80%, 67%);}
     &.doctor-1 {background-color: hsl(127deg 43% 60% / 15%);color: hsl(127, 50%, 67%);}
     &.doctor-2 {background-color: hsl(217deg 43% 60% / 15%);color: hsl(217, 80%, 67%);}
@@ -348,7 +349,11 @@ const eventCreation = reactive({
       color: hsl(27, 90%, 63%);
     }
 
-    em {font-size: 0.9em;color: #999;}
+    em {
+      font-size: 0.9em;
+      color: #999;
+      line-height: 1.15;
+    }
   }
 
   .vuecal__cell-schedule {

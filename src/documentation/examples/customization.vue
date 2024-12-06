@@ -488,11 +488,11 @@ example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
 example(title="External Controls" anchor="external-controls")
   template(#desc)
     p
-    | You can also place the button outside of Vue Cal like so:
-    w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
-    | #[br]You might want to change view as well when going to Today's date, here is an example how:
-    a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
-    w-icon(color="green lighten-2") mdi mdi-codepen
+      | You can also place the button outside of Vue Cal like so:
+      w-button.ma1.today-button(color="primary" outline round @click="selectedDate = new Date()") Another Today Button
+      | #[br]You might want to change view as well when going to Today's date, here is an example how:
+      a.mx1(href="https://codepen.io/antoniandre/pen/yrREOL?editors=1010" target="_blank") Today Button
+      w-icon(color="green lighten-2") mdi mdi-codepen
   template(#code-html).
     &lt;button @click="selectedDate = new Date()"&gt;ANOTHER TODAY BUTTON&lt;/button&gt;
 </template>
