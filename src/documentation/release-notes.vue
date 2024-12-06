@@ -20,6 +20,7 @@ h1.title1 Release notes
       li #[strong Easy theming] with support for dark and light themes, plus CSS variables.
       li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
       li Directly #[strong preload a locale externally] to avoid handling Promises.
+      li #[strong All the DOM events you can dream about are emitted] and many more!
       li Reworked options for #[strong more intuitive usage].
 
   div.mb1

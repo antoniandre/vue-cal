@@ -52,12 +52,41 @@ ul
   li.
     The selected date and view date are now 2 separated variables: #[code selectedDate] and
     #[code viewDate], so they can be updated distinctly without the side effect of the other.
-  li.
-    You can now directly attach any valid DOM event you want to the events and cells.
-    It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.#[br]
-    Additionnally, new events are fired on more complex circumstances: #[code cell-drag-start],
-    #[code cell-drag], #[code cell-drag-end], #[code cell-hold], #[code event-create], #[code event-delete],
-    #[code event-hold], #[code event-drag-start], #[code event-drag], #[code event-drag-end].
+  li
+    p.
+      You can now directly attach any valid DOM event you want to the events and cells.
+      It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.#[br]
+      Additionnally, new events are fired on more complex circumstances: #[code cell-drag-start],
+      #[code cell-drag], #[code cell-drag-end], #[code cell-hold], #[code event-create], #[code event-delete],
+      #[code event-hold], #[code event-drag-start], #[code event-drag], #[code event-drag-end].
+    p For instance:
+    ssh-pre(language="html-vue" :dark="store.darkMode").
+      &lt;vue-cal
+        @cell-click="log('cell-click', $event)"
+        @cell-dblclick="log('cell-dblclick', $event)"
+        @cell-drag-start="log('cell-drag-start', $event)"
+        @cell-drag="log('cell-drag', $event)"
+        @cell-drag-end="log('cell-drag-end', $event)"
+        @cell-hold="log('cell-hold', $event)"
+        @cell-mousedown="log('cell-mousedown', $event)"
+        @cell-touchstart="log('cell-touchstart', $event)"
+        @cell-mouseover="log('cell-mouseover', $event)"
+        @cell-mouseout="log('cell-mouseout', $event)"
+        @cell-contextmenu="log('cell-contextmenu', $event)"
+        @event-create="eventCreation.open"
+        @event-click="log('event-click', $event)"
+        @event-dblclick="log('event-dblclick', $event)"
+        @event-drag-start="log('event-drag-start', $event)"
+        @event-drag="log('event-drag', $event)"
+        @event-drag-end="log('event-drag-end', $event)"
+        @event-drop="log('event-drop', $event)"
+        @event-resize="log('event-resize', $event)"
+        @event-resize-end="log('event-resize-end', $event)"
+        @event-mouseover="log('event-mouseover', $event)"
+        @event-mouseout="log('event-mouseout', $event)"
+        @event-contextmenu="log('event-contextmenu', $event)"&gt;
+      &lt;/vue-cal&gt;
+
   li.
     Navigation by clicking or double-clicking cell has been removed, you can add this yourself
     now that you can directly attach any valid DOM event to the cell.
