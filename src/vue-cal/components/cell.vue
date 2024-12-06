@@ -3,7 +3,14 @@
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
 
-  template(v-else-if="config.schedules")
+  template(v-if="specialHours")
+    .vuecal__special-hours(
+      v-for="(range, i) in specialHours"
+      :style="range.style"
+      :class="range.class"
+      v-html="range.label || ''")
+
+  template(v-if="!$slots.cell && config.schedules")
     .vuecal__cell-schedule(
       v-for="schedule in config.schedules"
       :key="schedule.id"
@@ -34,7 +41,7 @@
         :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  template(v-else-if="!config.schedules")
+  template(v-if="!$slots.cell && !config.schedules")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -58,12 +65,6 @@
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  template(v-if="specialHours")
-    .vuecal__special-hours(
-      v-for="(range, i) in specialHours"
-      :style="range.style"
-      :class="range.class"
-      v-html="range.label || ''")
 
   .vuecal__now-line(
     v-if="nowLine.show"
@@ -301,13 +302,18 @@ const onMousedown = e => {
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
     // If there's a @cell-hold external listener, call it.
-    cellEventListeners.value.hold?.(e, { start: props.start, end: props.end, events: cellEvents })
+    cellEventListeners.value.hold?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
   }, 1000)
 }
 
 const onDocMousemove = e => {
   // Internal emit to the root component to add a CSS class on wrapper while dragging.
-  if (!touch.dragging) emit('cell-drag-start')
+  if (!touch.dragging) {
+    emit('cell-drag-start')
+
+    // If there's a @cell-drag-start external listener, call it.
+    cellEventListeners.value.dragStart?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+  }
   touch.dragging = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
@@ -319,16 +325,18 @@ const onDocMousemove = e => {
   touch.movePercentageY = touch.moveY * 100 / rect.height
 
   // If there's a @cell-drag external listener, call it.
-  cellEventListeners.value.drag?.(e, { start: props.start, end: props.end, events: cellEvents })
+  cellEventListeners.value.drag?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
 }
 
 const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
 
-  // If there's a @cell-drag-end external listener, call it.
-  cellEventListeners.value.dragEnd?.(e, { start: props.start, end: props.end, events: cellEvents })
-  emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+  if (touch.dragging) {
+    // If there's a @cell-drag-end external listener, call it.
+    cellEventListeners.value.dragEnd?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+    emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+  }
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
   touch.dragging = false
 
@@ -379,7 +387,7 @@ const cellEventListeners = computed(() => {
 
   // Inject the cell details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => handler({ e, event: { start: props.start, end: props.end, events: cellEvents } })
+    eventListeners[eventListener] = e => handler({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
   })
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
@@ -388,17 +396,17 @@ const cellEventListeners = computed(() => {
 
   eventListeners.click = e => {
     onCellClick()
-    externalHandlers.click?.({ e })
+    externalHandlers.click?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
   }
 
   if (config.time && view.isDay || view.isDays || view.isWeek) {
     eventListeners.touchstart = e => {
       onMousedown(e)
-      externalHandlers.touchstart?.({ e })
+      externalHandlers.touchstart?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
     }
     eventListeners.mousedown = e => {
       onMousedown(e)
-      externalHandlers.mousedown?.({ e })
+      externalHandlers.mousedown?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
     }
   }
 
@@ -419,7 +427,7 @@ const cellEventListeners = computed(() => {
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
 
   &--has-schedules {align-items: stretch;}
-  &--out-of-range {opacity: 0.5;}
+  &--out-of-range {opacity: 0.4;}
   &--disabled {cursor: not-allowed;}
 }
 
@@ -431,7 +439,7 @@ const cellEventListeners = computed(() => {
   align-items: center;
   left: 0;
   right: 0;
-  z-index: -1; // Under the day schedules if enabled.
+  pointer-events: none; // Under the day schedules if enabled.
 }
 
 .vuecal__now-line {
