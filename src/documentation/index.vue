@@ -31,6 +31,8 @@ top-bar(v-if="$route.name !== 'home'" fixed)
                 router-link.nav__item(to="/examples/dom-events") DOM Events
               li
                 router-link.nav__item(to="/examples/customization") Customization
+              li
+                router-link.nav__item(to="/examples/playground") Playground
         li
           router-link.nav__item(to="/migration-guide") Migration Guide
         li

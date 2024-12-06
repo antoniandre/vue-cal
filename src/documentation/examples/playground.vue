@@ -1,10 +1,10 @@
 <template lang="pug">
 .config-panel.w-flex.gap6.no-grow
   .w-flex.column.gap1.no-grow
-    w-switch.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
-    w-switch.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
+    w-switch.no-grow(v-model="mainVuecalConfig.twelveHour") 12h Format
+    w-switch.lh0.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
     w-switch.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
-    w-switch.no-grow(v-model="mainVuecalConfig.clickToNavigate") click-to-navigate
+    w-switch.no-grow(v-model="mainVuecalConfig.clickToNavigate") Click to Navigate
     w-switch.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
     w-switch.no-grow(v-model="mainVuecalConfig.editableEvents") Editable Events
 
@@ -50,7 +50,7 @@
         return-values
         inline)
 
-.w-flex.gap2.mt4.ovh.pb2
+.w-flex.gap2.mt2.mx2.ovh
   aside.no-shrink.no-grow
     vue-cal.no-shrink.no-grow(
       v-model:selected-date="pickerConfig.selectedDate"
@@ -289,16 +289,20 @@ const eventCreation = reactive({
 
 <style lang="scss">
 .page--playground {
-  padding-top: 40px;
-  padding-left: 12px;
-  padding-right: 12px;
+  padding: 40px 0 8px;
   border-left: none;
   overflow: hidden;
   max-width: none;
   height: 100dvh;
 
   // Global.
-  ~ footer, aside {display: none;}
+  ~ footer, aside, h1 {display: none;}
+  .main--examples {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+  }
 
   main {
     display: flex;
@@ -317,13 +321,13 @@ const eventCreation = reactive({
   }
 
   .config-panel {
-    margin: 0 -12px;
     padding: 12px;
     background-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
     border-bottom: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
   }
 
   .vue-cal--main {--vuecal-height: 100%;}
+
   // Min cell width example.
   // --------------------------------------------------------
   // .vuecal__weekdays-bar {margin: auto;} // So it will fill up the whole available space.
