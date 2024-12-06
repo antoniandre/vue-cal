@@ -19,11 +19,11 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
     ul
       li #[code ready]
       li #[code view-change]
-      li #[code cell-click] - returns a JS native #[span.code Date] object
-      li #[code cell-dblclick] - returns a JS native #[span.code Date] object
-      li #[code cell-contextmenu] - returns a JS native #[span.code Date] object and x, y: the cursor coordinates.
-      li #[code cell-keypress-enter] - returns a JS native #[span.code Date] object
-      li #[code cell-focus] - returns a JS native #[span.code Date] object
+      li #[code cell-*] - where star is any valid JavaScript DOM event
+      li #[code cell-drag-start] - returns a JS native #[span.code Date] object
+      li #[code cell-drag] - returns a JS native #[span.code Date] object
+      li #[code cell-drag-end] - returns a JS native #[span.code Date] object
+      li #[code cell-hold] - returns a JS native #[span.code Date] object
     alert(tip)
       ul
         li.
@@ -57,10 +57,12 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
 
     h4.mt2 Events-related
     ul
-      li.mt3 #[code.mr1 event-focus] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-mouse-enter] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-mouse-leave] - returns the associated calendar event object.
+      li.mt3 #[code.mr1 event-*] - where star is any valid JavaScript DOM event.
       li.mt3 #[code.mr1 event-create] - returns the associated calendar event object.
+      li.mt3 #[code.mr1 event-hold] - returns the associated calendar event object.
+      li.mt3 #[code.mr1 event-drag-start] - returns the associated calendar event object.
+      li.mt3 #[code.mr1 event-drag] - returns the associated calendar event object.
+      li.mt3 #[code.mr1 event-drag-end] - returns the associated calendar event object.
       li.mt3
         code.mr1 event-drag-create
         span.grey (only fired on mouseup after the event drag creation)

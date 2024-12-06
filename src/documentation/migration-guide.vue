@@ -54,7 +54,10 @@ ul
     #[code viewDate], so they can be updated distinctly without the side effect of the other.
   li.
     You can now directly attach any valid DOM event you want to the events and cells.
-    It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.
+    It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.#[br]
+    Additionnally, new events are fired on more complex circumstances: #[code cell-drag-start],
+    #[code cell-drag], #[code cell-drag-end], #[code cell-hold], #[code event-create], #[code event-delete],
+    #[code event-hold], #[code event-drag-start], #[code event-drag], #[code event-drag-end].
   li.
     Navigation by clicking or double-clicking cell has been removed, you can add this yourself
     now that you can directly attach any valid DOM event to the cell.
