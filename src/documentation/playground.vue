@@ -1,5 +1,5 @@
 <template lang="pug">
-.w-flex.gap6.no-grow
+.config-panel.w-flex.gap6.no-grow
   .w-flex.column.gap1.no-grow
     w-switch.no-grow(v-model="mainVuecalConfig.twelveHour") 12h format
     w-switch.no-grow(v-model="mainVuecalConfig.startWeekOnSunday") Start Week On Sunday
@@ -36,17 +36,21 @@
           multiple
           fit-to-content)
 
-    .mta.w-flex.justify-space-between.no-grow
-      .w-flex.gap2
-        w-button(@click="addEventFromOutside") Add event Externally
-        w-button(@click="addEventFromVueCal") Add event Internally
+    .mta.w-flex.justify-space-between.no-grow.gap2
+      .w-flex.wrap.gap2
+        w-button(
+          @click="addEventFromOutside"
+          tooltip="Add event to the<br>events array prop") Add Event Externally
+        w-button(
+          @click="addEventFromVueCal"
+          tooltip="Add event via<br><code>$refs.vuecal.view.createEvent()</code>") Add Event Internally
       w-radios(
         v-model="mainVuecalConfig.view"
         :items="viewsArray"
         return-values
         inline)
 
-.w-flex.gap2.mt4.ovh
+.w-flex.gap2.mt4.ovh.pb2
   aside.no-shrink.no-grow
     vue-cal.no-shrink.no-grow(
       v-model:selected-date="pickerConfig.selectedDate"
@@ -67,7 +71,7 @@
         span.code {{ mainVuecalConfig.selectedDate.formatTime() }}
       .grey(v-else) N/A
 
-  vue-cal.grow(
+  vue-cal.vue-cal--main.grow(
     ref="vueCalRef"
     v-model:view="mainVuecalConfig.view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
@@ -285,18 +289,18 @@ const eventCreation = reactive({
 
 <style lang="scss">
 .page--playground {
-  padding-top: 60px;
+  padding-top: 40px;
   padding-left: 12px;
   padding-right: 12px;
   border-left: none;
   overflow: hidden;
   max-width: none;
+  height: 100dvh;
 
   // Global.
   ~ footer, aside {display: none;}
 
   main {
-    overflow: auto;
     display: flex;
     flex-direction: column;
     border: none;
@@ -312,12 +316,14 @@ const eventCreation = reactive({
     padding: 0;
   }
 
-  .main--examples {
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
+  .config-panel {
+    margin: 0 -12px;
+    padding: 12px;
+    background-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
+    border-bottom: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
   }
 
+  .vue-cal--main {--vuecal-height: 100%;}
   // Min cell width example.
   // --------------------------------------------------------
   // .vuecal__weekdays-bar {margin: auto;} // So it will fill up the whole available space.
