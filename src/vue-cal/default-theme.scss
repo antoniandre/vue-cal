@@ -10,7 +10,7 @@
   --vuecal-border-radius: 6px;
   --vuecal-height: 500px;
   --vuecal-min-schedule-width: 0;
-  --vuecal-min-cell-width: 0;
+  --vuecal-min-cell-width: 1em; // Default to minimum 1 letter in weekdays headers.
 
   position: relative;
   border-radius: var(--vuecal-border-radius);
