@@ -53,6 +53,7 @@
   aside.no-shrink.no-grow
     vue-cal.no-shrink.no-grow(
       v-model:selected-date="mainVuecalConfig.selectedDate"
+      @update:selected-date="mainVuecalConfig.viewDate = $event"
       v-bind="pickerConfig")
 
     .w-flex.align-center.gap1.body.wrap.no-grow
