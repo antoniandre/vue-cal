@@ -283,8 +283,15 @@ const cellEventListeners = computed(() => {
 
   // Inject the cell details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    // Check if e.type to not re-nest if already done.
-    eventListeners[eventListener] = e => handler(e.type ? { e, cell: cellInfo.value } : e)
+    eventListeners[eventListener] = e => {
+      // When interacting with an event, skip calling the cell DOM event handler.
+      // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
+      // we can receive the on mouseup from the document and stop event drag&drop.
+      if ((e.target || e.e?.target).matches?.('.vuecal__event, .vuecal__event *')) return
+
+      // Check if e.type to not rewrap the DOM event in an object if already done.
+      handler(e.type ? { e, cell: cellInfo.value } : e)
+    }
   })
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
@@ -300,11 +307,12 @@ const cellEventListeners = computed(() => {
 
   if (config.time && view.isDay || view.isDays || view.isWeek) {
     eventListeners.touchstart = e => {
-      onMousedown(e)
+      onMousedown(e.e || e)
       externalHandlers.touchstart?.({ e, cell: cellInfo.value })
     }
     eventListeners.mousedown = e => {
-      onMousedown(e)
+      onMousedown(e.e || e)
+
       externalHandlers.mousedown?.({ e, cell: cellInfo.value })
     }
   }

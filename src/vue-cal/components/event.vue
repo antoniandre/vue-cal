@@ -48,7 +48,8 @@ const classes = computed(() => ({
   'vuecal__event--background': !!event.value.background,
   'vuecal__event--multiday': !!event.value._?.multiday,
   'vuecal__event--cut-top': event.value._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': event.value._?.endMinutes > config.timeTo
+  'vuecal__event--cut-bottom': event.value._?.endMinutes > config.timeTo,
+  'vuecal__event--dragging': touch.dragging
 }))
 
 const styles = computed(() => {
@@ -71,7 +72,15 @@ const eventListeners = computed(() => {
 
   // Inject the event details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => handler({ e, event: event.value })
+    eventListeners[eventListener] = e => {
+      // SHOULD NOT PREVENT BUBBLING UP TO THE CELL WHEN INTERACTING WITH THE EVENT:
+      // if we stop bubbling, we will not receive the onMouseup listened from document if releasing
+      // on the event. Instead, in the cell don't call the mouseup handler if releasing on the event.
+      // e.stopPropagation()
+
+      // Check if e.type to not rewrap the DOM event in an object if already done.
+      handler(e.type ? { e, event: event.value } : e)
+    }
   })
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
@@ -79,11 +88,13 @@ const eventListeners = computed(() => {
   const externalHandlers = { ...eventListeners }
 
   eventListeners.touchstart = e => {
-    onMousedown(e)
+    e.stopPropagation()
     externalHandlers.touchstart?.({ e })
   }
   eventListeners.mousedown = e => {
+    e.stopPropagation()
     onMousedown(e)
+
     externalHandlers.mousedown?.({ e })
   }
 
