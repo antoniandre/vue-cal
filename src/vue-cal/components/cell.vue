@@ -275,6 +275,52 @@ const nowLine = reactive({
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
 
+// Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
+const cellEventListeners = computed(() => {
+  if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
+
+  const eventListeners = { ...config.eventListeners.cell }
+
+  // Inject the cell details in each eventListener handler call as 2nd param.
+  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
+    // Check if e.type to not re-nest if already done.
+    eventListeners[eventListener] = e => handler(e.type ? { e, cell: cellInfo.value } : e)
+  })
+
+  // Store a copy of any potential external handler to combine with internal handlers like click,
+  // touchstart, mousedown.
+  const externalHandlers = { ...eventListeners }
+
+  eventListeners.click = e => {
+    onCellClick()
+    const cell = { start: props.start, end: props.end, events: cellEvents }
+    if (touch.schedule) cell.schedule = touch.schedule
+    externalHandlers.click?.({ e, cell })
+  }
+
+  if (config.time && view.isDay || view.isDays || view.isWeek) {
+    eventListeners.touchstart = e => {
+      onMousedown(e)
+      externalHandlers.touchstart?.({ e, cell: cellInfo.value })
+    }
+    eventListeners.mousedown = e => {
+      onMousedown(e)
+      externalHandlers.mousedown?.({ e, cell: cellInfo.value })
+    }
+  }
+
+  return eventListeners
+})
+
+const cellInfo = computed(() => ({
+  start: props.start,
+  end: props.end,
+  events: cellEvents,
+  ...(touch.schedule ? { schedule: touch.schedule } : {})
+}))
+
+// Functions.
+// --------------------------------------------------------
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
   view.updateViewDate(props.start)
@@ -302,7 +348,7 @@ const onMousedown = e => {
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
     // If there's a @cell-hold external listener, call it.
-    cellEventListeners.value.hold?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+    cellEventListeners.value.hold?.({ e, cell: cellInfo.value })
   }, 1000)
 }
 
@@ -312,7 +358,7 @@ const onDocMousemove = e => {
     emit('cell-drag-start')
 
     // If there's a @cell-drag-start external listener, call it.
-    cellEventListeners.value.dragStart?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+    cellEventListeners.value.dragStart?.({ e, cell: cellInfo.value })
   }
   touch.dragging = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -325,7 +371,7 @@ const onDocMousemove = e => {
   touch.movePercentageY = touch.moveY * 100 / rect.height
 
   // If there's a @cell-drag external listener, call it.
-  cellEventListeners.value.drag?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+  cellEventListeners.value.drag?.({ e, cell: cellInfo.value })
 }
 
 const onDocMouseup = async e => {
@@ -334,7 +380,7 @@ const onDocMouseup = async e => {
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
-    cellEventListeners.value.dragEnd?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
+    cellEventListeners.value.dragEnd?.({ e, cell: cellInfo.value })
     emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
   }
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
@@ -374,44 +420,10 @@ const createEventIfAllowed = async e => {
   const { create: createListener } = config.eventListeners.event
   let shouldCreateEvent = true
   if (typeof createListener === 'function') {
-    shouldCreateEvent = await new Promise(resolve => createListener({ e, event: eventToCreate, resolve }))
+    shouldCreateEvent = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve }))
   }
   if (shouldCreateEvent) view.createEvent(eventToCreate)
 }
-
-// Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
-const cellEventListeners = computed(() => {
-  if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
-
-  const eventListeners = { ...config.eventListeners.cell }
-
-  // Inject the cell details in each eventListener handler call as 2nd param.
-  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => handler({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
-  })
-
-  // Store a copy of any potential external handler to combine with internal handlers like click,
-  // touchstart, mousedown.
-  const externalHandlers = { ...eventListeners }
-
-  eventListeners.click = e => {
-    onCellClick()
-    externalHandlers.click?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
-  }
-
-  if (config.time && view.isDay || view.isDays || view.isWeek) {
-    eventListeners.touchstart = e => {
-      onMousedown(e)
-      externalHandlers.touchstart?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
-    }
-    eventListeners.mousedown = e => {
-      onMousedown(e)
-      externalHandlers.mousedown?.({ e, cell: { start: props.start, end: props.end, events: cellEvents } })
-    }
-  }
-
-  return eventListeners
-})
 </script>
 
 <style lang="scss">
