@@ -383,23 +383,23 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = async e => {
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
+  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
     cellEventListeners.value.dragEnd?.({ e, cell: cellInfo.value })
     emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+
+    if (config.editableEvents?.create) {
+      awaitingEventCreation.value = true
+      await createEventIfAllowed(e)
+      awaitingEventCreation.value = false
+    }
   }
-  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+
+  touch.holdTimer = clearTimeout(touch.holdTimer)
+  touch.holding = false
   touch.dragging = false
-
-  if (config.editableEvents?.create) {
-    awaitingEventCreation.value = true
-    await createEventIfAllowed(e)
-    awaitingEventCreation.value = false
-  }
-
   touch.startX = 0
   touch.startY = 0
   touch.moveX = 0
