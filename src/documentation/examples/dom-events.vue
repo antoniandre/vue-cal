@@ -123,21 +123,22 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
           You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
     p.mb0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
-    pre.mt2.ssh-pre.mb2.logs-box
+    .logs-box.ssh-pre.my2
       .w-flex.wrap.align-center.justify-end
         .grey //&nbsp;
           strong event-name:&nbsp;
           span arguments-list
         .spacer
-        w-button.my1(color="primary" outline @click="clearEventsLog")
+        w-button.my1(outline @click="exEmittedEvents.clearEventsLog")
           w-icon.mr1 mdi mdi-close
           | Clear log
-        w-button.my1.ml2(color="primary" outline @click="logMouseEvents = !logMouseEvents")
-          w-icon.mr1 mdi mdi-{{ logMouseEvents ? 'close' : 'plus' }}
-          | {{ logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
-      .scrollable
-        .mt1(v-for="(l, i) in reversedLogs" :key="i")
-          .w-divider.mb1.grey-light2(v-if="i")
+        w-button.my1.ml2(outline @click="exEmittedEvents.logMouseEvents = !exEmittedEvents.logMouseEvents")
+          w-icon.mr1 mdi mdi-{{ exEmittedEvents.logMouseEvents ? 'close' : 'plus' }}
+          | {{ exEmittedEvents.logMouseEvents ? 'Hide' : 'Track' }} mouse hover events
+
+      ssh-pre.mt2.mb2.scrollable(language="js" :dark="store.darkMode")
+        .mt1(v-for="(l, i) in exEmittedEvents.reversedLogs" :key="i")
+          | {{ i ? "\n\n" : '' }}
           strong.mr1 {{ l.name }}:
           span {{ l.args.replace(/,/g, m => ', ').replace(/":(?=["\w\[\{])/g, m => '": ') }}
     .example.mt6.mb2.mxa
@@ -151,22 +152,31 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         editable-events
         :events="events"
         cell-contextmenu
-        @ready="logEvents('ready', $event)"
-        @view-change="logEvents('view-change', $event)"
-        @cell-click="logEvents('cell-click', $event)"
-        @cell-dblclick="logEvents('cell-dblclick', $event)"
-        @cell-contextmenu="logEvents('cell-contextmenu', $event)"
-        @cell-focus="logEvents('cell-focus', $event)"
-        @event-focus="logEvents('event-focus', $event)"
-        @event-mouse-enter="logMouseEvents && logEvents('event-mouse-enter', $event)"
-        @event-mouse-leave="logMouseEvents && logEvents('event-mouse-leave', $event)"
-        @event-title-change="logEvents('event-title-change', $event)"
-        @event-content-change="logEvents('event-content-change', $event)"
-        @event-duration-change="logEvents('event-duration-change', $event)"
-        @event-drop="logEvents('event-drop', $event)"
-        @event-create="logEvents('event-create', $event)"
-        @event-drag-create="logEvents('event-drag-create', $event)"
-        @event-delete="logEvents('event-delete', $event)")
+        @ready="exEmittedEvents.logEvents('ready', $event)"
+        @view-change="exEmittedEvents.logEvents('view-change', $event)"
+        @event-create="exEmittedEvents.open"
+        @event-mousedown="exEmittedEvents.logEvents('event-mousedown', $event)"
+        @event-mouseup="exEmittedEvents.logEvents('event-mouseup', $event)"
+        @event-click="exEmittedEvents.logEvents('event-click', $event)"
+        @event-dblclick="exEmittedEvents.logEvents('event-dblclick', $event)"
+        @event-hold="exEmittedEvents.logEvents('event-hold', $event)"
+        @event-drag-start="exEmittedEvents.logEvents('event-drag-start', $event)"
+        @event-drag="exEmittedEvents.logEvents('event-drag', $event)"
+        @event-drag-end="exEmittedEvents.logEvents('event-drag-end', $event)"
+        @event-drop="exEmittedEvents.logEvents('event-drop', $event)"
+        @event-resize="exEmittedEvents.logEvents('event-resize', $event)"
+        @event-resize-end="exEmittedEvents.logEvents('event-resize-end', $event)"
+        @event-contextmenu="exEmittedEvents.logEvents('event-contextmenu', $event)"
+        @cell-click="exEmittedEvents.logEvents('cell-click', $event)"
+        @cell-dblclick="exEmittedEvents.logEvents('cell-dblclick', $event)"
+        @cell-drag-start="exEmittedEvents.logEvents('cell-drag-start', $event)"
+        @cell-drag="exEmittedEvents.logEvents('cell-drag', $event)"
+        @cell-drag-end="exEmittedEvents.logEvents('cell-drag-end', $event)"
+        @cell-hold="exEmittedEvents.logEvents('cell-hold', $event)"
+        @cell-mousedown="exEmittedEvents.logEvents('cell-mousedown', $event)"
+        @cell-mouseup="exEmittedEvents.logEvents('cell-mouseup', $event)"
+        @cell-touchstart="exEmittedEvents.logEvents('cell-touchstart', $event)"
+        @cell-contextmenu="exEmittedEvents.logEvents('cell-contextmenu', $event)")
 
   template(#code-html).
     &lt;vue-cal
@@ -178,22 +188,22 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
       editable-events
       :events="events"
       cell-contextmenu
-      @ready="logEvents('ready', $event)"
-      @view-change="logEvents('view-change', $event)"
-      @cell-click="logEvents('cell-click', $event)"
-      @cell-dblclick="logEvents('cell-dblclick', $event)"
-      @cell-contextmenu="logEvents('cell-contextmenu', $event)"
-      @cell-focus="logEvents('cell-focus', $event)"
-      @event-focus="logEvents('event-focus', $event)"
-      @event-mouse-enter="logEvents('event-mouse-enter', $event)"
-      @event-mouse-leave="logEvents('event-mouse-leave', $event)"
-      @event-title-change="logEvents('event-title-change', $event)"
-      @event-content-change="logEvents('event-content-change', $event)"
-      @event-duration-change="logEvents('event-duration-change', $event)"
-      @event-drop="logEvents('event-drop', $event)"
-      @event-create="logEvents('event-create', $event)"
-      @event-drag-create="logEvents('event-drag-create', $event)"
-      @event-delete="logEvents('event-delete', $event)"&gt;
+      @ready="exEmittedEvents.logEvents('ready', $event)"
+      @view-change="exEmittedEvents.logEvents('view-change', $event)"
+      @cell-click="exEmittedEvents.logEvents('cell-click', $event)"
+      @cell-dblclick="exEmittedEvents.logEvents('cell-dblclick', $event)"
+      @cell-contextmenu="exEmittedEvents.logEvents('cell-contextmenu', $event)"
+      @cell-focus="exEmittedEvents.logEvents('cell-focus', $event)"
+      @event-focus="exEmittedEvents.logEvents('event-focus', $event)"
+      @event-mouse-enter="exEmittedEvents.logEvents('event-mouse-enter', $event)"
+      @event-mouse-leave="exEmittedEvents.logEvents('event-mouse-leave', $event)"
+      @event-title-change="exEmittedEvents.logEvents('event-title-change', $event)"
+      @event-content-change="exEmittedEvents.logEvents('event-content-change', $event)"
+      @event-duration-change="exEmittedEvents.logEvents('event-duration-change', $event)"
+      @event-drop="exEmittedEvents.logEvents('event-drop', $event)"
+      @event-create="exEmittedEvents.logEvents('event-create', $event)"
+      @event-drag-create="exEmittedEvents.logEvents('event-drag-create', $event)"
+      @event-delete="exEmittedEvents.logEvents('event-delete', $event)"&gt;
     &lt;/vue-cal&gt;
 
 //- Example.
@@ -334,23 +344,18 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       })
   template(#desc2)
     .w-flex.align-center.justify-center.wrap
-      vue-cal.vuecal--rounded-theme(
-        :time="false"
+      vue-cal(
         :views-bar="false"
         date-picker
         @cell-focus="selectedDate = $event"
-        :dark="store.darkMode"
-        xs
-        style="max-width: 270px;height: 290px;transform: scale(0.9)")
+        :dark="store.darkMode")
       vue-cal(
-        :time="false"
         :views-bar="false"
         view="week"
         :views="['day', 'week']"
         :selected-date="selectedDate"
         :dark="store.darkMode"
-        small
-        style="max-width: 360px;height: 260px")
+        small)
 
 //- Example.
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
@@ -411,26 +416,13 @@ example(title="Modifying the array of events outside of Vue Cal" anchor="modifyi
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
-const logs = ref([])
 const view = ref('week')
-const logMouseEvents = ref(false)
 const selectedDate = ref(null)
-
-// Computed.
-const reversedLogs = computed(() => logs.value.slice(0).reverse())
-
-// Methods.
-const logEvents = (emittedEventName, params) => {
-  if (!logMouseEvents && emittedEventName.includes('event-mouse')) return
-
-  logs.value.push({ name: emittedEventName, args: JSON.stringify(params) })
-}
-const clearEventsLog = () => (logs.value = [])
 
 const events = [
   {
@@ -517,6 +509,28 @@ const events = [
 ]
 
 const eventsCopy = events.slice(0)
+
+const exEmittedEvents = reactive({
+  logs: ref([]),
+  reversedLogs: computed(() => exEmittedEvents.logs.slice(0).reverse()),
+  clearEventsLog: () => (exEmittedEvents.logs = []),
+  logMouseEvents: ref(false),
+  logEvents: (eventName, params) => {
+    if (!exEmittedEvents.logMouseEvents && eventName.includes('-mouse')) return
+
+    if (params.cell) {params.cell = { ...params.cell, events: params.cell.events.value }}
+    if (params.e) params.e = '[DOM Event]'
+    exEmittedEvents.logs.push({ name: eventName, args: JSON.stringify(params, null, 2) })
+  }
+})
+
+const exExternalControls = reactive({
+
+})
+
+const exSyncTwoCalendars = reactive({
+
+})
 </script>
 
 <style lang="scss">

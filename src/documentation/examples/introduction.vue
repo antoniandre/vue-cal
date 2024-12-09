@@ -38,7 +38,7 @@ p.
   you may want to explore these other use cases or user questions about usage of Vue Cal.#[br]
 
 .w-flex.justify-center.my6
-  router-link.highlight-box.no-grow.w-flex.align-center.pa12.gap3(to="/playground")
+  router-link.highlight-box.no-grow.w-flex.align-center.pa12.gap3(to="/examples/playground")
     w-icon.mt-5.grey(size="2.5rem") mdi mdi-seesaw
     | PLAYGROUND
 
