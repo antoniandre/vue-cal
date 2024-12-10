@@ -1,139 +1,181 @@
 <template lang="pug">
 //- Example.
-//- example(title="" anchor="")
-  template(#desc)
-  template(#code-html).
-
-
-
-
-//- Example.
 example(title="Vue Cal Emitted Events" anchor="emitted-events")
   template(#desc)
     p.mb0.
       Vue Cal emits events that you can listen to, to trigger an action outside of Vue Cal.#[br]
-      If you are not familiar with Vue JS events, you should read about it here:
-      #[a(href="https://vuejs.org/v2/guide/events.html" target="_blank") vuejs.org/v2/guide/events.html #[w-icon(color="primary") mdi mdi-open-in-new]]#[br]#[br]
-      Here is the list of emitted events:
-    h4.mt2 View-related
-    ul
-      li #[code ready]
-      li #[code view-change]
-      li #[code cell-*] - where star is any valid JavaScript DOM event
-      li #[code cell-drag-start] - returns a JS native #[span.code Date] object
-      li #[code cell-drag] - returns a JS native #[span.code Date] object
-      li #[code cell-drag-end] - returns a JS native #[span.code Date] object
-      li #[code cell-hold] - returns a JS native #[span.code Date] object
-    alert(tip)
-      ul
-        li.
-          #[span.code cell-click] is fired every time you click a day, whereas
-          #[span.code cell-focus] is fired only when the selected day changes.
-        li.
-          #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-contextmenu]
-          and #[span.code cell-focus] return the time at cursor position, unless the cell
-          was focused from tab key.
-          It would then return the cell start date (at midnight).
-        li.
-          If schedules is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
-          and #[span.code cell-focus] emitted events will return an object containing the date and the clicked schedule id.
-
     alert
-      | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
-      ssh-pre.mt2(language="js" :dark="store.darkMode").
-        {
-          view: [String],
-          start: [Date], // View start - JS native Date object.
-          end: [Date], // View end - JS native Date object.
-          firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
-          lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
-          outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
-          events: [Array], // All the events in the current view.
-          week: [Integer] // Week number. Only returned if view is 'week'.
-        }
-      strong.
-        Note that on a month view, the events from the out of scope days
-        (cells before and after the current month) are also returned in the array.
+      | If you are not familiar with Vue JS events, you should read about it in the
+      a.ml1.text-bold(href="https://https://vuejs.org/guide/essentials/event-handling.html" target="_blank")
+        | official Vue documentation.
+        w-icon.ml1(color="primary") mdi mdi-open-in-new
 
-    h4.mt2 Events-related
-    ul
-      li.mt3 #[code.mr1 event-*] - where star is any valid JavaScript DOM event.
-      li.mt3 #[code.mr1 event-create] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-hold] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-drag-start] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-drag] - returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-drag-end] - returns the associated calendar event object.
-      li.mt3
-        code.mr1 event-drag-create
-        span.grey (only fired on mouseup after the event drag creation)
-        p Returns the associated calendar event object.
-      li.mt3 #[code.mr1 event-delete] - returns the associated calendar event object.
-      li.mt2 #[code event-title-change] - returns an object containing:
-        ul
-          li #[span.code event], the calendar event object that was dropped
-          li #[span.code oldTitle], the title of the event before it was edited
+    h4.w-flex.justify-space-between.mb2.mt4
+      title-link(div anchor="emitted-events-list")
+        .title3 Emitted Events List
+      w-switch.my1.body(@update:model-value="exEmittedEvents.expandedEmittedEvents = Array(30).fill($event)") Expand All
+    w-divider
 
-      //- li #[span.code event-content-change]
-      li.mt2
-        code.mr1 event-duration-change
-        span.grey (only fired at the end of the event resizing)
-        | #[br]Returns an object containing:
+    w-accordion(
+      v-model="exEmittedEvents.expandedEmittedEvents"
+      :items="views"
+      expand-icon-rotate90
+      title-class="pa0 bd0 body"
+      content-class="pt0 pb3")
+      h5.mt2 View-related
+      w-accordion-item
+        template(#title)
+          code ready
+        template(#content) Fired as soon as Vue Cal is mounted in the DOM and ready.
+      w-accordion-item
+        template(#title)
+          code view-change
+        template(#content)
+
+      h5.mt2 Cell-related
+      w-accordion-item
+        template(#title)
+          code cell-*
+        template(#content) where star is any valid JavaScript DOM event.
+      w-accordion-item
+        template(#title)
+          code cell-drag-start
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code cell-drag
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code cell-drag-end
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code cell-hold
+        template(#content) returns a JS native #[span.code Date] object.
+
+      h5.mt2 Event-related
+      w-accordion-item
+        template(#title)
+          code event-*
+        template(#content) where star is any valid JavaScript DOM event.
+      w-accordion-item
+        template(#title)
+          code event-drag-start
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code event-drag
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code event-drag-end
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code event-hold
+        template(#content) returns a JS native #[span.code Date] object.
+      w-accordion-item
+        template(#title)
+          code event-create
+        template(#content)
+          span.grey (only fired on mouseup after the event drag creation)
+          p Returns the associated calendar event object.
+      w-accordion-item
+        template(#title)
+          code event-delete
+        template(#content) returns the associated calendar event object.
+      w-accordion-item
+        template(#title)
+          code event-duration-change
+        template(#content)
+          span.grey (only fired at the end of the event resizing)
+          | #[br]Returns an object containing:
+          ul
+            li #[span.code event], the calendar event object that was resized
+            li #[span.code oldDate], the Javascript Date the event was ending at before resize
+            li #[span.code originalEvent], the same calendar event before the change
+      w-accordion-item
+        template(#title)
+          code event-resizing
+        template(#content)
+          span.grey Fired repeatedly while resizing
+          | #[br]For performance while dragging, returns a lighter object containing:
+          ul
+            li #[span.code _eid], the calendar event internal id.
+            li #[span.code end], the calendar event new end Date.
+            li #[span.code endTimeMinutes], the calendar event new end time in minutes.
+          alert(warning).
+            You should only listen to this event if you have no choice. In most of cases you should
+            listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
+      w-accordion-item
+        template(#title)
+          code event-drop
+        template(#content)
+          p returns an object containing:
+          ul
+            li #[span.code event], the calendar event object that was dropped
+            li #[span.code oldDate], the Javascript Date the event was starting from before drag
+            li #[span.code newDate], the Javascript Date the event is now starting from
+            li #[span.code oldSchedule] only if schedules, the id of the schedule the event came from
+            li #[span.code newSchedule] only if schedules, the id of the schedule the event is dropped into
+
+      //- alert(tip)
         ul
-          li #[span.code event], the calendar event object that was resized
-          li #[span.code oldDate], the Javascript Date the event was ending at before resize
-          li #[span.code originalEvent], the same calendar event before the change
-      li.mt2
-        code.mr1 event-resizing
-        span.grey Fired repeatedly while resizing
-        | #[br]For performance while dragging, returns a lighter object containing:
-        ul
-          li #[span.code _eid], the calendar event internal id.
-          li #[span.code end], the calendar event new end Date.
-          li #[span.code endTimeMinutes], the calendar event new end time in minutes.
-        alert(warning).
-          You should only listen to this event if you have no choice. In most of cases you should
-          listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
-      li.mt2
-        code.mr1 event-drop
-        | - returns an object containing:
-        ul
-          li #[span.code event], the calendar event object that was dropped
-          li #[span.code oldDate], the Javascript Date the event was starting from before drag
-          li #[span.code newDate], the Javascript Date the event is now starting from
-          li #[span.code oldSchedule] only if schedules, the id of the schedule the event came from
-          li #[span.code newSchedule] only if schedules, the id of the schedule the event is dropped into
-      li.mt3 #[code.mr1 event-change] - returns an object containing:
-        ul
-          li #[span.code event], the calendar event object that was changed
           li.
-            #[span.code originalEvent], the same calendar event before the change
-            (#[span.code null] when creating event)
+            #[span.code cell-click] is fired every time you click a day, whereas
+            #[span.code cell-focus] is fired only when the selected day changes.
+          li.
+            #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-contextmenu]
+            and #[span.code cell-focus] return the time at cursor position, unless the cell
+            was focused from tab key.
+            It would then return the cell start date (at midnight).
+          li.
+            If schedules is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
+            and #[span.code cell-focus] emitted events will return an object containing the date and the clicked schedule id.
 
-    alert(tip)
-      ul
-        li.
-          The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
-          #[span.code event-title-change], #[span.code event-drop],
-          #[span.code event-duration-change] and #[span.code event-create]. So you have the choice to listen to
-          #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
-        li.mt3.
-          To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
-          objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
-          So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
-          You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
+      //- alert
+        | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
+        ssh-pre.mt2(language="js" :dark="store.darkMode").
+          {
+            view: [String],
+            start: [Date], // View start - JS native Date object.
+            end: [Date], // View end - JS native Date object.
+            firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+            lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
+            outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
+            events: [Array], // All the events in the current view.
+            week: [Integer] // Week number. Only returned if view is 'week'.
+          }
+        strong.
+          Note that on a month view, the events from the out of scope days
+          (cells before and after the current month) are also returned in the array.
 
-    p.mb0 Watch the list of emitted events (#[strong latest on top]) as you play with Vue Cal:
-    .logs-box.my2.bd1.bdrs2.ovh.ssh-pre--dark
-      .w-flex.wrap.align-center.justify-end.mx2
+      //- alert(tip)
+        ul
+          li.
+            The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
+            #[span.code event-title-change], #[span.code event-drop],
+            #[span.code event-duration-change] and #[span.code event-create]. So you have the choice to listen to
+            #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
+          li.mt3.
+            To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
+            objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
+            So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
+            You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
+
+    p.mb0 Better than theory, observe the events real-time in this logs box while interacting with Vue Cal:
+    .logs-box.my2.bd1.bdrs2.ovh
+      .w-flex.wrap.align-center.justify-end.ml2.mr1
         .grey //&nbsp;
           strong event-name:&nbsp;
           span { arguments }
           small.caption.ml2 Latest at the bottom.
         .spacer
-        w-button.my1(outline sm @click="exEmittedEvents.clearEventsLog")
+        w-button.mt1(outline sm @click="exEmittedEvents.clearEventsLog")
           w-icon.mr1 wi-cross
           | Clear Logs
-        w-button.my1.ml2(
+        w-button.mt1.ml2(
           outline
           sm
           @click="exEmittedEvents.logMouseEvents = !exEmittedEvents.logMouseEvents"
@@ -142,7 +184,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
           w-icon.mr1 mdi mdi-{{ exEmittedEvents.logMouseEvents ? 'close' : 'plus' }}
           | {{ exEmittedEvents.logMouseEvents ? 'Hide' : 'Track' }} Mouse Move &amp; Hover Events
 
-      ssh-pre.ma0.scrollable(
+      ssh-pre.ma0.py0.scrollable(
         language="js"
         :dark="store.darkMode"
         ref="logsBoxEl")
@@ -529,6 +571,7 @@ const eventsCopy = events.slice(0)
 
 const logsBoxEl = ref(null)
 const exEmittedEvents = reactive({
+  expandedEmittedEvents: ref(Array(30).fill(false)),
   logs: ref([]),
   // reversedLogs: computed(() => exEmittedEvents.logs.slice(0).reverse()),
   clearEventsLog: () => (exEmittedEvents.logs = []),
@@ -556,6 +599,16 @@ const exSyncTwoCalendars = reactive({
 
 <style lang="scss">
 .main--examples-dom-events {
-  .logs-box {white-space: pre-wrap;}
+  .logs-box {
+    background-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, var(--w-base-bg-color));
+
+    .scrollable {
+      border: none;
+      overflow: auto;
+      margin-top: 2px;
+      padding-bottom: 4px;
+    }
+    .scrollable:before {display: none;}
+  }
 }
 </style>
