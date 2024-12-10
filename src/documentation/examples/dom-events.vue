@@ -18,7 +18,6 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
 
     w-accordion(
       v-model="exEmittedEvents.expandedEmittedEvents"
-      :items="views"
       expand-icon-rotate90
       title-class="pa0 bd0 body"
       content-class="pt0 pb3")
@@ -31,6 +30,18 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         template(#title)
           code view-change
         template(#content)
+          p Fired on every view change.
+          p Returns an object containing:
+          ul
+            li #[code id] #[code {String}]: The view ID. Possible values: 'day', 'days', 'week', 'month', 'year', 'years'.
+            li #[code title] #[code {String}]: The view computed title.
+            li #[code start] #[code {Date}]: The view start date as a navite JavaScript Date.
+            li #[code end] #[code {Date}]: The view end date as a navite JavaScript Date.
+            li #[code extendedStart] #[code {Date}]: The view extended start date as a navite JavaScript Date.
+            li #[code extendedEnd] #[code {Date}]: The view extended end date as a navite JavaScript Date.
+            li #[code cellDates] #[code {Array}]: An array containing all the view cells.
+            li #[code containsToday] #[code {Bool}]: Whether the view contains the current date or not.
+            li #[code events] #[code {Array}]: An array containing all the events that are currently in view.
 
       h5.mt2 Cell-related
       w-accordion-item
@@ -185,9 +196,9 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
           | {{ exEmittedEvents.logMouseEvents ? 'Hide' : 'Track' }} Mouse Move &amp; Hover Events
 
       ssh-pre.ma0.py0.scrollable(
+        ref="logsBoxEl"
         language="js"
-        :dark="store.darkMode"
-        ref="logsBoxEl")
+        :dark="store.darkMode")
         .mt1(v-for="(l, i) in exEmittedEvents.logs" :key="i")
           | {{ i ? "\n\n" : '' }}{{ l.name }}: {{ l.args }}
 
@@ -573,18 +584,18 @@ const logsBoxEl = ref(null)
 const exEmittedEvents = reactive({
   expandedEmittedEvents: ref(Array(30).fill(false)),
   logs: ref([]),
-  // reversedLogs: computed(() => exEmittedEvents.logs.slice(0).reverse()),
   clearEventsLog: () => (exEmittedEvents.logs = []),
   logMouseEvents: ref(false),
   logEvents: (eventName, params) => {
+    // Filter out mouse move and mouseenter/leave events.
     if (!exEmittedEvents.logMouseEvents && eventName.includes('-mouse')) return
 
     if (params.cell) {params.cell = { ...params.cell, events: params.cell.events.value }}
     if (params.e) params.e = `[${params.e.constructor.name}]`
 
     exEmittedEvents.logs.push({ name: eventName, args: JSON.stringify(params, null, 2) })
-    const scrollableEl = logsBoxEl.value.$el
-    nextTick(() => scrollableEl.scrollTo({ top: scrollableEl.scrollHeight, behavior: 'smooth' }))
+    const scrollableEl = logsBoxEl.value?.$el
+    nextTick(() => scrollableEl?.scrollTo?.({ top: scrollableEl.scrollHeight, behavior: 'smooth' }))
   }
 })
 
