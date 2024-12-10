@@ -273,6 +273,17 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     }
 
     console.log('🙆‍♂️', 'updateView', startTheoretical.value)
+    emit('view-change', {
+      id: viewId.value,
+      title: title.value,
+      start: start.value,
+      end: end.value,
+      extendedStart: extendedStart.value,
+      extendedEnd: extendedEnd.value,
+      cellDates: cellDates.value,
+      containsToday: containsToday.value,
+      events: events.value
+    })
   }
 
   /**

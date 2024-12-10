@@ -74,7 +74,13 @@ const props = defineProps(propsDefinitions)
 // to specific components, allowing the user to have full flexibility and control on their own events:
 // cell-click, cell-xxxx, where xxxx is an existing DOM event name given by the end user;
 // event-click, event-xxxx, where xxxx is an existing DOM event name given by the end user.
-const emit = defineEmits(['ready', 'update:view', 'update:selectedDate', 'update:viewDate'])
+const emit = defineEmits([
+  'ready',
+  'view-change',
+  'update:view',
+  'update:selectedDate',
+  'update:viewDate'
+])
 
 const vuecalEl = useTemplateRef('vuecal-el')
 const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
