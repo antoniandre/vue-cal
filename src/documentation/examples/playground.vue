@@ -6,6 +6,7 @@
     w-switch.no-grow(v-model="mainVuecalConfig.hideWeekends") Hide Weekends
     w-switch.no-grow(v-model="mainVuecalConfig.clickToNavigate") Click to Navigate
     w-switch.no-grow(v-model="mainVuecalConfig.showSchedules") Day Schedules
+    w-switch.no-grow(v-model="mainVuecalConfig.showSpecialHours") Business Hours
     w-switch.no-grow(v-model="mainVuecalConfig.editableEvents") Editable Events
 
   .w-flex.column.grow
@@ -200,21 +201,27 @@ const mainVuecalConfig = reactive({
   events: ref([]),
   showSchedules: ref(false),
   schedules: computed(() => {
-    return mainVuecalConfig.showSchedules ? [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }] : undefined
+    return mainVuecalConfig.showSchedules ? [
+      { label: 'Dr 1', class: 'dr-1', style: 'background-color: rgba(255, 0, 0, 0.1)' },
+      { label: 'Dr 2', class: 'dr-2' }
+    ] : undefined
   }),
   eventsOnMonthView: true,
-  specialHours: {
-    mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    wed: [
-      { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
-      { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
-    ],
-    thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
-    sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  },
+  showSpecialHours: ref(false),
+  specialHours: computed(() => {
+    return mainVuecalConfig.showSpecialHours ? {
+      mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+      tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+      wed: [
+        { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
+        { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
+      ],
+      thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+      fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
+      sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+      sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+    } : undefined
+  }),
   editableEvents: ref(false)
 })
 
