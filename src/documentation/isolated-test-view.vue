@@ -53,40 +53,14 @@ addDatePrototypes()
 const store = useAppStore()
 const vueCalRef = ref(null)
 
-const views = {
-  day: { label: 'Day' },
-  days: { label: 'Days', cols: 365, rows: 1 },
-  week: { label: 'Week' },
-  month: { label: 'Month' },
-  year: { label: 'Year' },
-  years: { label: 'Years' }
-}
-const viewsArray = Object.entries(views).map(([viewId, obj]) => ({ ...obj, value: viewId }))
-
-const size = ref(null)
-const sizes = [
-  { value: null, label: 'Normal' },
-  { value: 'sm', label: 'small' },
-  { value: 'xs', label: 'Extra small' }
-]
-
-const weekdays = [{ label: 'mon' }, { label: 'tue' }, { label: 'wed' }, { label: 'thu' }, { label: 'fri' }, { label: 'sat' }, { label: 'sun' }]
-const hideWeekdays = ref([])
-
 const pickerConfig = reactive({
   datePicker: true,
   dark: computed(() => store.darkMode),
   selectedDate: computed(() => mainVuecalConfig.selectedDate),
-  locale: computed(() => mainVuecalConfig.locale),
-  startWeekOnSunday: computed(() => mainVuecalConfig.startWeekOnSunday),
-  todayButton: computed(() => mainVuecalConfig.todayButton),
-  hideWeekends: computed(() => mainVuecalConfig.hideWeekends),
-  hideWeekdays: computed(() => mainVuecalConfig.hideWeekdays),
-  viewDayOffset: computed(() => mainVuecalConfig.viewDayOffset)
+  locale: computed(() => mainVuecalConfig.locale)
 })
 
 const mainVuecalConfig = reactive({
-  views,
   view: ref('week'),
   dark: computed(() => store.darkMode),
   selectedDate: ref(null),
@@ -94,81 +68,72 @@ const mainVuecalConfig = reactive({
   locale: ref(''),
   startWeekOnSunday: ref(false),
   todayButton: ref(true),
-  xs: computed(() => size.value === 'xs'),
-  sm: computed(() => size.value === 'sm'),
+  xs: ref(false),
+  sm: ref(false),
   // timeFrom: 7 * 60,
   // timeTo: 20 * 60,
   timeStep: 60,
   twelveHour: ref(false),
   hideWeekends: ref(false),
-  hideWeekdays,
+  hideWeekdays: ref([]),
   viewDayOffset: ref(0),
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  showSchedules: ref(false),
-  schedules: computed(() => {
-    return mainVuecalConfig.showSchedules ? [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }] : undefined
-  }),
+  schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
   eventsOnMonthView: true,
-  specialHours: {
-    mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    wed: [
-      { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
-      { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
-    ],
-    thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
-    fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
-    sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
-    sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  },
+  // specialHours: {
+  //   mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+  //   tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+  //   wed: [
+  //     { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Morning shift</em>' },
+  //     { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Afternoon shift</em>' }
+  //   ],
+  //   thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
+  //   fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
+  //   sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
+  //   sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+  // },
   editableEvents: ref(false)
 })
 
 // Pretend a call to a backend.
 setTimeout(() => {
   mainVuecalConfig.events = [
-    { title: 'Event 1', start: '2024-09-20 10:00', end: '2024-09-20 10:30' },
-    { title: 'Event 2', start: '2024-09-20 11:00', end: '2024-09-20 11:30' }
+    {
+      title: 'Event 1',
+      start: new Date(new Date().setHours(10, 0, 0, 0)),
+      end: new Date(new Date().setHours(10, 30, 0, 0)),
+      schedule: 1
+    },
+    {
+      title: 'Event 2',
+      start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
+      end: new Date(new Date().addDays(1).setHours(11, 30, 0, 0)),
+      schedule: 2
+    }
   ]
 }, 1000)
 
 const addEventFromOutside = () => {
-  mainVuecalConfig.events.push({ title: 'Event 1', start: (new Date()).subtractHours(4), end: (new Date()).subtractHours(3) })
+  mainVuecalConfig.events.push({
+    title: `Event ${mainVuecalConfig.events.length}`,
+    start: new Date().subtractHours(4),
+    end: new Date().subtractHours(3),
+    schedule: 2
+  })
 }
 
 const addEventFromVueCal = () => {
   vueCalRef.value.view.createEvent({
-    title: 'Event New!!',
-    start: '2024-11-20 10:00',
-    end: '2024-11-20 10:30'
+    title: 'New Event!',
+    start: new Date().subtractHours(2),
+    end: new Date().subtractHours(1),
+    schedule: 1
   })
 }
 
 const log = (...args) => console.log(...args)
-
-// events: [
-//   {
-//     start: new Date(new Date(now).setHours(1, 0, 0)),
-//     end: new Date(new Date(now).setHours(4, 0, 0)),
-//     allDay: true,
-//     title: 'Event 1',
-//     schedule: 2
-//   },
-//   {
-//     start: new Date(new Date(now).setHours(1, 0, 0)),
-//     end: new Date(new Date(now).setHours(4, 0, 0)),
-//     title: 'Event 2',
-//     schedule: 1
-//   },
-//   {
-//     start: new Date(new Date(now).setHours(3, 0, 0)),
-//     end: new Date(new Date(now).setHours(5, 0, 0)),
-//     title: 'Event 3',
-//     schedule: 2
-//   }
-// ]
 </script>
 
 <style lang="scss">
