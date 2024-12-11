@@ -22,6 +22,8 @@
         slot(name="today-button" v-bind="params")
       template(v-if="!$slots.header && $slots.title" #title="params")
         slot(name="title" v-bind="params")
+      template(v-if="!$slots.header && $slots['schedule-heading']" #schedule-heading="params")
+        slot(name="schedule-heading" v-bind="params")
 
     .vuecal__scrollable-wrap
       transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
@@ -35,12 +37,18 @@
             WeekdaysBar
               template(#weekday-heading="params")
                 slot(name="weekday-heading" v-bind="params")
-            .vuecal__cell-schedules(v-if="config.schedules && view.isDay")
-              .vuecal__cell-schedule.vuecal__cell-schedule--label(
-                v-for="(schedule, i) in config.schedules"
-                :key="i"
-                :class="schedule.class"
-                v-html="schedule.label")
+              template(#schedule-heading="params")
+                slot(name="schedule-heading" v-bind="params")
+            .vuecal__schedule-headings(v-if="config.schedules && view.isDay")
+              template(v-for="(schedule, i) in config.schedules" :key="i")
+                .vuecal__schedule.vuecal__schedule--heading(
+                  v-if="$slots['schedule-heading']"
+                  :class="schedule.class")
+                  slot(name="schedule-heading" :schedule="schedule" :view="view")
+                .vuecal__schedule.vuecal__schedule--heading(
+                  v-else
+                  :class="schedule.class"
+                  v-html="schedule.label")
 
             VueCalBody(
               @cell-drag-start="isDraggingCell = true"
@@ -136,7 +144,7 @@ defineExpose({ view: vuecal.view })
     min-width: 0;
   }
 
-  &__scrollable--days-view &__cell-schedule,
-  &__scrollable--week-view &__cell-schedule {min-width: var(--vuecal-min-schedule-width, 0);}
+  &__scrollable--days-view &__schedule,
+  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-width, 0);}
 }
 </style>

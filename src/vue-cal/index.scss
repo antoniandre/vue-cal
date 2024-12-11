@@ -38,8 +38,7 @@
   .grow {flex-grow: 1;}
 
   // Shared in headers and cells.
-  &__cell-schedules {display: flex;}
-  &__cell-schedule {
+  &__schedule {
     position: relative;
     display: flex;
     flex-grow: 1;
@@ -47,12 +46,13 @@
     justify-content: center;
     overflow: hidden;
   }
-  &__cell-schedule--label {
+  &__schedule-headings {display: flex;}
+  &__schedule--heading {
     font-size: 12px;
     align-items: center;
   }
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view &__cell-schedule--label {height: var(--vuecal-weekdays-bar-height);}
+  &--has-schedules .vuecal__scrollable--day-view &__schedule--heading {height: var(--vuecal-weekdays-bar-height);}
 }
 
 // Transitions.

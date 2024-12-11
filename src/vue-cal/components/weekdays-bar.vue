@@ -9,13 +9,17 @@
       name="weekday-heading"
       :label="day[labelsSize]"
       :id="day.id"
-      :Date="day.date") {{ day[labelsSize] }}
-    .vuecal__cell-schedules(v-if="config.schedules")
-      .vuecal__cell-schedule.vuecal__cell-schedule--label(
-        v-for="(schedule, i) in config.schedules"
-        :key="i"
-        :class="schedule.class"
-        v-html="schedule.label")
+      :date="day.date") {{ day[labelsSize] }}
+    .vuecal__schedule-headings(v-if="config.schedules")
+      template(v-for="(schedule, i) in config.schedules" :key="i")
+        .vuecal__schedule.vuecal__schedule--heading(
+          v-if="$slots['schedule-heading']"
+          :class="schedule.class")
+          slot(name="schedule-heading" :schedule="schedule" :view="view")
+        .vuecal__schedule.vuecal__schedule--heading(
+          v-else
+          :class="schedule.class"
+          v-html="schedule.label")
 </template>
 
 <script setup>

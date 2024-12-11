@@ -11,7 +11,7 @@
       v-html="range.label || ''")
 
   template(v-if="!$slots.cell && config.schedules")
-    .vuecal__cell-schedule(
+    .vuecal__schedule.vuecal__schedule--cell(
       v-for="schedule in config.schedules"
       :key="schedule.id"
       :class="schedule.class"
