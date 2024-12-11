@@ -15,6 +15,7 @@
       v-for="schedule in config.schedules"
       :key="schedule.id"
       :class="schedule.class"
+      :style="schedule.style || null"
       :data-schedule="schedule.id")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events" :start="start" :end="end" :events="cellEvents")
