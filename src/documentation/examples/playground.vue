@@ -102,16 +102,6 @@
     @cell-touchstart="log('cell-touchstart', $event)"
     @cell-contextmenu="log('cell-contextmenu', $event)")
 
-    template(#title="view") {{ view }}
-    //- template(#cell="{ start, index }") ({{ start }}, {{ index }})
-    //- template(#diy="{ vuecal, view }") {{ view }}<br><br>{{ vuecal }}
-    //- template(#header="{ view, availableViews, vuecal }")
-      w-button.ma1(
-        v-for="(grid, viewName) in availableViews"
-        type="button"
-        @click="vuecal.switchView(viewName)"
-        :outline="view !== viewName") {{ viewName }}
-
 w-dialog(
   v-if="eventCreation.event"
   v-model="eventCreation.show"

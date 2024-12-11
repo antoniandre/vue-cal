@@ -2,7 +2,7 @@
 .vuecal__header
   slot(
     name="header"
-    :view="view.id"
+    :view="view"
     :available-views="config.availableViews"
     :vuecal="vuecal")
 
@@ -71,13 +71,6 @@ const titleEventHandlers = computed(() => config.clickToNavigate ? { click: onTi
 .vuecal__header {
   position: relative;
   user-select: none;
-
-  button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-  }
 }
 
 .vuecal__views-bar {
