@@ -28,13 +28,12 @@
               v-if="$slots.title"
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers")
-              slot(name="title" :title="view.title")
+              slot(name="title" v-bind="view")
             component.vuecal__title(
               v-else
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers"
-              v-html="view.title"
-              :key="view.id + view.start.getTime()")
+              v-html="view.title")
       template(v-if="config.todayButton")
         slot(
           v-if="$slots['today-button']"
