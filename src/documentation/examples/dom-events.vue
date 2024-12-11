@@ -389,43 +389,41 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       #[a(href="#ex--emitted-events") emitted events example].
   template(#code-html).
     &lt;vue-cal
-      small
+      date-picker
+      :views-bar="false"
+      hide-weekends
+      @cell-focus="selectedDate = $event"&gt;
+    &lt;/vue-cal&gt;
+    &lt;vue-cal
+      sm
       :time="false"
       :views-bar="false"
       view="week"
       :views="['day', 'week']"
+      hide-weekends
       :selected-date="selectedDate"
-      class="vuecal--blue-theme"
-      style="max-width: 360px;height: 260px"&gt;
-    &lt;/vue-cal&gt;
-    &lt;vue-cal
-      xs
-      :time="false"
-      :views-bar="false"
-      view="month"
-      :views="['month']"
-      @cell-focus="selectedDate = $event"
-      class="vuecal--blue-theme vuecal--rounded-theme"
-      style="max-width: 270px;height: 290px"&gt;
+      class="vuecal--blue-theme"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
       data: () => ({
         selectedDate: null
       })
   template(#desc2)
-    .w-flex.align-center.justify-center.wrap
+    .w-flex.align-center.justify-center.wrap.gap2
       vue-cal(
         :views-bar="false"
         date-picker
         @cell-focus="selectedDate = $event"
+        hide-weekends
         :dark="store.darkMode")
-      vue-cal(
+      vue-cal.grow(
         :views-bar="false"
         view="week"
         :views="['day', 'week']"
         :selected-date="selectedDate"
+        hide-weekends
         :dark="store.darkMode"
-        small)
+        sm)
 
 //- Example.
 example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")

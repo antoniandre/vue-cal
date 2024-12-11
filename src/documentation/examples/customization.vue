@@ -1,8 +1,9 @@
 <template lang="pug">
-alert(tip)
-  .text-bold Heads Up
-  | A good understanding of slots and scoped slots is required. Read about it in the
-  a.ml1(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") official Vue documentation #[w-icon(color="primary") mdi mdi-open-in-new]
+alert.mb2
+  | If you're not familiar with slots and scoped slots, first read about it in the
+  a.ml1(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank")
+    strong official Vue documentation
+    w-icon.primary.ml1 mdi mdi-open-in-new
   | .
 
 alert
@@ -29,14 +30,14 @@ example(title="Simple Slots" anchor="slots")
       This example highlights the simplest and most commonly used slots.
 
     .w-flex.column.gap1
-      w-switch(v-model="exSlots.title" :disabled="exSlots.header") Custom title via #[code.mx1 title] slot
-      w-switch(v-model="exSlots.prevNextButtons" :disabled="exSlots.header") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
-      w-switch(v-model="exSlots.todayButton" :disabled="exSlots.header") Custom today button via #[code.mx1 today-button] slot
-      w-switch(v-model="exSlots.weekdayHeading" :disabled="exSlots.header") Custom weekday labels via #[code.mx1 weekday-heading] slot
-      w-switch(v-model="exSlots.header") Custom header via #[code.mx1 header] slot
-      w-switch(v-model="exSlots.timeCell") time cell labels via #[code.mx1 time-cell] slot
-      w-switch(v-model="exSlots.cellContent") Custom cell content via #[code.mx1 cell-content] slot
-      w-switch(v-model="exSlots.diy") DIY via #[code.mx1 diy] slot!
+      w-switch(v-model="exSlots.title" :disabled="exSlots.header || exSlots.diy") Custom title via #[code.mx1 title] slot
+      w-switch(v-model="exSlots.prevNextButtons" :disabled="exSlots.header || exSlots.diy") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
+      w-switch(v-model="exSlots.todayButton" :disabled="exSlots.header || exSlots.diy") Custom today button via #[code.mx1 today-button] slot
+      w-switch(v-model="exSlots.weekdayHeading" :disabled="exSlots.header || exSlots.diy") Custom weekday labels via #[code.mx1 weekday-heading] slot
+      w-switch(v-model="exSlots.header" :disabled="exSlots.diy") Custom header via #[code.mx1 header] slot
+      w-switch(v-model="exSlots.timeCell" :disabled="exSlots.diy") time cell labels via #[code.mx1 time-cell] slot
+      w-switch(v-model="exSlots.cellContent" :disabled="exSlots.diy") Custom cell content via #[code.mx1 cell-content] slot
+      w-switch(v-model="exSlots.diy") DIY via #[code.mx1 diy] slot: you've got the power, build something nice!
 
   template(#code-html).
     &lt;vue-cal
@@ -69,6 +70,18 @@ example(title="Simple Slots" anchor="slots")
       &lt;template #next-button&gt;
         &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
       &lt;/template&gt;
+
+      &lt;template #time-cell="{ format24 }"&gt;
+        &lt;strong&gt;{{ '\{\{ format24 \}\}' }}&lt;/strong&gt;
+      &lt;/template&gt;
+
+      &lt;template #cell-content&gt;
+        &lt;i class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
+      &lt;/template&gt;
+
+      &lt;template #diy="{ vuecal, view }"&gt;
+        {{ '\{\{ view \}\}' }}<br><br>{{ '\{\{ vuecal \}\}' }}
+      &lt;/template&gt;
     &lt;/vue-cal&gt;
 
   template(#code-js).
@@ -82,7 +95,8 @@ example(title="Simple Slots" anchor="slots")
     :dark="store.darkMode"
     :time-from="9 * 60"
     :time-to="14 * 60"
-    v-model:view="exSlots.view")
+    v-model:view="exSlots.view"
+    style="overflow: auto")
     template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
       w-tooltip(left)
         template(#activator="{ on }")
@@ -116,7 +130,7 @@ example(title="Simple Slots" anchor="slots")
     template(#next-button v-if="exSlots.prevNextButtons")
       w-icon.orange-light2(md) mdi mdi-arrow-right
     template(#time-cell="{ format24 }" v-if="exSlots.timeCell")
-      strong.orange-light2(md) {{ format24 }}
+      strong.orange-light2 {{ format24 }}
     template(#cell-content v-if="exSlots.cellContent")
       w-icon.orange-light2(lg) mdi mdi-party-popper
     template(#diy="{ vuecal, view }" v-if="exSlots.diy") {{ view }}<br><br>{{ vuecal }}
@@ -459,7 +473,11 @@ example(title="Custom Day Schedule Headings" anchor="custom-schedule-headings")
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
 
-  w-dialog(v-model="showDialog" width="600" dialog-class="bdrs2" title-class="primary--bg white py2")
+  w-dialog(
+    v-model="showDialog"
+    width="600"
+    dialog-class="bdrs2"
+    title-class="primary--bg white py2")
     template(#title)
       w-icon.mr3 {{ selectedEvent.icon }}
       span.title3.text-upper {{ selectedEvent.title }}

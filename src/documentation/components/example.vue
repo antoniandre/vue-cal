@@ -28,7 +28,7 @@
       w-icon.mr1 mdi mdi-unfold-{{ expanded ? 'less' : 'more' }}-horizontal
       | {{ expanded ? 'Collapse' : 'Expand' }} Source Code
 
-  .example__render.w-flex.justify-center.mt2
+  .example__render.mt2.mxa
     slot
   .example__desc
     slot(name="desc2")
@@ -107,5 +107,7 @@ onMounted(async () => {
     padding-bottom: 24px; // Leave some space for the expand button.
   }
   .w-app .source-wrap.no-scroll &__source[data-label]:last-of-type {padding-bottom: 8px;}
+
+  .vuecal {margin-left: auto;margin-right: auto;}
 }
 </style>
