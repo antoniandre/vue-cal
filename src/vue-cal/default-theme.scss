@@ -133,8 +133,14 @@
     display: block;
     font-size: 0.95em;
   }
-  &.vuecal--has-schedules .vuecal__weekday {padding-left: 0;padding-right: 0;}
-
+  &.vuecal--has-schedules .vuecal__weekday {
+    padding-left: 0;
+    padding-right: 0;
+  }
+  &.vuecal--has-schedules .vuecal__scrollable--day-view .vuecal__schedule-headings {
+    position: sticky;
+    inset: 0 0 auto;
+  }
   // Calendar Body.
   // ------------------------------------------------------
   .vuecal__cell {
