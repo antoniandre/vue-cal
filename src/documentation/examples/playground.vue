@@ -368,7 +368,7 @@ const eventCreation = reactive({
     }
   }
 
-  .vuecal__cell-schedule {
+  .vuecal__schedule {
     &.dr-1 {background-color: rgba(134, 192, 253, 0.1);}
     &.dr-2 {background-color: rgba(187, 148, 255, 0.15);}
     .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}

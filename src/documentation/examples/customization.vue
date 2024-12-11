@@ -13,7 +13,7 @@ alert
     li #[span.code next-button]
     li #[span.code today-button]
     li #[span.code weekday-heading]
-    li #[span.code schedule-label]
+    li #[span.code schedule-heading]
     li #[span.code time-cell]
     li #[span.code week-number-cell]
     li #[span.code cell-content]
@@ -244,8 +244,8 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
       ssh-pre.my2.ml5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)" :dark="store.darkMode").
         Now this is the part you can customize:
 
-        &lt;!-- Will be added if schedules and schedule labels are set --&gt;
-        &lt;div class="schedule-label" /&gt;
+        &lt;!-- Will be added if schedules are set --&gt;
+        &lt;div class="vuecal__schedule" /&gt;
         &lt;!-- Will be added on years, year &amp; month view --&gt;
         &lt;div class="vuecal__cell-date" /&gt;
         &lt;!-- Will be added on month view --&gt;
@@ -404,44 +404,42 @@ example(title="Custom event Rendering" anchor="custom-event-rendering")
         span {{ event.end.formatTime('h O\'clock') }}
 
 //- Example.
-example(title="Custom Day Schedule Labels" anchor="custom-schedule-labels")
+example(title="Custom Day Schedule Headings" anchor="custom-schedule-headings")
   template(#desc)
-    p.mb6 You can provide a custom schedule label when a simple label is not enough.
+    p.mb6 You can define a custom schedule heading through slot.
   template(#code-html).
     &lt;vue-cal
       :views="['day', 'week']"
       view="day"
       :schedules="schedules"
-      :hide-weekdays="['fri', 'sat', 'sun']"
-      sticky-schedule-labels&gt;
-      &lt;template #schedule-label="{ schedule, view }"&gt;
+      :hide-weekdays="['fri', 'sat', 'sun']"&gt;
+      &lt;template #schedule-heading="{ schedule, view }"&gt;
         &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
         &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
     // In data.
-    customDayScheduleLabels: [
+    customDayScheduleHeadings: [
       { label: 'John', color: 'blue', class: 'schedule1' },
       { label: 'Tom', color: 'green', class: 'schedule2' },
       { label: 'Kate', color: 'orange', class: 'schedule3' },
       { label: 'Jess', color: 'red', class: 'schedule4' }
     ]
   template(#code-css).
-    .vuecal .schedule-header {font-size: 11px;}
+    .vuecal__schedule--heading {font-size: 11px;}
     .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
     .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
     .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
     .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
 
-  vue-cal.ex--custom-schedule-labels(
+  vue-cal(
     :dark="store.darkMode"
     :views="['day', 'week']"
     view="day"
-    :schedules="customDayScheduleLabels"
-    :hide-weekdays="['fri', 'sat', 'sun']"
-    sticky-schedule-labels)
-    template(#schedule-label="{ schedule, view }")
+    :schedules="customDayScheduleHeadings"
+    :hide-weekdays="['fri', 'sat', 'sun']")
+    template(#schedule-heading="{ schedule, view }")
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
 
@@ -514,7 +512,7 @@ const exSlots = reactive({
   cellContent: ref(false)
 })
 
-const customDayScheduleLabels = [
+const customDayScheduleHeadings = [
   { label: 'John', color: 'blue', class: 'schedule1' },
   { label: 'Tom', color: 'green', class: 'schedule2' },
   { label: 'Kate', color: 'orange', class: 'schedule3' },

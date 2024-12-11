@@ -783,7 +783,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
           li #[code .vuecal__today-btn--highlighted]
           li #[code .vuecal__arrow--highlighted]
           li #[code .vuecal__cell--highlighted]
-          li #[code .vuecal__cell-schedule--highlighted]
+          li #[code .vuecal__schedule--highlighted]
       li.
         You can change the style of the event being dragged through the
         #[code .vuecal__event--dragging] CSS class.

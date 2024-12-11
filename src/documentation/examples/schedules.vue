@@ -158,8 +158,6 @@ example(title="schedules &amp; schedule events" anchor="schedules")
     li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
     li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
 
-  | #[br]You can also use the option #[span.code sticky-schedule-labels] to place the schedule labels in the header.#[br]#[br]
-
   | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
 
   | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
@@ -177,12 +175,6 @@ example(title="schedules &amp; schedule events" anchor="schedules")
       w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
       | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
 
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.stickyScheduleLabels"
-      @click="schedulesExample.stickyScheduleLabels = !schedulesExample.stickyScheduleLabels")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.stickyScheduleLabels ? 'close' : 'plus' }}
-      | Sticky Schedule Labels
-
     w-button.px2.my1(
       :outline="schedulesExample.schedules[1].hide"
       @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
@@ -199,7 +191,6 @@ example(title="schedules &amp; schedule events" anchor="schedules")
     editable-events
     :events="scheduleEvents"
     :schedules="schedulesExample.schedules"
-    :sticky-schedule-labels="schedulesExample.stickyScheduleLabels"
     :min-cell-width="schedulesExample.minCellWidth"
     :min-schedule-width="schedulesExample.minScheduleWidth")
 ssh-pre(language="html-vue" :dark="store.darkMode").
@@ -208,9 +199,6 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
   &lt;/button&gt;
   &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
     {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
-  &lt;/button&gt;
-  &lt;button @click="stickyScheduleLabels = !stickyScheduleLabels"&gt;
-    Sticky Schedule Labels
   &lt;/button&gt;
   &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
     Show/Hide Dad
@@ -224,14 +212,12 @@ ssh-pre(language="html-vue" :dark="store.darkMode").
     editable-events
     :events="events"
     :schedules="schedules"
-    :sticky-schedule-labels="stickyScheduleLabels"
     :min-cell-width="minCellWidth"
     :min-schedule-width="minScheduleWidth"&gt;
   &lt;/vue-cal&gt;
 
 ssh-pre(language="js" :dark="store.darkMode").
   data: () => ({
-    stickyScheduleLabels: false,
     minCellWidth: 400,
     minScheduleWidth: 0,
     schedules: [
@@ -274,12 +260,12 @@ ssh-pre(language="js" :dark="store.darkMode").
 
 ssh-pre(language="css" :dark="store.darkMode").
   /* You can easily set a different style for each schedule of your days. */
-  .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-  .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-  .vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-  .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-  .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
+  .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+  .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+  .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+  .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+  .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
   .vuecal__event {color: #fff;border: 1px solid;}
   .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
@@ -299,7 +285,6 @@ const vuecalEl = ref(null)
 const schedulesExample = ref({
   minCellWidth: 400,
   minScheduleWidth: 0,
-  stickyScheduleLabels: false,
   schedules: [
     { id: 1, class: 'mom', label: 'Mom' },
     { id: 2, class: 'dad', label: 'Dad', hide: false },
@@ -476,18 +461,18 @@ const scheduleEvents = [
     }
   }
   // Schedules example.
-  .vuecal__cell-schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-  .vuecal__cell-schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-  .vuecal__cell-schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-  .vuecal__cell-schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-  .vuecal__cell-schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__cell-schedule .schedule-label {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
+  .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+  .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+  .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+  .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+  .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
 
   .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
 
-  // Schedules labels example.
-  .ex--custom-schedule-labels {
-    .schedule-header {font-size: 11px;}
+  // Schedules headings example.
+  .ex--custom-schedule-headings {
+    .schedule-heading {font-size: 11px;}
     .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
     .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
     .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
@@ -499,8 +484,8 @@ const scheduleEvents = [
 // --------------------------------------------------------
 @media screen and (max-width: 800px) {
   .main--examples-schedules {
-    .vuecal--week-view.ex--custom-schedule-labels .schedule-header .w-icon {display: none;}
-    .ex--custom-schedule-labels .schedule-header strong {
+    .vuecal--week-view.ex--custom-schedule-headings .vuecal__schedule--heading .w-icon {display: none;}
+    .ex--custom-schedule-headings .vuecal__schedule--heading strong {
       overflow: hidden;
       width: 0.9em;
       font-size: 13px;

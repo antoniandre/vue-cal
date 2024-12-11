@@ -167,7 +167,7 @@ ssh-pre(language="css" :dark="store.darkMode").
   .vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
   /* Cells and buttons get highlighted when an event is dragged over it. */
   .vuecal__cell--highlighted:not(.vuecal__cell--has-schedules),
-  .vuecal__cell-schedule--highlighted {background-color: rgba(195, 255, 225, 0.5);}
+  .vuecal__schedule--highlighted {background-color: rgba(195, 255, 225, 0.5);}
   .vuecal__arrow.vuecal__arrow--highlighted,
   .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
 

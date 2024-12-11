@@ -33,7 +33,7 @@
         :events="demoExample.events"
         @cell-focus="selectedDate = $event.date || $event"
         style="height: 450px")
-        template(#schedule-label="{ schedule, view }")
+        template(#schedule-heading="{ schedule, view }")
           w-icon(:color="schedule.color" size="20") mdi mdi-account
           strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
       .w-flex.justify-end.wrap.mt2
@@ -290,6 +290,6 @@ $kate: #406fbf;
 
 @media screen and (max-width: 499px) {
   .datepicker-wrap {display: none;}
-  .hero .schedule-header strong {display: none;}
+  .hero .vuecal__schedule--heading strong {display: none;}
 }
 </style>

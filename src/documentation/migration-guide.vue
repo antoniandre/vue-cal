@@ -136,6 +136,7 @@ ul
   li #[code showAllDayEvents] was renamed #[code allDayEvents].
   li #[code showTimeInCells] was removed: if you need to render time in cells, you can use cells slots.
   li #[code eventsCountOnYearView] was renamed #[code eventsCount].
+  li #[code sticky-split-labels] was removed. Any provided schedule heading is now always positioned in the header.
 </template>
 
 <script setup>
