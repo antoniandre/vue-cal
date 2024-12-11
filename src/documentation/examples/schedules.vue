@@ -5,183 +5,209 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
     p.
       The special hours are visible on #[span.code week] and #[span.code day] views and allow
       you to highlight a particular time range on each day of the week individually.#[br]
-    alert.
-      Refer to the #[a(href="#api") API] section to read more about the
-      #[span.code special-hours] option.
 
   template(#code-html).
     &lt;vue-cal
       :views="['day', 'week']"
-      :time-from="8 * 60"
-      :time-to="20 * 60"
-      :special-hours="specialHours" /&gt;
-  template(#code-js).
-    // `from` and `to` are expected in minutes.
-    const dailyHours = { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
-
-    // In your component's data, special hours from Monday to Friday.
-    // Note that you can provide an array of multiple blocks for the same day.
-    specialHours: {
-      mon: dailyHours,
-      tue: dailyHours,
-      wed: [
-        { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
-        { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-      ],
-      thu: dailyHours,
-      fri: dailyHours
-    }
-  template(#code-css).
-    .business-hours {
-      background-color: rgba(255, 255, 0, 0.15);
-      border: solid rgba(255, 210, 0, 0.3);
-      border-width: 2px 0;
-    }
-
-  vue-cal.ex--special-hours(
-    :dark="store.darkMode"
-    :time-from="8 * 60"
-    :time-to="20 * 60"
-    :views="['day', 'week']"
-    :special-hours="specialHours"
-    style="height: 450px")
-
-  template(#desc2)
-    p With the same principle, you could also build a lot more complex layout such as the following one.
-    vue-cal.ex--doctor-hours(
-      :dark="store.darkMode"
-      :views="['day', 'week']"
       :time-from="7 * 60"
       :time-to="20 * 60"
-      :special-hours="specialDoctorHours"
-      style="height: 550px")
-    ssh-pre(language="html-vue" :dark="store.darkMode").
-      &lt;vue-cal
-        :views="['day', 'week']"
-        :time-from="7 * 60"
-        :time-to="20 * 60"
-        :special-hours="specialHours" /&gt;
-    ssh-pre(language="js" :dark="store.darkMode").
-      // In your component's data, special hours from Monday to Sunday (1 to 7).
-      // Note that you can provide an array of multiple blocks for the same day.
-      specialHours: {
-        mon: {
+      :special-hours="specialHours"
+    /&gt;
+  template(#code-js).
+    // In your component's data, special hours from Monday to Sunday (1 to 7).
+    // Note that you can provide an array of multiple blocks for the same day.
+    specialHours: {
+      mon: {
+        from: 8 * 60,
+        to: 17 * 60,
+        class: 'doctor-1',
+        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+      },
+      tue: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-2',
+        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+      },
+      wed: [
+        {
           from: 8 * 60,
-          to: 17 * 60,
+          to: 12 * 60,
           class: 'doctor-1',
-          label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+          label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
         },
-        tue: {
-          from: 9 * 60,
-          to: 18 * 60,
-          class: 'doctor-2',
-          label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
-        },
-        wed: [
-          {
-            from: 8 * 60,
-            to: 12 * 60,
-            class: 'doctor-1',
-            label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
-          },
-          {
-            from: 14 * 60,
-            to: 19 * 60,
-            class: 'doctor-3',
-            label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
-          }
-        ],
-        thu: {
-          from: 8 * 60,
-          to: 17 * 60,
-          class: 'doctor-1',
-          label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
-        },
-        fri: {
-          from: 9 * 60,
-          to: 18 * 60,
+        {
+          from: 14 * 60,
+          to: 19 * 60,
           class: 'doctor-3',
-          label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
-        },
-        sat: {
-          from: 9 * 60,
-          to: 18 * 60,
-          class: 'doctor-2',
-          label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
-        },
-        sun: {
-          from: 7 * 60,
-          to: 20 * 60,
-          class: 'closed',
-          label: '<strong>Closed</strong>'
+          label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
         }
+      ],
+      thu: {
+        from: 8 * 60,
+        to: 17 * 60,
+        class: 'doctor-1',
+        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+      },
+      fri: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-3',
+        label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
+      },
+      sat: {
+        from: 9 * 60,
+        to: 18 * 60,
+        class: 'doctor-2',
+        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+      },
+      sun: {
+        from: 7 * 60,
+        to: 20 * 60,
+        class: 'closed',
+        label: '<strong>Closed</strong>'
       }
-    ssh-pre(language="css" :dark="store.darkMode").
-      .vuecal__special-hours {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 4px;
+    }
+  template(#code-css).
+    .vuecal__special-hours {
+      text-align: center;
 
-        em {font-size: 0.9em;color: #999;}
+      &amp;.doctor-1 {background-color: hsl(127deg 43% 60% / 15%);color: hsl(127, 50%, 67%);}
+      &amp;.doctor-2 {background-color: hsl(217deg 43% 60% / 15%);color: hsl(217, 80%, 67%);}
+      &amp;.doctor-3 {background-color: hsl(287deg 43% 60% / 15%);color: hsl(287, 80%, 67%);}
+      &amp;.closed {
+        background: repeating-linear-gradient(-45deg, rgba(#fff, 0) 0 6px, rgba(#ffa257, 0.15) 6px 20px);
+        color: hsl(27, 90%, 63%);
       }
 
-      .doctor-1 {background-color: #f0fff1;color: #81d58b;}
-      .doctor-2 {background-color: #f0f6ff;color: #689bee;}
-      .doctor-3 {background-color: #fcf0ff;color: #d168ee;}
-      .closed {
-        background:
-          #fff7f0
-          repeating-linear-gradient(
-            -45deg,
-            rgba(255, 162, 87, 0.25),
-            rgba(255, 162, 87, 0.25) 5px,
-            rgba(255, 255, 255, 0) 5px,
-            rgba(255, 255, 255, 0) 15px
-          );
-        color: #f6984c;
+      em {
+        font-size: 0.9em;
+        color: #999;
+        line-height: 1.15;
       }
+    }
 
+  vue-cal(
+    :dark="store.darkMode"
+    :views="['day', 'week']"
+    :time-from="7 * 60"
+    :time-to="20 * 60"
+    :special-hours="specialDoctorHours"
+    style="height: 550px")
 
 //- Example.
-example(title="schedules &amp; schedule events" anchor="schedules")
+example(title="schedules & schedule events" anchor="schedules")
   template(#desc)
+    .mb6
+      | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
+      br
+      br
+      | By default the body of the calendar will fit the container.#[br]
+      | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
+      | body width and it will become scrollable horizontally.
+      ul
+        li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
+        li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
+
+      | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
+
+      | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
+
+      .w-flex.align-center.wrap
+        w-button.px2.mr2.my1(
+          :outline="!schedulesExample.minCellWidth"
+          @click="schedulesExample.minCellWidth = schedulesExample.minCellWidth ? 0 : 400")
+          w-icon.mr2 mdi mdi-{{ schedulesExample.minCellWidth ? 'close' : 'plus' }}
+          | {{ schedulesExample.minCellWidth ? `Min cell width: ${schedulesExample.minCellWidth}px` : 'Add min cell width' }}
+
+        w-button.px2.mr2.my1(
+          :outline="!schedulesExample.minScheduleWidth"
+          @click="schedulesExample.minScheduleWidth = schedulesExample.minScheduleWidth ? 0 : 200")
+          w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
+          | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
+
+        w-button.px2.my1(
+          :outline="schedulesExample.schedules[1].hide"
+          @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
+          w-icon.mr2 mdi mdi-{{ schedulesExample.schedules[1].hide ? 'plus' : 'close' }}
+          | {{ schedulesExample.schedules[1].hide ? 'Show' : 'Hide' }} Dad
   template(#code-html).
-.mb6
-  | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
-  br
-  br
-  | By default the body of the calendar will fit the container.#[br]
-  | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
-  | body width and it will become scrollable horizontally.
-  ul
-    li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
-    li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
+    &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
+      {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
+    &lt;/button&gt;
+    &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
+      {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
+    &lt;/button&gt;
+    &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
+      Show/Hide Dad
+    &lt;/button&gt;
 
-  | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="8 * 60"
+      :time-step="30"
+      :views="['day', 'week']"
+      editable-events
+      :events="events"
+      :schedules="schedules"
+      :min-cell-width="minCellWidth"
+      :min-schedule-width="minScheduleWidth"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    data: () => ({
+      minCellWidth: 400,
+      minScheduleWidth: 0,
+      schedules: [
+        // The id property is added automatically if none (starting from 1), but you can set a custom one.
+        // If you need to toggle the schedules, you must set the id explicitly.
+        { id: 1, class: 'mom', label: 'Mom' },
+        { id: 2, class: 'dad', label: 'Dad', hide: false },
+        { id: 3, class: 'kid1', label: 'Kid 1' },
+        { id: 4, class: 'kid2', label: 'Kid 2' },
+        { id: 5, class: 'kid3', label: 'Kid 3' }
+      ]
+      events: [
+        {
+          start: '2018-11-19 10:35',
+          end: '2018-11-19 11:30',
+          title: 'Doctor appointment',
+          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
+          class: 'health',
+          schedule: 1 // Has to match the id of the schedule you have set (or integers if none).
+        },
+        {
+          start: '2018-11-19 18:30',
+          end: '2018-11-19 19:15',
+          title: 'Dentist appointment',
+          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
+          class: 'health',
+          schedule: 2
+        },
+        {
+          start: '2018-11-20 18:30',
+          end: '2018-11-20 20:30',
+          title: 'Cross-fit',
+          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
+          class: 'sport',
+          schedule: 1
+        },
+        ...
+      ]
+    })
+  template(#code-css).
+    /* You can easily set a different style for each schedule of your days. */
+    .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
+    .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
+    .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
+    .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
+    .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
+    .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
 
-  | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
+    .vuecal__event {color: #fff;border: 1px solid;}
+    .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+    .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
+    .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
 
-  .w-flex.align-center.wrap
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.minCellWidth"
-      @click="schedulesExample.minCellWidth = schedulesExample.minCellWidth ? 0 : 400")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.minCellWidth ? 'close' : 'plus' }}
-      | {{ schedulesExample.minCellWidth ? `Min cell width: ${schedulesExample.minCellWidth}px` : 'Add min cell width' }}
-
-    w-button.px2.mr2.my1(
-      :outline="!schedulesExample.minScheduleWidth"
-      @click="schedulesExample.minScheduleWidth = schedulesExample.minScheduleWidth ? 0 : 200")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
-      | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
-
-    w-button.px2.my1(
-      :outline="schedulesExample.schedules[1].hide"
-      @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
-      w-icon.mr2 mdi mdi-{{ schedulesExample.schedules[1].hide ? 'plus' : 'close' }}
-      | {{ schedulesExample.schedules[1].hide ? 'Show' : 'Hide' }} Dad
-
-.example.grow.my2(style="height: 600px")
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
@@ -193,84 +219,6 @@ example(title="schedules &amp; schedule events" anchor="schedules")
     :schedules="schedulesExample.schedules"
     :min-cell-width="schedulesExample.minCellWidth"
     :min-schedule-width="schedulesExample.minScheduleWidth")
-ssh-pre(language="html-vue" :dark="store.darkMode").
-  &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-    {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
-  &lt;/button&gt;
-  &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
-    {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
-  &lt;/button&gt;
-  &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
-    Show/Hide Dad
-  &lt;/button&gt;
-
-  &lt;vue-cal
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-step="30"
-    :views="['day', 'week']"
-    editable-events
-    :events="events"
-    :schedules="schedules"
-    :min-cell-width="minCellWidth"
-    :min-schedule-width="minScheduleWidth"&gt;
-  &lt;/vue-cal&gt;
-
-ssh-pre(language="js" :dark="store.darkMode").
-  data: () => ({
-    minCellWidth: 400,
-    minScheduleWidth: 0,
-    schedules: [
-      // The id property is added automatically if none (starting from 1), but you can set a custom one.
-      // If you need to toggle the schedules, you must set the id explicitly.
-      { id: 1, class: 'mom', label: 'Mom' },
-      { id: 2, class: 'dad', label: 'Dad', hide: false },
-      { id: 3, class: 'kid1', label: 'Kid 1' },
-      { id: 4, class: 'kid2', label: 'Kid 2' },
-      { id: 5, class: 'kid3', label: 'Kid 3' }
-    ]
-    events: [
-      {
-        start: '2018-11-19 10:35',
-        end: '2018-11-19 11:30',
-        title: 'Doctor appointment',
-        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-        class: 'health',
-        schedule: 1 // Has to match the id of the schedule you have set (or integers if none).
-      },
-      {
-        start: '2018-11-19 18:30',
-        end: '2018-11-19 19:15',
-        title: 'Dentist appointment',
-        content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-        class: 'health',
-        schedule: 2
-      },
-      {
-        start: '2018-11-20 18:30',
-        end: '2018-11-20 20:30',
-        title: 'Cross-fit',
-        content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
-        class: 'sport',
-        schedule: 1
-      },
-      ...
-    ]
-  })
-
-ssh-pre(language="css" :dark="store.darkMode").
-  /* You can easily set a different style for each schedule of your days. */
-  .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-  .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-  .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-  .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-  .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
-
-  .vuecal__event {color: #fff;border: 1px solid;}
-  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
-  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
-  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
 </template>
 
 <script setup>
@@ -434,32 +382,26 @@ const scheduleEvents = [
 
 <style lang="scss">
 .main--examples-schedules {
-  .ex--special-hours {
-    .business-hours {
-      background-color: rgba(255, 255, 0, 0.15);
-      border: solid rgba(255, 210, 0, 0.3);
-      border-width: 2px 0;
-    }
-  }
-
-  .ex--doctor-hours {
+  .example--special-hours {
     .vuecal__special-hours {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 4px;
+      text-align: center;
 
-      em {font-size: 0.9em;color: #999;}
-    }
+      &.doctor-1 {background-color: hsl(127deg 43% 60% / 15%);color: hsl(127, 50%, 67%);}
+      &.doctor-2 {background-color: hsl(217deg 43% 60% / 15%);color: hsl(217, 80%, 67%);}
+      &.doctor-3 {background-color: hsl(287deg 43% 60% / 15%);color: hsl(287, 80%, 67%);}
+      &.closed {
+        background: repeating-linear-gradient(-45deg, rgba(#fff, 0) 0 6px, rgba(#ffa257, 0.15) 6px 20px);
+        color: hsl(27, 90%, 63%);
+      }
 
-    .doctor-1 {background-color: rgb(240, 255, 241);color: rgb(129, 213, 139);}
-    .doctor-2 {background-color: hsl(217, 100%, 97%);color: hsl(217, 80%, 67%);}
-    .doctor-3 {background-color: hsl(287, 100%, 97%);color: hsl(287, 80%, 69%);}
-    .closed {
-      background: hsl(27, 100%, 97%) repeating-linear-gradient(-45deg, hsla(27, 100%, 67%, 0.25), hsla(27, 100%, 67%, 0.25) 5px, rgba(255, 255, 255, 0) 5px, rgba(255, 255, 255, 0) 15px);
-      color: hsl(27, 90%, 63%);
+      em {
+        font-size: 0.9em;
+        color: #999;
+        line-height: 1.15;
+      }
     }
   }
+
   // Schedules example.
   .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
   .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
