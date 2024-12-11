@@ -29,12 +29,14 @@ example(title="Simple Slots" anchor="slots")
       This example highlights the simplest and most commonly used slots.
 
     .w-flex.column.gap1
-      w-switch(v-model="exSlots.title") Custom title via #[code.mx1 title] slot
-      w-switch(v-model="exSlots.prevNextButtons") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
-      w-switch(v-model="exSlots.todayButton") Custom today button via #[code.mx1 today-button] slot
-      w-switch(v-model="exSlots.weekdayHeading") Custom weekday labels via #[code.mx1 weekday-heading] slot
-      w-switch(v-model="exSlots.timeCell") Custom weekday labels via #[code.mx1 time-cell] slot
-      w-switch(v-model="exSlots.cellContent") Custom weekday labels via #[code.mx1 cell-content] slot
+      w-switch(v-model="exSlots.title" :disabled="exSlots.header") Custom title via #[code.mx1 title] slot
+      w-switch(v-model="exSlots.prevNextButtons" :disabled="exSlots.header") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
+      w-switch(v-model="exSlots.todayButton" :disabled="exSlots.header") Custom today button via #[code.mx1 today-button] slot
+      w-switch(v-model="exSlots.weekdayHeading" :disabled="exSlots.header") Custom weekday labels via #[code.mx1 weekday-heading] slot
+      w-switch(v-model="exSlots.header") Custom header via #[code.mx1 header] slot
+      w-switch(v-model="exSlots.timeCell") time cell labels via #[code.mx1 time-cell] slot
+      w-switch(v-model="exSlots.cellContent") Custom cell content via #[code.mx1 cell-content] slot
+      w-switch(v-model="exSlots.diy") DIY via #[code.mx1 diy] slot!
 
   template(#code-html).
     &lt;vue-cal
@@ -79,7 +81,8 @@ example(title="Simple Slots" anchor="slots")
     ref="vuecal2"
     :dark="store.darkMode"
     :time-from="9 * 60"
-    :time-to="14 * 60")
+    :time-to="14 * 60"
+    v-model:view="exSlots.view")
     template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
       w-tooltip(left)
         template(#activator="{ on }")
@@ -92,6 +95,18 @@ example(title="Simple Slots" anchor="slots")
             icon="mdi mdi-calendar-today"
             :icon-props="{ size: '1.2rem' }")
         span Go to Today's date
+    template(#header="{ view, availableViews }" v-if="exSlots.header")
+      .w-flex.gap2.pa1.align-center(:class="store.darkMode ? 'orange-dark3--bg' : 'orange-light5--bg'")
+        w-button(color="base-color" icon="wi-chevron-left")
+        .base-color(v-html="view.title")
+        w-button(color="base-color" icon="wi-chevron-right")
+        .w-flex.gap2.mla.no-grow
+          w-button.text-upper(
+            v-for="(grid, viewId) in availableViews"
+            @click="exSlots.view = viewId"
+            color="base-color"
+            :outline="view.id === viewId"
+            sm) {{ viewId }}
     template(#title="{ title }" v-if="exSlots.title")
       code.orange-light2(v-html="title")
     template(#weekday-heading="{ label, id }" v-if="exSlots.weekdayHeading")
@@ -104,6 +119,7 @@ example(title="Simple Slots" anchor="slots")
       strong.orange-light2(md) {{ format24 }}
     template(#cell-content v-if="exSlots.cellContent")
       w-icon.orange-light2(lg) mdi mdi-party-popper
+    template(#diy="{ vuecal, view }" v-if="exSlots.diy") {{ view }}<br><br>{{ vuecal }}
 
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
@@ -509,7 +525,10 @@ const exSlots = reactive({
   nextButton: ref(false),
   weekdayHeading: ref(false),
   timeCell: ref(false),
-  cellContent: ref(false)
+  cellContent: ref(false),
+  header: ref(false),
+  diy: ref(false),
+  view: ref('week')
 })
 
 const customDayScheduleHeadings = [
