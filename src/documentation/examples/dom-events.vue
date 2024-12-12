@@ -10,11 +10,11 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         | official Vue documentation.
         w-icon.ml1(color="primary") mdi mdi-open-in-new
 
-    h4.w-flex.justify-space-between.mb2.mt4
+    h4.w-flex.justify-space-between.mb0.mt4
       title-link(div anchor="emitted-events-list")
         .title3 Emitted Events List
       w-switch.my1.body(@update:model-value="exEmittedEvents.expandedEmittedEvents = Array(30).fill($event)") Expand All
-    w-divider
+    w-divider.mb2
 
     w-accordion(
       v-model="exEmittedEvents.expandedEmittedEvents"
