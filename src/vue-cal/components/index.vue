@@ -108,7 +108,9 @@ const wrapperStyles = computed(() => ({
 
 const scrollableElClasses = computed(() => ({
   'vuecal__scrollable--row': hasTimeColumn.value,
-  [`vuecal__scrollable--${view.id}-view`]: true
+  // Keep the states inside the Vue transition wrapper for smooth CSS transitions.
+  [`vuecal__scrollable--${view.id}-view`]: true,
+  'vuecal__scrollable--has-schedules': config.schedules?.length
 }))
 
 onMounted(async () => {

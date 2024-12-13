@@ -12,9 +12,9 @@
   user-select: none;
 
   &--date-picker {--vuecal-headings-bar-height: 1.3rem;}
-  &--has-schedules {--vuecal-headings-bar-height: 2.2rem;}
+  &--has-schedules {--vuecal-headings-bar-height: 2.4rem;}
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view {--vuecal-headings-bar-height: 1.2rem;}
+  &--has-schedules .vuecal__scrollable--day-view {--vuecal-headings-bar-height: 1.3rem;}
 
   &, *, :before, :after {box-sizing: border-box;}
 
@@ -52,7 +52,9 @@
     align-items: center;
   }
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view &__schedule--heading {height: var(--vuecal-headings-bar-height);}
+  .vuecal__scrollable--has-schedules.vuecal__scrollable--day-view &__schedule--heading {
+    height: var(--vuecal-headings-bar-height);
+  }
 }
 
 // Transitions.

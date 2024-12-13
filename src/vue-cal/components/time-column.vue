@@ -80,7 +80,7 @@ const timeCells = computed(() => {
     line-height: 0;
   }
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  .vuecal:not(.vuecal--has-schedules) .vuecal__scrollable--day-view &:first-child label {
+  .vuecal__scrollable--day-view:not(.vuecal__scrollable--has-schedules) &:first-child label {
     margin-top: 0.6em;
     font-size: 0.9em;
     opacity: 0.4;
