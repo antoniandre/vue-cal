@@ -2,6 +2,8 @@
 //- Example.
 example(title="Special Hours (or Business Hours)" anchor="special-hours")
   template(#desc)
+    .todo-tag.d-iflex MAKE THIS INTERACTIVE
+    .todo-tag.d-iflex.ml2 FIX SOURCE CODE SCROLL
     p.
       The special hours are visible on #[span.code week] and #[span.code day] views and allow
       you to highlight a particular time range on each day of the week individually.#[br]
@@ -96,8 +98,10 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
     style="height: 550px")
 
 //- Example.
-example(title="schedules & schedule events" anchor="schedules")
+example(title="Schedules & Schedule Events" anchor="schedules")
   template(#desc)
+    .todo-tag.d-iflex REDO COLORS
+    .todo-tag.d-iflex.ml2 ADD MIN-WIDTH &amp; HIDE DAD
     .mb6
       | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
       br
@@ -219,6 +223,8 @@ example(title="schedules & schedule events" anchor="schedules")
     :schedules="schedulesExample.schedules"
     :min-cell-width="schedulesExample.minCellWidth"
     :min-schedule-width="schedulesExample.minScheduleWidth")
+
+.todo-tag.d-iflex.mt6 ADD EXAMPLE WITH SCHEDULE EVENTS
 </template>
 
 <script setup>

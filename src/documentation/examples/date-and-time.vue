@@ -2,6 +2,7 @@
 //- Example.
 example(title="Timeline" anchor="timeline")
   template(#desc)
+    .todo-tag.d-iflex MAKE THIS INTERACTIVE
     p.
       Timelines are only visible on #[span.code day], #[span.code days] and #[span.code week] views.#[br]
       This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
@@ -206,6 +207,8 @@ example(title="Disable Days" anchor="disable-days")
 //- Example.
 example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hiding-particular-week-days")
   template(#desc)
+    .todo-tag.d-iflex DO WEEK NUMBERS PROP
+    .todo-tag.d-iflex.ml2 MAKE THIS INTERACTIVE
     p.
       If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
       option.#[br]It accepts an array of strings for the days to hide as follows:

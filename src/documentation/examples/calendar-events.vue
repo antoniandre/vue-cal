@@ -170,7 +170,7 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     v-if="exOpenEventDetails.event"
     v-model="exOpenEventDetails.showDialog"
     :title="exOpenEventDetails.event.title"
-    width="300")
+    width="380")
     .w-flex.align-center.justify-end.gap2
       w-icon.grey mdi mdi-calendar
       small {{ exOpenEventDetails.event.start.format() }}
@@ -292,6 +292,7 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
 //- Example.
 example(title="Edit & Delete Events" anchor="edit-and-delete-events")
   template(#desc)
+    .todo-tag.d-iflex FINISH THIS EXAMPLE
     p.mb2.
       The #[code editable-events] option allows or prevent all the following actions when set to
       #[code true] or #[code false]:
@@ -360,6 +361,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :events="exEditEvents.events"
     @event-dblclick="exEditEvents.deleteEvent")
 
+.todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
 //- Example.
 //- example(title="Create Events" anchor="create-events")
   template(#desc)

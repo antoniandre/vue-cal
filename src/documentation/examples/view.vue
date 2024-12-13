@@ -153,6 +153,7 @@ example(title="Internationalization" anchor="internationalization")
 //- Example.
 example(title="CSS Control" anchor="css-variables")
   template(#desc)
+    .todo-tag.d-iflex MAKE THIS INTERACTIVE
     p When you're using the default theme, a few CSS variables will help you easily customize the calendar.
   template(#code-css).
     --vuecal-primary-color: #1976D2;

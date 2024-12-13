@@ -16,6 +16,7 @@ w-accordion(
 
 h2.w-flex.justify-space-between.mt12.mb2
   title-link(div anchor="view") The View Object
+  .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedViewVars = [...views].fill($event)") Expand All
 p.caption.size--md.
   You can use the #[code.base-color view] object to access accurate information about the current view at any time.
@@ -133,6 +134,7 @@ w-accordion.mt3(
 
 h2.w-flex.justify-space-between.mt12.mb2
   title-link(div anchor="options") Options
+  .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
 
 p.caption.size--md.lh1.
@@ -897,6 +899,7 @@ w-accordion.mt2(
           #[span.code showAllDayEvents] accepts a #[span.code Boolean] or the string
           #[span.code 'short'], to display only the event title.
 
+.todo-tag.d-iflex.mt6 ADD SLOTS &amp; EMITTED EVENTS?
 </template>
 
 <script setup>

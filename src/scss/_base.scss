@@ -175,6 +175,16 @@ ul {
 // Shared classes & styles.
 // --------------------------------------------------------
 .ovh {overflow: hidden;}
+.todo-tag {
+  background: var(--w-error-color);
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 12px;
+  line-height: 1.4;
+  border-radius: 99em;
+  align-self: center;
+  padding: 1px 10px 0;
+}
 .scrollable {
   height: 250px;
   overflow-y: scroll;
