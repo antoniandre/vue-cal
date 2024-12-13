@@ -44,6 +44,7 @@ p.
 
 .highlight-box.grow.mt4
   .title2 Demos on Codepen
+    .todo-tag.d-iflex.ml2 REVIEW EXAMPLES
   p.body.mb4.grey Try it yourself.
   .w-flex.align-center
     w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="2.8em") mdi mdi-codepen

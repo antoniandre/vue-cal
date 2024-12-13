@@ -21,6 +21,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
       expand-icon-rotate90
       title-class="pa0 bd0 body"
       content-class="pt0 pb3")
+      .todo-tag.d-iflex REVIEW &amp; COMPLETE
       h5.mt2 View-related
       w-accordion-item
         template(#title)
@@ -123,7 +124,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         template(#title)
           code event-drop
         template(#content)
-          p returns an object containing:
+          p Returns an object containing:
           ul
             li #[span.code event], the calendar event object that was dropped
             li #[span.code oldDate], the Javascript Date the event was starting from before drag
@@ -175,7 +176,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
             So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
             You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
-    p.mb0 Better than theory, observe the events real-time in this logs box while interacting with Vue Cal:
+    p.mt4.mb0 Better than theory, observe the events real-time in this logs box while interacting with Vue Cal:
     .logs-box.my2.bd1.bdrs2.ovh
       .w-flex.wrap.align-center.justify-end.ml2.mr1
         .grey //&nbsp;
@@ -413,15 +414,17 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
       vue-cal(
         :views-bar="false"
         date-picker
-        @cell-focus="selectedDate = $event"
-        hide-weekends
+        v-model:selected-date="exSyncTwoCalendars.selectedDate"
+        @update:selected-date="exSyncTwoCalendars.viewDate = $event"
+        :view-date="exSyncTwoCalendars.viewDate"
         :dark="store.darkMode")
       vue-cal.grow(
-        :views-bar="false"
+        v-model:view-date="exSyncTwoCalendars.viewDate"
+        v-model:selected-date="exSyncTwoCalendars.selectedDate"
+        @update:view-date="exSyncTwoCalendars.viewDate = $event"
         view="week"
         :views="['day', 'week']"
-        :selected-date="selectedDate"
-        hide-weekends
+        :views-bar="false"
         :dark="store.darkMode"
         sm)
 
@@ -602,7 +605,8 @@ const exExternalControls = reactive({
 })
 
 const exSyncTwoCalendars = reactive({
-
+  selectedDate: ref(null),
+  viewDate: ref(null)
 })
 </script>
 

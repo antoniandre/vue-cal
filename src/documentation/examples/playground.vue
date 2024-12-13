@@ -77,6 +77,7 @@
     v-model:view="mainVuecalConfig.view"
     v-model:selected-date="mainVuecalConfig.selectedDate"
     v-model:view-date="mainVuecalConfig.viewDate"
+    @update:view-date="pickerConfig.viewDate = $event"
     v-bind="mainVuecalConfig"
     @event-create="eventCreation.open"
     @event-mousedown="log('event-mousedown', $event)"
