@@ -267,11 +267,12 @@ $kate: #406fbf;
       color: #fff;
     }
   }
-  &.full-cal .vuecal__weekday {
+  &.full-cal .vuecal__schedule--heading {
     color: color-mix(in srgb, var(--w-base-color) 50%, transparent);
     font-weight: 500;
+    opacity: 0.8;
   }
-  .vuecal__weekday .w-icon {color: inherit;}
+  .vuecal__schedule--heading .w-icon {color: inherit;}
 
   .vuecal__event {
     border-color: color-mix(in srgb, currentColor 20%, transparent);
@@ -288,7 +289,7 @@ $kate: #406fbf;
 
   // John.
   .vuecal__body .john {background-color: rgba($john, 0.04);}
-  .vuecal__weekday .john {color: $john;}
+  .vuecal__schedule--heading.john {color: $john;}
   .john .vuecal__event {
     background-color: color.adjust($john, $lightness: 40%);
     color: color.adjust($john, $lightness: -10%, $saturation: -20%);
@@ -300,7 +301,7 @@ $kate: #406fbf;
 
   // Kate.
   .vuecal__body .kate {background-color: rgba($kate, 0.04);}
-  .vuecal__weekday .kate {color: $kate;}
+  .vuecal__schedule--heading.kate {color: $kate;}
   .kate .vuecal__event {
     background-color: color.adjust($kate, $lightness: 40%);
     color: color.adjust($kate, $lightness: -10%, $saturation: -20%);

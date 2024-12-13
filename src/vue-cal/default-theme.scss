@@ -126,21 +126,48 @@
   }
 
   .vuecal__weekday {
+    display: flex;
+    justify-content: center;
     padding: 2px 1px;
     overflow: hidden;
     letter-spacing: -0.03em;
     text-overflow: ellipsis;
-    display: block;
+    gap: 4px;
     font-size: 0.95em;
+
+    &-day {
+      display: inline-block; // For ellipsis.
+      overflow: hidden;
+      text-overflow: ellipsis;
+      opacity: 0.8;
+    }
+    &-date {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      background: color-mix(in srgb, var(--vuecal-base-color) 15%, transparent);
+      // background: color-mix(in srgb, var(--vuecal-primary-color) 20%, transparent);
+      aspect-ratio: 1;
+      width: 1.7em;
+      border-radius: 99em;
+      overflow: hidden;
+      line-height: 1;
+      font-size: 0.9em;
+      letter-spacing: -0.1em;
+      text-indent: -0.15em;
+    }
   }
-  &.vuecal--has-schedules .vuecal__weekday {
-    padding-left: 0;
-    padding-right: 0;
-  }
-  &.vuecal--has-schedules .vuecal__scrollable--day-view .vuecal__schedule-headings {
+  &.vuecal--light .vuecal__weekday-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 20%, transparent);}
+  &.vuecal--light .vuecal__weekday--today .vuecal__weekday-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 80%, transparent);color: #fff;}
+
+  &.vuecal--has-schedules .vuecal__weekday {padding: 0;}
+  &.vuecal--has-schedules .vuecal__weekday-date {width: 1.5em;}
+  &.vuecal--has-schedules .vuecal__scrollable--day-view .vuecal__schedules-headings {
     position: sticky;
     inset: 0 0 auto;
   }
+
   // Calendar Body.
   // ------------------------------------------------------
   .vuecal__cell {

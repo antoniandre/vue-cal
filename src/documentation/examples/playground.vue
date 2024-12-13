@@ -332,7 +332,7 @@ const eventCreation = reactive({
 
   // Min cell width example.
   // --------------------------------------------------------
-  // .vuecal__weekdays-bar {margin: auto;} // So it will fill up the whole available space.
+  // .vuecal__headings-bar {margin: auto;} // So it will fill up the whole available space.
   // .vuecal__weekday,
   // .vuecal--week-view .vuecal__cell,
   // .vuecal--days-view .vuecal__cell {min-width: 300px;}

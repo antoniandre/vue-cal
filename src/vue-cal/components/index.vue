@@ -34,21 +34,11 @@
             template(v-if="$slots['time-cell']" #time-cell="params")
               slot(name="time-cell" v-bind="params")
           .vuecal__body-wrap
-            WeekdaysBar
+            HeadingsBar
               template(#weekday-heading="params")
                 slot(name="weekday-heading" v-bind="params")
               template(#schedule-heading="params")
                 slot(name="schedule-heading" v-bind="params")
-            .vuecal__schedule-headings(v-if="config.schedules && view.isDay")
-              template(v-for="(schedule, i) in config.schedules" :key="i")
-                .vuecal__schedule.vuecal__schedule--heading(
-                  v-if="$slots['schedule-heading']"
-                  :class="schedule.class")
-                  slot(name="schedule-heading" :schedule="schedule" :view="view")
-                .vuecal__schedule.vuecal__schedule--heading(
-                  v-else
-                  :class="schedule.class"
-                  v-html="schedule.label")
 
             VueCalBody(
               @cell-drag-start="isDraggingCell = true"
@@ -70,9 +60,9 @@ import { computed, nextTick, onMounted, provide, ref, useAttrs, useTemplateRef, 
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
-import VueCalBody from './body.vue'
-import WeekdaysBar from './weekdays-bar.vue'
+import HeadingsBar from './headings-bar.vue'
 import TimeColumn from './time-column.vue'
+import VueCalBody from './body.vue'
 import '../index.scss'
 import '../default-theme.scss'
 

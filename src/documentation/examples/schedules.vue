@@ -205,7 +205,7 @@ example(title="Schedules & Schedule Events" anchor="schedules")
     .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
     .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
     .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-    .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;}
+    .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 26px;}
 
     .vuecal__event {color: #fff;border: 1px solid;}
     .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
@@ -414,12 +414,12 @@ const scheduleEvents = [
   .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
   .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
   .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.1);font-size: 26px;font-weight: 500;}
+  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 26px;font-weight: 500;}
 
   .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
 
   // Schedules headings example.
-  .ex--custom-schedule-headings {
+  .ex--custom-schedules-headings {
     .schedule-heading {font-size: 11px;}
     .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
     .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
@@ -432,8 +432,8 @@ const scheduleEvents = [
 // --------------------------------------------------------
 @media screen and (max-width: 800px) {
   .main--examples-schedules {
-    .vuecal--week-view.ex--custom-schedule-headings .vuecal__schedule--heading .w-icon {display: none;}
-    .ex--custom-schedule-headings .vuecal__schedule--heading strong {
+    .vuecal--week-view.ex--custom-schedules-headings .vuecal__schedule--heading .w-icon {display: none;}
+    .ex--custom-schedules-headings .vuecal__schedule--heading strong {
       overflow: hidden;
       width: 0.9em;
       font-size: 13px;

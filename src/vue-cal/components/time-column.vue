@@ -43,7 +43,7 @@ const timeCells = computed(() => {
   display: flex;
   flex-direction: column;
   align-self: flex-start; // Fill height.
-  padding-top: var(--vuecal-weekdays-bar-height);
+  padding-top: var(--vuecal-headings-bar-height);
   background-color: var(--vuecal-secondary-color);
   position: sticky;
   left: 0;
@@ -54,7 +54,7 @@ const timeCells = computed(() => {
 
   .vuecal__scrollable--day-view & {padding-top: 0;}
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  .vuecal--has-schedules .vuecal__scrollable--day-view & {padding-top: var(--vuecal-weekdays-bar-height);}
+  .vuecal--has-schedules .vuecal__scrollable--day-view & {padding-top: var(--vuecal-headings-bar-height);}
 }
 
 .vuecal__time-cell {

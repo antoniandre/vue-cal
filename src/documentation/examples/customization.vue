@@ -434,7 +434,7 @@ example(title="Custom event Rendering" anchor="custom-event-rendering")
         span {{ event.end.formatTime('h O\'clock') }}
 
 //- Example.
-example(title="Custom Day Schedule Headings" anchor="custom-schedule-headings")
+example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings")
   template(#desc)
     p.mb6 You can define a custom schedule heading through slot.
   template(#code-html).
