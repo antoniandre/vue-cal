@@ -79,7 +79,7 @@ hero
 </template>
 
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import TopBar from '@/documentation/components/top-bar.vue'
 import Hero from './hero.vue'
 
@@ -89,13 +89,14 @@ defineProps({
 
 const ready = ref(false)
 
-nextTick(() => (ready.value = true))
+onMounted(() => setTimeout(() => (ready.value = true), 300))
 </script>
 
 <style lang="scss">
 .page--home {
   flex-direction: column;
   padding-top: 8rem;
+  overflow: hidden;
 
   .hero {margin-top: 6rem;}
 

@@ -1,5 +1,5 @@
 <template lang="pug">
-.hero
+.hero(:class="{ ready }")
   .mb10.tagline
     .title2.grey-dark1 Go for the date picker...
     .title1.text-right.primary-dark1 or unleash the full potential!
@@ -9,7 +9,7 @@
       vue-cal.vuecal--date-picker.demo(
         :dark="store.darkMode"
         date-picker
-        v-model:view="month"
+        view="month"
         v-model:selected-date="selectedDate"
         :views-bar="false"
         :transitions="false"
@@ -45,11 +45,12 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, formatDate, addDays } from '@/vue-cal'
 
 const store = useAppStore()
+const ready = ref(false)
 
 const demoExample = ref({
   schedules: [{ label: 'Dr. John', class: 'john' }, { label: 'Dr. Kate', class: 'kate' }],
@@ -139,6 +140,8 @@ demoExample.value.events.push(
     schedule: 2
   }
 )
+
+onMounted(() => setTimeout(() => (ready.value = ready), 400))
 </script>
 
 <style lang="scss">
@@ -146,6 +149,21 @@ demoExample.value.events.push(
 
 $john: #40bfa8;
 $kate: #406fbf;
+
+.page--home {
+  .top-bar {
+    transform: scale(1.2);
+    opacity: 0;
+    filter: blur(50px);
+    transition: 1.5s ease-in-out;
+  }
+
+  .ready .top-bar {
+    transform: none;
+    opacity: 1;
+    filter: none;
+  }
+}
 
 .hero {
   position: relative;
@@ -172,11 +190,43 @@ $kate: #406fbf;
   .tagline {
     max-width: 500px;
     margin: 0 auto 5rem;
+    opacity: 0;
+    transform: translateX(-0.5rem);
+    filter: blur(20px);
+    transform-origin: left;
+    transition: 0.5s 1s ease-in-out, transform 2s 1s ease-in-out;
 
-    .title1 {letter-spacing: normal;}
+    .title1 {
+      letter-spacing: normal;
+      opacity: 0;
+      transition: 1s 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+      transform: translateY(0.4rem) scale(0.9);
+    }
   }
 
-  .hero-calendars {position: relative;}
+  .hero-calendars {
+    position: relative;
+    opacity: 0;
+    transform: scale(1.5);
+    filter: blur(40px);
+    transition: 1s 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+  }
+}
+
+.hero.ready {
+  .tagline {
+    filter: none;
+    opacity: 1;
+    transform: translateX(0);
+
+    .title1 {opacity: 1;transform: translateY(0);}
+  }
+
+  .hero-calendars {
+    opacity: 1;
+    transform: scale(1);
+    filter: none;
+  }
 }
 
 .demo {
