@@ -61,8 +61,9 @@
   button.vuecal__title {
     background: none;
     border: none;
-    cursor: pointer;
     color: inherit;
+
+    &:not([disabled]) {cursor: pointer;}
   }
   .vuecal__view-button {
     text-transform: uppercase;
