@@ -7,23 +7,21 @@
     .datepicker-wrap.ma4
       //- Date picker.
       vue-cal.vuecal--date-picker.demo(
-        :dark="store.darkMode"
         date-picker
         view="month"
         v-model:selected-date="selectedDate"
+        @update:selected-date="viewDate = $event"
+        :view-date="viewDate"
         :views-bar="false"
-        :transitions="false"
-        :events="demoExample.events"
-        @cell-click="selectedDate = $event")
+        :dark="store.darkMode")
       .code.base-color.transparent--bg.mt2.text-center(style="font-size: 12px").
         Selected date: {{ formatDate(selectedDate) }}
 
     .grow.mx2(style="max-width: 800px")
       //- Full-power calendar.
       vue-cal.demo.full-cal(
-        :dark="store.darkMode"
-        hide-weekends
-        :selected-date="selectedDate"
+        v-model:selected-date="selectedDate"
+        v-model:view-date="viewDate"
         :time-from="9 * 60"
         :time-step="20"
         :time-to="18 * 60"
@@ -31,10 +29,11 @@
         :schedules="demoExample.schedules"
         :editable-events="demoExample.editable"
         :events="demoExample.events"
-        @cell-focus="selectedDate = $event.date || $event"
+        hide-weekends
+        :dark="store.darkMode"
         style="height: 450px")
         template(#schedule-heading="{ schedule, view }")
-          w-icon(:color="schedule.color" size="20") mdi mdi-account
+          w-icon.mr1(:color="schedule.color" size="15") mdi mdi-account
           strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
       .w-flex.justify-end.wrap.mt2
         a.w-flex.justify-end.grey-light1(
@@ -58,7 +57,8 @@ const demoExample = ref({
   events: []
 })
 
-const selectedDate = new Date()
+const selectedDate = ref(new Date())
+const viewDate = ref(new Date())
 
 // Get the Monday of the real time current week.
 const previousFirstDayOfWeek = computed(() => {
