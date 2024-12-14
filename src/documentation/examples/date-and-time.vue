@@ -207,22 +207,31 @@ example(title="Disable Days" anchor="disable-days")
 //- Example.
 example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hiding-particular-week-days")
   template(#desc)
-    .todo-tag.d-iflex DO WEEK NUMBERS PROP
-    .todo-tag.d-iflex.ml2 MAKE THIS INTERACTIVE
-    p.
-      If you want to hide particular days of the week, you can use the #[span.code hide-weekdays]
-      option.#[br]It accepts an array of strings for the days to hide as follows:
-      #[code="['mon', 'tue', 'wed', 'fri', 'sat', 'sun']"].#[br]
-      This option will apply on #[span.code days], #[span.code week] &amp; #[span.code month] views.#[br]
-      You can show the weeks numbers column on the #[span.code month] view with the #[span.code show-week-numbers] option.#[br]
-      You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+    ul
+      li.
+        If you want to hide particular days of the week, you can provide an array through the
+        #[span.code hide-weekdays] option. Possible values: #[code="['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']"].#[br]
+        This option will apply on #[span.code days], #[span.code week] &amp; #[span.code month] views.#[br]
+      li.
+        You can show the weeks numbers column on the #[span.code month] view with the #[span.code week-numbers] option.#[br]
+        You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
+
+    .w-flex.justify-end.gap2.align-center
+      w-switch.mr2(v-model="exHideWeekDays.weekNumbers" label-color="base") Show Week Numbers
+      label Days to Hide:
+      w-select(
+        v-model="exHideWeekDays.weekdaysToHide"
+        :items="exHideWeekDays.weekdays.map(day => ({ label: day }))"
+        multiple
+        fit-to-content
+        placeholder="Weekdays")
   template(#code-html).
     &lt;vue-cal
-      show-week-numbers
+      week-numbers
       :hide-weekdays="['tue', 'wed', 'fri']" /&gt;
   vue-cal(
-    show-week-numbers
-    :hide-weekdays="['tue', 'wed', 'fri']"
+    :week-numbers="exHideWeekDays.weekNumbers"
+    :hide-weekdays="exHideWeekDays.weekdaysToHide"
     :dark="store.darkMode")
 </template>
 
@@ -262,6 +271,12 @@ const exScrollToTime = reactive({
     exScrollToTime.scrollToCurrentTime = view.scrollToCurrentTime
     view.scrollToCurrentTime()
   }
+})
+
+const exHideWeekDays = reactive({
+  weekdays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
+  weekdaysToHide: ref(['tue', 'wed', 'fri']),
+  weekNumbers: ref(false)
 })
 
 const minDate = computed(() => new Date().subtractDays(10))

@@ -101,6 +101,7 @@ ul
       li scrollToCurrentTime()
   li #[code .vuecal--full-height-delete] class was removed
   li #[code #no-event] slot was removed
+  li #[code #week-numbers-cell] slot was renamed #[code #week-number]
 
 title-link.mt12(h2 anchor="props-changes") Props Changes
 ul
