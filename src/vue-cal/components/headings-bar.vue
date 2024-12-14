@@ -73,9 +73,9 @@ const domEvents = {
     flex-direction: column;
     flex-shrink: 0;
     z-index: 1;
-    background-color: var(--vuecal-secondary-color);
     height: var(--vuecal-headings-bar-height);
     white-space: nowrap;
+    background-color: var(--vuecal-secondary-color);
   }
 
   &__weekdays-headings {display: flex;}
@@ -84,11 +84,6 @@ const domEvents = {
     flex: 1 1 0;
     align-items: center;
     background-color: inherit;
-
-    &--today {
-      color: color-mix(in srgb, var(--vuecal-primary-color) 80%, var(--vuecal-base-color));
-      font-weight: bold;
-    }
 
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}

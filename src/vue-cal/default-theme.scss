@@ -136,6 +136,8 @@
     gap: 4px;
     font-size: 0.95em;
 
+    &--today {font-weight: bold;}
+
     &-day {
       display: inline-block; // For ellipsis.
       overflow: hidden;
@@ -148,7 +150,6 @@
       justify-content: center;
       flex-shrink: 0;
       background: color-mix(in srgb, var(--vuecal-base-color) 15%, transparent);
-      // background: color-mix(in srgb, var(--vuecal-primary-color) 20%, transparent);
       aspect-ratio: 1;
       width: 1.7em;
       border-radius: 99em;
@@ -158,17 +159,18 @@
       letter-spacing: -0.1em;
       text-indent: -0.15em;
     }
+    &--today .vuecal__weekday-date {
+      background-color: color-mix(in srgb, var(--vuecal-primary-color) 80%, transparent);
+      color: #fff;
+    }
   }
-  &.vuecal--light .vuecal__weekday-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 20%, transparent);}
-  &.vuecal--light .vuecal__weekday--today .vuecal__weekday-date {background-color: color-mix(in srgb, var(--vuecal-primary-color) 80%, transparent);color: #fff;}
+  &.vuecal--light .vuecal__weekday:not(.vuecal__weekday--today) .vuecal__weekday-date {
+    background-color: color-mix(in srgb, var(--vuecal-primary-color) 20%, transparent);
+  }
 
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   .vuecal__scrollable--has-schedules .vuecal__weekday {padding: 0;}
   .vuecal__scrollable--has-schedules .vuecal__weekday-date {width: 1.5em;}
-  .vuecal__scrollable--has-schedules.vuecal__scrollable--day-view .vuecal__schedules-headings {
-    position: sticky;
-    inset: 0 0 auto;
-  }
 
   // Calendar Body.
   // ------------------------------------------------------

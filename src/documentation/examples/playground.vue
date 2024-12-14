@@ -109,7 +109,7 @@ w-dialog(
   width="300"
   @close="eventCreation.cancel")
   w-input(v-model="eventCreation.event.title") Event Title
-  w-input(v-model="eventCreation.event.class") Event class
+  w-input(v-model="eventCreation.event.class") Event Class
   w-switch.my2(v-model="eventCreation.event.background") Background
   .w-flex.justify-end.mt2.gap2
     w-button(@click="eventCreation.cancel") Cancel
@@ -365,5 +365,27 @@ const eventCreation = reactive({
     .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}
     .vuecal--dark &.dr-2 {background-color: rgba(131, 184, 255, 0.1);}
   }
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: $sm) {
+  .main--playground aside {
+    position: absolute;
+    bottom: 5px;
+    left: 5px;
+    z-index: 10;
+    background: var(--w-base-bg-color);
+  }
+  .vue-cal--main {margin-left: 80px;}
+}
+
+@media screen and (max-width: $xs) {
+  .main--playground aside {
+    bottom: -8px;
+    left: -8px;
+    transform: scale(0.9);
+  }
+  .vue-cal--main {margin-left: 0;}
 }
 </style>

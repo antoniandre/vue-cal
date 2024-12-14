@@ -1,7 +1,7 @@
 .vuecal {
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-headings-bar-height: 1.6rem;
+  --vuecal-headings-bar-height: 1.7rem;
   --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
   // When there are too many day cells to fit in the view, setting a min cell width will help
   // visualizing and a horizontal scrollbar will be added.
