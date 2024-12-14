@@ -47,6 +47,7 @@ export const props = {
   views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
   viewsBar: { type: Boolean, default: true }, // Show or hide the headers view selection bar.
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
+  weekNumbers: { type: [Boolean, String], default: false }, // Show the weeks numbers in a column on month view.
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO NEXT:
@@ -54,7 +55,6 @@ export const props = {
   // This prevents drag creation by mistake when you want to navigate.
   dragToCreateThreshold: { type: Number, default: 15 },
   snapToTime: { type: Number, default: 0 },
-  weekNumbers: { type: [Boolean, String], default: false },
 
   // TODO:
   eventsCountOnYearView: { type: Boolean, default: false },

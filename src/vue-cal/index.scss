@@ -17,6 +17,15 @@
   &--has-schedules .vuecal__scrollable--day-view {--vuecal-headings-bar-height: 1.3rem;}
 
   &, *, :before, :after {box-sizing: border-box;}
+  .grow {flex-grow: 1;}
+
+  &__body-wrap {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    // Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
+    min-width: 0;
+  }
 
   &__scrollable-wrap {
     position: relative;
@@ -33,9 +42,21 @@
     flex-direction: column;
 
     &--row {flex-direction: row;}
+    &--has-week-numbers {flex-direction: row;}
   }
 
-  .grow {flex-grow: 1;}
+  &__week-numbers {
+    display: flex;
+    flex-direction: column;
+    padding-top: var(--vuecal-headings-bar-height);
+  }
+  &__week-number {
+    display: flex;
+    flex-grow: 1;
+    align-items: center;
+    justify-content: center;
+    width: 1.4em;
+  }
 
   // Shared in headers and cells.
   &__schedule {
@@ -46,6 +67,9 @@
     justify-content: center;
     overflow: hidden;
   }
+  &__scrollable--days-view &__schedule,
+  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-width, 0);}
+
   &__schedules-headings {display: flex;}
   &__schedule--heading {
     font-size: 12px;

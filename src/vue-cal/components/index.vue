@@ -33,6 +33,10 @@
           TimeColumn(v-if="hasTimeColumn")
             template(v-if="$slots['time-cell']" #time-cell="params")
               slot(name="time-cell" v-bind="params")
+          .vuecal__week-numbers(v-if="config.weekNumbers && view.isMonth")
+            .vuecal__week-number(v-for="i in weekNumbers")
+              slot(name="week-number")
+                small {{ i }}
           .vuecal__body-wrap
             HeadingsBar
               template(#weekday-heading="params")
@@ -82,10 +86,16 @@ const emit = defineEmits([
 
 const vuecalEl = useTemplateRef('vuecal-el')
 const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
-const { config, view } = vuecal
+const { config, view, dateUtils } = vuecal
 const isDraggingCell = ref(false)
 const isDraggingEvent = ref(false)
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
+
+const weekNumbers = computed(() => {
+  return Array(view.rows).fill().map((v, i) => {
+    return dateUtils.getWeek(dateUtils.addDays(view.firstCellDate, 7 * i))
+  })
+})
 
 const wrapperClasses = computed(() => ({
   'vuecal--ready': config.ready,
@@ -107,7 +117,7 @@ const wrapperStyles = computed(() => ({
 }))
 
 const scrollableElClasses = computed(() => ({
-  'vuecal__scrollable--row': hasTimeColumn.value,
+  'vuecal__scrollable--row': hasTimeColumn.value || (config.weekNumbers && view.isMonth),
   // Keep the states inside the Vue transition wrapper for smooth CSS transitions.
   [`vuecal__scrollable--${view.id}-view`]: true,
   'vuecal__scrollable--has-schedules': config.schedules?.length
@@ -125,18 +135,3 @@ provide('vuecal', vuecal)
 
 defineExpose({ view: vuecal.view })
 </script>
-
-<style lang="scss">
-.vuecal {
-  &__body-wrap {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    // Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
-    min-width: 0;
-  }
-
-  &__scrollable--days-view &__schedule,
-  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-width, 0);}
-}
-</style>

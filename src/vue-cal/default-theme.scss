@@ -126,6 +126,18 @@
     &--row {grid-template-columns: 0fr 1fr;}
   }
 
+  .vuecal__week-number small {
+    width: 1.4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1;
+    font-size: 0.8em;
+    background-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
+    color: color-mix(in srgb, var(--vuecal-base-color) 70%, transparent);
+    border-radius: 4px;
+  }
+
   .vuecal__weekday {
     display: flex;
     justify-content: center;
