@@ -2,21 +2,39 @@
 //- Example.
 example(title="Timeline" anchor="timeline")
   template(#desc)
-    .todo-tag.d-iflex MAKE THIS INTERACTIVE
     p.
-      Timelines are only visible on #[span.code day], #[span.code days] and #[span.code week] views.#[br]
-      This example has a set time range from #[code 08:00] to #[code 19:00], time step of #[code 30] minutes (1 hour by default),
-      24-hour format.
-
+      Timelines are visible on #[span.code day], #[span.code days] and #[span.code week] views.#[br]
+      #[code time-start], #[code time-end] &amp; #[code time-step] are expected in minutes.
+    .mla.mr1.w-flex.mt8.mb4.gap4.xs8.justify-end
+      | From
+      w-slider.grow(
+        v-model="exTimeline.timeFrom"
+        min="0"
+        max="12"
+        step="1"
+        thumb-label)
+      | To
+      w-slider.grow(
+        v-model="exTimeline.timeTo"
+        min="12"
+        max="24"
+        step="1"
+        thumb-label)
+      | Step
+      w-slider.grow(
+        v-model="exTimeline.timeStep"
+        min="10"
+        max="240"
+        step="10"
+        thumb-label)
   template(#code-html).
-    &lt;!-- Time-start time-end &amp; time-step are expected in minutes. --&gt;
-    &lt;vue-cal :time-from="8 * 60" :time-to="19 * 60" :time-step="30" /&gt;
+    &lt;vue-cal :time-from="{{ exTimeline.timeFrom }} * 60" :time-to="{{ exTimeline.timeTo }} * 60" :time-step="{{ exTimeline.timeStep }}" /&gt;
 
   vue-cal(
     :dark="store.darkMode"
-    :time-from="8 * 60"
-    :time-to="19 * 60"
-    :time-step="30"
+    :time-from="exTimeline.timeFrom * 60"
+    :time-to="exTimeline.timeTo * 60"
+    :time-step="exTimeline.timeStep"
     hide-weekends)
 
 //- Example.
@@ -235,7 +253,13 @@ import { VueCal } from '@/vue-cal'
 
 const store = useAppStore()
 
-const exHideElements = ref({
+const exTimeline = reactive({
+  timeFrom: ref(7),
+  timeTo: ref(18),
+  timeStep: ref(30)
+})
+
+const exHideElements = reactive({
   todayButton: true,
   viewsBar: true,
   titleBar: true,
