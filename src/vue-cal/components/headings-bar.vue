@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__headings(v-if="isDayDaysWeekOrMonthView")
+.vuecal__headings(v-if="showHeadings")
   .vuecal__weekdays-headings(v-if="!view.isDay")
     .vuecal__weekday(
       v-for="(day, i) in weekDays"
@@ -39,7 +39,10 @@ const dayLabelSize = computed(() => {
   else return 'day'
 })
 
-const isDayDaysWeekOrMonthView = computed(() =>  view.isDay || view.isDays || view.isWeek || view.isMonth)
+const showHeadings = computed(() => {
+  const isDayDaysWeekOrMonthView = view.isDay || view.isDays || view.isWeek || view.isMonth
+  return isDayDaysWeekOrMonthView && !(view.isDay && !config.schedules)
+})
 
 // Only for days, week and month views.
 // The props sm and xs are not used in the computed so switching doesn't recompute.
