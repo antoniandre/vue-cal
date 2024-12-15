@@ -44,8 +44,14 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
       w-switch(v-model="exHideElements.startOnSunday") Start week on Sunday
       w-switch(v-model="exHideElements.hideWeekends") Hide weekends
       w-switch(v-model="exHideElements.time") Time
+      w-tooltip(align-left)
+        template(#activator="{ on }")
+          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
+            w-switch.mr3(v-model="exHideElements.weekNumbers") Show Week Numbers
+        | Visible on month view
+
   template(#code-html).
-    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }} /&gt;
+    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;
   vue-cal.mxa(
     :views-bar="exHideElements.viewsBar"
     :today-button="exHideElements.todayButton"
@@ -53,6 +59,7 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
     :time="exHideElements.time"
     :hide-weekends="exHideElements.hideWeekends"
     :start-week-on-sunday="exHideElements.startOnSunday"
+    :week-numbers="exHideElements.weekNumbers"
     :dark="store.darkMode")
 
 //- Example.
@@ -186,13 +193,14 @@ const exViews = reactive({
   enabledViews: ref(['day', 'month'])
 })
 
-const exHideElements = ref({
-  todayButton: true,
-  viewsBar: true,
-  titleBar: true,
-  startOnSunday: false,
-  hideWeekends: false,
-  time: true
+const exHideElements = reactive({
+  todayButton: ref(true),
+  viewsBar: ref(true),
+  titleBar: ref(true),
+  startOnSunday: ref(false),
+  hideWeekends: ref(false),
+  time: ref(true),
+  weekNumbers: ref(false)
 })
 
 const exThemes = reactive({

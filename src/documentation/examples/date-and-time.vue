@@ -205,19 +205,15 @@ example(title="Disable Days" anchor="disable-days")
     :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
 
 //- Example.
-example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hiding-particular-week-days")
+example(title="Hide Particular Week Days" anchor="hiding-particular-week-days")
   template(#desc)
     ul
       li.
         If you want to hide particular days of the week, you can provide an array through the
         #[span.code hide-weekdays] option. Possible values: #[code="['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']"].#[br]
         This option will apply on #[span.code days], #[span.code week] &amp; #[span.code month] views.#[br]
-      li.
-        You can show the weeks numbers column on the #[span.code month] view with the #[span.code week-numbers] option.#[br]
-        You can also provide a custom renderer to the weeks numbers cells through the #[span.code week-number-cell] slot.
 
     .w-flex.justify-end.gap2.align-center
-      w-switch.mr2(v-model="exHideWeekDays.weekNumbers" label-color="base") Show Week Numbers
       label Days to Hide:
       w-select(
         v-model="exHideWeekDays.weekdaysToHide"
@@ -226,11 +222,8 @@ example(title="Hide Particular Week Days & Show the Weeks Numbers" anchor="hidin
         fit-to-content
         placeholder="Weekdays")
   template(#code-html).
-    &lt;vue-cal
-      week-numbers
-      :hide-weekdays="['tue', 'wed', 'fri']" /&gt;
+    &lt;vue-cal {{ exHideWeekDays.weekdaysToHide.length ? `:hide-weekdays="['${exHideWeekDays.weekdaysToHide.join('\', \'')}']"` : '' }} /&gt;
   vue-cal(
-    :week-numbers="exHideWeekDays.weekNumbers"
     :hide-weekdays="exHideWeekDays.weekdaysToHide"
     :dark="store.darkMode")
 </template>
@@ -275,8 +268,7 @@ const exScrollToTime = reactive({
 
 const exHideWeekDays = reactive({
   weekdays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
-  weekdaysToHide: ref(['tue', 'wed', 'fri']),
-  weekNumbers: ref(false)
+  weekdaysToHide: ref(['tue', 'wed', 'fri'])
 })
 
 const minDate = computed(() => new Date().subtractDays(10))
