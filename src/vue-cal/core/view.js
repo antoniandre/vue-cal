@@ -417,10 +417,13 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   function updateSelectedDate (date, emitUpdate = true) {
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t update the selected date: invalid date provided to `updateSelectedDate(date)`.')
 
-    else if (!selectedDate.value || !dateUtils.isSameDate(date, selectedDate.value)) {
-      date.setHours(0, 0, 0, 0)
-      selectedDate.value = date
-      if (emitUpdate) emit('update:selectedDate', date)
+    else {
+      const { isValid, isSameDate } = dateUtils
+      if (!selectedDate.value || !isValid(selectedDate.value) || !isSameDate(date, selectedDate.value)) {
+        date.setHours(0, 0, 0, 0)
+        selectedDate.value = date
+        if (emitUpdate) emit('update:selectedDate', date)
+      }
     }
   }
 
