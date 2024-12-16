@@ -72,11 +72,13 @@ export const useConfig = (vuecal, props, attrs) => {
       event: {} // All possible event listeners to attach to calendar events.
     }
 
+    const kebabize = str => str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
     // Forward any cell and calendar-events event listener attached to VueCal to the cell and event components.
     // For instance, convert vuecal.onCellMouseenter to cell.mouseenter.
     Object.entries(attrs).forEach(([attr, value]) => {
-      const [m0, m1, m2, m3] = attr.match(/^on(Cell|Event)(.)(.*)/) || []
-      if (m0) listeners[m1.toLowerCase()][m2.toLowerCase() + m3] = value
+      const [m0, m1, m2] = attr.match(/^on(Cell|Event)(.+)$/) || []
+      // Allow both camelCase and kebab-case on event handlers.
+      if (m0) listeners[m1.toLowerCase()][kebabize(m2).replace(/^-+|-+$/g, '')] = value
     })
 
     return listeners
