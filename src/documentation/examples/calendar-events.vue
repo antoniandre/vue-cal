@@ -166,20 +166,110 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     :views-bar="false"
     :dark="store.darkMode"
     @event-click="exOpenEventDetails.openDialog")
-  w-dialog(
-    v-if="exOpenEventDetails.event"
-    v-model="exOpenEventDetails.showDialog"
-    :title="exOpenEventDetails.event.title"
-    width="380")
-    .w-flex.align-center.justify-end.gap2
-      w-icon.grey mdi mdi-calendar
-      small {{ exOpenEventDetails.event.start.format() }}
-      w-icon.grey.ml2 mdi mdi-clock-outline
-      small {{ exOpenEventDetails.event.start.formatTime() }} - {{ exOpenEventDetails.event.end.formatTime() }}
-    .w-flex.align-center.justify-center.title1.mt6.mb4(v-html="exOpenEventDetails.event.content")
-    p.lh1.
-      Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
-      labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
+//- Do not indent the w-dialog into the example:
+//- It causes to re-render the whole example on open/close and so, the calendar cells as well.
+w-dialog(
+  v-if="exOpenEventDetails.event"
+  v-model="exOpenEventDetails.showDialog"
+  :title="exOpenEventDetails.event.title"
+  width="380")
+  .w-flex.align-center.justify-end.gap2
+    w-icon.grey mdi mdi-calendar
+    small {{ exOpenEventDetails.event.start.format() }}
+    w-icon.grey.ml2 mdi mdi-clock-outline
+    small {{ exOpenEventDetails.event.start.formatTime() }} - {{ exOpenEventDetails.event.end.formatTime() }}
+  .w-flex.align-center.justify-center.title1.mt6.mb4(v-html="exOpenEventDetails.event.content")
+  p.lh1.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
+    labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
+
+//- Example.
+example(title="Create Events" anchor="create-events")
+  template(#desc)
+    .todo-tag.d-iflex FINISH THIS EXAMPLE
+    w-radios(
+      v-model="exCreateEvents.createMethod"
+      :items="exCreateEvents.createMethods"
+      inline)
+  template(#code-html).
+  template(#code-js).
+  template(#code-css).
+  vue-cal(
+    editable-events
+    @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
+    :dark="store.darkMode")
+
+//- Example.
+example(title="Edit & Delete Events" anchor="edit-and-delete-events")
+  template(#desc)
+    .todo-tag.d-iflex FINISH THIS EXAMPLE
+    p.mb2.
+      The #[code editable-events] option allows or prevent all the following actions when set to
+      #[code true] or #[code false]:
+    ul
+      li Edit the event title
+      li.
+        Resize an event by dragging the resizer handle.
+        #[strong Not available if no timeline, not possible on background events.]
+      li.
+        Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
+        #[strong Not possible on background events.]
+      li Delete an event (by clicking and holding an event)
+      li.
+        Create a new event (by clicking and dragging on a cell or clicking and holding on a cell)#[br]
+        Learn more about event creation in the #[a(href="#ex---create-events") create events]
+        example.
+
+    div.mt4
+      strong.
+        The #[code editable-events] option also accept a more granular object as follows to specifically
+        allow or deny any previously listed actions.
+      ssh-pre(language="js" :dark="store.darkMode").
+        { title: true, drag: true, resize: true, delete: true, create: true }
+    alert(tip).
+      On top of the global actions allowance, you can deny each of these actions individually for each event with the event
+      attributes #[code titleEditable: false], #[code deletable: false],
+      #[code draggable: false] &amp; #[code resizable: false].
+    p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
+  template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="10 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week', 'month']"
+      :views-bar="false"
+      hide-weekends
+      :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    // In data.
+    events: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 17:30',
+        title: 'Boring event',
+        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
+        class: 'blue-event',
+        deletable: false,
+        resizable: false,
+        draggable: false
+      },
+      // other events.
+    ]
+
+  vue-cal(
+    ref="exEditEventsVuecalRef"
+    :dark="store.darkMode"
+    :selected-date="stringToDate('2018-11-19')"
+    :time-from="10 * 60"
+    :time-to="23 * 60"
+    :views="['day', 'week', 'month']"
+    :views-bar="false"
+    hide-weekends
+    :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
+    :events="exEditEvents.events"
+    @event-dblclick="exEditEvents.deleteEvent")
 
 //- Example.
 //- example(title="Events Indicators" anchor="events-indicators")
@@ -289,77 +379,6 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     events-on-month-view="short"
     :events="events")
 
-//- Example.
-example(title="Edit & Delete Events" anchor="edit-and-delete-events")
-  template(#desc)
-    .todo-tag.d-iflex FINISH THIS EXAMPLE
-    p.mb2.
-      The #[code editable-events] option allows or prevent all the following actions when set to
-      #[code true] or #[code false]:
-    ul
-      li Edit the event title
-      li.
-        Resize an event by dragging the resizer handle.
-        #[strong Not available if no timeline, not possible on background events.]
-      li.
-        Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
-        #[strong Not possible on background events.]
-      li Delete an event (by clicking and holding an event)
-      li.
-        Create a new event (by clicking and dragging on a cell or clicking and holding on a cell)#[br]
-        Learn more about event creation in the #[a(href="#ex---create-events") create events]
-        example.
-
-    div.mt4
-      strong.
-        The #[code editable-events] option also accept a more granular object as follows to specifically
-        allow or deny any previously listed actions.
-      ssh-pre(language="js" :dark="store.darkMode").
-        { title: true, drag: true, resize: true, delete: true, create: true }
-    alert(tip).
-      On top of the global actions allowance, you can deny each of these actions individually for each event with the event
-      attributes #[code titleEditable: false], #[code deletable: false],
-      #[code draggable: false] &amp; #[code resizable: false].
-    p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
-  template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="10 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week', 'month']"
-      :views-bar="false"
-      hide-weekends
-      :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  template(#code-js).
-    // In data.
-    events: [
-      {
-        start: '2018-11-20 14:00',
-        end: '2018-11-20 17:30',
-        title: 'Boring event',
-        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
-        class: 'blue-event',
-        deletable: false,
-        resizable: false,
-        draggable: false
-      },
-      // other events.
-    ]
-
-  vue-cal(
-    ref="exEditEventsVuecalRef"
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="10 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week', 'month']"
-    :views-bar="false"
-    hide-weekends
-    :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
-    :events="exEditEvents.events"
-    @event-dblclick="exEditEvents.deleteEvent")
 
 .todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
 //- Example.
@@ -1458,6 +1477,19 @@ const exOpenEventDetails = reactive({
     exOpenEventDetails.showDialog = true
   },
   events: [...events]
+})
+
+const exCreateEvents = reactive({
+  createMethods: [
+    { value: 'event-create', label: 'Click & Drag' },
+    { value: 'cell-dblclick', label: 'Double Click' },
+    { value: 'cell-contextmenu', label: 'Right Click' },
+    { value: 'cell-hold', label: 'Click & Hold' }
+  ],
+  createMethod: ref('event-create'),
+  createEvent: (...args) => {
+    console.log(...args)
+  }
 })
 
 const exEventsIndicators = reactive({
