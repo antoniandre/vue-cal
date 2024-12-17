@@ -83,10 +83,10 @@ Every contribution—big or small—makes a huge difference. Join us on this jou
 
 A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see your name here? [Become a sponsor today!](https://github.com/sponsors/antoniandre)
 
-
-[![nmauersberg](https://avatars.githubusercontent.com/nmauersberg?v=4&s=50)](https://github.com/nmauersberg)
-[![audabas](https://avatars.githubusercontent.com/audabas?v=4&s=50)](https://github.com/audabas)
-[![crbast](https://avatars.githubusercontent.com/crbast?v=4&s=50)](https://github.com/crbast)
+[![nmauersberg](https://avatars.githubusercontent.com/nmauersberg?s=25)](https://github.com/nmauersberg)
+[![audabas](https://avatars.githubusercontent.com/audabas?s=25)](https://github.com/audabas)
+[![crbast](https://avatars.githubusercontent.com/crbast?s=25)](https://github.com/crbast)
+[![codecov](https://avatars.githubusercontent.com/codecov?s=25)](https://github.com/codecov)
 
 
 ---
