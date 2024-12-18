@@ -419,7 +419,7 @@ const createEventIfAllowed = async e => {
   end = new Date(props.start)
   end.setMinutes(endMinutes)
 
-  const eventToCreate = { ...eventPlaceholder.value, start, end }
+  let eventToCreate = { ...eventPlaceholder.value, start, end }
   // if (config.schedules) eventToCreate.schedule = schedule
 
   // If there's a @event-create listener, call it and check if it returns true to accept the event
@@ -427,11 +427,13 @@ const createEventIfAllowed = async e => {
   // The call to the handler is wrapped in a promise so the user may open an event editor and modify
   // the event before sending in back and resolving the promise.
   const { create: createListener } = config.eventListeners.event
-  let shouldCreateEvent = true
+
   if (typeof createListener === 'function') {
-    shouldCreateEvent = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve }))
+    eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve }))
+    // eventToCreate may be false or an updated event object to create.
+    if (eventToCreate && typeof eventToCreate === 'object') view.createEvent(eventToCreate)
   }
-  if (shouldCreateEvent) view.createEvent(eventToCreate)
+  else view.createEvent(eventToCreate)
 }
 </script>
 
