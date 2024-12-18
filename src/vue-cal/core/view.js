@@ -481,12 +481,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   })
 
   function createEvent(event) {
-    const { start, end, title, id } = event
-    eventsManager.createEvent(event)
+    return eventsManager.createEvent(event)
   }
 
   function deleteEvent(eventId) {
-    eventsManager.deleteEvent(eventId)
+    return eventsManager.deleteEvent(eventId)
   }
   // ------------------------------------------------------
 
