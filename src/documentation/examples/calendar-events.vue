@@ -186,18 +186,36 @@ w-dialog(
 //- Example.
 example(title="Create Events" anchor="create-events")
   template(#desc)
-    .todo-tag.d-iflex FINISH THIS EXAMPLE
-    w-radios(
-      v-model="exCreateEvents.createMethod"
-      :items="exCreateEvents.createMethods"
-      inline)
+    .todo-tag.d-iflex.mr2 FINISH THIS EXAMPLE
+    .w-flex.justify-end.gap2
+      label.title3.mt-1 Create Event On Cell
+      div
+        w-radios(
+          v-model="exCreateEvents.createMethod"
+          :items="exCreateEvents.createMethods")
+        p.caption.mt1 (Or however you want)
+    .w-flex.align-center.justify-end.mt4
+      w-switch(v-model="exCreateEvents.skipCreationDialog") Skip Creation Dialog
   template(#code-html).
   template(#code-js).
   template(#code-css).
   vue-cal(
+    ref="exCreateEventsVueCalEl"
     editable-events
     @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
+    :events="exCreateEvents.events"
     :dark="store.darkMode")
+w-dialog(
+  v-if="exCreateEvents.newEvent"
+  v-model="exCreateEvents.showCreationDialog"
+  width="300"
+  @close="exCreateEvents.cancel")
+  w-input(v-model="exCreateEvents.newEvent.title") Event Title
+  w-input(v-model="exCreateEvents.newEvent.class") Event Class
+  w-switch.my2(v-model="exCreateEvents.newEvent.background") Background
+  .w-flex.justify-end.mt2.gap2
+    w-button(@click="exCreateEvents.cancel") Cancel
+    w-button(@click="exCreateEvents.save") OK
 
 //- Example.
 example(title="Edit & Delete Events" anchor="edit-and-delete-events")
@@ -1479,6 +1497,7 @@ const exOpenEventDetails = reactive({
   events: [...events]
 })
 
+const exCreateEventsVueCalEl = ref(null)
 const exCreateEvents = reactive({
   createMethods: [
     { value: 'event-create', label: 'Click & Drag' },
@@ -1487,8 +1506,35 @@ const exCreateEvents = reactive({
     { value: 'cell-hold', label: 'Click & Hold' }
   ],
   createMethod: ref('event-create'),
-  createEvent: (...args) => {
-    console.log(...args)
+  createEvent: ({ e, event, cell, resolve }) => {
+    console.log({ e, event, cell, resolve })
+    if (exCreateEvents.skipCreationDialog) {
+      if (event && resolve) resolve(event)
+      else exCreateEventsVueCalEl.value.view.createEvent({ title: 'New Event! 🎉', start: new Date(), end: new Date().addHours(2),  class: 'blue-event' })
+    }
+    else exCreateEvents.openCreationDialog({ e, event, cell, resolve })
+  },
+  skipCreationDialog: ref(true),
+  showCreationDialog: ref(false),
+  resolve: null,
+  events: ref([]),
+  newEvent: {
+    title: '',
+    background: false,
+    class: ''
+  },
+  openCreationDialog: ({ event, resolve }) => {
+    exCreateEvents.showCreationDialog = true
+    exCreateEvents.newEvent = event
+    exCreateEvents.resolve = resolve
+  },
+  cancel: () => {
+    exCreateEvents.resolve(false)
+    exCreateEvents.showCreationDialog = false
+  },
+  save: () => {
+    exCreateEvents.resolve(exCreateEvents.newEvent)
+    exCreateEvents.showCreationDialog = false
   }
 })
 
