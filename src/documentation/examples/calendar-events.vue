@@ -188,7 +188,7 @@ example(title="Create Events" anchor="create-events")
   template(#desc)
     .todo-tag.d-iflex.mr2 FINISH THIS EXAMPLE
     .w-flex.justify-end.gap2
-      label.title3.mt-1 Create Event On Cell
+      label Create Event On Cell
       div
         w-radios(
           v-model="exCreateEvents.createMethod"
@@ -201,7 +201,7 @@ example(title="Create Events" anchor="create-events")
   template(#code-css).
   vue-cal(
     ref="exCreateEventsVueCalEl"
-    editable-events
+    :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
     @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
     :events="exCreateEvents.events"
     :dark="store.darkMode")
@@ -1507,11 +1507,15 @@ const exCreateEvents = reactive({
   ],
   createMethod: ref('event-create'),
   createEvent: ({ e, event, cell, resolve }) => {
-    console.log({ e, event, cell, resolve })
-    if (exCreateEvents.skipCreationDialog) {
-      if (event && resolve) resolve(event)
-      else exCreateEventsVueCalEl.value.view.createEvent({ title: 'New Event! 🎉', start: new Date(), end: new Date().addHours(2),  class: 'blue-event' })
+    e.preventDefault()
+    event = event || {
+      title: 'New Event! 🎉',
+      start: new Date(),
+      end: new Date().addHours(2),
+      class: 'blue-event'
     }
+    resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
+    if (exCreateEvents.skipCreationDialog) resolve(event)
     else exCreateEvents.openCreationDialog({ e, event, cell, resolve })
   },
   skipCreationDialog: ref(true),
@@ -1529,7 +1533,7 @@ const exCreateEvents = reactive({
     exCreateEvents.resolve = resolve
   },
   cancel: () => {
-    exCreateEvents.resolve(false)
+    if (exCreateEvents.createMethod === 'event-create') exCreateEvents.resolve(false)
     exCreateEvents.showCreationDialog = false
   },
   save: () => {
