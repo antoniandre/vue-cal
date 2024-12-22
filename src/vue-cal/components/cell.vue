@@ -384,7 +384,7 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = async e => {
-  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
@@ -420,7 +420,6 @@ const createEventIfAllowed = async e => {
   end.setMinutes(endMinutes)
 
   let eventToCreate = { ...eventPlaceholder.value, start, end }
-  // if (config.schedules) eventToCreate.schedule = schedule
 
   // If there's a @event-create listener, call it and check if it returns true to accept the event
   // creation or false to cancel it. If no listener, create the event.
@@ -429,9 +428,11 @@ const createEventIfAllowed = async e => {
   const { create: createListener } = config.eventListeners.event
 
   if (typeof createListener === 'function') {
+    const eventCopy = eventToCreate
     eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve }))
-    // eventToCreate may be false or an updated event object to create.
+    // eventToCreate may be true, false or an updated event object to create.
     if (eventToCreate && typeof eventToCreate === 'object') view.createEvent(eventToCreate)
+    if (eventToCreate && typeof eventToCreate === 'boolean') view.createEvent(eventCopy)
   }
   else view.createEvent(eventToCreate)
 }
