@@ -14,7 +14,7 @@ export const globalState = reactive({
 
 /**
  * This is the main composable of the calendar - the heart :)
- * It is used one single time, from the index.vue and inject-provided to all the components.
+ * It is used one single time, from the index.vue and it's inject-provided to all the components.
  *
  * GLOBAL IMPORTANT NOTES
  * ----------------------
