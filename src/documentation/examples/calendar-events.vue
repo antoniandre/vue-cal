@@ -1833,8 +1833,6 @@ const selectedEvent = ref({})
 .main--examples-calendar-events {
   .vuecal__event {
     text-align: center;
-    color: #fff;
-    border: 1px solid;
 
     i {margin: 2px 0;font-size: 23px;}
   }
