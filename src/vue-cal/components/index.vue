@@ -60,9 +60,10 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, provide, ref, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, onBeforeUnmount, provide, ref, useAttrs, useTemplateRef, watch } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
+import { useInteractions } from '@/vue-cal/core/interactions'
 import VueCalHeader from './header.vue'
 import HeadingsBar from './headings-bar.vue'
 import TimeColumn from './time-column.vue'
@@ -87,6 +88,8 @@ const emit = defineEmits([
 const vuecalEl = useTemplateRef('vuecal-el')
 const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
 const { config, view, dateUtils } = vuecal
+const interactions = useInteractions(vuecal, vuecalEl)
+
 const isDraggingCell = ref(false)
 const isDraggingEvent = ref(false)
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
@@ -125,7 +128,13 @@ const scrollableElClasses = computed(() => ({
 
 onMounted(async () => {
   await nextTick()
+
+  interactions.cells.bindEventListeners()
   emit('ready', { config, view })
+})
+
+onBeforeUnmount(() => {
+  interactions.cells.unbindEventListeners()
 })
 
 watch(() => config.locale, newLocale => config.loadTexts(newLocale))

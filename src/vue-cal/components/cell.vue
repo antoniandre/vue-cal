@@ -1,5 +1,5 @@
 <template lang="pug">
-.vuecal__cell(ref="cellEl" :class="classes" v-on="cellEventListeners")
+.vuecal__cell(ref="cellEl" :class="classes")
   template(v-if="$slots.cell")
     slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
 
@@ -276,51 +276,6 @@ const nowLine = reactive({
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
 
-// Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
-const cellEventListeners = computed(() => {
-  if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
-
-  const eventListeners = { ...config.eventListeners.cell }
-
-  // Inject the cell details in each eventListener handler call as 2nd param.
-  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    eventListeners[eventListener] = e => {
-      // When interacting with an event, skip calling the cell DOM event handler.
-      // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
-      // we can receive the on mouseup from the document and stop event drag&drop.
-      if ((e.target || e.e?.target).matches?.('.vuecal__event, .vuecal__event *')) return
-
-      // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, cell: cellInfo.value } : e)
-    }
-  })
-
-  // Store a copy of any potential external handler to combine with internal handlers like click,
-  // touchstart, mousedown.
-  const externalHandlers = { ...eventListeners }
-
-  eventListeners.click = e => {
-    onCellClick()
-    const cell = { start: props.start, end: props.end, events: cellEvents }
-    if (touch.schedule) cell.schedule = touch.schedule
-    externalHandlers.click?.({ e, cell })
-  }
-
-  if (config.time && view.isDay || view.isDays || view.isWeek) {
-    eventListeners.touchstart = e => {
-      onMousedown(e.e || e)
-      externalHandlers.touchstart?.({ e, cell: cellInfo.value })
-    }
-    eventListeners.mousedown = e => {
-      onMousedown(e.e || e)
-
-      externalHandlers.mousedown?.({ e, cell: cellInfo.value })
-    }
-  }
-
-  return eventListeners
-})
-
 const cellInfo = computed(() => ({
   start: props.start,
   end: props.end,
@@ -339,63 +294,6 @@ const onCellClick = () => {
     else if (view.isYear && config.availableViews.month) view.switch('month')
     else if (view.isYears && config.availableViews.year) view.switch('year')
     view.updateViewDate(props.start)
-  }
-}
-
-// On mousedown OR TOUCHSTART of the cell.
-const onMousedown = e => {
-  touch.schedule = ~~e.target.dataset.schedule
-  const rect = cellEl.value.getBoundingClientRect()
-  touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
-  touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
-  touch.startPercentageX = touch.startX * 100 / rect.width
-  touch.startPercentageY = touch.startY * 100 / rect.height
-
-  document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
-  document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
-
-  touch.holdTimer = setTimeout(() => {
-    touch.holding = true
-    // If there's a @cell-hold external listener, call it.
-    cellEventListeners.value.hold?.({ e, cell: cellInfo.value })
-  }, 1000)
-}
-
-const onDocMousemove = e => {
-  // Internal emit to the root component to add a CSS class on wrapper while dragging.
-  if (!touch.dragging) {
-    emit('cell-drag-start')
-
-    // If there's a @cell-drag-start external listener, call it.
-    cellEventListeners.value.dragStart?.({ e, cell: cellInfo.value })
-  }
-  touch.dragging = true
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
-
-  const rect = cellEl.value.getBoundingClientRect()
-  touch.moveX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
-  touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
-  touch.movePercentageX = touch.moveX * 100 / rect.width
-  touch.movePercentageY = touch.moveY * 100 / rect.height
-
-  // If there's a @cell-drag external listener, call it.
-  cellEventListeners.value.drag?.({ e, cell: cellInfo.value })
-}
-
-const onDocMouseup = async e => {
-  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
-
-  if (touch.dragging) {
-    // If there's a @cell-drag-end external listener, call it.
-    cellEventListeners.value.dragEnd?.({ e, cell: cellInfo.value })
-    emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
-
-    if (config.editableEvents?.create) {
-      awaitingEventCreation.value = true
-      await createEventIfAllowed(e)
-      awaitingEventCreation.value = false
-    }
   }
 
   touch.holdTimer = clearTimeout(touch.holdTimer)
