@@ -497,6 +497,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   watch(() => config.startWeekOnSunday, bool => switchWeekStart(bool))
   watch(() => config.hideWeekends, bool => toggleWeekends(bool))
   watch(() => config.hideWeekdays, toggleWeekdays)
+  watch(() => cellsCount.value, () => {
+    if (cellsCount.value > 90) console.warn('Vue Cal: high cell count detected. Performance may degrade when interactions are enabled.')
+  })
 
   updateView()
 
