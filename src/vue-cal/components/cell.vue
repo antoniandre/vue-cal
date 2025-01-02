@@ -345,8 +345,12 @@ const cursorInfo = computed(() => {
 // Functions.
 // --------------------------------------------------------
 const updateCursorInfo = e => {
-  const { clientX, clientY } = e.touches?.[0] || e
-  const { left, top, width, height } = e.target.getBoundingClientRect()
+  // The event object may already contain an `e` property added by the cellEventListeners computed prop.
+  const event = e.e || e
+  const { clientX, clientY } = event.touches?.[0] || event
+  const { left, top, width, height } = event.target.getBoundingClientRect()
+  // Only the pointer position in percentage in the cell.
+  // Does not take into account the calendar start time.
   touch.startPercentageX = ((clientX - left) / width) * 100
   touch.startPercentageY = ((clientY - top) / height) * 100
 }
