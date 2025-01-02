@@ -57,10 +57,13 @@ example(title="Events & Background Events" anchor="events")
 
   template(#code-css).
     .vuecal__event {color: #fff;border: 1px solid;}
-    .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
-    .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
-    .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
-    .vuecal__event.lunch {background-color: repeating-linear-gradient(45deg, transparent, transparent 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 20px);border: none;}
+    .vuecal__event.leisure {background-color: #fd9c42d9;}
+    .vuecal__event.health {background-color: #57cea9cc;}
+    .vuecal__event.sport {background-color: #ff6666d9;}
+    .vuecal__event.lunch {
+      background-color: repeating-linear-gradient(45deg, transparent 0 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 10px 20px);
+      border: none;
+    }
   vue-cal(
     :time-from="9 * 60"
     :time-to="14 * 60"
@@ -197,8 +200,64 @@ example(title="Create Events" anchor="create-events")
     .w-flex.align-center.justify-end.mt4
       w-switch(v-model="exCreateEvents.skipCreationDialog") Skip Creation Dialog
   template(#code-html).
+    &lt;vue-cal
+      ref="exCreateEventsVueCalEl"
+      :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
+      @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
+      :events="exCreateEvents.events"
+      :dark="store.darkMode"&gt;
+    &lt;/vue-cal&gt;
   template(#code-js).
+    const exCreateEventsVueCalEl = ref(null)
+    const exCreateEvents = reactive({
+      createMethods: [
+        { value: 'event-create', label: 'Click &amp; Drag' },
+        { value: 'cell-dblclick', label: 'Double Click' },
+        { value: 'cell-contextmenu', label: 'Right Click' },
+        { value: 'cell-hold', label: 'Click &amp; Hold' }
+      ],
+      createMethod: ref('event-create'),
+      createEvent: ({ e, event, cell, resolve, cursor }) => {
+        e.preventDefault()
+        event = event || {
+          title: 'New Event! 🎉',
+          start: cursor.date,
+          end: cursor.date.addHours(1),
+          class: 'blue-event'
+        }
+        resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
+        if (exCreateEvents.skipCreationDialog) resolve(event)
+        else exCreateEvents.openCreationDialog({ e, event, cell, resolve, cursor })
+      },
+      skipCreationDialog: ref(true),
+      showCreationDialog: ref(false),
+      resolve: null,
+      events: ref([]),
+      newEvent: {
+        title: '',
+        background: false,
+        class: ''
+      },
+      openCreationDialog: ({ event, resolve }) => {
+        exCreateEvents.showCreationDialog = true
+        exCreateEvents.newEvent = event
+        exCreateEvents.resolve = resolve
+      },
+      cancel: () => {
+        if (exCreateEvents.createMethod === 'event-create') exCreateEvents.resolve(false)
+        exCreateEvents.showCreationDialog = false
+      },
+      save: () => {
+        exCreateEvents.resolve(exCreateEvents.newEvent)
+        exCreateEvents.showCreationDialog = false
+      }
+    })
   template(#code-css).
+    .vuecal__event {color: #fff;border: 1px solid;}
+    .vuecal__event.leisure {background-color: #fd9c42d9;}
+    .vuecal__event.health {background-color: #57cea9cc;}
+    .vuecal__event.sport {background-color: #ff6666d9;}
+    .vuecal__event.lunch {background-image: repeating-linear-gradient(45deg, transparent 0 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 10px 20px);border: none;}
   vue-cal(
     ref="exCreateEventsVueCalEl"
     :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
