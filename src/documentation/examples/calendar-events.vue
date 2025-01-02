@@ -1506,17 +1506,17 @@ const exCreateEvents = reactive({
     { value: 'cell-hold', label: 'Click & Hold' }
   ],
   createMethod: ref('event-create'),
-  createEvent: ({ e, event, cell, resolve }) => {
+  createEvent: ({ e, event, cell, resolve, cursor }) => {
     e.preventDefault()
     event = event || {
       title: 'New Event! 🎉',
-      start: new Date(),
-      end: new Date().addHours(2),
+      start: cursor.date,
+      end: cursor.date.addHours(1),
       class: 'blue-event'
     }
     resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
     if (exCreateEvents.skipCreationDialog) resolve(event)
-    else exCreateEvents.openCreationDialog({ e, event, cell, resolve })
+    else exCreateEvents.openCreationDialog({ e, event, cell, resolve, cursor })
   },
   skipCreationDialog: ref(true),
   showCreationDialog: ref(false),
