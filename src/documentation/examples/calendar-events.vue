@@ -199,59 +199,89 @@ example(title="Create Events" anchor="create-events")
         p.caption.mt1 (Or however you want)
     .w-flex.align-center.justify-end.mt4
       w-switch(v-model="exCreateEvents.skipCreationDialog") Skip Creation Dialog
-  template(#code-html).
-    &lt;vue-cal
-      ref="exCreateEventsVueCalEl"
-      :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
-      @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
-      :events="exCreateEvents.events"
-      :dark="store.darkMode"&gt;
-    &lt;/vue-cal&gt;
-  template(#code-js).
-    const exCreateEventsVueCalEl = ref(null)
-    const exCreateEvents = reactive({
-      createMethods: [
-        { value: 'event-create', label: 'Click &amp; Drag' },
-        { value: 'cell-dblclick', label: 'Double Click' },
-        { value: 'cell-contextmenu', label: 'Right Click' },
-        { value: 'cell-hold', label: 'Click &amp; Hold' }
-      ],
-      createMethod: ref('event-create'),
-      createEvent: ({ e, event, cell, resolve, cursor }) => {
-        e.preventDefault()
-        event = event || {
-          title: 'New Event! 🎉',
-          start: cursor.date,
-          end: cursor.date.addHours(1),
-          class: 'blue-event'
-        }
-        resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
-        if (exCreateEvents.skipCreationDialog) resolve(event)
-        else exCreateEvents.openCreationDialog({ e, event, cell, resolve, cursor })
-      },
-      skipCreationDialog: ref(true),
-      showCreationDialog: ref(false),
-      resolve: null,
-      events: ref([]),
-      newEvent: {
-        title: '',
-        background: false,
-        class: ''
-      },
-      openCreationDialog: ({ event, resolve }) => {
-        exCreateEvents.showCreationDialog = true
-        exCreateEvents.newEvent = event
-        exCreateEvents.resolve = resolve
-      },
-      cancel: () => {
-        if (exCreateEvents.createMethod === 'event-create') exCreateEvents.resolve(false)
-        exCreateEvents.showCreationDialog = false
-      },
-      save: () => {
-        exCreateEvents.resolve(exCreateEvents.newEvent)
-        exCreateEvents.showCreationDialog = false
-      }
-    })
+  template(#code-html)
+    span.
+      &lt;vue-cal
+        ref="exCreateEventsVueCalEl"
+        editable-events
+        @{{ exCreateEvents.createMethod }}="createEvent"&gt;
+      &lt;/vue-cal&gt;
+    span(v-if="!skipCreationDialog")
+      |
+      |
+      | &lt;w-dialog
+      |   v-if="newEvent"
+      |   v-model="showCreationDialog"
+      |   width="300"
+      |   @close="cancelCreation"&gt;
+      |   &lt;w-input v-model="newEvent.title"&gt;Event Title&lt;/w-input&gt;
+      |   &lt;w-input v-model="newEvent.class"&gt;Event Class&lt;/w-input&gt;
+      |   &lt;w-switch.my2 v-model="newEvent.background"&gt;Background&lt;/w-switch&gt;
+      |   &lt;div class="w-flex justify-end mt2 gap2"&gt;
+      |     &lt;w-button @click="cancelCreation"&gt;Cancel&lt;/w-button&gt;
+      |     &lt;w-button @click="validateCreation"&gt;OK&lt;/w-button&gt;
+      |   &lt;/div&gt;
+      | &lt;/w-dialog&gt;
+    span(v-else)
+
+  template(#code-js)
+    template(v-if="exCreateEvents.createMethod === 'event-create'")=""
+    template(v-else)
+      | const exCreateEventsVueCalEl = ref(null)
+      |
+
+    template(v-if="exCreateEvents.createMethod === 'event-create' && exCreateEvents.skipCreationDialog")
+      | const createEvent = ({ event, resolve }) => {
+      |   resolve({
+      |     ...event,
+      |     title: 'New Event! 🎉',
+      |     class: 'blue-event'
+      |   })
+      | }
+      |
+
+    template(v-else-if="exCreateEvents.createMethod === 'event-create'")
+      | const createEvent = ({ event, resolve }) => {
+      |     openCreationDialog({ event, resolve })
+      | }
+      |
+    template(v-else-if="exCreateEvents.createMethod !== 'event-create'")
+      |
+      |   createEventFn.value = exCreateEventsVueCalEl.value.view.createEvent
+    template(v-else)
+      |
+
+    template(v-if="!exCreateEvents.skipCreationDialog")
+      |
+      | const showCreationDialog = ref(false)
+      | const createEventFn = ref(null)
+      | const newEvent = ref({
+      |   title: '',
+      |   background: false,
+      |   class: ''
+      | })
+      |
+      | const openCreationDialog = ({ event, resolve }) => {
+      |   showCreationDialog.value = true
+      |   newEvent.value = event
+      |   createEventFn.value = resolve
+      | }
+      |
+      | const cancelCreation = () => {
+      template(v-if="exCreateEvents.createMethod === 'event-create'")
+        |
+        |   createEventFn.value(false)
+      template(v-else)
+      |
+      |   showCreationDialog.value = false
+      | }
+      |
+      | const validateCreation = () => {
+      |   createEventFn.value(newEvent.value)
+      |   showCreationDialog.value = false
+      | }
+    template(v-else)
+
   template(#code-css).
     .vuecal__event {color: #fff;border: 1px solid;}
     .vuecal__event.leisure {background-color: #fd9c42d9;}
