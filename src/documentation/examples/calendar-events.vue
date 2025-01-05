@@ -200,13 +200,11 @@ example(title="Create Events" anchor="create-events")
     .w-flex.align-center.justify-end.mt4
       w-switch(v-model="exCreateEvents.skipCreationDialog") Skip Creation Dialog
   template(#code-html)
-    span.
-      &lt;vue-cal
-        ref="exCreateEventsVueCalEl"
-        editable-events
-        @{{ exCreateEvents.createMethod }}="createEvent"&gt;
-      &lt;/vue-cal&gt;
-    span(v-if="!skipCreationDialog")
+    | &lt;vue-cal
+    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}editable-events
+    |   @{{ exCreateEvents.createMethod }}="createEvent"&gt;
+    | &lt;/vue-cal&gt;
+    template(v-if="!exCreateEvents.skipCreationDialog")
       |
       |
       | &lt;w-dialog
@@ -225,7 +223,7 @@ example(title="Create Events" anchor="create-events")
     span(v-else)
 
   template(#code-js)
-    template(v-if="exCreateEvents.createMethod === 'event-create'")=""
+    template(v-if="exCreateEvents.createMethod === 'event-create'")
     template(v-else)
       | const exCreateEventsVueCalEl = ref(null)
       |
@@ -247,7 +245,11 @@ example(title="Create Events" anchor="create-events")
       |
     template(v-else-if="exCreateEvents.createMethod !== 'event-create'")
       |
-      |   createEventFn.value = exCreateEventsVueCalEl.value.view.createEvent
+      | const createEvent = ({ event, cursor }) => {
+      |   event.start = cursor.date
+      |   event.end = cursor.date.addHours(1) // Uses Vue Cal's Date prototypes.
+      |   exCreateEventsVueCalEl.value.view.createEvent(event)
+      | }
     template(v-else)
       |
 

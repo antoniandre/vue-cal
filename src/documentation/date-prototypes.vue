@@ -54,7 +54,7 @@ w-accordion.mt12.mb4.root-accordion(
               these awesome functions right where it makes sense: in the Date object.#[br]
               If you're not convinced, you can still use the methods by importing them from vue-cal.
 
-        h3.mt0 Motivation for use
+        h3.mt0 Motivation for Use
         p Here are some convincing key points:
         ul
           li You will obviously need at least one of them at some point if you work with Vue Cal and a backend.
@@ -65,12 +65,15 @@ w-accordion.mt12.mb4.root-accordion(
           li Using your loaded locale for any formatting.
 
 //- How to use.
-title-link.mt12.mb2(h2 anchor="how-to-use") How to use
-ssh-pre.mt4(language="js" :dark="store.darkMode").
+title-link.mt12.mb2(h2 anchor="how-to-use") How to Use
+p It's built in, just call the function #[span.code addDatePrototypes()] once in your project, and you're good to go.
+ssh-pre.mt2(language="js" :dark="store.darkMode").
   import { addDatePrototypes } from '@/vue-cal'
 
   addDatePrototypes()
 
+p Example of Use:
+ssh-pre.mt1(language="js" :dark="store.darkMode").
   const tomorrow = (new Date()).addDays(1) // Tomorrow at same time.
   console.log(tomorrow.format()) // outputs: {{ (new Date()).addDays(1).format() }}
 
