@@ -187,18 +187,23 @@ w-dialog(
     labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
 
 //- Example.
-example(title="Create Events" anchor="create-events")
+example(
+  ref="exCreateEventsExampleEl"
+  title="Create Events"
+  anchor="create-events")
   template(#desc)
-    .todo-tag.d-iflex.mr2 FINISH THIS EXAMPLE
     .w-flex.justify-end.gap2
       label Create Event On Cell
       div
         w-radios(
           v-model="exCreateEvents.createMethod"
+          @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight"
           :items="exCreateEvents.createMethods")
         p.caption.mt1 (Or however you want)
     .w-flex.align-center.justify-end.mt4
-      w-switch(v-model="exCreateEvents.skipCreationDialog") Skip Creation Dialog
+      w-switch(
+        v-model="exCreateEvents.skipCreationDialog"
+        @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight") Skip Creation Dialog
   template(#code-html)
     | &lt;vue-cal
     |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}editable-events
@@ -232,8 +237,7 @@ example(title="Create Events" anchor="create-events")
       | const createEvent = ({ event, resolve }) => {
       |   resolve({
       |     ...event,
-      |     title: 'New Event! 🎉',
-      |     class: 'blue-event'
+      |     title: 'New Event! 🎉'
       |   })
       | }
       |
@@ -279,17 +283,20 @@ example(title="Create Events" anchor="create-events")
       | }
       |
       | const validateCreation = () => {
-      |   createEventFn.value(newEvent.value)
+      template(v-if="exCreateEvents.createMethod !== 'event-create'")
+        |
+        |   exCreateEventsVueCalEl.value.view.createEvent({
+        |     ...newEvent.value,
+        |     start: cursor.date,
+        |     end: cursor.date.addHours(1) // Uses Vue Cal's Date prototypes.
+        |   })
+      template(v-else)
+        |
+        |   createEventFn.value(newEvent.value)
+      |
       |   showCreationDialog.value = false
       | }
     template(v-else)
-
-  template(#code-css).
-    .vuecal__event {color: #fff;border: 1px solid;}
-    .vuecal__event.leisure {background-color: #fd9c42d9;}
-    .vuecal__event.health {background-color: #57cea9cc;}
-    .vuecal__event.sport {background-color: #ff6666d9;}
-    .vuecal__event.lunch {background-image: repeating-linear-gradient(45deg, transparent 0 10px, {{ store.darkMode ? '#ffffff11' : '#00000011' }} 10px 20px);border: none;}
   vue-cal(
     ref="exCreateEventsVueCalEl"
     :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
@@ -1588,6 +1595,7 @@ const exOpenEventDetails = reactive({
   events: [...events]
 })
 
+const exCreateEventsExampleEl = ref(null)
 const exCreateEventsVueCalEl = ref(null)
 const exCreateEvents = reactive({
   createMethods: [
@@ -1599,10 +1607,11 @@ const exCreateEvents = reactive({
   createMethod: ref('event-create'),
   createEvent: ({ e, event, cell, resolve, cursor }) => {
     e.preventDefault()
-    event = event || {
+    event = {
+      ...(event || {}),
       title: 'New Event! 🎉',
-      start: cursor.date,
-      end: cursor.date.addHours(1),
+      start: event?.start || cursor.date,
+      end: event?.end || cursor.date.addHours(1),
       class: 'blue-event'
     }
     resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
