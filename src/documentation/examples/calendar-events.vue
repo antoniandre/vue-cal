@@ -192,7 +192,20 @@ example(
   title="Create Events"
   anchor="create-events")
   template(#desc)
-    .w-flex.justify-end.gap2
+    p.
+      Creating an event is possible in many different ways: programmatically, or by interacting with a
+      calendar cell.#[br]
+      The default interaction is a click and drag gesture, but you can define the type of interaction you
+      want.#[br]
+      The event creation can then be completed by an edition dialog box or not.
+    p.mt3.
+      With the #[code snapToInterval] option, you can make sure the event starts and end at specific
+      intervals of minutes.#[br]
+      E.g. #[code :snap-to-interval="15"] will snap the event to the closest #[code :00], #[code :15],
+      #[code :30], #[code :45] while dragging.#[br]
+      This option also applies on event resizing after the drag-creation.
+
+    .w-flex.justify-end.gap2.mt2
       label Create Event On Cell
       div
         w-radios(
@@ -200,10 +213,11 @@ example(
           @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight"
           :items="exCreateEvents.createMethods")
         p.caption.mt1 (Or however you want)
-    .w-flex.align-center.justify-end.mt4
+    .w-flex.align-center.justify-end.gap3.mt4
       w-switch(
         v-model="exCreateEvents.skipCreationDialog"
         @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight") Skip Creation Dialog
+      w-switch(v-model="exCreateEvents.snapToInterval") Snap to time: 15min
   template(#code-html)
     | &lt;vue-cal
     |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}editable-events
@@ -302,6 +316,7 @@ example(
     :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
     @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
     :events="exCreateEvents.events"
+    :snap-to-interval="exCreateEvents.snapToInterval ? 15 : 0"
     :dark="store.darkMode")
 w-dialog(
   v-if="exCreateEvents.newEvent"
@@ -309,16 +324,93 @@ w-dialog(
   width="300"
   @close="exCreateEvents.cancel")
   w-input(v-model="exCreateEvents.newEvent.title") Event Title
-  w-input(v-model="exCreateEvents.newEvent.class") Event Class
-  w-switch.my2(v-model="exCreateEvents.newEvent.background") Background
+  w-input.my4(v-model="exCreateEvents.newEvent.class") Event Class
+  w-switch(v-model="exCreateEvents.newEvent.background") Background
   .w-flex.justify-end.mt2.gap2
     w-button(@click="exCreateEvents.cancel") Cancel
     w-button(@click="exCreateEvents.save") OK
 
 //- Example.
+//- example(title="Create Events" anchor="create-events")
+  template(#desc)
+    p.
+      The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
+      There are multiple ways to create an event, let's start with the default one.#[br]#[br]
+      You may also want to observe the emitted events in the
+      #[a(href="#ex--emitted-events") emitted events example].
+    alert.
+      With the #[code snapToInterval] option, you can make sure the event starts and end at specific
+      intervals of minutes.#[br]
+      E.g. #[code :snap-to-interval="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.#[br]
+      This option also applies on event resizing after the drag-creation.
+    .w-flex.align-center.wrap
+      | Click and drag a cell to create an event (downwards or upwards).
+      .spacer
+      w-button.mr1.my1(
+        :outline="!snapToInterval15"
+        @click="snapToInterval15 = !snapToInterval15")
+        | Snap to time: 15min
+      w-button.my1(
+        outline
+        @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
+        | Clear all the events
+  template(#code-html).
+    &lt;vue-cal
+      :views-bar="false"
+      :title-bar="false"
+      hide-weekends
+      :time-from="10 * 60"
+      :time-to="16 * 60"
+      :views="['week']"
+      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
+      :drag-to-create-threshold="0"&gt;
+    &lt;/vue-cal&gt;
+
+  vue-cal.ex--create-events(
+    :dark="store.darkMode"
+    ref="vuecalCreateEx"
+    :views-bar="false"
+    :title-bar="false"
+    hide-weekends
+    :time-from="10 * 60"
+    :time-to="16 * 60"
+    :snap-to-interval="snapToInterval15 ? 15 : 0"
+    :views="['week']"
+    :editable-events="{ title: false, drag: false, create: false, resize: true, delete: true, create: true }"
+    :drag-to-create-threshold="0")
+
+  template(#desc2)
+    p.mt6.
+      This event creation method can cause difficulty when the calendar allows a click on a cell to
+      navigate: a slightly slipping click would create an event instead of navigating.#[br]
+      For this reason, the #[code dragToCreateThreshold] option default is 15 pixels.
+      So if you try to click or double click, it will not create an event.
+    p.mb1.
+      In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
+      even with an accidental move while double-clicking.
+    p try to double click on a cell to go to the day view with both #[code dragToCreateThreshold] to 15 and 0.
+    .w-flex.wrap.align-center.justify-end
+      span.subtitle-1.mr2 dragToCreateThreshold (px):
+      w-radios.d-iblock(
+        v-model="dragToCreateThreshold"
+        inline
+        label-color="grey"
+        :items="dragToCreateThresholdOpts")
+        template(#item="{ item }")
+          code {{ item.label }}
+    .example.grow.mt3(style="height: 280px")
+      vue-cal.ex--create-events(
+        :dark="store.darkMode"
+        :time-from="10 * 60"
+        :time-to="16 * 60"
+        hide-weekends
+        :views="['day', 'week']"
+        :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
+        :drag-to-create-threshold="dragToCreateThreshold")
+
+//- Example.
 example(title="Edit & Delete Events" anchor="edit-and-delete-events")
   template(#desc)
-    .todo-tag.d-iflex FINISH THIS EXAMPLE
     p.mb2.
       The #[code editable-events] option allows or prevent all the following actions when set to
       #[code true] or #[code false]:
@@ -330,12 +422,8 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
       li.
         Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
         #[strong Not possible on background events.]
-      li Delete an event (by clicking and holding an event)
-      li.
-        Create a new event (by clicking and dragging on a cell or clicking and holding on a cell)#[br]
-        Learn more about event creation in the #[a(href="#ex---create-events") create events]
-        example.
-
+      li Delete an event (by clicking and holding an event).
+      li Create a new event (by clicking and dragging by default).
     div.mt4
       strong.
         The #[code editable-events] option also accept a more granular object as follows to specifically
@@ -497,84 +585,6 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
 
 
 .todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
-//- Example.
-//- example(title="Create Events" anchor="create-events")
-  template(#desc)
-    p.
-      The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-      There are multiple ways to create an event, let's start with the default one.#[br]#[br]
-      You may also want to observe the emitted events in the
-      #[a(href="#ex--emitted-events") emitted events example].
-    alert.
-      With the #[code snapToTime] option, you can make sure the event starts and end at specific
-      intervals of minutes.#[br]
-      E.g. #[code :snap-to-time="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.#[br]
-      This option also applies on event resizing after the drag-creation.
-    .w-flex.align-center.wrap
-      | Click and drag a cell to create an event (downwards or upwards).
-      .spacer
-      w-button.mr1.my1(
-        :outline="!snapToTime15"
-        @click="snapToTime15 = !snapToTime15")
-        | Snap to time: 15min
-      w-button.my1(
-        outline
-        @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
-        | Clear all the events
-  template(#code-html).
-    &lt;vue-cal
-      :views-bar="false"
-      :title-bar="false"
-      hide-weekends
-      :time-from="10 * 60"
-      :time-to="16 * 60"
-      :views="['week']"
-      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-      :drag-to-create-threshold="0"&gt;
-    &lt;/vue-cal&gt;
-
-  vue-cal.ex--create-events(
-    :dark="store.darkMode"
-    ref="vuecalCreateEx"
-    :views-bar="false"
-    :title-bar="false"
-    hide-weekends
-    :time-from="10 * 60"
-    :time-to="16 * 60"
-    :snap-to-time="snapToTime15 ? 15 : 0"
-    :views="['week']"
-    :editable-events="{ title: false, drag: false, create: false, resize: true, delete: true, create: true }"
-    :drag-to-create-threshold="0")
-
-  template(#desc2)
-    p.mt6.
-      This event creation method can cause difficulty when the calendar allows a click on a cell to
-      navigate: a slightly slipping click would create an event instead of navigating.#[br]
-      For this reason, the #[code dragToCreateThreshold] option default is 15 pixels.
-      So if you try to click or double click, it will not create an event.
-    p.mb1.
-      In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
-      even with an accidental move while double-clicking.
-    p try to double click on a cell to go to the day view with both #[code dragToCreateThreshold] to 15 and 0.
-    .w-flex.wrap.align-center.justify-end
-      span.subtitle-1.mr2 dragToCreateThreshold (px):
-      w-radios.d-iblock(
-        v-model="dragToCreateThreshold"
-        inline
-        label-color="grey"
-        :items="dragToCreateThresholdOpts")
-        template(#item="{ item }")
-          code {{ item.label }}
-    .example.grow.mt3(style="height: 280px")
-      vue-cal.ex--create-events(
-        :dark="store.darkMode"
-        :time-from="10 * 60"
-        :time-to="16 * 60"
-        hide-weekends
-        :views="['day', 'week']"
-        :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-        :drag-to-create-threshold="dragToCreateThreshold")
-
 //- Example.
 //- example(title="Other Event Creation Methods" anchor="other-event-creation-methods")
   template(#desc)
@@ -902,8 +912,8 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
         be truncated to end at midnight (24:00).
       li.
         By default, when you drop the event it will start exactly where you dropped it,
-        but if you prefer you can use the #[code snapToTime] option to dictate where it should
-          snap to (refer to #[code snapToTime] in the #[a(href="#api") API section]).#[br]
+        but if you prefer you can use the #[code snapToInterval] option to dictate where it should
+          snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
         If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
         the native HTML5 drag &amp; drop.
     h5 Emitted events
@@ -936,7 +946,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
       :time-from="10 * 60"
       :time-to="23 * 60"
       hide-weekends
-      :snap-to-time="15"
+      :snap-to-interval="15"
       editable-events
       :events="events"
       :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
@@ -951,7 +961,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
     :time-from="10 * 60"
     :time-to="23 * 60"
     hide-weekends
-    :snap-to-time="15"
+    :snap-to-interval="15"
     editable-events
     :events="exDragAndDrop.events"
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
@@ -1620,6 +1630,7 @@ const exCreateEvents = reactive({
   },
   skipCreationDialog: ref(true),
   showCreationDialog: ref(false),
+  snapToInterval: ref(false),
   resolve: null,
   events: ref([]),
   newEvent: {
@@ -1689,7 +1700,7 @@ const exEventCreate = reactive({
 
     return event
   },
-  snapToTime15: ref(false),
+  snapToInterval15: ref(false),
   dragToCreateThreshold: ref(15),
   dragToCreateThresholdOpts: ref([{ label: '0' }, { label: '15' }]),
   deleteEventFunction: ref(null),
