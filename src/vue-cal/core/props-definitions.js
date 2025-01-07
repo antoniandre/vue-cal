@@ -25,11 +25,12 @@ export const props = {
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
   specialHours: { type: Object, default: () => ({}) }, // Highlight a particular time range on each day of the week, individually.
   schedules: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
+  snapToInterval: { type: Number, default: 0 }, // Snap the event start and end to a specific interval in minutes.
   startWeekOnSunday: { type: Boolean, default: false }, // Shows Sunday before Monday in days, week and month views.
   theme: { type: [String, Boolean], default: 'default' }, // Only adds a CSS class when set to default.
-  time: { type: Boolean, default: true },
+  time: { type: Boolean, default: true }, // Show or hide the time column.
   timeCellHeight: { type: Number, default: 40 }, // In pixels.
-  timeFormat: { type: String, default: '' },
+  timeFormat: { type: String, default: '' }, // Overrides the default time format.
   timeFrom: { type: Number, default: 0 }, // Start time of the time column, in minutes.
   timeStep: { type: Number, default: 60 }, // Step amount for the time in the time column, in minutes.
   timeTo: { type: Number, default: minutesInADay }, // End time of the time column, in minutes.
@@ -54,7 +55,6 @@ export const props = {
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
   dragToCreateThreshold: { type: Number, default: 15 },
-  snapToInterval: { type: Number, default: 0 },
 
   // TODO:
   eventsCountOnYearView: { type: Boolean, default: false },

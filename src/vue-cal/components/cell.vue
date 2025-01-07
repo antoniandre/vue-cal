@@ -119,10 +119,18 @@ const awaitingEventCreation = ref(false)
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
 // The calendar creation could be canceled for different wanted reasons at the end of dragging.
 const eventPlaceholder = computed(() => {
-  const startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
-  const endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
-  const startMinutes = percentageToMinutes(startPercentage, config)
-  const endMinutes = percentageToMinutes(endPercentage, config)
+  let startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
+  let endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
+  let startMinutes = percentageToMinutes(startPercentage, config)
+  let endMinutes = percentageToMinutes(endPercentage, config)
+
+  // Snap the event to the nearest interval if set.
+  if (config.snapToInterval) {
+    startMinutes = dateUtils.snapToInterval(startMinutes, config.snapToInterval)
+    endMinutes = dateUtils.snapToInterval(endMinutes, config.snapToInterval)
+    startPercentage = minutesToPercentage(startMinutes, config)
+    endPercentage = minutesToPercentage(endMinutes, config)
+  }
 
   return {
     style: {

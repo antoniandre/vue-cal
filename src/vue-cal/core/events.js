@@ -1,7 +1,7 @@
 import { computed } from 'vue'
 
 export const useEvents = vuecal => {
-  const { dateUtils } = vuecal
+  const { dateUtils, config } = vuecal
   let uid = 0 // Internal unique ID events counter.
 
   const events = computed(() => {
@@ -12,7 +12,7 @@ export const useEvents = vuecal => {
       byId: {} // A map of all the events indexed by ID for fast lookup.
     }
 
-    vuecal.config.events.forEach(event => {
+    config.events.forEach(event => {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
       normalizeEventDates(event)
 
@@ -84,7 +84,14 @@ export const useEvents = vuecal => {
       return
     }
 
-    vuecal.config.events.push(newEvent) // Add the new event to the source of truth.
+    // If `snapToInterval` is enabled in the configuration, adjust the `start` and `end` times to the
+    // nearest interval specified by `config.snapToInterval`.
+    if (config.snapToInterval) {
+      dateUtils.snapToInterval(newEvent.start, config.snapToInterval)
+      dateUtils.snapToInterval(newEvent.end, config.snapToInterval)
+    }
+
+    config.events.push(newEvent) // Add the new event to the source of truth.
     return true
   }
 
@@ -92,10 +99,10 @@ export const useEvents = vuecal => {
     if (!eventId) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
     // Remove the event from the source of truth.
-    const index = vuecal.config.events.findIndex(item => item._.id === eventId)
+    const index = config.events.findIndex(item => item._.id === eventId)
     if (index === -1) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
     else {
-      vuecal.config.events.splice(index, 1)
+      config.events.splice(index, 1)
       return true
     }
   }

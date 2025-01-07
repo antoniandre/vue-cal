@@ -93,6 +93,33 @@ export const useDateUtils = initTexts => {
   }
 
   /**
+   * Adjusts the given input to the nearest interval.
+   *
+   * @param {number|Date} input - The input to be adjusted. Can be a number representing minutes or a Date object.
+   * @param {number} interval - The interval to snap to.
+   * @returns {number|void} - Returns the adjusted minutes if the input is a number. If the input is a Date object, it modifies the Date object in place.
+   */
+  const snapToInterval = (input, interval) => {
+    const adjustMinutes = minutes => {
+      const remainder = minutes % interval
+      if (remainder !== 0) {
+        minutes += remainder >= interval / 2 ? interval - remainder : -remainder
+      }
+      return minutes
+    }
+
+    if (typeof input === 'number') return adjustMinutes(input)
+    else if (input instanceof Date) {
+      let minutes = adjustMinutes(input.getMinutes())
+      if (minutes >= 60) {
+        input.setHours(input.getHours() + 1)
+        minutes = 0
+      }
+      input.setMinutes(minutes, 0, 0)
+    }
+  }
+
+  /**
    * Get the week number for the given date.
    * Note: If starting the week on Sunday, 1 is added to the result because it's the first day
    * of the next week - compared to start from Monday where the Sunday is in the past week.
@@ -414,6 +441,7 @@ export const useDateUtils = initTexts => {
     subtractHours,
     addMinutes,
     subtractMinutes,
+    snapToInterval,
     getWeek,
     isToday,
     isSameDate,
