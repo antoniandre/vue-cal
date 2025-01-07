@@ -56,9 +56,9 @@ export const DragAndDrop = class {
     let startTimeMinutes = Math.max(this._getEventStart(e), 0)
 
     // On drop, snap to time every X minutes if the option is on.
-    if (this._vuecal.snapToTime) {
-      const plusHalfSnapTime = (startTimeMinutes + this._vuecal.snapToTime / 2)
-      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this._vuecal.snapToTime)
+    if (this._vuecal.snapToInterval) {
+      const plusHalfSnapTime = (startTimeMinutes + this._vuecal.snapToInterval / 2)
+      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this._vuecal.snapToInterval)
     }
 
     event.startTimeMinutes = startTimeMinutes

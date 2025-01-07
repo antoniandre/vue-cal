@@ -800,7 +800,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code snapToTime
+      strong.code snapToInterval
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -808,7 +808,7 @@ w-accordion.mt2(
     template(#content)
       p.
         Accepts a number of minutes from 0 to 60 to snap a dropped event or an event end time while resizing.#[br]
-        For instance, with a #[span.code snapToTime] of 15 min, an event dropped at a start of 10:05,
+        For instance, with a #[span.code snapToInterval] of 15 min, an event dropped at a start of 10:05,
         will snap to 10:00, and dropped at 10:11 will snap to 10:15.#[br]
         This option affects event resizing, event drag &amp; dropping, and event drag-creation.
 

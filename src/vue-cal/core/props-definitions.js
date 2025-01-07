@@ -54,7 +54,7 @@ export const props = {
   // Start a drag creation after dragging a certain amount of pixels.
   // This prevents drag creation by mistake when you want to navigate.
   dragToCreateThreshold: { type: Number, default: 15 },
-  snapToTime: { type: Number, default: 0 },
+  snapToInterval: { type: Number, default: 0 },
 
   // TODO:
   eventsCountOnYearView: { type: Boolean, default: false },
