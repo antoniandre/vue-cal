@@ -117,7 +117,7 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
   template(#code-html).
     &lt;vue-cal :events="events" @event-click="openDialog" /&gt;
 
-    &lt;!-- Using Wave UI --&gt;
+    &lt;!-- Using Wave UI - https://antoniandre.github.io/wave-ui --&gt;
     &lt;w-dialog
       v-if="demo.event"
       v-model="showDialog"
@@ -212,6 +212,7 @@ example(
     template(v-if="!exCreateEvents.skipCreationDialog")
       |
       |
+      | &lt;!-- Using Wave UI - https://antoniandre.github.io/wave-ui --&gt;
       | &lt;w-dialog
       |   v-if="newEvent"
       |   v-model="showCreationDialog"
@@ -219,7 +220,7 @@ example(
       |   @close="cancelCreation"&gt;
       |   &lt;w-input v-model="newEvent.title"&gt;Event Title&lt;/w-input&gt;
       |   &lt;w-input v-model="newEvent.class"&gt;Event Class&lt;/w-input&gt;
-      |   &lt;w-switch.my2 v-model="newEvent.background"&gt;Background&lt;/w-switch&gt;
+      |   &lt;w-switch v-model="newEvent.background"&gt;Background&lt;/w-switch&gt;
       |   &lt;div class="w-flex justify-end mt2 gap2"&gt;
       |     &lt;w-button @click="cancelCreation"&gt;Cancel&lt;/w-button&gt;
       |     &lt;w-button @click="validateCreation"&gt;OK&lt;/w-button&gt;
@@ -241,10 +242,9 @@ example(
       |   })
       | }
       |
-
     template(v-else-if="exCreateEvents.createMethod === 'event-create'")
       | const createEvent = ({ event, resolve }) => {
-      |     openCreationDialog({ event, resolve })
+      |   openCreationDialog({ event, resolve })
       | }
       |
     template(v-else-if="exCreateEvents.createMethod !== 'event-create'")
@@ -753,7 +753,7 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
                 :on-event-create="onEventCreate"&gt;
             &lt;/vue-cal&gt;
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;!-- Using Wave UI --&gt;
+        &lt;!-- Using Wave UI - https://antoniandre.github.io/wave-ui --&gt;
         &lt;w-dialog
           v-model="showEventCreationDialog"
           :persistent="true"
