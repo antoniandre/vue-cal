@@ -55,7 +55,7 @@ export const DragAndDrop = class {
     // Force the start of the event at previous midnight minimum.
     let startTimeMinutes = Math.max(this._getEventStart(e), 0)
 
-    // On drop, snap to time every X minutes if the option is on.
+    // On drop, Snap to interval every X minutes if the option is on.
     if (this._vuecal.snapToInterval) {
       const plusHalfSnapTime = (startTimeMinutes + this._vuecal.snapToInterval / 2)
       startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this._vuecal.snapToInterval)

@@ -193,8 +193,7 @@ example(
   anchor="create-events")
   template(#desc)
     p.
-      Creating an event is possible in many different ways: programmatically, or by interacting with a
-      calendar cell.#[br]
+      Events can be created in various ways: programmatically or through user interaction with a calendar cell.#[br]
       The default interaction is a click and drag gesture, but you can define the type of interaction you
       want.#[br]
       The event creation can then be completed by an edition dialog box or not.
@@ -204,6 +203,8 @@ example(
       E.g. #[code :snap-to-interval="15"] will snap the event to the closest #[code :00], #[code :15],
       #[code :30], #[code :45] while dragging.#[br]
       This option also applies on event resizing after the drag-creation.
+
+    alert The event creation is only available on a day cell: not on year &amp; years views.
 
     .w-flex.justify-end.gap2.mt2
       label Create Event On Cell
@@ -217,10 +218,10 @@ example(
       w-switch(
         v-model="exCreateEvents.skipCreationDialog"
         @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight") Skip Creation Dialog
-      w-switch(v-model="exCreateEvents.snapToInterval") Snap to time: 15min
+      w-switch(v-model="exCreateEvents.snapToInterval") Snap to Interval: #[span.code.transparent--bg.inherit 15min]
   template(#code-html)
     | &lt;vue-cal
-    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}editable-events
+    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}{{ exCreateEvents.snapToInterval ? ':snap-to-interval="15"\n  ' : '' }}editable-events
     |   @{{ exCreateEvents.createMethod }}="createEvent"&gt;
     | &lt;/vue-cal&gt;
     template(v-if="!exCreateEvents.skipCreationDialog")
@@ -333,23 +334,13 @@ w-dialog(
 //- Example.
 //- example(title="Create Events" anchor="create-events")
   template(#desc)
-    p.
-      The event creation is only possible on a day cell, so not on years &amp; year views.#[br]
-      There are multiple ways to create an event, let's start with the default one.#[br]#[br]
-      You may also want to observe the emitted events in the
-      #[a(href="#ex--emitted-events") emitted events example].
-    alert.
-      With the #[code snapToInterval] option, you can make sure the event starts and end at specific
-      intervals of minutes.#[br]
-      E.g. #[code :snap-to-interval="15"] will snap the event to the closest :00, :15, :30, :45 while dragging.#[br]
-      This option also applies on event resizing after the drag-creation.
     .w-flex.align-center.wrap
       | Click and drag a cell to create an event (downwards or upwards).
       .spacer
       w-button.mr1.my1(
         :outline="!snapToInterval15"
         @click="snapToInterval15 = !snapToInterval15")
-        | Snap to time: 15min
+        | Snap to interval: 15min
       w-button.my1(
         outline
         @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")

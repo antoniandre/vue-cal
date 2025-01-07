@@ -85,8 +85,8 @@ ul.kanban
       .task Date prototypes
       .task Business hours
       .task Drag &amp; drop events
-      .task Resize events snap to time
-      .task Drag events snap to time
+      .task Resize events Snap to interval
+      .task Drag events Snap to interval
       .task Drag &amp; drop ext. events into Vue Cal
       .task Disable days
       .task Support Vue 3
