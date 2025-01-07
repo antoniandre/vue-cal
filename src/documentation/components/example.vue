@@ -26,7 +26,6 @@
       data-label="CSS"
       :dark="store.darkMode")
       slot(name="code-css")
-    pre ({{sourceWrapNoScroll}})
     w-button.example__source-expand(v-if="!sourceWrapNoScroll" sm round @click="expanded = !expanded")
       w-icon.mr1 mdi mdi-unfold-{{ expanded ? 'less' : 'more' }}-horizontal
       | {{ expanded ? 'Collapse' : 'Expand' }} Source Code
