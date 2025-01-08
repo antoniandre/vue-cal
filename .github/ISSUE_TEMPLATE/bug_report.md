@@ -12,8 +12,8 @@ assignees: ''
 ## Environment
 - **Vue Cal Version:**
 - **Vue Version:**
-- [] **Composition API**
-- [] **SSR**
+- [ ] **Composition API**
+- [ ] **SSR**
 
 ## Describe the bug & expected behavior
 > Clear & concise description of what the bug is and what you expected to happen (add screenshots when helpful):
