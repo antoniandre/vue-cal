@@ -322,58 +322,19 @@ example(
     :events="exCreateEvents.events"
     :snap-to-interval="exCreateEvents.snapToInterval ? 15 : 0"
     :dark="store.darkMode")
-w-dialog(
-  v-if="exCreateEvents.newEvent"
-  v-model="exCreateEvents.showCreationDialog"
-  width="300"
-  @close="exCreateEvents.cancel")
-  w-input(v-model="exCreateEvents.newEvent.title") Event Title
-  w-input.my4(v-model="exCreateEvents.newEvent.class") Event Class
-  w-switch(v-model="exCreateEvents.newEvent.background") Background
-  .w-flex.justify-end.mt2.gap2
-    w-button(@click="exCreateEvents.cancel") Cancel
-    w-button(@click="exCreateEvents.save") OK
+  w-dialog(
+    v-if="exCreateEvents.newEvent"
+    v-model="exCreateEvents.showCreationDialog"
+    width="300"
+    @close="exCreateEvents.cancel")
+    w-input(v-model="exCreateEvents.newEvent.title") Event Title
+    w-input.my4(v-model="exCreateEvents.newEvent.class") Event Class
+    w-switch(v-model="exCreateEvents.newEvent.background") Background
+    .w-flex.justify-end.mt2.gap2
+      w-button(@click="exCreateEvents.cancel") Cancel
+      w-button(@click="exCreateEvents.save") OK
 
-//- Example.
-//- example(title="Create Events" anchor="create-events")
-  template(#desc)
-    .w-flex.align-center.wrap
-      | Click and drag a cell to create an event (downwards or upwards).
-      .spacer
-      w-button.mr1.my1(
-        :outline="!snapToInterval15"
-        @click="snapToInterval15 = !snapToInterval15")
-        | Snap to interval: 15min
-      w-button.my1(
-        outline
-        @click="$refs.vuecalCreateEx.mutableEvents = [];$refs.vuecalCreateEx.view.events = []")
-        | Clear all the events
-  template(#code-html).
-    &lt;vue-cal
-      :views-bar="false"
-      :title-bar="false"
-      hide-weekends
-      :time-from="10 * 60"
-      :time-to="16 * 60"
-      :views="['week']"
-      :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-      :drag-to-create-threshold="0"&gt;
-    &lt;/vue-cal&gt;
-
-  vue-cal.ex--create-events(
-    :dark="store.darkMode"
-    ref="vuecalCreateEx"
-    :views-bar="false"
-    :title-bar="false"
-    hide-weekends
-    :time-from="10 * 60"
-    :time-to="16 * 60"
-    :snap-to-interval="snapToInterval15 ? 15 : 0"
-    :views="['week']"
-    :editable-events="{ title: false, drag: false, create: false, resize: true, delete: true, create: true }"
-    :drag-to-create-threshold="0")
-
-  template(#desc2)
+  //- template(#desc2)
     p.mt6.
       This event creation method can cause difficulty when the calendar allows a click on a cell to
       navigate: a slightly slipping click would create an event instead of navigating.#[br]
