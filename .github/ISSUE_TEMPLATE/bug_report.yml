@@ -1,0 +1,66 @@
+name: Bug Report
+description: Report a bug to help us improve.
+title: "[Bug] "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## IS THIS BUG FOR V5 OR V4?
+        > V4 issues should be reported [here](https://github.com/antoniandre/vue-cal-v4/issues).
+
+  - type: input
+    id: vue-cal-version
+    attributes:
+      label: "Vue Cal Version"
+      description: "Specify the version of Vue Cal you are using (e.g., 5.0.0)."
+      placeholder: "e.g., 5.0.0"
+      required: true
+
+  - type: input
+    id: vue-version
+    attributes:
+      label: "Vue Version"
+      description: "Specify the version of Vue you are using (e.g., 3.3.0)."
+      placeholder: "e.g., 3.3.0"
+      required: true
+
+  - type: checkboxes
+    id: additional-settings
+    attributes:
+      label: "Additional Settings"
+      description: "Check all that apply."
+      options:
+        - label: "Using Composition API"
+          required: false
+        - label: "Using SSR"
+          required: false
+
+  - type: textarea
+    id: bug-description
+    attributes:
+      label: "Describe the Bug & Expected Behavior"
+      description: "Provide a clear and concise description of the bug and what you expected to happen. Add screenshots if helpful."
+      placeholder: "Describe the bug and expected behavior here..."
+      required: true
+
+  - type: textarea
+    id: reproduction-link
+    attributes:
+      label: "Provide a Reproduction Link or Steps"
+      description: |
+        Provide a link to reproduce the issue using one of the following:
+
+        - Fork from Codepen:
+          - [Vue Cal + Vue 3](https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010)
+        - Fork from Stackblitz:
+          - [Vue Cal + Vue 3 + Vue CLI](https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue)
+          - [Vue Cal + Vue 3 + Vite](https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue)
+          - [Vue Cal + Vue 3 & Composition API + Vite](https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue)
+          - [Vue Cal + Vue 2 + Vue CLI](https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue)
+        - Or describe steps to reproduce the behavior:
+          1. Go to '...'
+          2. Click on '...'
+          3. See error
+      placeholder: "Paste reproduction link or describe steps here..."
+      required: true
