@@ -15,8 +15,8 @@ body:
       label: "Vue Cal Version"
       description: "Specify the version of Vue Cal you are using (e.g., 5.0.0)."
       placeholder: "e.g., 5.0.0"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: input
     id: vue-version
@@ -24,8 +24,8 @@ body:
       label: "Vue Version"
       description: "Specify the version of Vue you are using (e.g., 3.3.0)."
       placeholder: "e.g., 3.3.0"
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: checkboxes
     id: additional-settings
@@ -42,8 +42,8 @@ body:
       label: "Describe the Bug & Expected Behavior"
       description: "Provide a clear and concise description of the bug and what you expected to happen. Add screenshots if helpful."
       placeholder: "Describe the bug and expected behavior here..."
-      validations:
-        required: true
+    validations:
+      required: true
 
   - type: textarea
     id: reproduction-link
@@ -64,5 +64,5 @@ body:
           2. Click on '...'
           3. See error
       placeholder: "Paste reproduction link or describe steps here..."
-      validations:
-        required: true
+    validations:
+      required: true
