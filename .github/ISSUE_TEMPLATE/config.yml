@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Questions & Discussions
+    url: https://github.com/antoniandre/vue-cal/discussions
+    about: Use GitHub discussions for message-board style questions and discussions.
+  - name: Sponsor
+    url: https://github.com/sponsors/antoniandre
+    about: Love Vu Cal? Please consider supporting us via Github Sponsor.
