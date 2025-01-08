@@ -192,18 +192,21 @@ example(
   title="Create Events"
   anchor="create-events")
   template(#desc)
-    p.
-      Events can be created in various ways: programmatically or through user interaction with a calendar cell.#[br]
-      The default interaction is a click and drag gesture, but you can define the type of interaction you
-      want.#[br]
-      The event creation can then be completed by an edition dialog box or not.
-    p.mt3.
-      With the #[code snapToInterval] option, you can make sure the event starts and end at specific
-      intervals of minutes.#[br]
-      E.g. #[code :snap-to-interval="15"] will snap the event to the closest #[code :00], #[code :15],
-      #[code :30], #[code :45] while dragging.#[br]
-      This option also applies on event resizing after the drag-creation.
+    .w-flex.wrap.gap3
+      .grow.xs7
+        p.
+          Events can be created in various ways: programmatically or through user interaction with a calendar cell.#[br]
+          The default interaction is a click and drag gesture, but you can define the type of interaction you
+          want.#[br]
+          The event creation can then be completed by an edition dialog box or not.
+        p.mt3.
+          With the #[code snapToInterval] option, you can make sure the event starts and end at specific
+          intervals of minutes.#[br]
+          E.g. #[code :snap-to-interval="15"] will snap the event to the closest #[code :00], #[code :15],
+          #[code :30], #[code :45] while dragging.#[br]
+          This option also applies on event resizing after the drag-creation.
 
+      w-image.bd1.bdrs2.sh2(src="/click-and-drag.webp" alt="Create Events" width="250" lazy)
     alert The event creation is only available on a day cell: not on year &amp; years views.
 
     .w-flex.justify-end.gap2.mt2
