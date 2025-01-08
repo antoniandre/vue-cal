@@ -43,24 +43,3 @@ body:
       description: "Provide a clear and concise description of the bug and what you expected to happen. Add screenshots if helpful."
       placeholder: "Describe the bug and expected behavior here..."
       required: true
-
-  - type: textarea
-    id: reproduction-link
-    attributes:
-      label: "Provide a Reproduction Link or Steps"
-      description: |
-        Provide a link to reproduce the issue using one of the following:
-
-        - Fork from Codepen:
-          - [Vue Cal + Vue 3](https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010)
-        - Fork from Stackblitz:
-          - [Vue Cal + Vue 3 + Vue CLI](https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue)
-          - [Vue Cal + Vue 3 + Vite](https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue)
-          - [Vue Cal + Vue 3 & Composition API + Vite](https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue)
-          - [Vue Cal + Vue 2 + Vue CLI](https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue)
-        - Or describe steps to reproduce the behavior:
-          1. Go to '...'
-          2. Click on '...'
-          3. See error
-      placeholder: "Paste reproduction link or describe steps here..."
-      required: true
