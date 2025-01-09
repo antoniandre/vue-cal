@@ -4,6 +4,8 @@
 [![npm](https://img.shields.io/npm/dw/vue-cal.svg)](https://www.npmjs.com/package/vue-cal)
 [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
 
+<img width="1057" alt="vue-cal-5" src="https://github.com/user-attachments/assets/70502565-f03e-47bd-b217-9adf9ce9e561" />
+
 # Vue Cal v5 - A Flexible and Beautiful Vue 3 Calendar 📅✨
 
 Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable.
