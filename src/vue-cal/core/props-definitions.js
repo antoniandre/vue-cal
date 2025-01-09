@@ -9,6 +9,8 @@ export const props = {
   // Can be true false or a finer grain permissions object like:
   // { title: bool, drag: bool, resize: bool, create: bool, delete: bool }
   editableEvents: { type: [Boolean, Object], default: false },
+  // Minimum drag distance in pixels to create an event (prevents accidental event creation when trying to navigate).
+  eventCreateDragMin: { type: Number, default: 15 },
   // The array of events to display in Vue Cal.
   // Can hold just the view events and be updated or the full array of all events available.
   events: { type: Array, default: () => [] },
@@ -50,11 +52,6 @@ export const props = {
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   weekNumbers: { type: [Boolean, String], default: false }, // Show the weeks numbers in a column on month view.
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
-
-  // TODO NEXT:
-  // Start a drag creation after dragging a certain amount of pixels.
-  // This prevents drag creation by mistake when you want to navigate.
-  dragToCreateThreshold: { type: Number, default: 15 },
 
   // TODO:
   eventsCountOnYearView: { type: Boolean, default: false },

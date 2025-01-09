@@ -719,7 +719,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code dragToCreateThreshold
+      strong.code eventCreateDragMin
       .type [Number]
       | ,
       .body.grey.mx1 default:

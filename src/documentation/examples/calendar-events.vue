@@ -338,19 +338,19 @@ example(
     p.mt6.
       This event creation method can cause difficulty when the calendar allows a click on a cell to
       navigate: a slightly slipping click would create an event instead of navigating.#[br]
-      For this reason, the #[code dragToCreateThreshold] option default is 15 pixels.
+      For this reason, the #[code eventCreateDragMin] option default is 15 pixels.
       So if you try to click or double click, it will not create an event.
     p.mb1.
       In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
       even with an accidental move while double-clicking.
-    p try to double click on a cell to go to the day view with both #[code dragToCreateThreshold] to 15 and 0.
+    p try to double click on a cell to go to the day view with both #[code eventCreateDragMin] to 15 and 0.
     .w-flex.wrap.align-center.justify-end
-      span.subtitle-1.mr2 dragToCreateThreshold (px):
+      span.subtitle-1.mr2 eventCreateDragMin (px):
       w-radios.d-iblock(
-        v-model="dragToCreateThreshold"
+        v-model="eventCreateDragMin"
         inline
         label-color="grey"
-        :items="dragToCreateThresholdOpts")
+        :items="eventCreateDragMinOpts")
         template(#item="{ item }")
           code {{ item.label }}
     .example.grow.mt3(style="height: 280px")
@@ -361,7 +361,7 @@ example(
         hide-weekends
         :views="['day', 'week']"
         :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-        :drag-to-create-threshold="dragToCreateThreshold")
+        :event-create-drag-min="eventCreateDragMin")
 
 //- Example.
 example(title="Edit & Delete Events" anchor="edit-and-delete-events")
@@ -1656,8 +1656,8 @@ const exEventCreate = reactive({
     return event
   },
   snapToInterval15: ref(false),
-  dragToCreateThreshold: ref(15),
-  dragToCreateThresholdOpts: ref([{ label: '0' }, { label: '15' }]),
+  eventCreateDragMin: ref(15),
+  eventCreateDragMinOpts: ref([{ label: '0' }, { label: '15' }]),
   deleteEventFunction: ref(null),
   deleteDragEventFunction: ref(null),
   cancelEventCreation: () => {
