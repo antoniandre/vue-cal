@@ -89,6 +89,7 @@ A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see y
 [![audabas](https://avatars.githubusercontent.com/audabas?s=25)](https://github.com/audabas)
 [![crbast](https://avatars.githubusercontent.com/crbast?s=25)](https://github.com/crbast)
 [![codecov](https://avatars.githubusercontent.com/codecov?s=25)](https://github.com/codecov)
+[![zeidanbm](https://avatars.githubusercontent.com/zeidanbm?s=25)](https://github.com/zeidanbm)
 
 
 ---
