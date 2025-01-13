@@ -200,11 +200,15 @@ example(
           want.#[br]
           The event creation can then be completed by an edition dialog box or not.
         p.mt3.
-          With the #[code snapToInterval] option, you can make sure the event starts and end at specific
+          With the #[code snapToInterval] option, you can make sure the event starts and ends at specific
           intervals of minutes.#[br]
           E.g. #[code :snap-to-interval="15"] will snap the event to the closest #[code :00], #[code :15],
           #[code :30], #[code :45] while dragging.#[br]
           This option also applies on event resizing after the drag-creation.
+        p.mt3.
+          With the #[code eventCreateMinDrag] option, you can define the minimum drag distance in pixels
+          before the event creation starts. This can be useful to prevent accidental event creation when
+          navigating the calendar.
 
       w-image.bd1.bdrs2.sh2(src="/click-and-drag.webp" alt="Create Events" width="250" lazy)
     alert The event creation is only available on a day cell: not on year &amp; years views.
@@ -217,14 +221,15 @@ example(
           @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight"
           :items="exCreateEvents.createMethods")
         p.caption.mt1 (Or however you want)
-    .w-flex.align-center.justify-end.gap3.mt4
+    .w-flex.align-center.justify-end.gap3.mt4.wrap
       w-switch(
         v-model="exCreateEvents.skipCreationDialog"
         @update:model-value="(exCreateEventsExampleEl || {}).refreshHeight") Skip Creation Dialog
       w-switch(v-model="exCreateEvents.snapToInterval") Snap to Interval: #[span.code.transparent--bg.inherit 15min]
+      w-switch(v-model="exCreateEvents.eventCreateMinDrag") Event Create Drag Min: #[span.code.transparent--bg.inherit 15px]
   template(#code-html)
     | &lt;vue-cal
-    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}{{ exCreateEvents.snapToInterval ? ':snap-to-interval="15"\n  ' : '' }}editable-events
+    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}{{ exCreateEvents.snapToInterval ? ':snap-to-interval="15"\n  ' : '' }}{{ exCreateEvents.eventCreateMinDrag ? ':event-create-min-drag="15"\n  ' : '' }}editable-events
     |   @{{ exCreateEvents.createMethod }}="createEvent"&gt;
     | &lt;/vue-cal&gt;
     template(v-if="!exCreateEvents.skipCreationDialog")
@@ -321,6 +326,7 @@ example(
     @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
     :events="exCreateEvents.events"
     :snap-to-interval="exCreateEvents.snapToInterval ? 15 : 0"
+    :event-create-min-drag="exCreateEvents.eventCreateMinDrag ? 15 : 0"
     :dark="store.darkMode")
   w-dialog(
     v-if="exCreateEvents.newEvent"
@@ -333,35 +339,6 @@ example(
     .w-flex.justify-end.mt2.gap2
       w-button(@click="exCreateEvents.cancel") Cancel
       w-button(@click="exCreateEvents.save") OK
-
-  //- template(#desc2)
-    p.mt6.
-      This event creation method can cause difficulty when the calendar allows a click on a cell to
-      navigate: a slightly slipping click would create an event instead of navigating.#[br]
-      For this reason, the #[code eventCreateDragMin] option default is 15 pixels.
-      So if you try to click or double click, it will not create an event.
-    p.mb1.
-      In this example, the event "drag-creation" only starts after dragging 15 pixels, which allows navigating
-      even with an accidental move while double-clicking.
-    p try to double click on a cell to go to the day view with both #[code eventCreateDragMin] to 15 and 0.
-    .w-flex.wrap.align-center.justify-end
-      span.subtitle-1.mr2 eventCreateDragMin (px):
-      w-radios.d-iblock(
-        v-model="eventCreateDragMin"
-        inline
-        label-color="grey"
-        :items="eventCreateDragMinOpts")
-        template(#item="{ item }")
-          code {{ item.label }}
-    .example.grow.mt3(style="height: 280px")
-      vue-cal.ex--create-events(
-        :dark="store.darkMode"
-        :time-from="10 * 60"
-        :time-to="16 * 60"
-        hide-weekends
-        :views="['day', 'week']"
-        :editable-events="{ title: false, drag: false, resize: true, delete: true, create: true }"
-        :event-create-drag-min="eventCreateDragMin")
 
 //- Example.
 example(title="Edit & Delete Events" anchor="edit-and-delete-events")
@@ -1586,6 +1563,7 @@ const exCreateEvents = reactive({
   skipCreationDialog: ref(true),
   showCreationDialog: ref(false),
   snapToInterval: ref(false),
+  eventCreateMinDrag: ref(false),
   resolve: null,
   events: ref([]),
   newEvent: {
@@ -1656,8 +1634,8 @@ const exEventCreate = reactive({
     return event
   },
   snapToInterval15: ref(false),
-  eventCreateDragMin: ref(15),
-  eventCreateDragMinOpts: ref([{ label: '0' }, { label: '15' }]),
+  eventCreateMinDrag: ref(15),
+  eventCreateMinDragOpts: ref([{ label: '0' }, { label: '15' }]),
   deleteEventFunction: ref(null),
   deleteDragEventFunction: ref(null),
   cancelEventCreation: () => {
