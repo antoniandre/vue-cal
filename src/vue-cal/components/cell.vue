@@ -104,6 +104,7 @@ const touch = reactive({
   dragging: false,
   holding: false, // When the cell is clicked and hold for a certain amount of time.
   holdTimer: null, // Cell click and hold detection.
+  thresholdPassed: false, // If the drag threshold has been passed.
   startX: 0,
   startY: 0,
   moveX: 0,
@@ -145,7 +146,11 @@ const eventPlaceholder = computed(() => {
   }
 })
 
-const isCreatingEvent = computed(() => config.editableEvents?.create && (touch.dragging || awaitingEventCreation.value))
+const isCreatingEvent = computed(() => {
+  const isCreating = config.editableEvents?.create && (touch.dragging || awaitingEventCreation.value)
+  const hasPassedMinDrag = ((config.eventCreateMinDrag && touch.thresholdPassed) || !config.eventCreateMinDrag)
+  return isCreating && hasPassedMinDrag
+})
 
 const classes = computed(() => {
   const now = new Date()
@@ -383,6 +388,7 @@ const onMousedown = e => {
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.startPercentageX = touch.startX * 100 / rect.width
   touch.startPercentageY = touch.startY * 100 / rect.height
+  touch.thresholdPassed = false
 
   document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
   document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
@@ -411,6 +417,9 @@ const onDocMousemove = e => {
   touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.movePercentageX = touch.moveX * 100 / rect.width
   touch.movePercentageY = touch.moveY * 100 / rect.height
+  if (config.eventCreateMinDrag && (Math.abs(touch.startY - touch.moveY) > config.eventCreateMinDrag)) {
+    touch.thresholdPassed = true
+  }
 
   // If there's a @cell-drag external listener, call it.
   cellEventListeners.value.drag?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
@@ -442,10 +451,13 @@ const onDocMouseup = async e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
+  touch.thresholdPassed = false
   touch.schedule = null
 }
 
 const createEventIfAllowed = async e => {
+  if (!isCreatingEvent.value) return
+
   let { start, end, startMinutes, endMinutes } = eventPlaceholder.value
   start = new Date(props.start)
   start.setMinutes(startMinutes)

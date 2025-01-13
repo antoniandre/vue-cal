@@ -10,7 +10,7 @@ export const props = {
   // { title: bool, drag: bool, resize: bool, create: bool, delete: bool }
   editableEvents: { type: [Boolean, Object], default: false },
   // Minimum drag distance in pixels to create an event (prevents accidental event creation when trying to navigate).
-  eventCreateDragMin: { type: Number, default: 15 },
+  eventCreateMinDrag: { type: Number, default: 15 }, // The minimum drag distance in pixels to create an event.
   // The array of events to display in Vue Cal.
   // Can hold just the view events and be updated or the full array of all events available.
   events: { type: Array, default: () => [] },
