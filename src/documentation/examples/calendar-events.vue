@@ -73,7 +73,7 @@ example(title="Events & Background Events" anchor="events")
     :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
-    style="height: 260px")
+    style="height: 261px")
 
 //- Example.
 example(title="Timeless Events" anchor="timeless-events")
@@ -168,7 +168,8 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
-    @event-click="exOpenEventDetails.openDialog")
+    @event-click="exOpenEventDetails.openDialog"
+    style="height: 301px")
 //- Do not indent the w-dialog into the example:
 //- It causes to re-render the whole example on open/close and so, the calendar cells as well.
 w-dialog(
@@ -327,7 +328,14 @@ example(
     :events="exCreateEvents.events"
     :snap-to-interval="exCreateEvents.snapToInterval ? 15 : 0"
     :event-create-min-drag="exCreateEvents.eventCreateMinDrag ? 15 : 0"
-    :dark="store.darkMode")
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :view-date="new Date()"
+    :views-bar="false"
+    :dark="store.darkMode"
+    style="height: 301px")
   w-dialog(
     v-if="exCreateEvents.newEvent"
     v-model="exCreateEvents.showCreationDialog"
@@ -341,40 +349,80 @@ example(
       w-button(@click="exCreateEvents.save") OK
 
 //- Example.
-example(title="Edit & Delete Events" anchor="edit-and-delete-events")
+example(title="Delete Events" anchor="delete-events")
   template(#desc)
     p.mb2.
-      The #[code editable-events] option allows or prevent all the following actions when set to
-      #[code true] or #[code false]:
-    ul
-      li Edit the event title
-      li.
-        Resize an event by dragging the resizer handle.
-        #[strong Not available if no timeline, not possible on background events.]
-      li.
-        Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
-        #[strong Not possible on background events.]
-      li Delete an event (by clicking and holding an event).
-      li Create a new event (by clicking and dragging by default).
-    div.mt4
-      strong.
-        The #[code editable-events] option also accept a more granular object as follows to specifically
-        allow or deny any previously listed actions.
-      ssh-pre(language="js" :dark="store.darkMode").
-        { title: true, drag: true, resize: true, delete: true, create: true }
-    alert(tip).
-      On top of the global actions allowance, you can deny each of these actions individually for each event with the event
-      attributes #[code titleEditable: false], #[code deletable: false],
-      #[code draggable: false] &amp; #[code resizable: false].
-    p In this example, the event creation and drag ability are disabled to focus on edition and deletion.
+      The deletion of events is allowed or denied when the #[code editable-events] option is set to
+      #[code true] or #[code false] - or more granularly, #[code editable-events.delete], when
+      #[code editable-events] is provided as an object:
+    ssh-pre(language="js" :dark="store.darkMode").
+      { title: true, drag: true, resize: true, delete: true, create: true }
+    alert.
+      In addition to the global settings, you can override the deletion ability individually for each
+      event using the event attributes #[code deletable: false].
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="10 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week', 'month']"
-      :views-bar="false"
-      hide-weekends
+      editable-events
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    // In data.
+    events: [
+      {
+        start: '2018-11-20 14:00',
+        end: '2018-11-20 17:30',
+        title: 'Boring event',
+        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
+        class: 'blue-event',
+        deletable: false,
+        resizable: false,
+        draggable: false
+      },
+      // other events.
+    ]
+
+  vue-cal(
+    ref="exEditEventsVuecalRef"
+    :selected-date="stringToDate('2018-11-19')"
+    :events="exEditEvents.events"
+    @event-dblclick="exEditEvents.deleteEvent"
+    editable-events
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :view-date="new Date()"
+    :views-bar="false"
+    :dark="store.darkMode"
+    style="height: 301px")
+
+//- Example.
+example(title="Edit Events" anchor="edit-events")
+  template(#desc)
+    p.mb2.
+      Editing events is allowed or denied when the #[code editable-events] option is set to
+      #[code true] or #[code false]. But more granularly, #[code editable-events] can be provided
+      as an object:
+    ssh-pre(language="js" :dark="store.darkMode").
+      { title: true, drag: true, resize: true, delete: true, create: true }
+    p With:
+    ul
+      li #[strong.code title]: Edit the event title.
+      li.
+        #[strong.code drag]: Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
+        #[strong Not allowed on background events.]
+      li.
+        #[strong.code resize]: Resize an event by dragging the resizer handle.
+        #[strong Not available if no timeline, not allowed on background events.]
+      li #[strong.code delete]: Delete an event (by clicking and holding an event).
+      li #[strong.code create]: Create a new event (by clicking and dragging by default).
+
+    alert.
+      In addition to the global settings, you can override these actions individually for each
+      event using the event attributes #[code titleEditable: false], #[code deletable: false],
+      #[code draggable: false] &amp; #[code resizable: false].
+  template(#code-html).
+    &lt;vue-cal
       :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
@@ -396,16 +444,18 @@ example(title="Edit & Delete Events" anchor="edit-and-delete-events")
 
   vue-cal(
     ref="exEditEventsVuecalRef"
-    :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
-    :time-from="10 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week', 'month']"
-    :views-bar="false"
-    hide-weekends
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
     :events="exEditEvents.events"
-    @event-dblclick="exEditEvents.deleteEvent")
+    @event-dblclick="exEditEvents.deleteEvent"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :view-date="new Date()"
+    :views-bar="false"
+    :dark="store.darkMode"
+    style="height: 301px")
 
 //- Example.
 //- example(title="Events Indicators" anchor="events-indicators")
