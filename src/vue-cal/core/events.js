@@ -20,6 +20,10 @@ export const useEvents = vuecal => {
       if (!event._) event._ = {}
       event._.id = event._.id || event.id || ++uid
 
+      // Inject a delete function in each event and set the deleting flag to false.
+      if (!event.delete) event.delete = () => deleteEvent(event._.id)
+      event._.deleting = false
+
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
       if (event.recurring) {
@@ -95,15 +99,20 @@ export const useEvents = vuecal => {
     return true
   }
 
-  const deleteEvent = eventId => {
+  const deleteEvent = (eventId, immediate = false) => {
     if (!eventId) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
-    // Remove the event from the source of truth.
     const index = config.events.findIndex(item => item._.id === eventId)
     if (index === -1) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
+
     else {
-      config.events.splice(index, 1)
-      return true
+      const event = config.events[index]
+
+      if (immediate || event._.deleting) {
+        config.events.splice(index, 1) // Remove the event from the source of truth.
+        return true
+      }
+      else event._.deleting = true
     }
   }
 
