@@ -303,11 +303,9 @@
     color: var(--vuecal-events-color);
     border: 1px solid var(--vuecal-events-border-color);
     border-radius: 4px;
-    padding: 2px;
-    font-size: 12px;
     line-height: 1;
-    overflow: hidden;
     width: 90%;
+    display: flex;
 
     &--background {
       border: none;
@@ -326,11 +324,45 @@
       border-bottom-right-radius: 0;
     }
 
+    &-details {
+      flex-grow: 1;
+      overflow: hidden;
+      padding: 2px;
+      font-size: 12px;
+    }
     &-time {
       white-space: nowrap;
       line-height: 1;
       letter-spacing: -0.5px;
       font-size: 11px;
+    }
+
+    &-delete {
+      position: absolute;
+      top: -5px;
+      right: -5px;
+      padding: 2px;
+      font-size: 0.8em;
+      cursor: pointer;
+      background-color: #ff4242;
+      border: 1px solid rgba(#fff, 0.5);
+      color: transparent;
+      border-radius: 99em;
+      aspect-ratio: 1;
+      width: 1.5em;
+
+      &:before, &:after {
+        content: '';
+        position: absolute;
+        border-radius: 99em;
+        top: 50%;
+        height: 2px;
+        left: 20%;
+        right: 20%;
+        background-color: var(--vuecal-events-color);
+      }
+      &:before {transform: translateY(-50%) rotate(45deg);}
+      &:after {transform: translateY(-50%) rotate(-45deg);}
     }
   }
 &.vuecal--timeless .vuecal__event {

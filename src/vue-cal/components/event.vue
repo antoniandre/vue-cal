@@ -4,12 +4,15 @@
   ref="eventEl"
   :class="classes"
   :style="styles")
-  .vuecal__event-title
-    | {{ event.title }}
-  .vuecal__event-content(v-html="event.content")
-  .vuecal__event-time(v-if="config.time")
-    | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-    | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+  .vuecal__event-details {{ event.title }}
+    .vuecal__event-title {{ event.title }}
+    .vuecal__event-content(v-html="event.content")
+    .vuecal__event-time(v-if="config.time")
+      | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+      | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+  .vuecal__event-resizer
+  transition(name="vuecal-delete-btn")
+    .vuecal__event-delete(v-if="event._.deleting" @click="event.delete") Delete
 </template>
 
 <script setup>
@@ -97,6 +100,11 @@ const eventListeners = computed(() => {
 
     externalHandlers.mousedown?.({ e })
   }
+  eventListeners.dblclick = e => {
+    onDblclick()
+
+    externalHandlers.dblclick?.({ e })
+  }
 
   return eventListeners
 })
@@ -140,6 +148,8 @@ const onDocMousemove = e => {
   eventListeners.value.drag?.({ e, event: event.value })
 }
 
+const onDblclick = () => event.value.delete()
+
 const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
@@ -171,5 +181,19 @@ const onDocMouseup = async e => {
   right: 0;
 
   .vuecal__scrollable--month-view & {position: relative;}
+}
+
+.vuecal-delete-btn-enter-active {
+  transition: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+.vuecal-delete-btn-enter-from {
+  transform: scale(0) rotate(-90deg);
+}
+.vuecal-delete-btn-enter-to {
+  transform: scale(1);
+}
+.vuecal-delete-btn-leave-active {
+  transition: 0.3s ease-in-out;
+  transform: scale(0);
 }
 </style>
