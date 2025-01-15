@@ -184,7 +184,7 @@ w-accordion.mt2(
     template(#content)
       p.
         Sets the date picker format CSS-wise and logic as well.
-        This option act like a shorthand for:
+        This option acts like a shorthand for:
         #[code="{ xs: true, views: ['month', 'year', 'years'], clickToNavigate: true }"].
 
   w-accordion-item
