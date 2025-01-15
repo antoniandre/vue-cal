@@ -23,6 +23,7 @@ export const useEvents = vuecal => {
       // Inject a delete function in each event and set the deleting flag to false.
       if (!event.delete) event.delete = () => deleteEvent(event._.id)
       event._.deleting = false
+      event._.deleted = false
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -109,7 +110,9 @@ export const useEvents = vuecal => {
       const event = config.events[index]
 
       if (immediate || event._.deleting) {
-        config.events.splice(index, 1) // Remove the event from the source of truth.
+        event._.deleted = true
+        config.events[index]._.deleted = true
+        // config.events.splice(index, 1) // Remove the event from the source of truth.
         return true
       }
       else event._.deleting = true

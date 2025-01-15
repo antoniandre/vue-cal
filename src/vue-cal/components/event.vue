@@ -20,14 +20,14 @@ import { computed, inject, reactive, ref } from 'vue'
 import { minutesToPercentage } from '@/vue-cal/utils/cell'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end'])
-const { config, eventsManager, view } = inject('vuecal')
+const { config, view } = inject('vuecal')
 
 const props = defineProps({
-  id: { type: Number, required: true }
+  event: { type: Object, required: true }
 })
 
 const eventEl = ref(null)
-const event = computed(() => eventsManager.getEvent(props.id))
+const event = reactive(props.event)
 
 const touch = reactive({
   dragging: false,
@@ -45,13 +45,13 @@ const touch = reactive({
 })
 
 const classes = computed(() => ({
-  [`vuecal__event--${props.id}`]: true,
-  [event.value.class]: !!event.value.class,
-  'vuecal__event--recurring': !!event.value.recurring,
-  'vuecal__event--background': !!event.value.background,
-  'vuecal__event--multiday': !!event.value._?.multiday,
-  'vuecal__event--cut-top': event.value._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': event.value._?.endMinutes > config.timeTo,
+  [`vuecal__event--${event.id}`]: true,
+  [event.class]: !!event.class,
+  'vuecal__event--recurring': !!event.recurring,
+  'vuecal__event--background': !!event.background,
+  'vuecal__event--multiday': !!event._?.multiday,
+  'vuecal__event--cut-top': event._?.startMinutes < config.timeFrom,
+  'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo,
   'vuecal__event--dragging': touch.dragging
 }))
 
@@ -59,8 +59,8 @@ const styles = computed(() => {
   if (!config.time || view.isMonth) return false
 
   // Ensure that the event start and end stay in range.
-  const from = Math.max(config.timeFrom, event.value._.startMinutes)
-  const to = Math.min(config.timeTo, event.value._.endMinutes)
+  const from = Math.max(config.timeFrom, event._.startMinutes)
+  const to = Math.min(config.timeTo, event._.endMinutes)
 
   const top = minutesToPercentage(from, config)
   const height = minutesToPercentage(to, config) - top
@@ -82,7 +82,7 @@ const eventListeners = computed(() => {
       // e.stopPropagation()
 
       // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, event: event.value } : e)
+      handler(e.type ? { e, event } : e)
     }
   })
 
@@ -123,7 +123,7 @@ const onMousedown = e => {
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
     // If there's an @event-hold external listener, call it.
-    eventListeners.value.hold?.({ e, event: event.value })
+    eventListeners.value.hold?.({ e, event })
   }, 1000)
 }
 
@@ -132,7 +132,7 @@ const onDocMousemove = e => {
   if (!touch.dragging) {
     emit('event-drag-start')
     // If there's an @event-drag-start external listener, call it.
-    eventListeners.value.dragStart?.({ e, event: event.value })
+    eventListeners.value.dragStart?.({ e, event })
   }
   touch.dragging = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -145,10 +145,10 @@ const onDocMousemove = e => {
   touch.movePercentageY = touch.moveY * 100 / rect.height
 
   // If there's an @event-drag external listener, call it.
-  eventListeners.value.drag?.({ e, event: event.value })
+  eventListeners.value.drag?.({ e, event })
 }
 
-const onDblclick = () => event.value.delete()
+const onDblclick = () => event.delete()
 
 const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -156,7 +156,7 @@ const onDocMouseup = async e => {
 
   if (touch.dragging) {
     // If there's an @event-drag-end external listener, call it.
-    eventListeners.value.dragEnd?.({ e, event: event.value })
+    eventListeners.value.dragEnd?.({ e, event })
     emit('event-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
   }
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)

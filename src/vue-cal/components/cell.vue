@@ -58,9 +58,9 @@
         :events="cellEvents")
       template(v-else)
         event(
-          v-for="eventId in cellEvents"
-          :key="eventId"
-          :id="eventId"
+          v-for="event in cellEvents"
+          :key="event.id"
+          :event="event"
           @event-drag-start="emit('event-drag-start')"
           @event-drag-end="emit('event-drag-end')")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
@@ -207,7 +207,9 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker || config.xs) return []
-  return view.events[dateUtils.formatDate(props.start)] || []
+  return (view.events[dateUtils.formatDate(props.start)] || [])
+    .map(eventsManager.getEvent)
+    .filter(event => !event._?.deleted)
 })
 
 /**
