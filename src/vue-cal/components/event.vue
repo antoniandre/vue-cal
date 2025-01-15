@@ -4,7 +4,7 @@
   ref="eventEl"
   :class="classes"
   :style="styles")
-  .vuecal__event-details {{ event.title }}
+  .vuecal__event-details
     .vuecal__event-title {{ event.title }}
     .vuecal__event-content(v-html="event.content")
     .vuecal__event-time(v-if="config.time")
