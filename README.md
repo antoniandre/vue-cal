@@ -26,7 +26,7 @@ ___
 
 This project is in active development, with new features, enhancements, and bug fixes being added every day! Every line of code is crafted with care to ensure it meets the highest standards and provides value to our community.
 
-We are pushing to pre-release the v5 this year! And your support can supercharge development! Sponsorships help us dedicate more time to accelerating feature releases, improving documentation and usability and ensuring robust testing and long-term stability.
+We are pushing to pre-release the v5 by February! And your support can supercharge development! Sponsorships help us dedicate more time to accelerating feature releases, improving documentation and usability and ensuring robust testing and long-term stability.
 
 #### 💡 Any Sponsorship Matters
 🌟 Whether you’re using this project for a hobby, a commercial product, or simply to explore new technologies, Your sponsorship — big or small — makes a direct impact, helping the project thrive and stay lush and green. 🥦
@@ -51,7 +51,7 @@ Install the latest stable Vue Cal (v4) with **npm**, **pnpm**, or **yarn**:
 npm i vue-cal
 ```
 
-We are pushing to pre-release the v5 this year!
+We are pushing to pre-release the v5 by February!
 
 ---
 

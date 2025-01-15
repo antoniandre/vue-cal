@@ -382,10 +382,7 @@ example(title="Delete Events" anchor="delete-events")
     ]
 
   vue-cal(
-    ref="exEditEventsVuecalRef"
-    :selected-date="stringToDate('2018-11-19')"
     :events="exEditEvents.events"
-    @event-dblclick="exEditEvents.deleteEvent"
     editable-events
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -447,7 +444,6 @@ example(title="Edit Events" anchor="edit-events")
     :selected-date="stringToDate('2018-11-19')"
     :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
     :events="exEditEvents.events"
-    @event-dblclick="exEditEvents.deleteEvent"
     :time-from="9 * 60"
     :time-to="15 * 60"
     :views="{ days: { cols: 5, rows: 1 } }"
