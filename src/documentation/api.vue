@@ -1,6 +1,7 @@
 <template lang="pug">
 h1.title1 API
 
+//- Calendar Views.
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="views") Calendar Views
   w-switch.my1.body(@update:model-value="expandedViews = [...views].fill($event)") Expand All
@@ -14,19 +15,19 @@ w-accordion(
   template(#item-title="{ item }")
     strong.code {{ item.label }}
 
+//- View Object.
 h2.w-flex.justify-space-between.mt12.mb2
   title-link(div anchor="view") The View Object
   .todo-tag.ml2.mra TO REVIEW
-  w-switch.my1.body(@update:model-value="expandedViewVars = [...views].fill($event)") Expand All
-p.caption.size--md.
+  w-switch.my1.body(@update:model-value="expandedViewObject = Array(10).fill($event)") Expand All
+p.caption.size--md.lh1.
   You can use the #[code.base-color view] object to access accurate information about the current view at any time.
   This is what it contains:
 w-accordion.mt3(
-  v-model="expandedViewVars"
+  v-model="expandedViewObject"
   expand-icon-rotate90
   title-class="pl0 bd0"
   content-class="pt1 pr0 pb6 pl7")
-
   w-accordion-item
     template(#title)
       h3.title4.mt0.pt0 ID, Title
@@ -132,6 +133,130 @@ w-accordion.mt3(
           scrollTop // Scrolls the calendar body to the top.
         }
 
+//- Event Object.
+h2.w-flex.justify-space-between.mt12.mb2
+  title-link(div anchor="view") The Event Object
+  .todo-tag.ml2.mra TO COMPLETE
+  w-switch.my1.body(@update:model-value="expandedEventObject = Array(15).fill($event)") Expand All
+p.caption.size--md.lh1.
+  The event object contains all the information about a calendar event and is used to render it in the calendar.
+p Minimum required properties: #[span.code start] and #[span.code end].
+
+p Example of a complete event object:
+ssh-pre(language="js" :dark="store.darkMode").
+  {
+    start: new Date(),
+    end: new Date().addHours(1), // Using Vue Cal's Date prototypes.
+    id: 'event-1',
+    title: 'Meeting with Alice',
+    draggable: true,
+    resizable: true,
+    deletable: true,
+    allDay: false,
+    recurring: { frequency: 'week', amount: 1, start: new Date() },
+    schedule: 1,
+    background: false,
+    class: 'meeting',
+
+    customField: '...', // Your custom fields.
+    _: { ... } // Internal Fields.
+  }
+
+w-accordion.mt3(
+  v-model="expandedEventObject"
+  expand-icon-rotate90
+  title-class="pl0 bd0"
+  content-class="pt1 pr0 pb6 pl7")
+  w-accordion-item
+    template(#title)
+      strong.code start
+      .type [Date]
+      w-tag.error--bg.ml1(round sm) REQUIRED
+    template(#content) The start date and time of the event, given as a JavaScript Date.
+  w-accordion-item
+    template(#title)
+      strong.code end
+      .type [Date]
+      w-tag.error--bg.ml1(round sm) REQUIRED
+    template(#content) The end date and time of the event, given as a JavaScript Date.
+  w-accordion-item
+    template(#title)
+      strong.code id
+      .type [String]
+    template(#content) The unique identifier of the event. If not provided, it will be internally identified by the key #[span.code _.id].
+  w-accordion-item
+    template(#title)
+      strong.code title
+      .type [String]
+    template(#content) The title of the event. If not provided, no title will be displayed.
+  w-accordion-item
+    template(#title)
+      strong.code draggable
+      .type [Boolean]
+    template(#content) Indicates if this specific event can be dragged and dropped. This property overrides the global setting.
+  w-accordion-item
+    template(#title)
+      strong.code resizable
+      .type [Boolean]
+    template(#content) Indicates if this specific event can be resized. This property overrides the global setting.
+  w-accordion-item
+    template(#title)
+      strong.code deletable
+      .type [Boolean]
+    template(#content) Indicates if this specific event can be deleted. This property overrides the global setting.
+  w-accordion-item
+    template(#title)
+      strong.code allDay
+      .type [Boolean]
+      w-tag.error--bg.ml1(round sm) COMING SOON
+    template(#content) Indicates if the event is an all-day event.
+  w-accordion-item
+    template(#title)
+      strong.code background
+      .type [Boolean]
+    template(#content) Indicates if the event is a background event (allows no user interaction).
+  w-accordion-item
+    template(#title)
+      strong.code schedule
+      .type [Number]
+    template(#content) The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
+  w-accordion-item
+    template(#title)
+      strong.code recurring
+      .type [Number]
+      w-tag.error--bg.ml1(round sm) COMING SOON
+    template(#content) Indicates if the event is recurring and its recurrence rule.
+  w-accordion-item
+    template(#title)
+      strong.code class
+      .type [String]
+    template(#content) The CSS class of the event.
+  w-accordion-item
+    template(#title)
+      strong.code _
+      .type [Object]
+    template(#content)
+      p.
+        Internal fields that are used by Vue Cal to manage the event. These fields are reserved and should not be modified.<br>
+        You may still access them for convenience or debugging purposes.<br>
+        Example:
+      ssh-pre(language="js" :dark="store.darkMode").
+        _: {
+          id, // Number.
+          startMinutes, // Number.
+          endMinutes, // Number.
+          multiday, // Boolean.
+          startFormatted, // String.
+          startTimeFormatted12, // String.
+          startTimeFormatted24, // String.
+          endTimeFormatted12, // String.
+          endTimeFormatted24, // String.
+          duration, // Boolean.
+          deleting, // Boolean.
+          deleted // Boolean.
+        }
+
+//- Options list.
 h2.w-flex.justify-space-between.mt12.mb2
   title-link(div anchor="options") Options
   .todo-tag.ml2.mra TO REVIEW
@@ -741,28 +866,20 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p When #[span.code editableEvents] is set to #[span.code true], it allows:
+      p When set to #[span.code true], it allows:
       ul
-        li Dragging and dropping events
-        li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true],
+        li Dragging and dropping events.
+        li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true]
         li Deleting events by click and hold an event.
-        li Editing events title
+        li Creating events by click and drag (refer to the #[router-link(to="/examples/calendar-events#ex--create-events") Create events] example).
       alert
         ul
           li
             | You can set more accurately which edition you want to allow by passing an object.#[br]
             | For instance, this object will allow all the above editions except the drag &amp; drop:
-            div.code.base-color { title: true, drag: false, resize: true, delete: true, create: true }
+            div.code.base-color { drag: false, resize: true, delete: true, create: true }
           li.
             You can still force an event to be undeletable or unresizable from the #[span.code deletable] &amp; #[span.code resizable] event attributes.
-      ul
-        li
-          code.mr2 create
-          p.
-            When events are editable and if #[span.code time] is set to #[span.code true],
-            clicking and dragging on a cell will create an event.#[br]
-            Note: if this option is set to true, it will prevent event creation from cell click &amp; hold.#[br]
-            Refer to the #[a(href="#ex--create-events") Create events] example.
 
   w-accordion-item
     template(#title)
@@ -923,8 +1040,9 @@ const views = [
   { label: 'years', content: 'Displays a range of 25 years in a 5x5 cell grid. Usually for date pickers.' }
 ]
 const expandedViews = ref([...views].fill(false))
+const expandedViewObject = ref(Array(10).fill(false))
+const expandedEventObject = ref(Array(15).fill(false))
 const expandedOptions = ref(Array(99).fill(false))
-const expandedViewVars = ref(Array(99).fill(false))
 </script>
 
 <style lang="scss">
