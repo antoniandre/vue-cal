@@ -136,7 +136,6 @@ w-accordion.mt3(
 //- Event Object.
 h2.w-flex.justify-space-between.mt12.mb2
   title-link(div anchor="view") The Event Object
-  .todo-tag.ml2.mra TO COMPLETE
   w-switch.my1.body(@update:model-value="expandedEventObject = Array(15).fill($event)") Expand All
 p.caption.size--md.lh1.
   The event object contains all the information about a calendar event and is used to render it in the calendar.
