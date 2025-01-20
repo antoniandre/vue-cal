@@ -53,7 +53,7 @@ const ready = ref(false)
 
 const demoExample = ref({
   schedules: [{ label: 'Dr. John', class: 'john' }, { label: 'Dr. Kate', class: 'kate' }],
-  editable: { title: false, drag: true, resize: true, create: true, delete: true },
+  editable: { drag: true, resize: true, create: true, delete: true },
   events: []
 })
 

@@ -13,8 +13,7 @@ alert(info)
       always be JavaScript Dates.
     li.
       When the events are editable, they can be created, deleted, drag and dropped to a different
-      date and time, resized and their content can be edited (externally). There's also a more granular
-      control on what exactly should be editable.
+      date and time and resized. There's also a more granular control on what exactly should be editable.
 
 //- Example.
 example(title="Events & Background Events" anchor="events")
@@ -356,7 +355,7 @@ example(title="Delete Events" anchor="delete-events")
       #[code true] or #[code false] - or more granularly, #[code editable-events.delete], when
       #[code editable-events] is provided as an object:
     ssh-pre(language="js" :dark="store.darkMode").
-      { title: true, drag: true, resize: true, delete: true, create: true }
+      { drag: true, resize: true, delete: true, create: true }
     alert.
       In addition to the global settings, you can override the deletion ability individually for each
       event using the event attributes #[code deletable: false].
@@ -401,13 +400,11 @@ example(title="Edit Events" anchor="edit-events")
       #[code true] or #[code false]. But more granularly, #[code editable-events] can be provided
       as an object:
     ssh-pre(language="js" :dark="store.darkMode").
-      { title: true, drag: true, resize: true, delete: true, create: true }
+      { drag: true, resize: true, delete: true, create: true }
     p With:
     ul
-      li #[strong.code title]: Edit the event title.
       li.
-        #[strong.code drag]: Drag &amp; drop an event (not from the editable title text selection and not from the resizer).
-        #[strong Not allowed on background events.]
+        #[strong.code drag]: Drag &amp; drop an event (not allowed on background events).
       li.
         #[strong.code resize]: Resize an event by dragging the resizer handle.
         #[strong Not available if no timeline, not allowed on background events.]
@@ -416,11 +413,11 @@ example(title="Edit Events" anchor="edit-events")
 
     alert.
       In addition to the global settings, you can override these actions individually for each
-      event using the event attributes #[code titleEditable: false], #[code deletable: false],
-      #[code draggable: false] &amp; #[code resizable: false].
+      event using the event attributes, #[code deletable: false], #[code draggable: false] &amp;
+      #[code resizable: false].
   template(#code-html).
     &lt;vue-cal
-      :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
+      :editable-events="{ drag: false, resize: true, delete: true, create: false }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -442,7 +439,7 @@ example(title="Edit Events" anchor="edit-events")
   vue-cal(
     ref="exEditEventsVuecalRef"
     :selected-date="stringToDate('2018-11-19')"
-    :editable-events="{ title: true, drag: false, resize: true, delete: true, create: false }"
+    :editable-events="{ drag: false, resize: true, delete: true, create: false }"
     :events="exEditEvents.events"
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -1070,7 +1067,7 @@ example(title="Edit Events" anchor="edit-events")
     p.
       Multiple day events work like a set of single day events linked together.#[br]
       Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
-      Updating the duration by dragging or changing the title will also update on all the days.#[br]
+      Updating the duration by dragging will also update on all the days.#[br]
       Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
       the option #[code resize-x].
     strong Drag &amp; drop is not available on multiple day events for now.
