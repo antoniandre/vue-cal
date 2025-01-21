@@ -66,7 +66,6 @@
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-
   .vuecal__now-line(
     v-if="nowLine.show"
     :style="nowLine.style"
@@ -105,12 +104,12 @@ const touch = reactive({
   holding: false, // When the cell is clicked and hold for a certain amount of time.
   holdTimer: null, // Cell click and hold detection.
   thresholdPassed: false, // If the drag threshold has been passed.
-  startX: 0,
-  startY: 0,
+  startX: 0, // The x position at the start of the drag (mousedown or touchstart).
+  startY: 0, // The y position at the start of the drag (mousedown or touchstart).
   moveX: 0,
   moveY: 0,
-  startPercentageX: 0,
-  startPercentageY: 0,
+  startPercentageX: 0, // The x position in percentage at the start of the drag (mousedown or touchstart).
+  startPercentageY: 0, // The y position in percentage at the start of the drag (mousedown or touchstart).
   movePercentageX: 0,
   movePercentageY: 0,
   schedule: null
@@ -300,8 +299,6 @@ const cellEventListeners = computed(() => {
   // Inject the cell details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
     eventListeners[eventListener] = e => {
-      updateCursorInfo(e) // Update the cursor position in the cell.
-
       // When interacting with an event, skip calling the cell DOM event handler.
       // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
       // we can receive the on mouseup from the document and stop event drag&drop.
@@ -346,30 +343,19 @@ const cellInfo = computed(() => ({
 
 // Get cursor information including position and date.
 const cursorInfo = computed(() => {
-  const minutes = percentageToMinutes(touch.startPercentageY, config)
+  const minutes = percentageToMinutes(touch.movePercentageY || touch.startPercentageY, config)
   const date = new Date(props.start)
   date.setMinutes(minutes)
 
   return {
-    x: touch.startPercentageX,
-    y: touch.startPercentageY,
+    x: touch.movePercentageX || touch.startPercentageX,
+    y: touch.movePercentageY || touch.startPercentageY,
     date
   }
 })
 
 // Functions.
 // --------------------------------------------------------
-const updateCursorInfo = e => {
-  // The event object may already contain an `e` property added by the cellEventListeners computed prop.
-  const event = e.e || e
-  const { clientX, clientY } = event.touches?.[0] || event
-  const { left, top, width, height } = event.target.getBoundingClientRect()
-  // Only the pointer position in percentage in the cell.
-  // Does not take into account the calendar start time.
-  touch.startPercentageX = ((clientX - left) / width) * 100
-  touch.startPercentageY = ((clientY - top) / height) * 100
-}
-
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
   view.updateViewDate(props.start)
