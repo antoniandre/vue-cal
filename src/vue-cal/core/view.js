@@ -337,7 +337,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    */
   function navigate (forward = true) {
     let newViewDate = viewDate.value
-    const { cols, rows } = config.availableViews[viewId.value]
 
     switch (viewId.value) {
       case 'day':
