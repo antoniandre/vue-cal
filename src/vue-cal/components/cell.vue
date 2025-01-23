@@ -50,21 +50,24 @@
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
       slot(name="cell-content" :start="start" :end="end" :events="cellEvents")
-    .vuecal__cell-events(v-if="cellEvents.length")
+    .vuecal__cell-events(v-if="cellEvents.length && $slots['cell-events']")
       slot(
-        v-if="$slots['cell-events']"
         name="cell-events"
         :start="start"
         :end="end"
         :events="cellEvents")
-      template(v-else)
-        event(
-          v-for="event in cellEvents"
-          :key="event._.id"
-          :event="event"
-          @event-drag-start="emit('event-drag-start')"
-          @event-drag-end="emit('event-drag-end')"
-          @event-deleted="eventsDeleted.push($event.detail)")
+    transition-group(
+      v-if="cellEvents.length && !$slots['cell-events']"
+      name="vuecal-event-delete"
+      tag="div"
+      class="vuecal__cell-events")
+      event(
+        v-for="event in cellEvents"
+        :key="event._.id"
+        :event="event"
+        @event-drag-start="emit('event-drag-start')"
+        @event-drag-end="emit('event-drag-end')"
+        @event-deleted="eventsDeleted.push($event.detail)")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 

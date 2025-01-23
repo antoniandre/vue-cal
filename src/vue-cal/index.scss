@@ -109,3 +109,9 @@
   position: absolute !important;
   inset: 0;
 }
+
+.vuecal-event-delete-leave-active {transition: 0.15s ease-out;}
+.vuecal-event-delete-leave-to {
+  opacity: 0;
+  transform: translateY(0.5rem);
+}
