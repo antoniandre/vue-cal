@@ -92,16 +92,16 @@ const eventListeners = computed(() => {
 
   eventListeners.touchstart = e => {
     e.stopPropagation()
-    externalHandlers.touchstart?.({ e })
+    externalHandlers.touchstart?.({ e, event })
   }
   eventListeners.mousedown = e => {
     e.stopPropagation()
     onMousedown(e)
 
-    externalHandlers.mousedown?.({ e })
+    externalHandlers.mousedown?.({ e, event })
   }
   eventListeners.dblclick = e => {
-    if (externalHandlers.dblclick) externalHandlers.dblclick({ e })
+    if (externalHandlers.dblclick) externalHandlers.dblclick({ e, event })
     // Show delete button on event on double click by default except if dblclick is used externally.
     else event.delete(1)
   }
