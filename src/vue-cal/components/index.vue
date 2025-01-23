@@ -81,7 +81,9 @@ const emit = defineEmits([
   'view-change',
   'update:view',
   'update:selectedDate',
-  'update:viewDate'
+  'update:viewDate',
+  'update:events',
+  'event-delete'
 ])
 
 const vuecalEl = useTemplateRef('vuecal-el')

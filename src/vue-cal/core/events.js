@@ -1,9 +1,17 @@
 import { computed } from 'vue'
 
+/**
+ * useEvents is a composable function that manages events for the Vue Cal component.
+ * It provides methods to create, delete, and retrieve events, as well as normalize event dates.
+ *
+ * @param {Object} vuecal - The Vue Cal instance.
+ * @returns {Object} An object containing methods and computed properties for managing events.
+ */
 export const useEvents = vuecal => {
   const { dateUtils, config } = vuecal
   let uid = 0 // Internal unique ID events counter.
 
+  // Computed property to manage and organize events.
   const events = computed(() => {
     const events = {
       byDate: {}, // A map of single-day events indexed by date.
@@ -21,9 +29,13 @@ export const useEvents = vuecal => {
       event._.id = event._.id || event.id || ++uid
 
       // Inject a delete function in each event and set the deleting flag to false.
-      if (!event.delete) event.delete = () => deleteEvent(event._.id)
+      if (!event.delete) event.delete = forcedStage => deleteEvent(event._.id, forcedStage)
       event._.deleting = false
       event._.deleted = false
+
+      // Register the event DOM node in the event in order to emit DOM events.
+      event._.register = domNode => (event._.$el = domNode)
+      event._.unregister = () => (event._.$el = null)
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -44,6 +56,7 @@ export const useEvents = vuecal => {
     return events
   })
 
+  // Normalize event dates to ensure they are valid Date objects and add formatted dates.
   const normalizeEventDates = event => {
     if (typeof event.start === 'string') event.start = dateUtils.stringToDate(event.start)
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
@@ -70,10 +83,16 @@ export const useEvents = vuecal => {
     event._.duration = event._.endMinutes - event._.startMinutes // Integer (minutes).
   }
 
+  // Retrieve an event by its ID.
   const getEvent = id => events.value.byId[id]
+
+  // Retrieve events by a formatted date.
   const getEventsByDate = dateFormatted => events.value.byDate[dateFormatted]
 
+  // Get events for the view based on cell dates.
   const getViewEvents = cellDates => {
+    console.log('👗', 'getViewEvents')
+
     const events = {}
     cellDates.forEach(({ startFormatted }) => {
       events[startFormatted] = []
@@ -83,6 +102,7 @@ export const useEvents = vuecal => {
     return events
   }
 
+  // Create a new event and add it to the events list.
   const createEvent = newEvent => {
     if (!newEvent.start || !newEvent.end) {
       console.error('Vue Cal: Cannot create an event without valid start and end dates.')
@@ -100,23 +120,56 @@ export const useEvents = vuecal => {
     return true
   }
 
-  const deleteEvent = (eventId, immediate = false) => {
+  /**
+   * Deletes an event based on the provided eventId and forcedStage.
+   *
+   * @param {string} eventId - The ID of the event to delete.
+   * @param {number} [forcedStage=0] - The stage of deletion to force.
+   *    0: Initial deletion stage, toggles deleting and deleted flags.
+   *    1: Sets the deleting flag to true.
+   *    2: Sets the deleted flag to true and dispatches 'event-deleted' event.
+   *    3: Removes the event from the source of truth, emits 'update:events' and 'event-delete' events, and dispatches 'event-deleted' event.
+   * @returns {boolean} - Returns true for chaining.
+   */
+  const deleteEvent = (eventId, forcedStage = 0) => {
     if (!eventId) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
     const index = config.events.findIndex(item => item._.id === eventId)
     if (index === -1) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
-    else {
-      const event = config.events[index]
+    const event = config.events[index]
+    if (event.deletable === false) return console.warn(`Vue Cal: Can't delete event \`${eventId}\` since it was explicitely set to \`delete: false\`.`)
 
-      if (immediate || event._.deleting) {
+    switch (forcedStage) {
+      case 0:
+        if (!event._.deleting) event._.deleting = true
+        else if (!event._.deleted) event._.deleted = true
+        else config.events.splice(index, 1) // Remove the event from the source of truth.
+        break
+      // Display the delete button.
+      case 1:
+        event._.deleting = true
+        config.events[index]._.deleting = true
+        break
+      // Visual deletion + external DOM event firing.
+      case 2:
         event._.deleted = true
         config.events[index]._.deleted = true
-        // config.events.splice(index, 1) // Remove the event from the source of truth.
-        return true
-      }
-      else event._.deleting = true
+        event._.$el?.dispatchEvent(new CustomEvent('event-deleted', { event }))
+        break
+      // Effective deletion from the source of truth (by default, when unmounting the cell).
+      case 3:
+        // Removing the event from the source of truth causes a reactivity update cascade that rerenders
+        // all the cells and sub-components. This is not a bug, but in most cases, not the ideal behavior.
+        config.events.splice(index, 1) // Remove the event from the source of truth.
+        console.log('😫', 'deleting the event!', event)
+        vuecal.emit('update:events', config.events)
+        vuecal.emit('event-delete', event)
+        event._.$el?.dispatchEvent(new CustomEvent('event-deleted', { event }))
+        break
     }
+
+    return true // For chaining.
   }
 
   return {

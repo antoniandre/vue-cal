@@ -12,11 +12,11 @@
       | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
   .vuecal__event-resizer
   transition(name="vuecal-delete-btn")
-    .vuecal__event-delete(v-if="event._.deleting" @click="event.delete") Delete
+    .vuecal__event-delete(v-if="event._.deleting" @click="emit('event-deleted', event._.id)") Delete
 </template>
 
 <script setup>
-import { computed, inject, reactive, ref } from 'vue'
+import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { minutesToPercentage } from '@/vue-cal/utils/cell'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end'])
@@ -148,7 +148,8 @@ const onDocMousemove = e => {
   eventListeners.value.drag?.({ e, event })
 }
 
-const onDblclick = () => event.delete()
+// Delete event on double click by default.
+const onDblclick = () => event.delete(1)
 
 const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -172,6 +173,11 @@ const onDocMouseup = async e => {
   touch.movePercentageY = 0
   touch.schedule = null
 }
+
+// Register the DOM node within the event in order to emit `event-deleted` to the cell.
+onMounted(() => event._.register(eventEl.value))
+
+onUnmounted(() => event._.unregister())
 </script>
 
 <style lang="scss">

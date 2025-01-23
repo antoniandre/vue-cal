@@ -32,11 +32,12 @@
           :events="cellEvents")
         template(v-else)
           event(
-            v-for="eventId in cellEventsPerSchedule[schedule.id]"
-            :key="eventId"
-            :id="eventId"
+            v-for="event in cellEventsPerSchedule[schedule.id]"
+            :key="event._.id"
+            :event="event"
             @event-drag-start="emit('event-drag-start')"
-            @event-drag-end="emit('event-drag-end')")
+            @event-drag-end="emit('event-drag-end')"
+            @event-deleted="eventsDeleted.push(event._.id)")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -59,10 +60,11 @@
       template(v-else)
         event(
           v-for="event in cellEvents"
-          :key="event.id"
+          :key="event._.id"
           :event="event"
           @event-drag-start="emit('event-drag-start')"
-          @event-drag-end="emit('event-drag-end')")
+          @event-drag-end="emit('event-drag-end')"
+          @event-deleted="eventsDeleted.push(event._.id)")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -74,7 +76,7 @@
 </template>
 
 <script setup>
-import { computed, inject, reactive, ref } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, reactive, ref } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/cell'
 import Event from './event.vue'
@@ -96,6 +98,10 @@ const { view, config, dateUtils, eventsManager } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const cellEl = ref(null)
+// Store deleted events per cell and filter them out in that specific cell.
+// Only delete the events for good when unmounting the cell, in order to avoid re-rendering all the
+// cells in the view when deleting in the source of truth.
+const eventsDeleted = ref([])
 
 // The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
 // display the event placeholder in that schedule.
@@ -205,10 +211,10 @@ const formattedCellDate = computed(() => {
 })
 
 const cellEvents = computed(() => {
-  if (config.datePicker || config.xs) return []
+  if (config.datePicker) return []
   return (view.events[dateUtils.formatDate(props.start)] || [])
     .map(eventsManager.getEvent)
-    .filter(event => !event._?.deleted)
+    .filter(event => !eventsDeleted.value.includes(event._.id))
 })
 
 /**
@@ -219,7 +225,7 @@ const cellEvents = computed(() => {
  */
 const cellEventsPerSchedule = computed(() => {
   return config.schedules?.reduce((obj, schedule) => {
-    obj[schedule.id] = cellEvents.value.filter(eid => eventsManager.getEvent(eid).schedule === schedule.id)
+    obj[schedule.id] = cellEvents.value.filter(event => event.schedule === schedule.id)
     return obj
   }, {})
 })
@@ -469,6 +475,13 @@ const createEventIfAllowed = async e => {
   }
   else view.createEvent(eventToCreate)
 }
+
+onBeforeUnmount(async () => {
+  // Removing the calendar events will trigger a rerender of all the cells in the view because the array
+  // of events is a reactive object. So only remove them from the source of truth when the cell is unmounted.
+  eventsDeleted.value.forEach(eventId => eventsManager.deleteEvent(eventId, 3))
+  await nextTick() // Batch updates to avoid multiple re-renders.
+})
 </script>
 
 <style lang="scss">
