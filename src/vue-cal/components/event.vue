@@ -45,7 +45,7 @@ const touch = reactive({
 })
 
 const classes = computed(() => ({
-  [`vuecal__event--${event.id}`]: true,
+  [`vuecal__event--${event._.id}`]: true,
   [event.class]: !!event.class,
   'vuecal__event--recurring': !!event.recurring,
   'vuecal__event--background': !!event.background,
