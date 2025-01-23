@@ -438,37 +438,56 @@ example(title="Delete Events" anchor="delete-events")
         #[code @double-click] for another action.
       li.
         Optionally assigning a different interaction for the deletion with: #[code @event-xxx="$event.delete"],
-        where #[code xxx] can be replaced with #[code click], #[code hold], #[code contextmenu], or whatever valid event you want.#[br]
+        where #[code xxx] can be replaced with #[code click], #[code hold], #[code contextmenu], or whatever
+        valid event you want.#[br]
 
     h4.mt4.mb0 C. The Delete Function
     div
       | Every event has a delete function that you can call from the event object itself:
       ssh-pre.d-iblock.pr5.py0.ml1.mb0(language="js" :dark="store.darkMode") event.delete()
 
-    p This function can receive an explicit "deletion stage" integer parameter:
+    p.
+      For more flexibility, this function can receive an explicit "deletion stage" integer parameter,
+      so you can skip to the stage you want directly:
     ul
       li #[code 1]: The delete button will appear.
       li
         | #[code 2]:
         span.ml1.
           The event is deleted visually from the cell but not in the global events array (source of truth).
-          This has the advantage of not triggering an immediate reactivity update cascade on all the cells.#[br]
-          The rerendering cascade of the cell is completely avoided by deleting the event on the next view change
-          when the cell is unmounted.
-      li #[code 3]: The event is deleted both visually and in the source of truth.
+          This has the advantage of not triggering an immediate Vue reactivity update cascade on all the
+          cells.#[br]
+          The rerendering cascade of the cell is completely avoided by deleting the event on the next view
+          change when the cell is unmounted.
+      li.
+        #[code 3]: The event is deleted both visually and in the source of truth (automatically called on
+        cell unmount after using stage #[code 2]).
     p.
-      For more flexibility, there is also a view.deleteEvent(eventId, stage) function which takes two
-      arguments: the ID of the event to delete and a "deletion stage" integer as described above.
+      For more flexibility, there is also a #[code view.deleteEvent(eventId, stage)] function which takes
+      two arguments: the ID of the event to delete and a "deletion stage" integer just as described.
+
+    p.mt6 Now let's view all this in action!
+    .w-flex.align-start.gap3.justify-end
+      w-switch.no-grow(v-model="exDeleteEvents.editableEvents" label-color="base") Editable Events
+      w-switch.no-grow(v-model="exDeleteEvents.skipDeleteButton" label-color="base") Skip Delete Button
+      .w-flex.gap2.d-iflex.no-grow
+        span Delete on:
+        w-radios(
+          v-model="exDeleteEvents.deleteMethod"
+          :items="exDeleteEvents.deleteMethods"
+          label-color="base")
+
   template(#code-html).
     &lt;vue-cal
-      editable-events
+      {{ exDeleteEvents.editableEvents ? 'editable-events' : ':editable-events="false"' }}
+      {{ exDeleteEvents.deleteMethod === 'hold' ? '\n  @event-dblclick="false"\n  @event-hold="$event.delete"' : '' }}
       :events="events"&gt;
     &lt;/vue-cal&gt;
 
   vue-cal(
     v-model:events="exDeleteEvents.events"
-    editable-events
-    @event-hold="$event.event.delete(3)"
+    :editable-events="exDeleteEvents.editableEvents"
+    v-on="exDeleteEvents.eventListeners"
     @event-delete="e => console.log('Event deleted!', e)"
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -1498,7 +1517,23 @@ const exDeleteEvents = reactive({
   deleteEvent: ({ e, event }) => {
     exEditEventsVuecalRef.value.view.deleteEvent(event._.id)
   },
-  viewDate: new Date()
+  viewDate: new Date(),
+  editableEvents: ref(false),
+  deleteMethod: ref('dblclick'),
+  deleteMethods: [{ label: 'dblclick' }, { label: 'hold' }],
+  eventListeners: computed(() => {
+    let listeners = {
+      'event-dblclick': event => event.event.delete(exDeleteEvents.skipDeleteButton ? 3 : 1)
+    }
+    if (exDeleteEvents.deleteMethod === 'hold') {
+      listeners = {
+        'event-hold': event => event.event.delete(exDeleteEvents.skipDeleteButton ? 3 : 1),
+        'event-dblclick': () => {}
+      }
+    }
+    return listeners
+  }),
+  skipDeleteButton: ref(false)
 })
 
 const exEventCreateVuecalRef = ref(null)
