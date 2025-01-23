@@ -37,7 +37,7 @@
             :event="event"
             @event-drag-start="emit('event-drag-start')"
             @event-drag-end="emit('event-drag-end')"
-            @event-deleted="eventsDeleted.push(event._.id)")
+            @event-deleted="eventsDeleted.push($event.detail)")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -64,7 +64,7 @@
           :event="event"
           @event-drag-start="emit('event-drag-start')"
           @event-drag-end="emit('event-drag-end')"
-          @event-deleted="eventsDeleted.push(event._.id)")
+          @event-deleted="eventsDeleted.push($event.detail)")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 

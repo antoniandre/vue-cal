@@ -12,7 +12,7 @@
       | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
   .vuecal__event-resizer
   transition(name="vuecal-delete-btn")
-    .vuecal__event-delete(v-if="event._.deleting" @click="emit('event-deleted', event._.id)") Delete
+    .vuecal__event-delete(v-if="event._.deleting" @click="onDelete") Delete
 </template>
 
 <script setup>
@@ -101,9 +101,9 @@ const eventListeners = computed(() => {
     externalHandlers.mousedown?.({ e })
   }
   eventListeners.dblclick = e => {
-    onDblclick()
-
-    externalHandlers.dblclick?.({ e })
+    if (externalHandlers.dblclick) externalHandlers.dblclick({ e })
+    // Show delete button on event on double click by default except if dblclick is used externally.
+    else event.delete(1)
   }
 
   return eventListeners
@@ -148,9 +148,6 @@ const onDocMousemove = e => {
   eventListeners.value.drag?.({ e, event })
 }
 
-// Delete event on double click by default.
-const onDblclick = () => event.delete(1)
-
 const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
@@ -174,9 +171,14 @@ const onDocMouseup = async e => {
   touch.schedule = null
 }
 
+const onDelete = () => {
+  // Fire the DOM event manually as it needs to be triggered from events.js on deletion as well.
+  // `detail` is the native expected object wrapper.
+  eventEl.value.dispatchEvent(new CustomEvent('event-deleted', { detail: event._.id }))
+}
+
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
 onMounted(() => event._.register(eventEl.value))
-
 onUnmounted(() => event._.unregister())
 </script>
 

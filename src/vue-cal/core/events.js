@@ -155,7 +155,8 @@ export const useEvents = vuecal => {
       case 2:
         event._.deleted = true
         config.events[index]._.deleted = true
-        event._.$el?.dispatchEvent(new CustomEvent('event-deleted', { event }))
+        // Internal emit to the cell (`detail` is the native expected object wrapper).
+        event._.$el?.dispatchEvent(new CustomEvent('event-deleted', { detail: event._.id }))
         break
       // Effective deletion from the source of truth (by default, when unmounting the cell).
       case 3:
@@ -165,7 +166,6 @@ export const useEvents = vuecal => {
         console.log('😫', 'deleting the event!', event)
         vuecal.emit('update:events', config.events)
         vuecal.emit('event-delete', event)
-        event._.$el?.dispatchEvent(new CustomEvent('event-deleted', { event }))
         break
     }
 
