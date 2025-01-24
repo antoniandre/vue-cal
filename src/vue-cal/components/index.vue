@@ -39,9 +39,9 @@
                 small {{ i }}
           .vuecal__body-wrap
             HeadingsBar
-              template(#weekday-heading="params")
+              template(v-if="$slots['weekday-heading']" #weekday-heading="params")
                 slot(name="weekday-heading" v-bind="params")
-              template(#schedule-heading="params")
+              template(v-if="$slots['schedule-heading']" #schedule-heading="params")
                 slot(name="schedule-heading" v-bind="params")
 
             VueCalBody(
