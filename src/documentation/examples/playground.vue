@@ -108,7 +108,7 @@ w-dialog(
   width="300"
   @close="eventCreation.cancel")
   w-input(v-model="eventCreation.event.title") Event Title
-  w-input(v-model="eventCreation.event.class") Event Class
+  w-select(v-model="eventCreation.event.class" :items="eventClasses") Event Class
   w-switch.my2(v-model="eventCreation.event.background") Background
   .w-flex.justify-end.mt2.gap2
     w-button(@click="eventCreation.cancel") Cancel
@@ -155,6 +155,12 @@ const sizes = [
 
 const weekdays = [{ label: 'mon' }, { label: 'tue' }, { label: 'wed' }, { label: 'thu' }, { label: 'fri' }, { label: 'sat' }, { label: 'sun' }]
 const hideWeekdays = ref([])
+
+const eventClasses = [
+  { value: 'leisure', label: 'Leisure' },
+  { value: 'health', label: 'Health' },
+  { value: 'sport', label: 'Sport' }
+]
 
 const pickerConfig = reactive({
   datePicker: true,
@@ -367,6 +373,10 @@ const eventCreation = reactive({
     .vuecal--dark &.dr-1 {background-color: rgba(143, 158, 196, 0.1);}
     .vuecal--dark &.dr-2 {background-color: rgba(131, 184, 255, 0.1);}
   }
+
+  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
+  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
 }
 
 // Media queries.
