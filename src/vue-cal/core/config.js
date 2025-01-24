@@ -1,4 +1,4 @@
-import { computed, toRefs } from 'vue'
+import { computed, reactive, toRefs, watch } from 'vue'
 import path from 'path'
 
 export const defaults = {
@@ -239,6 +239,10 @@ export const useConfig = (vuecal, props, attrs) => {
     dateUtils.updateTexts(vuecal.texts)
   }
 
+  // Keep a local copy of the events so the prop is not mandatory.
+  let events = reactive(props.events || [])
+  watch(() => props.events, evts => events = evts)
+
   // If a locale is requested via prop, load it (async call).
   // But if a locale is directly provided from external source using useLocale(),
   // the locale is ready right away.
@@ -246,6 +250,7 @@ export const useConfig = (vuecal, props, attrs) => {
 
   return {
     ...toRefs(props),
+    events,
     // All the events listeners for cells and events that the end user may have attached to vue-cal.
     eventListeners,
     defaultView,
