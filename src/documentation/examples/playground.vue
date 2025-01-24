@@ -83,7 +83,6 @@
     @event-mousedown="log('event-mousedown', $event)"
     @event-mouseup="log('event-mouseup', $event)"
     @event-click="log('event-click', $event)"
-    @event-dblclick="log('event-dblclick', $event)"
     @event-hold="log('event-hold', $event)"
     @event-drag-start="log('event-drag-start', $event)"
     @event-drag="log('event-drag', $event)"

@@ -114,8 +114,8 @@ const cellEl = ref(null)
 const eventsDeleted = ref([])
 // Wait for the event deletion transition end before unmounting the events container if no event.
 const transitionning = ref(false)
-const onEventDelete = () => {
-  eventsDeleted.push($event.detail)
+const onEventDelete = e => {
+  eventsDeleted.value.push(e.detail)
   transitionning.value = true
 }
 const afterDelete = () => setTimeout(() => (transitionning.value = false), 300)
@@ -338,7 +338,6 @@ const cellEventListeners = computed(() => {
 
   eventListeners.click = e => {
     onCellClick()
-    if (touch.schedule) cell.schedule = touch.schedule
     externalHandlers.click?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
   }
 
@@ -572,8 +571,10 @@ onBeforeUnmount(async () => {
   position: absolute;
   left: 0;
   right: 0;
+  padding-top: 2px;
   padding-left: 4px;
   border-radius: 4px;
   font-size: 11px;
+  line-height: 1;
 }
 </style>
