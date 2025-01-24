@@ -224,19 +224,22 @@ setTimeout(() => {
   ]
 }, 1000)
 
+let eventCounter = 0
 const addEventFromOutside = () => {
   mainVuecalConfig.events.push({
-    title: 'Event 1',
+    title: 'Event ' + ++eventCounter,
     start: (new Date()).subtractHours(4),
-    end: (new Date()).subtractHours(3)
+    end: (new Date()).subtractHours(3),
+    schedule: ((eventCounter - 1) % 2) + 1
   })
 }
 
 const addEventFromVueCal = () => {
   vueCalRef.value.view.createEvent({
-    title: 'Event New!!',
+    title: 'Event ' + ++eventCounter,
     start: (new Date()).subtractHours(4),
-    end: (new Date()).subtractHours(3)
+    end: (new Date()).subtractHours(3),
+    schedule: ((eventCounter - 1) % 2) + 1
   })
 }
 
