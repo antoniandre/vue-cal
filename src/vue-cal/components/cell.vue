@@ -23,21 +23,26 @@
         slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
       .vuecal__cell-content(v-if="$slots['cell-content']")
         slot(name="cell-content" :start="start" :end="end" :events="cellEvents")
-      .vuecal__cell-events(v-if="cellEvents.length")
+      .vuecal__cell-events(v-if="$slots['cell-events'] && cellEvents.length")
         slot(
-          v-if="$slots['cell-events']"
           name="cell-events"
           :start="start"
           :end="end"
           :events="cellEvents")
-        template(v-else)
-          event(
-            v-for="event in cellEventsPerSchedule[schedule.id]"
-            :key="event._.id"
-            :event="event"
-            @event-drag-start="emit('event-drag-start')"
-            @event-drag-end="emit('event-drag-end')"
-            @event-deleted="onEventDelete")
+      //- Animate event deletions.
+      transition-group.vuecal__cell-events(
+        v-else-if="cellEvents.length || transitionning"
+        name="vuecal-event-delete"
+        @before-leave="transitionning = true"
+        @after-leave="afterDelete"
+        tag="div")
+        event(
+          v-for="event in cellEventsPerSchedule[schedule.id]"
+          :key="event._.id"
+          :event="event"
+          @event-drag-start="emit('event-drag-start')"
+          @event-drag-end="emit('event-drag-end')"
+          @event-deleted="onEventDelete")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -50,7 +55,7 @@
       slot(name="cell-date" :start="start" :end="end" :events="cellEvents") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
       slot(name="cell-content" :start="start" :end="end" :events="cellEvents")
-    .vuecal__cell-events(v-if="cellEvents.length && $slots['cell-events']")
+    .vuecal__cell-events(v-if="$slots['cell-events'] && cellEvents.length")
       slot(
         name="cell-events"
         :start="start"
@@ -58,7 +63,7 @@
         :events="cellEvents")
     //- Animate event deletions.
     transition-group.vuecal__cell-events(
-      v-if="(cellEvents.length || transitionning) && !$slots['cell-events']"
+      v-else-if="cellEvents.length || transitionning"
       name="vuecal-event-delete"
       @before-leave="transitionning = true"
       @after-leave="afterDelete"
@@ -69,7 +74,7 @@
         :event="event"
         @event-drag-start="emit('event-drag-start')"
         @event-drag-end="emit('event-drag-end')"
-        @event-deleted="eventsDeleted.push($event.detail);transitionning = true")
+        @event-deleted="onEventDelete")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
