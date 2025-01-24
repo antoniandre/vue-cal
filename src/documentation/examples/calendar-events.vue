@@ -69,7 +69,6 @@ example(title="Events & Background Events" anchor="events")
     :events="exEvents.events"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
-    :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 261px")
@@ -98,7 +97,6 @@ example(title="Timeless Events" anchor="timeless-events")
     :time="false"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
-    :view-date="new Date()"
     :views-bar="false"
     :events="exTimelessEvents.events")
 
@@ -164,7 +162,6 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     :time-to="15 * 60"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
-    :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
     @event-click="exOpenEventDetails.openDialog"
@@ -331,7 +328,6 @@ example(
     :time-to="15 * 60"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
-    :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
@@ -348,68 +344,40 @@ example(
       w-button(@click="exCreateEvents.save") OK
 
 //- Example.
-//- example(title="Creating Events Programmatically" anchor="creating-events-programmatically")
+example(title="Create Events Programmatically" anchor="create-events-programmatically")
   template(#desc)
     p.my2.
-      To allow an external button to create events, you will need to call the
-      vue-cal #[code createEvent()] function from a Vue ref.
-    .w-flex.mb3.align-center
-      | This
-      w-button.mx1(sm @click="customEventCreation") button
-      | will prompt you to choose a date and time as the event start.
+      In order to create events programmatically, from an external button for instance, you need to call
+      the vue-cal #[code view.createEvent()] function from a Vue ref.
+    .w-flex.mb3.justify-end
+      w-button.mx1(sm @click="exExternalEventCreate.createEvent") Create Event
 
-    .w-flex.align-top.wrap
-      ssh-pre.my2(language="html-vue" style="font-size: 0.8em" :dark="store.darkMode").
-        &lt;button @click="customEventCreation"&gt;
-          button
-        &lt;/button&gt;
-
-        &lt;vue-cal
-          ref="vuecal"
-          small
-          :time-from="10 * 60"
-          :time-to="16 * 60"
-          :views="['day', 'week', 'month']"
-          :views-bar="false"
-          :title-bar="false"
-          hide-weekends
-          editable-events
-          :cell-click-hold="false"
-          :drag-to-create-event="false"&gt;
-        &lt;/vue-cal&gt;
-    p Then you can give custom event attributes as you wish:
-    ssh-pre.mt3(language="js" :dark="store.darkMode").
-      // In methods.
-      customEventCreation () {
-          const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', '{{ todayFormattedNotWeekend }}')
-
-          // Check if date format is correct before creating event.
-          if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-            this.$refs.vuecal.createEvent(
-              // Formatted start date and time or JavaScript Date object.
-              dateTime,
-              // Event duration in minutes (Integer).
-              120,
-              // Custom event props (optional).
-              { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' }
-            )
-          } else if (dateTime) alert('Wrong date format.')
-      }
   template(#code-html).
-  template(#desc2)
+    &lt;button @click="createEvent"&gt;Create Event&lt;/button&gt;
+
+    &lt;vue-cal
+      ref="vuecalRef"
+      editable-events&gt;
+    &lt;/vue-cal&gt;
+
+  template(#code-js).
+    const vuecalRef = ref(null)
+
+    const createEvent = () => {
+      vuecalRef.value.view.createEvent({
+        start: new Date(),
+        end: new Date().addHours(1), // Using Vue Cal's Date prototypes.
+        title: 'New Event 🎉'
+      })
+    }
   vue-cal(
-    :dark="store.darkMode"
-    ref="exEventCreateVuecalRef"
-    small
-    :time-from="10 * 60"
-    :time-to="16 * 60"
-    :views="['day', 'week', 'month']"
-    :views-bar="false"
-    :title-bar="false"
-    hide-weekends
+    ref="exExternalEventCreateVuecalRef"
     editable-events
-    :cell-click-hold="false"
-    :drag-to-create-event="false")
+    @ready="({ view }) => view.scrollToCurrentTime()"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :views-bar="false"
+    :dark="store.darkMode")
 
 //- Example.
 example(title="Delete Events" anchor="delete-events")
@@ -485,7 +453,7 @@ example(title="Delete Events" anchor="delete-events")
     &lt;/vue-cal&gt;
 
   vue-cal(
-    v-model:events="exDeleteEvents.events"
+    :events="exDeleteEvents.events"
     :editable-events="exDeleteEvents.editableEvents"
     v-on="exDeleteEvents.eventListeners"
     @event-delete="e => console.log('Event deleted!', e)"
@@ -497,8 +465,6 @@ example(title="Delete Events" anchor="delete-events")
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
-
-  pre.size--xs {{ exDeleteEvents.events }}
 
 //- Example.
 example(title="Edit Events" anchor="edit-events")
@@ -553,12 +519,31 @@ example(title="Edit Events" anchor="edit-events")
     :time-to="15 * 60"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
-    :view-date="new Date()"
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
 
 .todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
+
+//- Example.
+//- example(title="Events v-model" anchor="events-v-model")
+  template(#desc)
+    p Events v-model.
+
+  vue-cal(
+    ref="exEditEventsVuecalRef"
+    :selected-date="stringToDate('2018-11-19')"
+    :editable-events="{ drag: false, resize: true, delete: true, create: false }"
+    v-model:events="exEditEvents.events"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :views-bar="false"
+    :dark="store.darkMode"
+    style="height: 301px")
+  pre.size--xs {{ exDeleteEvents.events }}
+
 //- Example.
 //- example(title="Events Indicators" anchor="events-indicators")
   template(#desc)
@@ -1462,41 +1447,14 @@ const exCreateEvents = reactive({
   }
 })
 
-const exEventsIndicators = reactive({
-  indicatorStyle: ref('count'),
-  indicatorStyleOptions: ref([
-    { label: 'count (default)', value: 'count' },
-    { label: 'dash', value: 'dash' },
-    { label: 'dot', value: 'dot' },
-    { label: 'cell background', value: 'cell' }
-  ])
-})
-
-const exEventsOnMonthView = reactive({
-
-})
-
-const exEditAndDeleteEvents = reactive({
-
-})
-
-const exEditEventsVuecalRef = ref(null)
-const exEditEvents = reactive({
-  events: [
-    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-    {
-      start: '2018-11-20 14:00',
-      end: '2018-11-20 17:30',
-      title: 'Boring event',
-      content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
-      class: 'blue-event',
-      deletable: false,
-      resizable: false,
-      draggable: false
-    }
-  ],
-  deleteEvent: ({ e, event }) => {
-    exEditEventsVuecalRef.value.view.deleteEvent(event._.id)
+const exExternalEventCreateVuecalRef = ref(null)
+const exExternalEventCreate = reactive({
+  createEvent: () => {
+    exExternalEventCreateVuecalRef.value.view.createEvent({
+      start: new Date(),
+      end: new Date().addHours(1),
+      title: 'New Event 🎉'
+    })
   }
 })
 
@@ -1536,52 +1494,25 @@ const exDeleteEvents = reactive({
   skipDeleteButton: ref(false)
 })
 
-const exEventCreateVuecalRef = ref(null)
-const exEventCreate = reactive({
-  onEventCreate: (event, deleteEventFunction) => {
-    selectedEvent.value = event
-    showEventCreationDialog.value = true
-    deleteEventFunction.value = deleteEventFunction
-
-    return event
-  },
-  snapToInterval15: ref(false),
-  eventCreateMinDrag: ref(15),
-  eventCreateMinDragOpts: ref([{ label: '0' }, { label: '15' }]),
-  deleteEventFunction: ref(null),
-  deleteDragEventFunction: ref(null),
-  cancelEventCreation: () => {
-    closeCreationDialog()
-    (deleteEventFunction.value || deleteDragEventFunction.value)()
-  },
-  closeCreationDialog: () => {
-    showEventCreationDialog.value = false
-    selectedEvent.value = {}
-  },
-  onEventDragStartCreate: (event, deleteEventFunction) => {
-    selectedEvent.value = event
-    deleteEventFunction.value = deleteEventFunction
-
-    return event
-  },
-  customEventCreation: () => {
-    let today = new Date(new Date().setHours(13, 15))
-    // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
-    if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
-    const dateTime = prompt('Create event on (YYYY-MM-DD HH:mm)', today.format('YYYY-MM-DD HH:mm'))
-    if (/^\d{4}-\d{2}-\d{2} \d{2}:\d{2}$/.test(dateTime)) {
-      exEventCreateVuecalRef.value.createEvent(dateTime, 120, { title: 'New Event', content: 'yay! 🎉', class: 'blue-event' })
+const exEditEventsVuecalRef = ref(null)
+const exEditEvents = reactive({
+  events: [
+    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+    {
+      start: '2018-11-20 14:00',
+      end: '2018-11-20 17:30',
+      title: 'Boring event',
+      content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
+      class: 'blue-event',
+      deletable: false,
+      resizable: false,
+      draggable: false
     }
-    else if (dateTime) alert('Wrong date format.')
-  },
-  todayFormattedNotWeekend: computed(() => {
-    let today = new Date(new Date().setHours(13, 15))
-    // If today is on weekend subtract 2 days for the event to always be visible with hidden weekends.
-    if (!today.getDay() || today.getDay() > 5) today = today.subtractDays(2)
-    return today.format('YYYY-MM-DD HH:mm')
-  }),
-  eventsCssClasses: [{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }]
+  ]
 })
+
+
+
 
 const exDragAndDrop = reactive({
   events: [
@@ -1594,6 +1525,20 @@ const exDragAndDrop = reactive({
       schedule: 2
     }
   ]
+})
+
+const exEventsIndicators = reactive({
+  indicatorStyle: ref('count'),
+  indicatorStyleOptions: ref([
+    { label: 'count (default)', value: 'count' },
+    { label: 'dash', value: 'dash' },
+    { label: 'dot', value: 'dot' },
+    { label: 'cell background', value: 'cell' }
+  ])
+})
+
+const exEventsOnMonthView = reactive({
+
 })
 
 const exExternalEventsDragDrop = reactive({
@@ -1779,10 +1724,6 @@ const exAllDayEvents = reactive({
   ],
   shortEventsOnMonthView: ref(false)
 })
-
-const now = ref(new Date())
-const showEventCreationDialog = ref(false)
-const selectedEvent = ref({})
 </script>
 
 <style lang="scss">
