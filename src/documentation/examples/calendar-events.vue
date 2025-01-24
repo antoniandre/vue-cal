@@ -454,11 +454,11 @@ example(title="Delete Events" anchor="delete-events")
       li
         | #[code 2]:
         span.ml1.
-          The event is deleted visually from the cell but not in the global events array (source of truth).
+          The event is deleted visually from the cell but not in the global events array (source of truth) yet.
           This has the advantage of not triggering an immediate Vue reactivity update cascade on all the
           cells.#[br]
-          The rerendering cascade of the cell is completely avoided by deleting the event on the next view
-          change when the cell is unmounted.
+          The rerendering cascade of the cells is completely avoided by deleting the event on the next view
+          change, when the cell is unmounted.
       li.
         #[code 3]: The event is deleted both visually and in the source of truth (automatically called on
         cell unmount after using stage #[code 2]).
@@ -480,7 +480,7 @@ example(title="Delete Events" anchor="delete-events")
   template(#code-html).
     &lt;vue-cal
       {{ exDeleteEvents.editableEvents ? 'editable-events' : ':editable-events="false"' }}
-      {{ exDeleteEvents.deleteMethod === 'hold' ? '\n  @event-dblclick="false"\n  @event-hold="$event.delete"' : '' }}
+      {{ exDeleteEvents.deleteMethod === 'hold' ? `\n  @event-dblclick="false"\n  @event-hold="$event.delete${exDeleteEvents.skipDeleteButton ? '(3)' : ''}"` : `${exDeleteEvents.skipDeleteButton ? '\n  @event-dblclick="$event.delete(3)"' : ''}` }}
       :events="events"&gt;
     &lt;/vue-cal&gt;
 
@@ -1518,7 +1518,7 @@ const exDeleteEvents = reactive({
     exEditEventsVuecalRef.value.view.deleteEvent(event._.id)
   },
   viewDate: new Date(),
-  editableEvents: ref(false),
+  editableEvents: ref(true),
   deleteMethod: ref('dblclick'),
   deleteMethods: [{ label: 'dblclick' }, { label: 'hold' }],
   eventListeners: computed(() => {
