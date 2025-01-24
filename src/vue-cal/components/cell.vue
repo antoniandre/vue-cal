@@ -37,7 +37,7 @@
             :event="event"
             @event-drag-start="emit('event-drag-start')"
             @event-drag-end="emit('event-drag-end')"
-            @event-deleted="eventsDeleted.push($event.detail)")
+            @event-deleted="onEventDelete")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -56,18 +56,20 @@
         :start="start"
         :end="end"
         :events="cellEvents")
-    transition-group(
-      v-if="cellEvents.length && !$slots['cell-events']"
+    //- Animate event deletions.
+    transition-group.vuecal__cell-events(
+      v-if="(cellEvents.length || transitionning) && !$slots['cell-events']"
       name="vuecal-event-delete"
-      tag="div"
-      class="vuecal__cell-events")
+      @before-leave="transitionning = true"
+      @after-leave="afterDelete"
+      tag="div")
       event(
         v-for="event in cellEvents"
         :key="event._.id"
         :event="event"
         @event-drag-start="emit('event-drag-start')"
         @event-drag-end="emit('event-drag-end')"
-        @event-deleted="eventsDeleted.push($event.detail)")
+        @event-deleted="eventsDeleted.push($event.detail);transitionning = true")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -105,6 +107,13 @@ const cellEl = ref(null)
 // Only delete the events for good when unmounting the cell, in order to avoid re-rendering all the
 // cells in the view when deleting in the source of truth.
 const eventsDeleted = ref([])
+// Wait for the event deletion transition end before unmounting the events container if no event.
+const transitionning = ref(false)
+const onEventDelete = () => {
+  eventsDeleted.push($event.detail)
+  transitionning.value = true
+}
+const afterDelete = () => setTimeout(() => (transitionning.value = false), 300)
 
 // The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
 // display the event placeholder in that schedule.
@@ -544,6 +553,7 @@ onBeforeUnmount(async () => {
     right: 1px;
     font-size: 10px;
     opacity: 0.7;
+    pointer-events: none; // Let interactions go through on events.
   }
 }
 
