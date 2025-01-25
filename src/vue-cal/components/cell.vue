@@ -336,9 +336,20 @@ const cellEventListeners = computed(() => {
   // touchstart, mousedown.
   const externalHandlers = { ...eventListeners }
 
+  // `cell-delayed-click` is only fired after 400ms if there was no dblclick.
+  let clickTimeout = null
   eventListeners.click = e => {
     onCellClick()
     externalHandlers.click?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+
+    if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
+    else {
+      clickTimeout = setTimeout(() => {
+        clickTimeout = null
+        // Handle delayed single click.
+        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      }, 400)
+    }
   }
 
   if (config.time && view.isDay || view.isDays || view.isWeek) {

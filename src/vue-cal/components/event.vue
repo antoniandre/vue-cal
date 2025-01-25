@@ -100,6 +100,21 @@ const eventListeners = computed(() => {
 
     externalHandlers.mousedown?.({ e, event })
   }
+
+  // `event-delayed-click` is only fired after 400ms if there was no dblclick.
+  let clickTimeout = null
+  eventListeners.click = e => {
+    externalHandlers.click?.({ e, event }) // Handle single click.
+
+    // Handle double click in eventListeners.dblclick.
+    if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
+    else {
+      clickTimeout = setTimeout(() => {
+        clickTimeout = null
+        externalHandlers['delayed-click']?.({ e, event }) // Handle delayed single click.
+      }, 400)
+    }
+  }
   eventListeners.dblclick = e => {
     if (externalHandlers.dblclick) externalHandlers.dblclick({ e, event })
     // Show delete button on event on double click by default except if dblclick is used externally.
