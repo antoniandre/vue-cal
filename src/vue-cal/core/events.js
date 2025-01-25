@@ -45,7 +45,9 @@ export const useEvents = vuecal => {
       }
       else if (event._.multiday) {
         events.multiday.push(event._.id)
-        // @todo: Possibly do other things here.
+        // @todo: handle multiday events. For now, index the event by its start date.
+        if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
+        events.byDate[event._.startFormatted].push(event._.id)
       }
       else {
         // Index this event by its start date.
