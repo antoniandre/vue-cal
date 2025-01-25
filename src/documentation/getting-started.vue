@@ -111,7 +111,7 @@ ul.ml4
                 | Vue Cal + Vue 2 (UMD build)
                 w-icon.ml1(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-title-link.mt12.pt12(h2 anchor="how-to-use") How to use
+title-link.mt12.pt12(h2 anchor="how-to-use") How to Use
 p Once you've imported the Vue Cal component, it's super simple. In your template just use:
 ssh-pre.my2(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal ... /&gt;
@@ -136,7 +136,7 @@ p.
 
 alert
   .title3 That's it! You're up and running.
-  p.mt1 Vue Cal comes with a default height of 500px. If you want to change that, you can use CSS. ;)
+  p.mt1 Vue Cal comes with a default height of 500px, you can override this via CSS.
 
 vue-cal(small :dark="store.darkMode")
 
@@ -144,40 +144,19 @@ vue-cal(small :dark="store.darkMode")
 title-link.mt12.pt12(h2 anchor="css-notes") CSS Notes
 p You can easily change the calendar design with CSS.
 
-p.mt1 First off, Vue Cal comes with a default height of 500px. So if you want to change it, that's via CSS. ;)
+p.mt1 Vue Cal comes with a default height of 500px, you can override this via CSS.
 
 
-title-link.mt12(h3 anchor="themes") Themes
+title-link.mt6(h3 anchor="themes") Themes
 p.
-  Currently 2 color themes (green &amp; blue) are available, in addition to the standard grey theme.#[br]
-  You can apply a green or blue theme by using the CSS class #[span.code vuecal--green-theme]
-  or #[span.code vuecal--blue-theme].
+  Currently 2 color themes (light &amp; dark) are available.#[br]
+  Setting the #[code dark] prop to #[code true] will switch to dark mode.
 p.
-  If you want another color theme, you can define your own easily.#[br]
-  This is what a standard color theme looks like.
-  You can copy and change any color to quickly get a nice render.#[br]
-  If that is still not doing what you want you can change even more in your own CSS.
+  By default, the calendar is blue, but you can easily change the primary color with the CSS variables.#[br]
+  If you'd rather start the CSS from a clean cheat, you can decide to not use the default theme and do
+  everything yourself in your own CSS.
 
-ssh-pre(language="css" :dark="store.darkMode").
-  /* Green-theme. */
-  .vuecal__menu, .vuecal__cell-events-count {background-color: #42b983;}
-  .vuecal__title-bar {background-color: #e4f5ef;}
-  .vuecal__cell--today, .vuecal__cell--current {background-color: rgba(240, 240, 255, 0.4);}
-  .vuecal:not(.vuecal--day-view) .vuecal__cell--selected {background-color: rgba(235, 255, 245, 0.4);}
-  .vuecal__cell--selected:before {border-color: rgba(66, 185, 131, 0.5);}
-  /* Cells and buttons get highlighted when an event is dragged over it. */
-  .vuecal__cell--highlighted:not(.vuecal__cell--has-schedules),
-  .vuecal__schedule--highlighted {background-color: rgba(195, 255, 225, 0.5);}
-  .vuecal__arrow.vuecal__arrow--highlighted,
-  .vuecal__view-btn.vuecal__view-btn--highlighted {background-color: rgba(136, 236, 191, 0.25);}
-
-p
-  strong Rounded theme#[br]
-  | You can use the rounded cells theme like in the Example
-  | #[a(href="#ex--calendar-themes") Calendar themes - Rounded cells],
-  | by applying the CSS class #[span.code vuecal--rounded-theme] to the Vue Cal wrapper.
-
-title-link.mt12(h3 anchor="css-variables") CSS Variables
+title-link.mt6(h3 anchor="css-variables") CSS Variables
 ul
   li
     code.mr2 allDayBarHeight
@@ -195,7 +174,7 @@ ul
       If #[span.code time] is enabled, set the time cell height in pixels.#[br]
       this is very important as it is used to calculate the events position in the day.
 
-title-link.mt12(h3 anchor="responsiveness-media-queries") Responsiveness &amp; Media Queries
+title-link.mt6(h3 anchor="responsiveness-media-queries") Responsiveness &amp; Media Queries
 p.
   This calendar is fully responsive.#[br]
   To help you in making the calendar always look perfect,
@@ -207,7 +186,7 @@ p.
   Additionally, you can use the options #[span.code sm] &amp; #[span.code xs]
   to truncate week days at any size.
 
-h3.mt12 # Disabled text selection
+title-link.mt6(h3 anchor="disabled-text-selection") Disabled Text Selection
 p.
   By default the selection is disabled in the whole calendar except in the events.
   you can override this by CSS.
