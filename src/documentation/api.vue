@@ -106,6 +106,31 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      h3.title4.mt0.pt0 Methods
+    template(#content)
+      p Methods that you can use from the Vue Cal instance's view (you can use a template ref).
+      div
+        | Example:
+        ssh-pre.d-iblock.pr5.py0.ml1.my0(language="js" :dark="store.darkMode").
+          vuecalRef.value.view.next()
+        | .
+      ssh-pre(language="js" :dark="store.darkMode").
+        switch, // Switches to a different view given in param (day, days, month, year, years).
+        broader, // Navigates to the next available broader view.
+        narrower, // Navigates to the next available narrower view.
+        previous, // Navigates to the previous range of the same view.
+        next, // Navigates to the next range of the same view.
+        goToToday, // Goes to today.
+        updateViewDate, // Updates the view date to the date given in param.
+        updateSelectedDate, // Updates the selected date to the date given in param.
+        createEvent, // Creates an event given in params (requires `start`, `end`).
+        deleteEvent, // Deletes an event given its ID and a deletion stage (1, 2, 3).
+        scrollToCurrentTime, // Scrolls the calendar body to the current time.
+        scrollToTime, // Scrolls the calendar body to the given time in minutes.
+        scrollTop // Scrolls the calendar body to the top.
+
+  w-accordion-item
+    template(#title)
       h3.title4.mt0.pt0 Other Utilities
     template(#content)
       p Other utilities that you may find useful.
@@ -119,18 +144,12 @@ w-accordion.mt3(
           containsToday: true,
           cols: 7,
           rows: 6,
-          transitionDirection: "right",
           isDay: false,
           isDays: false,
           isWeek: false,
           isMonth: true,
           isYear: false,
-          isYears: false,
-
-          // Methods.
-          scrollToCurrentTime, // Scrolls the calendar body to the current time.
-          scrollToTime, // Scrolls the calendar body to the given time in minutes.
-          scrollTop // Scrolls the calendar body to the top.
+          isYears: false
         }
 
 //- Event Object.
