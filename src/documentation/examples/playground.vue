@@ -82,7 +82,8 @@
     @event-create="eventCreation.open"
     @event-mousedown="log('event-mousedown', $event)"
     @event-mouseup="log('event-mouseup', $event)"
-    @event-click="eventSelection.onEventClick"
+    @event-click="log('event-click', $event)"
+    @event-delayed-click="eventSelection.onEventDelayedClick"
     @event-hold="log('event-hold', $event)"
     @event-drag-start="log('event-drag-start', $event)"
     @event-drag="log('event-drag', $event)"
@@ -201,8 +202,8 @@ const mainVuecalConfig = reactive({
   todayButton: ref(true),
   xs: computed(() => size.value === 'xs'),
   sm: computed(() => size.value === 'sm'),
-  // timeFrom: 7 * 60,
-  // timeTo: 20 * 60,
+  timeFrom: 7 * 60,
+  timeTo: 20 * 60,
   timeStep: 60,
   twelveHour: ref(false),
   hideWeekends: ref(false),
@@ -210,7 +211,10 @@ const mainVuecalConfig = reactive({
   viewDayOffset: ref(0),
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
-  events: ref([]),
+  events: ref([
+    { title: 'Event 1', start: new Date(new Date().setHours(8, 0, 0, 0)), end: new Date(new Date().setHours(8, 30, 0, 0)) },
+    { title: 'Event 2', start: new Date(new Date().setHours(9, 0, 0, 0)), end: new Date(new Date().setHours(9, 30, 0, 0)) }
+  ]),
   showSchedules: ref(false),
   schedules: computed(() => {
     return mainVuecalConfig.showSchedules ? [
@@ -237,20 +241,12 @@ const mainVuecalConfig = reactive({
   editableEvents: ref(false)
 })
 
-// Pretend a call to a backend.
-setTimeout(() => {
-  mainVuecalConfig.events = [
-    { title: 'Event 1', start: '2024-09-20 10:00', end: '2024-09-20 10:30' },
-    { title: 'Event 2', start: '2024-09-20 11:00', end: '2024-09-20 11:30' }
-  ]
-}, 1000)
-
-let eventCounter = 0
+let eventCounter = 2 // Starts with 2 events in the array.
 const addEventFromOutside = () => {
   mainVuecalConfig.events.push({
     title: 'Event ' + ++eventCounter,
-    start: (new Date()).subtractHours(4),
-    end: (new Date()).subtractHours(3),
+    start: (new Date()).subtractHours(2),
+    end: (new Date()).subtractHours(1),
     schedule: ((eventCounter - 1) % 2) + 1
   })
 }
@@ -258,8 +254,8 @@ const addEventFromOutside = () => {
 const addEventFromVueCal = () => {
   vueCalRef.value.view.createEvent({
     title: 'Event ' + ++eventCounter,
-    start: (new Date()).subtractHours(4),
-    end: (new Date()).subtractHours(3),
+    start: new Date(),
+    end: (new Date()).addHours(1),
     schedule: ((eventCounter - 1) % 2) + 1
   })
 }
@@ -267,8 +263,8 @@ const addEventFromVueCal = () => {
 const log = (...args) => console.log(...args)
 
 const eventSelection = reactive({
-  onEventClick: e => {
-    log('event-click', e)
+  onEventDelayedClick: e => {
+    log('event-delayed-click', e)
 
     eventSelection.event = e.event
     eventSelection.showDialog = true
