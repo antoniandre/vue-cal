@@ -469,6 +469,7 @@ example(title="Delete Events" anchor="delete-events")
 //- Example.
 example(title="Edit Events" anchor="edit-events")
   template(#desc)
+    .todo-tag.d-iflex.mt6 FINISH THIS EXAMPLE
     p.mb2.
       Editing events is allowed or denied when the #[code editable-events] option is set to
       #[code true] or #[code false]. But more granularly, #[code editable-events] can be provided
@@ -523,26 +524,53 @@ example(title="Edit Events" anchor="edit-events")
     :dark="store.darkMode"
     style="height: 301px")
 
-.todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
-
 //- Example.
-//- example(title="Events v-model" anchor="events-v-model")
+example(title="Events v-model" anchor="events-v-model")
   template(#desc)
-    p Events v-model.
+    p.
+      The good news is that the events prop is a two-way binding! So you can use it to read or write with
+      #[code v-model:events]! But...
+    alert.mb4(tip)
+      .title4.mt-1 With great powers comes great responsibility
+      p.
+        Be aware that modifying the array of events externally will always override the internal array.#[br]
+        So you must be sure to save the changes that were made to events through the Vue Cal UI, or they
+        will be lost.
+    w-button.ma1(@click="exEventsVModel.addEvent")
+      w-icon.mr2 mdi mdi-plus
+      | Add Event
+    w-button.ma1(@click="exEventsVModel.events.pop()")
+      w-icon.mr2 mdi mdi-close
+      | Remove Last Event
+    p.mb0 Here is the live array of event titles:
+    pre.code.size--xs.pa2.ova {{ exEventsVModel.events.map(e => e.title) }}
 
+  template(#code-html).
+    &lt;button
+      @click="events.push({
+        start: '2018-11-20 12:00',
+        end: '2018-11-20 17:00',
+        title: 'Event 1'
+      })"&gt;Add Event&lt;/button&gt;
+    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
+
+    &lt;vue-cal
+      v-model:events="events"&gt;
+    &lt;/vue-cal&gt;
   vue-cal(
-    ref="exEditEventsVuecalRef"
-    :selected-date="stringToDate('2018-11-19')"
-    :editable-events="{ drag: false, resize: true, delete: true, create: false }"
-    v-model:events="exEditEvents.events"
-    :time-from="9 * 60"
-    :time-to="15 * 60"
+    ref="exEventsVModelVuecalRef"
+    v-model:events="exEventsVModel.events"
+    @ready="({ view }) => view.scrollToCurrentTime()"
+    @event-create="exEventsVModel.onEventCreate"
+    @event-dblclick="({ event }) => event.delete(2)"
+    editable-events
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
-  pre.size--xs {{ exDeleteEvents.events }}
+
+.todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
 
 //- Example.
 //- example(title="Events Indicators" anchor="events-indicators")
@@ -1511,7 +1539,12 @@ const exEditEvents = reactive({
   ]
 })
 
-
+const exEventsVModel = reactive({
+  counter: 0,
+  events: ref([]),
+  onEventCreate: ({ event, resolve }) => resolve({ ...event, title: 'Event ' + ++exEventsVModel.counter }),
+  addEvent: () => exEventsVModel.events.push({ start: new Date(), end: new Date().addHours(1), title: 'Event ' + ++exEventsVModel.counter })
+})
 
 
 const exDragAndDrop = reactive({

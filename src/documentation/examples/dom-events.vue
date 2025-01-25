@@ -48,7 +48,11 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
       w-accordion-item
         template(#title)
           code cell-*
-        template(#content) where star is any valid JavaScript DOM event.
+        template(#content) where star is any valid JavaScript DOM event that your app is listening for.
+      w-accordion-item
+        template(#title)
+          code cell-delayed-click
+        template(#content) returns a JS native #[span.code Date] object.
       w-accordion-item
         template(#title)
           code cell-drag-start
@@ -70,7 +74,11 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
       w-accordion-item
         template(#title)
           code event-*
-        template(#content) where star is any valid JavaScript DOM event.
+        template(#content) where star is any valid JavaScript DOM event that your app is listening for.
+      w-accordion-item
+        template(#title)
+          code event-delayed-click
+        template(#content) returns a JS native #[span.code Date] object.
       w-accordion-item
         template(#title)
           code event-drag-start
@@ -427,63 +435,6 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
         :views-bar="false"
         :dark="store.darkMode"
         sm)
-
-//- Example.
-example(title="Modifying the array of events outside of Vue Cal" anchor="modifying-events-from-outside")
-  template(#desc)
-    alert.mb4(tip).
-      It is possible to modify the array of events like adding or removing an event
-      after the first load, but be aware that by doing so all the events in Vue Cal
-      will be replaced by the new array of events. You may lose your changes if you
-      modified events within Vue Cal.
-    w-button.ma1(@click="eventsCopy.push({ start: '2018-11-20 12:00', end: '2018-11-20 17:00', title: 'A new event', class: 'blue-event' })")
-      w-icon.mr2 mdi mdi-plus
-      | Add an event
-    w-button.ma1(@click="eventsCopy.pop()")
-      w-icon.mr2 mdi mdi-close
-      | Remove last event
-    p.mb0 Here is the live array of event titles:
-    pre {{ eventsCopy.map(e => e.title) }}
-  template(#code-html).
-    &lt;button
-      @click="events.push({
-        start: '2018-11-20 12:00',
-        end: '2018-11-20 17:00',
-        title: 'A new event',
-        class: 'blue-event'
-      })"&gt;Add an event&lt;/button&gt;
-    &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
-
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-
-  template(#code-js).
-      data: () => ({
-        events: [
-          {
-            start: '2018-11-19 10:35',
-            end: '2018-11-19 11:30',
-            title: 'Doctor appointment',
-            content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-            class: 'health'
-          },
-          ...
-        ]
-      })
-  vue-cal(
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="9 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    :events="eventsCopy"
-    :dark="store.darkMode")
 </template>
 
 <script setup>
@@ -578,8 +529,6 @@ const events = [
     schedule: 1
   }
 ]
-
-const eventsCopy = events.slice(0)
 
 const logsBoxEl = ref(null)
 const exEmittedEvents = reactive({
