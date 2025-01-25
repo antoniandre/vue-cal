@@ -82,7 +82,7 @@
     @event-create="eventCreation.open"
     @event-mousedown="log('event-mousedown', $event)"
     @event-mouseup="log('event-mouseup', $event)"
-    @event-click="log('event-click', $event)"
+    @event-click="eventSelection.onEventClick"
     @event-hold="log('event-hold', $event)"
     @event-drag-start="log('event-drag-start', $event)"
     @event-drag="log('event-drag', $event)"
@@ -113,6 +113,22 @@ w-dialog(
   .w-flex.justify-end.mt2.gap2
     w-button(@click="eventCreation.cancel") Cancel
     w-button(@click="eventCreation.save") OK
+
+w-dialog(
+  v-if="eventSelection.event"
+  v-model="eventSelection.showDialog"
+  :title="eventSelection.event.title"
+  width="380")
+  .w-flex.align-center.justify-end.gap2
+    w-icon.grey mdi mdi-calendar
+    small {{ eventSelection.event.start.format() }}
+    w-icon.grey.ml2 mdi mdi-clock-outline
+    small {{ eventSelection.event.start.formatTime() }} - {{ eventSelection.event.end.formatTime() }}
+  .w-flex.align-center.justify-center.title1.mt6.mb4
+    w-icon.grey.ml2(size="3rem") mdi mdi-party-popper
+  p.lh1.
+    Lorem ipsum dolor sit amet consectetur adipisicing elit. Nihil inventore expedita veniam deleniti,
+    labore corporis quas, aspernatur praesentium quia nisi, omnis quod autem.
 </template>
 
 <script setup>
@@ -250,27 +266,16 @@ const addEventFromVueCal = () => {
 
 const log = (...args) => console.log(...args)
 
-// events: [
-//   {
-//     start: new Date(new Date(now).setHours(1, 0, 0)),
-//     end: new Date(new Date(now).setHours(4, 0, 0)),
-//     allDay: true,
-//     title: 'Event 1',
-//     schedule: 2
-//   },
-//   {
-//     start: new Date(new Date(now).setHours(1, 0, 0)),
-//     end: new Date(new Date(now).setHours(4, 0, 0)),
-//     title: 'Event 2',
-//     schedule: 1
-//   },
-//   {
-//     start: new Date(new Date(now).setHours(3, 0, 0)),
-//     end: new Date(new Date(now).setHours(5, 0, 0)),
-//     title: 'Event 3',
-//     schedule: 2
-//   }
-// ]
+const eventSelection = reactive({
+  onEventClick: e => {
+    log('event-click', e)
+
+    eventSelection.event = e.event
+    eventSelection.showDialog = true
+  },
+  showDialog: ref(false),
+  event: ref(null)
+})
 
 const eventCreation = reactive({
   show: ref(false),
