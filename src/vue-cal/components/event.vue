@@ -12,7 +12,7 @@
       | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
   .vuecal__event-resizer
   transition(name="vuecal-delete-btn")
-    .vuecal__event-delete(v-if="event._.deleting" @click="onDelete") Delete
+    .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete
 </template>
 
 <script setup>
