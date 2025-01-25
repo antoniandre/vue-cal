@@ -77,7 +77,7 @@ export const useConfig = (vuecal, props, attrs) => {
     // For instance, convert vuecal.onCellMouseenter to cell.mouseenter.
     Object.entries(attrs).forEach(([attr, value]) => {
       const [m0, m1, m2] = attr.match(/^on(Cell|Event)(.+)$/) || []
-      // Allow both camelCase and kebab-case on event handlers.
+      // Allow both camelCase and kebab-case for event handlers names, but store as kebab-case.
       if (m0) listeners[m1.toLowerCase()][kebabize(m2).replace(/^-+|-+$/g, '')] = value
     })
 
