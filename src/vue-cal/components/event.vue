@@ -10,7 +10,7 @@
     .vuecal__event-time(v-if="config.time")
       | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-  .vuecal__event-resizer
+  .vuecal__event-resizer(v-if="config.time && config.editableEvents.resize")
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete
 </template>
@@ -248,6 +248,7 @@ onUnmounted(() => event._.unregister())
 
   .vuecal__scrollable--month-view & {position: relative;}
 
+  &--resizing {z-index: 100;}
   &-resizer {
     position: absolute;
     inset: auto 0 0;
