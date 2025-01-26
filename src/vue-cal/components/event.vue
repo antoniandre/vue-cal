@@ -5,11 +5,12 @@
   :class="classes"
   :style="styles")
   .vuecal__event-details
-    .vuecal__event-title {{ event.title }}
-    .vuecal__event-content(v-html="event.content")
-    .vuecal__event-time(v-if="config.time")
-      | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-      | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+    slot(name="event" :event="event")
+      .vuecal__event-title {{ event.title }}
+      .vuecal__event-time(v-if="config.time")
+        | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+        | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+      .vuecal__event-content(v-html="event.content")
   .vuecal__event-resizer(v-if="config.time && config.editableEvents.resize && event.resizable !== false")
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete

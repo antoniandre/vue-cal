@@ -1,7 +1,12 @@
 <template lang="pug">
 .vuecal__cell(ref="cellEl" :class="classes" v-on="cellEventListeners")
-  template(v-if="$slots.cell")
-    slot(name="cell" :start="start" :end="end" :index="index" :events="cellEvents")
+  slot(
+    v-if="$slots.cell"
+    name="cell"
+    :start="start"
+    :end="end"
+    :index="index"
+    :events="cellEvents")
 
   template(v-if="specialHours")
     .vuecal__special-hours(
@@ -43,6 +48,8 @@
           @event-drag-start="emit('event-drag-start')"
           @event-drag-end="emit('event-drag-end')"
           @event-deleted="onEventDelete")
+          template(v-if="$slots.event" #event="params")
+            slot(name="event" v-bind="params")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id"
         :style="eventPlaceholder.style")
@@ -75,6 +82,8 @@
         @event-drag-start="emit('event-drag-start')"
         @event-drag-end="emit('event-drag-end')"
         @event-deleted="onEventDelete")
+        template(v-if="$slots.event" #event="params")
+          slot(name="event" v-bind="params")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 

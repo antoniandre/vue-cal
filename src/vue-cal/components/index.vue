@@ -57,6 +57,8 @@
                 slot(name="cell-content" v-bind="params")
               template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="params")
                 slot(name="cell-events" v-bind="params")
+              template(v-if="!$slots.cell && $slots.event" #event="params")
+                slot(name="event" v-bind="params")
 </template>
 
 <script setup>

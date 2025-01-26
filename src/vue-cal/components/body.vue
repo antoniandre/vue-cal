@@ -10,14 +10,16 @@
     @cell-drag-end="emit('cell-drag-end')"
     @event-drag-start="emit('event-drag-start')"
     @event-drag-end="emit('event-drag-end')")
-    template(v-if="$slots.cell" #cell="{ start, end, index, events }")
-      slot(name="cell" :start="date.start" :end="date.end" :index="index" :events="events")
-    template(v-if="$slots['cell-date']" #cell-date="{ start, end, events }")
-      slot(name="cell-date" :start="date.start" :end="date.end" :events="events")
-    template(v-if="$slots['cell-content']" #cell-content="{ start, end, events }")
-      slot(name="cell-content" :start="date.start" :end="date.end" :events="events")
-    template(v-if="$slots['cell-events']" #cell-events="{ start, end, events }")
-      slot(name="cell-events" :start="date.start" :end="date.end" :events="events")
+    template(v-if="$slots.cell" #cell="params")
+      slot(name="cell" v-bind="params")
+    template(v-if="$slots['cell-date']" #cell-date="params")
+      slot(name="cell-date" v-bind="params")
+    template(v-if="$slots['cell-content']" #cell-content="params")
+      slot(name="cell-content" v-bind="params")
+    template(v-if="$slots['cell-events']" #cell-events="params")
+      slot(name="cell-events" v-bind="params")
+    template(v-else-if="$slots.event" #event="params")
+      slot(name="event" v-bind="params")
 </template>
 
 <script setup>
