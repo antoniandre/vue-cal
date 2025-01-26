@@ -506,7 +506,7 @@ example(title="Edit Events" anchor="edit-events")
     const events = [
       {
         start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
-        end: new Date(new Date().addDays(2).setHours(12, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+        end: new Date(new Date().addDays(2).setHours(13, 0, 0, 0)), // Using Vue Cal's Date prototypes.
         title: 'Boring Event',
         content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;Can't drag, resize or delete me!',
         class: 'blue-event',
