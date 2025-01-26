@@ -17,7 +17,7 @@
 
 <script setup>
 import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { minutesToPercentage } from '@/vue-cal/utils/cell'
+import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/cell'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end'])
 const { config, view } = inject('vuecal')
@@ -31,16 +31,19 @@ const event = reactive(props.event)
 
 const touch = reactive({
   dragging: false,
+  resizing: false,
+  fromResizer: false, // If the drag originates from the resizer element.
   holding: false, // When the event is clicked and hold for a certain amount of time.
   holdTimer: null, // event click and hold detection.
-  startX: 0,
-  startY: 0,
-  moveX: 0,
-  moveY: 0,
-  startPercentageX: 0,
-  startPercentageY: 0,
-  movePercentageX: 0,
-  movePercentageY: 0,
+  startX: 0, // The X coords at the start of the drag.
+  startY: 0, // The Y coords at the start of the drag.
+  startPercentageX: 0, // The X coords in percentage at the start of the drag.
+  startPercentageY: 0, // The Y coords in percentage at the start of the drag.
+  moveX: 0, // The X coords while dragging.
+  moveY: 0, // The Y coords while dragging.
+  movePercentageX: 0, // The X coords in percentage while dragging.
+  movePercentageY: 0, // The Y coords in percentage while dragging.
+  cellEl: null, // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   schedule: null
 })
 
@@ -52,7 +55,8 @@ const classes = computed(() => ({
   'vuecal__event--multiday': !!event._?.multiday,
   'vuecal__event--cut-top': event._?.startMinutes < config.timeFrom,
   'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo,
-  'vuecal__event--dragging': touch.dragging
+  'vuecal__event--dragging': touch.dragging,
+  'vuecal__event--resizing': touch.resizing
 }))
 
 const styles = computed(() => {
@@ -126,38 +130,60 @@ const eventListeners = computed(() => {
 
 // On mousedown OR TOUCHSTART on the event.
 const onMousedown = e => {
+  const domEvent = e.touches?.[0] || e // Handle click or touch event.
+  // If the event target is the resizer, set the resizing flag.
+  touch.fromResizer = domEvent.target.matches('.vuecal__event-resizer, .vuecal__event-resizer *')
+
   const rect = eventEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.startPercentageX = touch.startX * 100 / rect.width
   touch.startPercentageY = touch.startY * 100 / rect.height
+  // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
+  touch.cellEl = eventEl.value.closest('.vuecal__cell')
 
   document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
   document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
-    // If there's an @event-hold external listener, call it.
+    // If there's an @event-hold external listener, call it after holding 1s.
     eventListeners.value.hold?.({ e, event })
   }, 1000)
 }
 
 const onDocMousemove = e => {
-  // Internal emit to the root component to add a CSS class on wrapper while dragging.
-  if (!touch.dragging) {
+  const domEvent = e.touches?.[0] || e // Handle click or touch event.
+
+  if (touch.fromResizer && !touch.resizing) {
+    // Internal emit to the root component to add a CSS class on wrapper while dragging.
+    emit('event-drag-start')
+    // If there's an @event-resize-start external listener, call it.
+    eventListeners.value.resizeStart?.({ e, event })
+  }
+  else if (!touch.dragging) {
+    // Internal emit to the root component to add a CSS class on wrapper while dragging.
     emit('event-drag-start')
     // If there's an @event-drag-start external listener, call it.
     eventListeners.value.dragStart?.({ e, event })
   }
-  touch.dragging = true
+
+  touch[touch.fromResizer ? 'resizing' : 'dragging'] = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
 
-  const rect = eventEl.value.getBoundingClientRect()
-  touch.moveX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
-  touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
-  touch.movePercentageX = touch.moveX * 100 / rect.width
-  touch.movePercentageY = touch.moveY * 100 / rect.height
+  if (touch.cellEl) {
+    const { top, left, width, height } = touch.cellEl.getBoundingClientRect()
+    touch.moveX = domEvent.clientX - left
+    touch.moveY = domEvent.clientY - top
+    touch.movePercentageX = touch.moveX * 100 / width
+    touch.movePercentageY = touch.moveY * 100 / height
+  }
+
+  if (touch.fromResizer) {
+    const newEnd = new Date(event.end.setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
+    event.end = newEnd
+  }
 
   // If there's an @event-drag external listener, call it.
   eventListeners.value.drag?.({ e, event })
@@ -167,12 +193,19 @@ const onDocMouseup = async e => {
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
 
-  if (touch.dragging) {
+  if (touch.resizing) {
+    // If there's an @event-resize-end external listener, call it.
+    eventListeners.value.resizeEnd?.({ e, event })
+    emit('event-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+  }
+  else if (touch.dragging) {
     // If there's an @event-drag-end external listener, call it.
     eventListeners.value.dragEnd?.({ e, event })
     emit('event-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
   }
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+  touch.resizing = false
+  touch.fromResizer = false
   touch.dragging = false
 
   touch.startX = 0
@@ -183,6 +216,7 @@ const onDocMouseup = async e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
+  touch.cellEl = null
   touch.schedule = null
 }
 
@@ -204,6 +238,18 @@ onUnmounted(() => event._.unregister())
   right: 0;
 
   .vuecal__scrollable--month-view & {position: relative;}
+
+  &-resizer {
+    position: absolute;
+    inset: auto 0 0;
+    height: 8px;
+    background-color: #fff;
+    opacity: 0.1;
+    transition: 0.25s;
+    cursor: ns-resize;
+
+    &:hover {opacity: 0.25;}
+  }
 }
 
 .vuecal-delete-btn-enter-active {
