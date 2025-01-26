@@ -519,7 +519,7 @@ example(title="Edit Events" anchor="edit-events")
 
   vue-cal(
     ref="exEditEventsVuecalRef"
-    :editable-events="{ create: exEditEvents.creatable, resize: exEditEvents.resizable,  drag: exEditEvents.draggable, delete: exEditEvents.deletable }"
+    :editable-events="{ create: exEditEvents.creatable, resize: exEditEvents.resizable, drag: exEditEvents.draggable, delete: exEditEvents.deletable }"
     :events="exEditEvents.events"
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -529,7 +529,9 @@ example(title="Edit Events" anchor="edit-events")
     :dark="store.darkMode"
     style="height: 301px")
     template(#event="{ event }")
-      pre {{event}}
+      strong {{ event.title }}
+      p {{ event.start.formatTime() }} - {{ event.end.formatTime() }}
+      p(v-html="event.content")
 
 //- Example.
 example(title="Events v-model" anchor="events-v-model")
@@ -1526,7 +1528,7 @@ const exEditEvents = reactive({
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
     {
       start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
-      end: new Date(new Date().addDays(2).setHours(12, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+      end: new Date(new Date().addDays(2).setHours(13, 0, 0, 0)), // Using Vue Cal's Date prototypes.
       class: 'blue-event',
       title: 'Boring Event',
       content: '<i class="w-icon mdi mdi-cancel"></i><br>Can\'t drag, resize or delete me!',
