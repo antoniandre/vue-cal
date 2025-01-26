@@ -5,22 +5,14 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task v-model="events"
-      .task check if the event is overlapping with another #398 #80
-      .task accept/reject the resizing events to check for overlaps.
-      .task redo the transitions like in v4
-
-      .task Recurring events
+      .task Reject event resize/drag on condition (E.g. overlap)
       .task Drag &amp; drop events
-      .task Drag &amp; drop multiple day events
-      .task Drag &amp; drop events on touch devices
+      .task All-day events
+      .task Multiple day events
+      .task Recurring events
       .task
         a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
-      .task
-        a(href="https://github.com/antoniandre/vue-cal/issues/127" target="_blank" style="text-decoration: underline;color: inherit") Full SSR support
       .task Improve multiple day events Month view
-      .task Prevent event intersect. on drag/resize
-      .task Horizontal timeline
         //- TODO:
           General
           - check overlaps only on the cell that has changed on event create/drag/background change
@@ -37,6 +29,7 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task v-model="events"
       .task custom days view
       .task view day offset
       .task accept/reject event creation
@@ -94,6 +87,9 @@ ul.kanban
   li.kanban__column.kanban__column--later.smd-hide
     .title 🕔 Later
     .w-flex.column.gap1.pa1
+      .task Drag &amp; drop multiple day events
+      .task Support Timezones
+      .task Horizontal timeline
 </template>
 
 <script setup>
