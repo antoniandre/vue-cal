@@ -134,7 +134,7 @@ export const useEvents = vuecal => {
    * @returns {boolean} - Returns true for chaining.
    */
   const deleteEvent = (eventId, forcedStage = 0) => {
-    if (!config.editableEvents?.delete) return
+    if (!config.editableEvents.delete) return
     if (!eventId) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
     const index = config.events.findIndex(item => item._.id === eventId)

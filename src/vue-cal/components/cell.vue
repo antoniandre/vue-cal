@@ -169,7 +169,7 @@ const eventPlaceholder = computed(() => {
 })
 
 const isCreatingEvent = computed(() => {
-  const isCreating = config.editableEvents?.create && (touch.dragging || awaitingEventCreation.value)
+  const isCreating = config.editableEvents.create && (touch.dragging || awaitingEventCreation.value)
   const hasPassedMinDrag = ((config.eventCreateMinDrag && touch.thresholdPassed) || !config.eventCreateMinDrag)
   return isCreating && hasPassedMinDrag
 })
@@ -454,7 +454,7 @@ const onDocMouseup = async e => {
     cellEventListeners.value.dragEnd?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
     emit('cell-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
 
-    if (config.editableEvents?.create) {
+    if (config.editableEvents.create) {
       awaitingEventCreation.value = true
       await createEventIfAllowed(e)
       awaitingEventCreation.value = false

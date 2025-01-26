@@ -179,14 +179,13 @@ export const useConfig = (vuecal, props, attrs) => {
 
   const editableEvents = computed(() => {
     const defaults = {
-      title: true,
       drag: true,
       resize: true,
       delete: true,
       create: true
     }
     if (props.editableEvents === true) return defaults
-    else if (props.editableEvents === false) return Object.keys(defaults).forEach(key => defaults[key] = false)
+    else if (props.editableEvents === false) return Object.keys(defaults).map(key => defaults[key] = false)
     return { ...defaults, ...props.editableEvents }
   })
 

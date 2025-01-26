@@ -7,7 +7,7 @@ export const props = {
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
   // Can be true false or a finer grain permissions object like:
-  // { title: bool, drag: bool, resize: bool, create: bool, delete: bool }
+  // { drag: bool, resize: bool, create: bool, delete: bool }
   editableEvents: { type: [Boolean, Object], default: false },
   // Minimum drag distance in pixels to create an event (prevents accidental event creation when trying to navigate).
   eventCreateMinDrag: { type: Number, default: 15 }, // The minimum drag distance in pixels to create an event.
