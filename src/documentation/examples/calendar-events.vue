@@ -475,46 +475,51 @@ example(title="Edit Events" anchor="edit-events")
       #[code true] or #[code false]. But more granularly, #[code editable-events] can be provided
       as an object:
     ssh-pre(language="js" :dark="store.darkMode").
-      { drag: true, resize: true, delete: true, create: true }
+      { create: true, resize: true, drag: true, delete: true }
     p With:
     ul
-      li.
-        #[strong.code drag]: Drag &amp; drop an event (not allowed on background events).
+      li #[strong.code create]: Create a new event (by clicking and dragging by default).
       li.
         #[strong.code resize]: Resize an event by dragging the resizer handle.
         #[strong Not available if no timeline, not allowed on background events.]
-      li #[strong.code delete]: Delete an event (by clicking and holding an event).
-      li #[strong.code create]: Create a new event (by clicking and dragging by default).
+      li.
+        #[strong.code drag]: Drag &amp; drop an event (not allowed on background events).
+      li #[strong.code delete]: Delete an event (by double clicking an event by default).
 
     alert.
       In addition to the global settings, you can override these actions individually for each
       event using the event attributes, #[code deletable: false], #[code draggable: false] &amp;
       #[code resizable: false].
+
+    .w-flex.justify-end.wrap.gap2
+      w-switch(v-model="exEditEvents.creatable") Create Events
+      w-switch(v-model="exEditEvents.resizable") Resize Events
+      w-switch(v-model="exEditEvents.draggable") Drag Events
+      w-switch(v-model="exEditEvents.deletable") Delete Events
+
   template(#code-html).
     &lt;vue-cal
-      :editable-events="{ drag: false, resize: true, delete: true, create: false }"
+      :editable-events="{ create: {{ exEditEvents.creatable ? 'true' : 'false' }}, resize: {{ exEditEvents.resizable ? 'true' : 'false' }},  drag: {{ exEditEvents.draggable ? 'true' : 'false' }}, delete: {{ exEditEvents.deletable ? 'true' : 'false' }} }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-    // In data.
-    events: [
+    const events = [
       {
-        start: '2018-11-20 14:00',
-        end: '2018-11-20 17:30',
-        title: 'Boring event',
-        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;I am not draggable, not resizable and not deletable.',
+        start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+        end: new Date(new Date().addDays(2).setHours(12, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+        title: 'Boring Event',
+        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;Can't drag, resize or delete me!',
         class: 'blue-event',
         deletable: false,
         resizable: false,
         draggable: false
       },
-      // other events.
+      ...
     ]
 
   vue-cal(
     ref="exEditEventsVuecalRef"
-    :selected-date="stringToDate('2018-11-19')"
-    :editable-events="{ drag: false, resize: true, delete: true, create: false }"
+    :editable-events="{ create: exEditEvents.creatable, resize: exEditEvents.resizable,  drag: exEditEvents.draggable, delete: exEditEvents.deletable }"
     :events="exEditEvents.events"
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -523,6 +528,8 @@ example(title="Edit Events" anchor="edit-events")
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
+    template(#event="{ event }")
+      pre {{event}}
 
 //- Example.
 example(title="Events v-model" anchor="events-v-model")
@@ -536,12 +543,13 @@ example(title="Events v-model" anchor="events-v-model")
         Be aware that modifying the array of events externally will always override the internal array.#[br]
         So you must be sure to save the changes that were made to events through the Vue Cal UI, or they
         will be lost.
-    w-button.ma1(@click="exEventsVModel.addEvent")
-      w-icon.mr2 mdi mdi-plus
-      | Add Event
-    w-button.ma1(@click="exEventsVModel.events.pop()")
-      w-icon.mr2 mdi mdi-close
-      | Remove Last Event
+    .w-flex.justify-end
+      w-button.ma1(@click="exEventsVModel.addEvent")
+        w-icon.mr2 mdi mdi-plus
+        | Add Event
+      w-button.ma1(@click="exEventsVModel.events.pop()")
+        w-icon.mr2 mdi mdi-close
+        | Remove Last Event
     p.mb0 Here is the live array of event titles:
     pre.code.size--xs.pa2.ova {{ exEventsVModel.events.map(e => e.title) }}
 
@@ -563,7 +571,7 @@ example(title="Events v-model" anchor="events-v-model")
     @ready="({ view }) => view.scrollToCurrentTime()"
     @event-create="exEventsVModel.onEventCreate"
     @event-dblclick="({ event }) => event.delete(2)"
-    editable-events
+    :editable-events="exEventsVModel.editableEvents"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
@@ -1489,16 +1497,6 @@ const exExternalEventCreate = reactive({
 const exDeleteEvents = reactive({
   events: [
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-    {
-      start: '2018-11-20 14:00',
-      end: '2018-11-20 17:30',
-      title: 'Boring event',
-      content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
-      class: 'blue-event',
-      deletable: false,
-      resizable: false,
-      draggable: false
-    }
   ],
   deleteEvent: ({ e, event }) => {
     exEditEventsVuecalRef.value.view.deleteEvent(event._.id)
@@ -1527,16 +1525,21 @@ const exEditEvents = reactive({
   events: [
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
     {
-      start: '2018-11-20 14:00',
-      end: '2018-11-20 17:30',
-      title: 'Boring event',
-      content: '<i class="w-icon mdi mdi-cancel"></i><br>I am not draggable, not resizable and not deletable.',
+      start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+      end: new Date(new Date().addDays(2).setHours(12, 0, 0, 0)), // Using Vue Cal's Date prototypes.
+      class: 'blue-event',
+      title: 'Boring Event',
+      content: '<i class="w-icon mdi mdi-cancel"></i><br>Can\'t drag, resize or delete me!',
       class: 'blue-event',
       deletable: false,
       resizable: false,
       draggable: false
     }
-  ]
+  ],
+  deletable: ref(false),
+  resizable: ref(false),
+  draggable: ref(false),
+  creatable: ref(false)
 })
 
 const exEventsVModel = reactive({
