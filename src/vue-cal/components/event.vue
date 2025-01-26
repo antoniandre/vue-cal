@@ -43,6 +43,7 @@ const touch = reactive({
   moveY: 0, // The Y coords while dragging.
   movePercentageX: 0, // The X coords in percentage while dragging.
   movePercentageY: 0, // The Y coords in percentage while dragging.
+  resizeStartDate: null, // When resizing and going above the start date (end before start) update the start instead of the end.
   cellEl: null, // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   schedule: null
 })
@@ -141,6 +142,8 @@ const onMousedown = e => {
   touch.startPercentageY = touch.startY * 100 / rect.height
   // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   touch.cellEl = eventEl.value.closest('.vuecal__cell')
+  // Store the event start to apply on event end when resizing and end < start.
+  touch.resizeStartDate = event.start
 
   document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
   document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
@@ -181,8 +184,13 @@ const onDocMousemove = e => {
   }
 
   if (touch.fromResizer) {
-    const newEnd = new Date(event.end.setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
-    event.end = newEnd
+    const newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
+    // Store the event start to apply on event end when resizing and end < start.
+    if (newEnd < touch.resizeStartDate) {
+      event.start = newEnd
+      event.end = touch.resizeStartDate
+    }
+    else event.end = newEnd
   }
 
   // If there's an @event-drag external listener, call it.
@@ -217,6 +225,7 @@ const onDocMouseup = async e => {
   touch.movePercentageX = 0
   touch.movePercentageY = 0
   touch.cellEl = null
+  touch.resizeStartDate = null
   touch.schedule = null
 }
 
