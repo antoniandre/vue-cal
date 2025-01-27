@@ -1,9 +1,10 @@
 <template lang="pug">
 .vuecal__body(ref="bodyEl" :style="bodyStyles")
-  .vuecal__time-at-cursor(
-    v-if="config.timeAtCursor && cursorYPercent !== null"
-    :style="timeAtCursor.style")
-    label {{ timeAtCursor.time }}
+  transition(name="vuecal-shrink")
+    .vuecal__time-at-cursor(
+      v-if="config.timeAtCursor && cursorYPercent !== null"
+      :style="timeAtCursor.style")
+      label {{ timeAtCursor.time }}
   VueCalCell(
     v-for="(date, i) in view.cellDates"
     :key="i"

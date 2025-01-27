@@ -115,3 +115,13 @@
   opacity: 0;
   transform: translateY(0.5rem);
 }
+
+.vuecal-shrink-enter-active,
+.vuecal-shrink-leave-active {
+  transition: transform 0.2s, opacity 0.2s;
+}
+
+.vuecal-shrink-enter-from,
+.vuecal-shrink-leave-to {
+  opacity: 0;
+}
