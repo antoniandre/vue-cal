@@ -42,8 +42,9 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
       w-switch(v-model="exHideElements.titleBar") Show Title bar
     .w-flex.wrap.gap3.my2
       w-switch(v-model="exHideElements.startOnSunday") Start week on Sunday
-      w-switch(v-model="exHideElements.hideWeekends") Hide weekends
+      w-switch(v-model="exHideElements.hideWeekends") Hide Weekends
       w-switch(v-model="exHideElements.time") Time
+      w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
       w-tooltip(align-left)
         template(#activator="{ on }")
           .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
@@ -51,12 +52,13 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
         | Visible on month view
 
   template(#code-html).
-    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;
+    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.timeAtCursor ? '\n  time-at-cursor' : '' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;
   vue-cal.mxa(
     :views-bar="exHideElements.viewsBar"
     :today-button="exHideElements.todayButton"
     :title-bar="exHideElements.titleBar"
     :time="exHideElements.time"
+    :time-at-cursor="exHideElements.timeAtCursor"
     :hide-weekends="exHideElements.hideWeekends"
     :start-week-on-sunday="exHideElements.startOnSunday"
     :week-numbers="exHideElements.weekNumbers"
@@ -200,6 +202,7 @@ const exHideElements = reactive({
   startOnSunday: ref(false),
   hideWeekends: ref(false),
   time: ref(true),
+  timeAtCursor: ref(true),
   weekNumbers: ref(false)
 })
 
