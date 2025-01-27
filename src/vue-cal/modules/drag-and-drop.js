@@ -1,64 +1,56 @@
+import { reactive } from 'vue'
+
 /**
- * Events drag and drop module.
- *
- * Note: Waiting for VS Code to support JavaScript private fields.
- * https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Classes/Class_fields
- * Meantime keep `_` for private.
+ * Events drag and drop composable.
  */
 
 const holdOverTimeout = 800 // How long we should hold over an element before it reacts.
 let changeViewTimeout = null
 let pressPrevOrNextInterval = null
-let viewBeforeDrag = { id: null, date: null } // To go back if cancelling.
+const viewBeforeDrag = reactive({ id: null, date: null }) // To go back if cancelling.
 let viewChanged = false
 let cancelViewChange = true
-let dragOverCell = { el: null, cell: null, timeout: null }
-const dragging = {
+const dragOverCell = reactive({ el: null, cell: null, timeout: null })
+const dragging = reactive({
   _eid: null,
   fromVueCal: null,
   toVueCal: null
-}
+})
 
-export const DragAndDrop = class {
-  _vuecal
-
-  constructor (vuecal) {
-    this._vuecal = vuecal
-  }
-
+export function useDragAndDrop (vuecal) {
   /**
+   * Calculate event start time based on cursor position.
    * When click and drag an event the cursor can be anywhere in the event,
    * when dropping the event, we need to subtract the cursor position in the event.
    *
    * @param {Object} e The associated DOM event.
    */
-  _getEventStart (e) {
-    const { timeStep, timeCellHeight, timeFrom, utils } = this._vuecal
+  const getEventStart = e => {
+    const { timeStep, timeCellHeight, timeFrom, utils } = vuecal
     let { y } = utils.cell.getPosition(e)
-    y -= e.dataTransfer.getData('cursor-grab-at') * 1
-    return Math.round(y * timeStep / parseInt(timeCellHeight) + timeFrom)
+    y -= Number(e.dataTransfer.getData('cursor-grab-at'))
+    return Math.round((y * timeStep) / parseInt(timeCellHeight) + timeFrom)
   }
 
   /**
-   * On drop, update the event start and end date directly into the event.
-   *
+   * On drop, update event start and end times in the event.
    * @param {Object} e The associated DOM event.
    * @param {Object} event The event being dragged.
    * @param {Object} transferData The transfer data from the HTML5 dragging event.
    * @param {Date} cellDate The hovered cell starting date.
    */
-  _updateEventStartEnd (e, event, transferData, cellDate) {
+  const updateEventStartEnd = (e, event, transferData, cellDate) => {
     // If no duration calculate it from event.endTimeMinutes - event.startTimeMinutes
     // before we modify the start and end.
     const eventDuration = transferData.duration * 1 || (event.endTimeMinutes - event.startTimeMinutes)
 
     // Force the start of the event at previous midnight minimum.
-    let startTimeMinutes = Math.max(this._getEventStart(e), 0)
+    let startTimeMinutes = Math.max(getEventStart(e), 0)
 
-    // On drop, Snap to interval every X minutes if the option is on.
-    if (this._vuecal.snapToInterval) {
-      const plusHalfSnapTime = (startTimeMinutes + this._vuecal.snapToInterval / 2)
-      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % this._vuecal.snapToInterval)
+    // On drop, snap to time every X minutes if the option is on.
+    if (vuecal.snapToTime) {
+      const plusHalfSnapTime = startTimeMinutes + vuecal.snapToTime / 2
+      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % vuecal.snapToTime)
     }
 
     event.startTimeMinutes = startTimeMinutes
@@ -75,7 +67,7 @@ export const DragAndDrop = class {
    * @param {Object} e The associated DOM event.
    * @param {Object} event The event being dragged.
    */
-  eventDragStart (e, event) {
+  const eventDragStart = (e, event) => {
     // Cancel the drag if event has draggable set to false and trying to drag a text selection.
     if (e.target.nodeType === 3) return e.preventDefault()
 
@@ -87,7 +79,7 @@ export const DragAndDrop = class {
     // when later dropping the event, we need to subtract the cursor position in the event.
     e.dataTransfer.setData('cursor-grab-at', e.offsetY) // In pixels.
 
-    const { clickHoldAnEvent } = this._vuecal.domEvents
+    const { clickHoldAnEvent } = vuecal.domEvents
     // Cancel any delete on dragStart (if held for too long). Don't drag an event with a visible delete button.
     setTimeout(() => {
       clickHoldAnEvent._eid = null
@@ -95,16 +87,16 @@ export const DragAndDrop = class {
       event.deleting = false
     }, 0)
 
-    this._vuecal.domEvents.dragAnEvent._eid = event._eid // Only for vuecal dragging-event class.
+    vuecal.domEvents.dragAnEvent._eid = event._eid // Only for vuecal dragging-event class.
     dragging._eid = event._eid
-    dragging.fromVueCal = this._vuecal._.uid
+    dragging.fromVueCal = vuecal._.uid
     event.dragging = true
     // Controls the CSS class of the static event that remains while a copy is being dragged.
     // Thanks to this class, the event being dragged can have a different style.
     setTimeout(() => (event.draggingStatic = true), 0)
 
     viewChanged = false
-    viewBeforeDrag = { id: this._vuecal.view.id, date: this._vuecal.view.start }
+    Object.assign(viewBeforeDrag, { id: vuecal.view.id, date: vuecal.view.startDate })
 
     cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
   }
@@ -114,8 +106,8 @@ export const DragAndDrop = class {
    *
    * @param {Object} event The event being dragged.
    */
-  eventDragEnd (event) {
-    this._vuecal.domEvents.dragAnEvent._eid = null
+  const eventDragEnd = event => {
+    vuecal.domEvents.dragAnEvent._eid = null
     dragging._eid = null
     event.dragging = false
     event.draggingStatic = false
@@ -123,12 +115,15 @@ export const DragAndDrop = class {
     // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
     // event from the first one.
     const { fromVueCal, toVueCal } = dragging
-    if (toVueCal && fromVueCal !== toVueCal) this._vuecal.utils.event.deleteAnEvent(event)
+    if (toVueCal && fromVueCal !== toVueCal) vuecal.utils.event.deleteAnEvent(event)
+
     dragging.fromVueCal = null
     dragging.toVueCal = null
 
     // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
-    if (viewChanged && cancelViewChange && viewBeforeDrag.id) this._vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
+    if (viewChanged && cancelViewChange && viewBeforeDrag.id) {
+      vuecal.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
+    }
   }
 
   /**
@@ -140,7 +135,7 @@ export const DragAndDrop = class {
    * @param {Object} cell The cell component's $data.
    * @param {Date} cellDate The hovered cell starting date.
    */
-  cellDragEnter (e, cell, cellDate) {
+  const cellDragEnter = (e, cell, cellDate) => {
     const target = e.currentTarget
 
     // Cancel dragEnter event if hovering a child.
@@ -150,12 +145,12 @@ export const DragAndDrop = class {
     // Un-highlight the previous cell.
     if (dragOverCell.el) dragOverCell.cell.highlighted = false
 
-    dragOverCell = { el: target, cell, timeout: clearTimeout(dragOverCell.timeout) }
+    Object.assign(dragOverCell, { el: target, cell, timeout: clearTimeout(dragOverCell.timeout) })
     cell.highlighted = true
 
     // On `years`, `year` & `month` views, go to narrower view on drag and hold.
-    if (['years', 'year', 'month'].includes(this._vuecal.view.id)) {
-      dragOverCell.timeout = setTimeout(() => this._vuecal.switchToNarrowerView(cellDate), 2000)
+    if (['years', 'year', 'month'].includes(vuecal.view.id)) {
+      dragOverCell.timeout = setTimeout(() => vuecal.switchToNarrowerView(cellDate), 2000)
     }
   }
 
@@ -169,7 +164,7 @@ export const DragAndDrop = class {
    * @param {Date} cellDate The hovered cell starting date.
    * @param {Number|String} schedule The optional schedule being hovered if any.
    */
-  cellDragOver (e, cell, cellDate, schedule) {
+  const cellDragOver = (e, cell, cellDate, schedule) => {
     e.preventDefault()
     cell.highlighted = true
     if (schedule || schedule === 0) cell.highlightedSchedule = schedule
@@ -183,7 +178,7 @@ export const DragAndDrop = class {
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
    */
-  cellDragLeave (e, cell) {
+  const cellDragLeave = (e, cell) => {
     e.preventDefault()
 
     if (e.currentTarget.contains(e.relatedTarget)) return
@@ -195,7 +190,7 @@ export const DragAndDrop = class {
     // and a new timer is started.
     if (dragOverCell.cell === cell) {
       clearTimeout(dragOverCell.timeout)
-      dragOverCell = { el: null, cell: null, timeout: null }
+      Object.assign(dragOverCell, { el: null, cell: null, timeout: null })
       cell.highlighted = false
     }
   }
@@ -210,24 +205,25 @@ export const DragAndDrop = class {
    * @param {Date} cellDate The hovered cell starting date.
    * @param {Number|String} schedule The optional schedule being dropped into, if any.
    */
-  cellDragDrop (e, cell, cellDate, schedule) {
+  const cellDragDrop = (e, cell, cellDate, schedule) => {
     // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
     e.preventDefault()
 
     clearTimeout(dragOverCell.timeout)
-    dragOverCell = { el: null, cell: null, timeout: null }
+    Object.assign(dragOverCell, { el: null, cell: null, timeout: null })
 
     const transferData = JSON.parse(e.dataTransfer.getData('event') || '{}')
-    let event, addToView
+    let event
+    let addToView = false
 
     // If the event is not coming from this Vue Cal it means that we are accepting a new event.
     // So create the event in this Vue Cal.
-    if (dragging.fromVueCal !== this._vuecal._.uid) {
+    if (dragging.fromVueCal !== vuecal._.uid) {
       // Removing the _eid is mandatory! It prevents the event to be duplicated when drag and
       // dropping to another calendar then back to the original place.
       const { _eid, start, end, duration, ...cleanTransferData } = transferData
       // Note: createAnEvent adds the event to the view.
-      event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
+      event = vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
     }
     else {
       // Find the dragged event from its _eid in the view or mutableEvents array.
@@ -236,7 +232,7 @@ export const DragAndDrop = class {
       event = this._vuecal.view.events.find(evt => evt._eid === dragging._eid)
 
       if (!event) {
-        event = this._vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
+        event = vuecal.mutableEvents.find(evt => evt._eid === dragging._eid)
         addToView = !!event
       }
 
@@ -246,17 +242,17 @@ export const DragAndDrop = class {
         const duration = transferData.endTimeMinutes - transferData.startTimeMinutes
         // Pass exactly the same event as it was before the view change (same _eid as well) except dates.
         const { start, end, ...cleanTransferData } = transferData
-        event = this._vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
+        event = vuecal.utils.event.createAnEvent(cellDate, duration, { ...cleanTransferData, schedule })
         // Note: createAnEvent adds the event to the view.
       }
     }
 
     const { start: oldDate, schedule: oldSchedule } = event
-    this._updateEventStartEnd(e, event, transferData, cellDate)
+    updateEventStartEnd(e, event, transferData, cellDate)
 
     // Only add the event to view after the start and end are modified otherwise
     // it would be filtered out from the function if not in range.
-    if (addToView) this._vuecal.addEventsToView([event])
+    if (addToView) vuecal.addEventsToView([event])
 
     event.dragging = false
     if (schedule || schedule === 0) event.schedule = schedule
@@ -264,23 +260,23 @@ export const DragAndDrop = class {
     cell.highlighted = false
     cell.highlightedSchedule = null
     cancelViewChange = false
-    dragging.toVueCal = this._vuecal._.uid
+    dragging.toVueCal = vuecal._.uid
 
     // Emit `event-drop` & `event-change` events and return the updated event.
     const params = {
-      event: this._vuecal.cleanupEvent(event),
+      event: vuecal.cleanupEvent(event),
       oldDate,
       newDate: event.start,
       ...((schedule || schedule === 0) && { oldSchedule, newSchedule: schedule }),
-      originalEvent: this._vuecal.cleanupEvent(transferData),
+      originalEvent: vuecal.cleanupEvent(transferData),
       external: !dragging.fromVueCal // If external event, not coming from any Vue Cal.
     }
-    this._vuecal.$emit('event-drop', params)
-    this._vuecal.$emit('event-change', { event: params.event, originalEvent: params.originalEvent })
+    vuecal.$emit('event-drop', params)
+    vuecal.$emit('event-change', { event: params.event, originalEvent: params.originalEvent })
 
     // Sometimes the event dragend does not trigger (?!), so manually trigger it if it didn't.
     setTimeout(() => {
-      if (dragging._eid) this.eventDragEnd(event)
+      if (dragging._eid) eventDragEnd(event)
     }, 300)
   }
 
@@ -293,28 +289,28 @@ export const DragAndDrop = class {
    *                    previous, next, today, years, year, month, week, day.
    * @param {Object} headerData The header component's $data.
    */
-  viewSelectorDragEnter (e, id, headerData) {
+  const viewSelectorDragEnter = (e, id, headerData) => {
     if (e.currentTarget.contains(e.relatedTarget)) return
 
     headerData.highlightedControl = id
     clearTimeout(changeViewTimeout)
     changeViewTimeout = setTimeout(() => {
       if (['previous', 'next'].includes(id)) {
-        this._vuecal[id]()
+        vuecal[id]()
         // Keep pressing on previous or next button until user goes away.
         clearInterval(pressPrevOrNextInterval)
-        pressPrevOrNextInterval = setInterval(this._vuecal[id], holdOverTimeout)
+        pressPrevOrNextInterval = setInterval(vuecal[id], holdOverTimeout)
       }
       else if (id === 'today') {
         clearInterval(pressPrevOrNextInterval)
         let viewId
-        if (this._vuecal.view.id.includes('year')) {
+        if (vuecal.view.id.includes('year')) {
           // If hovering today from a year or years view go to narrower view from month view.
-          viewId = this._vuecal.enabledViews.filter(view => !view.includes('year'))[0]
+          viewId = vuecal.enabledViews.filter(view => !view.includes('year'))[0]
         }
-        this._vuecal.switchView(viewId || this._vuecal.view.id, new Date(new Date().setHours(0, 0, 0, 0)), true)
+        vuecal.switchView(viewId || vuecal.view.id, new Date(new Date().setHours(0, 0, 0, 0)), true)
       }
-      else this._vuecal.switchView(id, null, true)
+      else vuecal.switchView(id, null, true)
       viewChanged = true
     }, holdOverTimeout)
   }
@@ -329,7 +325,7 @@ export const DragAndDrop = class {
    *                    previous, next, today, years, year, month, week, day.
    * @param {Object} headerData The header component's $data.
    */
-  viewSelectorDragLeave (e, id, headerData) {
+  const viewSelectorDragLeave = (e, id, headerData) => {
     if (e.currentTarget.contains(e.relatedTarget)) return
 
     // Only cancel the timer if leaving the current nav button to no other one.
@@ -340,5 +336,16 @@ export const DragAndDrop = class {
       if (changeViewTimeout) changeViewTimeout = clearTimeout(changeViewTimeout)
       if (pressPrevOrNextInterval) pressPrevOrNextInterval = clearInterval(pressPrevOrNextInterval)
     }
+  }
+
+  return {
+    eventDragStart,
+    eventDragEnd,
+    cellDragEnter,
+    cellDragOver,
+    cellDragLeave,
+    cellDragDrop,
+    viewSelectorDragEnter,
+    viewSelectorDragLeave
   }
 }
