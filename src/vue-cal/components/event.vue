@@ -18,7 +18,7 @@
 
 <script setup>
 import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
-import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/cell'
+import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end'])
 const { config, view } = inject('vuecal')

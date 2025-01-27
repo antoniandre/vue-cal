@@ -31,6 +31,7 @@ export const props = {
   startWeekOnSunday: { type: Boolean, default: false }, // Shows Sunday before Monday in days, week and month views.
   theme: { type: [String, Boolean], default: 'default' }, // Only adds a CSS class when set to default.
   time: { type: Boolean, default: true }, // Show or hide the time column.
+  timeAtCursor: { type: Boolean, default: false }, // Show or hide the "time at cursor" line.
   timeCellHeight: { type: Number, default: 40 }, // In pixels.
   timeFormat: { type: String, default: '' }, // Overrides the default time format.
   timeFrom: { type: Number, default: 0 }, // Start time of the time column, in minutes.

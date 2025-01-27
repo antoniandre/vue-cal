@@ -97,7 +97,7 @@
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
-import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/cell'
+import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 import Event from './event.vue'
 
 const props = defineProps({

@@ -1,5 +1,9 @@
 <template lang="pug">
-.vuecal__body(:style="bodyStyles")
+.vuecal__body(ref="bodyEl" :style="bodyStyles")
+  .vuecal__time-at-cursor(
+    v-if="config.timeAtCursor && cursorYPercent !== null"
+    :style="timeAtCursor.style")
+    label {{ timeAtCursor.time }}
   VueCalCell(
     v-for="(date, i) in view.cellDates"
     :key="i"
@@ -23,13 +27,16 @@
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import VueCalCell from './cell.vue'
-
+import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 const emit = defineEmits(['cell-drag-start', 'cell-drag-end', 'event-drag-start', 'event-drag-end'])
 
 const vuecal = inject('vuecal')
-let { view, config } = vuecal
+let { view, config, dateUtils } = vuecal
+
+const bodyEl = ref(null)
+const cursorYPercent = ref(null)
 
 // These CSS variables must stay at this level and not at the root, because they need to be "dead"
 // and frozen with the animated container when leaving in a vue transition, for a successful smooth
@@ -42,10 +49,43 @@ const bodyStyles = computed(() => {
     '--vuecal-grid-rows': view.rows
   }
 })
-</script>
+
+// Computes the time at the current cursor position.
+const timeAtCursor = computed(() => {
+  const time = dateUtils.formatTime(percentageToMinutes(cursorYPercent.value, config))
+  return {
+    style: { top: cursorYPercent.value + '%' },
+    time
+  }
+})
+
+const onMousemove = e => {
+  const clientY = (e.touches?.[0] || e).clientY
+  const { top } = bodyEl.value.getBoundingClientRect()
+  cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
+}
+
+const onMouseleave = () => {
+  cursorYPercent.value = null
+}
+
+onMounted(() => {
+  bodyEl.value.addEventListener('mousemove', onMousemove)
+  bodyEl.value.addEventListener('touchmove', onMousemove)
+  bodyEl.value.addEventListener('mouseleave', onMouseleave)
+  bodyEl.value.addEventListener('touchend', onMouseleave)
+})
+
+onBeforeUnmount(() => {
+  bodyEl.value.removeEventListener('mousemove', onMousemove)
+  bodyEl.value.removeEventListener('touchmove', onMousemove)
+  bodyEl.value.removeEventListener('mouseleave', onMouseleave)
+  bodyEl.value.removeEventListener('touchend', onMouseleave)
+})</script>
 
 <style lang="scss">
 .vuecal__body {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
   grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
@@ -54,6 +94,28 @@ const bodyStyles = computed(() => {
   .vuecal--view-has-time & {
     background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
     background-size: 100% var(--vuecal-time-cell-height);
+  }
+}
+
+.vuecal__time-at-cursor {
+  position: absolute;
+  left: 0;
+  right: 0;
+  border-top: 1px dashed var(--vuecal-border-color);
+  pointer-events: none;
+  z-index: 10;
+
+  label {
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 100%;
+    transform: translateY(-50%);
+    margin-right: 4px;
+    padding: 0 3px;
+    font-size: 0.7rem;
+    backdrop-filter: blur(10px);
+    border-radius: 99em;
   }
 }
 </style>
