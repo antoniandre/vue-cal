@@ -202,7 +202,7 @@ const exHideElements = reactive({
   startOnSunday: ref(false),
   hideWeekends: ref(false),
   time: ref(true),
-  timeAtCursor: ref(true),
+  timeAtCursor: ref(false),
   weekNumbers: ref(false)
 })
 

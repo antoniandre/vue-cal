@@ -61,6 +61,8 @@ const timeAtCursor = computed(() => {
 })
 
 const onMousemove = e => {
+  if (view.isMonth || view.isYear || view.isYears) return
+
   const clientY = (e.touches?.[0] || e).clientY
   const { top } = bodyEl.value.getBoundingClientRect()
   cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
@@ -82,7 +84,8 @@ onBeforeUnmount(() => {
   bodyEl.value.removeEventListener('touchmove', onMousemove)
   bodyEl.value.removeEventListener('mouseleave', onMouseleave)
   bodyEl.value.removeEventListener('touchend', onMouseleave)
-})</script>
+})
+</script>
 
 <style lang="scss">
 .vuecal__body {
