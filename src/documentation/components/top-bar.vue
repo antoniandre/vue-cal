@@ -95,7 +95,8 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store'
 
 const props = defineProps({
@@ -103,13 +104,12 @@ const props = defineProps({
 })
 
 const store = useAppStore()
+const route = useRoute()
 const todayDate = ref((new Date()).getDate())
 const isProduction = import.meta.env.PROD
 
-// Define the active section ref.
+const observer = ref(null) // Store observer reference for tracking page active sections.
 const activeSection = ref('')
-// Observer setup for tracking active sections.
-let observer = null
 
 // Example sections for the menu.
 const docs = [
@@ -180,8 +180,12 @@ const examples = [
   // w-tag.ml2(color="blue" outline) UPDATED
 ]
 
-onMounted(async () => {
-  await new Promise(resolve => setTimeout(resolve, 300))
+async function initializeObserver () {
+  // Wait for DOM updates to ensure sections are available.
+  await nextTick()
+
+  // Cleanup previous observer if it exists.
+  if (observer.value) observer.value.disconnect()
 
   const sections = document.querySelectorAll('[id^="ex--"]')
 
@@ -190,7 +194,7 @@ onMounted(async () => {
   const minThreshold = window.innerHeight * 0.03 // 3% of viewport height.
   const maxThreshold = window.innerHeight * 0.47 // 47% of viewport height.
 
-  observer = new IntersectionObserver(entries => {
+  observer.value = new IntersectionObserver(entries => {
     let topmostSection = null
     let nextVisibleSection = null
 
@@ -219,11 +223,18 @@ onMounted(async () => {
     rootMargin: '-3% 0px -53%' // Keeps the 3%-47% detection range accurate.
   })
 
-  sections.forEach(section => observer.observe(section)) // Observe all sections.
-})
+  sections.forEach(section => observer.value.observe(section)) // Observe all sections.
+}
 
+// Reinitialize observer when route changes (page navigation).
+watch(() => route.name, initializeObserver)
+
+// Run observer setup on initial mount.
+onMounted(initializeObserver)
+
+// Cleanup on unmount.
 onBeforeUnmount(() => {
-  if (observer) observer.disconnect()
+  if (observer.value) observer.value.disconnect()
 })
 
 // Compute version dynamically.
