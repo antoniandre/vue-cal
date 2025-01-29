@@ -185,52 +185,41 @@ onMounted(async () => {
 
   const sections = document.querySelectorAll('[id^="ex--"]')
 
-  if (!sections.length) {
-    console.error('No matching sections found in the DOM.')
-    return
-  }
+  if (!sections.length) return console.info('No matching sections found in the DOM.')
 
-  // Observer callback
+  const minThreshold = window.innerHeight * 0.03 // 3% of viewport height.
+  const maxThreshold = window.innerHeight * 0.47 // 47% of viewport height.
+
   observer = new IntersectionObserver(entries => {
-    const viewportHeight = window.innerHeight
-
-    let closestSection = null
-    let minDistance = Infinity
+    let topmostSection = null
+    let nextVisibleSection = null
 
     entries.forEach(entry => {
       const { top } = entry.boundingClientRect
 
-      // Check if section top is between 5% and 60% of the viewport height
-      const minThreshold = viewportHeight * 0.05
-      const maxThreshold = viewportHeight * 0.6
+      // If section's top is between 3%-47% of viewport, consider it as the topmost candidate.
+      if ((top >= minThreshold && top <= maxThreshold) && (!topmostSection || top < topmostSection.top)) {
+        topmostSection = { id: entry.target.id, top }
+      }
 
-      if (top >= minThreshold && top <= maxThreshold) {
-        const distance = Math.abs(viewportHeight * 0.3 - top) // Centering weight
-        if (distance < minDistance) {
-          minDistance = distance
-          closestSection = entry.target.id
-        }
+      // If section's top is between 0%-47% of viewport, consider it as the next visible section.
+      if ((top >= 0 && top <= maxThreshold) && (!nextVisibleSection || top < nextVisibleSection.top)) {
+        nextVisibleSection = { id: entry.target.id, top }
       }
     })
 
-    if (closestSection) {
-      activeSection.value = `#${closestSection}`
-    }
-
-    console.log({
-      activeSection: activeSection.value,
-      sectionsObserved: entries.map(e => ({
-        id: e.target.id,
-        top: e.boundingClientRect.top
-      }))
-    })
+    // Highlight the correct section:
+    // - If a section is within 3%-47%, highlight it.
+    // - Otherwise, highlight the next visible section (whose top is in 0%-47% of viewport).
+    if (topmostSection) activeSection.value = `#${topmostSection.id}`
+    else if (nextVisibleSection) activeSection.value = `#${nextVisibleSection.id}`
   }, {
-    root: null, // Viewport as the root
-    threshold: 0.0, // Trigger as soon as it enters the viewport
-    rootMargin: '-3% 0px -50%' // Ensures visibility is detected correctly
+    root: null, // Uses the viewport as the root.
+    threshold: 0.0, // Fires when any part of an element enters/exits the viewport.
+    rootMargin: '-3% 0px -53%' // Keeps the 3%-47% detection range accurate.
   })
 
-  sections.forEach(section => observer.observe(section))
+  sections.forEach(section => observer.observe(section)) // Observe all sections.
 })
 
 onBeforeUnmount(() => {
