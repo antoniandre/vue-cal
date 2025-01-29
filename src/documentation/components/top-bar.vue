@@ -76,27 +76,15 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
           height="100%")
           w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
-      w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
-        :items="examples"
-        item-class="pa0"
+      examples-menu.mt0.pa0.sh2.base-color--bg.bdrs1(
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
-        template(#item="{ item }")
-          w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
-          router-link.w-flex.grow.align-center.px5.py2(
-            v-else-if="item.route"
-            :to="item.route"
-            :class="{ active: activeSection === item.route.hash }")
-            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
-            span(:class="{ ml8: !item.icon }" v-html="item.label")
-          .w-flex.grow.align-center.px5.py2(v-else)
-            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
-            span(:class="{ ml8: !item.icon }" v-html="item.label")
 </template>
 
 <script setup>
 import { onMounted, onBeforeUnmount, ref, computed, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store'
+import ExamplesMenu from './examples-menu.vue'
 
 const props = defineProps({
   fixed: { type: Boolean }
@@ -108,7 +96,6 @@ const todayDate = ref((new Date()).getDate())
 const isProduction = import.meta.env.PROD
 
 const observer = ref(null) // Store observer reference for tracking page active sections.
-const activeSection = ref('')
 
 // Example sections for the menu.
 const docs = [
@@ -122,62 +109,13 @@ const docs = [
   { route: '/release-notes', label: 'Release Notes' }
 ]
 
-const examples = [
-  { class: 'heading', route: '/examples/view', label: 'VIEW', icon: 'mdi mdi-calendar-blank-outline' },
-  { route: { name: 'examples-view', hash: '#ex--layouts' }, label: 'Layouts' },
-  { route: { name: 'examples-view', hash: '#ex--views' }, label: 'Views' },
-  { route: { name: 'examples-view', hash: '#ex--hide-elements' }, label: 'Hide Elements & Toggles' },
-  { route: { name: 'examples-view', hash: '#ex--themes' }, label: 'Themes' },
-  { route: { name: 'examples-view', hash: '#ex--internationalization' }, label: 'Internationalization' },
-  { route: { name: 'examples-view', hash: '#ex--css-variables' }, label: 'CSS Control' },
-
-  { class: 'heading', route: '/examples/date-and-time', label: 'DATE AND TIME', icon: 'mdi mdi-translate' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--timeline' }, label: 'Timeline' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--today-current-time' }, label: 'Today\'s Current Time' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--scroll-to-time' }, label: 'Scroll the View to a Particular Time' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--timeline-tweaking' }, label: 'Timeline Tweaking' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--min-max-dates' }, label: 'Minimum / Maximum Dates' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--disable-days' }, label: 'Disable Days' },
-  { route: { name: 'examples-date-and-time', hash: '#ex--hiding-particular-week-days' }, label: 'Hide Particular Week Days' },
-
-  { class: 'heading', route: '/examples/schedules', label: 'SCHEDULES', icon: 'mdi mdi-account-multiple' },
-  { route: { name: 'examples-schedules', hash: '#ex--special-hours' }, label: 'Special / Business Hours' },
-  { route: { name: 'examples-schedules', hash: '#ex--schedules' }, label: 'Schedules & Schedule Events' },
-
-  { class: 'heading', route: '/examples/calendar-events', label:'CALENDAR EVENTS', icon: 'mdi mdi-calendar-today-outline' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events' }, label: 'Events & Background Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--timeless-events' }, label: 'Timeless Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a Dialog on Event Click' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--create-events' }, label: '  anchor="cr' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--create-events-programmatically' }, label: 'Create Events Programmatically' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--delete-events' }, label: 'Delete Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--edit-events' }, label: 'Edit Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-v-model' }, label: 'Events v-model' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-indicators' }, label: 'Events Indicators' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--drag-and-drop' }, label: 'Event Drag &amp; Drop' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--external-events-drag-and-drop' }, label: 'External Events Drag &amp; Drop' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--multiple-day-events' }, label: 'Multiple Day Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--recurring-events' }, label: 'Recurring Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--overlapping-events' }, label: 'Overlapping Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--all-day-events' }, label: 'All Day Events' },
-
-  { class: 'heading', route: '/examples/dom-events', label:'DOM EVENTS', icon: 'mdi mdi-gesture-double-tap' },
-  { route: { name: 'examples-dom-events', hash: '#ex--emitted-events' }, label: 'Vue Cal Emitted Events' },
-  { route: { name: 'examples-dom-events', hash: '#ex--external-controls' }, label: 'External Controls & View Methods' },
-  { route: { name: 'examples-dom-events', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
-
-  { class: 'heading', route: '/examples/customization', label:'CUSTOMIZATION', icon: 'mdi mdi-tune' },
-  { route: { name: 'examples-customization', hash: '#ex--slots' }, label: 'Simple Slots' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-events-count' }, label: 'Custom Events Count' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-title-and-cells' }, label: 'Custom Title & Cells' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-event-rendering' }, label: 'Custom event Rendering' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-schedules-headings' }, label: 'Custom Day Schedules Headings' },
-  { route: { name: 'examples-customization', hash: '#ex--external-controls' }, label: 'External Controls' }
-
-  // w-tag.ml2(color="primary" outline) NEW
-  // w-tag.ml2(color="blue" outline) UPDATED
-]
+// Compute version dynamically.
+const version = computed(() => {
+  return process.env.VITE_APP_VERSION.replace(
+    /-(\w)(\w+)\.(\d+)/,
+    (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
+  )
+})
 
 async function initializeObserver () {
   // Wait for DOM updates to ensure sections are available.
@@ -214,8 +152,8 @@ async function initializeObserver () {
     // Highlight the correct section:
     // - If a section is within 1%-47%, highlight it.
     // - Otherwise, highlight the next visible section (whose top is in 0%-47% of viewport).
-    if (topmostSection) activeSection.value = `#${topmostSection.id}`
-    else if (nextVisibleSection) activeSection.value = `#${nextVisibleSection.id}`
+    if (topmostSection) store.activeSection = `#${topmostSection.id}`
+    else if (nextVisibleSection) store.activeSection = `#${nextVisibleSection.id}`
   }, {
     root: null, // Uses the viewport as the root.
     threshold: 0.0, // Fires when any part of an element enters/exits the viewport.
@@ -234,14 +172,6 @@ onMounted(initializeObserver)
 // Cleanup on unmount.
 onBeforeUnmount(() => {
   if (observer.value) observer.value.disconnect()
-})
-
-// Compute version dynamically.
-const version = computed(() => {
-  return process.env.VITE_APP_VERSION.replace(
-    /-(\w)(\w+)\.(\d+)/,
-    (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
-  )
 })
 </script>
 
@@ -494,6 +424,8 @@ $lighter-text: #ccc;
   }
 }
 
+.top-menu--examples li a span:first-child {margin-left: 32px;}
+
 .top-menu li .heading {
   font-size: 14px;
   color: #888;
@@ -536,11 +468,11 @@ $lighter-text: #ccc;
   }
   .top-bar__items .w-button__content span {display: none;}
   .top-menu--examples li {font-size: 13px;}
+  .top-menu--examples li a span:first-child {margin-left: 0;}
   .top-menu--examples li .heading {
     margin-top: 12px;
     padding-top: 4px;
     padding-bottom: 4px;
-    padding-left: 30px;
   }
   .top-menu--examples li .w-list__item-label > div {padding-left: 8px;}
 }
