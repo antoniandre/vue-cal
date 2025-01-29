@@ -18,6 +18,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
+    pre (({{activeSection}}))
     w-button(
       v-if="!isProduction"
       route="/test"
@@ -77,13 +78,15 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
           w-icon.mr2(lg) mdi mdi-apps
           span EXAMPLES
       w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
-        nav
         :items="examples"
         item-class="pa0"
         style="max-height: 90vh;overflow: auto;white-space: nowrap")
         template(#item="{ item }")
           w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
-          router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
+          router-link.w-flex.grow.align-center.px5.py2(
+            v-else-if="item.route"
+            :to="item.route"
+            :class="{ active: activeSection === item.route.hash }")
             w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
             span(:class="{ ml8: !item.icon }" v-html="item.label")
           .w-flex.grow.align-center.px5.py2(v-else)
@@ -92,7 +95,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { onMounted, onBeforeUnmount, ref, computed, nextTick } from 'vue'
 import { useAppStore } from '@/store'
 
 const props = defineProps({
@@ -103,6 +106,12 @@ const store = useAppStore()
 const todayDate = ref((new Date()).getDate())
 const isProduction = import.meta.env.PROD
 
+// Define the active section ref.
+const activeSection = ref('')
+// Observer setup for tracking active sections.
+let observer = null
+
+// Example sections for the menu.
 const docs = [
   { route: '/getting-started', label: 'Getting Started' },
   { class: 'divider pa0' },
@@ -171,6 +180,64 @@ const examples = [
   // w-tag.ml2(color="blue" outline) UPDATED
 ]
 
+onMounted(async () => {
+  await new Promise(resolve => setTimeout(resolve, 300))
+
+  const sections = document.querySelectorAll('[id^="ex--"]')
+
+  if (!sections.length) {
+    console.error('No matching sections found in the DOM.')
+    return
+  }
+
+  // Observer callback
+  observer = new IntersectionObserver(entries => {
+    const viewportHeight = window.innerHeight
+
+    let closestSection = null
+    let minDistance = Infinity
+
+    entries.forEach(entry => {
+      const { top } = entry.boundingClientRect
+
+      // Check if section top is between 5% and 60% of the viewport height
+      const minThreshold = viewportHeight * 0.05
+      const maxThreshold = viewportHeight * 0.6
+
+      if (top >= minThreshold && top <= maxThreshold) {
+        const distance = Math.abs(viewportHeight * 0.3 - top) // Centering weight
+        if (distance < minDistance) {
+          minDistance = distance
+          closestSection = entry.target.id
+        }
+      }
+    })
+
+    if (closestSection) {
+      activeSection.value = `#${closestSection}`
+    }
+
+    console.log({
+      activeSection: activeSection.value,
+      sectionsObserved: entries.map(e => ({
+        id: e.target.id,
+        top: e.boundingClientRect.top
+      }))
+    })
+  }, {
+    root: null, // Viewport as the root
+    threshold: 0.0, // Trigger as soon as it enters the viewport
+    rootMargin: '-3% 0px -50%' // Ensures visibility is detected correctly
+  })
+
+  sections.forEach(section => observer.observe(section))
+})
+
+onBeforeUnmount(() => {
+  if (observer) observer.disconnect()
+})
+
+// Compute version dynamically.
 const version = computed(() => {
   return process.env.VITE_APP_VERSION.replace(
     /-(\w)(\w+)\.(\d+)/,
@@ -339,17 +406,6 @@ $lighter-text: #ccc;
   }
 
   .w-menu__content {max-height: 90vh;}
-  .w-menu__content .v-list-item {
-    height: 30px;
-    font-size: 1em;
-    padding-left: 32px;
-
-    &.heading {
-      padding-left: 8px;
-      margin-top: 8px;
-      color: #888;
-    }
-  }
 
   .w-tag {
     height: 16px;
@@ -371,19 +427,19 @@ $lighter-text: #ccc;
     border: none;
     text-align: left;
     white-space: nowrap;
-  }
 
-  .intro:before {
-    content: "* ";
-    vertical-align: super;
-  }
+    &:before {
+      content: "* ";
+      vertical-align: super;
+    }
 
-  .intro em {
-    padding-top: 3px;
-    opacity: 0.6;
-    transition: 0.3s;
+    em {
+      padding-top: 3px;
+      opacity: 0.6;
+      transition: 0.3s;
 
-    &:hover {opacity: 0.9;}
+      &:hover {opacity: 0.9;}
+    }
   }
 
   // When scrolled: sticky top bar.
@@ -427,9 +483,14 @@ $lighter-text: #ccc;
 
   .router-link-active {
     font-weight: normal;
-    background: linear-gradient(90deg, var(--highlight-color), rgba(255, 255, 255, 0));
+    // background: linear-gradient(90deg, var(--highlight-color), rgba(255, 255, 255, 0));
 
     &:before {display: none;}
+  }
+
+  &.active {
+    color: red;
+    font-weight: bold; // Optional emphasis.
   }
 }
 
