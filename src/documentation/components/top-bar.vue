@@ -18,7 +18,6 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
-    pre (({{activeSection}}))
     w-button(
       v-if="!isProduction"
       route="/test"
@@ -191,7 +190,7 @@ async function initializeObserver () {
 
   if (!sections.length) return console.info('No matching sections found in the DOM.')
 
-  const minThreshold = window.innerHeight * 0.03 // 3% of viewport height.
+  const minThreshold = window.innerHeight * 0.01 // 1% of viewport height.
   const maxThreshold = window.innerHeight * 0.47 // 47% of viewport height.
 
   observer.value = new IntersectionObserver(entries => {
@@ -201,7 +200,7 @@ async function initializeObserver () {
     entries.forEach(entry => {
       const { top } = entry.boundingClientRect
 
-      // If section's top is between 3%-47% of viewport, consider it as the topmost candidate.
+      // If section's top is between 1%-47% of viewport, consider it as the topmost candidate.
       if ((top >= minThreshold && top <= maxThreshold) && (!topmostSection || top < topmostSection.top)) {
         topmostSection = { id: entry.target.id, top }
       }
@@ -213,14 +212,14 @@ async function initializeObserver () {
     })
 
     // Highlight the correct section:
-    // - If a section is within 3%-47%, highlight it.
+    // - If a section is within 1%-47%, highlight it.
     // - Otherwise, highlight the next visible section (whose top is in 0%-47% of viewport).
     if (topmostSection) activeSection.value = `#${topmostSection.id}`
     else if (nextVisibleSection) activeSection.value = `#${nextVisibleSection.id}`
   }, {
     root: null, // Uses the viewport as the root.
     threshold: 0.0, // Fires when any part of an element enters/exits the viewport.
-    rootMargin: '-3% 0px -53%' // Keeps the 3%-47% detection range accurate.
+    rootMargin: '0% 0px -60%' // Set the detection range to 0%-40% (`top sides bottom`).
   })
 
   sections.forEach(section => observer.value.observe(section)) // Observe all sections.
@@ -481,16 +480,17 @@ $lighter-text: #ccc;
 .top-menu li {
   font-size: 15px;
 
+  a {color: inherit;}
+
   .router-link-active {
     font-weight: normal;
-    // background: linear-gradient(90deg, var(--highlight-color), rgba(255, 255, 255, 0));
 
     &:before {display: none;}
-  }
-
-  &.active {
-    color: red;
-    font-weight: bold; // Optional emphasis.
+    &.active {
+      color: var(--w-primary-color);
+      background: linear-gradient(90deg, var(--highlight-color), rgba(255, 255, 255, 0));
+      font-weight: bold; // Optional emphasis.
+    }
   }
 }
 
