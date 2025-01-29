@@ -17,9 +17,13 @@ export const useAppStore = defineStore('app', () => {
     $waveui.switchTheme(theme)
   }
 
+  // Active section or example in page, using an intersection observer in the top-bar component.
+  const activeSection = null
+
   return {
     darkMode,
     toggleDarkMode,
-    applyTheme
+    applyTheme,
+    activeSection
   }
 })
