@@ -580,11 +580,11 @@ example(title="Events v-model" anchor="events-v-model")
     :dark="store.darkMode"
     style="height: 301px")
 
-.todo-tag.d-iflex.mt6 ADD ALL THE COMMENTED EXAMPLES
-
 //- Example.
-//- example(title="Events Indicators" anchor="events-indicators")
+example(title="Events Indicators" anchor="events-indicators")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.mb0.
       When #[code eventsCount] is set to #[code true], the events will be counted on #[code month],
       #[code year] &amp; #[code years] and a number will appear in each cell that contain one or more
@@ -597,7 +597,7 @@ example(title="Events v-model" anchor="events-v-model")
         inline
         label-color="grey"
         :items="indicatorStyleOptions")
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       xs
@@ -606,7 +606,7 @@ example(title="Events v-model" anchor="events-v-model")
       events-count-on-year-view
       view="month"
       :events="events"&gt;
-  template(#code-css).
+  //- template(#code-css).
     /* Default indicator is count, but you can override it with one of the following rules. */
 
     /* Dash indicator */
@@ -628,7 +628,7 @@ example(title="Events v-model" anchor="events-v-model")
     /* Cell background indicator */
     .vuecal__cell--has-events {background-color: #fffacd;}
     .vuecal__cell-events-count {display: none;}
-  .w-flex.maa.justify-center.wrap.gap5
+  //- .w-flex.maa.justify-center.wrap.gap5
     vue-cal(
       :dark="store.darkMode"
       :class="'event-indicator--' + indicatorStyle"
@@ -651,15 +651,17 @@ example(title="Events v-model" anchor="events-v-model")
       :dark="store.darkMode")
 
 //- Example.
-//- example(title="Events on Month View" anchor="events-on-month-view")
+example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.
       With the option #[code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
       #[code events-on-month-view] accepts a Boolean to show or hide, or the string '#[code short]' to show only the event's title.#[br]
       If #[code events-on-month-view] is set to #[code true], all the information is displayed, you can then hide
       any event information via CSS.#[br]
       If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="9 * 60"
@@ -669,7 +671,7 @@ example(title="Events v-model" anchor="events-v-model")
       events-on-month-view="short"
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-css).
+  //- template(#code-css).
     .vuecal--month-view {height: 500px;}
     .vuecal--month-view .vuecal__cell {height: 80px;}
 
@@ -680,7 +682,7 @@ example(title="Events v-model" anchor="events-v-model")
     }
 
     .vuecal--month-view .vuecal__cell-date {padding: 4px;}
-  vue-cal.ex--events-on-month-view(
+  //- vue-cal.ex--events-on-month-view(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="9 * 60"
@@ -691,8 +693,10 @@ example(title="Events v-model" anchor="events-v-model")
     :events="events")
 
 //- Example.
-//- example(title="Event Drag &amp; Drop" anchor="drag-and-drop")
+example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.mb2.
       In addition to the obvious event dragging itself, there are quite a few things that are good
       to know about the drag &amp; drop.
@@ -770,7 +774,7 @@ example(title="Events v-model" anchor="events-v-model")
         (native HTML5 drag &amp; drop behavior). The original event receive the
         #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
         You can use that class to give it a different style.
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       today-button
@@ -782,10 +786,10 @@ example(title="Events v-model" anchor="events-v-model")
       :events="events"
       :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
     &lt;/vue-cal&gt;
-  template(#code-css).
+  //- template(#code-css).
     .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
-  vue-cal(
+  //- vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     today-button
@@ -798,8 +802,10 @@ example(title="Events v-model" anchor="events-v-model")
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
 
 //- Example.
-//- example(title="External Events Drag &amp; Drop" anchor="external-events-drag-and-drop")
+example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
       It is also possible to move an event from one calendar to another.#[br]#[br]
@@ -814,7 +820,7 @@ example(title="Events v-model" anchor="events-v-model")
         modify the data, you will also have to remove the event from its original data source yourself
         - unless you want to create a copy.#[br]
         Learn how in the example source code below.
-  template(#code-html).
+  //- template(#code-html).
     &lt;!-- Three HTML5 draggable events. --&gt;
     &lt;div
       class="external-event"
@@ -838,7 +844,7 @@ example(title="Events v-model" anchor="events-v-model")
       @event-drop="onEventDrop"&gt;
     &lt;/vue-cal&gt;
 
-  template(#code-js).
+  //- template(#code-js).
     export default {
       data: () => ({
         draggables: [
@@ -886,7 +892,7 @@ example(title="Events v-model" anchor="events-v-model")
       }
     }
 
-  .w-flex.mt4.wrap
+  //- .w-flex.mt4.wrap
     div.mr2
       .external-event(
         v-for="(item, i) in draggables"
@@ -918,8 +924,10 @@ example(title="Events v-model" anchor="events-v-model")
       @event-drop="onEventDrop")
 
 //- Example.
-//- example(title="Multiple Day Events" anchor="multiple-day-events")
+example(title="Multiple Day Events" anchor="multiple-day-events")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.
       Multiple day events work like a set of single day events linked together.#[br]
       Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
@@ -931,7 +939,7 @@ example(title="Events v-model" anchor="events-v-model")
     alert(tip).
       3 CSS classes are available to target the event first day, the last day and all the days in between:
       #[code event-start], #[code event-middle], #[code event-end].
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
@@ -942,7 +950,7 @@ example(title="Events v-model" anchor="events-v-model")
       resize-x
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-js).
+  //- template(#code-js).
     data: () => ({
       events: [
         {
@@ -968,7 +976,7 @@ example(title="Events v-model" anchor="events-v-model")
         }
       ]
     })
-  vue-cal.ex--multiple-day-events(
+  //- vue-cal.ex--multiple-day-events(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="8 * 60"
@@ -980,11 +988,11 @@ example(title="Events v-model" anchor="events-v-model")
     :events="multipleDayEvents")
 
 //- Example.
-//- example(anchor="recurring-events")
+example(anchor="recurring-events")
   template(#title)
     | Recurring Events
-    w-tag.ml2.white(bg-color="red-light1" round) COMING SOON
-  template(#desc)
+    .todo-tag.d-iflex.ml2 COMING SOON
+  //- template(#desc)
     .mt4.text-bold When it will be ready, this is how it will work.
     .mb2 You can repeat an event:
     ul
@@ -996,7 +1004,7 @@ example(title="Events v-model" anchor="events-v-model")
       li Every `x` days - by providing a #[code every: x] property, with #[code x] being an integer.
       li Forever; Or until an expiry date if you provide an #[code until: {String | Date}] property.
       li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
@@ -1007,7 +1015,7 @@ example(title="Events v-model" anchor="events-v-model")
       show-all-day-events
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-js).
+  //- template(#code-js).
     // month view event count => OK.
     // @todo: check years/year views event counts.
     // @todo: repeated multiple-day events does not appear if the first day is not in view (e.g. hide weekend).
@@ -1016,7 +1024,7 @@ example(title="Events v-model" anchor="events-v-model")
     // @todo: if 2 occurrences are in the same day (multiple-day events), only one is shown.
     // @todo: check all the above points one by one.
 
-  template(#desc2)
+  //- template(#desc2)
     p.
       Recurring events work like a set of single day events linked together.#[br]
       That means, deleting, resizing or editing one of the day will apply to all the other days.
@@ -1098,8 +1106,10 @@ example(title="Events v-model" anchor="events-v-model")
       })
 
 //- Example.
-//- example(title="Overlapping events" anchor="overlapping-events")
+example(title="Overlapping events" anchor="overlapping-events")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     p.
       Overlapping, editable &amp; deletable events.#[br]
       Try to resize &amp; delete events to see the overlapping redrawn.
@@ -1119,7 +1129,7 @@ example(title="Events v-model" anchor="events-v-model")
       (default time step is 1 hour), like in
       #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
       You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       :time-from="10 * 60"
@@ -1130,7 +1140,7 @@ example(title="Events v-model" anchor="events-v-model")
       :min-event-width="minEventWidth"
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-js).
+  //- template(#code-js).
     data: () => ({
       minEventWidth: 0,
       events: [
@@ -1159,7 +1169,7 @@ example(title="Events v-model" anchor="events-v-model")
       ]
     })
 
-  vue-cal(
+  //- vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     :time-from="10 * 60"
@@ -1171,8 +1181,10 @@ example(title="Events v-model" anchor="events-v-model")
     :events="overlappingEvents")
 
 //- Example.
-//- example(title="All day events" anchor="all-day-events")
+example(title="All day events" anchor="all-day-events")
   template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
     ul
       li.mb2.
         When the #[code showAllDayEvents] is set to #[code true] the events with an
@@ -1201,7 +1213,7 @@ example(title="Events v-model" anchor="events-v-model")
       span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][exAllDayEvents.showAllDayEvents] }}"
     w-button.ma1.code(@click="exAllDayEvents.shortEventsOnMonthView = !exAllDayEvents.shortEventsOnMonthView")
       span.white :events-on-month-views="{{ ['true', "'short'"][exAllDayEvents.shortEventsOnMonthView * 1] }}"
-  template(#code-html).
+  //- template(#code-html).
     &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
       :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
     &lt;/button&gt;
@@ -1218,7 +1230,7 @@ example(title="Events v-model" anchor="events-v-model")
       :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-js).
+  //- template(#code-js).
     showAllDayEvents: 0,
     shortEventsOnMonthView: false,
     events: [
@@ -1240,7 +1252,7 @@ example(title="Events v-model" anchor="events-v-model")
       },
       ...
     ]
-  template(#code-css).
+  //- template(#code-css).
     .vuecal__cell-content {align-self: flex-start;}
     .vuecal__cell-date {text-align: right;padding: 4px;}
 
@@ -1249,7 +1261,7 @@ example(title="Events v-model" anchor="events-v-model")
     .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
     .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
 
-  vue-cal.ex--all-day-events(
+  //- vue-cal.ex--all-day-events(
     :dark="store.darkMode"
     :selected-date="stringToDate('2019-02-11')"
     :time-from="7 * 60"
