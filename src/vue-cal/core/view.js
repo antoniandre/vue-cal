@@ -20,7 +20,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // on created and on navigation, two date ranges are computed:
   // [start-end]: the common date range to use.
   // [firstCellDate-endCellDate]: the full visible range including out-of-scope days in month view.
-  const startTheoretical = ref(viewDate)
+  const startTheoretical = ref(new Date(viewDate))
 
   // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   let timeTickerId = null
