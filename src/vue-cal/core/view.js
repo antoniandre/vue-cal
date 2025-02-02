@@ -475,7 +475,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
 
   // Array of IDs inside an object indexed by cell dates.
   const events = computed(() => {
-    if (viewId.value === 'month' && !config.eventsOnMonthView) return []
     return eventsManager.getViewEvents(cellDates.value)
   })
 

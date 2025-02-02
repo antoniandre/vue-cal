@@ -70,7 +70,7 @@
         :events="cellEvents")
     //- Animate event deletions.
     transition-group.vuecal__cell-events(
-      v-else-if="cellEvents.length || transitioning"
+      v-else-if="(cellEvents.length || transitioning) && !(view.isMonth && !config.eventsOnMonthView)"
       name="vuecal-event-delete"
       @before-leave="transitioning = true"
       @after-leave="afterDelete"
@@ -87,6 +87,7 @@
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
+  .vuecal__cell-events-count(v-if="showCellEventsCount") {{ cellEvents.length }}
   .vuecal__now-line(
     v-if="nowLine.show"
     :style="nowLine.style"
@@ -205,7 +206,7 @@ const classes = computed(() => {
     'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
     'vuecal__cell--has-schedules': config.schedules?.length,
     'vuecal__cell--dragging': touch.dragging,
-    'vuecal__cell--has-events': false
+    'vuecal__cell--has-events': cellEvents.value.length
   }
 })
 
@@ -254,6 +255,10 @@ const cellEventsPerSchedule = computed(() => {
     obj[schedule.id] = cellEvents.value.filter(event => event.schedule === schedule.id)
     return obj
   }, {})
+})
+
+const showCellEventsCount = computed(() => {
+  return view.isMonth && !config.eventsOnMonthView && cellEvents.value.length
 })
 
 /**
