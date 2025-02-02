@@ -34,7 +34,10 @@ export const useEvents = vuecal => {
       event._.deleted = false
 
       // Register the event DOM node in the event in order to emit DOM events.
-      event._.register = domNode => (event._.$el = domNode)
+      event._.register = domNode => {
+        event._.$el = domNode
+        if (event._.fireCreated) vuecal.emit('event-created', event)
+      }
       event._.unregister = () => (event._.$el = null)
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
@@ -118,6 +121,7 @@ export const useEvents = vuecal => {
       dateUtils.snapToInterval(newEvent.end, config.snapToInterval)
     }
 
+    newEvent._ = { fireCreated: true } // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
     return true
   }
