@@ -336,7 +336,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * @param {bool} forward
    */
   function navigate (forward = true) {
-    let newViewDate = viewDate.value
+    let newViewDate = new Date(viewDate.value)
 
     switch (viewId.value) {
       case 'day':
@@ -479,13 +479,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     return eventsManager.getViewEvents(cellDates.value)
   })
 
-  function createEvent(event) {
-    return eventsManager.createEvent(event)
-  }
+  const createEvent = event => eventsManager.createEvent(event)
 
-  function deleteEvent(eventId) {
-    return eventsManager.deleteEvent(eventId)
-  }
+  const deleteEvent = eventId => eventsManager.deleteEvent(eventId)
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
