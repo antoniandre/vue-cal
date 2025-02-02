@@ -1,6 +1,6 @@
 <template lang="pug">
-.examples-container.w-flex.grow.ovh.gap12(:class="{ 'examples-container--has-aside': showAside }")
-  .grow.w-flex.grow.column.ovh
+.examples-container.w-flex.grow.gap12(:class="{ 'examples-container--has-aside': showAside }")
+  .grow.w-flex.grow.column
     h1.title1
       | Examples
       template(v-if="$route.name !== 'examples-intro'")
@@ -33,6 +33,10 @@ const showAside = computed(() => {
 </script>
 
 <style lang="scss">
+.main--playground .examples-container {
+  &, > div {overflow: hidden;}
+}
+
 .main--examples {
   h2 {
     position: relative;

@@ -508,7 +508,7 @@ example(title="Edit Events" anchor="edit-events")
         start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
         end: new Date(new Date().addDays(2).setHours(13, 0, 0, 0)), // Using Vue Cal's Date prototypes.
         title: 'Boring Event',
-        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;Can't drag, resize or delete me!',
+        content: '&lt;i class="icon mdi mdi-cancel"&gt;&lt;/i&gt;&lt;br&gt;Can&rsquo;t drag, resize or delete me!',
         class: 'blue-event',
         deletable: false,
         resizable: false,
@@ -1540,7 +1540,7 @@ const exEditEvents = reactive({
       end: new Date(new Date().addDays(2).setHours(13, 0, 0, 0)), // Using Vue Cal's Date prototypes.
       class: 'blue-event',
       title: 'Boring Event',
-      content: '<i class="w-icon mdi mdi-cancel"></i><br>Can\'t drag, resize or delete me!',
+      content: '<i class="w-icon mdi mdi-cancel"></i><br>Can&rsquo;t drag, resize or delete me!',
       class: 'blue-event',
       deletable: false,
       resizable: false,
