@@ -34,7 +34,7 @@
     slot
   .example__desc
     slot(name="desc2")
-    p.mt3 For all the options details, refer to the #[router-link(to="/api") API] section.
+    p.caption.mt1 For all the options details, refer to the #[router-link(to="/api") API] section.
 </template>
 
 <script setup>

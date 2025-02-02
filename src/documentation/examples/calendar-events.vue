@@ -549,7 +549,7 @@ example(title="Events v-model" anchor="events-v-model")
       w-button.ma1(@click="exEventsVModel.addEvent")
         w-icon.mr2 mdi mdi-plus
         | Add Event
-      w-button.ma1(@click="exEventsVModel.events.pop()")
+      w-button.ma1(@click="exEventsVModel.events.pop")
         w-icon.mr2 mdi mdi-close
         | Remove Last Event
     p.mb0 Here is the live array of event titles:
@@ -579,6 +579,45 @@ example(title="Events v-model" anchor="events-v-model")
     :views-bar="false"
     :dark="store.darkMode"
     style="height: 301px")
+
+//- Example.
+example(title="Events on Month View" anchor="events-on-month-view")
+  template(#desc)
+    p.
+      With the option #[code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
+      #[code events-on-month-view] accepts a Boolean to show or hide, or the string '#[code short]' to show only the event's title.#[br]
+      If #[code events-on-month-view] is set to #[code true], all the information is displayed, you can then hide
+      any event information via CSS.#[br]
+      If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
+  template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="9 * 60"
+      :views="['day', 'week', 'month']"
+      view="month"
+      hide-weekends
+      events-on-month-view="short"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-css).
+    .vuecal--month-view {height: 500px;}
+    .vuecal--month-view .vuecal__cell {height: 80px;}
+
+    .vuecal--month-view .vuecal__cell-content {
+      justify-content: flex-start;
+      height: 100%;
+      align-items: flex-end;
+    }
+
+    .vuecal--month-view .vuecal__cell-date {padding: 4px;}
+  vue-cal.ex--events-on-month-view(
+    :events="events"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 } }"
+    view="days"
+    :dark="store.darkMode"
+    style="height: 331px")
 
 //- Example.
 example(title="Events Indicators" anchor="events-indicators")
@@ -649,48 +688,6 @@ example(title="Events Indicators" anchor="events-indicators")
       view="month"
       :events="events"
       :dark="store.darkMode")
-
-//- Example.
-example(title="Events on Month View" anchor="events-on-month-view")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    p.
-      With the option #[code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
-      #[code events-on-month-view] accepts a Boolean to show or hide, or the string '#[code short]' to show only the event's title.#[br]
-      If #[code events-on-month-view] is set to #[code true], all the information is displayed, you can then hide
-      any event information via CSS.#[br]
-      If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-  //- template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :views="['day', 'week', 'month']"
-      view="month"
-      hide-weekends
-      events-on-month-view="short"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  //- template(#code-css).
-    .vuecal--month-view {height: 500px;}
-    .vuecal--month-view .vuecal__cell {height: 80px;}
-
-    .vuecal--month-view .vuecal__cell-content {
-      justify-content: flex-start;
-      height: 100%;
-      align-items: flex-end;
-    }
-
-    .vuecal--month-view .vuecal__cell-date {padding: 4px;}
-  //- vue-cal.ex--events-on-month-view(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="9 * 60"
-    :views="['day', 'week', 'month']"
-    view="month"
-    hide-weekends
-    events-on-month-view="short"
-    :events="events")
 
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
