@@ -36,9 +36,9 @@
           :events="cellEvents")
       //- Animate event deletions.
       transition-group.vuecal__cell-events(
-        v-else-if="cellEvents.length || transitionning"
+        v-else-if="cellEvents.length || transitioning"
         name="vuecal-event-delete"
-        @before-leave="transitionning = true"
+        @before-leave="transitioning = true"
         @after-leave="afterDelete"
         tag="div")
         event(
@@ -70,9 +70,9 @@
         :events="cellEvents")
     //- Animate event deletions.
     transition-group.vuecal__cell-events(
-      v-else-if="cellEvents.length || transitionning"
+      v-else-if="cellEvents.length || transitioning"
       name="vuecal-event-delete"
-      @before-leave="transitionning = true"
+      @before-leave="transitioning = true"
       @after-leave="afterDelete"
       tag="div")
       event(
@@ -122,12 +122,12 @@ const cellEl = ref(null)
 // cells in the view when deleting in the source of truth.
 const eventsDeleted = ref([])
 // Wait for the event deletion transition end before unmounting the events container if no event.
-const transitionning = ref(false)
+const transitioning = ref(false)
 const onEventDelete = e => {
   eventsDeleted.value.push(e.detail)
-  transitionning.value = true
+  transitioning.value = true
 }
-const afterDelete = () => setTimeout(() => (transitionning.value = false), 300)
+const afterDelete = () => setTimeout(() => (transitioning.value = false), 300)
 
 // The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
 // display the event placeholder in that schedule.
