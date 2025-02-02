@@ -374,6 +374,7 @@ example(title="Create Events Programmatically" anchor="create-events-programmati
     ref="exExternalEventCreateVuecalRef"
     editable-events
     @ready="({ view }) => view.scrollToCurrentTime()"
+    @event-created="event => event._.$el.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' })"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
