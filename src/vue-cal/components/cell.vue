@@ -566,12 +566,6 @@ onBeforeUnmount(async () => {
     border-left-color: inherit;
   }
 
-  &:after {
-    content: "";
-    position: absolute;
-    inset: -6px 0;
-  }
-
   span {
     position: absolute;
     right: 1px;
