@@ -99,7 +99,20 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         template(#title)
           code event-create
         template(#content)
-          span.grey (only fired on mouseup after the event drag creation)
+          p.
+            Fired on mouseup after the event drag creation or programmatic creation via the Vue Cal
+            #[code view.createEvent()] method.
+          p Returns the associated calendar event object.
+      w-accordion-item
+        template(#title)
+          code event-created
+        template(#content)
+          p.
+            Fired on first mounted after an event is created via drag creation or programmatically
+            via the Vue Cal #[code view.createEvent()] method. Can be used to trigger an event
+            scroll into view for instance:
+          ssh-pre.mt1(language="js" :dark="store.darkMode").
+            @event-created="event => event._.$el.scrollIntoView({ behavior: 'smooth', block: 'center' })")
           p Returns the associated calendar event object.
       w-accordion-item
         template(#title)
