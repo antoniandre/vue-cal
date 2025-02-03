@@ -585,39 +585,56 @@ example(title="Events v-model" anchor="events-v-model")
 example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
     p.
-      With the option #[code events-on-month-view], you can choose whether to display the events on the month view or not.#[br]
-      #[code events-on-month-view] accepts a Boolean to show or hide, or the string '#[code short]' to show only the event's title.#[br]
-      If #[code events-on-month-view] is set to #[code true], all the information is displayed, you can then hide
-      any event information via CSS.#[br]
-      If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
-    .w-flex.justify-end
-      w-switch(v-model="exEventsMonthView.showEvents") Show Events
+      When #[code events-on-month-view] is set to true, the events will show in full on the month view.#[br]
+      When #[code events-counts] is set to true, the events will show in full on the month view.#[br]
+      In order to keep the same cell height on this view, you can set a height in CSS.
+    .w-flex.column.align-end.gap1
+      w-switch(
+        v-model="exEventsMonthView.showEvents"
+        @update:model-value="exEventsMonthView.showEvents && (exEventsMonthView.showEventCount = false)"
+        label-on-left) Show Events
+      w-switch(
+        v-model="exEventsMonthView.showEventCount"
+        @update:model-value="exEventsMonthView.showEventCount && (exEventsMonthView.showEvents = false)"
+        label-on-left) Show Events Count
+      w-switch(
+        v-model="exEventsMonthView.highlightCells"
+        label-on-left) Highlight Cells with Events
   template(#code-html).
     &lt;vue-cal
-      :views="{ days: { cols: 5, rows: 1 }, month: {}, year: {} }"
-      view="month"
-      events-on-month-view
-      :events="events"&gt;
+      :events="events"{{ exEventsMonthView.showEvents ? '\n  events-on-month-view' : '' }}{{ exEventsMonthView.showEventCount ? '\n  event-count' : '' }}
+      :views="{ days: { cols: 5, rows: 1 }, month: {} }"
+      view="month"&gt;
     &lt;/vue-cal&gt;
   template(#code-css).
-    .vuecal.vuecal--default-theme {
+    .vuecal {
       height: 441px;
 
       .vuecal__scrollable--month-view {
         .vuecal__cell {height: 50px;}
         .vuecal__event {height: 15px;margin-top: 1px;}
-        .vuecal__event-details {font-size: 11px;white-space: nowrap;padding: 0;}
-        .vuecal__cell--has-events {flex-direction: row-reverse;overflow: hidden;}
+        .vuecal__event-details {
+          font-size: 11px;
+          white-space: nowrap;
+          padding: 0;
+        }
+        .vuecal__cell--has-events {
+          flex-direction: row-reverse;
+          overflow: hidden;
+          justify-content: flex-start;
+        }
       }
     }
   vue-cal(
     :events="events"
     :events-on-month-view="exEventsMonthView.showEvents"
+    :event-count="exEventsMonthView.showEventCount"
     :time-from="8 * 60"
     :time-to="18 * 60"
-    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 }, year: { cols: 4, rows: 3 } }"
+    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 } }"
     view="month"
-    :dark="store.darkMode")
+    :dark="store.darkMode"
+    :class="exEventsMonthView.highlightCells ? 'vuecal--highlight-cells' : ''")
 
 //- Example.
 example(title="Events Indicators" anchor="events-indicators")
@@ -1589,7 +1606,9 @@ const exEventsIndicators = reactive({
 })
 
 const exEventsMonthView = reactive({
-  showEvents: ref(true)
+  showEvents: ref(true),
+  showEventCount: ref(false),
+  highlightCells: ref(false)
 })
 
 const exExternalEventsDragDrop = reactive({
@@ -1876,8 +1895,30 @@ const exAllDayEvents = reactive({
     .vuecal__scrollable--month-view {
       .vuecal__cell {height: 50px;}
       .vuecal__event {height: 15px;margin-top: 1px;}
-      .vuecal__event-details {font-size: 11px;white-space: nowrap;padding: 0;}
-      .vuecal__cell--has-events {flex-direction: row-reverse;overflow: hidden;}
+      .vuecal__event-details {
+        font-size: 11px;
+        white-space: nowrap;
+        padding: 0;
+      }
+      .vuecal__cell--has-events {
+        flex-direction: row-reverse;
+        justify-content: flex-start;
+        overflow: hidden;
+      }
+    }
+    &.vuecal--highlight-cells .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #fffacda8;}
+    &.vuecal--highlight-cells.vuecal--dark .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #00dbff1c;}
+
+    .vuecal__cell-events-count {
+      position: absolute;
+      inset: auto 2px 2px;
+      text-align: center;
+      opacity: 0.3;
+      font: italic 0.7rem monospace;
+      word-spacing: -0.1rem;
+
+      &:before {content: '- ';}
+      &:after {content: ' events -';}
     }
   }
 
