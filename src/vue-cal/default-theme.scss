@@ -184,7 +184,7 @@
   .vuecal__scrollable--has-schedules .vuecal__weekday {padding: 0;}
   .vuecal__scrollable--has-schedules .vuecal__weekday-date {width: 1.5em;}
 
-  // Calendar Body.
+  // Calendar Body > Calendar Cell.
   // ------------------------------------------------------
   .vuecal__cell {
     overflow: hidden;
@@ -202,17 +202,6 @@
     inset: 0;
     z-index: -1;
   }
-  &.vuecal--timeless .vuecal__cell-events {
-    display: flex;
-    width: 100%;
-    height: 100%;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    padding: 4px;
-    gap: 4px;
-  }
-
   &.vuecal--light .vuecal__cell:before {filter: saturate(2);}
 
   .vuecal__cell--today:before,
@@ -253,6 +242,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
       margin: 4px;
       font-size: 13px;
       letter-spacing: -0.5px;
@@ -271,7 +261,19 @@
 
   .vuecal__cell--out-of-scope .vuecal__cell-date {opacity: 0.4;}
 
-  // Time column.
+  .vuecal__scrollable--month-view .vuecal__cell-events {overflow: hidden;}
+  &.vuecal--timeless .vuecal__cell-events {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-start;
+    padding: 4px;
+    gap: 4px;
+  }
+
+  // Calendar Body > Time column.
   // ------------------------------------------------------
   .vuecal__time-cell {
     display: flex;
@@ -365,14 +367,15 @@
       &:after {transform: translateY(-50%) rotate(-45deg);}
     }
   }
-&.vuecal--timeless .vuecal__event {
-  position: relative;
-  width: 100%;
-}
+  &.vuecal--timeless .vuecal__event {
+    position: relative;
+    width: 100%;
+  }
 
   .vuecal__scrollable--month-view .vuecal__event {
     padding-top: 1px;
     padding-bottom: 1px;
+    width: 100%;
   }
 
   // Sm and xs layouts.
