@@ -258,7 +258,7 @@ const cellEventsPerSchedule = computed(() => {
 })
 
 const showCellEventsCount = computed(() => {
-  return view.isMonth && !config.eventsOnMonthView && cellEvents.value.length
+  return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellEvents.value.length
 })
 
 /**
