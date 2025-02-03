@@ -586,7 +586,9 @@ example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
     p.
       When #[code events-on-month-view] is set to true, the events will show in full on the month view.#[br]
-      When #[code events-counts] is set to true, the events will show in full on the month view.#[br]
+      When #[code events-counts] is set to true, the events count will be shown on every cell that has
+      events, and you can customize this however you like. Here are 3 different random options that you can
+      achieve with CSS.#[br]
       In order to keep the same cell height on this view, you can set a height in CSS.
     .w-flex.column.align-end.gap1
       w-switch(
@@ -597,6 +599,12 @@ example(title="Events on Month View" anchor="events-on-month-view")
         v-model="exEventsMonthView.showEventCount"
         @update:model-value="exEventsMonthView.showEventCount && (exEventsMonthView.showEvents = false)"
         label-on-left) Show Events Count
+      w-radios(
+        v-model="exEventsMonthView.eventCountStyle"
+        inline
+        label-color="grey"
+        :items="exEventsMonthView.eventCountStyleOptions"
+        :disabled="!exEventsMonthView.showEventCount") Events Count Style
       w-switch(
         v-model="exEventsMonthView.highlightCells"
         label-on-left) Highlight Cells with Events
@@ -606,25 +614,69 @@ example(title="Events on Month View" anchor="events-on-month-view")
       :views="{ days: { cols: 5, rows: 1 }, month: {} }"
       view="month"&gt;
     &lt;/vue-cal&gt;
-  template(#code-css).
-    .vuecal {
-      height: 441px;
-
-      .vuecal__scrollable--month-view {
-        .vuecal__cell {height: 50px;}
-        .vuecal__event {height: 15px;margin-top: 1px;}
-        .vuecal__event-details {
-          font-size: 11px;
-          white-space: nowrap;
-          padding: 0;
-        }
-        .vuecal__cell--has-events {
-          flex-direction: row-reverse;
-          overflow: hidden;
-          justify-content: flex-start;
-        }
-      }
-    }
+  template(#code-css)
+    | .vuecal {
+    |   height: 441px;
+    |
+    |   .vuecal__scrollable--month-view {
+    |     .vuecal__cell {height: 50px;}
+    |     .vuecal__event {height: 15px;margin-top: 1px;}
+    |     .vuecal__event-details {
+    |       font-size: 11px;
+    |       white-space: nowrap;
+    |       padding: 0;
+    |     }
+    |     .vuecal__cell--has-events {
+    |       flex-direction: row-reverse;
+    |       overflow: hidden;
+    |       justify-content: flex-start;
+    |     }
+    |   }
+    |
+    template(v-if="!exEventsMonthView.showEventCount")
+    template(v-else-if="exEventsMonthView.eventCountStyle === 'dot'")
+      |   .event-count--dot .vuecal__cell-events-count {
+      |     position: absolute;
+      |     bottom: 14px;
+      |     right: 15%;
+      |     transform: translateX(-50%);
+      |     text-align: center;
+      |     width: 4px;
+      |     aspect-ratio: 1;
+      |     overflow: hidden;
+      |     background-color: currentColor;
+      |     opacity: 0.3;
+      |     border-radius: 100%;
+      |   }
+      |
+    template(v-else-if="exEventsMonthView.eventCountStyle === 'dash'")
+      |   .event-count--dash .vuecal__cell-events-count {
+      |     position: absolute;
+      |     bottom: 14px;
+      |     right: 12px;
+      |     text-align: center;
+      |     width: 10px;
+      |     height: 2px;
+      |     overflow: hidden;
+      |     background-color: currentColor;
+      |     opacity: 0.3;
+      |     border-radius: 100rem;
+      |   }
+      |
+    template(v-else-if="exEventsMonthView.eventCountStyle === 'caption'")
+      |   .event-count--caption .vuecal__cell-events-count {
+      |     position: absolute;
+      |     inset: auto 2px 2px;
+      |     text-align: center;
+      |     opacity: 0.3;
+      |     font: italic 0.7rem monospace;
+      |     word-spacing: -0.1rem;
+      |
+      |     &amp;:before {content: '- ';}
+      |     &amp;:after {content: ' events -';}
+      |   }
+      |
+    | }
   vue-cal(
     :events="events"
     :events-on-month-view="exEventsMonthView.showEvents"
@@ -634,7 +686,7 @@ example(title="Events on Month View" anchor="events-on-month-view")
     :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 } }"
     view="month"
     :dark="store.darkMode"
-    :class="exEventsMonthView.highlightCells ? 'vuecal--highlight-cells' : ''")
+    :class="exEventsMonthView.classes")
 
 //- Example.
 example(title="Events Indicators" anchor="events-indicators")
@@ -1608,7 +1660,13 @@ const exEventsIndicators = reactive({
 const exEventsMonthView = reactive({
   showEvents: ref(true),
   showEventCount: ref(false),
-  highlightCells: ref(false)
+  highlightCells: ref(false),
+  eventCountStyle: ref('dot'),
+  eventCountStyleOptions: [{ label: 'Dot', value: 'dot' }, { label: 'Dash', value: 'dash' }, { label: 'Caption', value: 'caption' }],
+  classes: computed(() => ({
+    [`event-count--${exEventsMonthView.eventCountStyle}`]: exEventsMonthView.showEventCount,
+    'vuecal--highlight-cells': exEventsMonthView.highlightCells
+  }))
 })
 
 const exExternalEventsDragDrop = reactive({
@@ -1909,7 +1967,7 @@ const exAllDayEvents = reactive({
     &.vuecal--highlight-cells .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #fffacda8;}
     &.vuecal--highlight-cells.vuecal--dark .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #00dbff1c;}
 
-    .vuecal__cell-events-count {
+    &.event-count--caption .vuecal__cell-events-count {
       position: absolute;
       inset: auto 2px 2px;
       text-align: center;
@@ -1919,6 +1977,31 @@ const exAllDayEvents = reactive({
 
       &:before {content: '- ';}
       &:after {content: ' events -';}
+    }
+    &.event-count--dot .vuecal__cell-events-count {
+      position: absolute;
+      bottom: 14px;
+      right: 15%;
+      transform: translateX(-50%);
+      text-align: center;
+      width: 4px;
+      aspect-ratio: 1;
+      overflow: hidden;
+      background-color: currentColor;
+      opacity: 0.3;
+      border-radius: 100%;
+    }
+    &.event-count--dash .vuecal__cell-events-count {
+      position: absolute;
+      bottom: 14px;
+      right: 12px;
+      text-align: center;
+      width: 10px;
+      height: 2px;
+      overflow: hidden;
+      background-color: currentColor;
+      opacity: 0.3;
+      border-radius: 100rem;
     }
   }
 
