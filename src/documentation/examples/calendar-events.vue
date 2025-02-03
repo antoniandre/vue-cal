@@ -550,7 +550,7 @@ example(title="Events v-model" anchor="events-v-model")
       w-button.ma1(@click="exEventsVModel.addEvent")
         w-icon.mr2 mdi mdi-plus
         | Add Event
-      w-button.ma1(@click="exEventsVModel.events.pop")
+      w-button.ma1(@click="exEventsVModel.events.pop()")
         w-icon.mr2 mdi mdi-close
         | Remove Last Event
     p.mb0 Here is the live array of event titles:
@@ -590,35 +590,34 @@ example(title="Events on Month View" anchor="events-on-month-view")
       If #[code events-on-month-view] is set to #[code true], all the information is displayed, you can then hide
       any event information via CSS.#[br]
       If you want all the cells to have the same height on this view, this is also your call, you can do it via CSS.
+    .w-flex.justify-end
+      w-switch(v-model="exEventsMonthView.showEvents") Show Events
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :views="['day', 'week', 'month']"
+      :views="{ days: { cols: 5, rows: 1 }, month: {}, year: {} }"
       view="month"
-      hide-weekends
-      events-on-month-view="short"
+      events-on-month-view
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-css).
-    .vuecal--month-view {height: 500px;}
-    .vuecal--month-view .vuecal__cell {height: 80px;}
+    .vuecal.vuecal--default-theme {
+      height: 441px;
 
-    .vuecal--month-view .vuecal__cell-content {
-      justify-content: flex-start;
-      height: 100%;
-      align-items: flex-end;
+      .vuecal__scrollable--month-view {
+        .vuecal__cell {height: 50px;}
+        .vuecal__event {height: 15px;margin-top: 1px;}
+        .vuecal__event-details {font-size: 11px;white-space: nowrap;padding: 0;}
+        .vuecal__cell--has-events {flex-direction: row-reverse;overflow: hidden;}
+      }
     }
-
-    .vuecal--month-view .vuecal__cell-date {padding: 4px;}
-  vue-cal.ex--events-on-month-view(
+  vue-cal(
     :events="events"
-    :time-from="9 * 60"
-    :time-to="15 * 60"
-    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 } }"
-    view="days"
-    :dark="store.darkMode"
-    style="height: 331px")
+    :events-on-month-view="exEventsMonthView.showEvents"
+    :time-from="8 * 60"
+    :time-to="18 * 60"
+    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 }, year: { cols: 4, rows: 3 } }"
+    view="month"
+    :dark="store.darkMode")
 
 //- Example.
 example(title="Events Indicators" anchor="events-indicators")
@@ -1558,7 +1557,11 @@ const exEventsVModel = reactive({
   counter: 0,
   events: ref([]),
   onEventCreate: ({ event, resolve }) => resolve({ ...event, title: 'Event ' + ++exEventsVModel.counter }),
-  addEvent: () => exEventsVModel.events.push({ start: new Date(), end: new Date().addHours(1), title: 'Event ' + ++exEventsVModel.counter })
+  addEvent: () => exEventsVModel.events.push({
+    start: new Date(),
+    end: new Date().addHours(1),
+    title: 'Event ' + ++exEventsVModel.counter
+  })
 })
 
 
@@ -1585,8 +1588,8 @@ const exEventsIndicators = reactive({
   ])
 })
 
-const exEventsOnMonthView = reactive({
-
+const exEventsMonthView = reactive({
+  showEvents: ref(true)
 })
 
 const exExternalEventsDragDrop = reactive({
@@ -1867,17 +1870,15 @@ const exAllDayEvents = reactive({
     .vuecal__cell-events-count {background: transparent;}
   }
 
-  .ex--events-on-month-view.vuecal--month-view {
-    height: 500px;
-    .vuecal__cell {height: 80px;}
+  .example--events-on-month-view .vuecal.vuecal--default-theme {
+    height: 441px;
 
-    .vuecal__cell-content {
-      justify-content: flex-start;
-      height: 100%;
-      align-items: flex-end;
+    .vuecal__scrollable--month-view {
+      .vuecal__cell {height: 50px;}
+      .vuecal__event {height: 15px;margin-top: 1px;}
+      .vuecal__event-details {font-size: 11px;white-space: nowrap;padding: 0;}
+      .vuecal__cell--has-events {flex-direction: row-reverse;overflow: hidden;}
     }
-
-    .vuecal__cell-date {padding: 3px 4px;}
   }
 
   .event-indicator--cell .vuecal__cell--has-events:before {background-color: #fffacd;}
