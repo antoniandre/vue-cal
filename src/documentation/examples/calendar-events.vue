@@ -582,14 +582,17 @@ example(title="Events v-model" anchor="events-v-model")
     style="height: 301px")
 
 //- Example.
-example(title="Events on Month View" anchor="events-on-month-view")
+example(title="Month View Events & Count" anchor="events-on-month-view")
   template(#desc)
-    p.
-      When #[code events-on-month-view] is set to true, the events will show in full on the month view.#[br]
-      When #[code events-counts] is set to true, the events count will be shown on every cell that has
-      events, and you can customize this however you like. Here are 3 different random options that you can
-      achieve with CSS.#[br]
-      In order to keep the same cell height on this view, you can set a height in CSS.
+    ul
+      li.
+        When #[code events-on-month-view] is set to true, the events will show in full on the month view
+        (you can customize via CSS or #[code #event] slots).
+      li.
+        When #[code event-count] is set to true, the events count will be shown on every cell that has
+        events (you can customize via CSS or via the #[code #event-count] slots). In this example you will
+        see 3 different (random) options that you can achieve with CSS.
+      li In order to keep the same cell height on this view, you can set a height in CSS.
     .w-flex.column.align-end.gap1
       w-switch(
         v-model="exEventsMonthView.showEvents"
@@ -602,18 +605,29 @@ example(title="Events on Month View" anchor="events-on-month-view")
       w-radios(
         v-model="exEventsMonthView.eventCountStyle"
         inline
-        label-color="grey"
         :items="exEventsMonthView.eventCountStyleOptions"
         :disabled="!exEventsMonthView.showEventCount") Events Count Style
+      p.caption For illustration, the slot option will only count orange events (with the `leisure` class).
       w-switch(
         v-model="exEventsMonthView.highlightCells"
         label-on-left) Highlight Cells with Events
-  template(#code-html).
-    &lt;vue-cal
-      :events="events"{{ exEventsMonthView.showEvents ? '\n  events-on-month-view' : '' }}{{ exEventsMonthView.showEventCount ? '\n  event-count' : '' }}
-      :views="{ days: { cols: 5, rows: 1 }, month: {} }"
-      view="month"&gt;
-    &lt;/vue-cal&gt;
+  template(#code-html)
+    | &lt;vue-cal
+    |   :events="events"{{ exEventsMonthView.showEvents ? '\n  events-on-month-view' : '' }}{{ exEventsMonthView.showEventCount ? '\n  event-count' : '' }}
+    |   :views="{ days: { cols: 5, rows: 1 }, month: {} }"
+    |   view="month"&gt;
+    | &lt;/vue-cal&gt;
+    |
+    template(v-if="exEventsMonthView.showEventCount && exEventsMonthView.eventCountStyle === 'slot'")
+      |
+      | &lt;!-- Only count leisure class events. --&gt;
+      | &lt;template #event-count="{ events }"&gt;
+      |   &lt;span v-if="events.filter(event => event.class === 'leisure').length"&gt;
+      |     {{ '\{\{ events.filter(event => event.class === \'leisure\').length \}\}' }}
+      |   &lt;/span&gt;
+      | &lt;/template&gt;
+    template(v-else)
+
   template(#code-css)
     | .vuecal {
     |   height: 441px;
@@ -652,14 +666,14 @@ example(title="Events on Month View" anchor="events-on-month-view")
     template(v-else-if="exEventsMonthView.eventCountStyle === 'dash'")
       |   .event-count--dash .vuecal__cell-events-count {
       |     position: absolute;
-      |     bottom: 14px;
+      |     top: 24px;
       |     right: 12px;
       |     text-align: center;
       |     width: 10px;
       |     height: 2px;
       |     overflow: hidden;
-      |     background-color: currentColor;
-      |     opacity: 0.3;
+      |     background-color: var(--vuecal-base-color);
+      |     opacity: 0.5;
       |     border-radius: 100rem;
       |   }
       |
@@ -676,6 +690,12 @@ example(title="Events on Month View" anchor="events-on-month-view")
       |     &amp;:after {content: ' events -';}
       |   }
       |
+    template(v-else)
+
+    template(v-if="exEventsMonthView.highlightCells")
+      |   .vuecal__cell--has-events {background-color: {{ store.darkMode ? '#00dbff1c' : '#fffacda8' }};}
+      |
+    template(v-else)
     | }
   vue-cal(
     :events="events"
@@ -687,9 +707,15 @@ example(title="Events on Month View" anchor="events-on-month-view")
     view="month"
     :dark="store.darkMode"
     :class="exEventsMonthView.classes")
+    template(
+      v-if="exEventsMonthView.showEventCount && exEventsMonthView.eventCountStyle === 'slot'"
+      #event-count="{ events }")
+      span.warning--bg.bdrsr.w-icon.size--xs.pa2.mr-6.mb1.align-self-end(
+        v-if="events.filter(event => event.class === 'leisure').length")
+        | {{ events.filter(event => event.class === 'leisure').length }}
 
 //- Example.
-example(title="Events Indicators" anchor="events-indicators")
+example(title="Custom Event Count" anchor="custom-event-count")
   template(#desc)
     .todo-tag.d-iflex COMING SOON
   //- template(#desc)
@@ -697,7 +723,7 @@ example(title="Events Indicators" anchor="events-indicators")
       When #[code eventsCount] is set to #[code true], the events will be counted on #[code month],
       #[code year] &amp; #[code years] and a number will appear in each cell that contain one or more
       events.#[br]
-      You can customize the events count via CSS or via the #[code #events-count] slot.
+      You can customize the events count via CSS or via the #[code #event-count] slot.
     p.my3.w-flex.align-center
       span.mr2 Choose an indicator style:
       w-radios.d-iblock(
@@ -1662,7 +1688,12 @@ const exEventsMonthView = reactive({
   showEventCount: ref(false),
   highlightCells: ref(false),
   eventCountStyle: ref('dot'),
-  eventCountStyleOptions: [{ label: 'Dot', value: 'dot' }, { label: 'Dash', value: 'dash' }, { label: 'Caption', value: 'caption' }],
+  eventCountStyleOptions: [
+    { label: 'Dot', value: 'dot' },
+    { label: 'Dash', value: 'dash' },
+    { label: 'Caption', value: 'caption' },
+    { label: 'Use slot', value: 'slot' }
+  ],
   classes: computed(() => ({
     [`event-count--${exEventsMonthView.eventCountStyle}`]: exEventsMonthView.showEventCount,
     'vuecal--highlight-cells': exEventsMonthView.highlightCells
@@ -1909,44 +1940,6 @@ const exAllDayEvents = reactive({
     span {color: #777;font-size: 0.9em;}
   }
 
-  // Events on month view example.
-  .event-indicator--dash .vuecal__cell-events-count {
-    top: 70%;
-    width: 14px;
-    height: 2px;
-    color: transparent;
-  }
-
-  .event-indicator--dot .vuecal__cell-events-count {
-    top: 70%;
-    width: 4px;
-    min-width: 0;
-    height: 4px;
-    padding: 0;
-    color: transparent;
-  }
-
-  .ex--events-indicators {
-    .vuecal__cell-events-count span {
-      background: var(--w-primary-color);
-      height: 100%;
-      border-radius: 12px;
-      display: block;
-    }
-  }
-
-  .ex--custom-events-count {
-    .vuecal__cell-events-count span {
-      background-color: #fd9c42;
-      height: 100%;
-      min-width: 12px;
-      padding: 0 3px;
-      border-radius: 12px;
-      display: block;
-    }
-    .vuecal__cell-events-count {background: transparent;}
-  }
-
   .example--events-on-month-view .vuecal.vuecal--default-theme {
     height: 441px;
 
@@ -1993,14 +1986,14 @@ const exAllDayEvents = reactive({
     }
     &.event-count--dash .vuecal__cell-events-count {
       position: absolute;
-      bottom: 14px;
+      top: 24px;
       right: 12px;
       text-align: center;
       width: 10px;
       height: 2px;
       overflow: hidden;
-      background-color: currentColor;
-      opacity: 0.3;
+      background-color: var(--vuecal-base-color);
+      opacity: 0.5;
       border-radius: 100rem;
     }
   }
