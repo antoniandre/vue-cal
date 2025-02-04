@@ -7,7 +7,7 @@ import pkg from './package.json'
 
 const banner = `/**
   * ${pkg.name} v${pkg.version}
-  * (c) ${new Date().getFullYear()} ${pkg.author}
+  * (c) 2024-${new Date().getFullYear()} ${pkg.author}
   * @license MIT
   */\n`
 
@@ -15,8 +15,8 @@ const bundlingConf = {
   minify: true,
   lib: {
     entry: resolve(__dirname, 'src/vue-cal/index.js'),
-    name: 'vuecal', // The global name of the library
-    fileName: format => `vue-cal.${format}.js` // Output filename pattern
+    name: 'vuecal', // The global name of the library.
+    fileName: format => `vue-cal.${format}.js` // Output filename pattern.
   },
   rollupOptions: {
     // Make sure to externalize deps that shouldn't be bundled into library.
@@ -27,11 +27,10 @@ const bundlingConf = {
     },
     output: {
       banner,
-      globals: {
-        vue: 'Vue' // Vue should be treated as external and available as a global variable
-      }
+      globals: { vue: 'Vue' } // Vue should be treated as external and available as a global variable.
     }
-  }
+  },
+  copyPublicDir: false // Prevent copying `public/` to `dist` folder.
 }
 
 export default defineConfig({
@@ -53,8 +52,8 @@ export default defineConfig({
     viteStaticCopy({
       targets: [
         {
-          src: 'src/vue-cal/i18n/*.json', // Source directory of your JSON files
-          dest: 'i18n' // Destination in the dist folder
+          src: 'src/vue-cal/i18n/*.json',
+          dest: 'i18n' // Destination in the dist folder.
         }
       ]
     })
