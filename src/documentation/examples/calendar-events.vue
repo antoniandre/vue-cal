@@ -715,76 +715,6 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
         | {{ events.filter(event => event.class === 'leisure').length }}
 
 //- Example.
-example(title="Custom Event Count" anchor="custom-event-count")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    p.mb0.
-      When #[code eventsCount] is set to #[code true], the events will be counted on #[code month],
-      #[code year] &amp; #[code years] and a number will appear in each cell that contain one or more
-      events.#[br]
-      You can customize the events count via CSS or via the #[code #event-count] slot.
-    p.my3.w-flex.align-center
-      span.mr2 Choose an indicator style:
-      w-radios.d-iblock(
-        v-model="indicatorStyle"
-        inline
-        label-color="grey"
-        :items="indicatorStyleOptions")
-  //- template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      xs
-      :time-from="10 * 60"
-      date-picker
-      events-count-on-year-view
-      view="month"
-      :events="events"&gt;
-  //- template(#code-css).
-    /* Default indicator is count, but you can override it with one of the following rules. */
-
-    /* Dash indicator */
-    .vuecal__cell-events-count {
-      width: 18px;
-      height: 2px;
-      color: transparent;
-    }
-
-    /* Dot indicator */
-    .vuecal__cell-events-count {
-      width: 4px;
-      min-width: 0;
-      height: 4px;
-      padding: 0;
-      color: transparent;
-    }
-
-    /* Cell background indicator */
-    .vuecal__cell--has-events {background-color: #fffacd;}
-    .vuecal__cell-events-count {display: none;}
-  //- .w-flex.maa.justify-center.wrap.gap5
-    vue-cal(
-      :dark="store.darkMode"
-      :class="'event-indicator--' + indicatorStyle"
-      :selected-date="stringToDate('2018-11-19')"
-      xs
-      :time-from="10 * 60"
-      view="month"
-      date-picker
-      events-count-on-year-view
-      :events="events")
-    vue-cal.vuecal--yellow-theme(
-      :class="'event-indicator--' + indicatorStyle"
-      :selected-date="stringToDate('2018-11-19')"
-      xs
-      :time-from="10 * 60"
-      date-picker
-      events-count-on-year-view
-      view="month"
-      :events="events"
-      :dark="store.darkMode")
-
-//- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
     .todo-tag.d-iflex COMING SOON
@@ -1014,70 +944,6 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       :time-to="16 * 60"
       editable-events
       @event-drop="onEventDrop")
-
-//- Example.
-example(title="Multiple Day Events" anchor="multiple-day-events")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    p.
-      Multiple day events work like a set of single day events linked together.#[br]
-      Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
-      Updating the duration by dragging will also update on all the days.#[br]
-      Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
-      the option #[code resize-x].
-    strong Drag &amp; drop is not available on multiple day events for now.
-
-    alert(tip).
-      3 CSS classes are available to target the event first day, the last day and all the days in between:
-      #[code event-start], #[code event-middle], #[code event-end].
-  //- template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="8 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
-      editable-events
-      resize-x
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  //- template(#code-js).
-    data: () => ({
-      events: [
-        {
-          start: '2018-11-16 10:00',
-          end: '2018-11-20 12:37',
-          title: 'Running Marathon',
-          content: '&lt;i class="icon mdi mdi-run"&gt;&lt;/i&gt;',
-          class: 'sport'
-        },
-        {
-          start: '2018-11-20 10:00',
-          end: '2018-11-20 10:25',
-          title: 'Drink water!',
-          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
-          class: 'health'
-        },
-        {
-          start: '2018-11-21 19:00',
-          end: '2018-11-23 11:30',
-          title: 'Trip to India',
-          content: '&lt;i class="icon mdi mdi-airplane"&gt;&lt;/i&gt;',
-          class: 'leisure'
-        }
-      ]
-    })
-  //- vue-cal.ex--multiple-day-events(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-to="23 * 60"
-    hide-weekends
-    events-count-on-year-view
-    editable-events
-    resize-x
-    :events="multipleDayEvents")
 
 //- Example.
 example(anchor="recurring-events")
@@ -1362,6 +1228,70 @@ example(title="All day events" anchor="all-day-events")
     :show-all-day-events="['short', true, false][exAllDayEvents.showAllDayEvents]"
     :events-on-month-view="[true, 'short'][exAllDayEvents.shortEventsOnMonthView * 1]"
     :events="exAllDayEvents.events")
+
+//- Example.
+example(title="Multiple Day Events" anchor="multiple-day-events")
+  template(#desc)
+    .todo-tag.d-iflex COMING SOON
+  //- template(#desc)
+    p.
+      Multiple day events work like a set of single day events linked together.#[br]
+      Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
+      Updating the duration by dragging will also update on all the days.#[br]
+      Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
+      the option #[code resize-x].
+    strong Drag &amp; drop is not available on multiple day events for now.
+
+    alert(tip).
+      3 CSS classes are available to target the event first day, the last day and all the days in between:
+      #[code event-start], #[code event-middle], #[code event-end].
+  //- template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week']"
+      hide-weekends
+      editable-events
+      resize-x
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  //- template(#code-js).
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-16 10:00',
+          end: '2018-11-20 12:37',
+          title: 'Running Marathon',
+          content: '&lt;i class="icon mdi mdi-run"&gt;&lt;/i&gt;',
+          class: 'sport'
+        },
+        {
+          start: '2018-11-20 10:00',
+          end: '2018-11-20 10:25',
+          title: 'Drink water!',
+          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
+          class: 'health'
+        },
+        {
+          start: '2018-11-21 19:00',
+          end: '2018-11-23 11:30',
+          title: 'Trip to India',
+          content: '&lt;i class="icon mdi mdi-airplane"&gt;&lt;/i&gt;',
+          class: 'leisure'
+        }
+      ]
+    })
+  //- vue-cal.ex--multiple-day-events(
+    :dark="store.darkMode"
+    :selected-date="stringToDate('2018-11-19')"
+    :time-from="8 * 60"
+    :time-to="23 * 60"
+    hide-weekends
+    events-count-on-year-view
+    editable-events
+    resize-x
+    :events="multipleDayEvents")
 </template>
 
 <script setup>
