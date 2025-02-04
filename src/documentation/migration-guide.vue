@@ -140,7 +140,9 @@ ul
   li #[code showTimeInCells] was removed: if you need to render time in cells, you can use cells slots.
   li #[code eventsCountOnYearView] was renamed #[code eventsCount].
   li #[code dragToCreateThreshold] was renamed #[code eventCreateMinDrag].
-  li #[code sticky-split-labels] was removed. Any provided schedule heading is now always positioned in the header.
+  li #[code stickySplitLabels] was removed. Any provided schedule heading is now always positioned in the header.
+  li #[code eventsCountOnYearView] was removed. If you need such a feature, you can request this feature in a Github issue with a use case explanation.
+  li #[code eventCount] was added in order to toggle the event count display on the month view.
 </template>
 
 <script setup>
