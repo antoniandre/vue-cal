@@ -25,6 +25,8 @@
       slot(name="cell-events" v-bind="params")
     template(v-else-if="$slots.event" #event="params")
       slot(name="event" v-bind="params")
+    template(v-else-if="$slots['event-count']" #event-count="params")
+      slot(name="event-count" v-bind="params")
 </template>
 
 <script setup>

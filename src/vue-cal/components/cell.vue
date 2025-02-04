@@ -87,7 +87,9 @@
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  .vuecal__cell-events-count(v-if="showCellEventsCount") {{ cellEvents.length }}
+  slot(v-if="$slots['event-count']" name="event-count" :events="cellEvents")
+  .vuecal__cell-events-count(v-else-if="showCellEventsCount") {{ cellEvents.length }}
+
   .vuecal__now-line(
     v-if="nowLine.show"
     :style="nowLine.style"
