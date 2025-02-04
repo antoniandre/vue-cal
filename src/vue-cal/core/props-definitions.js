@@ -56,7 +56,6 @@ export const props = {
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO:
-  eventsCountOnYearView: { type: Boolean, default: false },
   minEventWidth: { type: Number, default: 0 },
   minScheduleWidth: { type: Number, default: 0 },
   overlapsPerTimeStep: { type: Boolean, default: false },
