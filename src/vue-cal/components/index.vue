@@ -64,7 +64,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, provide, ref, useAttrs, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
@@ -92,7 +92,7 @@ const emit = defineEmits([
 ])
 
 const vuecalEl = useTemplateRef('vuecal-el')
-const vuecal = useVueCal(props, emit, useAttrs(), vuecalEl)
+const vuecal = useVueCal({ props, emit, attrs: useAttrs(), vuecalEl, uid: useId() })
 const { config, view, dateUtils } = vuecal
 const isDraggingCell = ref(false)
 const isDraggingEvent = ref(false)

@@ -3,7 +3,11 @@
   v-on="eventListeners"
   ref="eventEl"
   :class="classes"
-  :style="styles")
+  :style="styles"
+  :draggable="isDraggable"
+  @dragstart="isDraggable && dnd.eventDragStart($event, event)"
+  @drag="isDraggable && dnd.eventDrag($event, event)"
+  @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
@@ -11,7 +15,7 @@
         | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
-  .vuecal__event-resizer(v-if="config.time && config.editableEvents.resize && event.resizable !== false")
+  .vuecal__event-resizer(v-if="isResizable")
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete
 </template>
@@ -21,7 +25,7 @@ import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end'])
-const { config, view } = inject('vuecal')
+const { config, view, dnd } = inject('vuecal')
 
 const props = defineProps({
   event: { type: Object, required: true }
@@ -48,6 +52,10 @@ const touch = reactive({
   cellEl: null, // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   schedule: null
 })
+
+const isDraggable = computed(() => config.editableEvents.drag && event.drag !== false)
+const isResizable = computed(() => config.time && config.editableEvents.resize && event.resizable !== false)
+const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false)
 
 const classes = computed(() => ({
   [`vuecal__event--${event._.id}`]: true,

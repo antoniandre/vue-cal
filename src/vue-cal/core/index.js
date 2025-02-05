@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import { defaults, useConfig } from './config'
+import { useDragAndDrop } from '../modules/drag-and-drop'
 import { useDateUtils } from '../utils/date'
 import { useEvents } from './events'
 import { useView } from './view'
@@ -31,9 +32,10 @@ export const globalState = reactive({
  * @param {object} props The Vue props definition from the root VueCal component (index.vue).
  * @param {function} emit The Vue emit function from the root VueCal component (index.vue).
  */
-export const useVueCal = (props, emit, attrs, vuecalEl) => {
+export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
   // This reactive store is the one and only source of truth.
   const state = reactive({
+    uid, // The Vuecal instance unique ID, used for dnd source-target identification.
     emit,
     texts: { ...globalState.texts }, // Make texts reactive before a locale is loaded.
     // The date utils composable.
@@ -43,13 +45,15 @@ export const useVueCal = (props, emit, attrs, vuecalEl) => {
     now: new Date(),
     config: {},
     eventsManager: {},
-    view: {} // At any time this object will be filled with current view details and visible events.
+    view: {}, // At any time this object will be filled with current view details and visible events.
+    dnd: {} // Drag and drop module.
   })
 
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts))
   state.config = useConfig(state, props, attrs)
   state.eventsManager = useEvents(state)
   state.view = useView(state, vuecalEl)
+  state.dnd = useDragAndDrop(state)
 
   return state
 }
