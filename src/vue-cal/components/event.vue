@@ -64,7 +64,12 @@ const classes = computed(() => ({
   'vuecal__event--multiday': !!event._?.multiday,
   'vuecal__event--cut-top': event._?.startMinutes < config.timeFrom,
   'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo,
-  'vuecal__event--dragging': touch.dragging,
+  // Only apply the dragging class on the event copy that is being dragged.
+  'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
+  // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
+  // dragged. Sometimes when dragging fast the dragging-ghost class would get stuck and events stays
+  // invisible, so if dragging is false, disable the dragging-ghost class as well.
+  'vuecal__event--dragging-ghost': event._.dragging && event._.draggingGhost,
   'vuecal__event--resizing': touch.resizing
 }))
 
@@ -253,6 +258,9 @@ onUnmounted(() => event._.unregister())
   position: absolute;
   left: 0;
   right: 0;
+
+  &--dragging {opacity: 1;}
+  &--dragging-ghost {opacity: 0;transition: opacity 0.1s;}
 
   .vuecal__scrollable--month-view & {position: relative;}
 
