@@ -116,7 +116,7 @@ const props = defineProps({
 const emit = defineEmits(['cell-drag-start', 'cell-drag-end', 'event-drag-start', 'event-drag-end'])
 
 const vuecal = inject('vuecal')
-const { view, config, dateUtils, eventsManager } = vuecal
+const { view, config, dateUtils, eventsManager, dnd } = vuecal
 const isToday = computed(() => dateUtils.isToday(props.start))
 
 const cellEl = ref(null)
@@ -379,6 +379,12 @@ const cellEventListeners = computed(() => {
       externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
     }
   }
+
+  // @todo: detach the listeners on unmount.
+  eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
+  eventListeners.dragover = e => dnd.cellDragOver(e, cellInfo.value)
+  eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
+  eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
 
   return eventListeners
 })

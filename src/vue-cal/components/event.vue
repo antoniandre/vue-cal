@@ -6,8 +6,7 @@
   :style="styles"
   :draggable="isDraggable"
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
-  @drag="isDraggable && dnd.eventDrag($event, event)"
-  @dragend="isDraggable && dnd.eventDragEnd($event, event)")
+  @dragend="isDraggable && dnd.eventDragEnd(event)")
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
