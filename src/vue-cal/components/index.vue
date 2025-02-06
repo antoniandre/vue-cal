@@ -48,7 +48,9 @@
               @cell-drag-start="isDraggingCell = true"
               @cell-drag-end="isDraggingCell = false"
               @event-drag-start="isDraggingEvent = true"
-              @event-drag-end="isDraggingEvent = false")
+              @event-drag-end="isDraggingEvent = false"
+              @event-resize-start="isResizingEvent = true"
+              @event-resize-end="isResizingEvent = false")
               template(v-if="$slots.cell" #cell="params")
                 slot(name="cell" v-bind="params")
               template(v-if="!$slots.cell && $slots['cell-date']" #cell-date="params")
@@ -98,6 +100,7 @@ const vuecal = useVueCal({ props, emit, attrs: useAttrs(), vuecalEl, uid: useId(
 const { config, view, dateUtils } = vuecal
 const isDraggingCell = ref(false)
 const isDraggingEvent = ref(false)
+const isResizingEvent = ref(false)
 const hasTimeColumn = computed(() => config.time && (view.isDay || view.isDays || view.isWeek))
 
 const weekNumbers = computed(() => {
@@ -118,6 +121,7 @@ const wrapperClasses = computed(() => ({
   'vuecal--timeless': !config.time,
   'vuecal--dragging-cell': isDraggingCell.value,
   'vuecal--dragging-event': isDraggingEvent.value,
+  'vuecal--resizing-event': isResizingEvent.value,
   'vuecal--has-schedules': config.schedules
 }))
 

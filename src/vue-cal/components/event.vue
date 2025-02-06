@@ -23,7 +23,7 @@
 import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
-const emit = defineEmits(['event-drag-start', 'event-drag-end'])
+const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
 const { config, view, dnd } = inject('vuecal')
 
 const props = defineProps({
@@ -52,9 +52,9 @@ const touch = reactive({
   schedule: null
 })
 
-const isDraggable = computed(() => config.editableEvents.drag && event.drag !== false)
-const isResizable = computed(() => config.time && config.editableEvents.resize && event.resizable !== false)
-const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false)
+const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
+const isResizable = computed(() => config.time && config.editableEvents.resize && event.resizable !== false && !event.background)
+const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
 const classes = computed(() => ({
   [`vuecal__event--${event._.id}`]: true,
@@ -173,7 +173,7 @@ const onDocMousemove = e => {
 
   if (touch.fromResizer && !touch.resizing) {
     // Internal emit to the root component to add a CSS class on wrapper while dragging.
-    emit('event-drag-start')
+    emit('event-resize-start')
     // If there's an @event-resize-start external listener, call it.
     eventListeners.value.resizeStart?.({ e, event })
   }
@@ -217,7 +217,7 @@ const onDocMouseup = async e => {
   if (touch.resizing) {
     // If there's an @event-resize-end external listener, call it.
     eventListeners.value.resizeEnd?.({ e, event })
-    emit('event-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+    emit('event-resize-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
   }
   else if (touch.dragging) {
     // If there's an @event-drag-end external listener, call it.

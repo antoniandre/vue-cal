@@ -47,6 +47,8 @@
           :event="event"
           @event-drag-start="emit('event-drag-start')"
           @event-drag-end="emit('event-drag-end')"
+          @event-resize-start="emit('event-resize-start')"
+          @event-resize-end="emit('event-resize-end')"
           @event-deleted="onEventDelete")
           template(v-if="$slots.event" #event="params")
             slot(name="event" v-bind="params")
@@ -81,6 +83,8 @@
         :event="event"
         @event-drag-start="emit('event-drag-start')"
         @event-drag-end="emit('event-drag-end')"
+        @event-resize-start="emit('event-resize-start')"
+        @event-resize-end="emit('event-resize-end')"
         @event-deleted="onEventDelete")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
@@ -113,7 +117,14 @@ const props = defineProps({
 
 // These emits are only internal to the root component.
 // External emits are not using `emit` and manually call any listener handler directly (more flexible).
-const emit = defineEmits(['cell-drag-start', 'cell-drag-end', 'event-drag-start', 'event-drag-end'])
+const emit = defineEmits([
+  'cell-drag-start',
+  'cell-drag-end',
+  'event-drag-start',
+  'event-drag-end',
+  'event-resize-start',
+  'event-resize-end'
+])
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils, eventsManager, dnd } = vuecal
