@@ -20,7 +20,11 @@ export const useEvents = vuecal => {
       byId: {} // A map of all the events indexed by ID for fast lookup.
     }
 
-    config.events.forEach(event => {
+    // First sort the events by start date so the latest comes last in the DOM and has a natural
+    // higher z-index for readability when overlapping.
+    const sortedEvents = config.events.sort((a, b) => a.start - b.start < 0 ? -1 : 1)
+
+    sortedEvents.forEach(event => {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
       normalizeEventDates(event)
 

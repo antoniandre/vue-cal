@@ -259,7 +259,7 @@ onUnmounted(() => event._.unregister())
   left: 0;
   right: 0;
 
-  &--dragging {opacity: 1;}
+  &--dragging {opacity: 1;z-index: 100;}
   &--dragging-ghost {opacity: 0;transition: opacity 0.1s;}
 
   .vuecal__scrollable--month-view & {position: relative;}
@@ -278,15 +278,9 @@ onUnmounted(() => event._.unregister())
   }
 }
 
-.vuecal-delete-btn-enter-active {
-  transition: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.vuecal-delete-btn-enter-from {
-  transform: scale(0) rotate(-90deg);
-}
-.vuecal-delete-btn-enter-to {
-  transform: scale(1);
-}
+.vuecal-delete-btn-enter-active {transition: 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);}
+.vuecal-delete-btn-enter-from {transform: scale(0) rotate(-90deg);}
+.vuecal-delete-btn-enter-to {transform: scale(1);}
 .vuecal-delete-btn-leave-active {
   transition: 0.3s ease-in-out;
   transform: scale(0);

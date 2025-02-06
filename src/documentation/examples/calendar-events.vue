@@ -1838,11 +1838,6 @@ const exAllDayEvents = reactive({
     .vuecal__event-time {display: none;}
   }
 
-  .vuecal__event--dragging {
-    background-color: rgba(grey, 0.3) !important;
-    border: none !important;
-  }
-
   .vuecal__event-title {font-weight: bold;}
 
   // Create events example.

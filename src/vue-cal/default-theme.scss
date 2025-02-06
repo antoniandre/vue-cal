@@ -308,12 +308,14 @@
     line-height: 1;
     width: 90%;
     display: flex;
+    z-index: 1;
 
     &--background {
       border: none;
       border-radius: 0;
       overflow: visible;
       width: 100%;
+      z-index: 0;
     }
     &--cut-top {
       border-top: none;
@@ -325,6 +327,8 @@
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
+
+    &:not(.vuecal__event--background):hover {z-index: 10;} // Bring to front on hover.
 
     &-details {
       flex-grow: 1;
