@@ -1898,9 +1898,8 @@ const exAllDayEvents = reactive({
     }
     &.event-count--dot .vuecal__cell-events-count {
       position: absolute;
-      bottom: 14px;
-      right: 15%;
-      transform: translateX(-50%);
+      top: 33px;
+      right: 15px;
       text-align: center;
       width: 4px;
       aspect-ratio: 1;
