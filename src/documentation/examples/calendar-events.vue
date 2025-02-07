@@ -717,41 +717,33 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
     p.mb2.
       In addition to the obvious event dragging itself, there are quite a few things that are good
-      to know about the drag &amp; drop.
-    alert(warning)
-      ul
-        li.
-          Drag &amp; drop is a module (to keep Vue Cal light weight).#[br]
-          For Vue Cal versions that don't support ESM (prior 4.3.4 on Vue 3 or 3.11.0 on Vue 2),
-          it must be loaded separately: #[br]#[code import 'vue-cal/dist/drag-and-drop.js'].
-        li
-          strong Drag &amp; drop is only available on single day events.
+      to know about the drag &amp; drop functionality.
+    alert
+      strong Drag &amp; drop is only available for single-day events.
     h5 Dragging over header
     ul
       li.
-        While you drag an event over the view selector buttons, or the previous and next arrows,
-        or even the today button, they will get into a highlighted state and if you hold over for
-        a few milliseconds they will change the view so you can drop the event you are holding
+        While you drag an event over the view selector buttons, the previous and next arrows,
+        or even the today button, they will get into a highlighted state. If you hold over them for
+        a few milliseconds, they will change the view so you can drop the event you are holding
         on another date of the calendar.
       li.
-        while dragged over, the previous and next buttons will keep changing the view until you go
+        While dragged over, the previous and next buttons will keep changing the view until you move
         away from the button.
       li.
-        Dragging an event over the today button will take you to Today's date, and if you're in
-        a #[code years] or #[code year] view it will also go to the next available
+        Dragging an event over the today button will take you to today's date. If you're in
+        a #[code years] or #[code year] view, it will also go to the next available
         narrower view from #[code month] downwards.
     h5 Dragging over a cell
     ul
       li.
         If you drag an event over a cell or a day schedule
-        (ref. #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
+        (refer to #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
         highlighted state, showing you where the event would go if you drop it.
       li.
-        You can drop an event in any cell. But because it does not make much sense to drop it into a
+        You can drop an event in any cell. However, because it does not make much sense to drop it into a
         #[code years] or #[code year] view, if you hold over a cell
         in these views or in #[code month] view, it will go to the next available narrower
         view so you can at least see a day cell.
@@ -770,7 +762,7 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
       li.
         By default, when you drop the event it will start exactly where you dropped it,
         but if you prefer you can use the #[code snapToInterval] option to dictate where it should
-          snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
+        snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
         If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
         the native HTML5 drag &amp; drop.
     h5 Emitted events
@@ -793,10 +785,10 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         #[code .vuecal__event--dragging] CSS class.
       li.
         While dragging, a copy of the original event is made and that's what you drag
-        (native HTML5 drag &amp; drop behavior). The original event receive the
+        (native HTML5 drag &amp; drop behavior). The original event receives the
         #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
         You can use that class to give it a different style.
-  //- template(#code-html).
+  template(#code-html).
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
       today-button
@@ -808,10 +800,10 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
       :events="events"
       :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
     &lt;/vue-cal&gt;
-  //- template(#code-css).
+  template(#code-css).
     .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
 
-  //- vue-cal(
+  vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     today-button
