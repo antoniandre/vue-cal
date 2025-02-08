@@ -790,14 +790,8 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         You can use that class to give it a different style.
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      today-button
-      :time-from="10 * 60"
-      :time-to="23 * 60"
-      hide-weekends
-      :snap-to-interval="15"
-      editable-events
       :events="events"
+      editable-events
       :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
     &lt;/vue-cal&gt;
   template(#code-css).
