@@ -242,7 +242,7 @@ export function useDragAndDrop (vuecal) {
         event._.dragging = false
         event.start = newStart
         event.end = newEnd
-        if (cell.schedule || cell.schedule === 0) event.schedule = cell.schedule
+        if (e.target.dataset.schedule) event.schedule = ~~e.target.dataset.schedule
       }
       else {
         // Case where events are fetched from the backend and removed from the array when not in the view.
