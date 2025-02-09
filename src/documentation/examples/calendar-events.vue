@@ -927,6 +927,75 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       style="height: 301px")
 
 //- Example.
+example(title="Overlapping events" anchor="overlapping-events")
+  template(#desc)
+    p.
+      Overlapping, editable &amp; deletable events.#[br]
+      Try to resize &amp; delete events to see the overlapping redrawn.
+
+    .w-flex.mb3.align-center
+      | Optionally you can set a min width (in percent) to the events:
+      w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
+        w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
+        | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
+    div(style="min-height: 40px")
+      w-transition-expand(y)
+        .grey(v-if="minEventWidth").
+          #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
+          events that would be smaller than that (e.g. with 3 events side by side)
+    alert.mb6.
+      In some cases you may want to set the events overlaps calculation only per same time step
+      (default time step is 1 hour), like in
+      #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
+      You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
+  template(#code-html).
+    &lt;vue-cal
+      editable-events
+      :min-event-width="minEventWidth"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    data: () => ({
+      minEventWidth: 0,
+      events: [
+        {
+          start: '2018-11-21 14:00',
+          end: '2018-11-21 22:00',
+          title: 'A big thing',
+          content: '&lt;i class="icon mdi mdi-emoticon-outline"&gt;&lt;/i&gt;',
+          class: 'health'
+        },
+        {
+          start: '2018-11-21 16:00',
+          end: '2018-11-21 19:00',
+          title: 'Another thing',
+          content: '&lt;i class="icon mdi mdi-thumb-up-outline"&gt;&lt;/i&gt;',
+          class: 'blue-event'
+        },
+        {
+          start: '2018-11-20 18:30',
+          end: '2018-11-20 20:30',
+          title: 'Cross-fit',
+          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
+          class: 'sport'
+        },
+        ...
+      ]
+    })
+
+  vue-cal(
+    :events="exOverlappingEvents.events"
+    editable-events
+    :min-event-width="minEventWidth"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :views-bar="false"
+    :dark="store.darkMode"
+    style="height: 301px")
+
+//- Example.
 example(anchor="recurring-events")
   template(#title)
     | Recurring Events
@@ -1043,81 +1112,6 @@ example(anchor="recurring-events")
           }
         ]
       })
-
-//- Example.
-example(title="Overlapping events" anchor="overlapping-events")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    p.
-      Overlapping, editable &amp; deletable events.#[br]
-      Try to resize &amp; delete events to see the overlapping redrawn.
-
-    .w-flex.mb3.align-center
-      | Optionally you can set a min width (in percent) to the events:
-      w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
-        w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
-        | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
-    div(style="min-height: 40px")
-      w-transition-expand(y)
-        .grey(v-if="minEventWidth").
-          #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
-          events that would be smaller than that (e.g. with 3 events side by side)
-    alert.mb6.
-      In some cases you may want to set the events overlaps calculation only per same time step
-      (default time step is 1 hour), like in
-      #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
-      You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
-  //- template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="10 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
-      editable-events
-      :min-event-width="minEventWidth"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  //- template(#code-js).
-    data: () => ({
-      minEventWidth: 0,
-      events: [
-        {
-          start: '2018-11-21 14:00',
-          end: '2018-11-21 22:00',
-          title: 'A big thing',
-          content: '&lt;i class="icon mdi mdi-emoticon-outline"&gt;&lt;/i&gt;',
-          class: 'health'
-        },
-        {
-          start: '2018-11-21 16:00',
-          end: '2018-11-21 19:00',
-          title: 'Another thing',
-          content: '&lt;i class="icon mdi mdi-thumb-up-outline"&gt;&lt;/i&gt;',
-          class: 'blue-event'
-        },
-        {
-          start: '2018-11-20 18:30',
-          end: '2018-11-20 20:30',
-          title: 'Cross-fit',
-          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
-          class: 'sport'
-        },
-        ...
-      ]
-    })
-
-  //- vue-cal(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="10 * 60"
-    :time-to="23 * 60"
-    :views="['day', 'week']"
-    hide-weekends
-    editable-events
-    :min-event-width="minEventWidth"
-    :events="overlappingEvents")
 
 //- Example.
 example(title="All day events" anchor="all-day-events")
@@ -1628,36 +1622,6 @@ const exExternalEventsDragDrop = reactive({
   }
 })
 
-const exMultipleDayEvents = reactive({
-  events: [
-    {
-      start: '2018-11-16 10:00',
-      end: '2018-11-20 12:37',
-      title: 'Running Marathon',
-      content: '<i class="w-icon mdi mdi-run"></i>',
-      class: 'sport'
-    },
-    {
-      start: '2018-11-20 10:00',
-      end: '2018-11-20 10:25',
-      title: 'Drink water!',
-      content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
-      class: 'health drink-water'
-    },
-    {
-      start: '2018-11-21 19:00',
-      end: '2018-11-23 11:30',
-      title: 'Trip to India',
-      content: '<i class="w-icon mdi mdi-airplane"></i>',
-      class: 'leisure'
-    }
-  ]
-})
-
-const exRecurringEvents = reactive({
-
-})
-
 const exOverlappingEvents = reactive({
   events: [
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
@@ -1691,6 +1655,10 @@ const exOverlappingEvents = reactive({
     }
   ],
   minEventWidth: ref(0)
+})
+
+const exRecurringEvents = reactive({
+
 })
 
 const exAllDayEvents = reactive({
@@ -1778,6 +1746,32 @@ const exAllDayEvents = reactive({
     }
   ],
   shortEventsOnMonthView: ref(false)
+})
+
+const exMultipleDayEvents = reactive({
+  events: [
+    {
+      start: '2018-11-16 10:00',
+      end: '2018-11-20 12:37',
+      title: 'Running Marathon',
+      content: '<i class="w-icon mdi mdi-run"></i>',
+      class: 'sport'
+    },
+    {
+      start: '2018-11-20 10:00',
+      end: '2018-11-20 10:25',
+      title: 'Drink water!',
+      content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
+      class: 'health drink-water'
+    },
+    {
+      start: '2018-11-21 19:00',
+      end: '2018-11-23 11:30',
+      title: 'Trip to India',
+      content: '<i class="w-icon mdi mdi-airplane"></i>',
+      class: 'leisure'
+    }
+  ]
 })
 </script>
 
