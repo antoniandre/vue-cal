@@ -812,8 +812,6 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
   template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
       It is also possible to move an event from one calendar to another.#[br]#[br]
@@ -828,8 +826,8 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
         modify the data, you will also have to remove the event from its original data source yourself
         - unless you want to create a copy.#[br]
         Learn how in the example source code below.
-  //- template(#code-html).
-    &lt;!-- Three HTML5 draggable events. --&gt;
+  template(#code-html).
+    &lt;!-- HTML5 draggable events --&gt;
     &lt;div
       class="external-event"
       v-for="(item, i) in draggables"
@@ -838,21 +836,15 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       @dragstart="onEventDragStart($event, item)"&gt;
       &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
       ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
-      &lt;div&gt;{{ '\{\{ item.content \}\}' }}&lt;/div&gt;
     &lt;/div&gt;
 
     &lt;vue-cal
-      small
       :views-bar="false"
-      hide-weekends
-      :views="['week']"
-      :time-from="9 * 60"
-      :time-to="16 * 60"
       editable-events
       @event-drop="onEventDrop"&gt;
     &lt;/vue-cal&gt;
 
-  //- template(#code-js).
+  template(#code-js).
     export default {
       data: () => ({
         draggables: [
@@ -861,20 +853,17 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
             // from the callback triggered on drop into Vue Cal.
             id: 1,
             title: 'Ext. Event 1',
-            content: 'content 1',
             duration: 60
           },
           {
             id: 2,
             title: 'Ext. Event 2',
-            content: 'content 2',
             duration: 30
           },
           {
             id: 3,
             title: 'Ext. Event 3',
-            content: 'content 3'
-            // No defined duration here: will default to 2 hours.
+            // No defined duration: defaults to a time step on drop.
           }
         ]
       }),
@@ -900,36 +889,42 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       }
     }
 
-  //- .w-flex.mt4.wrap
-    div.mr2
+  .w-flex.mt4.wrap.gap2
+    .external-events.w-flex.column.gap2(
+      @drop="exExternalEventsDragDrop.onEventDropInBank"
+      @dragover.prevent)
+      .title4.primary.text-center Ext. Events
       .external-event(
-        v-for="(item, i) in draggables"
+        v-for="(item, i) in exExternalEventsDragDrop.events"
         :key="i"
         draggable="true"
-        @dragstart="onEventDragStart($event, item)")
-          strong.mr2 {{ item.title }}
-          span ({{ item.duration ? `${item.duration} min` : 'no duration' }})
-          div {{ item.content }}
-    vue-cal.mr1.grow.external-events-drag-and-drop(
-      small
-      :views-bar="false"
-      hide-weekends
-      :views="['week']"
-      :time-from="9 * 60"
-      :time-to="16 * 60"
+        @dragstart="exExternalEventsDragDrop.onEventDragStart($event, item)")
+        strong.mr2 {{ item.title }}
+        .caption ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+    vue-cal.grow(
+      @event-drop="exExternalEventsDragDrop.onEventDrop"
       editable-events
-      @event-drop="onEventDrop"
-      :dark="store.darkMode")
-    vue-cal.ml1.grow.external-events-drag-and-drop(
+      :views-bar="false"
+      :views="{ days: { cols: 3, rows: 1 } }"
+      view="days"
+      :time-from="9 * 60"
+      :time-to="15 * 60"
+      small
+      :today-button="false"
       :dark="store.darkMode"
-      small
-      :views-bar="false"
-      hide-weekends
-      :views="['week']"
-      :time-from="9 * 60"
-      :time-to="16 * 60"
+      style="height: 301px")
+    vue-cal.grow(
+      @event-drop="exExternalEventsDragDrop.onEventDrop"
       editable-events
-      @event-drop="onEventDrop")
+      :views-bar="false"
+      :views="{ days: { cols: 3, rows: 1 } }"
+      view="days"
+      :time-from="9 * 60"
+      :time-to="15 * 60"
+      small
+      :today-button="false"
+      :dark="store.darkMode"
+      style="height: 301px")
 
 //- Example.
 example(anchor="recurring-events")
@@ -1589,16 +1584,6 @@ const exDragAndDrop = reactive({
   ]
 })
 
-const exEventsIndicators = reactive({
-  indicatorStyle: ref('count'),
-  indicatorStyleOptions: ref([
-    { label: 'count (default)', value: 'count' },
-    { label: 'dash', value: 'dash' },
-    { label: 'dot', value: 'dot' },
-    { label: 'cell background', value: 'cell' }
-  ])
-})
-
 const exEventsMonthView = reactive({
   showEvents: ref(true),
   showEventCount: ref(false),
@@ -1618,23 +1603,9 @@ const exEventsMonthView = reactive({
 
 const exExternalEventsDragDrop = reactive({
   events: ref([
-    {
-      id: 1,
-      title: 'Ext. Event 1',
-      content: 'content 1',
-      duration: 60
-    },
-    {
-      id: 2,
-      title: 'Ext. Event 2',
-      content: 'content 2',
-      duration: 30
-    },
-    {
-      id: 3,
-      title: 'Ext. Event 3',
-      content: 'content 3'
-    }
+    { id: 1, title: 'Ext. Event 1', duration: 60 },
+    { id: 2, title: 'Ext. Event 2', duration: 30 },
+    { id: 3, title: 'Ext. Event 3' }
   ]),
   onEventDragStart: (e, draggable) => {
     e.dataTransfer.setData('event', JSON.stringify(draggable))
@@ -1642,9 +1613,18 @@ const exExternalEventsDragDrop = reactive({
   },
   onEventDrop: ({ event, originalEvent, external }) => {
     if (external) {
-      const extEventToDeletePos = exExternalEventsDragDrop.events.value.findIndex(item => item.id === originalEvent.id)
-      if (extEventToDeletePos > -1) exExternalEventsDragDrop.events.value.splice(extEventToDeletePos, 1)
+      const extEventToDeletePos = exExternalEventsDragDrop.events.findIndex(item => item.id === originalEvent.id)
+      if (extEventToDeletePos > -1) exExternalEventsDragDrop.events.splice(extEventToDeletePos, 1)
     }
+  },
+  onEventDropInBank: e => {
+    const incomingEvent = JSON.parse(e.dataTransfer.getData('event') || '{}')
+    exExternalEventsDragDrop.events.push({
+      ...incomingEvent,
+      duration: incomingEvent.end ? (incomingEvent.end - incomingEvent.start) / 60000 : 60
+    })
+    console.log(incomingEvent)
+    debugger
   }
 })
 
@@ -1832,23 +1812,30 @@ const exAllDayEvents = reactive({
   }
 
   // External events drag and drop example.
-  .external-events-drag-and-drop {
+  .example--external-events-drag-and-drop {
     flex-basis: 0 !important;
     min-width: 285px;
-  }
-  .external-events-drag-and-drop .vuecal__event, .external-event {
-    background-color: rgba(160, 220, 255, 0.5);
-    border: 1px solid rgba(0, 100, 150, 0.15);
-    padding: 0.2em 0.4em;
-    cursor: move;
-    cursor: grab;
-  }
+    --vuecal-primary-color: #316191;
+    [data-theme="light"] & {--vuecal-primary-color: #1976D2;}
 
-  .external-event {
-    margin-bottom: 0.5em;
-    width: 12.5em;
+    .external-events {
+      width: 70px;
+      background-color: color-mix(in srgb, var(--w-contrast-bg-color) 3%, transparent);
+      border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent);
+      padding: 4px;
+      border-radius: 4px;
+      flex-shrink: 0;
+    }
+    .external-event {
+      background-color: var(--vuecal-primary-color);
+      color: #fff;
+      cursor: grab;
+      border-radius: 4px;
+      font-size: 13px;
+      padding: 2px 4px;
 
-    span {color: #777;font-size: 0.9em;}
+      .caption {color: rgba(255, 255, 255, 0.7);}
+    }
   }
 
   .example--events-on-month-view .vuecal.vuecal--default-theme {
