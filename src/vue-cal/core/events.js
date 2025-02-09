@@ -127,7 +127,7 @@ export const useEvents = vuecal => {
 
     newEvent._ = { fireCreated: true } // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
-    return true
+    return newEvent
   }
 
   /**

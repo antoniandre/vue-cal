@@ -119,7 +119,7 @@ export function useDragAndDrop (vuecal) {
     // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
     // event from the first one.
     const { fromVueCal, toVueCal } = dragging
-    if (toVueCal && fromVueCal !== toVueCal) eventsManager.deleteEvent(event)
+    if (toVueCal && fromVueCal !== toVueCal) eventsManager.deleteEvent(event._.id, 3)
 
     dragging.fromVueCal = null
     dragging.toVueCal = null
@@ -265,7 +265,7 @@ export function useDragAndDrop (vuecal) {
         start: newStart,
         end: newEnd,
         ...((cell.schedule || cell.schedule === 0) && { schedule: cell.schedule }),
-        _: { id: incomingEvent._.id || incomingEvent.id }
+        _: { id: incomingEvent._?.id || incomingEvent.id }
       })
     }
 
