@@ -104,7 +104,7 @@
 <script setup>
 import { computed, inject, nextTick, onBeforeUnmount, reactive, ref } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
-import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
+import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 import Event from './event.vue'
 
 const props = defineProps({
@@ -391,11 +391,29 @@ const cellEventListeners = computed(() => {
     }
   }
 
-  // @todo: detach the listeners on unmount.
-  eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
-  eventListeners.dragover = e => dnd.cellDragOver(e, cellInfo.value)
-  eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
-  eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
+  if (externalHandlers.dblclick) {
+    // If there's a dblclick external listener, recalculate the cursor position and date
+    // since the mouse up has already fired and cleared the touch object.
+    // Note: increasing the touch object longevity to keep the cursor position and date would not
+    // work because the dblclick can have a fast click and a long hold second click and it should
+    // still fire.
+    eventListeners.dblclick = e => {
+      const clientY = (e.touches?.[0] || e).clientY
+      const { top } = cellEl.value.getBoundingClientRect()
+      const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
+
+      const minutes = percentageToMinutes(cursorYPercent, config)
+      const date = new Date(props.start)
+      date.setMinutes(minutes)
+
+      const cursor = {
+        y: cursorYPercent,
+        date
+      }
+      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor })
+    }
+  }
+
 
   return eventListeners
 })
