@@ -414,6 +414,12 @@ const cellEventListeners = computed(() => {
     }
   }
 
+  if (config.editableEvents.drag) {
+    eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
+    eventListeners.dragover = e => dnd.cellDragOver(e, cellInfo.value)
+    eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
+    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
+  }
 
   return eventListeners
 })
@@ -554,10 +560,18 @@ const createEventIfAllowed = async e => {
   else view.createEvent(eventToCreate)
 }
 
+const removeEventListeners = () => {
+  Object.keys(cellEventListeners.value).forEach(event => {
+    cellEl.value.removeEventListener(event, cellEventListeners.value[event])
+  })
+}
+
 onBeforeUnmount(async () => {
   // Removing the calendar events will trigger a rerender of all the cells in the view because the array
   // of events is a reactive object. So only remove them from the source of truth when the cell is unmounted.
   eventsDeleted.value.forEach(eventId => eventsManager.deleteEvent(eventId, 3))
+
+  removeEventListeners() // Prevent potential memory leaks.
   await nextTick() // Batch updates to avoid multiple re-renders.
 })
 </script>
