@@ -319,6 +319,8 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 //- Example.
 example(title="Overlapping events" anchor="overlapping-events")
   template(#desc)
+  .todo-tag.d-iflex.ml2 COMING SOON
+  //- template(#desc)
     p.
       Overlapping, editable &amp; deletable events.#[br]
       Try to resize &amp; delete events to see the overlapping redrawn.
@@ -338,13 +340,13 @@ example(title="Overlapping events" anchor="overlapping-events")
       (default time step is 1 hour), like in
       #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
       You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
-  template(#code-html).
+  //- template(#code-html).
     &lt;vue-cal
       editable-events
       :min-event-width="minEventWidth"
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  template(#code-js).
+  //- template(#code-js).
     data: () => ({
       minEventWidth: 0,
       events: [
@@ -373,7 +375,7 @@ example(title="Overlapping events" anchor="overlapping-events")
       ]
     })
 
-  vue-cal(
+  //- vue-cal(
     :events="exOverlappingEvents.events"
     editable-events
     :min-event-width="minEventWidth"
@@ -1021,56 +1023,24 @@ const exMultipleDayEvents = reactive({
   .vuecal__event {
     text-align: center;
 
+    &.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+    &.health {background-color: #57cea9cc;border-color: #90d2be;}
+    &.sport {background-color: #ff6666d9;border-color: #eb5252;}
+    &.pink-event {background-color: #ff3a8fb3;border-color: #eb267b;}
+    &.blue-event {background-color: #64c8ffcc;border-color: #50b4eb;}
+    &.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
+
+    &.lunch {
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 20px);
+      border: none;
+      z-index: -1;
+
+      .vuecal__event-time {display: none;}
+    }
+
     i {margin: 2px 0;font-size: 23px;}
-  }
 
-  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
-  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
-  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
-  .vuecal__event.pink-event {background-color: #ff3a8fb3;border-color: #eb267b;}
-  .vuecal__event.blue-event {background-color: #64c8ffcc;border-color: #50b4eb;}
-  .vuecal__event.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
-
-  .vuecal__event.lunch {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 20px);
-    border: none;
-    z-index: -1;
-
-    .vuecal__event-time {display: none;}
-  }
-
-  .vuecal__event-title {font-weight: bold;}
-
-  // Create events example.
-  .ex--create-events {
-    .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
-  }
-
-  // External events drag and drop example.
-  .example--external-events-drag-and-drop {
-    flex-basis: 0 !important;
-    min-width: 285px;
-    --vuecal-primary-color: #316191;
-    [data-theme="light"] & {--vuecal-primary-color: #1976D2;}
-
-    .external-events {
-      width: 70px;
-      background-color: color-mix(in srgb, var(--w-contrast-bg-color) 3%, transparent);
-      border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent);
-      padding: 4px;
-      border-radius: 4px;
-      flex-shrink: 0;
-    }
-    .external-event {
-      background-color: var(--vuecal-primary-color);
-      color: #fff;
-      cursor: grab;
-      border-radius: 4px;
-      font-size: 13px;
-      padding: 2px 4px;
-
-      .caption {color: rgba(255, 255, 255, 0.7);}
-    }
+    &-title {font-weight: bold;}
   }
 
   .example--events-on-month-view .vuecal.vuecal--default-theme {
@@ -1129,9 +1099,6 @@ const exMultipleDayEvents = reactive({
       border-radius: 100rem;
     }
   }
-
-  .event-indicator--cell .vuecal__cell--has-events:before {background-color: #fffacd;}
-  .event-indicator--cell .vuecal__cell-events-count {display: none;}
 
   .ex--multiple-day-events .vuecal__event {
     border-radius: 5px;

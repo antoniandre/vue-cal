@@ -710,15 +710,6 @@ const events = [
   }
 ]
 
-const exOpenEventDetails = reactive({
-  showDialog: false,
-  openDialog: ({ event }) => {
-    exOpenEventDetails.event = event
-    exOpenEventDetails.showDialog = true
-  },
-  events: [...events]
-})
-
 const exCreateEventsExampleEl = ref(null)
 const exCreateEventsVueCalEl = ref(null)
 const exCreateEvents = reactive({
@@ -885,25 +876,25 @@ const exExternalEventsDragDrop = reactive({
   .vuecal__event {
     text-align: center;
 
+    &.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
+    &.health {background-color: #57cea9cc;border-color: #90d2be;}
+    &.sport {background-color: #ff6666d9;border-color: #eb5252;}
+    &.pink-event {background-color: #ff3a8fb3;border-color: #eb267b;}
+    &.blue-event {background-color: #64c8ffcc;border-color: #50b4eb;}
+    &.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
+
+    &.lunch {
+      background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 20px);
+      border: none;
+      z-index: -1;
+
+      .vuecal__event-time {display: none;}
+    }
+
     i {margin: 2px 0;font-size: 23px;}
+
+    &-title {font-weight: bold;}
   }
-
-  .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
-  .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
-  .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
-  .vuecal__event.pink-event {background-color: #ff3a8fb3;border-color: #eb267b;}
-  .vuecal__event.blue-event {background-color: #64c8ffcc;border-color: #50b4eb;}
-  .vuecal__event.yellow-event {background-color: #ffc85abf;border-color: #ffc356;}
-
-  .vuecal__event.lunch {
-    background: repeating-linear-gradient(45deg, transparent, transparent 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 10px, color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent) 20px);
-    border: none;
-    z-index: -1;
-
-    .vuecal__event-time {display: none;}
-  }
-
-  .vuecal__event-title {font-weight: bold;}
 
   // Create events example.
   .ex--create-events {
