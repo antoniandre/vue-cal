@@ -1,9 +1,6 @@
 <template lang="pug">
 //- Example.
-example(
-  ref="exCreateEventsExampleEl"
-  title="Create Events"
-  anchor="create-events")
+example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-events")
   template(#desc)
     .w-flex.wrap.gap3
       .grow.xs7

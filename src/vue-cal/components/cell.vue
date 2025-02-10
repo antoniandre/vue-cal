@@ -352,7 +352,7 @@ const cellEventListeners = computed(() => {
       // When interacting with an event, skip calling the cell DOM event handler.
       // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
       // we can receive the on mouseup from the document and stop event drag&drop.
-      if ((e.target || e.e?.target).matches?.('.vuecal__event, .vuecal__event *')) return
+      if ((e.target || e.e?.target).closest?.('.vuecal__event')) return
 
       // Check if e.type to not rewrap the DOM event in an object if already done.
       handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
