@@ -26,7 +26,9 @@ top-bar(v-if="$route.name !== 'home'" fixed)
               li
                 router-link.nav__item(to="/examples/schedules") Schedules
               li
-                router-link.nav__item(to="/examples/calendar-events") Calendar Events
+                router-link.nav__item(to="/examples/calendar-events--display") Events Display
+              li
+                router-link.nav__item(to="/examples/calendar-events--interactions") Events Interactions
               li
                 router-link.nav__item(to="/examples/dom-events") DOM Events
               li

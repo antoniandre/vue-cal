@@ -43,23 +43,24 @@ const examples = [
   { route: { name: 'examples-schedules', hash: '#ex--special-hours' }, label: 'Special / Business Hours' },
   { route: { name: 'examples-schedules', hash: '#ex--schedules' }, label: 'Schedules & Schedule Events' },
 
-  { class: 'heading', route: '/examples/calendar-events', label:'CALENDAR EVENTS', icon: 'mdi mdi-calendar-today-outline' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events' }, label: 'Events & Background Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--timeless-events' }, label: 'Timeless Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a Dialog on Event Click' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--create-events' }, label: 'Create Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--create-events-programmatically' }, label: 'Create Events Programmatically' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--delete-events' }, label: 'Delete Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--edit-events' }, label: 'Edit Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-v-model' }, label: 'Events v-model' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-indicators' }, label: 'Events Indicators' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--drag-and-drop' }, label: 'Event Drag &amp; Drop' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--external-events-drag-and-drop' }, label: 'External Events Drag &amp; Drop' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--multiple-day-events' }, label: 'Multiple Day Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--recurring-events' }, label: 'Recurring Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--overlapping-events' }, label: 'Overlapping Events' },
-  { route: { name: 'examples-calendar-events', hash: '#ex--all-day-events' }, label: 'All Day Events' },
+  { class: 'heading', route: '/examples/calendar-events--display', label: 'CALENDAR EVENTS - DISPLAY', icon: 'mdi mdi-calendar-today-outline' },
+  { route: { name: 'examples-events-display', hash: '#ex--events' }, label: 'Events & Background Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--timeless-events' }, label: 'Timeless Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a Dialog on Event Click' },
+  { route: { name: 'examples-events-display', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' },
+  { route: { name: 'examples-events-display', hash: '#ex--multiple-day-events' }, label: 'Multiple Day Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--recurring-events' }, label: 'Recurring Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--overlapping-events' }, label: 'Overlapping Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--all-day-events' }, label: 'All Day Events' },
+
+  { class: 'heading', route: '/examples/calendar-events--interactions', label: 'CALENDAR EVENTS - INTERACTIONS', icon: 'mdi mdi-calendar-today-outline' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--create-events' }, label: 'Create Events' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--create-events-programmatically' }, label: 'Create Events Programmatically' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--delete-events' }, label: 'Delete Events' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--edit-events' }, label: 'Edit Events' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--events-v-model' }, label: 'Events v-model' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--drag-and-drop' }, label: 'Event Drag &amp; Drop' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--external-events-drag-and-drop' }, label: 'External Events Drag &amp; Drop' },
 
   { class: 'heading', route: '/examples/dom-events', label:'DOM EVENTS', icon: 'mdi mdi-gesture-double-tap' },
   { route: { name: 'examples-dom-events', hash: '#ex--emitted-events' }, label: 'Vue Cal Emitted Events' },
@@ -114,5 +115,6 @@ const filteredExamples = computed(() => {
 
     .router-link-exact-active {color: var(--w-primary-color);}
   }
+  li:first-child .heading {margin-top: 0;}
 }
 </style>

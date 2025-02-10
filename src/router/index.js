@@ -52,10 +52,16 @@ const routes = [
         meta: { title: 'schedules' }
       },
       {
-        path: 'calendar-events',
-        name: 'examples-calendar-events',
-        component: () => import('@/documentation/examples/calendar-events.vue'),
-        meta: { title: 'Calendar Events' }
+        path: 'calendar-events--display',
+        name: 'examples-events-display',
+        component: () => import('@/documentation/examples/calendar-events-display.vue'),
+        meta: { title: 'Calendar Events Display' }
+      },
+      {
+        path: 'calendar-events--interactions',
+        name: 'examples-events-interactions',
+        component: () => import('@/documentation/examples/calendar-events-interactions.vue'),
+        meta: { title: 'Calendar Events Interactions' }
       },
       {
         path: 'dom-events',
