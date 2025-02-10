@@ -64,7 +64,7 @@ aside {
       content: '';
       position: absolute;
       inset: 0;
-      border-right: 2px solid transparent;
+      border-right: 1px solid transparent;
       transform-origin: right;
       transform: scaleX(0);
       transition: 0.25s transform;
@@ -113,7 +113,7 @@ aside {
       transition: none;
       content: '';
       position: absolute;
-      inset: 0 -3px 0 auto;
+      inset: 0 -1px 0 auto;
       border: 12px solid transparent;
       border-right-color: var(--w-base-bg-color);
       z-index: 1;

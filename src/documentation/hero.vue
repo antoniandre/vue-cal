@@ -2,7 +2,7 @@
 .hero(:class="{ ready }")
   .mb10.tagline
     .title2.grey-dark1 Go for the date picker...
-    .title1.text-right.primary-dark1 or unleash the full potential!
+    .title1.text-right.shiny-text.ml12.mt3.lh0 or unleash the full potential!
   .w-flex.wrap.align-center.justify-center.hero-calendars
     .datepicker-wrap.ma4
       //- Date picker.
@@ -201,7 +201,9 @@ $kate: #406fbf;
       opacity: 0;
       transition: 1s 1.5s cubic-bezier(0.68, -0.55, 0.27, 1.55);
       transform: translateY(0.4rem) scale(0.9);
+      color: color-mix(in srgb, var(--w-primary-color) 85%, transparent);
     }
+    [data-theme="light"] & .title1 {color: color-mix(in srgb, var(--w-primary-color) 55%, white 30%);}
   }
 
   .hero-calendars {
@@ -322,6 +324,22 @@ $kate: #406fbf;
       color: #a2dfd4;
     }
   }
+}
+
+.shiny-text {
+  position: relative;
+  display: inline-flex;
+  color: transparent;
+  background: linear-gradient(90deg, #f00, #ff0, #0f0, #0ff, #00f, #f0f, #f00);
+  background-size: 200% 100%;
+  background-clip: text;
+  -webkit-background-clip: text;
+  animation: shiny-text 10s infinite linear;
+}
+
+@keyframes shiny-text {
+  0% {background-position: 0% 50%;}
+  100% {background-position: 200% 50%;}
 }
 
 // Media queries.
