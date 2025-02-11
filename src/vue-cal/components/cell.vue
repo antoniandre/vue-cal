@@ -448,14 +448,13 @@ const cursorInfo = computed(() => {
 // --------------------------------------------------------
 const onCellClick = () => {
   view.updateSelectedDate(props.start)
-  view.updateViewDate(props.start)
 
   if (config.clickToNavigate) {
     if ((view.isMonth || view.isDays || view.isWeek) && config.availableViews.day) view.switch('day')
     else if (view.isYear && config.availableViews.month) view.switch('month')
     else if (view.isYears && config.availableViews.year) view.switch('year')
-    view.updateViewDate(props.start)
   }
+  view.updateViewDate(props.start)
 }
 
 // On mousedown OR TOUCHSTART of the cell.
