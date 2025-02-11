@@ -7,7 +7,7 @@ body:
     attributes:
       value: |
         ## IS THIS BUG FOR V5 OR V4?
-        > V4 issues should be reported [here](https://github.com/antoniandre/vue-cal-v4/issues).
+        > THIS BUG REPORT IS ONLY FOR THE V5. v4 issues should be reported [here](https://github.com/antoniandre/vue-cal-v4/issues).
 
   - type: input
     id: vue-cal-version

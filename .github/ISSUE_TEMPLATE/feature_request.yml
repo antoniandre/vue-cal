@@ -6,6 +6,8 @@ body:
   - type: markdown
     attributes:
       value: |
+        > THIS FEAT. REQUEST IS ONLY FOR THE V5. v4 issues should be reported [here](https://github.com/antoniandre/vue-cal-v4/issues).
+
         ## Feature Request Guidelines
         Thank you for taking the time to suggest a feature! Please provide as much detail as possible to help us evaluate and implement your idea.
 
