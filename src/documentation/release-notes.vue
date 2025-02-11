@@ -1,7 +1,7 @@
 <template lang="pug">
 h1.title1 Release Notes
 
-title-link.title2.mt12(h2) Version 5.0.0
+title-link.title2.mt12(h2 anchor="v5") Version 5.0.0
 p.
   Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
   composables, while focusing on two key aspects: #[strong performance and flexibility].
