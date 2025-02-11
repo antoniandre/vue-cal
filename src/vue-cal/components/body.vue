@@ -92,10 +92,12 @@ onMounted(() => {
 })
 
 onBeforeUnmount(() => {
-  bodyEl.value.removeEventListener('mousemove', onMousemove)
-  bodyEl.value.removeEventListener('touchmove', onMousemove)
-  bodyEl.value.removeEventListener('mouseleave', onMouseleave)
-  bodyEl.value.removeEventListener('touchend', onMouseleave)
+  if (bodyEl.value) {
+    bodyEl.value.removeEventListener('mousemove', onMousemove)
+    bodyEl.value.removeEventListener('touchmove', onMousemove)
+    bodyEl.value.removeEventListener('mouseleave', onMouseleave)
+    bodyEl.value.removeEventListener('touchend', onMouseleave)
+  }
 })
 </script>
 
