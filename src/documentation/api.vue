@@ -16,7 +16,7 @@ w-accordion(
     strong.code {{ item.label }}
 
 //- View Object.
-h2.w-flex.justify-space-between.mt12.mb2
+h2.w-flex.justify-space-between.mb2
   title-link(div anchor="view") The View Object
   .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedViewObject = Array(10).fill($event)") Expand All
@@ -153,7 +153,7 @@ w-accordion.mt3(
         }
 
 //- Event Object.
-h2.w-flex.justify-space-between.mt12.mb2
+h2.w-flex.justify-space-between.mb2
   title-link(div anchor="view") The Event Object
   w-switch.my1.body(@update:model-value="expandedEventObject = Array(15).fill($event)") Expand All
 p.caption.size--md.lh1.
@@ -275,7 +275,7 @@ w-accordion.mt3(
         }
 
 //- Options list.
-h2.w-flex.justify-space-between.mt12.mb2
+h2.w-flex.justify-space-between.mb2
   title-link(div anchor="options") Options
   .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All

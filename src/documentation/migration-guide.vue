@@ -19,7 +19,7 @@ p.mt4 We recommend reading through this guide completely before beginning the mi
 
 p Let’s get started! 🚀
 
-title-link.mt12(h2 anchor="new") New Features &amp; Improvements
+title-link(h2 anchor="new") New Features &amp; Improvements
 p.
   Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
   composables, while focusing on two key aspects: #[strong performance and flexibility].
@@ -38,7 +38,7 @@ ul
   li Directly #[strong preload a locale externally] to avoid handling Promises.
   li Reworked options for #[strong more intuitive usage].
 
-title-link.mt12(h2 anchor="global-changes") Global Changes
+title-link(h2 anchor="global-changes") Global Changes
 ul
   li
     p The Date prototypes are not injected by default anymore, and very easy to add, you control when:
@@ -103,7 +103,7 @@ ul
   li #[code #no-event] slot was removed
   li #[code #week-numbers-cell] slot was renamed #[code #week-number]
 
-title-link.mt12(h2 anchor="props-changes") Props Changes
+title-link(h2 anchor="props-changes") Props Changes
 ul
   li #[code activeView] was renamed #[code view].
   li #[code selectedDate] does not necessary control the view navigation anymore.

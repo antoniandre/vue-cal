@@ -25,7 +25,7 @@ hero
 
   main
     //- Github project.
-    title-link.mb4(h2 anchor="github-and-notes") Github project &nbsp;&amp;&nbsp; important notes
+    title-link.mt0.mb4(h2 anchor="github-and-notes") Github project &nbsp;&amp;&nbsp; important notes
     .announcement.announcement--github.w-flex.align-center
       w-icon.mr5.lightgrey(size="46") mdi mdi-github
       a.title4(href="https://github.com/antoniandre/vue-cal" target="_blank")

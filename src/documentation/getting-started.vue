@@ -2,7 +2,7 @@
 h1.title1 Getting Started
 
 //- Installation
-title-link.mt12(h2 anchor="installation") Installation
+title-link(h2 anchor="installation") Installation
 p.mt2 You have 2 options: using #[strong NPM] or #[strong.code &lt;script&gt;] tag.
 ul.ml4
   li
@@ -111,7 +111,7 @@ ul.ml4
                 | Vue Cal + Vue 2 (UMD build)
                 w-icon.ml1(sm style="margin-top: -2px") mdi mdi-open-in-new
 
-title-link.mt12.pt12(h2 anchor="how-to-use") How to Use
+title-link(h2 anchor="how-to-use") How to Use
 p Once you've imported the Vue Cal component, it's super simple. In your template just use:
 ssh-pre.my2(language="html-vue" :dark="store.darkMode").
   &lt;vue-cal ... /&gt;
@@ -141,7 +141,7 @@ alert
 vue-cal(small :dark="store.darkMode")
 
 //- CSS notes.
-title-link.mt12.pt12(h2 anchor="css-notes") CSS Notes
+title-link(h2 anchor="css-notes") CSS Notes
 p You can easily change the calendar design with CSS.
 
 p.mt1 Vue Cal comes with a default height of 500px, you can override this via CSS.

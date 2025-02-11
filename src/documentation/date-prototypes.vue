@@ -65,7 +65,7 @@ w-accordion.mt12.mb4.root-accordion(
           li Using your loaded locale for any formatting.
 
 //- How to use.
-title-link.mt12.mb2(h2 anchor="how-to-use") How to Use
+title-link.mb2(h2 anchor="how-to-use") How to Use
 p It's built in, just call the function #[span.code addDatePrototypes()] once in your project, and you're good to go.
 ssh-pre.mt2(language="js" :dark="store.darkMode").
   import { addDatePrototypes } from '@/vue-cal'
@@ -81,11 +81,11 @@ ssh-pre.mt1(language="js" :dark="store.darkMode").
   console.log(currentTime.formatTime()) // outputs: {{ (new Date()).formatTime() }}
 
 //- Prototypes.
-h2.w-flex.justify-space-between.align-center.mt12.mb2
+h2.w-flex.justify-space-between.align-center.mb2
   title-link(div anchor="prototypes") Prototypes
   div(@click.native.stop)
-    w-switch.body(
-      @update:model-value="expandedPrototypes = [...expandedPrototypes].fill($event)") Expand All
+    w-switch.body(@update:model-value="expandedPrototypes = [...expandedPrototypes].fill($event)")
+      | Expand All
 
 w-accordion(
   v-model="expandedPrototypes"
