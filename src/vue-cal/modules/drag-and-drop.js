@@ -32,9 +32,10 @@ export function useDragAndDrop (vuecal) {
     const { timeStep, timeCellHeight, timeFrom } = config
 
     const clientY = (e.touches?.[0] || e).clientY
-    const { top } = e.target.getBoundingClientRect()
+    // currentTarget is the cell DOM node, whereas target is whatever DOM node we drop the event on.
+    const { top } = e.currentTarget.getBoundingClientRect()
     const y = clientY - top - ~~e.dataTransfer.getData('cursor-grab-at')
-    return percentageToMinutes(pxToPercentage(y, e.target), config)
+    return percentageToMinutes(pxToPercentage(y, e.currentTarget), config)
   }
 
   /**
