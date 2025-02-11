@@ -17,9 +17,14 @@ w-grid.gap4.ml0.mt12(:columns="{ xs: 2, sm: 3, md: 3, lg: 6, xl: 6 }")
       | Schedules
 
   .category.highlight-box
-    router-link(to="/examples/calendar-events")
+    router-link(to="/examples/calendar-events--display")
       w-icon(size="2.3rem") mdi mdi-calendar-today-outline
-      | Calendar Events
+      | Events Display
+
+  .category.highlight-box
+    router-link(to="/examples/calendar-events--interactions")
+      w-icon(size="2.3rem") mdi mdi-calendar-today-outline
+      | Events Interactions
 
   .category.highlight-box
     router-link(to="/examples/dom-events")

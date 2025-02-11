@@ -889,7 +889,7 @@ w-accordion.mt2(
         li Dragging and dropping events.
         li Resizing events by dragging the handle showing at the bottom of each event if #[span.code time] is set to #[span.code true]
         li Deleting events by click and hold an event.
-        li Creating events by click and drag (refer to the #[router-link(to="/examples/calendar-events#ex--create-events") Create events] example).
+        li Creating events by click and drag (refer to the #[router-link(to="/examples/calendar-events--interactions#ex--create-events") Create events] example).
       alert
         ul
           li
