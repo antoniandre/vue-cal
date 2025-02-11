@@ -5,8 +5,6 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task Drag &amp; drop events
-      .task Reject event resize/drag on condition (E.g. overlap)
       .task All-day events
       .task Multiple day events
       .task Recurring events
@@ -24,10 +22,13 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
+      .task Events overlap
+      .task Reject event resize/drag on condition (E.g. overlap)
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Drag &amp; drop events
       .task v-model:events
       .task custom days view
       .task view day offset
