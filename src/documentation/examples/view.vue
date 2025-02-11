@@ -27,7 +27,7 @@ example(title="Views" anchor="views")
   template(#code-html).
     &lt;vue-cal view="month" :views="['{{ exViews.enabledViews.join('\', \'') }}']" /&gt;
 
-  vue-cal.ex--disable-views(
+  vue-cal(
     :dark="store.darkMode"
     view="month"
     :views="exViews.enabledViews")

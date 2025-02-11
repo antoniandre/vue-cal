@@ -117,8 +117,7 @@ ul
   li #[code hideViewsBar] was renamed #[code viewsBar], default true.
   li #[code hideTitleBar] was renamed #[code titleBar], default true.
   li #[code todayButton] now defaults to true, previously false.
-  li #[code clickToNavigate] was removed, you can attach your own DOM events to cells.
-  li #[code dblClickToNavigate] was removed, you can attach your own DOM events to cells.
+  li #[code dblClickToNavigate] was removed, you can attach your own DOM events to cells if you need this specific behavior.
   li #[code day-splits] was renamed #[code schedules].
   li #[code onEventClick] was removed, you can attach from outside.
   li #[code onEventCreate] was removed, you can attach from outside and control whether to create the event or reject the creation.
