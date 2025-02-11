@@ -283,7 +283,6 @@ example(title="Delete Events" anchor="delete-events")
 //- Example.
 example(title="Edit Events" anchor="edit-events")
   template(#desc)
-    .todo-tag.d-iflex.mt6 FINISH THIS EXAMPLE
     p.mb2.
       Editing events is allowed or denied when the #[code editable-events] option is set to
       #[code true] or #[code false]. But more granularly, #[code editable-events] can be provided
@@ -372,15 +371,22 @@ example(title="Events v-model" anchor="events-v-model")
   template(#code-html).
     &lt;button
       @click="events.push({
-        start: '2018-11-20 12:00',
-        end: '2018-11-20 17:00',
+        start: new Date(),
+        end: new Date().addHours(1), // Using Vue Cal's Date prototypes.
         title: 'Event 1'
       })"&gt;Add Event&lt;/button&gt;
     &lt;button @click="events.pop()"&gt;Remove last event&lt;/button&gt;
 
-    &lt;vue-cal
-      v-model:events="events"&gt;
-    &lt;/vue-cal&gt;
+    &lt;vue-cal v-model:events="events" /&gt;
+  template(#code-js).
+    const events = [
+      {
+        start: new Date(new Date().setHours(9, 0, 0, 0)),
+        end: new Date(new Date().setHours(10, 0, 0, 0)),
+        title: 'Event 1'
+      },
+      ...
+    ]
   vue-cal(
     ref="exEventsVModelVuecalRef"
     v-model:events="exEventsVModel.events"
@@ -397,6 +403,7 @@ example(title="Events v-model" anchor="events-v-model")
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
+    .todo-tag.d-iflex TO REVIEW
     p.mb2.
       In addition to the obvious event dragging itself, there are quite a few things that are good
       to know about the drag &amp; drop functionality.
@@ -492,6 +499,7 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
   template(#desc)
+    .todo-tag.d-iflex TO REVIEW &amp; RETEST
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
       It is also possible to move an event from one calendar to another.#[br]#[br]
