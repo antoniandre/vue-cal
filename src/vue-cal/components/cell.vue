@@ -85,7 +85,8 @@
         @event-drag-end="emit('event-drag-end')"
         @event-resize-start="emit('event-resize-start')"
         @event-resize-end="emit('event-resize-end')"
-        @event-deleted="onEventDelete")
+        @event-deleted="onEventDelete"
+        :style="eventStyles[event._.id]")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
@@ -102,7 +103,7 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, onBeforeUnmount, reactive, ref } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 import Event from './event.vue'
@@ -268,6 +269,35 @@ const cellEventsPerSchedule = computed(() => {
     obj[schedule.id] = cellEvents.value.filter(event => event.schedule === schedule.id)
     return obj
   }, {})
+})
+
+// Overlapping events calculation (only updates when event IDs change).
+const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
+watch(
+  () => cellEvents.value.map(e => e._.id).join(), // Watch event IDs only.
+  () => {
+    overlappingEvents.value = eventsManager.getOverlappingEvents(cellEvents.value)
+  },
+  { immediate: true }
+)
+
+// Compute styles for event width & offset.
+const eventStyles = computed(() => {
+  const styles = {}
+  for (const event of cellEvents.value) {
+    const eventId = event._.id
+    const overlapData = overlappingEvents.value.cellOverlaps[eventId]
+
+    if (overlapData) {
+      const totalOverlaps = overlapData.overlaps.length + 1
+      const position = overlapData.position || 0
+      styles[eventId] = {
+        width: `${100 / totalOverlaps}%`,
+        left: `${(100 / totalOverlaps) * position}%`
+      }
+    }
+  }
+  return styles
 })
 
 const showCellEventsCount = computed(() => {
