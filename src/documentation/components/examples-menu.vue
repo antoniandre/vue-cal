@@ -26,8 +26,8 @@ const examples = [
   { route: { name: 'examples-view', hash: '#ex--layouts' }, label: 'Layouts' },
   { route: { name: 'examples-view', hash: '#ex--views' }, label: 'Views' },
   { route: { name: 'examples-view', hash: '#ex--hide-elements' }, label: 'Hide Elements & Toggles' },
-  { route: { name: 'examples-view', hash: '#ex--themes' }, label: 'Themes' },
   { route: { name: 'examples-view', hash: '#ex--internationalization' }, label: 'Internationalization' },
+  { route: { name: 'examples-view', hash: '#ex--themes' }, label: 'Themes' },
   { route: { name: 'examples-view', hash: '#ex--css-variables' }, label: 'CSS Control' },
 
   { class: 'heading', route: '/examples/date-and-time', label: 'DATE AND TIME', icon: 'mdi mdi-translate' },

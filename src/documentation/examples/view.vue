@@ -65,44 +65,6 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
     :dark="store.darkMode")
 
 //- Example.
-example(title="Themes" anchor="themes")
-  template(#desc)
-    p.
-      You have already seen the default theme. It comes with a bunch of CSS rules and variables that
-      you can easily override, and it also offers a light and dark mode.
-    p.
-      But if you prefer to do your own styles from scratch, you can disable the default theme: it will
-      only set the critical layout styles.
-    .w-flex.wrap.gap3.mt2
-      w-switch(
-        v-model="exThemes.default"
-        @update:model-value="exThemes.onDefaultThemeSwitch") Default Theme
-      w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
-      .mla.w-flex.align-center
-        w-switch.mr1(
-          v-model="exThemes.pickColorSwitch"
-          @update:model-value="exThemes.onColorPickSwitch"
-          :disabled="!exThemes.default")
-        .w-flex.align-center(:class="{ disabled: !exThemes.default || !exThemes.pickColorSwitch }")
-          .primary Or even pick a color!
-          input.ml2(
-            @input="e => exThemes.setThemeColor(e.target.value, true)"
-            v-model="exThemes.color"
-            type="color")
-
-  template(#code-html).
-    &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark && exThemes.default ? ' dark' : '' }} /&gt;
-
-  template(#code-css v-if="exThemes.pickColorSwitch").
-    .vuecal {
-      --vuecal-primary-color: {{ exThemes.color }};
-    }
-  vue-cal.mxa(
-    ref="vuecalEl"
-    :theme="exThemes.default && 'default'"
-    :dark="exThemes.dark")
-
-//- Example.
 example(title="Internationalization" anchor="internationalization")
   template(#desc)
     p.
@@ -160,27 +122,85 @@ example(title="Internationalization" anchor="internationalization")
         w-icon.ml1(sm) mdi mdi-open-in-new
 
 //- Example.
+example(title="Themes" anchor="themes")
+  template(#desc)
+    p.
+      You have already seen the default theme. It comes with a bunch of CSS rules and variables that
+      you can easily override, and it also offers a light and dark mode.
+    p.
+      But if you prefer to do your own styles from scratch, you can disable the default theme: it will
+      only set the critical layout styles.
+    .w-flex.wrap.gap3.mt2
+      w-switch(
+        v-model="exThemes.default"
+        @update:model-value="exThemes.onDefaultThemeSwitch") Default Theme
+      w-switch(v-model="exThemes.dark" :disabled="!exThemes.default") Dark Mode
+      .mla.w-flex.align-center
+        w-switch.mr1(
+          v-model="exThemes.pickColorSwitch"
+          @update:model-value="exThemes.onColorPickSwitch"
+          :disabled="!exThemes.default")
+        .w-flex.align-center(:class="{ disabled: !exThemes.default || !exThemes.pickColorSwitch }")
+          .primary Or even pick a color!
+          input.ml2(
+            @input="e => exThemes.setThemeColor(e.target.value, true)"
+            v-model="exThemes.color"
+            type="color")
+
+  template(#code-html).
+    &lt;vue-cal{{ exThemes.default ? '' : ' :theme="false"' }}{{ exThemes.dark && exThemes.default ? ' dark' : '' }} /&gt;
+
+  template(#code-css v-if="exThemes.pickColorSwitch").
+    .vuecal {
+      --vuecal-primary-color: {{ exThemes.color }};
+    }
+  vue-cal.mxa(
+    ref="vuecalEl"
+    :theme="exThemes.default && 'default'"
+    :dark="exThemes.dark")
+
+//- Example.
 example(title="CSS Control" anchor="css-variables")
   template(#desc)
-    .todo-tag.d-iflex MAKE THIS INTERACTIVE
-    p When you're using the default theme, a few CSS variables will help you easily customize the calendar.
-  template(#code-css).
-    --vuecal-primary-color: #1976D2;
-    --vuecal-secondary-color: #fff;
-    --vuecal-base-color: #000;
-    --vuecal-contrast-color: #fff;
-    --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
-    --vuecal-header-color: var(--vuecal-secondary-color);
-    --vuecal-events-color: var(--vuecal-contrast-color);
-    --vuecal-events-border-color: currentColor;
-    --vuecal-border-radius: 6px;
-    --vuecal-height: 500px;
-    --vuecal-min-schedule-width: 0;
-    --vuecal-min-cell-width: 1em;
+    p.
+      When you're using the default theme, a few CSS variables will help you easily customize the
+      calendar, while the rest of the styles remain easy to override.#[br]
+      In the following code, you can directly #[strong edit the values] of the CSS variables used by
+      Vue Cal and view the result in real-time.
+
+    .ssh-pre.ssh-pre--custom(:class="{ 'ssh-pre--dark': store.darkMode }" data-type="css")
+      pre.ssh-pre__content
+        span.selector .vuecal
+        span.punctuation.ml1 {
+        .ml4(v-for="variable in exCssControl.variables")
+          span.variable {{ variable.name }}
+          span.punctuation :
+          input.ml2.number(
+            v-if="variable.type === 'number'"
+            v-model="variable.value"
+            type="number"
+            step="5"
+            min="0")
+          span.unit {{ variable.unit || '' }}
+          .color-picker.ml2(v-if="variable.type === 'color'")
+            input(v-model="variable.value" type="color")
+            ssh-pre.ma0.pa0.d-iflex(
+              v-if="variable.type === 'color'"
+              :dark="store.darkMode"
+              language="css") {{ variable.value }}{{ variable.unit || '' }}
+          span.punctuation ;
+        span.punctuation }
+
+  template(#code-html) &lt;vue-cal /&gt;
+  vue-cal(
+    @ready="({ view }) => view.scrollToCurrentTime()"
+    :events="exCssControl.events"
+    :dark="store.darkMode"
+    :style="exCssControl.style")
 </template>
 
 <script setup>
-import { inject, reactive, ref } from 'vue'
+import { computed, inject, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
 
@@ -242,8 +262,54 @@ const exI18n = reactive({
     setTimeout(vuecalEl.value.updateTexts, 3000)
   }
 })
+
+const exCssControl = reactive({
+  events: [
+    { start: new Date(), end: new Date().addHours(1), title: 'Event 1' },
+    { start: new Date().addDays(1).addHours(1), end: new Date().addDays(1).addHours(2), title: 'Event 2' }
+  ],
+  variables: [
+    { name: '--vuecal-primary-color', value: store.darkMode ? '#316191' : '#1976d2', type: 'color' },
+    { name: '--vuecal-secondary-color', value: store.darkMode ? '#2e2e2e' : '#fff', type: 'color' },
+    { name: '--vuecal-base-color', value: store.darkMode ? '#fff' : '#000', type: 'color' },
+    { name: '--vuecal-contrast-color', value: store.darkMode ? '#000' : '#fff', type: 'color' },
+    { name: '--vuecal-border-color', value: 'color-mix(in srgb, var(--vuecal-base-color) 8%, transparent)', type: 'color' },
+    { name: '--vuecal-header-color', value: store.darkMode ? 'var(--vuecal-base-color)' : 'var(--vuecal-secondary-color)', type: 'color' },
+    { name: '--vuecal-event-color', value: store.darkMode ? 'var(--vuecal-base-color)' : 'var(--vuecal-contrast-color)', type: 'color' },
+    { name: '--vuecal-event-border-color', value: 'currentColor', type: 'color' },
+    { name: '--vuecal-border-radius', value: 6, type: 'number', unit: 'px' },
+    { name: '--vuecal-height', value: 500, type: 'number', unit: 'px' },
+    { name: '--vuecal-min-schedule-width', value: 0, type: 'number', unit: 'px' },
+    { name: '--vuecal-min-cell-width', value: 0, type: 'number', unit: 'px' }
+  ],
+  style: computed(() => exCssControl.variables.map(v => `${v.name}: ${v.value}${v.unit || ''};`).join('\n'))
+})
 </script>
 
 <style lang="scss" scoped>
-.example--themes .disabled input {opacity: 0.5;}
+.example--css-variables {
+  div.vuecal:not(.vuecal--date-picker) {height: var(--vuecal-height);}
+  .color-picker {
+    position: relative;
+    display: inline-flex;
+
+    input {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      opacity: 0;
+      width: 100%;
+      height: 100%;
+      cursor: pointer;
+    }
+  }
+  input[type="number"] {
+    background-color: color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
+    border-radius: 4px;
+    max-width: 45px;
+    padding: 1px 1px 1px 3px;
+  }
+  .ssh-pre--custom .ssh-pre:before {display: none;}
+}
 </style>
