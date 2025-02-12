@@ -253,7 +253,7 @@ export const useEvents = vuecal => {
         start: cellOverlaps[id2].start
       }))
       overlapsRow.push({ id, start: item.start })
-      overlapsRow.sort((a, b) => a.start - b.start || a.id.localeCompare(b.id))
+      overlapsRow.sort((a, b) => a.start - b.start || String(a.id).localeCompare(String(b.id)))
 
       item.position = overlapsRow.findIndex(e => e.id === id)
       longestStreak = Math.max(overlapsRow.length, longestStreak)
