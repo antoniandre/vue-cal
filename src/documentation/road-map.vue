@@ -8,8 +8,6 @@ ul.kanban
       .task All-day events
       .task Multiple day events
       .task Recurring events
-      .task
-        a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
         //- TODO:
           General
           - check overlaps only on the cell that has changed on event create/drag/background change
@@ -87,8 +85,10 @@ ul.kanban
   li.kanban__column.kanban__column--later.smd-hide
     .title 🕔 Later
     .w-flex.column.gap1.pa1
+      .task Support timezones
+      .task
+        a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
       .task Drag &amp; drop multiple day events
-      .task Support Timezones
       .task Improve multiple day events Month view
       .task Horizontal timeline
 </template>
