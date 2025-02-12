@@ -317,7 +317,7 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
         | {{ events.filter(event => event.class === 'leisure').length }}
 
 //- Example.
-example(title="Overlapping events" anchor="overlapping-events")
+example(title="Overlapping Events" anchor="overlapping-events")
   template(#desc)
   .todo-tag.d-iflex.ml2 COMING SOON
   //- template(#desc)

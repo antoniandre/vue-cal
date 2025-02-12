@@ -154,42 +154,13 @@ p.
 p.
   By default, the calendar is blue, but you can easily change the primary color with the CSS variables.#[br]
   If you'd rather start the CSS from a clean cheat, you can decide to not use the default theme and do
-  everything yourself in your own CSS.
+  everything yourself in your own CSS.#[br]
+  Checkout the #[router-link(to="examples/view#ex--themes") Themes Example] for a demo.
 
 title-link.mt6(h3 anchor="css-variables") CSS Variables
-ul
-  li
-    code.mr2 allDayBarHeight
-    p.
-      When the all day bar is visible and Vue Cal is also scrollable horizontally (due to
-      #[span.code --vuecal-min-cell-width] or day schedules with #[span.code --vuecal-min-schedule-width]),
-      the all-day bar must have a fixed height for this particular layout.#[br]
-      Only if these conditions are fulfilled, the height provided through this option will be
-      used. If none is provided the default height will be used.#[br]
-      The height can be any valid CSS height (as a string) or an integer for an amount of pixels.
-
-  li
-    code.mr2 timeCellHeight
-    p.
-      If #[span.code time] is enabled, set the time cell height in pixels.#[br]
-      this is very important as it is used to calculate the events position in the day.
-
-title-link.mt6(h3 anchor="responsiveness-media-queries") Responsiveness &amp; Media Queries
 p.
-  This calendar is fully responsive.#[br]
-  To help you in making the calendar always look perfect,
-  2 media queries (to keep it simple) are in place for small screens.#[br]
-  The media queries operate downwards from 550px &amp; 450px, to truncate the text
-  of the days of the week from full day name to 3 letters and to 1 letter according to the available space.#[br]#[br]
-
-  If this is not enough for your particular use, you can add your own in your CSS.#[br]
-  Additionally, you can use the options #[span.code sm] &amp; #[span.code xs]
-  to truncate week days at any size.
-
-title-link.mt6(h3 anchor="disabled-text-selection") Disabled Text Selection
-p.
-  By default the selection is disabled in the whole calendar except in the events.
-  you can override this by CSS.
+  Vue Cal uses CSS variables for easy customization.#[br]
+  Checkout the #[router-link(to="examples/view#ex--css-variables") CSS Control Example] for a demo.
 </template>
 
 <script setup>
