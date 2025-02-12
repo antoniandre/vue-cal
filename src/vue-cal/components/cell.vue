@@ -561,7 +561,7 @@ const createEventIfAllowed = async e => {
 
 const removeEventListeners = () => {
   Object.keys(cellEventListeners.value).forEach(event => {
-    cellEl.value.removeEventListener(event, cellEventListeners.value[event])
+    cellEl.value?.removeEventListener(event, cellEventListeners.value[event])
   })
 }
 
