@@ -183,12 +183,106 @@ export const useEvents = vuecal => {
     return true // For chaining.
   }
 
+  const isEventOverlapping = (event, otherCellEvents = []) => {
+    if (!otherCellEvents) return false
+    const { startMinutes: eventStart, endMinutes: eventEnd } = event._
+
+    return otherCellEvents.some(id => {
+      const otherEvent = getEvent(id)
+      if (!otherEvent) return false
+      const { startMinutes: otherStart, endMinutes: otherEnd } = otherEvent._
+      return (eventStart >= otherStart && eventStart < otherEnd) || (eventEnd > otherStart && eventEnd <= otherEnd) || (eventStart <= otherStart && eventEnd >= otherEnd)
+    })
+  }
+
+  // Will recalculate all the overlaps of the current cell OR split.
+  // cellEvents will contain only the current split events if in a split.
+  const getOverlappingEvents = cellEvents => {
+    let comparisonArray = cellEvents.slice(0)
+    let cellOverlaps = {}
+    console.log({ cellEvents, comparisonArray, cellOverlaps })
+    // Can't filter background events before calling this function otherwise
+    // when an event is changed to background it would not update its previous overlaps.
+    cellEvents.forEach(e => {
+      // For performance, never compare the current event in the next loops.
+      // The array is smaller and smaller as we loop.
+      comparisonArray.shift()
+
+      if (!cellOverlaps[e._.id]) cellOverlaps[e._.id] = { overlaps: [], start: e.start, position: 0 }
+      cellOverlaps[e._.id].position = 0
+
+      comparisonArray.forEach(e2 => {
+        if (!cellOverlaps[e2._.id]) cellOverlaps[e2._.id] = { overlaps: [], start: e2.start, position: 0 }
+
+        const eventIsInRange = isEventInRange(e2, e.start, e.end)
+        const eventsInSameTimeStep = config.overlapsPerTimeStep ? dateUtils.datesInSameTimeStep(e.start, e2.start, config.timeStep) : true
+        // Add to the overlapping events array if overlapping.
+        if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventIsInRange && eventsInSameTimeStep) {
+          cellOverlaps[e._.id].overlaps.push(e2._.id)
+          cellOverlaps[e._.id].overlaps = [...new Set(cellOverlaps[e._.id].overlaps)] // Dedupe, most efficient way.
+
+          cellOverlaps[e2._.id].overlaps.push(e._.id)
+          cellOverlaps[e2._.id].overlaps = [...new Set(cellOverlaps[e2._.id].overlaps)] // Dedupe, most efficient way.
+          cellOverlaps[e2._.id].position++
+        }
+        // Remove from the overlapping events array if not overlapping or if 1 of the 2 events is background or all-day long.
+        else {
+          let pos1, pos2
+          if ((pos1 = (cellOverlaps[e._.id] || { overlaps: [] }).overlaps.indexOf(e2._.id)) > -1) cellOverlaps[e._.id].overlaps.splice(pos1, 1)
+          if ((pos2 = (cellOverlaps[e2._.id] || { overlaps: [] }).overlaps.indexOf(e._.id)) > -1) cellOverlaps[e2._.id].overlaps.splice(pos2, 1)
+          cellOverlaps[e2._.id].position--
+        }
+      })
+    })
+
+    let longestStreak = 0
+    for (const id in cellOverlaps) {
+      const item = cellOverlaps[id]
+
+      const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
+      overlapsRow.push({ id, start: item.start })
+      overlapsRow.sort((a, b) => a.start < b.start ? -1 : (a.start > b.start ? 1 : (a.id > b.id ? -1 : 1)))
+      item.position = overlapsRow.findIndex(e => e.id === id)
+
+      longestStreak = Math.max(overlapsRow.length, longestStreak)
+    }
+
+    return { cellOverlaps, longestStreak }
+  }
+
+  /**
+   * Returns true if an event is in a given date range, even partially, or false otherwise.
+   *
+   * @param {Object} event The event to test.
+   * @param {Date} start The start of range date object.
+   * @param {Date} end The end of range date object.
+   * @return {Boolean} true if in range, even partially.
+   */
+  const isEventInRange = (event, start, end) => {
+    // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
+    if (event.allDay || !config.time) {
+      // Get the date and discard the time if any, then check it's within the date range.
+      const startTimestamp = new Date(event.start).setHours(0, 0, 0, 0)
+      const endTimestamp = new Date(event.end).setHours(23, 59, 59, 999)
+      const rangeStart = new Date(start).setHours(0, 0, 0, 0)
+      const rangeEnd = new Date(end).setHours(23, 59, 59, 999)
+
+      return endTimestamp >= rangeStart && startTimestamp <= rangeEnd
+    }
+
+    const startTimestamp = event.start.getTime()
+    const endTimestamp = event.end.getTime()
+    return endTimestamp >= start.getTime() && startTimestamp <= end.getTime()
+  }
+
   return {
     events,
     getEvent,
     getEventsByDate,
     getViewEvents,
+    getOverlappingEvents,
     createEvent,
-    deleteEvent
+    deleteEvent,
+    isEventInRange
   }
 }
