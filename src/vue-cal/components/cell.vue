@@ -81,10 +81,10 @@
         v-for="event in cellEvents"
         :key="event._.id"
         :event="event"
-        @event-drag-start="emit('event-drag-start')"
-        @event-drag-end="emit('event-drag-end')"
-        @event-resize-start="emit('event-resize-start')"
-        @event-resize-end="emit('event-resize-end')"
+        @event-drag-start="() => { emit('event-drag-start'); recalculateOverlaps() }"
+        @event-drag-end="() => { emit('event-drag-end'); recalculateOverlaps() }"
+        @event-resize-start="() => { emit('event-resize-start'); recalculateOverlaps() }"
+        @event-resize-end="() => { emit('event-resize-end'); recalculateOverlaps() }"
         @event-deleted="onEventDelete"
         :style="eventStyles[event._.id]")
         template(v-if="$slots.event" #event="params")
@@ -300,6 +300,10 @@ const eventStyles = computed(() => {
   return styles
 })
 
+const recalculateOverlaps = () => {
+  overlappingEvents.value = eventsManager.getOverlappingEvents(cellEvents.value)
+}
+
 const showCellEventsCount = computed(() => {
   return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellEvents.value.length
 })
@@ -448,7 +452,7 @@ const cellEventListeners = computed(() => {
     eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
     eventListeners.dragover = e => dnd.cellDragOver(e, cellInfo.value)
     eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
-    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
+    eventListeners.drop = e => { dnd.cellDragDrop(e, cellInfo.value); recalculateOverlaps() }
   }
 
   return eventListeners
