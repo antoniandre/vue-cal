@@ -284,19 +284,46 @@ watch(
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
   const styles = {}
-  for (const event of cellEvents.value) {
+  const sortedEvents = [...cellEvents.value].sort((a, b) => a.start - b.start)
+  const activeColumns = [] // Tracks columns of overlapping events
+
+  sortedEvents.forEach(event => {
     const eventId = event._.id
     const overlapData = overlappingEvents.value.cellOverlaps[eventId]
+    if (!overlapData) return
 
-    if (overlapData) {
-      const totalOverlaps = overlapData.overlaps.length + 1
-      const position = overlapData.position || 0
-      styles[eventId] = {
-        width: `${100 / totalOverlaps}%`,
-        left: `${(100 / totalOverlaps) * position}%`
+    // Remove finished events from active columns
+    activeColumns.forEach(column => {
+      column.events = column.events.filter(e => e.end > event.start)
+    })
+
+    // Find an available column for this event
+    let placed = false
+    for (const column of activeColumns) {
+      if (!column.events.some(e => e.start < event.end && e.end > event.start)) {
+        column.events.push(event)
+        placed = true
+        break
       }
     }
-  }
+
+    // Create a new column if no existing column fits
+    if (!placed) {
+      activeColumns.push({ events: [event] })
+    }
+
+    // Assign widths and positions dynamically
+    activeColumns.forEach((column, colIndex) => {
+      const totalColumns = activeColumns.length
+      column.events.forEach((e, index) => {
+        styles[e._.id] = {
+          width: `${100 / totalColumns}%`,
+          left: `${(100 / totalColumns) * colIndex}%`
+        }
+      })
+    })
+  })
+
   return styles
 })
 
