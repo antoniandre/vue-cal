@@ -5,8 +5,8 @@
   --vuecal-contrast-color: #fff;
   --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
   --vuecal-header-color: var(--vuecal-secondary-color);
-  --vuecal-events-color: var(--vuecal-contrast-color);
-  --vuecal-events-border-color: currentColor;
+  --vuecal-event-color: var(--vuecal-contrast-color);
+  --vuecal-event-border-color: currentColor;
   --vuecal-border-radius: 6px;
   --vuecal-height: 500px;
   --vuecal-min-schedule-width: 0;
@@ -29,8 +29,8 @@
     --vuecal-contrast-color: #000;
     --vuecal-border-color: color-mix(in srgb, var(--vuecal-base-color) 8%, transparent);
     --vuecal-header-color: var(--vuecal-base-color);
-    --vuecal-events-color: var(--vuecal-base-color);
-    --vuecal-events-border-color: color-mix(in srgb, var(--vuecal-base-color) 50%, transparent);
+    --vuecal-event-color: var(--vuecal-base-color);
+    --vuecal-event-border-color: color-mix(in srgb, var(--vuecal-base-color) 50%, transparent);
   }
 
   // Calendar Header.
@@ -302,8 +302,8 @@
   // ------------------------------------------------------
   .vuecal__event {
     background-color: var(--vuecal-primary-color);
-    color: var(--vuecal-events-color);
-    border: 1px solid var(--vuecal-events-border-color);
+    color: var(--vuecal-event-color);
+    border: 1px solid var(--vuecal-event-border-color);
     border-radius: 4px;
     line-height: 1;
     width: 90%;
@@ -365,7 +365,7 @@
         height: 2px;
         left: 20%;
         right: 20%;
-        background-color: var(--vuecal-events-color);
+        background-color: var(--vuecal-event-color);
       }
       &:before {transform: translateY(-50%) rotate(45deg);}
       &:after {transform: translateY(-50%) rotate(-45deg);}
