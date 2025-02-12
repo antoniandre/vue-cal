@@ -198,34 +198,53 @@ export const useEvents = vuecal => {
   // Will recalculate all the overlaps of the current cell OR split.
   // cellEvents will contain only the current split events if in a split.
   const getOverlappingEvents = cellEvents => {
+    if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
+
     let cellOverlaps = {}
     let longestStreak = 0
+    let activeEvents = new Set()
 
-    for (let i = 0; i < cellEvents.length; i++) {
-      const e = cellEvents[i]
+    // Sort events by start time, then by duration (shorter first)
+    cellEvents.sort((a, b) => a.start - b.start || (a.end - a.start) - (b.end - b.start))
 
-      if (!cellOverlaps[e._.id]) {
-        cellOverlaps[e._.id] = { overlaps: new Set(), start: e.start, position: 0 }
+    for (const e of cellEvents) {
+      const id = e._.id
+
+      if (!cellOverlaps[id]) {
+        cellOverlaps[id] = { overlaps: new Set(), start: e.start, position: 0 }
       }
 
-      for (let j = i + 1; j < cellEvents.length; j++) {
-        const e2 = cellEvents[j]
-
-        if (!cellOverlaps[e2._.id]) {
-          cellOverlaps[e2._.id] = { overlaps: new Set(), start: e2.start, position: 0 }
-        }
-
-        const eventIsInRange = isEventInRange(e2, e.start, e.end)
-        const eventsInSameTimeStep = config.overlapsPerTimeStep ? dateUtils.datesInSameTimeStep(e.start, e2.start, config.timeStep) : true
-
-        if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventIsInRange && eventsInSameTimeStep) {
-          cellOverlaps[e._.id].overlaps.add(e2._.id)
-          cellOverlaps[e2._.id].overlaps.add(e._.id)
-          cellOverlaps[e2._.id].position++
+      // Remove non-overlapping events
+      for (const activeId of [...activeEvents]) {
+        const activeEvent = cellEvents.find(ev => ev._.id === activeId)
+        if (activeEvent && !isEventInRange(activeEvent, e.start, e.end)) {
+          activeEvents.delete(activeId)
         }
       }
+
+      // Track overlaps in active events
+      for (const activeId of activeEvents) {
+        const activeEvent = cellEvents.find(ev => ev._.id === activeId)
+
+        const eventIsInRange = isEventInRange(activeEvent, e.start, e.end)
+        const eventsInSameTimeStep = config.overlapsPerTimeStep
+          ? dateUtils.datesInSameTimeStep(e.start, activeEvent.start, config.timeStep)
+          : true
+
+        if (!e.background && !e.allDay && !activeEvent.background && !activeEvent.allDay && eventIsInRange && eventsInSameTimeStep) {
+          cellOverlaps[id].overlaps.add(activeId)
+          cellOverlaps[activeId].overlaps.add(id)
+        }
+      }
+
+      // Add current event to active tracking
+      activeEvents.add(id)
+
+      // Update longest streak of overlapping events
+      longestStreak = Math.max(longestStreak, activeEvents.size)
     }
 
+    // Convert Sets to Arrays and assign positions correctly
     for (const id in cellOverlaps) {
       const item = cellOverlaps[id]
 
