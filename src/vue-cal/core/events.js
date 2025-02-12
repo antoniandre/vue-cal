@@ -198,53 +198,49 @@ export const useEvents = vuecal => {
   // Will recalculate all the overlaps of the current cell OR split.
   // cellEvents will contain only the current split events if in a split.
   const getOverlappingEvents = cellEvents => {
-    let comparisonArray = cellEvents.slice(0)
     let cellOverlaps = {}
-    console.log({ cellEvents, comparisonArray, cellOverlaps })
-    // Can't filter background events before calling this function otherwise
-    // when an event is changed to background it would not update its previous overlaps.
-    cellEvents.forEach(e => {
-      // For performance, never compare the current event in the next loops.
-      // The array is smaller and smaller as we loop.
-      comparisonArray.shift()
+    let longestStreak = 0
 
-      if (!cellOverlaps[e._.id]) cellOverlaps[e._.id] = { overlaps: [], start: e.start, position: 0 }
-      cellOverlaps[e._.id].position = 0
+    for (let i = 0; i < cellEvents.length; i++) {
+      const e = cellEvents[i]
 
-      comparisonArray.forEach(e2 => {
-        if (!cellOverlaps[e2._.id]) cellOverlaps[e2._.id] = { overlaps: [], start: e2.start, position: 0 }
+      if (!cellOverlaps[e._.id]) {
+        cellOverlaps[e._.id] = { overlaps: new Set(), start: e.start, position: 0 }
+      }
+
+      for (let j = i + 1; j < cellEvents.length; j++) {
+        const e2 = cellEvents[j]
+
+        if (!cellOverlaps[e2._.id]) {
+          cellOverlaps[e2._.id] = { overlaps: new Set(), start: e2.start, position: 0 }
+        }
 
         const eventIsInRange = isEventInRange(e2, e.start, e.end)
         const eventsInSameTimeStep = config.overlapsPerTimeStep ? dateUtils.datesInSameTimeStep(e.start, e2.start, config.timeStep) : true
-        // Add to the overlapping events array if overlapping.
-        if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventIsInRange && eventsInSameTimeStep) {
-          cellOverlaps[e._.id].overlaps.push(e2._.id)
-          cellOverlaps[e._.id].overlaps = [...new Set(cellOverlaps[e._.id].overlaps)] // Dedupe, most efficient way.
 
-          cellOverlaps[e2._.id].overlaps.push(e._.id)
-          cellOverlaps[e2._.id].overlaps = [...new Set(cellOverlaps[e2._.id].overlaps)] // Dedupe, most efficient way.
+        if (!e.background && !e.allDay && !e2.background && !e2.allDay && eventIsInRange && eventsInSameTimeStep) {
+          cellOverlaps[e._.id].overlaps.add(e2._.id)
+          cellOverlaps[e2._.id].overlaps.add(e._.id)
           cellOverlaps[e2._.id].position++
         }
-        // Remove from the overlapping events array if not overlapping or if 1 of the 2 events is background or all-day long.
-        else {
-          let pos1, pos2
-          if ((pos1 = (cellOverlaps[e._.id] || { overlaps: [] }).overlaps.indexOf(e2._.id)) > -1) cellOverlaps[e._.id].overlaps.splice(pos1, 1)
-          if ((pos2 = (cellOverlaps[e2._.id] || { overlaps: [] }).overlaps.indexOf(e._.id)) > -1) cellOverlaps[e2._.id].overlaps.splice(pos2, 1)
-          cellOverlaps[e2._.id].position--
-        }
-      })
-    })
+      }
+    }
 
-    let longestStreak = 0
     for (const id in cellOverlaps) {
       const item = cellOverlaps[id]
 
-      const overlapsRow = item.overlaps.map(id2 => ({ id: id2, start: cellOverlaps[id2].start }))
+      const overlapsRow = Array.from(item.overlaps).map(id2 => ({
+        id: id2,
+        start: cellOverlaps[id2].start
+      }))
       overlapsRow.push({ id, start: item.start })
-      overlapsRow.sort((a, b) => a.start < b.start ? -1 : (a.start > b.start ? 1 : (a.id > b.id ? -1 : 1)))
-      item.position = overlapsRow.findIndex(e => e.id === id)
+      overlapsRow.sort((a, b) => a.start - b.start || a.id.localeCompare(b.id))
 
+      item.position = overlapsRow.findIndex(e => e.id === id)
       longestStreak = Math.max(overlapsRow.length, longestStreak)
+
+      // Convert Set to array for return
+      item.overlaps = [...item.overlaps]
     }
 
     return { cellOverlaps, longestStreak }
