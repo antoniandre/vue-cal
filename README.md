@@ -85,12 +85,11 @@ Every contribution—big or small—makes a huge difference. Join us on this jou
 
 A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see your name here? [Become a sponsor today!](https://github.com/sponsors/antoniandre)
 
-[![nmauersberg](https://avatars.githubusercontent.com/nmauersberg?s=25)](https://github.com/nmauersberg)
-[![audabas](https://avatars.githubusercontent.com/audabas?s=25)](https://github.com/audabas)
-[![crbast](https://avatars.githubusercontent.com/crbast?s=25)](https://github.com/crbast)
-[![codecov](https://avatars.githubusercontent.com/codecov?s=25)](https://github.com/codecov)
-[![zeidanbm](https://avatars.githubusercontent.com/zeidanbm?s=25)](https://github.com/zeidanbm)
-
+<a href="https://github.com/nmauersberg" style="text-decoration: none"><img src="https://avatars.githubusercontent.com/nmauersberg?s=25" alt="nmauersberg" width="25"></a>
+<a href="https://github.com/audabas" style="text-decoration: none"><img src="https://avatars.githubusercontent.com/audabas?s=25" alt="audabas" width="25"></a>
+<a href="https://github.com/crbast" style="text-decoration: none"><img src="https://avatars.githubusercontent.com/crbast?s=25" alt="crbast" width="25"></a>
+<a href="https://github.com/codecov" style="text-decoration: none"><img src="https://avatars.githubusercontent.com/codecov?s=25" alt="codecov" width="25"></a>
+<a href="https://github.com/zeidanbm" style="text-decoration: none"><img src="https://avatars.githubusercontent.com/zeidanbm?s=25" alt="zeidanbm" width="25"></a>
 
 ---
 
