@@ -105,8 +105,8 @@ export const useEvents = vuecal => {
 
   // Retrieve events by a formatted date and optionally return the full event objects.
   const getEventsByDate = (dateFormatted, fullEvents = false) => {
-    const events = events.value.byDate[dateFormatted] || []
-    return fullEvents ? events.map(getEvent) : events
+    const evts = events.value.byDate[dateFormatted] || []
+    return fullEvents ? evts.map(getEvent) : evts
   }
 
   // Get events for the view based on cell dates.
