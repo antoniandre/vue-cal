@@ -224,6 +224,8 @@ const classes = computed(() => {
   }
 })
 
+const startFormatted = computed(() => dateUtils.formatDate(props.start))
+
 // Note: This will recompute when the locale changes (from formatDate) or xs prop changes for instance.
 // So it needs to be a distinct computed from the events.
 const formattedCellDate = computed(() => {
@@ -253,8 +255,7 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
-  return (view.events[dateUtils.formatDate(props.start)] || [])
-    .map(eventsManager.getEvent)
+  return eventsManager.getEventsByDate(startFormatted.value, true)
     .filter(event => !eventsDeleted.value.includes(event._.id))
 })
 
@@ -276,7 +277,7 @@ const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 watch(
   () => cellEvents.value.map(e => e._.id).join(), // Watch event IDs only.
   () => {
-    overlappingEvents.value = eventsManager.getOverlappingEvents(cellEvents.value)
+    overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value)
   },
   { immediate: true }
 )
@@ -328,7 +329,7 @@ const eventStyles = computed(() => {
 })
 
 const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getOverlappingEvents(cellEvents.value)
+  overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value)
 }
 
 const showCellEventsCount = computed(() => {

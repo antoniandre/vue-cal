@@ -37,6 +37,14 @@ export const useEvents = vuecal => {
       event._.deleting = false
       event._.deleted = false
 
+      event.isOverlapping = () => {
+        // return isEventOverlapping(event, events.byDate[event._.startFormatted].filter(id => id !== event._.id))
+        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps?.length > 0
+      }
+      event.getOverlappingEvents = () => {
+        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps
+      }
+
       // Register the event DOM node in the event in order to emit DOM events.
       event._.register = domNode => {
         event._.$el = domNode
@@ -95,10 +103,14 @@ export const useEvents = vuecal => {
   // Retrieve an event by its ID.
   const getEvent = id => events.value.byId[id]
 
-  // Retrieve events by a formatted date.
-  const getEventsByDate = dateFormatted => events.value.byDate[dateFormatted]
+  // Retrieve events by a formatted date and optionally return the full event objects.
+  const getEventsByDate = (dateFormatted, fullEvents = false) => {
+    const events = events.value.byDate[dateFormatted] || []
+    return fullEvents ? events.map(getEvent) : events
+  }
 
   // Get events for the view based on cell dates.
+  // Returns an object of cell events arrays indexed by the cell string date.
   const getViewEvents = cellDates => {
     console.log('👗', 'getViewEvents')
 
@@ -106,7 +118,7 @@ export const useEvents = vuecal => {
     cellDates.forEach(({ startFormatted }) => {
       events[startFormatted] = []
       const eventsByDate = getEventsByDate(startFormatted)
-      if (eventsByDate?.length) events[startFormatted].push(...eventsByDate)
+      if (eventsByDate.length) events[startFormatted].push(...eventsByDate)
     })
     return events
   }
@@ -183,6 +195,7 @@ export const useEvents = vuecal => {
     return true // For chaining.
   }
 
+  const overlaps = {} // Store the overlaps for each cell date.
   const isEventOverlapping = (event, otherCellEvents = []) => {
     if (!otherCellEvents) return false
     const { startMinutes: eventStart, endMinutes: eventEnd } = event._
@@ -195,9 +208,10 @@ export const useEvents = vuecal => {
     })
   }
 
-  // Will recalculate all the overlaps of the current cell OR split.
-  // cellEvents will contain only the current split events if in a split.
-  const getOverlappingEvents = cellEvents => {
+  // Will recalculate all the overlaps of the current cell OR schedule.
+  // cellEvents will contain only the current schedule events if in a schedule.
+  const getOverlappingEvents = cellDate => {
+    const cellEvents = getEventsByDate(cellDate, true)
     if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
 
     let cellOverlaps = {}
@@ -261,6 +275,9 @@ export const useEvents = vuecal => {
       // Convert Set to array for return
       item.overlaps = [...item.overlaps]
     }
+
+    // Save the overlaps for this cell date so it can be used from the event.getOverlappingEvents method.
+    overlaps[cellDate] = cellOverlaps
 
     return { cellOverlaps, longestStreak }
   }
