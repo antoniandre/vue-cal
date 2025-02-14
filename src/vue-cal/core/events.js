@@ -215,8 +215,8 @@ export const useEvents = vuecal => {
     if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
 
     let cellOverlaps = {}
-    let longestStreak = 0
-    let activeEvents = new Set()
+    let activeEvents = []
+    let maxConcurrent = 0
 
     // Sort events by start time, then by duration (shorter first)
     cellEvents.sort((a, b) => a.start - b.start || (a.end - a.start) - (b.end - b.start))
@@ -225,61 +225,51 @@ export const useEvents = vuecal => {
       const id = e._.id
 
       if (!cellOverlaps[id]) {
-        cellOverlaps[id] = { overlaps: new Set(), start: e.start, position: 0 }
+        cellOverlaps[id] = { overlaps: new Set(), maxConcurrent: 1, position: 0 }
       }
 
-      // Remove non-overlapping events
-      for (const activeId of [...activeEvents]) {
-        const activeEvent = cellEvents.find(ev => ev._.id === activeId)
-        if (activeEvent && !isEventInRange(activeEvent, e.start, e.end)) {
-          activeEvents.delete(activeId)
-        }
-      }
+      // Remove expired events from the active tracking list
+      activeEvents = activeEvents.filter(activeEvent => activeEvent.end > e.start)
 
-      // Track overlaps in active events
-      for (const activeId of activeEvents) {
-        const activeEvent = cellEvents.find(ev => ev._.id === activeId)
+      // Assign position within the current overlap group
+      let takenPositions = new Set(activeEvents.map(ev => cellOverlaps[ev._.id]?.position ?? 0))
+      let position = 0
+      while (takenPositions.has(position)) position++
 
-        const eventIsInRange = isEventInRange(activeEvent, e.start, e.end)
-        const eventsInSameTimeStep = config.overlapsPerTimeStep
-          ? dateUtils.datesInSameTimeStep(e.start, activeEvent.start, config.timeStep)
-          : true
+      // Store event in activeEvents
+      activeEvents.push(e)
+      cellOverlaps[id].position = position
 
-        if (!e.background && !e.allDay && !activeEvent.background && !activeEvent.allDay && eventIsInRange && eventsInSameTimeStep) {
+      // Get the maximum concurrent streak for this event
+      let localMaxConcurrent = activeEvents.length
+
+      // Update overlaps for all active events
+      for (const activeEvent of activeEvents) {
+        const activeId = activeEvent._.id
+        if (id !== activeId) {
           cellOverlaps[id].overlaps.add(activeId)
           cellOverlaps[activeId].overlaps.add(id)
+
+          // Ensure **all overlapping events** get the right maxConcurrent
+          localMaxConcurrent = Math.max(localMaxConcurrent, cellOverlaps[activeId].maxConcurrent)
         }
       }
 
-      // Add current event to active tracking
-      activeEvents.add(id)
+      // Assign **final maxConcurrent** to all events in the current group
+      for (const activeEvent of activeEvents) {
+        cellOverlaps[activeEvent._.id].maxConcurrent = localMaxConcurrent
+      }
 
-      // Update longest streak of overlapping events
-      longestStreak = Math.max(longestStreak, activeEvents.size)
+      // Track the maximum overlap count at any point in time
+      maxConcurrent = Math.max(maxConcurrent, localMaxConcurrent)
     }
 
-    // Convert Sets to Arrays and assign positions correctly
+    // Convert Sets to Arrays
     for (const id in cellOverlaps) {
-      const item = cellOverlaps[id]
-
-      const overlapsRow = Array.from(item.overlaps).map(id2 => ({
-        id: id2,
-        start: cellOverlaps[id2].start
-      }))
-      overlapsRow.push({ id, start: item.start })
-      overlapsRow.sort((a, b) => a.start - b.start || String(a.id).localeCompare(String(b.id)))
-
-      item.position = overlapsRow.findIndex(e => e.id === id)
-      longestStreak = Math.max(overlapsRow.length, longestStreak)
-
-      // Convert Set to array for return
-      item.overlaps = [...item.overlaps]
+      cellOverlaps[id].overlaps = [...cellOverlaps[id].overlaps]
     }
 
-    // Save the overlaps for this cell date so it can be used from the event.getOverlappingEvents method.
-    overlaps[cellDate] = cellOverlaps
-
-    return { cellOverlaps, longestStreak }
+    return { cellOverlaps, longestStreak: maxConcurrent }
   }
 
   /**
