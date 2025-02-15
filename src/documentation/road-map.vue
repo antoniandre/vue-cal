@@ -21,6 +21,7 @@ ul.kanban
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
       .task Events overlap
+      .task Events overlap with schedules
       .task Reject event resize/drag on condition (E.g. overlap)
 
   li.kanban__column.kanban__column--done.xs-hide
