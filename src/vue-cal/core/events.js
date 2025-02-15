@@ -38,8 +38,9 @@ export const useEvents = vuecal => {
       event._.deleted = false
 
       event.isOverlapping = () => {
-        // return isEventOverlapping(event, events.byDate[event._.startFormatted].filter(id => id !== event._.id))
-        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps?.length > 0
+        return getEventsByDate(event._.startFormatted, true)
+          .filter(event2 => event2._.id !== event._.id)
+          .some(event2 => isEventInRange(event2, event.start, event.end))
       }
       event.getOverlappingEvents = () => {
         return overlaps[event._.startFormatted]?.[event._.id]?.overlaps
@@ -218,7 +219,7 @@ export const useEvents = vuecal => {
     let activeEvents = []
     let maxConcurrent = 0
 
-    // Sort events by start time, then by duration (shorter first)
+    // Sort events by start time, then by duration (shorter first).
     cellEvents.sort((a, b) => a.start - b.start || (a.end - a.start) - (b.end - b.start))
 
     for (const e of cellEvents) {
@@ -228,7 +229,7 @@ export const useEvents = vuecal => {
         cellOverlaps[id] = { overlaps: new Set(), maxConcurrent: 1, position: 0 }
       }
 
-      // Remove expired events from the active tracking list
+      // Remove expired events from the active tracking list.
       activeEvents = activeEvents.filter(activeEvent => activeEvent.end > e.start)
 
       // Assign position within the current overlap group
@@ -236,11 +237,11 @@ export const useEvents = vuecal => {
       let position = 0
       while (takenPositions.has(position)) position++
 
-      // Store event in activeEvents
+      // Store event in activeEvents.
       activeEvents.push(e)
       cellOverlaps[id].position = position
 
-      // Get the maximum concurrent streak for this event
+      // Get the maximum concurrent streak for this event.
       let localMaxConcurrent = activeEvents.length
 
       // Update overlaps for all active events
@@ -255,16 +256,16 @@ export const useEvents = vuecal => {
         }
       }
 
-      // Assign **final maxConcurrent** to all events in the current group
+      // Update all overlaps to have the same maxConcurrent.
       for (const activeEvent of activeEvents) {
         cellOverlaps[activeEvent._.id].maxConcurrent = localMaxConcurrent
       }
 
-      // Track the maximum overlap count at any point in time
+      // Track the maximum overlap count at any point in time.
       maxConcurrent = Math.max(maxConcurrent, localMaxConcurrent)
     }
 
-    // Convert Sets to Arrays
+    // Convert Sets to Arrays.
     for (const id in cellOverlaps) {
       cellOverlaps[id].overlaps = [...cellOverlaps[id].overlaps]
     }
