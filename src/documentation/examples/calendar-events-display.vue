@@ -319,20 +319,18 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 //- Example.
 example(title="Overlapping Events" anchor="overlapping-events")
   template(#desc)
-  .todo-tag.d-iflex.ml2 COMING SOON
-  //- template(#desc)
     p.
       Overlapping, editable &amp; deletable events.#[br]
       Try to resize &amp; delete events to see the overlapping redrawn.
 
     .w-flex.mb3.align-center
       | Optionally you can set a min width (in percent) to the events:
-      w-button.ml2(@click="minEventWidth = minEventWidth ? 0 : 50")
-        w-icon.mr1 mdi mdi-{{ minEventWidth ? 'close' : 'plus' }}
-        | {{ minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
+      w-button.ml2(@click="exOverlappingEvents.minEventWidth = exOverlappingEvents.minEventWidth ? 0 : 50")
+        w-icon.mr1 mdi mdi-{{ exOverlappingEvents.minEventWidth ? 'close' : 'plus' }}
+        | {{ exOverlappingEvents.minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
     div(style="min-height: 40px")
       w-transition-expand(y)
-        .grey(v-if="minEventWidth").
+        .grey(v-if="exOverlappingEvents.minEventWidth").
           #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
           events that would be smaller than that (e.g. with 3 events side by side)
     alert.mb6.
@@ -340,13 +338,13 @@ example(title="Overlapping Events" anchor="overlapping-events")
       (default time step is 1 hour), like in
       #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
       You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
-  //- template(#code-html).
+  template(#code-html).
     &lt;vue-cal
       editable-events
       :min-event-width="minEventWidth"
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  //- template(#code-js).
+  template(#code-js).
     data: () => ({
       minEventWidth: 0,
       events: [
@@ -375,17 +373,14 @@ example(title="Overlapping Events" anchor="overlapping-events")
       ]
     })
 
-  //- vue-cal(
+  vue-cal(
     :events="exOverlappingEvents.events"
     editable-events
-    :min-event-width="minEventWidth"
-    :time-from="9 * 60"
-    :time-to="15 * 60"
+    :min-event-width="exOverlappingEvents.minEventWidth"
     :views="{ days: { cols: 5, rows: 1 } }"
-    view="days"
-    :views-bar="false"
+    view="week"
     :dark="store.darkMode"
-    style="height: 301px")
+    style="min-height: 490px")
 
 //- Example.
 example(anchor="recurring-events")
@@ -866,37 +861,9 @@ const exEventsMonthView = reactive({
 })
 
 const exOverlappingEvents = reactive({
-  events: [
+  events: ref([
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-    {
-      start: '2018-11-21 14:00',
-      end: '2018-11-21 22:00',
-      title: 'A big thing',
-      content: '<i class="w-icon mdi mdi-emoticon-outline"></i>',
-      class: 'health'
-    },
-    {
-      start: '2018-11-21 16:00',
-      end: '2018-11-21 19:00',
-      title: 'Another thing',
-      content: '<i class="w-icon mdi mdi-thumb-up-outline"></i>',
-      class: 'blue-event'
-    },
-    {
-      start: '2018-11-23 21:00',
-      end: '2018-11-23 23:30',
-      title: 'Eat pop corns',
-      content: '<i class="w-icon mdi mdi-ticket"></i>',
-      class: 'leisure'
-    },
-    {
-      start: '2018-11-23 21:00',
-      end: '2018-11-23 23:30',
-      title: 'Enjoy the movie',
-      content: '<i class="w-icon mdi mdi-ticket"></i>',
-      class: 'leisure'
-    }
-  ],
+  ]),
   minEventWidth: ref(0)
 })
 

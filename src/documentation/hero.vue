@@ -29,7 +29,6 @@
         :schedules="demoExample.schedules"
         :editable-events="demoExample.editable"
         :events="demoExample.events"
-        hide-weekends
         :dark="store.darkMode"
         style="height: 450px")
         template(#schedule-heading="{ schedule, view }")
