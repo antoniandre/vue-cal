@@ -14,7 +14,7 @@
         | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
-  .vuecal__event-resizer(v-if="isResizable")
+  .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete
 </template>

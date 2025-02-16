@@ -81,8 +81,8 @@ export function useDragAndDrop (vuecal) {
   const eventDragStart = (e, event) => {
     console.log('eventDragStart')
 
-    // Cancel the drag if trying to drag event from a text selection.
-    if (e.target.nodeType === 3) return e.preventDefault()
+    // Cancel the drag if trying to drag event from a text selection or from the resizer.
+    if (e.target.nodeType === 3 || vuecal.touch.isResizingEvent) return e.preventDefault()
 
     e.dataTransfer.dropEffect = 'move'
     // Transfer the event's data to the receiver (when successfully drag & dropping out of Vue Cal).
@@ -96,6 +96,7 @@ export function useDragAndDrop (vuecal) {
     dragging.eventId = event._.id
     dragging.fromVueCal = vuecalUid
     event._.dragging = true
+
     // Controls the CSS class of the fixed event that remains while a copy is being dragged.
     // Thanks to this class added at next Vue frame, the event being dragged can have a different style.
     setTimeout(() => (event._.draggingGhost = true), 0)
