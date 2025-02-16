@@ -10,13 +10,7 @@
     :key="i"
     :start="date.start"
     :end="date.end"
-    :index="i"
-    @cell-drag-start="emit('cell-drag-start')"
-    @cell-drag-end="emit('cell-drag-end')"
-    @event-drag-start="emit('event-drag-start')"
-    @event-drag-end="emit('event-drag-end')"
-    @event-resize-start="emit('event-resize-start')"
-    @event-resize-end="emit('event-resize-end')")
+    :index="i")
     template(v-if="$slots.cell" #cell="params")
       slot(name="cell" v-bind="params")
     template(v-if="$slots['cell-date']" #cell-date="params")
@@ -35,15 +29,6 @@
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
 import VueCalCell from './cell.vue'
 import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
-
-const emit = defineEmits([
-  'cell-drag-start',
-  'cell-drag-end',
-  'event-drag-start',
-  'event-drag-end',
-  'event-resize-start',
-  'event-resize-end'
-])
 
 const vuecal = inject('vuecal')
 let { view, config, dateUtils } = vuecal

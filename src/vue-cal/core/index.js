@@ -46,7 +46,13 @@ export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
     config: {},
     eventsManager: {},
     view: {}, // At any time this object will be filled with current view details and visible events.
-    dnd: {} // Drag and drop module.
+    dnd: {}, // Drag and drop module.
+    // stores the gesture related states. E.g. dragging event, resizing event, etc.
+    touch: {
+      isDraggingCell: false,
+      isDraggingEvent: false,
+      isResizingEvent: false
+    }
   })
 
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts))

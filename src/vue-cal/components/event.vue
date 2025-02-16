@@ -24,7 +24,7 @@ import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
-const { config, view, dnd } = inject('vuecal')
+const { config, view, dnd, touch: globalTouchState } = inject('vuecal')
 
 const props = defineProps({
   event: { type: Object, required: true }
@@ -172,19 +172,13 @@ const onDocMousemove = e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
 
   if (touch.fromResizer && !touch.resizing) {
-    // Internal emit to the root component to add a CSS class on wrapper while dragging.
-    emit('event-resize-start')
+    touch.resizing = true
+    globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
+
     // If there's an @event-resize-start external listener, call it.
     eventListeners.value.resizeStart?.({ e, event })
   }
-  else if (!touch.dragging) {
-    // Internal emit to the root component to add a CSS class on wrapper while dragging.
-    emit('event-drag-start')
-    // If there's an @event-drag-start external listener, call it.
-    eventListeners.value.dragStart?.({ e, event })
-  }
 
-  touch[touch.fromResizer ? 'resizing' : 'dragging'] = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
   touch.holding = false
 
@@ -217,13 +211,9 @@ const onDocMouseup = async e => {
   if (touch.resizing) {
     // If there's an @event-resize-end external listener, call it.
     eventListeners.value.resizeEnd?.({ e, event })
-    emit('event-resize-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
+    globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
-  else if (touch.dragging) {
-    // If there's an @event-drag-end external listener, call it.
-    eventListeners.value.dragEnd?.({ e, event })
-    emit('event-drag-end') // Internal emit to the root to add a CSS class on wrapper while dragging.
-  }
+
   document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
   touch.resizing = false
   touch.fromResizer = false

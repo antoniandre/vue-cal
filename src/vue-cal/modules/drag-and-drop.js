@@ -104,6 +104,8 @@ export function useDragAndDrop (vuecal) {
     Object.assign(viewBeforeDrag, { id: view.id, date: view.firstCellDate })
 
     cancelViewChange = true // Re-init the cancel view: should cancel unless a cell received the event.
+
+    vuecal.touch.isDraggingEvent = true // For the global dragging class and cursor.
   }
 
   /**
@@ -129,6 +131,8 @@ export function useDragAndDrop (vuecal) {
     if (viewChanged && cancelViewChange && viewBeforeDrag.id) {
       view.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
     }
+
+    vuecal.touch.isDraggingEvent = false // For the global dragging class and cursor.
   }
 
   /**
@@ -282,11 +286,6 @@ export function useDragAndDrop (vuecal) {
     // `external` when the event is not coming from this Vue Cal.
     emit('event-drop', { event, originalEvent: incomingEvent, external: !dragging.fromVueCal })
     emit('event-change', { event, originalEvent: incomingEvent })
-
-    // Sometimes the event dragend does not trigger (?!), so manually trigger it if it didn't.
-    // setTimeout(() => {
-    //   if (dragging.eventId) eventDragEnd(event)
-    // }, 300)
   }
 
   /**
