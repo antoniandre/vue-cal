@@ -85,8 +85,8 @@
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  slot(v-if="$slots['event-count']" name="event-count" :events="cellEvents")
-  .vuecal__cell-events-count(v-else-if="showCellEventsCount") {{ cellEvents.length }}
+  slot(v-if="$slots['event-count']" name="event-count" :events="cellForegroundEvents")
+  .vuecal__cell-events-count(v-else-if="showCellEventsCount") {{ cellForegroundEvents.length }}
 
   .vuecal__now-line(
     v-if="nowLine.show"
@@ -237,8 +237,12 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
-  return eventsManager.getEventsByDate(startFormatted.value, true)
+  return eventsManager.getEventsByDate(startFormatted.value, true, true)
     .filter(event => !eventsDeleted.value.includes(event._.id))
+})
+
+const cellForegroundEvents = computed(() => {
+  return cellEvents.value.filter(event => !event.background)
 })
 
 /**
@@ -257,10 +261,8 @@ const cellEventsPerSchedule = computed(() => {
 // Overlapping events calculation (only updates when event IDs change).
 const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 watch(
-  () => cellEvents.value.map(e => e._.id).join(), // Watch event IDs only.
-  () => {
-    overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value)
-  },
+  () => cellForegroundEvents.value.map(e => e._.id).join(), // Watch event IDs only.
+  () => overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value),
   { immediate: true }
 )
 
@@ -269,7 +271,7 @@ const eventStyles = computed(() => {
   const styles = {}
   for (const event of cellEvents.value) {
     const eventId = event._.id
-    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId]
+    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
 
     styles[eventId] = {
       width: `${100 / maxConcurrent}%`,
@@ -284,7 +286,7 @@ const recalculateOverlaps = () => {
 }
 
 const showCellEventsCount = computed(() => {
-  return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellEvents.value.length
+  return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellForegroundEvents.value.length
 })
 
 /**
@@ -579,7 +581,7 @@ const removeEventListeners = () => {
 }
 
 // Recalculate overlaps when events change (added, deleted, update).
-watch(cellEvents, recalculateOverlaps, { deep: true })
+watch(cellForegroundEvents.value, recalculateOverlaps, { deep: true })
 
 onBeforeUnmount(async () => {
   // Removing the calendar events will trigger a rerender of all the cells in the view because the array

@@ -105,9 +105,14 @@ export const useEvents = vuecal => {
   const getEvent = id => events.value.byId[id]
 
   // Retrieve events by a formatted date and optionally return the full event objects.
-  const getEventsByDate = (dateFormatted, fullEvents = false) => {
-    const evts = events.value.byDate[dateFormatted] || []
-    return fullEvents ? evts.map(getEvent) : evts
+  const getEventsByDate = (dateFormatted, fullEvents = false, includeBackgroundEvents = false) => {
+    let evts = events.value.byDate[dateFormatted] || []
+    evts = fullEvents || includeBackgroundEvents ? evts.map(getEvent) : evts
+    if (!includeBackgroundEvents) {
+      evts = evts.filter(event => !event.background)
+      if (!fullEvents) evts = evts.map(event => event._.id)
+    }
+    return evts
   }
 
   // Get events for the view based on cell dates.
@@ -118,7 +123,7 @@ export const useEvents = vuecal => {
     const events = {}
     cellDates.forEach(({ startFormatted }) => {
       events[startFormatted] = []
-      const eventsByDate = getEventsByDate(startFormatted)
+      const eventsByDate = getEventsByDate(startFormatted, false, true)
       if (eventsByDate.length) events[startFormatted].push(...eventsByDate)
     })
     return events
@@ -225,9 +230,7 @@ export const useEvents = vuecal => {
     for (const e of cellEvents) {
       const id = e._.id
 
-      if (!cellOverlaps[id]) {
-        cellOverlaps[id] = { overlaps: new Set(), maxConcurrent: 1, position: 0 }
-      }
+      if (!cellOverlaps[id]) cellOverlaps[id] = { overlaps: new Set(), maxConcurrent: 1, position: 0 }
 
       // Remove expired events from active tracking list.
       activeEvents = activeEvents.filter(active => active.end > e.start)
@@ -261,9 +264,7 @@ export const useEvents = vuecal => {
     }
 
     // Convert Sets to Arrays.
-    for (const id in cellOverlaps) {
-      cellOverlaps[id].overlaps = [...cellOverlaps[id].overlaps]
-    }
+    for (const id in cellOverlaps) cellOverlaps[id].overlaps = [...cellOverlaps[id].overlaps]
 
     return { cellOverlaps, longestStreak: maxConcurrent }
   }
