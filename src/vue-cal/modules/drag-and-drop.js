@@ -220,7 +220,7 @@ export function useDragAndDrop (vuecal) {
    * @param {Date} cellDate The hovered cell starting date.
    * @param {Number|String} schedule The optional schedule being dropped into, if any.
    */
-  const cellDragDrop = (e, cell) => {
+  const cellDragDrop = async (e, cell) => {
     // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
     e.preventDefault()
 
@@ -246,12 +246,24 @@ export function useDragAndDrop (vuecal) {
 
       if (event) {
         event._.dragging = false
-        event.start = newStart
-        event.end = newEnd
 
-        // Can drop on anything, but climb up to schedule div if any.
-        const schedule = e.target.closest('[data-schedule]')
-        if (schedule) event.schedule = ~~schedule.dataset.schedule
+        let acceptDrop = true
+        const { drop: dropEventHandler } = config.eventListeners?.event
+        // Call external validation of event drop. If successful, update the event details.
+        if (dropEventHandler) {
+          acceptDrop = await dropEventHandler({
+            event: { ...event, start: newStart, end: newEnd },
+            overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
+          })
+          // Can externally use event.isOverlapping() to check if the event overlaps with other events.
+        }
+        if (acceptDrop) {
+          event.start = newStart
+          event.end = newEnd
+          // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
+          const schedule = e.target.closest('[data-schedule]')
+          if (schedule) event.schedule = ~~schedule.dataset.schedule
+        }
       }
       else {
         // Case where events are fetched from the backend and removed from the array when not in the view.
@@ -283,9 +295,9 @@ export function useDragAndDrop (vuecal) {
     cancelViewChange = false
     dragging.toVueCal = vuecalUid
 
-    // Emit `event-drop` & `event-change` events and return the updated event.
-    // `external` when the event is not coming from this Vue Cal.
-    emit('event-drop', { event, originalEvent: incomingEvent, external: !dragging.fromVueCal })
+    // Emit `event-dropped` & `event-change` events and return the updated event.
+    // `external` is when the event is not coming from this Vue Cal instance.
+    emit('event-dropped', { event, originalEvent: incomingEvent, external: !dragging.fromVueCal })
     emit('event-change', { event, originalEvent: incomingEvent })
   }
 

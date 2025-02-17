@@ -85,7 +85,7 @@ const emit = defineEmits([
   'update:events',
   'event-delete',
   'event-created',
-  'event-drop',
+  'event-dropped',
   'event-change'
 ])
 

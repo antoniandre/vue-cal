@@ -69,7 +69,10 @@ const classes = computed(() => ({
   // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
   // dragged. Sometimes when dragging fast the dragging-ghost class would get stuck and events stays
   // invisible, so if dragging is false, disable the dragging-ghost class as well.
-  'vuecal__event--dragging-ghost': event._.dragging && event._.draggingGhost,
+  // On event drop, if the new position of the event is approved, only remove the dragging-ghost class
+  // after event deletion (event._.dragging is already false) so the event ghost does not flash in before
+  // deletion.
+  'vuecal__event--dragging-ghost': event._.draggingGhost,
   'vuecal__event--resizing': touch.resizing
 }))
 
