@@ -145,6 +145,17 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         template(#title)
           code event-drop
         template(#content)
+          p.
+            Fired as soon as the event is dropped. If there is a listener, it must return true or false to
+            accept or reject the event drop at the new position.
+            Returns an object containing:
+          ul
+            li #[span.code event], the calendar event object that is being dropped
+            li #[span.code overlaps], an array of all the overlapping events, or empty array if none.
+      w-accordion-item
+        template(#title)
+          code event-dropped
+        template(#content)
           p Returns an object containing:
           ul
             li #[span.code event], the calendar event object that was dropped

@@ -37,10 +37,17 @@ export const useEvents = vuecal => {
       event._.deleting = false
       event._.deleted = false
 
-      event.isOverlapping = () => {
-        return getEventsByDate(event._.startFormatted, true)
+      /**
+       * Inject a function to check if the event is overlapping with any another event.
+       *
+       * @param {Object} at - An optional object with start and end dates to check the overlap at.
+       *                      If not provided, the event's own start and end dates will be used.
+       * @returns {Boolean} - True if the event is overlapping with another event.
+       */
+      event.isOverlapping = (at = null) => {
+        return getEventsByDate(at?.start ? dateUtils.formatDate(at?.start) : event._.startFormatted, true)
           .filter(event2 => event2._.id !== event._.id)
-          .some(event2 => isEventInRange(event2, event.start, event.end))
+          .some(event2 => isEventInRange(event2, at?.start || event.start, at?.end || event.end))
       }
       event.getOverlappingEvents = () => {
         return overlaps[event._.startFormatted]?.[event._.id]?.overlaps
