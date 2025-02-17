@@ -580,7 +580,7 @@ const removeEventListeners = () => {
   })
 }
 
-// Recalculate overlaps when events change (added, deleted, update).
+// Recalculate overlaps when events change (added, deleted, date change, schedule change).
 watch(cellForegroundEvents.value, recalculateOverlaps, { deep: true })
 
 onBeforeUnmount(async () => {

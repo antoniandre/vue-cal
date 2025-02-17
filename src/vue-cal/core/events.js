@@ -235,8 +235,11 @@ export const useEvents = vuecal => {
       // Remove expired events from active tracking list.
       activeEvents = activeEvents.filter(active => active.end > e.start)
 
-      // Find all current overlaps.
-      let currentOverlaps = activeEvents.filter(active => active.start < e.end)
+      // Find all current overlaps in the current cell or schedule.
+      let currentOverlaps = activeEvents.filter(active => {
+        const sameSchedule = !e.schedule || !active.schedule || e.schedule === active.schedule
+        return sameSchedule && active.start < e.end
+      })
       let takenPositions = new Set(currentOverlaps.map(ev => cellOverlaps[ev._.id]?.position ?? 0))
 
       // Assign the lowest available column position.
