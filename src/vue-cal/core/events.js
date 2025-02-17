@@ -46,11 +46,15 @@ export const useEvents = vuecal => {
        */
       event.isOverlapping = (at = null) => {
         return getEventsByDate(at?.start ? dateUtils.formatDate(at?.start) : event._.startFormatted, true)
-          .filter(event2 => event2._.id !== event._.id)
+          .filter(event2 => event2._.id !== event._.id) // Remove itself.
           .some(event2 => isEventInRange(event2, at?.start || event.start, at?.end || event.end))
       }
-      event.getOverlappingEvents = () => {
-        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps
+      event.getOverlappingEvents = (at = null) => {
+        if (at?.start && at?.end) {
+          return getEventsByDate(dateUtils.formatDate(at.start), true)
+            .filter(event2 => event2._.id !== event._.id && isEventInRange(event2, at.start, at.end))
+        }
+        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps || []
       }
 
       // Register the event DOM node in the event in order to emit DOM events.
