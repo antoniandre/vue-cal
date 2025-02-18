@@ -494,6 +494,7 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     :snap-to-interval="15"
     editable-events
     :events="exDragAndDrop.events"
+    @event-drop="({ event, overlaps }) => !overlaps.length"
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
 
 //- Example.
@@ -836,16 +837,7 @@ const exEventsVModel = reactive({
 
 
 const exDragAndDrop = reactive({
-  events: [
-    {
-      start: '2018-11-21 14:00',
-      end: '2018-11-21 16:30',
-      title: 'Surgery',
-      content: '<i class="w-icon mdi silverware-fork-knife"></i>',
-      class: 'health',
-      schedule: 2
-    }
-  ]
+  events: events.map(e => ({ ...e })) // Clone events when reusing, so events are independent.
 })
 
 const exExternalEventsDragDrop = reactive({
