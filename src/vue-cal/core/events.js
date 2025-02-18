@@ -52,7 +52,12 @@ export const useEvents = vuecal => {
       event.getOverlappingEvents = (at = null) => {
         if (at?.start && at?.end) {
           return getEventsByDate(dateUtils.formatDate(at.start), true)
-            .filter(event2 => event2._.id !== event._.id && isEventInRange(event2, at.start, at.end))
+            .filter(event2 => {
+              const notItself = event2._.id !== event._.id
+              const schedule = ~~(at.schedule || event.schedule)
+              const inSameSchedule = (schedule && event2.schedule === schedule) || !schedule
+              return notItself && inSameSchedule && isEventInRange(event2, at.start, at.end)
+            })
         }
         return overlaps[event._.startFormatted]?.[event._.id]?.overlaps || []
       }
@@ -233,6 +238,13 @@ export const useEvents = vuecal => {
 
     let cellOverlaps = {}
     let activeEvents = []
+    // Overlaps streak is the longest horizontal set of simultaneous events.
+    // This is determining the width of events in a streak.
+    // e.g. 3 overlapping events in a cell:
+    //  ___   ___
+    // | 1 | |_2_|  1 overlaps 2 & 3; 2 & 3 don't overlap;
+    // |   |  ___   => streak = 2; each width = 50% not 33%.
+    // |___| |_3_|
     let maxConcurrent = 0
 
     // Sort events by start time, then by duration (shorter first).
