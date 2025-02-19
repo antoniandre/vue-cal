@@ -403,14 +403,20 @@ example(title="Events v-model" anchor="events-v-model")
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
-    .todo-tag.d-iflex TO REVIEW
-    p.mb2.
-      In addition to the obvious event dragging itself, there are quite a few things that are good
-      to know about the drag &amp; drop functionality.
-    alert
-      strong Drag &amp; drop is only available for single-day events.
-    h5 Dragging over header
-    ul
+    .todo-tag.d-iflex FINISH THIS EXAMPLE
+    p.
+      The drag &amp; drop functionality is available for single-day foreground events only and is powered by
+      the native HTML5 drag &amp; drop API (widely supports touch devices).#[br]
+      It allows you to move an event from one cell to another, or from an external source to the calendar
+      and vice-versa.
+    p.mt2.
+      The drag &amp; drop feature is enabled by default, but you can disable it by setting the
+      #[code editable-events.drag] option to #[code false].#[br]
+      You can also disable it for a specific event by setting the #[code draggable] attribute to #[code false].
+    p
+    //- TODO
+    //- h5 Dragging over header
+    //- ul
       li.
         While you drag an event over the view selector buttons, the previous and next arrows,
         or even the today button, they will get into a highlighted state. If you hold over them for
@@ -423,8 +429,8 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         Dragging an event over the today button will take you to today's date. If you're in
         a #[code years] or #[code year] view, it will also go to the next available
         narrower view from #[code month] downwards.
-    h5 Dragging over a cell
-    ul
+    //- h5 Dragging over a cell
+    //- ul
       li.
         If you drag an event over a cell or a day schedule
         (refer to #[a(href="#ex--schedules") schedules]), the cell/schedule gets into a
@@ -434,8 +440,8 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         #[code years] or #[code year] view, if you hold over a cell
         in these views or in #[code month] view, it will go to the next available narrower
         view so you can at least see a day cell.
-    h5 Dropping the event into a cell or somewhere not allowed
-    ul
+    //- h5 Dropping the event into a cell or somewhere not allowed
+    //- ul
       li.
         If you drop the event outside of the calendar or anywhere it's not possible,
         it will snap back to its original place and the original view will be restored if it
@@ -452,13 +458,16 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
         If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
         the native HTML5 drag &amp; drop.
-    h5 Emitted events
-    ul
-      li
-        | When dropping an event into a cell, the
-        a.ml1(href="#ex--emitted-events") #[code event-drop] and #[code event-change] events are emitted.
-    h5 CSS styles
-    ul
+    alert
+      p If you listen for the #[code event-drop] event, you will receive an object with the following:
+      ul
+        li #[code event]: The event object that was dropped (contains the date and schedule where it was dropped).
+        li #[code cell]: The cell object where the event was dropped.
+        li #[code e]: The JavaScript native event object.
+        li #[code overlaps]: An array of events that overlap the dropped event.
+      p From the same event listener, you can #[strong accept or reject the drop by returning a boolean value].
+    //- h5 CSS styles
+    //- ul
       li
         | You can change the highlighted style of the header buttons or cells through these CSS classes:
         ul
@@ -488,14 +497,15 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
     today-button
-    :time-from="10 * 60"
-    :time-to="23 * 60"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
     hide-weekends
     :snap-to-interval="15"
     editable-events
     :events="exDragAndDrop.events"
-    @event-drop="({ event, overlaps }) => !overlaps.length"
-    :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]")
+    @event-drop="exDragAndDrop.onEventDrop"
+    :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
+    style="height: 341px")
 
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
@@ -837,7 +847,11 @@ const exEventsVModel = reactive({
 
 
 const exDragAndDrop = reactive({
-  events: events.map(e => ({ ...e })) // Clone events when reusing, so events are independent.
+  events: events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+  onEventDrop: ({ event, cell, overlaps }) => {
+    console.log('Event dropped:', event, 'into cell:', cell, overlaps)
+    return false
+  }
 })
 
 const exExternalEventsDragDrop = reactive({
