@@ -247,7 +247,7 @@ export function useDragAndDrop (vuecal) {
       if (event) {
         event._.dragging = false
         // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
-        const { schedule } = e.target.closest('[data-schedule]')?.dataset
+        const { schedule } = e.target.closest('[data-schedule]')?.dataset || {}
 
         let acceptDrop = true
         const { drop: dropEventHandler } = config.eventListeners?.event

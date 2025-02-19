@@ -378,9 +378,12 @@ example(title="Overlapping Events" anchor="overlapping-events")
     editable-events
     :min-event-width="exOverlappingEvents.minEventWidth"
     :views="{ days: { cols: 5, rows: 1 } }"
-    view="week"
+    view="days"
+    :views-bar="false"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
     :dark="store.darkMode"
-    style="min-height: 490px")
+    style="height: 301px")
 
 //- Example.
 example(anchor="recurring-events")
