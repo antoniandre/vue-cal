@@ -124,7 +124,8 @@ const scrollableElClasses = computed(() => ({
   'vuecal__scrollable--row': hasTimeColumn.value || (config.weekNumbers && view.isMonth),
   // Keep the states inside the Vue transition wrapper for smooth CSS transitions.
   [`vuecal__scrollable--${view.id}-view`]: true,
-  'vuecal__scrollable--has-schedules': config.schedules?.length
+  'vuecal__scrollable--has-schedules': config.schedules?.length,
+  'vuecal__scrollable--no-schedules': !config.schedules?.length
 }))
 
 onMounted(async () => {
