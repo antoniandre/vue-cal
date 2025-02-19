@@ -5,7 +5,11 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
+      .task Events overlap size option
+      .task Review external events drag &amp; drop
       .task Drag &amp; drop events on edges
+      .task Drag &amp; drop events on disabled day
+      .task Drag events over years/year/month views
       .task All-day events
       .task Multiple day events
       .task Recurring events
@@ -21,12 +25,12 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Events overlap size option
-      .task Reject event resize/drag on condition (E.g. overlap)
+      .task Accept/reject event resizing &amp; expose overlapping events
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Accept/reject event drag &amp; drop and expose overlapping events
       .task Events overlap with schedules
       .task Events overlap
       .task Drag &amp; drop events
