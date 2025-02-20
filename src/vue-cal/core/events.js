@@ -55,7 +55,7 @@ export const useEvents = vuecal => {
             .filter(event2 => {
               const notItself = event2._.id !== event._.id
               const schedule = ~~(at.schedule || event.schedule)
-              const inSameSchedule = (schedule && event2.schedule === schedule) || !schedule
+              const inSameSchedule = (config.schedules.length && event2.schedule === schedule) || !config.schedules.length
               return notItself && inSameSchedule && isEventInRange(event2, at.start, at.end)
             })
         }
@@ -260,7 +260,7 @@ export const useEvents = vuecal => {
 
       // Find all current overlaps in the current cell or schedule.
       let currentOverlaps = activeEvents.filter(active => {
-        const sameSchedule = !e.schedule || !active.schedule || e.schedule === active.schedule
+        const sameSchedule = !config.schedules.length || e.schedule === active.schedule
         return sameSchedule && active.start < e.end
       })
       let takenPositions = new Set(currentOverlaps.map(ev => cellOverlaps[ev._.id]?.position ?? 0))

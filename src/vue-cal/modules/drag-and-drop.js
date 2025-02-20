@@ -246,6 +246,8 @@ export function useDragAndDrop (vuecal) {
 
       if (event) {
         event._.dragging = false
+        // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
+        const { schedule } = e.target.closest('[data-schedule]')?.dataset || {}
 
         let acceptDrop = true
         const { drop: dropEventHandler } = config.eventListeners?.event
@@ -254,7 +256,7 @@ export function useDragAndDrop (vuecal) {
           acceptDrop = await dropEventHandler({
             e,
             event: { ...event, start: newStart, end: newEnd },
-            overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd }),
+            overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: ~~schedule }),
             cell
           })
           // Can externally use event.isOverlapping() to check if the event overlaps with other events.
@@ -262,9 +264,7 @@ export function useDragAndDrop (vuecal) {
         if (acceptDrop !== false) {
           event.start = newStart
           event.end = newEnd
-          // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
-          const schedule = e.target.closest('[data-schedule]')
-          if (schedule) event.schedule = ~~schedule.dataset.schedule
+          if (schedule) event.schedule = ~~schedule
         }
       }
       else {

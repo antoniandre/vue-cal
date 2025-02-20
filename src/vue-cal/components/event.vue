@@ -103,7 +103,8 @@ const eventListeners = computed(() => {
       // e.stopPropagation()
 
       // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, event } : e)
+      // `event-drop` is handled in the drag-and-drop composable.
+      if (e.type !== 'drop') handler(e.type ? { e, event } : e)
     }
   })
 
