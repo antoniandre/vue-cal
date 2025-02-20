@@ -89,6 +89,7 @@
     @event-drag="log('event-drag', $event)"
     @event-drag-end="log('event-drag-end', $event)"
     @event-drop="log('event-drop', $event)"
+    @event-dropped="log('event-dropped', $event)"
     @event-resize="log('event-resize', $event)"
     @event-resize-end="log('event-resize-end', $event)"
     @event-contextmenu="log('event-contextmenu', $event)"
