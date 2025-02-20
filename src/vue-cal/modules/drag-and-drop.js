@@ -246,8 +246,6 @@ export function useDragAndDrop (vuecal) {
 
       if (event) {
         event._.dragging = false
-        // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
-        const { schedule } = e.target.closest('[data-schedule]')?.dataset || {}
 
         let acceptDrop = true
         const { drop: dropEventHandler } = config.eventListeners?.event
@@ -255,16 +253,18 @@ export function useDragAndDrop (vuecal) {
         if (dropEventHandler) {
           acceptDrop = await dropEventHandler({
             e,
-            event,
-            overlaps: event.getOverlappingEvents(({ start: newStart, end: newEnd, schedule: ~~schedule })),
+            event: { ...event, start: newStart, end: newEnd },
+            overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd }),
             cell
           })
           // Can externally use event.isOverlapping() to check if the event overlaps with other events.
         }
-        if (acceptDrop) {
+        if (acceptDrop !== false) {
           event.start = newStart
           event.end = newEnd
-          if (schedule) event.schedule = ~~schedule
+          // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
+          const schedule = e.target.closest('[data-schedule]')
+          if (schedule) event.schedule = ~~schedule.dataset.schedule
         }
       }
       else {
@@ -303,74 +303,12 @@ export function useDragAndDrop (vuecal) {
     emit('event-change', { event, originalEvent: incomingEvent })
   }
 
-  /**
-   * On drag enter on a view button or on today, prev & next buttons.
-   * Sets a highlighted state on the hovered button, and go to requested view.
-   *
-   * @param {Object} e The associated DOM event.
-   * @param {String} id The id of the header element being hovered. One of:
-   *                    previous, next, today, years, year, month, week, day.
-   * @param {Object} headerData The header component's $data.
-   */
-  const viewSelectorDragEnter = (e, id, headerData) => {
-    console.log('viewSelectorDragEnter')
-    if (e.currentTarget.contains(e.relatedTarget)) return
-
-    headerData.highlightedControl = id
-    clearTimeout(changeViewTimeout)
-    changeViewTimeout = setTimeout(() => {
-      if (['previous', 'next'].includes(id)) {
-        vuecal[id]()
-        // Keep pressing on previous or next button until user goes away.
-        clearInterval(pressPrevOrNextInterval)
-        pressPrevOrNextInterval = setInterval(vuecal[id], holdOverTimeout)
-      }
-      else if (id === 'today') {
-        clearInterval(pressPrevOrNextInterval)
-        let viewId
-        if (view.id.includes('year')) {
-          // If hovering today from a year or years view go to narrower view from month view.
-          viewId = vuecal.enabledViews.filter(view => !view.includes('year'))[0]
-        }
-        view.switchView(viewId || view.id, new Date(new Date().setHours(0, 0, 0, 0)), true)
-      }
-      else view.switchView(id, null, true)
-      viewChanged = true
-    }, holdOverTimeout)
-  }
-
-  /**
-   * On drag leave on a view button or on today, prev & next buttons.
-   * Removes the highlighted state on the hovered button, and cancel the timer to
-   * go to the requested view.
-   *
-   * @param {Object} e The associated DOM event.
-   * @param {String} id The id of the header element being hovered. One of:
-   *                    previous, next, today, years, year, month, week, day.
-   * @param {Object} headerData The header component's $data.
-   */
-  const viewSelectorDragLeave = (e, id, headerData) => {
-    console.log('viewSelectorDragLeave')
-    if (e.currentTarget.contains(e.relatedTarget)) return
-
-    // Only cancel the timer if leaving the current nav button to no other one.
-    // If leaving this nav button to enter another, a cancel is done in viewSelectorDragEnter,
-    // and a new timer is started.
-    if (headerData.highlightedControl === id) {
-      headerData.highlightedControl = null
-      if (changeViewTimeout) changeViewTimeout = clearTimeout(changeViewTimeout)
-      if (pressPrevOrNextInterval) pressPrevOrNextInterval = clearInterval(pressPrevOrNextInterval)
-    }
-  }
-
   return {
     eventDragStart,
     eventDragEnd,
     cellDragEnter,
     cellDragOver,
     cellDragLeave,
-    cellDragDrop,
-    viewSelectorDragEnter,
-    viewSelectorDragLeave
+    cellDragDrop
   }
 }
