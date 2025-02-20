@@ -10,6 +10,7 @@ ul.kanban
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
       .task Drag events over years/year/month views
+      .task Events accept dynamic colors
       .task All-day events
       .task Multiple day events
       .task Recurring events
