@@ -484,27 +484,43 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
         (native HTML5 drag &amp; drop behavior). The original event receives the
         #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
         You can use that class to give it a different style.
+    .w-flex.wrap.gap3.justify-end
+      w-switch(v-model="exDragAndDrop.draggableEvents" label-color="base") Draggable Events
+      w-tooltip(align-right)
+        template(#activator="{ on }")
+          div(v-on="on")
+            w-switch(v-model="exDragAndDrop.overlappableEvents" label-color="base") Overlappable Events
+        | Allow dropping events on top of other events
+
   template(#code-html).
     &lt;vue-cal
       :events="events"
-      editable-events
-      :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"&gt;
+      :editable-events="{ drag: {{ exDragAndDrop.draggableEvents ? 'true' : 'false' }} }"
+      @event-drop="onEventDrop"
+      :schedules="schedules"&gt;
     &lt;/vue-cal&gt;
-  template(#code-css).
-    .vuecal__event--dragging {background-color: rgba(60, 60, 60, 0.3);}
+  template(#code-js)
+    | const schedules = [{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]
+    |
+    template(v-if="exDragAndDrop.overlappableEvents")
+      |
+      | const onEventDrop = ({ e, event, cell }) => {
+      |   console.log('Event dropped!', event, cell)
+      |   // Return false to reject the drop.
+      | }
+    template(v-else)
+      |
+      | const onEventDrop = ({ e, event, cell, overlaps }) => !overlaps.length
 
   vue-cal(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    today-button
-    :time-from="9 * 60"
-    :time-to="15 * 60"
-    hide-weekends
-    :snap-to-interval="15"
-    editable-events
     :events="exDragAndDrop.events"
+    :editable-events="{ drag: exDragAndDrop.draggableEvents }"
     @event-drop="exDragAndDrop.onEventDrop"
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :snap-to-interval="15"
+    :dark="store.darkMode"
     style="height: 341px")
 
 //- Example.
@@ -848,10 +864,11 @@ const exEventsVModel = reactive({
 
 const exDragAndDrop = reactive({
   events: events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  onEventDrop: ({ event, cell, overlaps }) => {
-    console.log('Event dropped:', event, 'into cell:', cell, overlaps)
-    return false
-  }
+  onEventDrop: ({ e, event, cell, overlaps }) => {
+    return !overlaps.length || (overlaps.length && exDragAndDrop.overlappableEvents)
+  },
+  draggableEvents: ref(true),
+  overlappableEvents: ref(true)
 })
 
 const exExternalEventsDragDrop = reactive({
