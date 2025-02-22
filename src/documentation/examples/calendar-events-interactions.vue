@@ -1,4 +1,39 @@
 <template lang="pug">
+alert.py3(info)
+  p.mb2.
+    The calendar allows you to interact with events in various ways.#[br]
+    Here are some examples of how you can create, edit, delete, and drag &amp; drop events.
+
+  p.text-bold.mt4 There are 5 types of event interactions:
+  ul.no-bullet.ml0
+    li.mt3
+      .title3
+        w-icon.mr2.success(md) wi-check
+        | Read
+      p.ml7.
+        The events are displayed on the calendar and can show more details, usually on click,
+        like seen in the #[router-link(to="/examples/calendar-events--display#ex--open-dialog-on-event-click") Open Dialog on Event Click] example.
+    li.mt4
+      .title3
+        w-icon.mr2.success(md) wi-check
+        | Create
+      p.ml7 Create an event by clicking and dragging on a cell, by default.
+    li.mt4
+      .title3
+        w-icon.mr2.success(md) wi-check
+        | Delete
+      p.ml7 Delete an event by double clicking on it, by default.
+    li.mt4
+      .title3
+        w-icon.mr2.success(md) wi-check
+        | Resize
+      p.ml7 Resize an event by dragging its resizer handle.
+    li.mt4
+      .title3
+        w-icon.mr2.success(md) wi-check
+        | Drag
+      p.ml7 Drag and drop an event onto any cell that is not disabled.
+
 //- Example.
 example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-events")
   template(#desc)
