@@ -44,20 +44,14 @@ export const useEvents = vuecal => {
        *                      If not provided, the event's own start and end dates will be used.
        * @returns {Boolean} - True if the event is overlapping with another event.
        */
-      event.isOverlapping = (at = null) => {
-        return getEventsByDate(at?.start ? dateUtils.formatDate(at?.start) : event._.startFormatted, true)
-          .filter(event2 => event2._.id !== event._.id) // Remove itself.
-          .some(event2 => isEventInRange(event2, at?.start || event.start, at?.end || event.end))
-      }
+      event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
       event.getOverlappingEvents = (at = null) => {
         if (at?.start && at?.end) {
-          return getEventsByDate(dateUtils.formatDate(at.start), true)
-            .filter(event2 => {
-              const notItself = event2._.id !== event._.id
-              const schedule = ~~(at.schedule || event.schedule)
-              const inSameSchedule = (config.schedules.length && event2.schedule === schedule) || !config.schedules.length
-              return notItself && inSameSchedule && isEventInRange(event2, at.start, at.end)
-            })
+          return getEventsInRange(
+            getEventsByDate(dateUtils.formatDate(at.start), true),
+            { start: at?.start || event.start, end: at?.end || event.end },
+            { excludeIds: [event._.id], schedule: config.schedules.length ? ~~(at.schedule || event.schedule) : null }
+          )
         }
         return overlaps[event._.startFormatted]?.[event._.id]?.overlaps || []
       }
@@ -296,6 +290,31 @@ export const useEvents = vuecal => {
   }
 
   /**
+   * Returns a list of events that are in the provided date range.
+   * Optionally exclude some events by their IDs and optionally filter by schedule.
+   * Not the most readable function, but it's optimized for performance (Set and for loop).
+   *
+   * @param {Array} events The list of events to filter.
+   * @param {Object} range The date range to filter events by.
+   * @param {Object} options Additional options for filtering.
+   * @param {Array} options.excludeIds An array of event IDs to exclude from the results.
+   * @param {Number} options.schedule The schedule to filter events by.
+   * @return {Array} The list of events that are in the provided date range.
+   */
+  const getEventsInRange = (events = [], { start, end }, { excludeIds = [], schedule = null }) => {
+    const excludeSet = new Set(excludeIds)
+    const result = []
+    for (const event of events) {
+      if (
+        !excludeSet.has(event._?.id) &&
+        (schedule === null || schedule === event.schedule) &&
+        isEventInRange(event, start, end)
+      ) result.push(event)
+    }
+    return result
+  }
+
+  /**
    * Returns true if an event is in a given date range, even partially, or false otherwise.
    *
    * @param {Object} event The event to test.
@@ -322,6 +341,7 @@ export const useEvents = vuecal => {
     getEventsByDate,
     getViewEvents,
     getCellOverlappingEvents,
+    getEventsInRange,
     createEvent,
     deleteEvent,
     isEventInRange
