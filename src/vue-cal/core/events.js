@@ -30,7 +30,7 @@ export const useEvents = vuecal => {
 
       // Inject a unique ID in each event.
       if (!event._) event._ = {}
-      event._.id = event._.id || event.id || ++uid
+      event._.id = event._.id || ++uid
 
       // Inject a delete function in each event and set the deleting flag to false.
       if (!event.delete) event.delete = forcedStage => deleteEvent(event._.id, forcedStage)
@@ -152,6 +152,10 @@ export const useEvents = vuecal => {
       dateUtils.snapToInterval(newEvent.start, config.snapToInterval)
       dateUtils.snapToInterval(newEvent.end, config.snapToInterval)
     }
+
+    // Always override any existing ID when created: it could come from an external source
+    // with an existing _.id, but we need to ensure it's unique for internal management.
+    newEvent._.id = ++uid
 
     newEvent._ = { fireCreated: true } // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
