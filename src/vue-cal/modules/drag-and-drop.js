@@ -237,8 +237,13 @@ export function useDragAndDrop (vuecal) {
     // ----------------------------------------------------
     let event
     const { start: newStart, end: newEnd } = computeNewEventStartEnd(e, incomingEvent, cell.start)
+    // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
+    const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
+    let onAcceptedDrop = () => {}
+    console.log('cellDragDrop', newStart, newEnd, newSchedule)
 
-    // Step 3: Create or update the event in the config.events array (source of truth).
+    // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
+    // for drop approval request.
     // ----------------------------------------------------
     // The event is coming from this Vue Cal, find it in the events array.
     if (dragging.fromVueCal === vuecalUid) {
@@ -246,25 +251,11 @@ export function useDragAndDrop (vuecal) {
 
       if (event) {
         event._.dragging = false
-        // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
-        const { schedule } = e.target.closest('[data-schedule]')?.dataset || {}
 
-        let acceptDrop = true
-        const { drop: dropEventHandler } = config.eventListeners?.event
-        // Call external validation of event drop. If successful, update the event details.
-        if (dropEventHandler) {
-          acceptDrop = await dropEventHandler({
-            e,
-            event: { ...event, start: newStart, end: newEnd },
-            overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: ~~schedule }),
-            cell
-          })
-          // Can externally use event.isOverlapping() to check if the event overlaps with other events.
-        }
-        if (acceptDrop !== false) {
+        onAcceptedDrop = () => {
           event.start = newStart
           event.end = newEnd
-          if (schedule) event.schedule = ~~schedule
+          if (newSchedule !== undefined) event.schedule = ~~newSchedule
         }
       }
       else {
@@ -283,14 +274,34 @@ export function useDragAndDrop (vuecal) {
       // dropping to another calendar then back to the original place.
       // const { eventId, start, end, duration, ...cleanIncomingEvent } = incomingEvent
       // event = eventsManager.createEvent(cellDate, duration, { ...cleanIncomingEvent, schedule })
-      event = eventsManager.createEvent({
+      event = {
         ...incomingEvent,
         start: newStart,
         end: newEnd,
-        ...((cell.schedule || cell.schedule === 0) && { schedule: cell.schedule }),
+        ...((newSchedule !== undefined) && { schedule: ~~newSchedule }),
         _: { id: incomingEvent._?.id || incomingEvent.id }
-      })
+      }
+      onAcceptedDrop = () => { event = eventsManager.createEvent(event) }
+      // if (event.isOverlapping()) debugger
     }
+
+    // Step 4: Call the external event drop handler if any, to ask for drop approval.
+    // Then update the event in the events array (source of truth).
+    // ----------------------------------------------------
+    let acceptDrop = true
+    const { drop: dropEventHandler } = config.eventListeners?.event
+    // Call external validation of event drop. If successful, update the event details.
+    if (dropEventHandler) {
+      acceptDrop = await dropEventHandler({
+        e,
+        event: { ...event, start: newStart, end: newEnd, schedule: ~~newSchedule },
+        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: ~~newSchedule }),
+        cell
+      })
+      // Can externally use event.isOverlapping() to check if the event overlaps with other events.
+    }
+    // If the event drop is accepted, add the event to the events array (source of truth).
+    if (acceptDrop !== false) onAcceptedDrop()
 
     cell.highlighted = false
     cell.highlightedSchedule = null
