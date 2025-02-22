@@ -262,7 +262,7 @@ const cellEventsPerSchedule = computed(() => {
 const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 watch(
   () => cellForegroundEvents.value.map(e => e._.id).join(), // Watch event IDs only.
-  () => overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value),
+  () => overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value),
   { immediate: true }
 )
 
@@ -282,7 +282,7 @@ const eventStyles = computed(() => {
 })
 
 const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getOverlappingEvents(startFormatted.value)
+  overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value)
 }
 
 const showCellEventsCount = computed(() => {
