@@ -304,20 +304,16 @@ export const useEvents = vuecal => {
    * @return {Boolean} true if in range, even partially.
    */
   const isEventInRange = (event, start, end) => {
-    // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start).
-    if (event.allDay || !config.time) {
-      // Get the date and discard the time if any, then check it's within the date range.
-      const startTimestamp = new Date(event.start).setHours(0, 0, 0, 0)
-      const endTimestamp = new Date(event.end).setHours(23, 59, 59, 999)
-      const rangeStart = new Date(start).setHours(0, 0, 0, 0)
-      const rangeEnd = new Date(end).setHours(23, 59, 59, 999)
+    // Check if all-day or timeless event (if date but no time there won't be a `:` in event.start),
+    // and discard the time from the date if any,
+    const allDayOrTimeless = event.allDay || !config.time
 
-      return endTimestamp >= rangeStart && startTimestamp <= rangeEnd
-    }
-
-    const startTimestamp = event.start.getTime()
-    const endTimestamp = event.end.getTime()
-    return endTimestamp >= start.getTime() && startTimestamp <= end.getTime()
+    const startTimestamp = allDayOrTimeless ? new Date(event.start).setHours(0, 0, 0, 0) : event.start.getTime()
+    const endTimestamp = allDayOrTimeless ? new Date(event.end).setHours(23, 59, 59, 999) : event.end.getTime()
+    const rangeStart = allDayOrTimeless ? new Date(start).setHours(0, 0, 0, 0) : start.getTime()
+    const rangeEnd = allDayOrTimeless ? new Date(end).setHours(23, 59, 59, 999) : end.getTime()
+    // Check the event is within the range.
+    return endTimestamp >= rangeStart && startTimestamp <= rangeEnd
   }
 
   return {
