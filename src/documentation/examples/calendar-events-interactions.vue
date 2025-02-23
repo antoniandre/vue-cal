@@ -438,7 +438,7 @@ example(title="Events v-model" anchor="events-v-model")
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
-    .todo-tag.d-iflex FINISH THIS EXAMPLE
+    .todo-tag.d-iflex FINISH THIS EXAMPLE - DISABLE A DAY
     p.
       The drag &amp; drop functionality is available for single-day foreground events only and is powered by
       the native HTML5 drag &amp; drop API (widely supports touch devices).#[br]
@@ -546,6 +546,8 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     template(v-else)
       |
       | const onEventDrop = ({ e, event, cell, overlaps }) => !overlaps.length
+      |
+      |
 
   vue-cal(
     :events="exDragAndDrop.events"
@@ -639,7 +641,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       }
     }
 
-  .w-flex.mt4.wrap.gap2
+  .w-flex.mt4.wrap.gap2.basis-zero
     .external-events.w-flex.column.gap2(
       @drop="exExternalEventsDragDrop.onEventDropInBank"
       @dragover.prevent)
@@ -916,9 +918,10 @@ const exExternalEventsDragDrop = reactive({
     e.dataTransfer.setData('event', JSON.stringify(draggable))
     e.dataTransfer.setData('cursor-grab-at', e.offsetY)
   },
-  onEventDrop: ({ event, originalEvent, external }) => {
+  onEventDrop: ({ e, event, cell, overlaps, external }) => {
     if (external) {
-      const extEventToDeletePos = exExternalEventsDragDrop.events.findIndex(item => item.id === originalEvent.id)
+      // When dropping an external event into Vue Cal, remove it from the external events list.
+      const extEventToDeletePos = exExternalEventsDragDrop.events.findIndex(item => item.id === event.id)
       if (extEventToDeletePos > -1) exExternalEventsDragDrop.events.splice(extEventToDeletePos, 1)
     }
   },
@@ -972,12 +975,11 @@ const exExternalEventsDragDrop = reactive({
     [data-theme="light"] & {--vuecal-primary-color: #1976D2;}
 
     .external-events {
-      width: 70px;
+      max-width: 150px;
       background-color: color-mix(in srgb, var(--w-contrast-bg-color) 3%, transparent);
       border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 6%, transparent);
       padding: 4px;
       border-radius: 4px;
-      flex-shrink: 0;
     }
     .external-event {
       background-color: var(--vuecal-primary-color);
