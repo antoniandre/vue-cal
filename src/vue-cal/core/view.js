@@ -482,9 +482,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     return eventsManager.getViewEvents(cellDates.value)
   })
 
-  const createEvent = event => eventsManager.createEvent(event)
+  const createEvent = eventsManager.createEvent
 
-  const deleteEvent = eventId => eventsManager.deleteEvent(eventId)
+  const deleteEvent = eventsManager.deleteEvent
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
