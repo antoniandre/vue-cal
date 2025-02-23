@@ -5,23 +5,16 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
+      .task Events snap-to-interval while resizing
       .task Events overlap size option
-      .task Review external events drag &amp; drop
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
       .task Drag events over years/year/month views
+      .task Further optimize events recomputation
       .task Events accept dynamic colors
       .task All-day events
       .task Multiple day events
       .task Recurring events
-        //- TODO:
-          General
-          - check overlaps only on the cell that has changed on event create/drag/background change
-          Multiple-day events:
-          - Fix event segments when dragging too fast on x axis.
-          - multiple days on month view like google calendar
-          - if more than 24 hour duration, consider as all-day
-          - #events-count
 
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
@@ -31,6 +24,7 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task I/O drag &amp; drop events
       .task Accept/reject event drag &amp; drop and expose overlapping events
       .task Events overlap with schedules
       .task Events overlap
