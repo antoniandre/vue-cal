@@ -19,7 +19,7 @@ const dragging = reactive({
 })
 
 export function useDragAndDrop (vuecal) {
-  const { config, view, eventsManager, emit, uid: vuecalUid } = vuecal
+  const { config, view, eventsManager, emit, uid: vuecalUid, dateUtils } = vuecal
 
   /**
    * Calculate event start time based on cursor position.
@@ -240,7 +240,7 @@ export function useDragAndDrop (vuecal) {
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
     let onAcceptedDrop = () => {}
-    console.log('cellDragDrop', newStart, newEnd, newSchedule)
+    console.log('cellDragDrop', newStart, newEnd, newSchedule, dragging.fromVueCal, vuecalUid)
 
     // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
     // for drop approval request.
@@ -279,10 +279,16 @@ export function useDragAndDrop (vuecal) {
         start: newStart,
         end: newEnd,
         ...((newSchedule !== undefined) && { schedule: ~~newSchedule }),
-        _: { id: incomingEvent._?.id || incomingEvent.id }
+        _: { id: incomingEvent._?.id || incomingEvent.id },
+        getOverlappingEvents: () => {
+          return eventsManager.getEventsInRange(
+            eventsManager.getEventsByDate(dateUtils.formatDate(newStart), true),
+            { start: newStart, end: newEnd },
+            { schedule: ~~newSchedule }
+          )
+        }
       }
       onAcceptedDrop = () => { event = eventsManager.createEvent(event) }
-      // if (event.isOverlapping()) debugger
     }
 
     // Step 4: Call the external event drop handler if any, to ask for drop approval.

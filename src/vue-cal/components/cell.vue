@@ -258,11 +258,12 @@ const cellEventsPerSchedule = computed(() => {
   }, {})
 })
 
-// Overlapping events calculation (only updates when event IDs change).
+// Overlapping events calculation (only updates when event IDs or date ranges change).
 const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 watch(
-  () => cellForegroundEvents.value.map(e => e._.id).join(), // Watch event IDs only.
-  () => overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value),
+  // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
+  () => cellForegroundEvents.value.map(e => `${e._.id} ${e.start.getTime()} ${e.end.getTime()}`).join(),
+  () => { overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value) },
   { immediate: true }
 )
 

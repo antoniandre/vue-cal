@@ -155,9 +155,10 @@ export const useEvents = vuecal => {
 
     // Always override any existing ID when created: it could come from an external source
     // with an existing _.id, but we need to ensure it's unique for internal management.
+    if (!newEvent._) newEvent._ = {}
     newEvent._.id = ++uid
 
-    newEvent._ = { fireCreated: true } // Flag to fire the 'event-created' event on first mounted.
+    newEvent._.fireCreated = true // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
     return newEvent
   }
