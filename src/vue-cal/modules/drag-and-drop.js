@@ -274,10 +274,6 @@ export function useDragAndDrop (vuecal) {
     // If the event is not coming from this Vue Cal but from another Vue Cal or an external source,
     // create the event in this Vue Cal.
     else {
-      // Removing the eventId is mandatory! It prevents the event to be duplicated when drag and
-      // dropping to another calendar then back to the original place.
-      // const { eventId, start, end, duration, ...cleanIncomingEvent } = incomingEvent
-      // event = eventsManager.createEvent(cellDate, duration, { ...cleanIncomingEvent, schedule })
       event = {
         ...incomingEvent,
         start: newStart,
