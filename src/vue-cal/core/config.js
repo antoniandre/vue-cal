@@ -174,7 +174,7 @@ export const useConfig = (vuecal, props, attrs) => {
     const { view } = vuecal
     const show = props.schedules.length && (view.isDay || view.isDays || view.isWeek)
     // Inject an id in each schedule if not present.
-    return show ? props.schedules.map((s, i) => ({ ...s, id: s.id ?? (i + 1) })) : []
+    return (show && props.schedules?.map((s, i) => ({ ...s, id: s.id ?? (i + 1) }))) || undefined
   })
 
   const editableEvents = computed(() => {

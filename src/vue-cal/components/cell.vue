@@ -54,7 +54,7 @@
         :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
-  template(v-if="!$slots.cell && !config.schedules.length")
+  template(v-if="!$slots.cell && !config.schedules")
     template(v-if="$slots['cell-events']")
       slot(name="cell-events")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")

@@ -60,7 +60,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, provide, ref, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onMounted, provide, useAttrs, useId, useTemplateRef, watch } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
@@ -113,7 +113,7 @@ const wrapperClasses = computed(() => ({
   'vuecal--dragging-cell': touchState.isDraggingCell,
   'vuecal--dragging-event': touchState.isDraggingEvent,
   'vuecal--resizing-event': touchState.isResizingEvent,
-  'vuecal--has-schedules': config.schedules
+  'vuecal--has-schedules': config.schedules?.length
 }))
 
 const wrapperStyles = computed(() => ({
