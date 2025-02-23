@@ -123,7 +123,11 @@ export function useDragAndDrop (vuecal) {
     // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
     // event from the first one.
     const { fromVueCal, toVueCal } = dragging
-    if (fromVueCal !== toVueCal) eventsManager.deleteEvent(event._.id, 3)
+    // First check if the destination is a Vue Cal (toVueCal), then the event can be deleted from
+    // the source.
+    // This is to prevent the event from being deleted when dragging and dropping to nowhere.
+    // When dropping the event to an external source, the event has to be deleted manually.
+    if (toVueCal && fromVueCal !== toVueCal) eventsManager.deleteEvent(event._.id, 3)
 
     dragging.fromVueCal = null
     dragging.toVueCal = null
@@ -302,7 +306,8 @@ export function useDragAndDrop (vuecal) {
         e,
         event: { ...event, start: newStart, end: newEnd, schedule: ~~newSchedule },
         overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: ~~newSchedule }),
-        cell
+        cell,
+        external: dragging.fromVueCal !== vuecalUid
       })
       // Can externally use event.isOverlapping() to check if the event overlaps with other events.
     }
@@ -316,7 +321,7 @@ export function useDragAndDrop (vuecal) {
 
     // Emit `event-dropped` & `event-change` events and return the updated event.
     // `external` is when the event is not coming from this Vue Cal instance.
-    emit('event-dropped', { event, originalEvent: incomingEvent, external: !dragging.fromVueCal })
+    emit('event-dropped', { event, originalEvent: incomingEvent, external: dragging.fromVueCal !== vuecalUid })
     emit('event-change', { event, originalEvent: incomingEvent })
   }
 
