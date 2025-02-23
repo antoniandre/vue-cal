@@ -59,7 +59,10 @@ export const useEvents = vuecal => {
       // Register the event DOM node in the event in order to emit DOM events.
       event._.register = domNode => {
         event._.$el = domNode
-        if (event._.fireCreated) vuecal.emit('event-created', event)
+        if (event._.fireCreated) {
+          vuecal.emit('event-created', event)
+          delete event._.fireCreated
+        }
       }
       event._.unregister = () => (event._.$el = null)
 
