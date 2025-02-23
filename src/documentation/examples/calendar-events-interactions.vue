@@ -654,6 +654,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
         strong.mr2 {{ item.title }}
         .caption ({{ item.duration ? `${item.duration} min` : 'no duration' }})
     vue-cal.grow(
+      ref="exExternalEventsDragDropEl1"
       @event-drop="exExternalEventsDragDrop.onEventDrop"
       editable-events
       :views-bar="false"
@@ -666,6 +667,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       :dark="store.darkMode"
       style="height: 301px")
     vue-cal.grow(
+      ref="exExternalEventsDragDropEl2"
       @event-drop="exExternalEventsDragDrop.onEventDrop"
       editable-events
       :views-bar="false"
@@ -908,6 +910,8 @@ const exDragAndDrop = reactive({
   overlappableEvents: ref(true)
 })
 
+const exExternalEventsDragDropEl1 = ref(null)
+const exExternalEventsDragDropEl2 = ref(null)
 const exExternalEventsDragDrop = reactive({
   events: ref([
     { id: 1, title: 'Ext. Event 1', duration: 60 },
@@ -931,8 +935,10 @@ const exExternalEventsDragDrop = reactive({
       ...incomingEvent,
       duration: incomingEvent.end ? (incomingEvent.end - incomingEvent.start) / 60000 : 60
     })
-    console.log(incomingEvent)
-    debugger
+    // When dropping a Vue Cal event into the external events bank, remove it from the Vue Cal events list.
+    const srcCal = document.querySelector('.vuecal--dragging-event')
+    const src = srcCal.isSameNode(exExternalEventsDragDropEl1.value.$el) ? exExternalEventsDragDropEl1 : exExternalEventsDragDropEl2
+    src.value.view.deleteEvent(incomingEvent._.id, 3)
   }
 })
 </script>
