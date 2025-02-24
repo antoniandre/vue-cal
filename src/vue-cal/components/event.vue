@@ -172,9 +172,10 @@ const onMousedown = e => {
   }, 1000)
 }
 
-const onDocMousemove = e => {
+const onDocMousemove = async e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
 
+  // Only the first touchmove to set the dragging flag.
   if (touch.fromResizer && !touch.resizing) {
     touch.resizing = true
     globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
@@ -195,17 +196,32 @@ const onDocMousemove = e => {
   }
 
   if (touch.fromResizer) {
-    const newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
+    let newStart = event.start
+    let newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
     // Store the event start to apply on event end when resizing and end < start.
     if (newEnd < touch.resizeStartDate) {
-      event.start = newEnd
-      event.end = touch.resizeStartDate
+      newStart = newEnd
+      newEnd = touch.resizeStartDate
     }
-    else event.end = newEnd
-  }
 
-  // If there's an @event-drag external listener, call it.
-  eventListeners.value.drag?.({ e, event })
+    // If there's an @event-resize external listener, call it and ask for resizing approval.
+    let acceptResize = true
+    const { resize: resizeEventHandler } = config.eventListeners?.event
+    // Call external validation of event resizing. If successful, update the event details.
+    if (resizeEventHandler) {
+      acceptResize = await resizeEventHandler({
+        e,
+        event: { ...event, start: newStart, end: newEnd },
+        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
+      })
+      // Can externally use event.isOverlapping() to check if the event overlaps with other events.
+    }
+    // If the event resizing is accepted, apply to new time range to the event.
+    if (acceptResize !== false) {
+      event.start = newStart
+      event.end = newEnd
+    }
+  }
 }
 
 const onDocMouseup = async e => {
