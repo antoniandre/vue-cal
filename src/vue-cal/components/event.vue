@@ -7,6 +7,7 @@
   :draggable="isDraggable"
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
   @dragend="isDraggable && dnd.eventDragEnd(event)")
+  pre {{event._.duration}}
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
@@ -201,13 +202,7 @@ const onDocMousemove = async e => {
   }
 
   if (touch.fromResizer) {
-    let newStart = event.start
-    let newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
-    // Store the event start to apply on event end when resizing and end < start.
-    if (newEnd < touch.resizeStartDate) {
-      newStart = newEnd
-      newEnd = touch.resizeStartDate
-    }
+    const { newStart, newEnd } = computeStartEnd(event)
 
     // If there's an @event-resize external listener, call it and ask for resizing approval.
     let acceptResize = true
@@ -233,8 +228,25 @@ const onDocMouseup = async e => {
   touch.holding = false
 
   if (touch.resizing) {
+    const { newStart, newEnd } = computeStartEnd(event)
+
     // If there's an @event-resize-end external listener, call it.
-    eventListeners.value.resizeEnd?.({ e, event })
+    let acceptResize = true
+    const resizeEndHandler = eventListeners.value['resize-end']
+    // Call external validation of event resize-end. If successful, update the event details.
+    if (resizeEndHandler) {
+      acceptResize = await resizeEndHandler({
+        e,
+        event,
+        original: touch.resizingOriginalEvent, // Original event details before resizing.
+        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
+      })
+    }
+
+    // If the event resize is accepted, apply new range if refused revert to original.
+    event.start = acceptResize === false ? touch.resizingOriginalEvent.start : newStart
+    event.end = acceptResize === false ? touch.resizingOriginalEvent.end : newEnd
+
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
 
@@ -261,6 +273,17 @@ const onDelete = () => {
   // Fire the DOM event manually as it needs to be triggered from events.js on deletion as well.
   // `detail` is the native expected object wrapper.
   eventEl.value.dispatchEvent(new CustomEvent('event-deleted', { detail: event._.id }))
+}
+
+const computeStartEnd = event => {
+  let newStart = event.start
+  let newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
+  // While resizing and event end is before event start.
+  if (newEnd < touch.resizeStartDate) {
+    newStart = newEnd
+    newEnd = touch.resizeStartDate
+  }
+  return { newStart, newEnd }
 }
 
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
