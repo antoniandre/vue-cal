@@ -50,6 +50,7 @@ const touch = reactive({
   movePercentageY: 0, // The Y coords in percentage while dragging.
   resizeStartDate: null, // When resizing and going above the start date (end before start) update the start instead of the end.
   resizingOriginalEvent: null, // Store the original event details while resizing.
+  resizingLastAcceptedEvent: null, // Store the last accepted event details while resizing.
   cellEl: null, // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   schedule: null
 })
@@ -220,6 +221,11 @@ const onDocMousemove = async e => {
       event.start = newStart
       event.end = newEnd
     }
+    else {
+      // If the event resizing is refused, store the last accepted original event details
+      // so it can be used to revert to this stage on event-resize-end (in `onDocMouseup`).
+      if (resizeEventHandler) touch.resizingLastAcceptedEvent = { ...event, _: { ...event._ } }
+    }
   }
 }
 
@@ -243,9 +249,9 @@ const onDocMouseup = async e => {
       })
     }
 
-    // If the event resize is accepted, apply new range if refused revert to original.
-    event.start = acceptResize === false ? touch.resizingOriginalEvent.start : newStart
-    event.end = acceptResize === false ? touch.resizingOriginalEvent.end : newEnd
+    // If the event resize is accepted apply new range, if refused (SPECIFICALLY FALSE) revert to original.
+    event.start = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).start : (touch.resizingLastAcceptedEvent?.start || newStart)
+    event.end = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).end : (touch.resizingLastAcceptedEvent?.end || newEnd)
 
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
@@ -266,6 +272,7 @@ const onDocMouseup = async e => {
   touch.cellEl = null
   touch.resizeStartDate = null
   touch.resizingOriginalEvent = null
+  touch.resizingLastAcceptedEvent = null
   touch.schedule = null
 }
 
