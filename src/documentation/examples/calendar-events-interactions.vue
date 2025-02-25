@@ -246,7 +246,9 @@ example(title="Delete Events" anchor="delete-events")
     p.
       The deletion of an event is straightforward and extremely flexible.#[br]
       By default it is triggered by a double click/tap on the event, which displays a delete button.
-      On click/tap on this button, the event is deleted.
+      On click/tap on this button, the event is deleted.#[br]
+      This gesture has the advantage of not interfering with the single click/tap event, which can be
+      used for other actions, and not interfering with the drag &amp; drop gesture.
 
     p.mt4 You can easily override this behavior by:
     ol.ml4

@@ -269,7 +269,7 @@ w-accordion.mt3(
           startTimeFormatted24, // String.
           endTimeFormatted12, // String.
           endTimeFormatted24, // String.
-          duration, // Boolean.
+          duration, // Number.
           deleting, // Boolean.
           deleted // Boolean.
         }
