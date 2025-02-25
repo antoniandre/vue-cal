@@ -57,8 +57,10 @@ ul
       You can now directly attach any valid DOM event you want to the events and cells.
       It only needs to start respectively with #[code event-] and #[code cell-] to be forwarded.#[br]
       Additionnally, new events are fired on more complex circumstances: #[code cell-drag-start],
-      #[code cell-drag], #[code cell-drag-end], #[code cell-hold], #[code event-create], #[code event-delete],
-      #[code event-hold], #[code event-drag-start], #[code event-drag], #[code event-drag-end].
+      #[code cell-drag], #[code cell-drag-end], #[code cell-delayed-click], #[code cell-hold],
+      #[code event-create], #[code event-delete], #[code event-delayed-click], #[code event-hold],
+      #[code event-resize-start], #[code event-resize], #[code event-resize-end],
+      #[code event-drag-start], #[code event-drag], #[code event-drag-end].
     p For instance:
     ssh-pre(language="html-vue" :dark="store.darkMode").
       &lt;vue-cal
@@ -80,6 +82,7 @@ ul
         @event-drag="log('event-drag', $event)"
         @event-drag-end="log('event-drag-end', $event)"
         @event-drop="log('event-drop', $event)"
+        @event-resize-start="log('event-resize-start', $event)"
         @event-resize="log('event-resize', $event)"
         @event-resize-end="log('event-resize-end', $event)"
         @event-mouseenter="log('event-mouseenter', $event)"
