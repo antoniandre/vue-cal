@@ -680,6 +680,44 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       :dark="store.darkMode"
       style="height: 301px")
 
+//- Example.
+example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or-resizing")
+  template(#desc)
+    .todo-tag.d-iflex FINISH THIS EXAMPLE
+    p.
+      The drag &amp; drop and resizing of events can be rejected by returning #[code false] from the
+      #[code event-drop], #[code event-resize] and #[code event-resize-end] event listeners.
+    p.
+      This is useful when you want to prevent an event from being moved or resized in certain conditions.
+      For example, you can reject the drop of an event on top of another event, or prevent an event from
+      being resized if it's too close to another event.
+
+    .w-flex.wrap.column.gap3.align-end
+      w-switch(v-model="exRejectDndOrResize.preventOverlapOnDrop" label-color="base") Prevent Event Overlap On Drop
+      w-switch(
+        v-model="exRejectDndOrResize.preventOverlapWhileResizing"
+        label-color="base") Prevent Overlap WHILE Resizing
+      w-switch(
+        v-model="exRejectDndOrResize.preventOverlapAfterResizing"
+        label-color="base") Prevent Overlap AFTER Resizing
+  template(#code-html).
+    &lt;vue-cal
+      :events="events"
+      @event-drop="onEventDrop"&gt;
+    &lt;/vue-cal&gt;
+  //- template(#code-js)
+
+  vue-cal(
+    :events="exRejectDndOrResize.events"
+    editable-events
+    @event-drop="exRejectDndOrResize.onEventDrop"
+    @event-resize="exRejectDndOrResize.onEventResize"
+    @event-resize-end="exRejectDndOrResize.onEventResizeEnd"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :snap-to-interval="15"
+    :dark="store.darkMode"
+    style="height: 341px")
 </template>
 
 <script setup>
@@ -939,6 +977,22 @@ const exExternalEventsDragDrop = reactive({
     const srcCal = document.querySelector('.vuecal--dragging-event')
     const src = srcCal.isSameNode(exExternalEventsDragDropEl1.value.$el) ? exExternalEventsDragDropEl1 : exExternalEventsDragDropEl2
     src.value.view.deleteEvent(incomingEvent._.id, 3)
+  }
+})
+
+const exRejectDndOrResize = reactive({
+  events: events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+  preventOverlapOnDrop: ref(true),
+  preventOverlapWhileResizing: ref(true),
+  preventOverlapAfterResizing: ref(false),
+  onEventDrop: ({ e, event, cell, overlaps }) => {
+    return !overlaps.length || (overlaps.length && !exRejectDndOrResize.preventOverlapOnDrop)
+  },
+  onEventResize: ({ e, event, overlaps }) => {
+    return !overlaps.length || (overlaps.length && !exRejectDndOrResize.preventOverlapWhileResizing)
+  },
+  onEventResizeEnd: ({ e, event, overlaps }) => {
+    return !overlaps.length || (overlaps.length && !exRejectDndOrResize.preventOverlapAfterResizing)
   }
 })
 </script>
