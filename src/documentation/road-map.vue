@@ -19,11 +19,13 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Accept/reject event resizing &amp; expose overlapping events
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Accept/reject event resizing while resizing
+      .task Accept/reject event resizing after resizing and revert changes
+      .task Expose overlapping events on resize and drag &amp; drop
       .task I/O drag &amp; drop events
       .task Accept/reject event drag &amp; drop and expose overlapping events
       .task Events overlap with schedules
