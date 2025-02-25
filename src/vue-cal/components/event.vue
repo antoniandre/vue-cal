@@ -48,6 +48,7 @@ const touch = reactive({
   movePercentageX: 0, // The X coords in percentage while dragging.
   movePercentageY: 0, // The Y coords in percentage while dragging.
   resizeStartDate: null, // When resizing and going above the start date (end before start) update the start instead of the end.
+  resizingOriginalEvent: null, // Store the original event details while resizing.
   cellEl: null, // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
   schedule: null
 })
@@ -178,6 +179,7 @@ const onDocMousemove = async e => {
   // Only the first touchmove to set the dragging flag.
   if (touch.fromResizer && !touch.resizing) {
     touch.resizing = true
+    touch.resizingOriginalEvent = { ...event, _: { ...event._ } }
     globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
 
     // If there's an @event-resize-start external listener, call it.
@@ -214,7 +216,6 @@ const onDocMousemove = async e => {
         event: { ...event, start: newStart, end: newEnd },
         overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
       })
-      // Can externally use event.isOverlapping() to check if the event overlaps with other events.
     }
     // If the event resizing is accepted, apply to new time range to the event.
     if (acceptResize !== false) {
@@ -249,6 +250,7 @@ const onDocMouseup = async e => {
   touch.movePercentageY = 0
   touch.cellEl = null
   touch.resizeStartDate = null
+  touch.resizingOriginalEvent = null
   touch.schedule = null
 }
 
