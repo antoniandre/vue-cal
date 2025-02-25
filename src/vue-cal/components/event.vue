@@ -98,9 +98,8 @@ const eventListeners = computed(() => {
 
   // Inject the event details in each eventListener handler call as 2nd param.
   Object.entries(eventListeners).forEach(([eventListener, handler]) => {
-    // `event-drop` is handled in the drag-and-drop composable.
     // `event-resize-end` is handled in `onDocMouseup` in this file.
-    if (!['drop', 'resize-end'].includes(eventListener)) {
+    if (!['resize-end'].includes(eventListener)) {
       eventListeners[eventListener] = e => {
         // SHOULD NOT PREVENT BUBBLING UP TO THE CELL WHEN INTERACTING WITH THE EVENT:
         // if we stop bubbling, we will not receive the onMouseup listened from document if releasing
@@ -108,7 +107,8 @@ const eventListeners = computed(() => {
         // e.stopPropagation()
 
         // Check if e.type to not rewrap the DOM event in an object if already done.
-        handler(e.type ? { e, event } : e)
+        // `event-drop` is handled in the drag-and-drop composable.
+        if (e.type !== 'drop') handler(e.type ? { e, event } : e)
       }
     }
   })
