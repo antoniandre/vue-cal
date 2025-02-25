@@ -5,7 +5,6 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task Events snap-to-interval while resizing
       .task Events overlap size option
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
@@ -19,10 +18,12 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
+      .task Improve the event range accuracy while resizing upwards
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Events snap-to-interval while resizing
       .task Accept/reject event resizing while resizing
       .task Accept/reject event resizing after resizing and revert changes
       .task Expose overlapping events on resize and drag &amp; drop
