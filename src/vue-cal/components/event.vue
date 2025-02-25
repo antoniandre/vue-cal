@@ -220,6 +220,8 @@ const onDocMousemove = async e => {
     if (acceptResize !== false) {
       event.start = newStart
       event.end = newEnd
+      // Reset last accepted event details if existing and accepting again.
+      if (touch.resizingLastAcceptedEvent) touch.resizingLastAcceptedEvent = null
     }
     else {
       // If the event resizing is refused, store the last accepted original event details
@@ -252,7 +254,11 @@ const onDocMouseup = async e => {
     // If the event resize is accepted apply new range, if refused (SPECIFICALLY FALSE) revert to original.
     event.start = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).start : (touch.resizingLastAcceptedEvent?.start || newStart)
     event.end = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).end : (touch.resizingLastAcceptedEvent?.end || newEnd)
-
+    // If resizing to less than 1 minute, revert to original.
+    if (event._.duration < 1) {
+      event.start = touch.resizingOriginalEvent.start
+      event.end = touch.resizingOriginalEvent.end
+    }
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
 
