@@ -55,9 +55,9 @@ export function useDragAndDrop (vuecal) {
     let startTimeMinutes = Math.max(getEventStart(e), 0)
 
     // On drop, snap to time every X minutes if the option is on.
-    if (config.snapToTime) {
-      const plusHalfSnapTime = startTimeMinutes + config.snapToTime / 2
-      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToTime)
+    if (config.snapToInterval) {
+      const plusHalfSnapTime = startTimeMinutes + config.snapToInterval / 2
+      startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
     }
 
     const start = new Date(new Date(cellDate).setMinutes(startTimeMinutes))

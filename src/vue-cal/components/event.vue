@@ -289,13 +289,22 @@ const onDelete = () => {
 }
 
 const computeStartEnd = event => {
+  // Force the start of the event at previous midnight minimum.
+  let minutes = Math.max(percentageToMinutes(touch.movePercentageY, config), 0)
+  // On drop, snap to time every X minutes if the option is on.
+  if (config.snapToInterval) {
+    const plusHalfSnapTime = minutes + config.snapToInterval / 2
+    minutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
+  }
+
   let newStart = event.start
-  let newEnd = new Date(new Date(event.end).setHours(0, percentageToMinutes(touch.movePercentageY, config), 0 , 0))
+  let newEnd = new Date(new Date(event.end).setHours(0, minutes, 0 , 0))
   // While resizing and event end is before event start.
   if (newEnd < touch.resizeStartDate) {
     newStart = newEnd
     newEnd = touch.resizeStartDate
   }
+
   return { newStart, newEnd }
 }
 
