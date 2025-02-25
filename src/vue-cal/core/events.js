@@ -46,14 +46,11 @@ export const useEvents = vuecal => {
        */
       event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
       event.getOverlappingEvents = (at = null) => {
-        if (at?.start && at?.end) {
-          return getEventsInRange(
-            getEventsByDate(dateUtils.formatDate(at.start), true),
-            { start: at?.start || event.start, end: at?.end || event.end },
-            { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at.schedule || event.schedule) : null }
-          )
-        }
-        return overlaps[event._.startFormatted]?.[event._.id]?.overlaps || []
+        return getEventsInRange(
+          getEventsByDate(dateUtils.formatDate(at?.start || event.start), true),
+          { start: at?.start || event.start, end: at?.end || event.end },
+          { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at?.schedule || event.schedule) : null }
+        )
       }
 
       // Register the event DOM node in the event in order to emit DOM events.
@@ -91,6 +88,10 @@ export const useEvents = vuecal => {
   const normalizeEventDates = event => {
     if (typeof event.start === 'string') event.start = dateUtils.stringToDate(event.start)
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
+
+    event.start.setSeconds(0, 0) // For more accurate range and overlap comparison.
+    event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
+
     if (isNaN(event.start) || isNaN(event.end)) {
       if (isNaN(event.start)) console.error(`Vue Cal: invalid start date for event "${event.title}".`, event.start)
       else console.error(`Vue Cal: invalid end date for event "${event.title}".`, event.end)
@@ -219,19 +220,6 @@ export const useEvents = vuecal => {
     return true // For chaining.
   }
 
-  const overlaps = {} // Store the overlaps for each cell date.
-  const isEventOverlapping = (event, otherCellEvents = []) => {
-    if (!otherCellEvents) return false
-    const { startMinutes: eventStart, endMinutes: eventEnd } = event._
-
-    return otherCellEvents.some(id => {
-      const otherEvent = getEvent(id)
-      if (!otherEvent) return false
-      const { startMinutes: otherStart, endMinutes: otherEnd } = otherEvent._
-      return (eventStart >= otherStart && eventStart < otherEnd) || (eventEnd > otherStart && eventEnd <= otherEnd) || (eventStart <= otherStart && eventEnd >= otherEnd)
-    })
-  }
-
   // Will recalculate all the overlaps of the current cell OR schedule.
   // cellEvents will contain only the current schedule events if in a schedule.
   const getCellOverlappingEvents = cellDate => {
@@ -339,8 +327,8 @@ export const useEvents = vuecal => {
     const endTimestamp = allDayOrTimeless ? new Date(event.end).setHours(23, 59, 59, 999) : event.end.getTime()
     const rangeStart = allDayOrTimeless ? new Date(start).setHours(0, 0, 0, 0) : start.getTime()
     const rangeEnd = allDayOrTimeless ? new Date(end).setHours(23, 59, 59, 999) : end.getTime()
-    // Check the event is within the range.
-    return endTimestamp >= rangeStart && startTimestamp <= rangeEnd
+    // Check the event is within the range, considering at least one second overlap.
+    return endTimestamp > rangeStart && startTimestamp < rangeEnd
   }
 
   return {
