@@ -65,7 +65,7 @@ const classes = computed(() => ({
   'vuecal__event--background': !!event.background,
   'vuecal__event--multiday': !!event._?.multiday,
   'vuecal__event--cut-top': event._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo,
+  'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo || event.end.getDate() !== event.start.getDate(),
   // Only apply the dragging class on the event copy that is being dragged.
   'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
   // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
