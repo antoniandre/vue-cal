@@ -85,7 +85,6 @@ example(title="Events & Background Events" anchor="events")
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
-    editable-events
     :dark="store.darkMode"
     style="height: 261px")
 

@@ -37,6 +37,16 @@ ul
   li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
   li Directly #[strong preload a locale externally] to avoid handling Promises.
   li Reworked options for #[strong more intuitive usage].
+  li Fine-grain event deletion in 3 stages: 1. show the delete button, 2. delete the event from the view, 3. delete the event in the source of truth.
+  li New animation on event deletion.
+  li New event v-model for more control over events.
+  li More intuitive and flexible event creation.
+  li More events are emitted for more control and customization. E.g. #[code cell-drag-start], #[code cell-drag], #[code cell-drag-end], #[code cell-delayed-click], #[code cell-hold], #[code event-create], #[code event-delete], #[code event-delayed-click], #[code event-hold], #[code event-resize-start], #[code event-resize], #[code event-resize-end], #[code event-drag-start], #[code event-drag], #[code event-drag-end].
+  li Any valid event listener will be forwarder to cells and events. E.g. #[code cell-click], #[code cell-dblclick], #[code cell-drag-start], #[code cell-drag], #[code cell-drag-end], #[code cell-hold], #[code cell-mousedown], #[code cell-touchstart], #[code cell-mouseenter], #[code cell-mouseleave], #[code cell-contextmenu], #[code event-create], #[code event-click], #[code event-dblclick], #[code event-drag-start], #[code event-drag], #[code event-drag-end], #[code event-drop], #[code event-resize-start], #[code event-resize], #[code event-resize-end], #[code event-mouseenter], #[code event-mouseleave], #[code event-contextmenu].
+  li Ability to reject event creation.
+  li Ability to reject event drag and drop and event resize.
+  li Exposed event overlap detection for more external control.
+  li Supports dynamic event colors.
 
 title-link(h2 anchor="global-changes") Global Changes
 ul
