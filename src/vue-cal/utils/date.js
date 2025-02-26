@@ -152,11 +152,12 @@ export const useDateUtils = initTexts => {
     else if (!isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${date1}\`.`)
     else if (!isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${date2}\`.`)
 
-    const dateA = new Date(date1)
-    dateA.setHours(0, 0, 0, 0)
-    const dateB = new Date(date2)
-    dateB.setHours(0, 0, 0, 0)
-    return dateA.getTime() === dateB.getTime()
+    // Most efficient way to compare dates without time.
+    return (
+      date1.getFullYear() === date2.getFullYear() &&
+      date1.getMonth() === date2.getMonth() &&
+      date1.getDate() === date2.getDate()
+    )
   }
 
   const isInRange = (date, rangeStart, rangeEnd) => {

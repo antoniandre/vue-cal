@@ -24,7 +24,7 @@ import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
-const { config, view, dnd, touch: globalTouchState } = inject('vuecal')
+const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
 
 const props = defineProps({
   event: { type: Object, required: true }
@@ -299,8 +299,14 @@ const onDelete = () => {
 }
 
 const computeStartEnd = event => {
-  // Force the start of the event at previous midnight minimum.
-  let minutes = Math.max(percentageToMinutes(touch.movePercentageY, config), 0)
+  const startMidnight = new Date(event.start.getFullYear(), event.start.getMonth(), event.start.getDate())
+  const nextMidnight = new Date(startMidnight)
+  nextMidnight.setDate(startMidnight.getDate() + 1)
+
+  let minutes = percentageToMinutes(touch.movePercentageY, config)
+  // While resizing, cap the newEnd between the previous midnight and next midnight.
+  minutes = Math.max(0, Math.min(minutes, 24 * 60))
+
   // On drop, snap to time every X minutes if the option is on.
   if (config.snapToInterval) {
     const plusHalfSnapTime = minutes + config.snapToInterval / 2
@@ -308,7 +314,8 @@ const computeStartEnd = event => {
   }
 
   let newStart = event.start
-  let newEnd = new Date(new Date(event.end).setHours(0, minutes, 0 , 0))
+  let newEnd = new Date(startMidnight.getTime() + minutes * 60000)
+
   // While resizing and event end is before event start.
   if (newEnd < touch.resizeStartDate) {
     newStart = newEnd

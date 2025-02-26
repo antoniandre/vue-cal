@@ -101,7 +101,7 @@ export const useEvents = vuecal => {
     else if (event.end.getTime() < event.start.getTime()) console.error(`Vue Cal: invalid event dates for event "${event.title}". The event ends before it starts.`, event.start, event.end)
 
     if (!event._) event._ = {}
-    event._.multiday = !dateUtils.isSameDate(event.start, event.end)
+    event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
     event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
     event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).
@@ -113,7 +113,7 @@ export const useEvents = vuecal => {
     event._.startTimeFormatted12 = `${(startHours % 12) || 12}${startMinutes ? `:${startMinutes}` : ''} ${startHours < 12 ? 'AM' : 'PM'}`
     event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
     event._.endTimeFormatted12 = `${(endHours % 12) || 12}${endMinutes ? `:${endMinutes}` : ''} ${endHours < 12 ? 'AM' : 'PM'}`
-    event._.duration = event._.endMinutes - event._.startMinutes // Integer (minutes).
+    event._.duration = Math.abs(~~((event.end - event.start) / 60000)) // Integer (minutes).
   }
 
   // Retrieve an event by its ID.
