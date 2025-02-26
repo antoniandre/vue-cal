@@ -81,6 +81,7 @@ export const useEvents = vuecal => {
         events.byDate[event._.startFormatted].push(event._.id)
       }
     })
+
     return events
   })
 

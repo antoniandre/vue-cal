@@ -79,16 +79,27 @@ const classes = computed(() => ({
 }))
 
 const styles = computed(() => {
-  if (!config.time || view.isMonth) return false
+  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time
 
-  // Ensure that the event start and end stay in range.
-  const from = Math.max(config.timeFrom, event._.startMinutes)
-  const to = Math.min(config.timeTo, event._.endMinutes)
+  if (!hasPosition && !event.backgroundColor && !event.color) return false
 
-  const top = minutesToPercentage(from, config)
-  const height = minutesToPercentage(to, config) - top
+  const styles = {
+    backgroundColor: event.backgroundColor || null,
+    color: event.color || null
+  }
 
-  return { top: `${top}%`, height: `${height}%` }
+  if (hasPosition) {
+    // Ensure that the event start and end stay in range.
+    const from = Math.max(config.timeFrom, event._.startMinutes)
+    const to = Math.min(config.timeTo, event._.endMinutes)
+    const top = minutesToPercentage(from, config)
+    const height = minutesToPercentage(to, config) - top
+
+    styles.top = `${top}%`
+    styles.height = `${height}%`
+  }
+
+  return styles
 })
 
 // Automatically forwards any event listener attached to vuecal starting with @event- to the
