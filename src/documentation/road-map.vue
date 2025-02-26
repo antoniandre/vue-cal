@@ -10,7 +10,6 @@ ul.kanban
       .task Drag &amp; drop events on disabled day
       .task Drag events over years/year/month views
       .task Further optimize events recomputation
-      .task Events accept dynamic colors
       .task All-day events
       .task Multiple day events
       .task Recurring events
@@ -23,6 +22,7 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Events accept dynamic colors
       .task Events snap-to-interval while resizing
       .task Accept/reject event resizing while resizing
       .task Accept/reject event resizing after resizing and revert changes

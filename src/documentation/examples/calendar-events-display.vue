@@ -13,7 +13,7 @@ alert(info)
       Thus, any time you access the event object, the #[code start] and #[code end] will always be
       a JavaScript Date.
     li.
-      When the events are editable, they can be created, deleted, drag and dropped to a different
+      When the events are editable, they can be created, deleted, dragged and dropped to a different
       date and time and resized. There's also a more granular control on what exactly should be editable.
 
 //- Example.
@@ -23,11 +23,15 @@ example(title="Events & Background Events" anchor="events")
       Events are defined by a #[code start] and #[code end] dates, provided as a JavaScript Date object
       or a formatted date and time. Additionally, you can optionally add a title, content, and a CSS class.#[br]
 
-      Adding a #[code background: true] property to the event object will make it behave like a background event:
-      it can be overlapped without constraint, and cannot be interacted with.#[br]
-      The particularity of the background events is that they can fully be overlapped but not overlapping.#[br]
-      They are not affected by other events: they stay in the background occupying the whole cell/schedule width.#[br]
-      Note that you can still temporarily raise a background event on top of others (z-index) by hovering it or clicking it.
+    ul
+      li.
+        Adding a #[code background: true] property to the event object will make it behave like a background event:
+        it can be overlapped without constraint (not affected by other events).#[br]
+      li.
+        Events are best styled with CSS classes using the #[code class] property, but you can also provide
+        a #[code backgroundColor] and a #[code color] property to dynamically change the event's
+        background and text colors. Like in this example, the "Dentist Appointment" event has a dynamic
+        background color and text color.
 
     .w-flex.justify-end.my2
       w-switch(v-model="exEvents.showBgEvents") Show Background Events
@@ -40,15 +44,25 @@ example(title="Events & Background Events" anchor="events")
     |     end: new Date(new Date().setHours(11, 30, 0, 0)),
     |     title: 'Doctor Appt.',
     |     content: '&lt;i class="icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
-    |     class: 'health'
+    |     class: 'health' // Custom CSS class.
+    |   },
+    |   {
+    |     start: new Date(new Date().setHours(9, 0)).addDays(4), // Using Vue Cal's Date prototypes.
+    |     end: new Date(new Date().setHours(10, 0)).addDays(4), // Using Vue Cal's Date prototypes.
+    |     title: 'Doctor Appt.',
+    |     content: '&lt;i class="w-icon mdi mdi-stethoscope"&gt;&lt;/i&gt;',
+    |     class: 'health',
+    |     backgroundColor: 'rgb(158 199 237)', // Dynamic colors.
+    |     color: '#0e5597' // Dynamic colors.
     |   },
     |
+
     span(v-if="exEvents.showBgEvents")
       |   {
       |     start: new Date(new Date().setHours(12, 0, 0, 0)),
       |     end: new Date(new Date().setHours(14, 0, 0, 0)),
       |     class: 'lunch',
-      |     background: true
+      |     background: true // Background event.
       |   },
       |
     span(v-else)
@@ -67,10 +81,11 @@ example(title="Events & Background Events" anchor="events")
   vue-cal(
     :time-from="9 * 60"
     :time-to="14 * 60"
-    :events="exEvents.events"
+    v-model:events="exEvents.events"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
+    editable-events
     :dark="store.darkMode"
     style="height: 261px")
 
@@ -761,17 +776,26 @@ const events = [
 
 const exEvents = reactive({
   showBgEvents: ref(false),
-  bgEvents: computed(() => Array(5).fill({}).map((event, i) => ({
-    start: new Date(new Date().setHours(12, 0)).addDays(i),
-    end: new Date(new Date().setHours(14, 0)).addDays(i),
-    class: 'lunch',
-    background: true
-  }))),
-  events: computed(() => [
-    ...events,
-    ...(exEvents.showBgEvents ? exEvents.bgEvents : [])
-  ])
+  initEvents: () => {
+    const evts = [
+      ...events,
+      ...Array(5).fill({}).map((event, i) => ({
+        start: new Date(new Date().setHours(12, 0)).addDays(i),
+        end: new Date(new Date().setHours(14, 0)).addDays(i),
+        class: 'lunch',
+        background: true
+      }))
+    ]
+    evts[2] = { ...evts[2], backgroundColor: 'rgb(158 199 237)', color: '#0e5597' }
+    delete evts[2].class
+
+    return evts
+  },
+  allEvents: [],
+  // Filter background events on demand.
+  events: computed(() => exEvents.allEvents.filter(e => exEvents.showBgEvents || !e.background))
 })
+exEvents.allEvents = exEvents.initEvents()
 
 const exTimelessEvents = reactive({
   events: [
