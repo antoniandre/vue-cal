@@ -101,7 +101,7 @@ export const useConfig = (vuecal, props, attrs) => {
     let availViews = {} // The new object to return.
     const views = props.views
 
-    if (datePicker) return {
+    if (datePicker && !views) return {
       month: { ...defaults.availableViews.month },
       year: { ...defaults.availableViews.year },
       years: { ...defaults.availableViews.years }
