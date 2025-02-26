@@ -3,7 +3,6 @@
 example(title="Special Hours (or Business Hours)" anchor="special-hours")
   template(#desc)
     .todo-tag.d-iflex MAKE THIS INTERACTIVE
-    .todo-tag.d-iflex.ml2 FIX SOURCE CODE SCROLL
     p.
       The special hours are visible on #[span.code week] and #[span.code day] views and allow
       you to highlight a particular time range on each day of the week individually.#[br]

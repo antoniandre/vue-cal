@@ -5,10 +5,10 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task Events overlap size option
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
       .task Drag events over years/year/month views
+      .task Drag &amp; drop timeless events
       .task Further optimize events recomputation
       .task All-day events
       .task Multiple day events
@@ -17,11 +17,12 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Improve the event range accuracy while resizing upwards
+      .task Events overlap size option
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Improve the event range accuracy while resizing upwards
       .task Events accept dynamic colors
       .task Events snap-to-interval while resizing
       .task Accept/reject event resizing while resizing

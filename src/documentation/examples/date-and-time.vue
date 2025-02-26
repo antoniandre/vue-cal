@@ -203,9 +203,6 @@ example(title="Disable Days" anchor="disable-days")
     &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
     &lt;vue-cal
       date-picker
-      :views-bar="false"
-      view="month"
-      :views="['day', 'week', 'year']"
       :disable-days="[
         new Date().subtractDays(2).format(),
         new Date().format(),
@@ -217,9 +214,8 @@ example(title="Disable Days" anchor="disable-days")
   vue-cal(
     :dark="store.darkMode"
     date-picker
+    :views="['day', 'month', 'year', 'years']"
     :views-bar="false"
-    view="month"
-    :views="['day', 'week', 'year']"
     :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
 
 //- Example.

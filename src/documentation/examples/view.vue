@@ -164,8 +164,9 @@ example(title="CSS Control" anchor="css-variables")
   template(#desc)
     p.
       When you're using the default theme, a few CSS variables will help you easily customize the
-      calendar, while the rest of the styles remain easy to override.#[br]
-      In the following code, you can directly #[strong edit the values] of the CSS variables used by
+      calendar, while the rest of the styles remain easy to override.
+    p.mt2.
+      In the following code, #[strong you can directly edit the values] of the CSS variables used by
       Vue Cal and view the result in real-time.
 
     .ssh-pre.ssh-pre--custom(:class="{ 'ssh-pre--dark': store.darkMode }" data-type="css")
