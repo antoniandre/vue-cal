@@ -168,7 +168,8 @@ ul.kanban
     line-height: 1.2;
     font-size: 13px;
     border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
-    background-color: color-mix(in srgb, var(--w-base-bg-color) 90%, transparent);
+    background-color: rgba(#fff, 0.1);
+    [data-theme="light"] & {background-color: rgba(#fff, 0.9);}
   }
 }
 </style>
