@@ -48,20 +48,30 @@ example(title="Today's Current Time" anchor="today-current-time")
       When the time column is visible, the current time of today's date will
       be marked with a line.#[br]
       The line position will be updated every time the calendar current view is re-rendered (by interacting)
-      or following the real time if #[code watch-real-time] is set to true (more expensive).#[br]
+      or following the real time if #[code watch-real-time] is set to true (uses an optimized nested
+      setTimeout, but still more expensive than none).#[br]
       You can easily customize the now-line via CSS, for instance, changing the line and arrow color is as
       easy as:
     ssh-pre.my1.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
     div
       p.d-iblock Or you can also hide it:
       ssh-pre.mt0.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {display: none;}
+    .w-flex.mb4.justify-end
+      .text-right
+        w-switch.mb1(v-model="exTodayCurrentTime.watchRealTime") Watch Real Time
+        .caption(v-if="exTodayCurrentTime.watchRealTime") Will update the now line in {{ exTodayCurrentTime.timeBeforeUpdate }}s.
+        .caption(v-else) Will update the now line when you switch view.
 
+  template(#code-html).
+    &lt;vue-cal{{ exTodayCurrentTime.watchRealTime ? ' watch-real-time' : '' }} /&gt;
   vue-cal(
     :views="['day']"
     view="day"
     :views-bar="false"
     :today-button="false"
-    @ready="({ view }) => view.scrollToCurrentTime()"
+    :time-cell-height="26"
+    :watch-real-time="exTodayCurrentTime.watchRealTime"
+    @ready="exTodayCurrentTime.onReady"
     :dark="store.darkMode"
     xs
     style="width: 320px;height: 200px")
@@ -83,8 +93,8 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       li.mt3
         code view.scrollToCurrentTime()
         p Scrolls the calendar body to the current time.
-    alert.my2.d-iblock You can store the functions from #[code @ready] for later use.
-    .mb2
+    alert.mt2.d-iblock You can store the functions from #[code @ready] for later use.
+    .w-flex.mb6.justify-end
       w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
         w-icon mdi mdi-format-vertical-align-top
         | Scroll top
@@ -94,18 +104,18 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       w-button.mt2.mr2(@click="exScrollToTime.scrollToCurrentTime")
         w-icon mdi mdi-format-vertical-align-bottom
         | Scroll to current time
-    vue-cal.ex--scroll-to-time(
-      :views="['day']"
-      view="day"
-      :views-bar="false"
-      :today-button="false"
-      :time-cell-height="exScrollToTime.timeCellHeight"
-      @ready="exScrollToTime.onReady"
-      :dark="store.darkMode"
-      xs
-      style="width: 320px;height: 200px")
   template(#code-html).
     &lt;vue-cal @ready="({ view }) =&#65310; view.scrollToCurrentTime()" /&gt;
+  vue-cal.ex--scroll-to-time(
+    :views="['day']"
+    view="day"
+    :views-bar="false"
+    :today-button="false"
+    :time-cell-height="exScrollToTime.timeCellHeight"
+    @ready="exScrollToTime.onReady"
+    :dark="store.darkMode"
+    xs
+    style="width: 320px;height: 200px")
 
 //- Example.
 example(title="Timeline Tweaking" anchor="timeline-tweaking")
@@ -202,9 +212,11 @@ example(title="Disable Days" anchor="disable-days")
   template(#desc)
     p.
       You can use the #[span.code disable-days] option to provide an array of formatted dates
-      (e.g. #[span.code 2020-09-18]) to disable.
+      (e.g. #[span.code 2020-09-18]) to disable.#[br]
+      Disabled days will be visible but not selectable or clickable to navigate to. But you can still
+      navigate through them in day view with the calendar arrows.
+    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
   template(#code-html).
-    &lt;!-- Using Vue Cal Date Prototypes (activated by default): subtractDays, format, addDays --&gt;
     &lt;vue-cal
       date-picker
       :disable-days="[
@@ -225,11 +237,10 @@ example(title="Disable Days" anchor="disable-days")
 //- Example.
 example(title="Hide Particular Week Days" anchor="hiding-particular-week-days")
   template(#desc)
-    ul
-      li.
-        If you want to hide particular days of the week, you can provide an array through the
-        #[span.code hide-weekdays] option. Possible values: #[code="['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']"].#[br]
-        This option will apply on #[span.code days], #[span.code week] &amp; #[span.code month] views.#[br]
+    p.
+      If you want to hide particular days of the week, you can provide an array through the
+      #[code hide-weekdays] option. Possible values: #[code="['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun']"].#[br]
+      This option will apply on #[code days], #[code week] &amp; #[code month] views.#[br]
 
     .w-flex.justify-end.gap2.align-center
       label Days to Hide:
@@ -247,7 +258,7 @@ example(title="Hide Particular Week Days" anchor="hiding-particular-week-days")
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
 
@@ -260,14 +271,23 @@ const exTimeline = reactive({
   onReady: ({ view }) => setTimeout(() => view.scrollToCurrentTime(), 350)
 })
 
-const exThemes = reactive({
-  default: true,
-  dark: store.darkMode,
-  setThemeColor: color => {
-    vuecalEl.value.$el.style.setProperty('--vuecal-primary-color', color)
+const exTodayCurrentTime = reactive({
+  watchRealTime: ref(false),
+  now: ref(new Date()),
+  timeBeforeUpdate: computed(() => 60 - exTodayCurrentTime.now.getSeconds()),
+  timeTickerId: null,
+  onReady: ({ view }) => {
+    view.scrollToCurrentTime()
+  },
+  timeTick: () => {
+    exTodayCurrentTime.now = new Date()
+    exTodayCurrentTime.timeTickerId = setTimeout(exTodayCurrentTime.timeTick, 1000)
   }
 })
-const vuecalEl = ref(null)
+watch(() => exTodayCurrentTime.watchRealTime, () => {
+  if (exTodayCurrentTime.watchRealTime) exTodayCurrentTime.timeTick()
+  else clearTimeout(exTodayCurrentTime.timeTickerId)
+})
 
 const exScrollToTime = reactive({
   timeCellHeight: 26,
