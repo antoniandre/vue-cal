@@ -48,10 +48,10 @@ const examples = [
   { route: { name: 'examples-events-display', hash: '#ex--timeless-events' }, label: 'Timeless Events' },
   { route: { name: 'examples-events-display', hash: '#ex--open-dialog-on-event-click' }, label: 'Open a Dialog on Event Click' },
   { route: { name: 'examples-events-display', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' },
-  { route: { name: 'examples-events-display', hash: '#ex--multiple-day-events' }, label: 'Multiple Day Events' },
-  { route: { name: 'examples-events-display', hash: '#ex--recurring-events' }, label: 'Recurring Events' },
   { route: { name: 'examples-events-display', hash: '#ex--overlapping-events' }, label: 'Overlapping Events' },
   { route: { name: 'examples-events-display', hash: '#ex--all-day-events' }, label: 'All Day Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--multiple-day-events' }, label: 'Multiple Day Events' },
+  { route: { name: 'examples-events-display', hash: '#ex--recurring-events' }, label: 'Recurring Events' },
 
   { class: 'heading', route: '/examples/calendar-events--interactions', label: 'CALENDAR EVENTS - INTERACTIONS', icon: 'mdi mdi-calendar-today-outline' },
   { route: { name: 'examples-events-interactions', hash: '#ex--create-events' }, label: 'Create Events' },

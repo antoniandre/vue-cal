@@ -334,6 +334,7 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 //- Example.
 example(title="Overlapping Events" anchor="overlapping-events")
   template(#desc)
+    .todo-tag.d-iflex TO REVIEW
     p.
       Overlapping, editable &amp; deletable events.#[br]
       Try to resize &amp; delete events to see the overlapping redrawn.
@@ -399,6 +400,163 @@ example(title="Overlapping Events" anchor="overlapping-events")
     :time-to="15 * 60"
     :dark="store.darkMode"
     style="height: 301px")
+
+//- Example.
+example(title="All Day Events" anchor="all-day-events")
+  template(#title)
+      | All Day Events
+      .todo-tag.d-iflex.ml2 COMING SOON
+  //- template(#desc)
+    ul
+      li.mb2.
+        When the #[code showAllDayEvents] is set to #[code true] the events with an
+        #[code allDay] attribute set to #[code true] will be displayed in a fixed top
+        bar on the #[code week] &amp; #[code day] views.#[br]
+        The all day events bar will only show up if the options #[code showAllDayEvents] &amp;
+        #[code time] are set to #[code true].#[br]
+        #[code time] is important since without time information every event is an all-day
+        event there is no point in separating them then.
+      li.mb2.
+        When #[code showAllDayEvents] is set to #[code false], all the all day events
+        (#[code allDay] attribute set to #[code true]), will show up as a normal
+        #[strong background event].
+      li.mb2.
+        On month view, switching #[code showAllDayEvents] on and off will not have any impact
+        since both should display the all day events.
+      li.mb2.
+        #[code showAllDayEvents] accepts a #[code Boolean] or the string
+        #[code 'short'], to display only the event title.
+
+    alert.
+      Multiple-day events feature will be improved in a future version to display across
+      multiple cells in the all day bar.
+
+    w-button.ma1.code(@click="exAllDayEvents.showAllDayEvents = (exAllDayEvents.showAllDayEvents + 1) % 3")
+      span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][exAllDayEvents.showAllDayEvents] }}"
+    w-button.ma1.code(@click="exAllDayEvents.shortEventsOnMonthView = !exAllDayEvents.shortEventsOnMonthView")
+      span.white :events-on-month-views="{{ ['true', "'short'"][exAllDayEvents.shortEventsOnMonthView * 1] }}"
+  //- template(#code-html).
+    &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
+      :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
+    &lt;/button&gt;
+    &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
+      :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
+    &lt;/button&gt;
+
+    &lt;vue-cal
+      :selected-date="stringToDate('2019-02-11')"
+      :time-from="7 * 60"
+      :views="['day', 'week', 'month']"
+      hide-weekends
+      :show-all-day-events="['short', true, false][showAllDayEvents]"
+      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  //- template(#code-js).
+    showAllDayEvents: 0,
+    shortEventsOnMonthView: false,
+    events: [
+      {
+        start: '2019-02-12',
+        end: '2019-02-12',
+        title: 'Day off!',
+        content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
+        class: 'yellow-event',
+        allDay: true
+      },
+      {
+        start: '2019-02-14',
+        end: '2019-02-14',
+        title: 'Valentine\'s day',
+        content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
+        class: 'pink-event',
+        allDay: true
+      },
+      ...
+    ]
+  //- template(#code-css).
+    .vuecal__cell-content {align-self: flex-start;}
+    .vuecal__cell-date {text-align: right;padding: 4px;}
+
+    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
+    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
+    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
+    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
+
+  //- vue-cal.ex--all-day-events(
+    :dark="store.darkMode"
+    :selected-date="stringToDate('2019-02-11')"
+    :time-from="7 * 60"
+    :views="['day', 'week', 'month']"
+    hide-weekends
+    :show-all-day-events="['short', true, false][exAllDayEvents.showAllDayEvents]"
+    :events-on-month-view="[true, 'short'][exAllDayEvents.shortEventsOnMonthView * 1]"
+    :events="exAllDayEvents.events")
+
+//- Example.
+example(title="Multiple Day Events" anchor="multiple-day-events")
+  template(#title)
+      | Multiple Day Events
+      .todo-tag.d-iflex.ml2 COMING SOON
+  //- template(#desc)
+    p.
+      Multiple day events work like a set of single day events linked together.#[br]
+      Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
+      Updating the duration by dragging will also update on all the days.#[br]
+      Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
+      the option #[code resize-x].
+    strong Drag &amp; drop is not available on multiple day events for now.
+
+    alert(tip).
+      3 CSS classes are available to target the event first day, the last day and all the days in between:
+      #[code event-start], #[code event-middle], #[code event-end].
+  //- template(#code-html).
+    &lt;vue-cal
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="8 * 60"
+      :time-to="23 * 60"
+      :views="['day', 'week']"
+      hide-weekends
+      editable-events
+      resize-x
+      :events="events"&gt;
+    &lt;/vue-cal&gt;
+  //- template(#code-js).
+    data: () => ({
+      events: [
+        {
+          start: '2018-11-16 10:00',
+          end: '2018-11-20 12:37',
+          title: 'Running Marathon',
+          content: '&lt;i class="icon mdi mdi-run"&gt;&lt;/i&gt;',
+          class: 'sport'
+        },
+        {
+          start: '2018-11-20 10:00',
+          end: '2018-11-20 10:25',
+          title: 'Drink water!',
+          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
+          class: 'health'
+        },
+        {
+          start: '2018-11-21 19:00',
+          end: '2018-11-23 11:30',
+          title: 'Trip to India',
+          content: '&lt;i class="icon mdi mdi-airplane"&gt;&lt;/i&gt;',
+          class: 'leisure'
+        }
+      ]
+    })
+  //- vue-cal.ex--multiple-day-events(
+    :dark="store.darkMode"
+    :selected-date="stringToDate('2018-11-19')"
+    :time-from="8 * 60"
+    :time-to="23 * 60"
+    hide-weekends
+    events-count-on-year-view
+    editable-events
+    resize-x
+    :events="multipleDayEvents")
 
 //- Example.
 example(anchor="recurring-events")
@@ -517,161 +675,6 @@ example(anchor="recurring-events")
           }
         ]
       })
-
-//- Example.
-example(title="All Day Events" anchor="all-day-events")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    ul
-      li.mb2.
-        When the #[code showAllDayEvents] is set to #[code true] the events with an
-        #[code allDay] attribute set to #[code true] will be displayed in a fixed top
-        bar on the #[code week] &amp; #[code day] views.#[br]
-        The all day events bar will only show up if the options #[code showAllDayEvents] &amp;
-        #[code time] are set to #[code true].#[br]
-        #[code time] is important since without time information every event is an all-day
-        event there is no point in separating them then.
-      li.mb2.
-        When #[code showAllDayEvents] is set to #[code false], all the all day events
-        (#[code allDay] attribute set to #[code true]), will show up as a normal
-        #[strong background event].
-      li.mb2.
-        On month view, switching #[code showAllDayEvents] on and off will not have any impact
-        since both should display the all day events.
-      li.mb2.
-        #[code showAllDayEvents] accepts a #[code Boolean] or the string
-        #[code 'short'], to display only the event title.
-
-    alert.
-      Multiple-day events feature will be improved in a future version to display across
-      multiple cells in the all day bar.
-
-    w-button.ma1.code(@click="exAllDayEvents.showAllDayEvents = (exAllDayEvents.showAllDayEvents + 1) % 3")
-      span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][exAllDayEvents.showAllDayEvents] }}"
-    w-button.ma1.code(@click="exAllDayEvents.shortEventsOnMonthView = !exAllDayEvents.shortEventsOnMonthView")
-      span.white :events-on-month-views="{{ ['true', "'short'"][exAllDayEvents.shortEventsOnMonthView * 1] }}"
-  //- template(#code-html).
-    &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
-      :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
-    &lt;/button&gt;
-    &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
-      :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
-    &lt;/button&gt;
-
-    &lt;vue-cal
-      :selected-date="stringToDate('2019-02-11')"
-      :time-from="7 * 60"
-      :views="['day', 'week', 'month']"
-      hide-weekends
-      :show-all-day-events="['short', true, false][showAllDayEvents]"
-      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  //- template(#code-js).
-    showAllDayEvents: 0,
-    shortEventsOnMonthView: false,
-    events: [
-      {
-        start: '2019-02-12',
-        end: '2019-02-12',
-        title: 'Day off!',
-        content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
-        class: 'yellow-event',
-        allDay: true
-      },
-      {
-        start: '2019-02-14',
-        end: '2019-02-14',
-        title: 'Valentine\'s day',
-        content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
-        class: 'pink-event',
-        allDay: true
-      },
-      ...
-    ]
-  //- template(#code-css).
-    .vuecal__cell-content {align-self: flex-start;}
-    .vuecal__cell-date {text-align: right;padding: 4px;}
-
-    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.pink-event,
-    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.pink-event {right: 50%;}
-    .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
-    .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
-
-  //- vue-cal.ex--all-day-events(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2019-02-11')"
-    :time-from="7 * 60"
-    :views="['day', 'week', 'month']"
-    hide-weekends
-    :show-all-day-events="['short', true, false][exAllDayEvents.showAllDayEvents]"
-    :events-on-month-view="[true, 'short'][exAllDayEvents.shortEventsOnMonthView * 1]"
-    :events="exAllDayEvents.events")
-
-//- Example.
-example(title="Multiple Day Events" anchor="multiple-day-events")
-  template(#desc)
-    .todo-tag.d-iflex COMING SOON
-  //- template(#desc)
-    p.
-      Multiple day events work like a set of single day events linked together.#[br]
-      Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
-      Updating the duration by dragging will also update on all the days.#[br]
-      Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
-      the option #[code resize-x].
-    strong Drag &amp; drop is not available on multiple day events for now.
-
-    alert(tip).
-      3 CSS classes are available to target the event first day, the last day and all the days in between:
-      #[code event-start], #[code event-middle], #[code event-end].
-  //- template(#code-html).
-    &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="8 * 60"
-      :time-to="23 * 60"
-      :views="['day', 'week']"
-      hide-weekends
-      editable-events
-      resize-x
-      :events="events"&gt;
-    &lt;/vue-cal&gt;
-  //- template(#code-js).
-    data: () => ({
-      events: [
-        {
-          start: '2018-11-16 10:00',
-          end: '2018-11-20 12:37',
-          title: 'Running Marathon',
-          content: '&lt;i class="icon mdi mdi-run"&gt;&lt;/i&gt;',
-          class: 'sport'
-        },
-        {
-          start: '2018-11-20 10:00',
-          end: '2018-11-20 10:25',
-          title: 'Drink water!',
-          content: '&lt;i class="icon mdi mdi-glass-cocktail"&gt;&lt;/i&gt;',
-          class: 'health'
-        },
-        {
-          start: '2018-11-21 19:00',
-          end: '2018-11-23 11:30',
-          title: 'Trip to India',
-          content: '&lt;i class="icon mdi mdi-airplane"&gt;&lt;/i&gt;',
-          class: 'leisure'
-        }
-      ]
-    })
-  //- vue-cal.ex--multiple-day-events(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-to="23 * 60"
-    hide-weekends
-    events-count-on-year-view
-    editable-events
-    resize-x
-    :events="multipleDayEvents")
 </template>
 
 <script setup>
