@@ -8,7 +8,7 @@
   .source-wrap.w-flex.column.gap3.mt3(
     v-if="$slots['code-html'] || $slots['code-js'] || $slots['code-css']"
     :class="{ expanded, 'no-scroll': sourceInnerNoScroll, [codeClass]: !!codeClass }")
-    .source-inner.w-flex.column.gap3.mt3(ref="sourceInnerEl")
+    .source-inner.w-flex.column.gap3(ref="sourceInnerEl")
       ssh-pre.example__source(
         v-if="$slots['code-html']"
         language="html-vue"
@@ -76,25 +76,9 @@ defineExpose({ refreshHeight: refreshSourceInnerHeight })
 .example {
   .source-wrap {
     position: relative;
-
-    .source-inner {
-      border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
-      overflow-y: hidden;
-      max-height: 250px;
-      border-radius: 6px;
-      transition: 0.25s ease-out;
-    }
-
-    &.ova .source-inner {
-      overflow: auto;
-      clip-path: inset(0 round 6px);
-    }
-
-    &.expanded .source-inner {
-      overflow-y: auto;
-      max-height: 1200px; // Should stay bigger than likely height.
-      transition: 0.35s ease-in-out;
-    }
+    border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 10%, transparent);
+    border-radius: 6px;
+    overflow: hidden;
 
     &:after {
       content: '';
@@ -109,6 +93,18 @@ defineExpose({ refreshHeight: refreshSourceInnerHeight })
       transition: 0.35s ease-in-out;
     }
     &.expanded:after, &.no-scroll:after {opacity: 0;}
+  }
+
+  .source-inner {
+    overflow-y: hidden;
+    max-height: 250px;
+    transition: 0.25s ease-out;
+  }
+
+  .source-wrap.expanded .source-inner {
+    overflow-y: auto;
+    max-height: 1200px; // Should stay bigger than likely height.
+    transition: 0.35s ease-in-out;
   }
 
   .w-app &__source-expand {
@@ -128,7 +124,7 @@ defineExpose({ refreshHeight: refreshSourceInnerHeight })
     border-bottom: none;
     padding-bottom: 24px; // Leave some space for the expand button.
   }
-  .w-app .source-inner.no-scroll &__source[data-label]:last-of-type {padding-bottom: 8px;}
+  .w-app .source-wrap.no-scroll &__source[data-label]:last-of-type {padding-bottom: 8px;}
 
   .vuecal {margin-left: auto;margin-right: auto;}
 }
