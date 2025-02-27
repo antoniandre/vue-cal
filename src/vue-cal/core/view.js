@@ -71,6 +71,14 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     now.value = new Date()
     timeTickerId = setTimeout(timeTick, 60 * 1000) // Every minute.
   }
+
+  function initTimeTicker () {
+    // Snap the time ticker on round minutes (when seconds = 0), so that we can set
+    // the time ticker interval to 60 seconds and spare some function calls.
+    timeTickerId = setTimeout(timeTick, (60 - new Date().getSeconds()) * 1000)
+
+    timeTick()
+  }
   // ------------------------------------------------------
 
   // Cells.
@@ -288,6 +296,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
       containsToday: containsToday.value,
       events: events.value
     })
+
+    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+    // Does not cost much to update when not watching real time as it is only computed when the view
+    // is updated.
+    now.value = new Date()
   }
 
   /**
@@ -498,15 +511,15 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   watch(() => cellsCount.value, () => {
     if (cellsCount.value > 90) console.warn('Vue Cal: high cell count detected. Performance may degrade when interactions are enabled.')
   })
+  watch(() => config.watchRealTime, watchRealTime => {
+    if (watchRealTime && config.time) initTimeTicker()
+    else timeTickerId = clearTimeout(timeTickerId)
+  })
 
   updateView()
 
   // Timers are expensive, this should only trigger on demand.
-  if (config.time && config.watchRealTime) {
-    // Snap the time ticker on round minutes (when seconds = 0), so that we can set
-    // the time ticker interval to 60 seconds and spare some function calls.
-    timeTickerId = setTimeout(timeTick, (60 - now.value.getSeconds()) * 1000)
-  }
+  if (config.time && config.watchRealTime) initTimeTicker()
 
   onBeforeUnmount(() => (timeTickerId = clearTimeout(timeTickerId))) // Stop the time ticker.
 
