@@ -30,6 +30,7 @@
   &__scrollable-wrap {
     position: relative;
     flex: 1;
+    display: flex;
     min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
   }
 
@@ -37,7 +38,6 @@
     position: relative; // For the time cells lines to fill up the whole calendar width.
     overflow: auto;
     flex: 1;
-    height: 100%;
     display: flex;
     flex-direction: column;
 
