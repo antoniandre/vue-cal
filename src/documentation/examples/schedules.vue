@@ -22,51 +22,51 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
         from: 8 * 60,
         to: 17 * 60,
         class: 'doctor-1',
-        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+        label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
       },
       tue: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-2',
-        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+        label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
       },
       wed: [
         {
           from: 8 * 60,
           to: 12 * 60,
           class: 'doctor-1',
-          label: '<strong>Doctor 1</strong><br><em>Morning shift</em>'
+          label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Morning shift&lt;/em&gt;'
         },
         {
           from: 14 * 60,
           to: 19 * 60,
           class: 'doctor-3',
-          label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>'
+          label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Afternoon shift&lt;/em&gt;'
         }
       ],
       thu: {
         from: 8 * 60,
         to: 17 * 60,
         class: 'doctor-1',
-        label: '<strong>Doctor 1</strong><br><em>Full day shift</em>'
+        label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
       },
       fri: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-3',
-        label: '<strong>Doctor 3</strong><br><em>Full day shift</em>'
+        label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
       },
       sat: {
         from: 9 * 60,
         to: 18 * 60,
         class: 'doctor-2',
-        label: '<strong>Doctor 2</strong><br><em>Full day shift</em>'
+        label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
       },
       sun: {
         from: 7 * 60,
         to: 20 * 60,
         class: 'closed',
-        label: '<strong>Closed</strong>'
+        label: '&lt;strong&gt;Closed&lt;/strong&gt;'
       }
     }
   template(#code-css).
@@ -93,7 +93,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
     :views="['day', 'week']"
     :time-from="7 * 60"
     :time-to="20 * 60"
-    :special-hours="specialDoctorHours"
+    :special-hours="exSpecialHours.doctorHours"
     style="height: 550px")
 
 //- Example.
@@ -118,22 +118,22 @@ example(title="Schedules & Schedule Events" anchor="schedules")
 
       .w-flex.align-center.wrap
         w-button.px2.mr2.my1(
-          :outline="!schedulesExample.minCellWidth"
-          @click="schedulesExample.minCellWidth = schedulesExample.minCellWidth ? 0 : 400")
-          w-icon.mr2 mdi mdi-{{ schedulesExample.minCellWidth ? 'close' : 'plus' }}
-          | {{ schedulesExample.minCellWidth ? `Min cell width: ${schedulesExample.minCellWidth}px` : 'Add min cell width' }}
+          :outline="!exSchedules.minCellWidth"
+          @click="exSchedules.minCellWidth = exSchedules.minCellWidth ? 0 : 400")
+          w-icon.mr2 mdi mdi-{{ exSchedules.minCellWidth ? 'close' : 'plus' }}
+          | {{ exSchedules.minCellWidth ? `Min cell width: ${exSchedules.minCellWidth}px` : 'Add min cell width' }}
 
         w-button.px2.mr2.my1(
-          :outline="!schedulesExample.minScheduleWidth"
-          @click="schedulesExample.minScheduleWidth = schedulesExample.minScheduleWidth ? 0 : 200")
-          w-icon.mr2 mdi mdi-{{ schedulesExample.minScheduleWidth ? 'close' : 'plus' }}
-          | {{ schedulesExample.minScheduleWidth ? `Min schedule width: ${schedulesExample.minScheduleWidth}px` : 'Add min schedule width' }}
+          :outline="!exSchedules.minScheduleWidth"
+          @click="exSchedules.minScheduleWidth = exSchedules.minScheduleWidth ? 0 : 200")
+          w-icon.mr2 mdi mdi-{{ exSchedules.minScheduleWidth ? 'close' : 'plus' }}
+          | {{ exSchedules.minScheduleWidth ? `Min schedule width: ${exSchedules.minScheduleWidth}px` : 'Add min schedule width' }}
 
         w-button.px2.my1(
-          :outline="schedulesExample.schedules[1].hide"
-          @click="schedulesExample.schedules[1].hide = !schedulesExample.schedules[1].hide")
-          w-icon.mr2 mdi mdi-{{ schedulesExample.schedules[1].hide ? 'plus' : 'close' }}
-          | {{ schedulesExample.schedules[1].hide ? 'Show' : 'Hide' }} Dad
+          :outline="exSchedules.schedules[1].hide"
+          @click="exSchedules.schedules[1].hide = !exSchedules.schedules[1].hide")
+          w-icon.mr2 mdi mdi-{{ exSchedules.schedules[1].hide ? 'plus' : 'close' }}
+          | {{ exSchedules.schedules[1].hide ? 'Show' : 'Hide' }} Dad
   template(#code-html).
     &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
       {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
@@ -218,24 +218,37 @@ example(title="Schedules & Schedule Events" anchor="schedules")
     :time-step="30"
     :views="['day', 'week', 'month']"
     editable-events
-    :events="scheduleEvents"
-    :schedules="schedulesExample.schedules"
-    :min-cell-width="schedulesExample.minCellWidth"
-    :min-schedule-width="schedulesExample.minScheduleWidth")
+    :events="exSchedules.scheduleEvents"
+    :schedules="exSchedules.schedules"
+    :min-cell-width="exSchedules.minCellWidth"
+    :min-schedule-width="exSchedules.minScheduleWidth")
 
 .todo-tag.d-iflex.mt6 ADD EXAMPLE WITH SCHEDULE EVENTS
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
-const vuecalEl = ref(null)
+const exSpecialHours = reactive({
+  doctorHours: {
+    mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+    tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+    wed: [
+      { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
+      { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
+    ],
+    thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
+    fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
+    sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
+    sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
+  }
+})
 
-const schedulesExample = ref({
+const exSchedules = reactive({
   minCellWidth: 400,
   minScheduleWidth: 0,
   schedules: [
@@ -244,6 +257,33 @@ const schedulesExample = ref({
     { id: 3, class: 'kid1', label: 'Kid 1' },
     { id: 4, class: 'kid2', label: 'Kid 2' },
     { id: 5, class: 'kid3', label: 'Kid 3' }
+  ],
+  scheduleEvents = [
+    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+    {
+      start: '2018-11-21 12:00',
+      end: '2018-11-21 12:30',
+      title: 'Recall Dave',
+      content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
+      class: 'leisure',
+      schedule: 1
+    },
+    {
+      start: '2018-11-21 20:00',
+      end: '2018-11-21 22:00',
+      title: 'Salsa',
+      content: '<i class="w-icon mdi mdi-walk"></i>',
+      class: 'sport',
+      schedule: 1
+    },
+    {
+      start: '2018-11-23 21:00',
+      end: '2018-11-23 23:30',
+      title: 'Movie time',
+      content: '<i class="w-icon mdi mdi-ticket"></i>',
+      class: 'leisure',
+      schedule: 2
+    }
   ]
 })
 
@@ -259,18 +299,6 @@ const specialHours = computed(() => ({
   fri: dailyHours
 }))
 
-const specialDoctorHours = {
-  mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  wed: [
-    { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Morning shift</em>' },
-    { from: 14 * 60, to: 19 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Afternoon shift</em>' }
-  ],
-  thu: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
-  fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
-  sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
-  sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-}
 
 const events = [
   {
@@ -356,33 +384,6 @@ const events = [
   }
 ]
 
-const scheduleEvents = [
-  ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-  {
-    start: '2018-11-21 12:00',
-    end: '2018-11-21 12:30',
-    title: 'Recall Dave',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-    class: 'leisure',
-    schedule: 1
-  },
-  {
-    start: '2018-11-21 20:00',
-    end: '2018-11-21 22:00',
-    title: 'Salsa',
-    content: '<i class="w-icon mdi mdi-walk"></i>',
-    class: 'sport',
-    schedule: 1
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Movie time',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure',
-    schedule: 2
-  }
-]
 </script>
 
 <style lang="scss">
@@ -413,7 +414,7 @@ const scheduleEvents = [
   .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
   .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
   .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 26px;font-weight: 500;}
+  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 14px;font-weight: 500;}
 
   .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
 

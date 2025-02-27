@@ -5,7 +5,7 @@ example(title="Timeline" anchor="timeline")
     p.
       Timelines are visible on #[span.code day], #[span.code days] and #[span.code week] views.#[br]
       #[code time-start], #[code time-end] &amp; #[code time-step] are expected in minutes.
-    .mla.mr1.w-flex.mt8.mb4.gap4.xs8.justify-end
+    .mla.w-flex.mt8.mb4.gap4.xs8.justify-end
       | From
       w-slider.grow(
         v-model="exTimeline.timeFrom"
@@ -31,11 +31,15 @@ example(title="Timeline" anchor="timeline")
     &lt;vue-cal :time-from="{{ exTimeline.timeFrom }} * 60" :time-to="{{ exTimeline.timeTo }} * 60" :time-step="{{ exTimeline.timeStep }}" /&gt;
 
   vue-cal(
-    :dark="store.darkMode"
     :time-from="exTimeline.timeFrom * 60"
     :time-to="exTimeline.timeTo * 60"
     :time-step="exTimeline.timeStep"
-    hide-weekends)
+    @ready="exTimeline.onReady"
+    :view-date="new Date().subtractDays(2)"
+    :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {}, year: {}, years: {} }"
+    view="days"
+    :dark="store.darkMode"
+    style="height: auto;max-height: 400px;overflow: auto")
 
 //- Example.
 example(title="Today's Current Time" anchor="today-current-time")
@@ -44,7 +48,7 @@ example(title="Today's Current Time" anchor="today-current-time")
       When the time column is visible, the current time of today's date will
       be marked with a line.#[br]
       The line position will be updated every time the calendar current view is re-rendered (by interacting)
-      or following the real time if #[code watchRealTime] is set to true (more expensive).#[br]
+      or following the real time if #[code watch-real-time] is set to true (more expensive).#[br]
       You can easily customize the now-line via CSS, for instance, changing the line and arrow color is as
       easy as:
     ssh-pre.my1.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {border-color: #06c;}
@@ -53,9 +57,8 @@ example(title="Today's Current Time" anchor="today-current-time")
       ssh-pre.mt0.d-iblock.pr8(language="css" :dark="store.darkMode") .vuecal__now-line {display: none;}
 
   vue-cal(
-    :time-cell-height="26"
-    view="day"
     :views="['day']"
+    view="day"
     :views-bar="false"
     :today-button="false"
     @ready="({ view }) => view.scrollToCurrentTime()"
@@ -92,13 +95,13 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
         w-icon mdi mdi-format-vertical-align-bottom
         | Scroll to current time
     vue-cal.ex--scroll-to-time(
-      :dark="store.darkMode"
-      view="day"
       :views="['day']"
+      view="day"
       :views-bar="false"
       :today-button="false"
       :time-cell-height="exScrollToTime.timeCellHeight"
       @ready="exScrollToTime.onReady"
+      :dark="store.darkMode"
       xs
       style="width: 320px;height: 200px")
   template(#code-html).
@@ -146,11 +149,12 @@ example(title="Timeline Tweaking" anchor="timeline-tweaking")
     :time-step="15"
     :time-cell-height="18"
     :views="['day']"
-    style="width: 320px;height: 200px"
+    view="day"
     :views-bar="false"
     :today-button="false"
     :dark="store.darkMode"
-    sm)
+    sm
+    style="width: 320px;height: 200px")
     template(#time-cell="{ hours, minutes, index }")
       .mt-2(v-show="index" :class="{ hours: !minutes }")
         strong.primary.px2(v-if="!minutes" style="font-size: 15px;line-height: 18px") {{ hours }}
@@ -184,14 +188,14 @@ example(title="Minimum / Maximum Dates" anchor="min-max-dates")
     .vuecal__cell--before-min {color: #b6d6c7;}
     .vuecal__cell--after-max {color: #008b8b;}
   vue-cal(
-    :dark="store.darkMode"
-    xs
-    :views-bar="false"
     click-to-navigate
-    view="month"
     :views="['day', 'month', 'year', 'years']"
-    :min-date="minDate"
-    :max-date="maxDate")
+    view="month"
+    :views-bar="false"
+    :min-date="exMinMaxDates.minDate"
+    :max-date="exMinMaxDates.maxDate"
+    xs
+    :dark="store.darkMode")
 
 //- Example.
 example(title="Disable Days" anchor="disable-days")
@@ -252,16 +256,8 @@ const store = useAppStore()
 const exTimeline = reactive({
   timeFrom: ref(7),
   timeTo: ref(18),
-  timeStep: ref(30)
-})
-
-const exHideElements = reactive({
-  todayButton: true,
-  viewsBar: true,
-  titleBar: true,
-  startOnSunday: false,
-  hideWeekends: false,
-  time: true
+  timeStep: ref(30),
+  onReady: ({ view }) => setTimeout(() => view.scrollToCurrentTime(), 350)
 })
 
 const exThemes = reactive({
@@ -286,13 +282,15 @@ const exScrollToTime = reactive({
   }
 })
 
+const exMinMaxDates = reactive({
+  minDate: computed(() => new Date().subtractDays(10)),
+  maxDate: computed(() => new Date().addDays(10))
+})
+
 const exHideWeekDays = reactive({
   weekdays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
   weekdaysToHide: ref(['tue', 'wed', 'fri'])
 })
-
-const minDate = computed(() => new Date().subtractDays(10))
-const maxDate = computed(() => new Date().addDays(10))
 </script>
 
 <style lang="scss">

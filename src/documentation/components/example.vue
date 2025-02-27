@@ -58,6 +58,7 @@ const sourceInnerNoScroll = ref(false)
 // so we need to refresh it for the expand button to show up correctly.
 const refreshSourceInnerHeight = async () => {
   await nextTick()
+  if (!sourceInnerEl.value) return
   sourceInnerNoScroll.value = !expanded.value && (sourceInnerEl.value.scrollHeight <= sourceInnerEl.value.clientHeight)
 }
 const onExpandClick = () => {
