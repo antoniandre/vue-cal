@@ -60,7 +60,7 @@ export default defineConfig({
   ], // https://vitejs.dev/config/
   resolve: {
     alias: {
-      '@': resolve(__dirname, '/src')
+      '@': resolve(__dirname, 'src')
     }
   },
   css: {
