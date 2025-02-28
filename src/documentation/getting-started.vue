@@ -7,8 +7,9 @@ p.mt2 You have 2 options: using #[strong NPM] or #[strong.code &lt;script&gt;] t
 ul.ml4
   li
     h3.mt4 Via NPM
+    p Vue Cal is currently available as a pre-release version, so you need to install it from the next tag.
     .w-flex.align-center.mt2.xs-column.xs-align-start
-      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal
+      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@next
 
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
     .w-flex.gap6.smd-column.wrap

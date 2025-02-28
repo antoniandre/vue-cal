@@ -53,10 +53,10 @@ Experience Vue Cal in action or dive into the docs for setup instructions and AP
 
 ## 📦 Installation
 
-Install the latest Vue Cal V5 with your favorite package manager:
+Install the latest prerelease of Vue Cal V5 with your favorite package manager:
 
 ```bash
-npm i vue-cal
+npm i vue-cal@next
 ```
 
 ---
