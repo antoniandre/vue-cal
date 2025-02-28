@@ -198,7 +198,9 @@ example(title="Create Events Programmatically" anchor="create-events-programmati
       In order to create events programmatically, from an external button for instance, you need to call
       the vue-cal #[code view.createEvent()] function from a Vue ref.
     .w-flex.mb3.justify-end
-      w-button.mx1(sm @click="exExternalEventCreate.createEvent") Create Event
+      w-button(sm @click="exExternalEventCreate.createEvent")
+        w-icon.mr1 mdi mdi-plus
+        | Create Event
 
   template(#code-html).
     &lt;button @click="createEvent"&gt;Create Event&lt;/button&gt;
@@ -395,15 +397,27 @@ example(title="Events v-model" anchor="events-v-model")
         Be aware that modifying the array of events externally will always override the internal array.#[br]
         So you must be sure to save the changes that were made to events through the Vue Cal UI, or they
         will be lost.
-    .w-flex.justify-end
-      w-button.ma1(@click="exEventsVModel.addEvent")
-        w-icon.mr2 mdi mdi-plus
-        | Add Event
-      w-button.ma1(@click="exEventsVModel.events.pop()")
-        w-icon.mr2 mdi mdi-close
-        | Remove Last Event
-    p.mb0 Here is the live array of event titles:
-    pre.code.size--xs.pa2.ova {{ exEventsVModel.events.map(e => e.title) }}
+
+    p.mb2.
+      In this example, you can add or remove events from the array of events and they will be displayed in the
+      box below. You can also create events in the calendar with a click and drag, and resize or drag and drop
+      them.#[br]
+      The events in the list will accurately display the updated start and end times.
+    .w-flex.justify-space-between.gap2.wrap.mt4
+      .title4 Current List of Events
+      .w-flex.align-end.no-grow.gap1.mb1
+        w-button(@click="exEventsVModel.addEvent")
+          w-icon.mr2 mdi mdi-plus
+          | Add Event
+        w-button(@click="exEventsVModel.events.pop()")
+          w-icon.mr2 mdi mdi-trash-can-outline
+          | Remove Last Event
+    .size--xs.w-flex.pa2.ova.gap2.wrap.bdrs2.bd1(style="min-height: 100px;background-color: color-mix(in srgb, var(--w-base-color) 3%, transparent);")
+      .w-flex.column.align-center.justify-center(v-if="!exEventsVModel.events.length")
+        .caption No events yet.
+      .bdrs2.bd1.w-flex.column.align-center.justify-center.pa1.no-grow.blue--bg.white(v-for="event in exEventsVModel.events")
+        .title3 {{ event.title }}
+        .size--xs {{ event.start.formatTime() }} - {{ event.end.formatTime() }}
 
   template(#code-html).
     &lt;button
@@ -427,6 +441,7 @@ example(title="Events v-model" anchor="events-v-model")
   vue-cal(
     ref="exEventsVModelVuecalRef"
     v-model:events="exEventsVModel.events"
+    editable-events
     @ready="({ view }) => view.scrollToCurrentTime()"
     @event-create="exEventsVModel.onEventCreate"
     @event-dblclick="({ event }) => event.delete(2)"
@@ -446,12 +461,25 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
       the native HTML5 drag &amp; drop API (widely supports touch devices).#[br]
       It allows you to move an event from one cell to another, or from an external source to the calendar
       and vice-versa.
-    p.mt2.
-      The drag &amp; drop feature is enabled by default, but you can disable it by setting the
-      #[code editable-events.drag] option to #[code false].#[br]
-      You can also disable it for a specific event by setting the #[code draggable] attribute to #[code false].
-    p
-    //- TODO
+    .title5.mt4 Good to Know:
+    ul
+      li.mt2.
+        The drag &amp; drop feature is enabled with #[code editable-events] set to true, but you can specifically
+        disable it by setting the #[code editable-events.drag] option to #[code false].#[br]
+        You can also disable it for a specific event by setting the #[code draggable] attribute to #[code false].
+
+      li.mt2.
+        While dragging an event, the clone at cursor receives the #[code .vuecal__event--dragging-ghost] CSS
+        class, while the original event receives the #[code .vuecal__event--dragging-original] CSS class (the
+        original is hidden by default while dragging). You can override these styles with your own CSS.
+      li.
+        By default, when you drop the event it will start exactly where you dropped it,
+        but if you prefer you can use the #[code snapToInterval] option to dictate where it should
+        snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
+        If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
+        the native HTML5 drag &amp; drop.
+
+    //- @todo:
     //- h5 Dragging over header
     //- ul
       li.
@@ -489,20 +517,7 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
       li.
         If you drop the event in a cell and it would end after midnight (24:00), its duration will
         be truncated to end at midnight (24:00).
-      li.
-        By default, when you drop the event it will start exactly where you dropped it,
-        but if you prefer you can use the #[code snapToInterval] option to dictate where it should
-        snap to (refer to #[code snapToInterval] in the #[a(href="#api") API section]).#[br]
-        If you wonder why it does not represent the snapping while dragging, it's not possible to do it with
-        the native HTML5 drag &amp; drop.
-    alert
-      p If you listen for the #[code event-drop] event, you will receive an object with the following:
-      ul
-        li #[code event]: The event object that was dropped (contains the date and schedule where it was dropped).
-        li #[code cell]: The cell object where the event was dropped.
-        li #[code e]: The JavaScript native event object.
-        li #[code overlaps]: An array of events that overlap the dropped event.
-      p From the same event listener, you can #[strong accept or reject the drop by returning a boolean value].
+
     //- h5 CSS styles
     //- ul
       li
@@ -513,27 +528,38 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
           li #[code .vuecal__arrow--highlighted]
           li #[code .vuecal__cell--highlighted]
           li #[code .vuecal__schedule--highlighted]
-      li.
-        You can change the style of the event being dragged through the
-        #[code .vuecal__event--dragging] CSS class.
-      li.
-        While dragging, a copy of the original event is made and that's what you drag
-        (native HTML5 drag &amp; drop behavior). The original event receives the
-        #[code .vuecal__event--static] CSS class which hides it with #[code opacity: 0].#[br]
-        You can use that class to give it a different style.
-    .w-flex.wrap.gap3.justify-end
+    alert
+      p If you listen for the #[code event-drop] event, you will receive an object with the following:
+      ul
+        li #[code event]: The event object that was dropped (contains the date and schedule where it was dropped).
+        li #[code cell]: The cell object where the event was dropped.
+        li #[code e]: The JavaScript native event object.
+        li #[code overlaps]: An array of events that overlap the dropped event.
+      p From the same event listener, you can #[strong reject the drop by returning #[code false]].
+
+    .w-flex.wrap.gap3.justify-end.mt8
       w-switch(v-model="exDragAndDrop.draggableEvents" label-color="base") Draggable Events
       w-tooltip(align-right)
         template(#activator="{ on }")
           div(v-on="on")
             w-switch(v-model="exDragAndDrop.overlappableEvents" label-color="base") Overlappable Events
         | Allow dropping events on top of other events
+      w-tooltip(align-right)
+        template(#activator="{ on }")
+          div(v-on="on")
+            w-switch(v-model="exDragAndDrop.snapToInterval" label-color="base") Snap to Interval
+        | Snap the event to the closest round hour when dropped or resized
+      w-tooltip(align-right)
+        template(#activator="{ on }")
+          div(v-on="on")
+            w-switch(v-model="exDragAndDrop.overrideDragCss" label-color="base") Override Draggable CSS
+        | Override the default event dragging CSS styles
 
   template(#code-html).
     &lt;vue-cal
       :events="events"
       :editable-events="{ drag: {{ exDragAndDrop.draggableEvents ? 'true' : 'false' }} }"
-      @event-drop="onEventDrop"
+      {{ exDragAndDrop.snapToInterval ? `:snap-to-interval="60"\n  ` : '' }}@event-drop="onEventDrop"
       :schedules="schedules"&gt;
     &lt;/vue-cal&gt;
   template(#code-js)
@@ -550,6 +576,19 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
       | const onEventDrop = ({ e, event, cell, overlaps }) => !overlaps.length
       |
       |
+  template(#code-css v-if="exDragAndDrop.overrideDragCss").
+    .vuecal__event--dragging-ghost {
+      opacity: 1;
+      background-color: #adff2f;
+      border: none;
+      color: #000;
+    }
+    .vuecal__event--dragging-original {
+      opacity: 0.8;
+      border: 1px dashed var(--vuecal-event-border-color);
+      transform: scale(0.8);
+      transition: transform 0.2s ease-in-out;
+    }
 
   vue-cal(
     :events="exDragAndDrop.events"
@@ -558,9 +597,13 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     :schedules="[{ id: 1, label: 'Dr 1' }, { id: 2, label: 'Dr 2' }]"
     :time-from="9 * 60"
     :time-to="15 * 60"
-    :snap-to-interval="15"
+    :snap-to-interval="exDragAndDrop.snapToInterval ? 60 : 0"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :views-bar="false"
     :dark="store.darkMode"
-    style="height: 341px")
+    :class="{ 'override-drag-css': exDragAndDrop.overrideDragCss }"
+    style="height: 312px")
 
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
@@ -569,19 +612,21 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
       It is also possible to move an event from one calendar to another.#[br]#[br]
-      In the external event, you can set a #[code duration] property: it will be used to represent the duration of the event on Vue Cal when it has no date.#[br]
-      If the #[code duration] is missing, the default will be 2 hours.
+      In the external event, you can set a #[code duration] property: it will be used to set the duration of the event when dropped in Vue Cal.#[br]
+      If the #[code duration] is missing, the default duration will be equal to the time interval.#[br]
+      Once the event is dropped into Vue Cal, it will be removed from the external source and its duration will be calculated in #[code event._.duration].
 
     alert(tip)
       strong Important note when dragging external events into Vue Cal:
       div.
-        With HTML5 drag &amp; drop, when you drop a DOM element to another location, you have to move
+        It's important to understand that the native HTML5 drag &amp; drop, does not move an element from its
+        source to the destination. It only creates a copy of the element that you drag.#[br]
+        when you drop a DOM element to another location, you have to move
         the element yourself. Now especially because Vue is data driven and a DOM update does not
         modify the data, you will also have to remove the event from its original data source yourself
         - unless you want to create a copy.#[br]
         Learn how in the example source code below.
   template(#code-html).
-    &lt;!-- HTML5 draggable events --&gt;
     &lt;div
       class="external-event"
       v-for="(item, i) in draggables"
@@ -589,7 +634,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       draggable="true"
       @dragstart="onEventDragStart($event, item)"&gt;
       &lt;strong&gt;{{ '\{\{ item.title \}\}' }}&lt;/strong&gt;
-      ({{ "\{\{ item.duration ? `${item.duration} min` : 'no duration' \}\}" }})
+      ({{ "\{\{ (item._ || {}).duration || item.duration ? `${(item._ || {}).duration || item.duration} min` : 'no duration' \}\}" }})
     &lt;/div&gt;
 
     &lt;vue-cal
@@ -654,7 +699,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
         draggable="true"
         @dragstart="exExternalEventsDragDrop.onEventDragStart($event, item)")
         strong.mr2 {{ item.title }}
-        .caption ({{ item.duration ? `${item.duration} min` : 'no duration' }})
+        .caption ({{ (item._ || {}).duration || item.duration ? `${(item._ || {}).duration || item.duration} min` : 'no duration' }})
     vue-cal.grow(
       ref="exExternalEventsDragDropEl1"
       @event-drop="exExternalEventsDragDrop.onEventDrop"
@@ -930,8 +975,14 @@ const exEditEvents = reactive({
 })
 
 const exEventsVModel = reactive({
-  counter: 0,
-  events: ref([]),
+  counter: 1,
+  events: ref([
+    {
+      start: new Date(),
+      end: new Date().addHours(1),
+      title: 'Event 1'
+    }
+  ]),
   onEventCreate: ({ event, resolve }) => resolve({ ...event, title: 'Event ' + ++exEventsVModel.counter }),
   addEvent: () => exEventsVModel.events.push({
     start: new Date(),
@@ -1029,6 +1080,20 @@ const exRejectDndOrResize = reactive({
     .vuecal__event {background-color: rgba(76, 172, 175, 0.35);}
   }
 
+  .example--drag-and-drop .override-drag-css {
+    .vuecal__event--dragging-ghost {
+      opacity: 1;
+      background-color: #adff2f;
+      border: none;
+      color: #000;
+    }
+    .vuecal__event--dragging-original {
+      opacity: 0.8;
+      border: 1px dashed var(--vuecal-event-border-color);
+      transform: scale(0.8);
+      transition: transform 0.2s ease-in-out;
+    }
+  }
   // External events drag and drop example.
   .example--external-events-drag-and-drop {
     flex-basis: 0 !important;
