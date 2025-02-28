@@ -276,7 +276,8 @@ div.ssh-pre {
   }
 }
 
-.page.prod .todo-tag {display: none;}
+// Hide todos in PROD.
+.page.prod .todo-tag:not(.prod) {display: none;}
 
 @keyframes heart-pulse {
   0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
