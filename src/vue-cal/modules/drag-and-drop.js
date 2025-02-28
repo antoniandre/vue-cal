@@ -87,7 +87,7 @@ export function useDragAndDrop (vuecal) {
     e.dataTransfer.dropEffect = 'move'
     // Transfer the event's data to the receiver (when successfully drag & dropping out of Vue Cal).
     // Notice: in Firefox the drag is prevented if there is no dataTransfer.setData().
-    const cleanEvent = { ...event, _: { id: event._.id } }
+    const cleanEvent = { ...event, _: { id: event._.id, duration: deltaMinutes(event.start, event.end) } }
     e.dataTransfer.setData('event', JSON.stringify(cleanEvent))
     // When click and drag an event the cursor can be anywhere in the event,
     // when later dropping the event, we need to subtract the cursor position in the event.
@@ -279,7 +279,7 @@ export function useDragAndDrop (vuecal) {
         start: newStart,
         end: newEnd,
         ...((newSchedule !== undefined) && { schedule: ~~newSchedule }),
-        _: { id: incomingEvent._?.id || incomingEvent.id },
+        _: { id: incomingEvent._?.id || incomingEvent.id, duration: deltaMinutes(newStart, newEnd) },
         getOverlappingEvents: () => {
           return eventsManager.getEventsInRange(
             eventsManager.getEventsByDate(dateUtils.formatDate(newStart), true),
