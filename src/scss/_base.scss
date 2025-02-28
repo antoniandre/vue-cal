@@ -276,6 +276,8 @@ div.ssh-pre {
   }
 }
 
+.page.prod .todo-tag {display: none;}
+
 @keyframes heart-pulse {
   0%, 20%, 30%, 35%, 45%, 100% {transform: scale(1);}
   25%, 40% {transform: scale(1.3);}

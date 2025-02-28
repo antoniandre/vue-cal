@@ -405,7 +405,7 @@ example(title="Overlapping Events" anchor="overlapping-events")
 example(title="All Day Events" anchor="all-day-events")
   template(#title)
       | All Day Events
-      .todo-tag.d-iflex.ml2 COMING SOON
+      .todo-tag.prod.d-iflex.ml2 COMING SOON
   //- template(#desc)
     ul
       li.mb2.
@@ -497,7 +497,7 @@ example(title="All Day Events" anchor="all-day-events")
 example(title="Multiple Day Events" anchor="multiple-day-events")
   template(#title)
       | Multiple Day Events
-      .todo-tag.d-iflex.ml2 COMING SOON
+      .todo-tag.prod.d-iflex.ml2 COMING SOON
   //- template(#desc)
     p.
       Multiple day events work like a set of single day events linked together.#[br]
@@ -562,7 +562,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
 example(anchor="recurring-events")
   template(#title)
     | Recurring Events
-    .todo-tag.d-iflex.ml2 COMING SOON
+    .todo-tag.prod.d-iflex.ml2 COMING SOON
   //- template(#desc)
     .mt4.text-bold When it will be ready, this is how it will work.
     .mb2 You can repeat an event:

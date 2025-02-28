@@ -121,20 +121,21 @@ example(title="Schedules & Schedule Events" anchor="schedules")
   template(#desc)
     .todo-tag.d-iflex REDO COLORS
     .todo-tag.d-iflex.ml2 ADD MIN-WIDTH &amp; HIDE DAD
-    .mb6
+    alert.text-bold This example will be completed soon.
+    //- .mb6
       | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
       br
       br
       | By default the body of the calendar will fit the container.#[br]
       | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
       | body width and it will become scrollable horizontally.
-      ul
+      //- ul
         li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
         li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
 
-      | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
+      //- | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
 
-      | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
+      //- | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
 
       .w-flex.align-center.wrap
         w-button.px2.mr2.my1(

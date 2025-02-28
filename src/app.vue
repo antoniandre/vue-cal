@@ -1,5 +1,5 @@
 <template lang="pug">
-documentation
+documentation(:class="{ prod: isProduction }")
 </template>
 
 <script setup>
@@ -9,6 +9,7 @@ import Documentation from '@/documentation/index.vue'
 
 const $waveui = inject('$waveui')
 const store = useAppStore()
+const isProduction = import.meta.env.PROD
 
 onMounted(() => store.applyTheme(localStorage.theme || $waveui.preferredTheme))
 </script>

@@ -115,6 +115,10 @@ ul
   li #[code .vuecal--full-height-delete] class was removed
   li #[code #no-event] slot was removed
   li #[code #week-numbers-cell] slot was renamed #[code #week-number]
+  li.
+    D&amp;D CSS classes changed: #[code .vuecal__event--dragging] was renamed
+    #[code .vuecal__event--ghost] (as commonly named), and #[code .vuecal__event--static]
+    was renamed #[code .vuecal__event--original]
 
 title-link(h2 anchor="props-changes") Props Changes
 ul
