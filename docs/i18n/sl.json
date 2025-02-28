@@ -1,0 +1,16 @@
+{
+  "weekDays": ["Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota", "Nedelja"],
+  "months": ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"],
+  "years": "Leta",
+  "year": "Leto",
+  "month": "Mesec",
+  "week": "Teden",
+  "days": "Dni",
+  "day": "Dan",
+  "today": "Danes",
+  "noEvent": "Ni dogodkov",
+  "allDay": "Cel dan",
+  "deleteEvent": "Odstrani",
+  "createEvent": "Ustvari dogodek",
+  "dateFormat": "dddd MMMM D, YYYY"
+}

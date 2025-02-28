@@ -1,0 +1,16 @@
+{
+  "weekDays": ["Esmaspäev", "Teisipäev", "Kolmapäev", "Neljapäev", "Reede", "Laupäev", "Pühapäev"],
+  "months": ["Jaanuar", "Veebruar", "Märts", "Aprill", "Mai", "Juuni", "Juuli", "August", "September", "Oktoober", "November", "Detsember"],
+  "years": "Aastad",
+  "year": "Aasta",
+  "month": "Kuu",
+  "week": "Nädal",
+  "days": "Päeva",
+  "day": "Päev",
+  "today": "Täna",
+  "noEvent": "Sündmus puudub",
+  "allDay": "Terve päev",
+  "deleteEvent": "Kustuta",
+  "createEvent": "Loo sündmus",
+  "dateFormat": "dddd D MMMM YYYY"
+}

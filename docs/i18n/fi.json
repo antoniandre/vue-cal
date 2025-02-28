@@ -1,0 +1,16 @@
+{
+	"weekDays": ["Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai", "Sunnuntai"],
+	"months": ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"],
+	"years": "Vuodet",
+	"year": "Vuosi",
+	"month": "Kuukausi",
+	"week": "Viikko",
+  "days": "Päivät",
+	"day": "Päivä",
+	"today": "Tänään",
+	"noEvent": "Ei tapahtumia",
+	"allDay": "Koko päivä",
+	"deleteEvent": "Poista tapahtuma",
+	"createEvent": "Luo tapahtuma",
+	"dateFormat": "dddd, D MMMM YYYY"
+}

@@ -1,0 +1,16 @@
+{
+  "weekDays": ["Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota", "Nedelja"],
+  "months": ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"],
+  "years": "Godine",
+  "year": "Godina",
+  "month": "Mesec",
+  "week": "Sedmica",
+  "days": "Dana",
+  "day": "Dan",
+  "today": "Danas",
+  "noEvent": "Nema događaja",
+  "allDay": "Celi dan",
+  "deleteEvent": "Obriši",
+  "createEvent": "Kreiraj događaj",
+  "dateFormat": "dddd D MMMM YYYY"
+}

@@ -1,0 +1,17 @@
+{
+  "weekDays": ["E Hënë","E Martë","E Mërkurë","E Enjte","E Premte","E Shtunë","E Diel"],
+  "weekDaysShort": ["Hë","Ma","Mr","Enj","Pr","Sh","D"],
+  "months": ["Janar","Shkurt","Mars","Prill","Maj","Qershor","Korrik","Gusht","Shtator","Tetor","Nëntor","Dhjetor"],
+  "years": "Vitet",
+  "year": "Viti",
+  "month": "Muaji",
+  "week": "Java",
+  "days": "Ditë",
+  "day": "Dita",
+  "today": "Sot",
+  "noEvent": "Nuk ka event",
+  "allDay": "Tërë ditën",
+  "deleteEvent": "Fshijë",
+  "createEvent": "Krijo një event",
+  "dateFormat": "dddd D MMMM YYYY"
+}
