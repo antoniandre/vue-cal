@@ -1,5 +1,4 @@
 import { computed, reactive, toRefs, watch } from 'vue'
-import path from 'path'
 
 export const defaults = {
   texts: {
@@ -211,11 +210,10 @@ export const useConfig = (vuecal, props, attrs) => {
     let translations = import.meta.glob('../i18n/*.json', { import: 'default' })
 
     if (import.meta.env.SSR) {
-      // Server-Side: Read JSON directly from the file system.
       let fs
       (async () => (fs = await import('fs').then(mod => mod.promises)))()
 
-      const filePath = path.resolve(__dirname, `../i18n/${locale}.json`)
+      const filePath = new URL(`../i18n/${locale}.json`, import.meta.url).pathname
       try {
         const data = await fs.readFile(filePath, 'utf-8')
         translations = JSON.parse(data)
