@@ -19,8 +19,8 @@
       // Ensure we only rewrite paths inside the repo
       if (!path.startsWith(repoName)) repoName = ''
 
-      // Redirect to index.html inside the repo
-      var newUrl = repoName + '/index.html' + search + hash
+      // Redirect to the base path without adding index.html
+      var newUrl = repoName + '/' + search + hash
       window.location.replace(newUrl)
     })()
   </script>
