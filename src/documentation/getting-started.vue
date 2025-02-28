@@ -8,17 +8,21 @@ ul.ml4
   li
     h3.mt4 Via NPM
     .w-flex.align-center.mt2.xs-column.xs-align-start
-      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal # Vue 3
-      span.mx6 or
-      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@legacy # Vue 2
+      ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal
 
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
     .w-flex.gap6.smd-column.wrap
       w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")
-        template(#item-title.1) Options API
+        template(#item-title.1) Composition API
         template(#item-content.1)
           ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
-            import VueCal from 'vue-cal'
+            import { VueCal } from 'vue-cal'
+            import 'vue-cal/style'
+
+        template(#item-title.2) Options API
+        template(#item-content.2)
+          ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
+            import { VueCal } from 'vue-cal'
             import 'vue-cal/style'
 
             export default {
@@ -26,14 +30,8 @@ ul.ml4
               ...
             }
 
-        template(#item-title.2) Composition API
-        template(#item-content.2)
-          ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
-            import VueCal from 'vue-cal'
-            import 'vue-cal/style'
-
       .highlight-box.grow
-        .title2 Demos on StackBlitz
+        .title2 Demos on StackBlitz (V4 only)
         p.body.mb4.grey Check the different setups for bundlers
         .w-flex.align-center
           w-icon.ml3.mr2.bolt(color="grey-light2" size="4.5em") mdi mdi-lightning-bolt
@@ -41,29 +39,31 @@ ul.ml4
             li
               w-icon.mr2 wi-chevron-right
               a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 + Vue CLI
+                | Vue Cal 4 + Vue 3 + Vue CLI
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
               w-icon.mr2 wi-chevron-right
               a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 + Vite
+                | Vue Cal 4 + Vue 3 + Vite
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
               w-icon.mr2 wi-chevron-right
               a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 3 &amp; composition API + Vite
+                | Vue Cal 4 + Vue 3 &amp; composition API + Vite
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
             li
               w-icon.mr2 wi-chevron-right
               a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
-                | Vue Cal + Vue 2 + Vue CLI
+                | Vue Cal 4 + Vue 2 + Vue CLI
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
   li.mt8
     h3.mt4 Or via #[span.code &lt;script&gt;] tag
-    p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
-    w-tabs.my4(:items="2" content-class="pa0")
+    .title5.mt3.mb1 Currently Deprecated
+    p.mb4 This method is currently deprecated, but support may be added for users who need it.
+    //- p Include the Vue Cal script in your document #[span.code &lt;head&gt;] as follows:
+    //- w-tabs.my4(:items="2" content-class="pa0")
       template(#item-title.1) Vue 3
       template(#item-content.1)
         ssh-pre.ma0(language="html" :dark="store.darkMode").
@@ -84,10 +84,10 @@ ul.ml4
             &lt;link href="https://unpkg.com/vue-cal@legacy/dist/vuecal.css" rel="stylesheet"&gt;
           &lt;/head&gt;
 
-    p.
+    //- p.
       Then define the component to use in your template if you are not using the Vue composition
       API:
-    .w-flex.gap6.smd-column.wrap.mt4
+    //- .w-flex.gap6.smd-column.wrap.mt4
       ssh-pre.grow.ma0.pa3.bdrs2(language="js" :dark="store.darkMode").
         // In your Vue.js component.
         export default {
