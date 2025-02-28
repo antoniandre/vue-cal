@@ -6,7 +6,7 @@
   :style="styles"
   :draggable="isDraggable"
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
-  @dragend="isDraggable && dnd.eventDragEnd(event)")
+  @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
@@ -336,8 +336,9 @@ onUnmounted(() => event._.unregister())
   left: 0;
   right: 0;
 
-  &--dragging {opacity: 1;z-index: 100;}
-  &--dragging-ghost {opacity: 0;transition: opacity 0.1s;}
+  &--resizing {z-index: 100;}
+  &--dragging-ghost {z-index: 100;} // The clone at cursor.
+  &--dragging-original {opacity: 0;transition: opacity 0.1s;} // The original event at original position.
 
   .vuecal__scrollable--month-view & {position: relative;}
 

@@ -95,11 +95,15 @@ export function useDragAndDrop (vuecal) {
 
     dragging.eventId = event._.id
     dragging.fromVueCal = vuecalUid
-    event._.dragging = true
 
-    // Controls the CSS class of the fixed event that remains while a copy is being dragged.
-    // Thanks to this class added at next Vue frame, the event being dragged can have a different style.
-    setTimeout(() => (event._.draggingGhost = true), 0)
+    // Add CSS class to the event clone and original for styling while dragging.
+    const eventDomNode = e.target.closest('.vuecal__event')
+    eventDomNode.classList.add('vuecal__event--dragging-ghost') // Add a class to the dragging clone.
+    // Update classes right after the dragging clone is created.
+    setTimeout(() => {
+      eventDomNode.classList.add('vuecal__event--dragging-original') // Add a class to the original event.
+      eventDomNode.classList.remove('vuecal__event--dragging-ghost') // Remove the ghost class.
+    }, 0)
 
     viewChanged = false
     Object.assign(viewBeforeDrag, { id: view.id, date: view.firstCellDate })
@@ -114,11 +118,11 @@ export function useDragAndDrop (vuecal) {
    *
    * @param {Object} event The event being dragged.
    */
-  const eventDragEnd = event => {
+  const eventDragEnd = (e, event) => {
     console.log('eventDragEnd')
     dragging.eventId = null
-    event._.dragging = false
-    event._.draggingGhost = false
+
+    e.target.closest('.vuecal__event').classList.remove('vuecal__event--dragging-original')
 
     // If an event is dragged from a Vue Cal instance and dropped in a different one, remove the
     // event from the first one.
