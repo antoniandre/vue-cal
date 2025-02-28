@@ -144,13 +144,13 @@ vue-cal(small :dark="store.darkMode")
 title-link(h2 anchor="css-notes") CSS Notes
 p You can easily change the calendar design with CSS.
 
-p.mt1 Vue Cal comes with a default height of 500px, you can override this via CSS.
+p.mt1 Vue Cal comes with default styles scoped in the #[code vuecal--default-theme] class (which is used by default) and a height of 500px, you can override this via CSS.
 
 
 title-link.mt6(h3 anchor="themes") Themes
 p.
   Currently 2 color themes (light &amp; dark) are available.#[br]
-  Setting the #[code dark] prop to #[code true] will switch to dark mode.
+  Setting the #[code dark] prop to #[code true] will switch to dark mode, while the light mode is the default.
 p.
   By default, the calendar is blue, but you can easily change the primary color with the CSS variables.#[br]
   If you'd rather start the CSS from a clean cheat, you can decide to not use the default theme and do
