@@ -22,15 +22,17 @@ Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features,
 
 ___
 
-## 🚧 WIP: We’re Building This From the Ground Up!
+## 🚀 v5 is Here! A New Era Begins
 
-This project is in active development, with new features, enhancements, and bug fixes being added every day! Every line of code is crafted with care to ensure it meets the highest standards and provides value to our community.
+The long-awaited v5 is now officially released! This version has been rebuilt from the ground up, bringing powerful new features, performance improvements, and a solid foundation for future growth.
 
-We are pushing to pre-release the v5 by February! And your support can supercharge development! Sponsorships help us dedicate more time to accelerating feature releases, improving documentation and usability and ensuring robust testing and long-term stability.
+Every line of code has been carefully crafted to maintain the highest standards, ensuring reliability, flexibility, and ease of use for our community.
 
-#### 💡 Any Sponsorship Matters
-🌟 Whether you’re using this project for a hobby, a commercial product, or simply to explore new technologies, Your sponsorship — big or small — makes a direct impact, helping the project thrive and stay lush and green. 🥦
+### 💡 Your Support Fuels the Future
 
+🌟 Whether you’re using this project for a hobby, a commercial product, or to explore new technologies, your support makes a huge difference! Sponsorships help us continue improving, refining documentation, and ensuring long-term stability. 🚀
+
+Let me know if you’d like any tweaks! 🎉
 
 ---
 
@@ -51,13 +53,11 @@ Experience Vue Cal in action or dive into the docs for setup instructions and AP
 
 ## 📦 Installation
 
-Install the latest stable Vue Cal (v4) with **npm**, **pnpm**, or **yarn**:
+Install the latest Vue Cal V5 with your favorite package manager:
 
 ```bash
 npm i vue-cal
 ```
-
-We are pushing to pre-release the v5 by February!
 
 ---
 
