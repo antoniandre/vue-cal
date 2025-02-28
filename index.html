@@ -18,6 +18,12 @@
     <meta itemprop="name" content="Vue Cal - Documentation">
     <meta itemprop="description" content="A Vue.js full calendar, no dependency, no BS. :metal:">
     <title>Vue Cal - Documentation</title>
+    <script>
+      (function () {
+        const path = window.location.search.slice(1)
+        if (path) window.history.replaceState({}, '', path)
+      })()
+    </script>
   </head>
   <body id="top">
     <noscript>
