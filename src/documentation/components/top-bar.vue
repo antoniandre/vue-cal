@@ -14,7 +14,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
         .logo.top-bar__logo {{ todayDate < 10 ? `0${todayDate}` : todayDate }}
         .top-bar__logo-title
           | Vue Cal
-          .version v. {{ version }}
+          .version(v-html="`v.${version}`")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
@@ -110,12 +110,7 @@ const docs = [
 ]
 
 // Compute version dynamically.
-const version = computed(() => {
-  return process.env.VITE_APP_VERSION.replace(
-    /-(\w)(\w+)\.(\d+)/,
-    (m0, m1, m2, m3) => ` <strong>${m1.toUpperCase()}${m2} ${m3}</strong>`
-  )
-})
+const version = computed(() => process.env.VITE_APP_VERSION)
 
 async function initializeObserver () {
   // Wait for DOM updates to ensure sections are available.
