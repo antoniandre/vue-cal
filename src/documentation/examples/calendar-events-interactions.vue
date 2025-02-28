@@ -608,7 +608,6 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
   template(#desc)
-    .todo-tag.d-iflex TO REVIEW &amp; RETEST
     p.mb2.
       You can drag &amp; drop events from an external source as long as they are HTML5 draggable (this will change when touch devices are supported).#[br]
       It is also possible to move an event from one calendar to another.#[br]#[br]
