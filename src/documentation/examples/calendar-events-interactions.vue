@@ -621,11 +621,10 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       div.
         It's important to understand that the native HTML5 drag &amp; drop, does not move an element from its
         source to the destination. It only creates a copy of the element that you drag.#[br]
-        when you drop a DOM element to another location, you have to move
-        the element yourself. Now especially because Vue is data driven and a DOM update does not
-        modify the data, you will also have to remove the event from its original data source yourself
-        - unless you want to create a copy.#[br]
-        Learn how in the example source code below.
+        When you drop a DOM element to another location, you have to code the actual move yourself:
+        delete from source and create in destination.#[br]
+        Learn how in the example source code below!
+    p In this example, you can drag the external events into the calendar and vice-versa.
   template(#code-html).
     &lt;div
       class="external-event"
@@ -730,7 +729,6 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
 //- Example.
 example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or-resizing")
   template(#desc)
-    .todo-tag.d-iflex FINISH THIS EXAMPLE
     p.
       The drag &amp; drop and resizing of events can be rejected by returning #[code false] from the
       #[code event-drop], #[code event-resize] and #[code event-resize-end] event listeners.
@@ -739,7 +737,7 @@ example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or
       For example, you can reject the drop of an event on top of another event, or prevent an event from
       being resized if it's too close to another event.
 
-    .w-flex.wrap.column.gap3.align-end
+    .w-flex.wrap.column.gap3.align-end.mt6
       w-switch(v-model="exRejectDndOrResize.preventOverlapOnDrop" label-color="base") Prevent Event Overlap On Drop
       w-switch(
         v-model="exRejectDndOrResize.preventOverlapWhileResizing"
@@ -750,9 +748,42 @@ example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or
   template(#code-html).
     &lt;vue-cal
       :events="events"
-      @event-drop="onEventDrop"&gt;
+      editable-events
+      @event-drop="onEventDrop"
+      @event-resize="onEventResize"
+      @event-resize-end="onEventResizeEnd"&gt;
     &lt;/vue-cal&gt;
-  //- template(#code-js)
+  template(#code-js)
+    | const events = [
+    |   {
+    |     start: new Date(new Date().setHours(11, 0, 0, 0)),
+    |     end: new Date(new Date().setHours(13, 0, 0, 0)),
+    |     title: 'Event 1'
+    |   },
+    |   ...
+    | ]
+    |
+    template(v-if="exRejectDndOrResize.preventOverlapOnDrop")
+      |
+      | const onEventDrop = ({ e, event, cell, overlaps }) => {
+      |  return !overlaps.length
+      | }
+      |
+    template(v-else)
+    template(v-if="exRejectDndOrResize.preventOverlapWhileResizing")
+      |
+      | const onEventResize = ({ e, event, overlaps }) => {
+      |  return !overlaps.length
+      | }
+      |
+    template(v-else)
+    template(v-if="exRejectDndOrResize.preventOverlapAfterResizing")
+      |
+      | const onEventResizeEnd = ({ e, event, overlaps }) => {
+      |  return !overlaps.length
+      | }
+      |
+    template(v-else)
 
   vue-cal(
     :events="exRejectDndOrResize.events"
@@ -762,7 +793,6 @@ example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or
     @event-resize-end="exRejectDndOrResize.onEventResizeEnd"
     :time-from="9 * 60"
     :time-to="15 * 60"
-    :snap-to-interval="15"
     :dark="store.darkMode"
     style="height: 341px")
 </template>
