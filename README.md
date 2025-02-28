@@ -38,8 +38,14 @@ We are pushing to pre-release the v5 by February! And your support can superchar
 
 Experience Vue Cal in action or dive into the docs for setup instructions and API details.
 
-- [**Demo & Documentation**](https://antoniandre.github.io/vue-cal) (Stable v4)
-- [**V4 stable repo**](https://antoniandre.github.io/vue-cal-v4)
+### New V5! 🚀
+> [**Demo & Documentation**](https://antoniandre.github.io/vue-cal)
+
+### V4 (Stable)
+
+> [**V4 Demo & Documentation**](https://antoniandre.github.io/vue-cal)
+
+> [**V4 Repo**](https://antoniandre.github.io/vue-cal-v4)
 
 ---
 
