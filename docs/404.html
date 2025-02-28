@@ -10,22 +10,27 @@
       var search = window.location.search
       var hash = window.location.hash
 
-      // Change this to your GitHub repo name
+      // Your GitHub repo name (must match the deployment URL)
       var repoName = '/vue-cal'
 
       // Prevent infinite loop if already on 404.html
       if (path.endsWith('/404.html')) return
 
-      // Ensure we only rewrite paths inside the repo
+      // Ensure only paths inside the repo are rewritten
       if (!path.startsWith(repoName)) repoName = ''
 
-      // Redirect to the base path without adding index.html
-      var newUrl = repoName + '/' + search + hash
+      // Preserve full path while redirecting to index.html
+      var newUrl = repoName + '/index.html' + search + hash
+
+      // Use replace() to avoid creating history back navigation issues
       window.location.replace(newUrl)
     })()
   </script>
 </head>
 <body>
-  <p>If you are not redirected, <a href="/vue-cal/">click here</a>.</p>
+  <p>If you are not redirected, <a id="redirect-link" href="/">click here</a>.</p>
+  <script>
+    document.getElementById('redirect-link').href = window.location.pathname
+  </script>
 </body>
 </html>
