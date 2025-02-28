@@ -1,29 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Vue Cal</title>
-  <script>
-    (function () {
-      var path = window.location.pathname
-      var search = window.location.search
-      var hash = window.location.hash
+<script>
+  (function () {
+    var path = window.location.pathname
+    var search = window.location.search
+    var hash = window.location.hash
 
-      // Extract repository name from GitHub Pages URL
-      var repoName = '/vue-cal' // Change this to your repo name
+    // Extract repository name from GitHub Pages URL (change to your repo name)
+    var repoName = '/vue-cal'
 
-      // Ensure it only rewrites if needed
-      if (!path.startsWith(repoName)) repoName = ''
+    // If we are already on 404.html, do NOT redirect again
+    if (path.endsWith('/404.html')) return
 
-      // Rewrite the URL to index.html within the project directory
-      var newUrl = repoName + '/index.html' + search + hash
+    // Ensure it only rewrites if needed (for project pages)
+    if (!path.startsWith(repoName)) repoName = ''
 
-      window.location.replace(newUrl)
-    })()
-  </script>
-</head>
-<body>
+    // Rewrite the URL to index.html within the project directory
+    var newUrl = repoName + '/index.html' + search + hash
 
-</body>
-</html>
+    window.location.replace(newUrl)
+  })()
+</script>
