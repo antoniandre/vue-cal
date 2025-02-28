@@ -1,21 +1,31 @@
-<script>
-  (function () {
-    var path = window.location.pathname
-    var search = window.location.search
-    var hash = window.location.hash
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+      var path = window.location.pathname
+      var search = window.location.search
+      var hash = window.location.hash
 
-    // Extract repository name from GitHub Pages URL (change to your repo name)
-    var repoName = '/vue-cal'
+      // Change this to your GitHub repo name
+      var repoName = '/vue-cal'
 
-    // If we are already on 404.html, do NOT redirect again
-    if (path.endsWith('/404.html')) return
+      // Prevent infinite loop if already on 404.html
+      if (path.endsWith('/404.html')) return
 
-    // Ensure it only rewrites if needed (for project pages)
-    if (!path.startsWith(repoName)) repoName = ''
+      // Ensure we only rewrite paths inside the repo
+      if (!path.startsWith(repoName)) repoName = ''
 
-    // Rewrite the URL to index.html within the project directory
-    var newUrl = repoName + '/index.html' + search + hash
-
-    window.location.replace(newUrl)
-  })()
-</script>
+      // Redirect to index.html inside the repo
+      var newUrl = repoName + '/index.html' + search + hash
+      window.location.replace(newUrl)
+    })()
+  </script>
+</head>
+<body>
+  <p>If you are not redirected, <a href="/vue-cal/">click here</a>.</p>
+</body>
+</html>
