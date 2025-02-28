@@ -19,7 +19,7 @@ ul.ml4
         template(#item-content.1)
           ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
             import VueCal from 'vue-cal'
-            import 'vue-cal/dist/vuecal.css'
+            import 'vue-cal/style'
 
             export default {
               components: { VueCal },
@@ -30,7 +30,7 @@ ul.ml4
         template(#item-content.2)
           ssh-pre.fill-height.ma0.bd0(language="js" :dark="store.darkMode").
             import VueCal from 'vue-cal'
-            import 'vue-cal/dist/vuecal.css'
+            import 'vue-cal/style'
 
       .highlight-box.grow
         .title2 Demos on StackBlitz
