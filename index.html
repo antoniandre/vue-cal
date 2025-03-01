@@ -18,6 +18,7 @@
     <meta itemprop="name" content="Vue Cal - Documentation">
     <meta itemprop="description" content="A Vue.js full calendar, no dependency, no BS. :metal:">
     <title>Vue Cal - Documentation</title>
+    <script type="text/javascript" src="https://antoniandre.github.io/vue-cal/ghspa.js"></script>
   </head>
   <body id="top">
     <noscript>
@@ -25,16 +26,5 @@
     </noscript>
     <div id="app"></div>
     <script type="module" src="/src/main.js"></script>
-    <script>
-      (function(l) {
-        if (l.search.startsWith('?')) {
-          var path = l.search.slice(1).split('&').map(function(s) {
-            return s.replace(/~and~/g, '&')
-          }).join('?')
-
-          window.history.replaceState(null, null, l.pathname + path + l.hash)
-        }
-      })(window.location)
-    </script>
   </body>
 </html>
