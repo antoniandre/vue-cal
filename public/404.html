@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Redirecting...</title>
+  <script>
+    (function () {
+      var path = window.location.pathname + window.location.search + window.location.hash;
+      var newUrl = '/vue-cal/index.html' + path.replace('/vue-cal', '');
+      window.location.replace(newUrl);
+    })();
+  </script>
+</head>
+<body>
+  <p>If you are not redirected, <a id="redirect-link" href="/">click here</a>.</p>
+  <script>
+    document.getElementById('redirect-link').href = window.location.pathname;
+  </script>
+</body>
+</html>
