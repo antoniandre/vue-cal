@@ -4,21 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Redirecting...</title>
-  <script>
-    (function () {
-      var path = window.location.pathname + window.location.search + window.location.hash
-
-      // GitHub Pages repo name (change if needed)
-      var repoName = '/vue-cal'
-
-      // If already in index.html, stop redirecting to prevent loops
-      if (path.includes('/index.html')) return
-
-      // Redirect to index.html inside the repo, keeping the path
-      var newUrl = repoName + '/index.html' + path.replace(repoName, '')
-      window.location.replace(newUrl)
-    })()
-  </script>
+  <script type="text/javascript" src="/ghspa.js"></script>
 </head>
 <body>
   <p>If you are not redirected, <a href="/">click here</a></p>
