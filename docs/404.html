@@ -6,16 +6,21 @@
   <title>Redirecting...</title>
   <script>
     (function () {
-      var path = window.location.pathname + window.location.search + window.location.hash;
-      var newUrl = '/vue-cal/index.html' + path.replace('/vue-cal', '');
-      window.location.replace(newUrl);
-    })();
+      var path = window.location.pathname + window.location.search + window.location.hash
+
+      // GitHub Pages repo name (change if needed)
+      var repoName = '/vue-cal'
+
+      // If already in index.html, stop redirecting to prevent loops
+      if (path.includes('/index.html')) return
+
+      // Redirect to index.html inside the repo, keeping the path
+      var newUrl = repoName + '/index.html' + path.replace(repoName, '')
+      window.location.replace(newUrl)
+    })()
   </script>
 </head>
 <body>
-  <p>If you are not redirected, <a id="redirect-link" href="/">click here</a>.</p>
-  <script>
-    document.getElementById('redirect-link').href = window.location.pathname;
-  </script>
+  <p>If you are not redirected, <a href="/">click here</a></p>
 </body>
 </html>
