@@ -148,6 +148,31 @@ export const useConfig = (vuecal, props, attrs) => {
     else console.warn('Vue Cal: The provided selected date is invalid:', props.selectedDate)
   })
 
+  // An array of specific dates to disable.
+  // The dates can be provided as 'YYYY-MM-DD' strings or Date objects and the dates are validated
+  // or ignored.
+  const disableDays = computed(() => {
+    if (!props.disableDays) return []
+
+    const validDates = []
+    if (Array.isArray(props.disableDays)) {
+      props.disableDays.forEach(date => {
+        let jsDate = date
+        if (typeof date === 'string') jsDate = dateUtils.stringToDate(date)
+        else if (date instanceof Date) date = dateUtils.formatDate(date, 'YYYY-MM-DD')
+
+        if (jsDate instanceof Date && !isNaN(jsDate.getTime())) {
+          validDates.push(date)
+          return
+        }
+        else console.warn('Vue Cal: The provided `disableDays` prop contains an invalid date:', date)
+      })
+    }
+    else console.warn('Vue Cal: The provided `disableDays` prop is invalid:', props.disableDays)
+
+    return validDates
+  })
+
   /**
    * Mostly for date pickers, sets a minimum date for cell interactions.
    */
@@ -251,6 +276,7 @@ export const useConfig = (vuecal, props, attrs) => {
     eventListeners,
     defaultView,
     availableViews,
+    disableDays,
     ready,
     sm,
     xs,
