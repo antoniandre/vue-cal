@@ -24,7 +24,7 @@ export const props = {
   maxDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a maximum date for cell interactions.
   minDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a minimum date for cell interactions.
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
-  selectedDate: { type: [String, Date], default: '' },
+  selectedDate: { type: [String, Date], default: '' }, // The selected date in the calendar !== viewDate.
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
   specialHours: { type: Object, default: () => ({}) }, // Highlight a particular time range on each day of the week, individually.
   schedules: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
