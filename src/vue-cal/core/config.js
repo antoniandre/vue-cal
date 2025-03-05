@@ -136,7 +136,6 @@ export const useConfig = (vuecal, props, attrs) => {
   })
 
   const defaultView = computed(() => {
-    console.log('recomputing defaultView')
     if (props.datePicker) return 'month'
     else if (availableViews.value.week) return 'week'
     else return Object.keys(availableViews.value)[0]

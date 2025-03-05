@@ -216,8 +216,6 @@ const formattedCellDate = computed(() => {
   // (triggering an emit of the selectedDate), would trigger a rerendering of all the
   // cells of the view. The following marker is here to monitor that this does not happen
   // with any prop while developing.
-  console.log('recomputing cell') // @todo: remove this marker after dev.
-
   switch (view.id) {
     case 'day':
       return ''

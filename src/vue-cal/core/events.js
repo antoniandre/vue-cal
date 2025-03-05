@@ -133,8 +133,6 @@ export const useEvents = vuecal => {
   // Get events for the view based on cell dates.
   // Returns an object of cell events arrays indexed by the cell string date.
   const getViewEvents = cellDates => {
-    console.log('👗', 'getViewEvents')
-
     const events = {}
     cellDates.forEach(({ startFormatted }) => {
       events[startFormatted] = []
@@ -212,7 +210,6 @@ export const useEvents = vuecal => {
         // Removing the event from the source of truth causes a reactivity update cascade that rerenders
         // all the cells and sub-components. This is not a bug, but in most cases, not the ideal behavior.
         config.events.splice(index, 1) // Remove the event from the source of truth.
-        console.log('😫', 'deleting the event!', event)
         vuecal.emit('update:events', config.events)
         vuecal.emit('event-delete', event)
         break

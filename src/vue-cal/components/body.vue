@@ -40,13 +40,10 @@ const cursorYPercent = ref(null)
 // and frozen with the animated container when leaving in a vue transition, for a successful smooth
 // transition. In other terms, there can be 2 vuecal__scrollable elements that are animated with
 // different values of these CSS variables at the same time. Beautiful :)
-const bodyStyles = computed(() => {
-  console.log('recomputing bodyStyles', view.id)
-  return {
-    '--vuecal-grid-columns': view.cols,
-    '--vuecal-grid-rows': view.rows
-  }
-})
+const bodyStyles = computed(() => ({
+  '--vuecal-grid-columns': view.cols,
+  '--vuecal-grid-rows': view.rows
+}))
 
 // Computes the time at the current cursor position.
 const timeAtCursor = computed(() => {

@@ -132,7 +132,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   //   Every recomputing can become very expensive when handling a large amount of cells per view
   //   with a large amount of calendar events.
   const cellDates = computed(() => {
-    console.log('recomputing view dates')
     const dates = []
     const isDaysWeekOrMonthView = ['days', 'week', 'month'].includes(viewId.value)
 
@@ -284,7 +283,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         break
     }
 
-    console.log('🙆‍♂️', 'updateView', startTheoretical.value)
     emit('view-change', {
       id: viewId.value,
       title: title.value,
@@ -364,9 +362,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         else newViewDate = dateUtils.subtractDays(firstCellDate.value, cellsCount.value)
         break
       case 'week': {
-        // const prevFirstDayOfWeek = dateUtils.getPreviousFirstDayOfWeek(newViewDate, config.startWeekOnSunday && !config.hideWeekdays[7])
-        // newViewDate = dateUtils[forward ? 'addDays' : 'subtractDays'](extendedStart.value, cellsCount.value)
-        // console.log('🤙', prevFirstDayOfWeek, newViewDate)
         if (forward) {
           newViewDate = dateUtils.addDays(extendedEnd.value, 1)
           newViewDate.setHours(0, 0, 0, 0)
@@ -462,7 +457,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * @param {Boolean} hide hide weekends or not.
    */
   function toggleWeekends (hide) {
-    console.log('😮', hide, config.startWeekOnSunday, startTheoretical.value)
     if (hide && config.startWeekOnSunday && !startTheoretical.value.getDay()) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
     else if (!hide && config.startWeekOnSunday && startTheoretical.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(startTheoretical.value, 1), true, true)
   }

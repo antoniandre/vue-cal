@@ -79,8 +79,6 @@ export function useDragAndDrop (vuecal) {
    * @param {Object} event The event being dragged.
    */
   const eventDragStart = (e, event) => {
-    console.log('eventDragStart')
-
     // Cancel the drag if trying to drag event from a text selection or from the resizer.
     if (e.target.nodeType === 3 || vuecal.touch.isResizingEvent) return e.preventDefault()
 
@@ -119,7 +117,6 @@ export function useDragAndDrop (vuecal) {
    * @param {Object} event The event being dragged.
    */
   const eventDragEnd = (e, event) => {
-    console.log('eventDragEnd')
     dragging.eventId = null
 
     e.target.closest('.vuecal__event').classList.remove('vuecal__event--dragging-original')
@@ -155,7 +152,6 @@ export function useDragAndDrop (vuecal) {
    */
   const cellDragEnter = (e, cell) => {
     const { start: cellDate } = cell
-    console.log('cellDragEnter')
     const target = e.currentTarget
 
     // Cancel dragEnter event if hovering a child.
@@ -186,7 +182,6 @@ export function useDragAndDrop (vuecal) {
    */
   const cellDragOver = (e, cell) => {
     const { start: cellDate, schedule } = cell
-    console.log('cellDragOver')
     e.preventDefault()
     cell.highlighted = true
     if (schedule || schedule === 0) cell.highlightedSchedule = schedule
@@ -201,7 +196,6 @@ export function useDragAndDrop (vuecal) {
    * @param {Object} cell The cell component's $data.
    */
   const cellDragLeave = (e, cell) => {
-    console.log('cellDragLeave')
     e.preventDefault()
 
     if (e.currentTarget.contains(e.relatedTarget)) return
@@ -248,7 +242,6 @@ export function useDragAndDrop (vuecal) {
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
     let onAcceptedDrop = () => {}
-    console.log('cellDragDrop', newStart, newEnd, newSchedule, dragging.fromVueCal, vuecalUid)
 
     // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
     // for drop approval request.
