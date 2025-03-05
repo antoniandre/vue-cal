@@ -1,7 +1,8 @@
 export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
-  // HANDLED:
+  allDayEvents: { type: [Boolean, String], default: false }, // Coming soon.
+  // avoidEventOverlap: { type: Boolean, default: undefined }, // Coming soon.
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   dark: { type: Boolean, default: false }, // Dark theme.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
@@ -56,9 +57,8 @@ export const props = {
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO:
-  minEventWidth: { type: Number, default: 0 },
-  minScheduleWidth: { type: Number, default: 0 },
-  overlapsPerTimeStep: { type: Boolean, default: false },
-  resizeX: { type: Boolean, default: false },
-  allDayEvents: { type: [Boolean, String], default: false }
+  // minEventWidth: { type: Number, default: 0 },
+  // minScheduleWidth: { type: Number, default: 0 },
+  // overlapsPerTimeStep: { type: Boolean, default: false },
+  // resizeX: { type: Boolean, default: false },
 }
