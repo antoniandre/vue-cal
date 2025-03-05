@@ -858,7 +858,7 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code () => []
     template(#content)
-      p Accepts an array of formatted dates (e.g. #[span.code 2024-09-18]) of days to disable.
+      p Accepts an array of formatted dates (e.g. #[span.code {{ new Date().format() }}]) of days to disable.
 
   w-accordion-item
     template(#title)

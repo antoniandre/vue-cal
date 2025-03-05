@@ -220,9 +220,9 @@ example(title="Disable Days" anchor="disable-days")
     &lt;vue-cal
       date-picker
       :disable-days="[
-        new Date().subtractDays(2).format(),
-        new Date().format(),
-        new Date().addDays(2).format()
+        new Date().subtractDays(2).format(), // Using Vue Cal's Date prototypes.
+        new Date().format(), // Using Vue Cal's Date prototypes.
+        new Date().addDays(2).format() // Using Vue Cal's Date prototypes.
       ]" /&gt;
   template(#code-css).
     .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
