@@ -158,6 +158,7 @@ ul
   li #[code stickySplitLabels] was removed. Any provided schedule heading is now always positioned in the header.
   li #[code eventsCountOnYearView] was removed. If you need such a feature, you can request this feature in a Github issue with a use case explanation.
   li #[code eventCount] was added in order to toggle the event count display on the month view.
+  li #[code transitions] was removed and moved to the CSS var #[code --vuecal-transition-duration].
 </template>
 
 <script setup>

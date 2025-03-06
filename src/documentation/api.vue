@@ -824,16 +824,6 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code transitions
-      .type [Boolean]
-      | ,
-      .body.grey.mx1 default:
-      strong.default.code true
-    template(#content)
-      p Enables/disables the navigation CSS transitions between all the views and view states.
-
-  w-accordion-item
-    template(#title)
       strong.code twelveHour
       .type [Boolean]
       | ,
