@@ -41,7 +41,6 @@ export const props = {
   timeTo: { type: Number, default: minutesInADay }, // End time of the time column, in minutes.
   titleBar: { type: Boolean, default: true }, // Show or hide the header title bar.
   todayButton: { type: Boolean, default: true }, // Show or hide the header today button.
-  transitions: { type: Boolean, default: true }, // Enables/disables the navigation transitions.
   twelveHour: { type: Boolean, default: false }, // 12 or 24 hour format are respectively written like 1pm and 13:00.
   // Sets the calendar view to one of: 'day', 'days', 'week', 'month', 'year', 'years'. Default 'week' or 'month' if datePicker.
   // Gets updated on view navigation.

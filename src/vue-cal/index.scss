@@ -6,6 +6,7 @@
   // When there are too many day cells to fit in the view, setting a min cell width will help
   // visualizing and a horizontal scrollbar will be added.
   --vuecal-min-cell-width: 0;
+  --vuecal-transition-duration: 0.25s;
 
   display: flex;
   flex-direction: column;
@@ -86,7 +87,7 @@
 // --------------------------------------------------------
 .vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
 .vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
-  transition: 0.25s ease-in-out;
+  transition: var(--vuecal-transition-duration) ease-in-out;
 }
 
 .vuecal-slide-fade--left-enter-from,
