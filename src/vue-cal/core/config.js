@@ -100,6 +100,7 @@ export const useConfig = (vuecal, props, attrs) => {
     let availViews = {} // The new object to return.
     const views = props.views
 
+    // Default views for date picker layout: ['month', 'year', 'years'].
     if (datePicker && !views) return {
       month: { ...defaults.availableViews.month },
       year: { ...defaults.availableViews.year },
@@ -130,6 +131,7 @@ export const useConfig = (vuecal, props, attrs) => {
         availViews = { ...defaults.availableViews }
       }
     }
+    // Default views for normal layout: ['day', 'days', 'week', 'month', 'year', 'years'] }.
     else availViews = { ...defaults.availableViews }
 
     return availViews

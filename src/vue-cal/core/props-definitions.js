@@ -49,7 +49,9 @@ export const props = {
   // Only available for month and day views, this will shift the start of the view (left or right) by x days (signed integer).
   viewDayOffset: { type: Number, default: 0 },
   // The list of all the view that will be available in this calendar.
-  views: { type: [Array, Object], default: ['day', 'days', 'week', 'month', 'year', 'years'] },
+  // Default for normal layout: ['day', 'days', 'week', 'month', 'year', 'years'] }.
+  // Default for date picker layout: ['month', 'year', 'years'].
+  views: { type: [Array, Object] },
   viewsBar: { type: Boolean, default: true }, // Show or hide the headers view selection bar.
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   weekNumbers: { type: Boolean, default: false }, // Show the weeks numbers in a column on month view.
