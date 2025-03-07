@@ -156,6 +156,9 @@ export const useEvents = vuecal => {
       dateUtils.snapToInterval(newEvent.end, config.snapToInterval)
     }
 
+    // Create a clean deep copy of the event to prevent reference issues.
+    newEvent = { ...newEvent }
+
     // Always override any existing ID when created: it could come from an external source
     // with an existing _.id, but we need to ensure it's unique for internal management.
     if (!newEvent._) newEvent._ = {}
