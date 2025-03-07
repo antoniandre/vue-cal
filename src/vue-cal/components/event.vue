@@ -272,7 +272,7 @@ const onDocMouseup = async e => {
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
 
-  document.removeEventListener(e.type === 'touchmove' ? 'touchmove' : 'mousemove', onDocMousemove)
+  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove)
   touch.resizing = false
   touch.fromResizer = false
   touch.dragging = false
