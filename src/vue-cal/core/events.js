@@ -61,8 +61,17 @@ export const useEvents = vuecal => {
           delete event._.fireCreated
         }
       }
-      // Unregister the event DOM node and break the reference.
-      event._.unregister = () => (event._.$el = null)
+      // Unregister the event DOM node and cleanup preventing potential memory leaks.
+      event._.unregister = () => {
+        // Break any circular references in the event object.
+        event._.$el = null
+        event._.register = null
+        event._.unregister = null
+        // Clear any methods that might create closures.
+        event.isOverlapping = null
+        event.getOverlappingEvents = null
+        event.delete = null
+      }
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 

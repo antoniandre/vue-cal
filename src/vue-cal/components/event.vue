@@ -20,7 +20,7 @@
 </template>
 
 <script setup>
-import { computed, inject, onMounted, onUnmounted, reactive, ref } from 'vue'
+import { computed, inject, onMounted, reactive, ref, onBeforeUnmount } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
@@ -178,8 +178,8 @@ const onMousedown = e => {
   // Store the event start to apply on event end when resizing and end < start.
   touch.resizeStartDate = event.start
 
-  document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
-  document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
+  attachDocumentListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
+  attachDocumentListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
@@ -321,7 +321,22 @@ const computeStartEnd = event => {
 
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
 onMounted(() => event._.register(eventEl.value))
-onUnmounted(() => event._.unregister())
+
+const documentListeners = []
+
+const attachDocumentListener = (event, handler, options) => {
+  document.addEventListener(event, handler, options)
+  documentListeners.push({ event, handler, options })
+}
+
+onBeforeUnmount(() => {
+  event._.unregister()
+
+  // Clean up all document event listeners to prevent memory leaks
+  documentListeners.forEach(({ event, handler, options }) => {
+    document.removeEventListener(event, handler, options)
+  })
+})
 </script>
 
 <style lang="scss">
