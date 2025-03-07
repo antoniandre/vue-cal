@@ -66,7 +66,6 @@ export const useEvents = vuecal => {
         // Break any circular references in the event object.
         event._.$el = null
         event._.register = null
-        event._.unregister = null
         // Clear any methods that might create closures.
         event.isOverlapping = null
         event.getOverlappingEvents = null
