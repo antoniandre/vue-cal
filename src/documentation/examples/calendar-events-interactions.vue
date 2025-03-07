@@ -271,7 +271,9 @@ example(title="Delete Events" anchor="delete-events")
       For more flexibility, this function can receive an explicit "deletion stage" integer parameter,
       so you can skip to the stage you want directly:
     ul
-      li #[code 1]: The delete button will appear.
+      li.
+        #[code 1]: The delete button will appear. On click, the event is deleted directly in the global
+        events array (source of truth) and visually from the cell.
       li
         | #[code 2]:
         span.ml1.
@@ -279,7 +281,11 @@ example(title="Delete Events" anchor="delete-events")
           This has the advantage of not triggering an immediate Vue reactivity update cascade on all the
           cells.#[br]
           The rerendering cascade of the cells is completely avoided by deleting the event on the next view
-          change, when the cell is unmounted.
+          change, when the cell is unmounted.#[br]
+          even though this stage is more optimized than the stage #[code 3], it can be non-obvious or confusing
+          for the developer that the event is still in the array at this stage until the view changes.
+          Especially if you use a v-model on the events. For this reason, the stage #[code 3] is the default
+          behavior from the delete button.
       li.
         #[code 3]: The event is deleted both visually and in the source of truth (automatically called on
         cell unmount after using stage #[code 2]).
