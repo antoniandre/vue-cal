@@ -61,6 +61,7 @@ export const useEvents = vuecal => {
           delete event._.fireCreated
         }
       }
+      // Unregister the event DOM node and break the reference.
       event._.unregister = () => (event._.$el = null)
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
@@ -181,8 +182,10 @@ export const useEvents = vuecal => {
    * @returns {boolean} - Returns true for chaining.
    */
   const deleteEvent = (eventId, forcedStage = 0) => {
-    if (!config.editableEvents.delete) return
-    if (!eventId) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
+    if (!config.editableEvents.delete) {
+      return console.info('Vue Cal: Event deletion is disabled. Enable it with the `editable-events` props.')
+    }
+    if (!eventId) return console.warn('Vue Cal: Cannot delete event without its ID.')
 
     const index = config.events.findIndex(item => item._.id === eventId)
     if (index === -1) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
@@ -193,15 +196,17 @@ export const useEvents = vuecal => {
     switch (forcedStage) {
       case 0:
         if (!event._.deleting) event._.deleting = true
-        else if (!event._.deleted) event._.deleted = true
+        // If the event is already marked as deleting, delete completely from the source of truth
+        // by default, and skip the stage 2. Stage 2 (for visual deletion) will stay on specific demand.
         else config.events.splice(index, 1) // Remove the event from the source of truth.
         break
       // Display the delete button.
       case 1:
         event._.deleting = true
-        config.events[index]._.deleting = true
         break
       // Visual deletion + external DOM event firing.
+      // When explicitly using this stage, the event will be visually deleted but still present in the
+      // source of truth until the cell is unmounted (by navigating away).
       case 2:
         event._.deleted = true
         config.events[index]._.deleted = true

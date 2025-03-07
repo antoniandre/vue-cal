@@ -16,7 +16,7 @@
       .vuecal__event-content(v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
-    .vuecal__event-delete(v-if="event._.deleting" @click.stop="onDelete") Delete
+    .vuecal__event-delete(v-if="event._.deleting" @click.stop="event.delete(3)") Delete
 </template>
 
 <script setup>
@@ -290,12 +290,6 @@ const onDocMouseup = async e => {
   touch.resizingOriginalEvent = null
   touch.resizingLastAcceptedEvent = null
   touch.schedule = null
-}
-
-const onDelete = () => {
-  // Fire the DOM event manually as it needs to be triggered from events.js on deletion as well.
-  // `detail` is the native expected object wrapper.
-  eventEl.value.dispatchEvent(new CustomEvent('event-deleted', { detail: event._.id }))
 }
 
 const computeStartEnd = event => {
