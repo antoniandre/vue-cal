@@ -580,7 +580,13 @@ const removeEventListeners = () => {
 }
 
 // Recalculate overlaps when events change (added, deleted, date change, schedule change).
-watch(cellForegroundEvents.value, recalculateOverlaps, { deep: true })
+// Use a simple watcher with flush: 'post' to prevent infinite updates.
+watch(
+  () => cellForegroundEvents.value,
+  // Use nextTick to avoid recursive updates.
+  () => nextTick(() => recalculateOverlaps()),
+  { deep: true, flush: 'post' }
+)
 
 onBeforeUnmount(async () => {
   // Removing the calendar events will trigger a rerender of all the cells in the view because the array
