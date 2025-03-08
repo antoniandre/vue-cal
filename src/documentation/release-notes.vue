@@ -3,7 +3,7 @@ h1.title1 Release Notes
 
 ul.history.ml1
   li.patch
-    strong.version 5.0.1-rc.1
+    strong.version 5.0.1-rc.2
     ul
       li Fixed a memory leak happening on Firefox while recalculating the events' overlaps.
       li Default to deletion stage 3 instead of 2 when deleting an event from its delete button.
@@ -41,7 +41,7 @@ ul.history.ml1
 
 w-transition-expand(y)
   ul.history.history--more.ml-2.pl3(v-if="seeOldReleaseNotes")
-    li.minor
+    li
       br
 
     li.minor
