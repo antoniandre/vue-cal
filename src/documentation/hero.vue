@@ -40,6 +40,7 @@
           target="_blank")
           | View this example source code
           w-icon.ml1(color="grey lighten-1") mdi mdi-open-in-new
+  .bg
 </template>
 
 <script setup>
@@ -212,6 +213,22 @@ $kate: #406fbf;
     filter: blur(40px);
     transition: 1s 2s cubic-bezier(0.68, -0.55, 0.27, 1.55);
   }
+
+  .bg {
+    position: absolute;
+    inset: 0;
+    background-image: conic-gradient(from 180deg at 50% 50%, #83afff 130deg, 270deg, #00ebeb);
+    filter: blur(80px);
+    border-radius: 1000em;
+    transform: scale(0.5);
+    opacity: 0;
+    transition: 1s 2.2s ease-in-out;
+    z-index: -1;
+  }
+  [data-theme="light"] .bg {
+    background-image: conic-gradient(from 180deg at 50% 50%, #6db8ff 130deg, 270deg, #00ffff);
+    filter: blur(80px);
+  }
 }
 
 .hero.ready {
@@ -228,10 +245,14 @@ $kate: #406fbf;
     transform: scale(1);
     filter: none;
   }
+
+  .bg {transform: scale(0.75);opacity: 0.15;}
+  [data-theme="light"] .bg {opacity: 0.25;}
 }
 
 .demo {
   border-radius: 4px;
+  background: var(--w-base-bg-color);
 
   // Date picker.
   &.vuecal--date-picker .vuecal__cell-events-count {
