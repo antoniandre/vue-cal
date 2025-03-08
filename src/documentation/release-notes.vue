@@ -1,180 +1,227 @@
 <template lang="pug">
 h1.title1 Release Notes
 
-title-link.title2.mt12(h2 anchor="v5") Version 5.0.0
-p.
-  Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
-  composables, while focusing on two key aspects: #[strong performance and flexibility].
-  You will continue to benefit from all the features of previous versions, now enhanced with new functionality and improvements.
-ul
-  li #[strong Performance-oriented]: faster and more efficient than ever.
-  li Highly adapted and practical for use with the Composition API.
-  li #[strong Exposes the view] for external use.
-  li #[strong Exposes all date utilities] for external use.
-  li Take advantage of #[strong Date prototypes whenever and wherever] you want, even before the calendar is created or mounted.
-  li #[strong Modernized default UI] for a more contemporary appearance, designed to save you time and effort in customization and usability.
-  li #[strong Custom days view] to display a custom number of days with an adaptive grid layout.
-  li #[strong Flexible grid-based layout] for enhanced customization.
-  li #[strong Easy theming] with support for dark and light themes, plus CSS variables.
-  li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
-  li Directly #[strong preload a locale externally] to avoid handling Promises.
-  li #[strong All the DOM events you can dream about are emitted] and many more!
-  li Reworked options for #[strong more intuitive usage].
+ul.history.ml1
+  li.patch
+    strong.version 5.0.1-rc.1
+    ul
+      li Fixed a memory leak happening on Firefox while recalculating the events' overlaps.
+      li Default to deletion stage 3 instead of 2 when deleting an event from its delete button.
 
-//- Older release notes.
-.w-flex.my12.align-center
-  .w-divider.primary--bg.px3
-  w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
-    strong {{ seeOldReleaseNotes ? 'Hide' : 'View' }} older release notes
-    w-icon.ml2(:rotate90a="!seeOldReleaseNotes") wi-arrow-down
-  .w-divider.primary--bg.grow
+  li.major
+    title-link.title2.mt12.version.mb4(h2 anchor="v5") Version 5.0.0 - RC
+    p.
+      Vue Cal has been completely #[strong refactored from the ground up], using the Composition API and
+      composables, while focusing on two key aspects: #[strong performance and flexibility].
+      You will continue to benefit from all the features of previous versions, now enhanced with new functionality and improvements.
+    ul
+      li #[strong Performance-oriented]: faster and more efficient than ever.
+      li Highly adapted and practical for use with the Composition API.
+      li #[strong Exposes the view] for external use.
+      li #[strong Exposes all date utilities] for external use.
+      li Take advantage of #[strong Date prototypes whenever and wherever] you want, even before the calendar is created or mounted.
+      li #[strong Modernized default UI] for a more contemporary appearance, designed to save you time and effort in customization and usability.
+      li #[strong Custom days view] to display a custom number of days with an adaptive grid layout.
+      li #[strong Flexible grid-based layout] for enhanced customization.
+      li #[strong Easy theming] with support for dark and light themes, plus CSS variables.
+      li #[strong All-direction sticky headers]: Sticky headers and sticky time bars simultaneously - achieved purely with CSS.
+      li Directly #[strong preload a locale externally] to avoid handling Promises.
+      li #[strong All the DOM events you can dream about are emitted] and many more!
+      li Reworked options for #[strong more intuitive usage].
+    br
+
+  li.patch.mb-5.view-more
+    //- Older release notes.
+    .w-flex.align-center
+      .w-divider.primary--bg.px3
+      w-button(round outline @click="seeOldReleaseNotes = !seeOldReleaseNotes")
+        strong {{ seeOldReleaseNotes ? 'Hide' : 'View' }} older release notes
+        w-icon.ml2(:rotate90a="!seeOldReleaseNotes") wi-arrow-down
+      .w-divider.primary--bg.grow
 
 w-transition-expand(y)
-  div(v-if="seeOldReleaseNotes")
-    div.mb1
-      strong.mr1 Version 4.9.0
-      | Added the Portuguese (Portugal) and Finnish locale.
+  ul.history.history--more.ml-2.pl3(v-if="seeOldReleaseNotes")
+    li.minor
+      br
 
-    div.mb1
-      strong.mr1 Version 4.8.0
-      | Added the Estonian locale.
+    li.minor
+      strong.version Version 4.9.0
+      p Added the Portuguese (Portugal) and Finnish locale.
 
-    div.mb1
-      strong.mr1 Version 4.6.0
-      | Skip the hidden days on #[span.code day] view (days listed in #[span.code hideWeekends]
-      | and #[span.code hideWeekdays]).
+    li.minor
+      strong.version Version 4.8.0
+      p Added the Estonian locale.
 
-    div.grey.mb1
-      strong.mr1 Version 4.5.1
-      | Fix wrong starting day on week view when the week starts on sunday
-      | &amp; #[span.code hideWeekends] is true.
+    li.minor
+      strong.version Version 4.6.0
+      p.
+        Skip the hidden days on #[span.code day] view (days listed in #[span.code hideWeekends]
+        and #[span.code hideWeekdays]).
 
-    div.mb1
-      strong.mr1 Version 4.5.0
-      | Added option to display time labels in cells.
+    li.patch
+      strong.version Version 4.5.1
+      p.
+        Fix wrong starting day on week view when the week starts on sunday
+        &amp; #[span.code hideWeekends] is true.
 
-    div.grey.mb1
-      strong.mr1 Version 4.4.3
-      | Fix headings misalignments on certain views, when OS sets fixed scrollbars.
+    li.minor
+      strong.version Version 4.5.0
+      p Added option to display time labels in cells.
 
-    div.mb1
-      strong.mr1 Version 4.4.0
-      | Added a v-model on the #[span.code selected-date].
+    li.patch
+      strong.version Version 4.4.3
+      p Fix headings misalignments on certain views, when OS sets fixed scrollbars.
 
-    div.mb1
-      strong.mr1 Version 4.3.4
-      | New ESM build by default.
+    li.minor
+      strong.version Version 4.4.0
+      p Added a v-model on the #[span.code selected-date].
 
-    div.mb1
-      strong.mr1 Version 4.0.0
-      | Supports and only works on Vue 3.
+    li.patch
+      strong.version Version 4.3.4
+      p New ESM build by default.
 
-    div.grey.mb1
-      strong.mr1 Version 3.10.1
-      | Prevent focusing cells when they are disabled.
+    li.minor
+      strong.version Version 4.0.0
+      p Supports and only works on Vue 3.
 
-    div.mb1
-      strong.mr1 Version 3.10.0
-      | Allow multiple ranges in daily special hours.
+    li.patch
+      strong.version Version 3.10.1
+      p Prevent focusing cells when they are disabled.
 
-    div.grey.mb1
-      strong.mr1 Version 3.9.1
-      | Fix: Prevent disabling full month or year when using #[span.code disable-days].
+    li.minor
+      strong.version Version 3.10.0
+      p Allow multiple ranges in daily special hours.
 
-    div.mb1
-      strong.mr1 Version 3.9.0
-      | Allow full custom locale.
+    li.patch
+      strong.version Version 3.9.1
+      p Fix: Prevent disabling full month or year when using #[span.code disable-days].
 
-    div.grey.mb1
-      strong.mr1 Version 3.8.4
-      | Fix showing events ending at 24:00 on Safari.
+    li.minor
+      strong.version Version 3.9.0
+      p Allow full custom locale.
 
-    div.grey.mb1
-      strong.mr1 Version 3.8.3
-      | Return the full original DOM event from #[span.code cell-contextmenu].
+    li.patch
+      strong.version Version 3.8.4
+      p Fix showing events ending at 24:00 on Safari.
 
-    div.grey.mb1
-      strong.mr1 Version 3.8.2
-      | Add #[span.code active-view] validations and raise warning if incorrect.
+    li.patch
+      strong.version Version 3.8.3
+      p Return the full original DOM event from #[span.code cell-contextmenu].
 
-    div.grey.mb1
-      strong.mr1 Version 3.8.1
-      | Fix all-day events when no time information is provided.
-    div.mb1
-      strong.mr1 Version 3.8.0
-      | Add Mongolian language.
-    div.mb1
-      strong.mr1 Version 3.7.0
-      | Add a new #[span.code disable-days] option.
-    div.grey.mb1
-      strong.mr1 Version 3.6.5
-      | Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.
-    div.grey.mb1
-      strong.mr1 Version 3.6.4
+    li.patch
+      strong.version Version 3.8.2
+      p Add #[span.code active-view] validations and raise warning if incorrect.
+
+    li.patch
+      strong.version Version 3.8.1
+      p Fix all-day events when no time information is provided.
+
+    li.minor
+      strong.version Version 3.8.0
+      p Add Mongolian language.
+
+    li.minor
+      strong.version Version 3.7.0
+      p Add a new #[span.code disable-days] option.
+
+    li.patch
+      strong.version Version 3.6.5
+      p Call the on-event-click function (if any) on event single tap. Also add a 30px threshold to not call the handler if the event was tapped and dragged.
+
+    li.patch
+      strong.version Version 3.6.4
       ul
         li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
         li When #[span.code time] is #[span.code true], keep 23:59:59 internally, but format string to 24:00.
         li Fix previous / next navigation on day view when date prototypes are disabled.
         li Add shortWeekDays to the #[span.code uk] locale.
-    div.grey.mb1
-      strong.mr1 Version 3.6.3
+
+    li.patch
+      strong.version Version 3.6.3
       | Return the correct event on out-of-scope event click on month view.
-    div.grey.mb1
-      strong.mr1 Version 3.6.2
+
+    li.patch
+      strong.version Version 3.6.2
       | Fix all-day events not showing up and fix error when using #[span.code hide-body].
-    div.grey.mb1
-      strong.mr1 Version 3.6.1
+
+    li.patch
+      strong.version Version 3.6.1
       | Fix timeless events not showing up.
-    div.mb1
-      strong.mr1 Version 3.6.0
+
+    li.minor
+      strong.version Version 3.6.0
       | Added Albanian language and short days in Russian language
-    div.grey.mb1
-      strong.mr1 Version 3.5.6
+
+    li.patch
+      strong.version Version 3.5.6
       | Fix multiple day events display across days when #[span.code time] is false
-    div.grey.mb1
-      strong.mr1 Version 3.5.4
+
+    li.patch
+      strong.version Version 3.5.4
       | Add mouseup event listener when deletable but not resizable
-    div.grey.mb1
-      strong Version 3.5.3
+
+    li.patch
+      strong.version 3.5.3
       ul
         li Provide the split (if any) to event creation from cell click &amp; hold.
         li.
           Add mousemove &amp; mouseup event handlers if drag-creation is allowed but
           #[span.code editableEvents.resize] is set to false.
-    div.grey.mb1
-      strong Version 3.5.1
+
+    li.patch
+      strong.version 3.5.1
       ul
         li Don't fire cell-click when clicking on an event
         li Focus and highlight cell on mousedown rather than click
-    div.
-      #[strong Version 3.5.0] Create events with click &amp; drag.
-      Refer to the #[a(href="#ex--create-events") Create events] example.
-    div.grey.
-      #[strong Version 3.4.1] Also return the original event from the emitted
-      #[span.code event-duration-change] event
-    div.
-      #[strong Version 3.4.0] Add a #[span.code split-label] slot for day splits labels.
-      Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
-    div.grey #[strong Version 3.3.1] Add custom event renderer back in all-day bar events
-    div.
-      #[strong Version 3.3.0] Added the #[span.code allDayBarHeight] option and fix the all-day
-      bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
-    div.grey.
-      #[strong Version 3.2.8] Call #[span.code onEventClick()] (if any) on event click if events
-      are not editable or on event creation
-    div.grey #[strong Version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
-    div.grey #[strong Version 3.2.6] Display the no-event slot accurately per slot if there are
-    div.grey.
-      #[strong Version 3.2.5] Fix emitting #[span.code view-change] between #[span.code week]
-      &amp; #[span.code day] views
-    div.grey #[strong Version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
-    div
-      strong.mr2 Version 3.2
-      | The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
-      | Refer to the #[a(href="#ex--external-controls") external controls] example.
-    div.mt2.grey #[strong Version 3.1.1] Allow disabling event #[span.code titleEditable] individually
-    div
-      strong Version 3.1.0
+
+    li.minor
+      strong.version 3.5.0
+      p.
+        Create events with click &amp; drag
+        Refer to the #[a(href="#ex--create-events") Create events] example.
+
+    li.patch
+      strong.version 3.4.1
+      p.
+        Also return the original event from the emitted
+        #[span.code event-duration-change] event
+
+    li.minor
+      strong.version 3.4.0
+      p.
+        Add a #[span.code split-label] slot for day splits labels.
+        Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
+
+    li.patch #[strong.version 3.3.1] Add custom event renderer back in all-day bar events
+
+    li.minor
+      strong.version 3.3.0
+      p.
+        Added the #[span.code allDayBarHeight] option and fix the all-day
+        bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
+    li.patch
+      strong.version 3.2.8
+      p.
+        Call #[span.code onEventClick()] (if any) on event click if events
+        are not editable or on event creation
+    li.patch #[strong.version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
+    li.patch #[strong.version 3.2.6] Display the no-event slot accurately per slot if there are
+    li.patch
+      strong.version 3.2.5
+      p.
+        Fix emitting #[span.code view-change] between #[span.code week]
+        &amp; #[span.code day] views
+    li.patch #[strong.version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
+    li.minor
+      strong.version 3.2.0
+      p.
+        The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
+        Refer to the #[a(href="#ex--external-controls") external controls] example.
+    li.patch
+      strong.version 3.1.1
+      p Allow disabling event #[span.code titleEditable] individually
+    li.minor
+      strong.version 3.1.0
       alert(warning).
         The event properties #[span.code startDate] and #[span.code endDate] have been merged into
         #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
@@ -184,8 +231,9 @@ w-transition-expand(y)
         li Fixed multiple day events resizing on x and y axis.
         li Allow disabling Date prototypes
         li Emit an #[span.code event-resizing] repeatedly while resizing an event
-    div.mt4
-      strong Version 3.0
+
+    li.major
+      strong.version 3.0.0
       h3.mt0.pt0 The arrival of the drag &amp; drop feature marks a new milestone for Vue Cal!
       p.mb0.
         Many subsequent features to come, progressively building the most intuitive full-featured and flexible calendar
@@ -298,22 +346,22 @@ w-transition-expand(y)
               #[span.code .vuecal__cell--highlighted].#[br]
               Refer to the #[a(href="#css-notes") CSS Notes].
 
-    div.grey #[strong Version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
-    div.grey #[strong Version 2.24.3] Fix the all-day bar label cell horizontal alignment
-    div.grey #[strong Version 2.24.1] Disable special hours in the all-day bar
-    div #[strong Version 2.24.0] Allow toggling day splits
-    div #[strong Version 2.23.0] Added #[span.code special-hours] option
-    div.grey #[strong Version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
-    div.
-      #[strong Version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours],
+    li.patch #[strong.version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
+    li.patch #[strong.version 2.24.3] Fix the all-day bar label cell horizontal alignment
+    li.patch #[strong.version 2.24.1] Disable special hours in the all-day bar
+    li.minor #[strong.version 2.24.0] Allow toggling day splits
+    li.minor #[strong.version 2.23.0] Added #[span.code special-hours] option
+    li.patch #[strong.version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
+    li.minor.
+      #[strong.version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours],
       #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
-    div #[strong Version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
-    div.grey #[strong Version 2.20.1] Fix wrong week number with #[span.code startWeekOnSunday]
-    div #[strong Version 2.20.0] Added Icelandic language
-    div #[strong Version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
-    div #[strong Version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
-    div #[strong Version 2.17.0] Added Lithuanian language
-    div #[strong Version 2.16.0]
+    li.minor #[strong.version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
+    li.patch #[strong.version 2.20.1] Fix wrong week number with #[span.code startWeekOnSunday]
+    li.minor #[strong.version 2.20.0] Added Icelandic language
+    li.minor #[strong.version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
+    li.minor #[strong.version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
+    li.minor #[strong.version 2.17.0] Added Lithuanian language
+    li.minor #[strong.version 2.16.0]
       ul
         li New Date prototype functions, refer to: #[a(href="#date-prototypes") Date prototypes]
         li Scroll the view to a particular time: #[a(href="#ex--scroll-to-time") see the example]
@@ -333,28 +381,31 @@ w-transition-expand(y)
               #[span.code `YYYY-MM-DD`].#[br]
               Ref. #[a(href="#date-prototypes") Date prototypes]
 
-    div.mt4 #[strong Version 2.15.0]
+    li.minor
+      strong.version 2.15.0
       ul
         li Allow ending an event at #[span.code 00:00] both from #[span.code event.end] and #[span.code event.endDate]
         li Prevent resizing an event below a 1 minute duration or a minimum height of 5px.
-    div.mt2 #[strong Version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
-    div #[strong Version 2.13.0] Added Indonesian language
-    div #[strong Version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
-    div #[strong Version 2.11.0] Added Greek language
-    div #[strong Version 2.10.0] Added the #[span.code watchRealTime] option
-    div #[strong Version 2.9.0] Added the #[span.code minEventWidth] option
-    div #[strong Version 2.8.0] Added the #[span.code showWeekNumbers] option
-    div #[strong Version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
-    div #[strong Version 2.6.0] Added Bangla language
-    div #[strong Version 2.5.0] Control Previous &amp; Next externally
-    div #[strong Version 2.4.0] Added Korean language
-    div #[strong Version 2.3.0] Added Turkish language
-    div #[strong Version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
-    div.
-      #[strong Version 2.1.0] Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick]
-      &amp; #[span.code cell-focus] emitted events
+    li.minor #[strong.version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
+    li.minor #[strong.version 2.13.0] Added Indonesian language
+    li.minor #[strong.version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
+    li.minor #[strong.version 2.11.0] Added Greek language
+    li.minor #[strong.version 2.10.0] Added the #[span.code watchRealTime] option
+    li.minor #[strong.version 2.9.0] Added the #[span.code minEventWidth] option
+    li.minor #[strong.version 2.8.0] Added the #[span.code showWeekNumbers] option
+    li.minor #[strong.version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
+    li.minor #[strong.version 2.6.0] Added Bangla language
+    li.minor #[strong.version 2.5.0] Control Previous &amp; Next externally
+    li.minor #[strong.version 2.4.0] Added Korean language
+    li.minor #[strong.version 2.3.0] Added Turkish language
+    li.minor #[strong.version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
+    li.minor
+      strong.version 2.1.0
+      p.
+        Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick]
+        &amp; #[span.code cell-focus] emitted events
 
-    div #[strong Version 2.0.0]
+    li.major #[strong.version 2.0.0]
       alert(warning) Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
       alert(success)
         h3.mt0.pt0 New features
@@ -443,20 +494,20 @@ w-transition-expand(y)
                 Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
               li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
 
-    div #[strong Version 1.63.0] Added Japanese language
-    div #[strong Version 1.62.0] Added Arabic &amp; Farsi languages
-    div #[strong Version 1.61.0] Added Traditional Chinese language
-    div #[strong Version 1.60.0] Added Danish language
-    div #[strong Version 1.59.0] Added Czech language
-    div #[strong Version 1.58.0] Added Ukrainian language
-    div #[strong Version 1.57.0] Added an option to display a Today button
+    li.minor #[strong.version 1.63.0] Added Japanese language
+    li.minor #[strong.version 1.62.0] Added Arabic &amp; Farsi languages
+    li.minor #[strong.version 1.61.0] Added Traditional Chinese language
+    li.minor #[strong.version 1.60.0] Added Danish language
+    li.minor #[strong.version 1.59.0] Added Czech language
+    li.minor #[strong.version 1.58.0] Added Ukrainian language
+    li.minor #[strong.version 1.57.0] Added an option to display a Today button
       alert(success).
         The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
         The class #[span.code .vuecal__title] is now only wrapping the title, inside the #[span.code .vuecal__title-bar].#[br]
       alert(tip).
         If you have a custom theme, you will need to update it as per the theme example in the #[a(href="#css-notes") CSS Notes].
-    div #[strong Version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
-    div #[strong Version 1.55.0] Set view and cells end dates to 23:59:59
+    li.minor #[strong.version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
+    li.minor #[strong.version 1.55.0] Set view and cells end dates to 23:59:59
       alert(success)
         ul
           li This update ensures the coverage of the full range of days when fetching your events from an AJAX call.
@@ -466,7 +517,7 @@ w-transition-expand(y)
             #[span.code years] &amp; #[span.code year] views.
           li Adaptive width on events-count (for count numbers on more than 1 digit)
           li On month view, removed redundant css classes from events (classes related to event overlaps)
-    div #[strong Version 1.54.0] Added min &amp; max dates for cell selection
+    li.minor #[strong.version 1.54.0] Added min &amp; max dates for cell selection
       alert(success)
         ul
           li.
@@ -475,99 +526,105 @@ w-transition-expand(y)
           li.
             The #[span.code selectedDate] option, like min &amp; max dates, now also accept a
             plain JS Date Object.
-    div #[strong Version 1.53.0] Added click/dblclick ability on weekdays headings on week view
-    div #[strong Version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
+    li.minor #[strong.version 1.53.0] Added click/dblclick ability on weekdays headings on week view
+    li.minor #[strong.version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
       alert(success).
         In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
         now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array
-    div #[strong Version 1.51.0] Added Bosnian &amp; Serbian languages
-    div #[strong Version 1.50.0] Create a new event on cell click &amp; hold
-    div #[strong Version 1.49.0] Added Hebrew language
-    div #[strong Version 1.48.0] Added Bulgarian language
-    div #[strong Version 1.47.0] Added events count on #[span.code years] &amp; #[span.code year] views
+    li.minor #[strong.version 1.51.0] Added Bosnian &amp; Serbian languages
+    li.minor #[strong.version 1.50.0] Create a new event on cell click &amp; hold
+    li.minor #[strong.version 1.49.0] Added Hebrew language
+    li.minor #[strong.version 1.48.0] Added Bulgarian language
+    li.minor #[strong.version 1.47.0] Added events count on #[span.code years] &amp; #[span.code year] views
       alert(success).
         As it can now be used on #[span.code years] &amp; #[span.code year] views, the former
         #[span.code events-count-month-view] slot is now renamed to #[span.code events-count].
-    div #[strong Version 1.46.0] Allow cell customization
+    li.minor #[strong.version 1.46.0] Allow cell customization
       alert(success).
         For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
         are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
 
-    div #[strong Version 1.45.0] Added #[span.code cell-click] emitted event
-    div #[strong Version 1.44.0] Added Slovenian &amp; Hungarian languages
-    div #[strong Version 1.43.0] Added Catalan language
-    div #[strong Version 1.42.0] Added Norwegian language
-    div #[strong Version 1.41.0] Added Romanian language
-    div #[strong Version 1.39.0] Added Vietnamese language
-    div #[strong Version 1.38.0] #[span.code showAllDayEvents] now also accepts string 'short'
-    div #[strong Version 1.37.0] Added text 'All day' in all i18n files
-    div #[strong Version 1.36.0] Added out of scope events in month view
+    li.minor #[strong.version 1.45.0] Added #[span.code cell-click] emitted event
+    li.minor #[strong.version 1.44.0] Added Slovenian &amp; Hungarian languages
+    li.minor #[strong.version 1.43.0] Added Catalan language
+    li.minor #[strong.version 1.42.0] Added Norwegian language
+    li.minor #[strong.version 1.41.0] Added Romanian language
+    li.minor #[strong.version 1.39.0] Added Vietnamese language
+    li.minor #[strong.version 1.38.0] #[span.code showAllDayEvents] now also accepts string 'short'
+    li.minor #[strong.version 1.37.0] Added text 'All day' in all i18n files
+    li.minor #[strong.version 1.36.0] Added out of scope events in month view
       alert(success).
         On a month view, the events from the out of scope days
         (cells before and after the current month) are now also be displayed when using
         the #[span.code eventsOnMonthView] option, and returned in the array of events in
         the #[span.code ready] &amp; #[span.code view-change] emited events.
-    div #[strong Version 1.35.0] Allow displaying all-day events in fixed top bar
-    div #[strong Version 1.34.0] Allow starting week on Sunday
-    div
-      | #[strong Version 1.33.0] Minor internal structure improvements
+    li.minor #[strong.version 1.35.0] Allow displaying all-day events in fixed top bar
+    li.minor #[strong.version 1.34.0] Allow starting week on Sunday
+    li.minor
+      strong.version 1.33.0
+      p Minor internal structure improvements
       alert(success).
         In order to make the internal structure less verbose, the #[span.code events-count] slot
         use has been simplified.#[br]
         Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
         A few default CSS rules have also been updated.#[br]
-    div
-      | #[strong Version 1.32.0] Allow Syncing 2 vue-cal instances
+    li.minor
+      strong.version 1.32.0
+      p Allow Syncing 2 vue-cal instances
       alert(success).
         The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
         Refer to the #[span.code selectedDate] option in the #[a(href="#api") API] section.
-    div #[strong Version 1.31.0] Added CSS transitions option
-    div #[strong Version 1.30.0] Allow custom event rendering
-    div #[strong Version 1.29.0] Accept a callback function on event click / dblclick
-    div #[strong Version 1.28.0] Added Polish language
-    div
-      | #[strong Version 1.27.0] Allow overriding 'No event' text
+    li.minor #[strong.version 1.31.0] Added CSS transitions option
+    li.minor #[strong.version 1.30.0] Allow custom event rendering
+    li.minor #[strong.version 1.29.0] Accept a callback function on event click / dblclick
+    li.minor #[strong.version 1.28.0] Added Polish language
+    li.minor
+      strong.version 1.27.0
+      p Allow overriding 'No event' text
       alert(success).
         The #[span.code events-on-month-view] option now also accepts the string '#[span.code short]'.#[br]
         Refer to the #[a(href="#ex--events-on-month-view") Display events on month view] example.
-    div #[strong Version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
-    div #[strong Version 1.25.0] Support multiple day events
-    div
-      | #[strong Version 1.24.0] Allow hiding the calendar body
-      alert(success).
-        Week days headings now have a today CSS class when equals to today's date.
-    div #[strong Version 1.22.0] Added Slovak language
-    div #[strong Version 1.21.0] Added Georgian language
-    div #[strong Version 1.20.0] Allow displaying events on month view
-    div #[strong Version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
-    div #[strong Version 1.18.0] Allow overriding indicators in month view
-    div #[strong Version 1.17.0] Allow overriding time cells &amp; title
-    div #[strong Version 1.16.0] Highlight Today's current time
-    div #[strong Version 1.15.0] Added German language
-    div
-      | #[strong Version 1.14.0] Added custom time format &amp; emit event on #[span.code cell-focus]
+    li.minor #[strong.version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
+    li.minor #[strong.version 1.25.0] Support multiple day events
+    li.minor
+      strong.version 1.24.0
+      p Allow hiding the calendar body
+      alert(success) Week days headings now have a today CSS class when equals to today's date.
+    li.minor #[strong.version 1.22.0] Added Slovak language
+    li.minor #[strong.version 1.21.0] Added Georgian language
+    li.minor #[strong.version 1.20.0] Allow displaying events on month view
+    li.minor #[strong.version 1.19.0] Emit events on mouse-enter &amp; mouse-leave an event
+    li.minor #[strong.version 1.18.0] Allow overriding indicators in month view
+    li.minor #[strong.version 1.17.0] Allow overriding time cells &amp; title
+    li.minor #[strong.version 1.16.0] Highlight Today's current time
+    li.minor #[strong.version 1.15.0] Added German language
+    li.minor
+      strong.version 1.14.0
+      p Added custom time format &amp; emit event on #[span.code cell-focus]
       alert(success)
         ul
           li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
           li The emitted events-related events now also return native JS Date objects.
           li Refer to the #[a(href="#ex--emitted-events") emitted events example].
-    div #[strong Version 1.13.0] Added Swedish language
-    div #[strong Version 1.12.0] Added Croatian language
-    div
-      | #[strong Version 1.11.0] Added events indicators in month view
+    li.minor #[strong.version 1.13.0] Added Swedish language
+    li.minor #[strong.version 1.12.0] Added Croatian language
+    li.minor
+      strong.version 1.11.0
+      p Added events indicators in month view
       alert(tip).
         If you have created a custom theme, you will need to update it adding the new indicator
         #[span.code .vuecal__cell-events-count], as per the theme example in the #[a(href="#css-notes") CSS Notes].
       alert(success).
         The default #[span.code time-step] option value is now 60 minutes (previously 30).
-    div #[strong Version 1.10.0] Allow no event overlaps
-    div #[strong Version 1.9.0] Added Dutch language
-    div #[strong Version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
-    div #[strong Version 1.7.0] Vue Cal emits events
-    div #[strong Version 1.6.0] Allow event deletion on touch devices
-    div #[strong Version 1.5.0] Added Russian language
-    div
-      | #[strong Version 1.4.0] Allow editing events title
+    li.minor #[strong.version 1.10.0] Allow no event overlaps
+    li.minor #[strong.version 1.9.0] Added Dutch language
+    li.minor #[strong.version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
+    li.minor #[strong.version 1.7.0] Vue Cal emits events
+    li.minor #[strong.version 1.6.0] Allow event deletion on touch devices
+    li.minor #[strong.version 1.5.0] Added Russian language
+    li.minor
+      strong.version 1.4.0
+      p Allow editing events title
       alert(success)
         ul
           li The delete button now appears on click and hold.
@@ -575,15 +632,16 @@ w-transition-expand(y)
           li.
             The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
             Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
-    div #[strong Version 1.3.0] Added Simplified Chinese language &amp; bug fixes
-    div
-      | #[strong Version 1.2.0] Allow event deletion
+    li.minor #[strong.version 1.3.0] Added Simplified Chinese language &amp; bug fixes
+    li.minor
+      strong.version 1.2.0
+      p Allow event deletion
       alert(success).
         You now have the ability to select an event independently of a cell.#[br]
         On event focus the event z-index is increased and a delete button appears to delete the event.#[br]
         Hovering an event also increases its z-index so you can see the event more easily in case of overlaps.
-    div.mt3 #[strong Version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
-    div.mt3 #[strong Version 1.0.0] First public release
+    li.minor #[strong.version 1.1.0] Allow event resizing + Spanish &amp; Portuguese-Brasil languages.
+    li.major #[strong.version 1.0.0] First public release
 </template>
 
 <script setup>
@@ -591,3 +649,135 @@ import { ref } from 'vue'
 
 const seeOldReleaseNotes = ref(false)
 </script>
+<style lang="scss">
+.main--release-notes {
+  .history {
+    > li {padding-left: 20px;}
+    > li + li {margin-top: 28px;}
+
+    li {
+      position: relative;
+      list-style-type: none;
+    }
+    h2 {margin-top: 0;}
+    .view-more > div {bottom: 2px;position: relative;}
+
+    // Bullet.
+    > li:before {
+      content: '';
+      position: absolute;
+      top: 11px;
+      left: 0;
+      background-color: var(--w-base-bg-color);
+      border-radius: 1em;
+      border: 1px solid currentColor;
+      width: 1em;
+      aspect-ratio: 1;
+      transform: translate(-50%, -50%);
+      z-index: 1;
+    }
+
+    &.history--more > li:first-child:before {display: none;}
+
+    // Left border.
+    > li:after {
+      content: '';
+      position: absolute;
+      top: 11px;
+      bottom: -39px; // 11px top + 28px margin between each li.
+      left: -0.5px;
+      border-left: 1px solid var(--w-base-color);
+      opacity: 0.25;
+    }
+
+    > li:last-child:after {display: none;}
+    > li.dashed:after {border-left-style: dashed;}
+    > li.patch:before {font-size: 7px;}
+    > li.minor:before {font-size: 11px;}
+    > li.major:before {font-size: 14px;}
+
+    .version {
+      font: bold 1.2rem monospace;
+      display: block;
+    }
+
+    > li.patch:before,
+    > li.patch .version {
+      color: color-mix(in srgb, var(--w-base-color) 40%, transparent);
+    }
+    > li.patch:before {border-style: dashed;width: 1.1rem;}
+    > li.minor:before,
+    > li.minor .version {
+      color: color-mix(in srgb, var(--w-base-color) 60%, transparent);
+    }
+    > li.minor:before {width: 1.1rem;}
+    > li.major:before,
+    > li.major .version {
+      color: #09c;
+      font-size: 1.4rem;
+    }
+
+    ul {margin-left: -2px;}
+
+    li li {
+      padding-left: 20px;
+      margin-top: 2px;
+    }
+
+    // Bullet.
+    li li:before {
+      content: '\e002';
+      font-family: "wave-ui" !important;
+      font-style: normal !important;
+      font-weight: normal !important;
+      font-variant: normal !important;
+      text-transform: none !important;
+      speak: none;
+      line-height: 1;
+      -webkit-font-smoothing: antialiased;
+      position: absolute;
+      top: 3px;
+      left: 0;
+      width: 1em;
+      aspect-ratio: 1;
+    }
+
+    li li li:before {content: '\e007';}
+
+    p {
+      margin: 0.2em 0 0;
+      line-height: 1.2;
+    }
+
+    code {
+      padding: 0 4px;
+      font-size: 1em;
+    }
+
+    strong.code:first-child:not(.black) {
+      color: var(--w-primary-color);
+      font-size: 1.1em;
+    }
+  }
+
+  .vue-green {color: #42b883;}
+  .vue-green--bg {background-color: #42b883;}
+
+  span.tag {
+    border-radius: 99em;
+    padding: 2px 5px;
+    color: #fff;
+    font-weight: bold;
+    font-size: 9px;
+    position: relative;
+    top: -1px;
+  }
+
+  span.new {background-color: #3698e5;}
+  span.new:before {content: 'NEW';}
+  span.deprecated {background-color: #000;}
+  span.deprecated:before {content: 'DEPRECATED';}
+  span.removed {background-color: #f02c2c;}
+  span.removed:before {content: 'REMOVED';}
+}
+</style>
