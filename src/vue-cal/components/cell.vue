@@ -145,6 +145,9 @@ const touch = reactive({
 })
 const awaitingEventCreation = ref(false)
 
+// Overlapping events calculation (only updates when event IDs or date ranges change).
+const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
+
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
 // The calendar creation could be canceled for different wanted reasons at the end of dragging.
 const eventPlaceholder = computed(() => {
@@ -256,15 +259,6 @@ const cellEventsPerSchedule = computed(() => {
   }, {})
 })
 
-// Overlapping events calculation (only updates when event IDs or date ranges change).
-const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
-watch(
-  // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
-  () => cellForegroundEvents.value.map(e => `${e._.id} ${e.start.getTime()} ${e.end.getTime()}`).join(),
-  () => { overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value) },
-  { immediate: true }
-)
-
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
   const styles = {}
@@ -279,10 +273,6 @@ const eventStyles = computed(() => {
   }
   return styles
 })
-
-const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value)
-}
 
 const showCellEventsCount = computed(() => {
   return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellForegroundEvents.value.length
@@ -579,13 +569,19 @@ const removeEventListeners = () => {
   })
 }
 
-// Recalculate overlaps when events change (added, deleted, date change, schedule change).
-// Use a simple watcher with flush: 'post' to prevent infinite updates.
+const recalculateOverlaps = () => {
+  overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value)
+}
+
 watch(
-  () => cellForegroundEvents.value,
-  // Use nextTick to avoid recursive updates.
-  () => nextTick(() => recalculateOverlaps()),
-  { deep: true, flush: 'post' }
+  // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
+  () => cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
+  async () => {
+    await nextTick() // Use nextTick to avoid recursive updates.
+    // Recalculate overlaps when events change (added, deleted, date change, schedule change).
+    recalculateOverlaps()
+  },
+  { immediate: true, flush: 'post' } // Use flush: 'post' to prevent infinite updates.
 )
 
 onBeforeUnmount(async () => {
