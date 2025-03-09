@@ -221,17 +221,17 @@ main.main {
     top: var(--data-stream-origin-top, 0);
     left: -1px;
     width: 1px;
-    height: 40px;
+    height: 35px;
     z-index: 10;
     opacity: 0;
     will-change: transform, opacity;
     pointer-events: none;
     box-shadow:
-      0 0 4px color-mix(in srgb, var(--w-primary-color) 80%, transparent),
-      0 0 8px color-mix(in srgb, var(--w-primary-color) 40%, transparent);
+      0 0 3px color-mix(in srgb, var(--w-primary-color) 80%, transparent),
+      0 0 6px color-mix(in srgb, var(--w-primary-color) 40%, transparent);
     transform: translateY(-120%) scaleY(0);
     transition: 0.2s;
-    animation: data-stream-up 5s ease-in infinite;
+    animation: data-stream-up 10s ease-in infinite;
   }
 
   &:before {
@@ -262,15 +262,15 @@ main.main {
 @keyframes data-stream-up {
   0% {opacity: 0;transform: translateY(-120%) scaleY(0);animation-timing-function: ease-in;}
   4% {opacity: 1;transform: translateY(-90%) scaleY(1);animation-timing-function: linear;}
-  25% {opacity: 1;}
-  35%, 100% {opacity: 0;transform: translateY(-350px);}
+  15% {opacity: 1;}
+  25%, 100% {opacity: 0;transform: translateY(-350px);}
 }
 
 // Animation for downward stream.
 @keyframes data-stream-down {
   0% {opacity: 0;transform: translateY(30%) scaleY(0);animation-timing-function: ease-in;}
   4% {opacity: 1;transform: translateY(10%) scaleY(1);animation-timing-function: linear;}
-  25% {opacity: 1;}
-  35%, 100% {opacity: 0;transform: translateY(350px);}
+  15% {opacity: 1;}
+  25%, 100% {opacity: 0;transform: translateY(350px);}
 }
 </style>
