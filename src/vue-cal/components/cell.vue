@@ -420,7 +420,10 @@ const cellEventListeners = computed(() => {
 
   if (config.editableEvents.drag) {
     eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
-    eventListeners.dragover = e => dnd.cellDragOver(e, cellInfo.value)
+    eventListeners.dragover = e => {
+      e.preventDefault() // Explicitly prevent default to allow drop in Firefox.
+      dnd.cellDragOver(e, cellInfo.value)
+    }
     eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
     eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
   }

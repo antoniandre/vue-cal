@@ -4,7 +4,7 @@
   ref="eventEl"
   :class="classes"
   :style="styles"
-  :draggable="isDraggable"
+  :draggable="isDraggable ? 'true' : undefined"
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
   @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
