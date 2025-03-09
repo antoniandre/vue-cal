@@ -233,6 +233,8 @@ main.main {
     transition: 0.2s;
     animation: data-stream-up 10s ease-in infinite;
   }
+  [data-theme="light"] &:before,
+  [data-theme="light"] &:after {box-shadow: none;}
 
   &:before {
     transform-origin: bottom;

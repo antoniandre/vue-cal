@@ -196,7 +196,7 @@ $lighter-text: #ccc;
   height: 40px;
 
   &.w-toolbar {border-color: transparent;}
-  .w-app &.w-toolbar {z-index: 10;}
+  .w-app &.w-toolbar {z-index: 20;}
 
   h1 {height: 100%;}
 
