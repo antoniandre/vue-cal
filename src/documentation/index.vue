@@ -8,18 +8,10 @@ top-bar(v-if="$route.name !== 'home'" fixed)
   aside(v-if="!['test', 'home'].includes($route.name)")
     nav.nav.mb12
       ul
-        li
-          router-link.nav__item(to="/") Home
-        li
-          router-link.nav__item(to="/getting-started") Getting Started
-        li
-          router-link.nav__item(to="/api") API
-        li
-          router-link.nav__item(to="/date-prototypes") Date Prototypes
-        li
-          router-link.nav__item(to="/examples") Examples
-          w-transition-expand(y)
-            ul(v-if="$route.fullPath.includes('/examples')")
+        li(v-for="item in navItems" :key="item.path")
+          router-link.nav__item(:to="item.path") {{ item.title }}
+          w-transition-expand(y v-if="item.id === 'examples'")
+            ul(v-if="$route.fullPath.includes(item.id)")
               li
                 router-link.nav__item(to="/examples/introduction") Introduction
               li
@@ -38,12 +30,6 @@ top-bar(v-if="$route.name !== 'home'" fixed)
                 router-link.nav__item(to="/examples/customization") Customization
               li
                 router-link.nav__item(to="/examples/playground") Playground
-        li
-          router-link.nav__item(to="/migration-guide") Migration Guide
-        li
-          router-link.nav__item(to="/road-map") Road Map
-        li
-          router-link.nav__item(to="/release-notes") Release Notes
 
   router-view(v-if="$route.name === 'home'" :offset-top="offsetTop")
   main.main(v-else :class="`main--${$route.name}`")
@@ -97,6 +83,15 @@ import '@/scss/index.scss'
 
 const offsetTop = ref(0)
 const goTopHidden = ref(true)
+const navItems = ref([
+  { title: 'Getting Started', path: '/getting-started' },
+  { title: 'API', path: '/api' },
+  { title: 'Date Prototypes', path: '/date-prototypes' },
+  { title: 'Examples', path: '/examples', id: 'examples' },
+  { title: 'Migration Guide', path: '/migration-guide' },
+  { title: 'Road Map', path: '/road-map' },
+  { title: 'Release Notes', path: '/release-notes' }
+])
 
 const scrollToTop = () => document.querySelector('#top').scrollIntoView()
 

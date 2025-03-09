@@ -8,20 +8,8 @@ hero
   aside
     nav.nav
       ul
-        li
-          router-link.nav__item(to="/getting-started") Getting Started
-        li
-          router-link.nav__item(to="/api") API
-        li
-          router-link.nav__item(to="/date-prototypes") Date Prototypes
-        li
-          router-link.nav__item(to="/examples") Examples
-        li
-          router-link.nav__item(to="/migration-guide") Migration Guide
-        li
-          router-link.nav__item(to="/road-map") Road Map
-        li
-          router-link.nav__item(to="/release-notes") Release Notes
+        li(v-for="item in navItems" :key="item.path")
+          router-link.nav__item(:to="item.path") {{ item.title }}
 
   main
     .get-started-cta
@@ -98,6 +86,15 @@ defineProps({
 })
 
 const ready = ref(false)
+const navItems = ref([
+  { title: 'Getting Started', path: '/getting-started' },
+  { title: 'API', path: '/api' },
+  { title: 'Date Prototypes', path: '/date-prototypes' },
+  { title: 'Examples', path: '/examples' },
+  { title: 'Migration Guide', path: '/migration-guide' },
+  { title: 'Road Map', path: '/road-map' },
+  { title: 'Release Notes', path: '/release-notes' }
+])
 
 onMounted(() => setTimeout(() => (ready.value = true), 300))
 </script>
