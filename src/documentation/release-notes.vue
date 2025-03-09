@@ -3,6 +3,12 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.4
+    ul
+      li Fixed event resizing on touch devices.
+      li Optimized and improved the calendar title range formatting to handle locale specific formats.
+
+  li.patch
     strong.version 5.0.1-rc.3
     ul
       li Fixed event drag-and-drop on Firefox.
