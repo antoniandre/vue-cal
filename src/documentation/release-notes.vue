@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.3
+    ul
+      li Fixed event drag-and-drop on Firefox.
+
+  li.patch
     strong.version 5.0.1-rc.2
     ul
       li Fixed a memory leak happening on Firefox while recalculating the events' overlaps.
