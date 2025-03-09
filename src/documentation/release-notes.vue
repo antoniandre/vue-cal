@@ -692,9 +692,23 @@ const seeOldReleaseNotes = ref(false)
 
     > li:last-child:after {display: none;}
     > li.dashed:after {border-left-style: dashed;}
-    > li.patch:before {font-size: 7px;}
-    > li.minor:before {font-size: 11px;}
-    > li.major:before {font-size: 14px;}
+    > li.patch:before {
+      font-size: 7px;
+      border-style: dashed;
+      width: 1.1rem;
+      animation: spin 10s linear infinite;
+    }
+    > li.minor:before {
+      font-size: 11px;
+      width: 1.1rem;
+      animation: pulse 3s ease-in-out infinite;
+    }
+    > li.major:before {
+      font-size: 14px;
+      box-shadow: 0 0 0 0 #09c;
+      border-color: var(--w-primary-color);
+      animation: pulse-sonar 3s infinite cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
 
     .version {
       font: bold 1.2rem monospace;
@@ -705,12 +719,10 @@ const seeOldReleaseNotes = ref(false)
     > li.patch .version {
       color: color-mix(in srgb, var(--w-base-color) 40%, transparent);
     }
-    > li.patch:before {border-style: dashed;width: 1.1rem;}
     > li.minor:before,
     > li.minor .version {
       color: color-mix(in srgb, var(--w-base-color) 60%, transparent);
     }
-    > li.minor:before {width: 1.1rem;}
     > li.major:before,
     > li.major .version {
       color: #09c;
@@ -779,5 +791,33 @@ const seeOldReleaseNotes = ref(false)
   span.deprecated:before {content: 'DEPRECATED';}
   span.removed {background-color: #f02c2c;}
   span.removed:before {content: 'REMOVED';}
+
+  @keyframes spin {
+    from {transform: translate(-50%, -50%) rotate(0deg);}
+    to {transform: translate(-50%, -50%) rotate(360deg);}
+  }
+  @keyframes pulse {
+    0% {transform: translate(-50%, -50%) scale(1);}
+    50% {transform: translate(-50%, -50%) scale(1.1);}
+    100% {transform: translate(-50%, -50%) scale(1);}
+  }
+  @keyframes pulse-sonar {
+    0% {
+      box-shadow: 0 0 0 0 #09c;
+      transform: translate(-50%, -50%) scale(1);
+      border-color: var(--w-primary-color);
+      opacity: 0.5;
+    }
+    50% {
+      box-shadow: 0 0 0 15px rgba(9, 204, 204, 0);
+      transform: translate(-50%, -50%) scale(1.05);
+      border-color: #09c;
+    }
+    100% {
+      box-shadow: 0 0 0 0 rgba(9, 204, 204, 0);
+      transform: translate(-50%, -50%) scale(1);
+      border-color: var(--w-primary-color);
+    }
+  }
 }
 </style>

@@ -24,6 +24,16 @@ hero
           router-link.nav__item(to="/release-notes") Release Notes
 
   main
+    .get-started-cta
+      .cta-wrap
+        .w-flex.align-center.justify-center.column
+          h2.title1.mt0.mb6 Ready to Create Amazing Calendars?
+          p.subtitle.mb10 Vue Cal makes it easy to build powerful, flexible calendars for your Vue.js applications.
+          w-button.cta-button(xl round color="primary" route="/getting-started")
+            w-icon.mr3(size="1.4rem") mdi mdi-rocket-launch-outline
+            | Get Started
+            w-icon.ml3(size="1.4rem") mdi mdi-arrow-right
+
     //- Github project.
     title-link.mt0.mb4(h2 anchor="github-and-notes") Github project &nbsp;&amp;&nbsp; important notes
     .announcement.announcement--github.w-flex.align-center
@@ -98,13 +108,50 @@ onMounted(() => setTimeout(() => (ready.value = true), 300))
   padding-top: 8rem;
   overflow: hidden;
 
-  .hero {margin-top: 6rem;}
+  .hero {margin-top: 8rem;}
 
   aside, nav {padding-top: 0;}
   aside nav {position: static;}
   main {padding-top: 0;}
 
   .pale-blue {color: #1471b8;}
+
+  .get-started-cta {
+    margin-bottom: 4rem;
+
+    .cta-wrap {
+      max-width: 800px;
+      padding: 4rem 3rem;
+      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(66, 184, 131, 0.1) 0%, rgba(20, 113, 184, 0.1) 100%);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .subtitle {
+      font-size: 1.2rem;
+      opacity: 0.8;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .cta-button {
+      font-size: 1.1rem;
+      text-transform: uppercase;
+      padding: 1.5rem 2rem;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+      [data-theme="light"] & {background: #fff;}
+      [data-theme="light"] &:hover:before {display: none;}
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+      }
+    }
+  }
 }
 
 // Media queries.
