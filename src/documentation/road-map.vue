@@ -132,13 +132,12 @@ ul.kanban
     .title {
       font-size: 1.2rem;
       color: var(--w-base-color);
-      padding: 4px 8px;
+      padding: 12px 8px 4px;
       display: flex;
       align-items: center;
       position: sticky;
       top: 0;
       z-index: 1;
-      border: 1px solid inherit;
       background-color: var(--w-base-bg-color);
 
       &:before {
@@ -149,18 +148,38 @@ ul.kanban
         border-top-right-radius: 6px;
         background-color: var(--w-base-bg-color);
         z-index: -1;
+        border: 1px solid;
+        border-width: 4px 1.5px 0;
       }
+    }
+
+    &--todo .column, &--todo .title:before {
+      background-color: hsla(0, 0%, 75%, 0.06);
+      border-color: hsla(0, 0%, 75%, 0.12);
+      border-top: 4px solid hsla(0, 0%, 75%, 0.6);
+    }
+    &--doing .column, &--doing .title:before {
+      background-color: hsla(50, 80%, 75%, 0.08);
+      border-color: hsla(50, 80%, 75%, 0.2);
+      border-top: 4px solid hsla(50, 100%, 80%, 0.6);
+    }
+    &--done .column, &--done .title:before {
+      background-color: hsla(140, 100%, 75%, 0.08);
+      border-color: hsla(140, 100%, 75%, 0.2);
+      border-top: 4px solid hsla(140, 100%, 70%, 0.5);
+    }
+    &--later .column, &--later .title:before {
+      background-color: hsla(300, 100%, 75%, 0.06);
+      border-color: hsla(300, 100%, 75%, 0.2);
+      border-top: 4px solid hsla(300, 100%, 75%, 0.6);
     }
     .column {
       border-bottom-left-radius: inherit;
       border-bottom-right-radius: inherit;
-      border: 1px solid;
+      border-style: solid;
+      border-width: 4px 1px1px;
+      border-top: none;
     }
-
-    &--todo .column, &--todo .title:before {background-color: hsla(0, 0%, 75%, 0.06);border-color: hsla(0, 0%, 75%, 0.12);}
-    &--doing .column, &--doing .title:before {background-color: hsla(70, 100%, 75%, 0.08);border-color: hsla(70, 100%, 75%, 0.16);}
-    &--done .column, &--done .title:before {background-color: hsla(140, 100%, 75%, 0.08);border-color: hsla(140, 100%, 75%, 0.16);}
-    &--later .column, &--later .title:before {background-color: hsla(300, 100%, 75%, 0.06);border-color: hsla(300, 100%, 75%, 0.12);}
   }
 
   .task {
@@ -170,7 +189,12 @@ ul.kanban
     font-size: 13px;
     border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
     background-color: rgba(#fff, 0.1);
+
     [data-theme="light"] & {background-color: rgba(#fff, 0.9);}
   }
+  &__column--todo .task {border-left: 4px solid hsla(0, 0%, 75%, 0.62);}
+  &__column--doing .task {border-left: 4px solid hsla(50, 100%, 80%, 0.8);}
+  &__column--done .task {border-left: 4px solid hsla(140, 80%, 75%, 0.66);}
+  &__column--later .task {border-left: 4px solid hsla(300, 80%, 75%, 0.62);}
 }
 </style>

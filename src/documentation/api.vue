@@ -157,10 +157,11 @@ h2.w-flex.justify-space-between.mb2
   title-link(div anchor="view") The Event Object
   w-switch.my1.body(@update:model-value="expandedEventObject = Array(15).fill($event)") Expand All
 p.caption.size--md.lh1.
-  The event object contains all the information about a calendar event and is used to render it in the calendar.
+  The calendar event object contains all the information about a calendar event and is used to render
+  it in the calendar.
 p Minimum required properties: #[span.code start] and #[span.code end].
 
-p Example of a complete event object:
+p First look at an example of a complete event object and below the list of all the available properties:
 ssh-pre(language="js" :dark="store.darkMode").
   {
     start: new Date(),
