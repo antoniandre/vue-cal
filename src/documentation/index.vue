@@ -178,7 +178,7 @@ provide('locales', [
   { code: 'hr', label: 'Croatian' },
   { code: 'da', label: 'Danish' },
   { code: 'nl', label: 'Dutch' },
-  { code: 'en', label: 'English' },
+  { code: 'en-us', label: 'English' },
   { code: 'et', label: 'Estonian' },
   { code: 'fa', label: 'Farsi' },
   { code: 'fr', label: 'French' },
