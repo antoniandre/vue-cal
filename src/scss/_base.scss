@@ -31,6 +31,7 @@ aside {
   padding: 1.5rem 0 2rem;
   display: flex;
   justify-content: flex-end;
+  z-index: 1;
 
   .nav {
     position: fixed;
@@ -116,7 +117,7 @@ aside {
       inset: 0 -1px 0 auto;
       border: 12px solid transparent;
       border-right-color: var(--w-base-bg-color);
-      z-index: 1;
+      z-index: 11;
     }
   }
 }

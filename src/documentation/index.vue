@@ -9,30 +9,30 @@ top-bar(v-if="$route.name !== 'home'" fixed)
     nav.nav.mb12
       ul
         li(v-for="item in navItems" :key="item.path")
-          router-link.nav__item(:to="item.path") {{ item.title }}
+          router-link.nav__item(:to="item.path" @click="updateDataStreamPosition") {{ item.title }}
           w-transition-expand(y v-if="item.id === 'examples'")
             ul(v-if="$route.fullPath.includes(item.id)")
               li
-                router-link.nav__item(to="/examples/introduction") Introduction
+                router-link.nav__item(to="/examples/introduction" @click="updateDataStreamPosition") Introduction
               li
-                router-link.nav__item(to="/examples/view") View
+                router-link.nav__item(to="/examples/view" @click="updateDataStreamPosition") View
               li
-                router-link.nav__item(to="/examples/date-and-time") Date and Time
+                router-link.nav__item(to="/examples/date-and-time" @click="updateDataStreamPosition") Date and Time
               li
-                router-link.nav__item(to="/examples/schedules") Schedules
+                router-link.nav__item(to="/examples/schedules" @click="updateDataStreamPosition") Schedules
               li
-                router-link.nav__item(to="/examples/calendar-events--display") Events Display
+                router-link.nav__item(to="/examples/calendar-events--display" @click="updateDataStreamPosition") Events Display
               li
-                router-link.nav__item(to="/examples/calendar-events--interactions") Events Interactions
+                router-link.nav__item(to="/examples/calendar-events--interactions" @click="updateDataStreamPosition") Events Interactions
               li
-                router-link.nav__item(to="/examples/dom-events") DOM Events
+                router-link.nav__item(to="/examples/dom-events" @click="updateDataStreamPosition") DOM Events
               li
-                router-link.nav__item(to="/examples/customization") Customization
+                router-link.nav__item(to="/examples/customization" @click="updateDataStreamPosition") Customization
               li
-                router-link.nav__item(to="/examples/playground") Playground
+                router-link.nav__item(to="/examples/playground" @click="updateDataStreamPosition") Playground
 
   router-view(v-if="$route.name === 'home'" :offset-top="offsetTop")
-  main.main(v-else :class="`main--${$route.name}`")
+  main.main(v-else :class="`main--${$route.name}`" :style="dataStreamStyle" :key="animationKey")
     router-view
 
     w-transition-twist
@@ -77,12 +77,17 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
 </template>
 
 <script setup>
-import { provide, ref } from 'vue'
+import { provide, ref, onMounted, nextTick, watch } from 'vue'
+import { useRoute } from 'vue-router'
 import TopBar from '@/documentation/components/top-bar.vue'
 import '@/scss/index.scss'
 
+const route = useRoute()
 const offsetTop = ref(0)
 const goTopHidden = ref(true)
+const dataStreamStyle = ref({})
+const resetAnimation = ref(false)
+const animationKey = ref(0)
 const navItems = ref([
   { title: 'Getting Started', path: '/getting-started' },
   { title: 'API', path: '/api' },
@@ -92,6 +97,53 @@ const navItems = ref([
   { title: 'Road Map', path: '/road-map' },
   { title: 'Release Notes', path: '/release-notes' }
 ])
+
+// Update data stream position.
+const updateDataStreamPosition = async () => {
+  // Wait for DOM to update.
+  await nextTick()
+
+  // Find active nav item.
+  const activeNavItem = document.querySelector('aside .nav .router-link-exact-active')
+  if (activeNavItem) {
+    // Get top position relative to viewport.
+    const activeRect = activeNavItem.getBoundingClientRect()
+    // Get the position relative to the document.
+    const topPosition = activeRect.top + window.scrollY
+
+    // Calculate the position relative to the main element.
+    // Reference to the main element.
+    const mainElement = document.querySelector('main.main')
+    if (mainElement) {
+      const mainRect = mainElement.getBoundingClientRect()
+      const mainTop = mainRect.top + window.scrollY
+
+      // Position relative to main element.
+      const relativeTop = topPosition - mainTop + activeRect.height / 2
+
+      // Set CSS variables for the data stream.
+      dataStreamStyle.value = {
+        '--data-stream-origin-top': `${relativeTop}px`
+      }
+    }
+  }
+}
+
+// Function to restart animation - simply increment the animation key to force Vue to recreate the element.
+const restartAnimation = () => {
+  animationKey.value++
+}
+
+// Update position on route change.
+// Wait a bit for navigation to complete.
+watch(() => route.path, () => {
+  setTimeout(() => {
+    updateDataStreamPosition()
+    restartAnimation() // Increment key to restart animation.
+  }, 100)
+})
+
+onMounted(() => updateDataStreamPosition()) // Initial position update.
 
 const scrollToTop = () => document.querySelector('#top').scrollIntoView()
 
@@ -109,6 +161,8 @@ const onScroll = () => {
   const { scrollTop, offsetHeight } = document.documentElement
   offsetTop.value = window.scrollY || scrollTop
   goTopHidden.value = offsetTop.value < 200
+
+  updateDataStreamPosition() // Update data stream position while scrolling.
 }
 
 provide('locales', [
@@ -155,3 +209,68 @@ provide('locales', [
   { code: 'vi', label: 'Vietnamese' }
 ])
 </script>
+
+<style lang="scss">
+main.main {
+  position: relative;
+
+  // Before pseudo element for upward and downward stream.
+  &:before, &:after {
+    content: '';
+    position: absolute;
+    top: var(--data-stream-origin-top, 0);
+    left: -1px;
+    width: 1px;
+    height: 40px;
+    z-index: 10;
+    opacity: 0;
+    will-change: transform, opacity;
+    pointer-events: none;
+    box-shadow:
+      0 0 4px color-mix(in srgb, var(--w-primary-color) 80%, transparent),
+      0 0 8px color-mix(in srgb, var(--w-primary-color) 40%, transparent);
+    transform: translateY(-120%) scaleY(0);
+    transition: 0.2s;
+    animation: data-stream-up 5s ease-in infinite;
+  }
+
+  &:before {
+    transform-origin: bottom;
+    background: linear-gradient(to top,
+      transparent 0%,
+      var(--w-primary-color) 40%,
+      color-mix(in srgb, var(--w-primary-color) 90%, transparent) 50%,
+      var(--w-primary-color) 60%,
+      transparent 100%
+    );
+  }
+  &:after {
+    transform-origin: top;
+    transform: translateY(30%) scaleY(0);
+    background: linear-gradient(to bottom,
+      transparent 0%,
+      var(--w-primary-color) 40%,
+      color-mix(in srgb, var(--w-primary-color) 90%, transparent) 50%,
+      var(--w-primary-color) 60%,
+      transparent 100%
+    );
+    animation-name: data-stream-down;
+  }
+}
+
+// Animation for upward stream.
+@keyframes data-stream-up {
+  0% {opacity: 0;transform: translateY(-120%) scaleY(0);animation-timing-function: ease-in;}
+  4% {opacity: 1;transform: translateY(-90%) scaleY(1);animation-timing-function: linear;}
+  25% {opacity: 1;}
+  35%, 100% {opacity: 0;transform: translateY(-350px);}
+}
+
+// Animation for downward stream.
+@keyframes data-stream-down {
+  0% {opacity: 0;transform: translateY(30%) scaleY(0);animation-timing-function: ease-in;}
+  4% {opacity: 1;transform: translateY(10%) scaleY(1);animation-timing-function: linear;}
+  25% {opacity: 1;}
+  35%, 100% {opacity: 0;transform: translateY(350px);}
+}
+</style>
