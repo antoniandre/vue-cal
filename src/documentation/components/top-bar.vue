@@ -178,7 +178,7 @@ $lighter-text: #ccc;
   position: fixed;
   top: 8px;
   right: 8px;
-  z-index: 11;
+  z-index: 21; // Above the top bar.
 }
 
 .top-bar {
