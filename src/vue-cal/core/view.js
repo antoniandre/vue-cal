@@ -209,36 +209,57 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     switch (viewId.value) {
       case 'day':
         return dateUtils.formatDate(firstCellDate.value, dateFormat)
-      case 'days': {
-        let format = dateFormat.replace(/(\s|^)[^a-zA-Z]*?d{2,4}[^a-zA-Z]*?(\s|$)/, '') // Remove week day.
-        // Always shorten month if the locale doesn't forbid it.
-        if (truncations !== false) format = format.replace('MMMM', 'MMM')
-        const startDateFormatted = dateUtils.formatDate(firstCellDate.value, format)
-        const endDateFormatted = dateUtils.formatDate(lastCellDate.value, format)
-
-        return `${startDateFormatted} - ${endDateFormatted}`
-      }
+      case 'days':
       case 'week': {
-        let weekNumber = dateUtils.getWeek(firstCellDate.value, config.startWeekOnSunday && !config.hideWeekdays[7])
-        weekNumber = ` <small>${texts.week} ${weekNumber}</small>`
-
         const startMonth = firstCellDate.value.getMonth()
         const startYear = firstCellDate.value.getFullYear()
         const endMonth = lastCellDate.value.getMonth()
         const endYear = lastCellDate.value.getFullYear()
         const crossingMonth = startMonth !== endMonth
-        const crossingYear = crossingMonth && startYear !== endYear
-        // Shorten month if xs and the locale doesn't forbid it.
-        const truncate = truncations !== false && (config.xs || crossingMonth)
-        const m1 = texts.months[startMonth][truncate ? 'substring' : 'toString'](0, 3)
+        const crossingYear = startYear !== endYear
 
-        if (crossingMonth) {
-          const m2 = texts.months[endMonth][truncate ? 'substring' : 'toString'](0, 3)
+        // Determine if we should truncate based on screen size & locale preference.
+        const shouldTruncate = truncations !== false && (config.xs || crossingMonth || crossingYear)
 
-          if (crossingYear) return `${m1} ${startYear} - ${m2} ${endYear} ${weekNumber}`
-          else return `${m1} - ${m2} ${startYear} ${weekNumber}`
+        // Get month names (potentially truncated).
+        const getMonthName = (month, truncate) => {
+          return texts.months[month][truncate ? 'substring' : 'toString'](0, 3)
         }
-        else return `${m1} ${startYear} ${weekNumber}`
+
+        // Format the day part - ensure we only get numeric values.
+        const startDay = firstCellDate.value.getDate()
+        const endDay = lastCellDate.value.getDate()
+
+        let result = ''
+
+        if (crossingYear) {
+          // Different years: format as "MMM D, YYYY - MMM D, YYYY".
+          const startMonthName = getMonthName(startMonth, shouldTruncate)
+          const endMonthName = getMonthName(endMonth, shouldTruncate)
+          result = `${startMonthName} ${startDay}, ${startYear} - ${endMonthName} ${endDay}, ${endYear}`
+        }
+        else if (crossingMonth) {
+          // Same year, different months: format as "MMM D - MMM D, YYYY".
+          const startMonthName = getMonthName(startMonth, shouldTruncate)
+          const endMonthName = getMonthName(endMonth, shouldTruncate)
+          result = `${startMonthName} ${startDay} - ${endMonthName} ${endDay}, ${startYear}`
+        }
+        else {
+          // Same month and year: format as "MMM D-D, YYYY".
+          const monthName = getMonthName(startMonth, shouldTruncate)
+          result = `${monthName} ${startDay}-${endDay}, ${startYear}`
+        }
+
+        // Add week number for week view.
+        if (viewId.value === 'week') {
+          const weekNumber = dateUtils.getWeek(
+            firstCellDate.value,
+            config.startWeekOnSunday && !config.hideWeekdays[7]
+          )
+          result += ` <small>${texts.week} ${weekNumber}</small>`
+        }
+
+        return result
       }
       case 'month': {
         // Shorten month if xs and the locale doesn't forbid it.
