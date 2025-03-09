@@ -184,11 +184,12 @@ example(title="CSS Control" anchor="css-variables")
             min="0")
           span.unit {{ variable.unit || '' }}
           .color-picker.ml2(v-if="variable.type === 'color'")
-            input(v-model="variable.value" type="color")
-            ssh-pre.ma0.pa0.d-iflex(
-              v-if="variable.type === 'color'"
-              :dark="store.darkMode"
-              language="css") {{ variable.value }}{{ variable.unit || '' }}
+            input(
+              @input="e => variable.value = e.target.value"
+              :value="isHexColor(variable.value) ? variable.value : '#000000'"
+              type="color")
+            ssh-pre.ma0.pa0.d-iflex(:dark="store.darkMode" language="css")
+              | {{ variable.value }}{{ variable.unit || '' }}
           span.punctuation ;
         span.punctuation }
 
@@ -201,11 +202,18 @@ example(title="CSS Control" anchor="css-variables")
 </template>
 
 <script setup>
-import { computed, inject, reactive, ref } from 'vue'
+import { computed, inject, reactive, ref, onMounted } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal } from '@/vue-cal'
 
 const store = useAppStore()
+
+// Simplified hex color check and conversion
+const isHexColor = val => typeof val === 'string' && /^#([0-9A-F]{3}){1,2}$/i.test(val)
+const formatHex = hex => {
+  if (!isHexColor(hex)) return hex
+  return hex.length === 4 ? `#${hex[1]}${hex[1]}${hex[2]}${hex[2]}${hex[3]}${hex[3]}` : hex
+}
 
 const exLayouts = ref({
   size: 'normal'
@@ -227,27 +235,22 @@ const exHideElements = reactive({
   weekNumbers: ref(false)
 })
 
+const defaultColor = formatHex(store.darkMode ? '#316191' : '#1976d2')
 const exThemes = reactive({
   default: true,
   dark: store.darkMode,
   pickColorSwitch: ref(false),
-  defaultColor: ref(store.darkMode ? '#316191' : '#1976d2'),
-  color: ref(store.darkMode ? '#316191' : '#1976d2'),
+  defaultColor,
+  color: defaultColor,
   setThemeColor: (color, switchOn = false) => {
-    vuecalEl.value.$el.style.setProperty('--vuecal-primary-color', color)
+    vuecalEl.value?.$el?.style.setProperty('--vuecal-primary-color', color)
     if (switchOn) exThemes.pickColorSwitch = true
   },
   onDefaultThemeSwitch: bool => {
-    if (bool) {
-      exThemes.setThemeColor(exThemes.defaultColor)
-    }
-    else {
-      exThemes.setThemeColor(exThemes.defaultColor)
-      exThemes.pickColorSwitch = false
-    }
+    exThemes.setThemeColor(exThemes.defaultColor)
+    if (!bool) exThemes.pickColorSwitch = false
   },
   onColorPickSwitch: () => {
-    // if (!exThemes.pickColorSwitch) exThemes.color = exThemes.defaultColor
     exThemes.setThemeColor(exThemes.pickColorSwitch ? exThemes.color : exThemes.defaultColor)
   }
 })
@@ -271,9 +274,9 @@ const exCssControl = reactive({
   ],
   variables: [
     { name: '--vuecal-primary-color', value: store.darkMode ? '#316191' : '#1976d2', type: 'color' },
-    { name: '--vuecal-secondary-color', value: store.darkMode ? '#2e2e2e' : '#fff', type: 'color' },
-    { name: '--vuecal-base-color', value: store.darkMode ? '#fff' : '#000', type: 'color' },
-    { name: '--vuecal-contrast-color', value: store.darkMode ? '#000' : '#fff', type: 'color' },
+    { name: '--vuecal-secondary-color', value: store.darkMode ? '#2e2e2e' : '#ffffff', type: 'color' },
+    { name: '--vuecal-base-color', value: store.darkMode ? '#ffffff' : '#000000', type: 'color' },
+    { name: '--vuecal-contrast-color', value: store.darkMode ? '#000000' : '#ffffff', type: 'color' },
     { name: '--vuecal-border-color', value: 'color-mix(in srgb, var(--vuecal-base-color) 8%, transparent)', type: 'color' },
     { name: '--vuecal-header-color', value: store.darkMode ? 'var(--vuecal-base-color)' : 'var(--vuecal-secondary-color)', type: 'color' },
     { name: '--vuecal-event-color', value: store.darkMode ? 'var(--vuecal-base-color)' : 'var(--vuecal-contrast-color)', type: 'color' },
@@ -286,6 +289,9 @@ const exCssControl = reactive({
   ],
   style: computed(() => exCssControl.variables.map(v => `${v.name}: ${v.value}${v.unit || ''};`).join('\n'))
 })
+
+// Initialize theme color.
+onMounted(() => exThemes.setThemeColor(exThemes.color))
 </script>
 
 <style lang="scss" scoped>
