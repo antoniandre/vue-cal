@@ -130,6 +130,8 @@ const eventListeners = computed(() => {
 
   eventListeners.touchstart = e => {
     e.stopPropagation()
+    onMousedown(e)
+
     externalHandlers.touchstart?.({ e, event })
   }
   eventListeners.mousedown = e => {
