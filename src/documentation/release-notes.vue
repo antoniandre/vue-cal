@@ -1,7 +1,7 @@
 <template lang="pug">
 h1.title1 Release Notes
 
-ul.history.ml1
+ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.2
     ul
@@ -652,7 +652,7 @@ const seeOldReleaseNotes = ref(false)
 <style lang="scss">
 .main--release-notes {
   .history {
-    > li {padding-left: 20px;}
+    > li {padding-left: 24px;}
     > li + li {margin-top: 28px;}
 
     li {
