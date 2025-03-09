@@ -203,52 +203,88 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     return availableViews[availableViews.indexOf(viewId.value) - 1]
   })
 
+  /**
+   * Gets a month name with optional truncation.
+   *
+   * @param {number} monthIndex - The 0-based month index.
+   * @param {Array} monthsArray - Array of month names.
+   * @param {boolean} shouldTruncate - Whether to truncate the month name.
+   * @returns {string} The formatted month name.
+   */
+  function getMonthName(monthIndex, monthsArray, shouldTruncate = false) {
+    if (!monthsArray || !monthsArray[monthIndex]) return monthIndex + 1 // Numeric fallback.
+
+    const name = monthsArray[monthIndex]
+    return shouldTruncate && typeof name === 'string' ? name.substring(0, 3) : name
+  }
+
+  /**
+   * Formats a date range between two dates.
+   *
+   * @param {Date} start - The start date.
+   * @param {Date} end - The end date.
+   * @param {Object} options - Formatting options.
+   * @returns {string} The formatted date range.
+   */
+  function formatDateRange(start, end, options) {
+    const { monthsArray, monthBeforeDay, canTruncate, xs } = options
+
+    const startMonth = start.getMonth()
+    const startYear = start.getFullYear()
+    const endMonth = end.getMonth()
+    const endYear = end.getFullYear()
+    const crossingMonth = startMonth !== endMonth
+    const crossingYear = startYear !== endYear
+
+    // Should we truncate month names?.
+    const shouldTruncate = canTruncate && (xs || crossingMonth)
+
+    // Get day numbers directly.
+    const startDay = start.getDate()
+    const endDay = end.getDate()
+
+    if (crossingYear) {
+      // Different years.
+      if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay}, ${startYear} - ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endDay}, ${endYear}`
+      else return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endYear}`
+    }
+    else if (crossingMonth) {
+      // Same year, different months.
+      if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay} - ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endDay}, ${startYear}`
+      else return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${startYear}`
+    }
+    else {
+      // Same month and year.
+      if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay}-${endDay}, ${startYear}`
+      else return `${startDay}-${endDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear}`
+    }
+  }
+
   const title = computed(() => {
-    const { dateFormat, truncations } = texts
+    const { dateFormat, months, monthsGenitive, week: weekText, truncations } = texts
+    const locale = config.locale
+    const canTruncate = truncations !== false
+
+    // Determine date format style (month-first or day-first).
+    const monthBeforeDay = dateFormat.indexOf('M') < dateFormat.indexOf('D')
+
+    // Use genitive case for Greek if available and appropriate.
+    const monthsArray = (monthsGenitive && locale === 'el') ? monthsGenitive : months
 
     switch (viewId.value) {
       case 'day':
         return dateUtils.formatDate(firstCellDate.value, dateFormat)
+
       case 'days':
       case 'week': {
-        const startMonth = firstCellDate.value.getMonth()
-        const startYear = firstCellDate.value.getFullYear()
-        const endMonth = lastCellDate.value.getMonth()
-        const endYear = lastCellDate.value.getFullYear()
-        const crossingMonth = startMonth !== endMonth
-        const crossingYear = startYear !== endYear
-
-        // Determine if we should truncate based on screen size & locale preference.
-        const shouldTruncate = truncations !== false && (config.xs || crossingMonth || crossingYear)
-
-        // Get month names (potentially truncated).
-        const getMonthName = (month, truncate) => {
-          return texts.months[month][truncate ? 'substring' : 'toString'](0, 3)
+        const options = {
+          monthsArray,
+          monthBeforeDay,
+          canTruncate,
+          xs: config.xs
         }
 
-        // Format the day part - ensure we only get numeric values.
-        const startDay = firstCellDate.value.getDate()
-        const endDay = lastCellDate.value.getDate()
-
-        let result = ''
-
-        if (crossingYear) {
-          // Different years: format as "MMM D, YYYY - MMM D, YYYY".
-          const startMonthName = getMonthName(startMonth, shouldTruncate)
-          const endMonthName = getMonthName(endMonth, shouldTruncate)
-          result = `${startMonthName} ${startDay}, ${startYear} - ${endMonthName} ${endDay}, ${endYear}`
-        }
-        else if (crossingMonth) {
-          // Same year, different months: format as "MMM D - MMM D, YYYY".
-          const startMonthName = getMonthName(startMonth, shouldTruncate)
-          const endMonthName = getMonthName(endMonth, shouldTruncate)
-          result = `${startMonthName} ${startDay} - ${endMonthName} ${endDay}, ${startYear}`
-        }
-        else {
-          // Same month and year: format as "MMM D-D, YYYY".
-          const monthName = getMonthName(startMonth, shouldTruncate)
-          result = `${monthName} ${startDay}-${endDay}, ${startYear}`
-        }
+        let result = formatDateRange(firstCellDate.value, lastCellDate.value, options)
 
         // Add week number for week view.
         if (viewId.value === 'week') {
@@ -256,18 +292,21 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
             firstCellDate.value,
             config.startWeekOnSunday && !config.hideWeekdays[7]
           )
-          result += ` <small>${texts.week} ${weekNumber}</small>`
+          result += ` <small>${weekText} ${weekNumber}</small>`
         }
 
         return result
       }
+
       case 'month': {
         // Shorten month if xs and the locale doesn't forbid it.
-        const format = `${config.xs && truncations !== false ? 'MMM' : 'MMMM'} YYYY`
+        const format = `${config.xs && canTruncate ? 'MMM' : 'MMMM'} YYYY`
         return dateUtils.formatDate(start.value, format)
       }
+
       case 'year':
         return firstCellDate.value.getFullYear()
+
       case 'years':
         return `${firstCellDate.value.getFullYear()} - ${end.value.getFullYear()}`
     }
