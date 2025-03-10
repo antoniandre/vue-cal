@@ -48,7 +48,24 @@ p.
     | PLAYGROUND
 
 .highlight-box.grow.mt4
-  .title2 Demos on Codepen
+  .title2 #[strong V5] Demos on StackBlitz
+  p.body.mb4.grey Try it yourself.
+  .w-flex.align-center
+    w-icon.ml3.mr2.bolt.pa6(color="grey-light2" size="3.2rem") mdi mdi-lightning-bolt
+    ul.no-bullet
+      li
+        w-icon wi-chevron-right
+        a.ml2(href="https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue" target="_blank")
+          | Basic Calendar
+          w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
+      li
+        w-icon wi-chevron-right
+        a.ml2(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
+          | Calendar with Events
+          w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
+
+.highlight-box.grow.mt4
+  .title2 #[strong V4] Demos on Codepen
     .todo-tag.d-iflex.ml2 REVIEW EXAMPLES
   p.body.mb4.grey Try it yourself.
   .w-flex.align-center
