@@ -21,8 +21,8 @@
       "import": "./dist/vue-cal.es.js",
       "require": "./dist/vue-cal.cjs.js"
     },
-    "./style": "./dist/vue-cal.css",
-    "./style.css": "./dist/vue-cal.css",
+    "./style": { "default": "./dist/vue-cal.css" },
+    "./style.css": { "default": "./dist/vue-cal.css" },
     "./i18n/*": "./dist/i18n/*",
     "./package.json": "./package.json"
   },
