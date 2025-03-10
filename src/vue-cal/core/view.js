@@ -343,17 +343,19 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         break
     }
 
-    emit('view-change', {
-      id: viewId.value,
-      title: title.value,
-      start: start.value,
-      end: end.value,
-      extendedStart: extendedStart.value,
-      extendedEnd: extendedEnd.value,
-      cellDates: cellDates.value,
-      containsToday: containsToday.value,
-      events: events.value
-    })
+    if (config.ready) {
+      emit('view-change', {
+        id: viewId.value,
+        title: title.value,
+        start: start.value,
+        end: end.value,
+        extendedStart: extendedStart.value,
+        extendedEnd: extendedEnd.value,
+        cellDates: cellDates.value,
+        containsToday: containsToday.value,
+        events: events.value
+      })
+    }
 
     // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
     // Does not cost much to update when not watching real time as it is only computed when the view

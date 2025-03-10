@@ -129,6 +129,7 @@ const scrollableElClasses = computed(() => ({
 
 onMounted(async () => {
   await nextTick()
+  config.ready = true
   emit('ready', { config, view })
 })
 
