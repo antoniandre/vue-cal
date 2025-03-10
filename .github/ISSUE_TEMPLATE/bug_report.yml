@@ -48,21 +48,17 @@ body:
   - type: textarea
     id: reproduction-link
     attributes:
-      label: "Provide a Reproduction Link or Steps"
+      label: "Provide a Reproduction Link"
       description: |
-        Provide a link to reproduce the issue using one of the following:
+        Provide a link to reproduce the issue by forking one of our examples on StackBlitz:
 
-        - Fork from Codepen:
-          - [Vue Cal + Vue 3](https://codepen.io/antoniandre/pen/XWEgLxg?editors=1010)
-        - Fork from Stackblitz:
-          - [Vue Cal + Vue 3 + Vue CLI](https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue)
-          - [Vue Cal + Vue 3 + Vite](https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue)
-          - [Vue Cal + Vue 3 & Composition API + Vite](https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue)
-          - [Vue Cal + Vue 2 + Vue CLI](https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue)
-        - Or describe steps to reproduce the behavior:
+        - [Vue Cal 5: Basic (Vue 3 + Vite)](https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue)
+        - [Vue Cal 5: Events (Vue 3 + Vite)](https://stackblitz.com/edit/vuecal5-events?file=src/App.vue)
+
+        If not possible to reproduce, describe the detailed steps to reproduce the behavior:
           1. Go to '...'
           2. Click on '...'
           3. See error
-      placeholder: "Paste reproduction link or describe steps here..."
+      placeholder: "Paste reproduction link here"
     validations:
       required: true
