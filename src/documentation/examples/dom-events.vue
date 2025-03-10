@@ -120,20 +120,10 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         template(#content) returns the associated calendar event object.
       w-accordion-item
         template(#title)
-          code event-duration-change
+          code event-resize
         template(#content)
-          span.grey (only fired at the end of the event resizing)
-          | #[br]Returns an object containing:
-          ul
-            li #[span.code event], the calendar event object that was resized
-            li #[span.code oldDate], the Javascript Date the event was ending at before resize
-            li #[span.code originalEvent], the same calendar event before the change
-      w-accordion-item
-        template(#title)
-          code event-resizing
-        template(#content)
-          span.grey Fired repeatedly while resizing
-          | #[br]For performance while dragging, returns a lighter object containing:
+          span.grey Fired repeatedly while resizing#[br]
+          | For performance while dragging, returns a lighter object containing:
           ul
             li #[span.code _eid], the calendar event internal id.
             li #[span.code end], the calendar event new end Date.
@@ -143,6 +133,18 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
             listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
       w-accordion-item
         template(#title)
+          code event-resize-end
+        template(#content)
+          span.grey Fired when the event resizing is ended.
+          | #[br]Returns an object containing:
+          ul
+            li #[span.code e], the native DOM event object
+            li #[span.code event], the calendar event object with updated start, end and schedule properties
+            li #[span.code overlaps], an array of all the overlapping events, or empty array if none
+            li #[span.code cell], the cell object where the event was resized
+            li #[span.code external], true if the event is not coming from this Vue Cal instance
+      w-accordion-item
+        template(#title)
           code event-drop
         template(#content)
           p.
@@ -150,20 +152,22 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
             accept or reject the event drop at the new position.
             Returns an object containing:
           ul
-            li #[span.code event], the calendar event object that is being dropped
-            li #[span.code overlaps], an array of all the overlapping events, or empty array if none.
+            li #[span.code e], the native DOM event object
+            li #[span.code event], the calendar event object with updated start, end and schedule properties
+            li #[span.code overlaps], an array of all the overlapping events, or empty array if none
+            li #[span.code cell], the cell object where the event was dropped
+            li #[span.code external], true if the event is not coming from this Vue Cal instance
       w-accordion-item
         template(#title)
           code event-dropped
         template(#content)
-          p Returns an object containing:
+          p Fired on event drop after the drop has been validated (not denied). Returns an object containing:
           ul
+            li #[span.code e], the native DOM event object
+            li #[span.code cell], the cell object where the event was dropped
             li #[span.code event], the calendar event object that was dropped
-            li #[span.code oldDate], the Javascript Date the event was starting from before drag
-            li #[span.code newDate], the Javascript Date the event is now starting from
-            li #[span.code oldSchedule] only if schedules, the id of the schedule the event came from
-            li #[span.code newSchedule] only if schedules, the id of the schedule the event is dropped into
-
+            li #[span.code originalEvent], the calendar original event object before the drag and drop
+            li #[span.code external], true if the event is not coming from this Vue Cal instance
       //- alert(tip)
         ul
           li.
@@ -197,11 +201,6 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
 
       //- alert(tip)
         ul
-          li.
-            The #[span.code event-change] emitted event groups all the events triggered on a calendar event property change:
-            #[span.code event-title-change], #[span.code event-drop],
-            #[span.code event-duration-change] and #[span.code event-create]. So you have the choice to listen to
-            #[span.code event-change] to cover any calendar event change or listen to a specific action emitted event.
           li.mt3.
             To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
             objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
@@ -209,24 +208,24 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
             You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
 
     p.mt4.mb0 Better than theory, observe the events real-time in this logs box while interacting with Vue Cal:
-    .logs-box.my2.bd1.bdrs2.ovh
+    .caption.lh0.my1 The #[span.code event-drag] event logging is disabled for performance reasons (too many events).
+    .logs-box.bd1.bdrs2.ovh
       .w-flex.wrap.align-center.justify-end.ml2.mr1
         .grey //&nbsp;
           strong event-name:&nbsp;
           span { arguments }
-          small.caption.ml2 Latest at the bottom.
         .spacer
-        w-button.mt1(outline sm @click="exEmittedEvents.clearEventsLog")
-          w-icon.mr1 wi-cross
-          | Clear Logs
-        w-button.mt1.ml2(
+        w-button.mt1.mr1(
           outline
           sm
           @click="exEmittedEvents.logMouseEvents = !exEmittedEvents.logMouseEvents"
           tooltip="Will also log events on<br><code>cell-mousemove</code>, <code>cell-mouseenter</code>, <code>cell-mouseleave</code>."
           :tooltip-props="{ alignRight: true }")
-          w-icon.mr1 mdi mdi-{{ exEmittedEvents.logMouseEvents ? 'close' : 'plus' }}
-          | {{ exEmittedEvents.logMouseEvents ? 'Hide' : 'Track' }} Mouse Move &amp; Hover Events
+          w-icon.mr1 mdi mdi-{{ exEmittedEvents.logMouseEvents ? 'trash-can-outline' : 'plus' }}
+          | {{ exEmittedEvents.logMouseEvents ? 'remove' : 'Add' }} Mouse Move &amp; Hover Events
+        w-button.mt1(outline sm @click="exEmittedEvents.clearEventsLog")
+          w-icon.mr1(xs) mdi mdi-trash-can-outline
+          | Clear Logs
 
       ssh-pre.ma0.py0.scrollable(
         ref="logsBoxEl"
@@ -252,7 +251,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
         @event-dblclick="exEmittedEvents.logEvents('event-dblclick', $event)"
         @event-hold="exEmittedEvents.logEvents('event-hold', $event)"
         @event-drag-start="exEmittedEvents.logEvents('event-drag-start', $event)"
-        @event-drag="exEmittedEvents.logEvents('event-drag', $event)"
+        @event-drag="true/* exEmittedEvents.logEvents('event-drag', $event) // Disabled for performance. */"
         @event-drag-end="exEmittedEvents.logEvents('event-drag-end', $event)"
         @event-drop="exEmittedEvents.logEvents('event-drop', $event)"
         @event-resize="exEmittedEvents.logEvents('event-resize', $event)"
@@ -562,14 +561,16 @@ const exEmittedEvents = reactive({
   logMouseEvents: ref(false),
   logEvents: (eventName, params) => {
     // Filter out mouse move and mouseenter/leave events.
-    if (!exEmittedEvents.logMouseEvents && eventName.includes('-mouse')) return
+    if (!exEmittedEvents.logMouseEvents && eventName.includes('-mouse')) return true
 
-    if (params.cell) {params.cell = { ...params.cell, events: params.cell.events.value }}
+    if (params.cell) params.cell = { ...params.cell, events: params.cell.events.value }
     if (params.e) params.e = `[${params.e.constructor.name}]`
 
     exEmittedEvents.logs.push({ name: eventName, args: JSON.stringify(params, null, 2) })
     const scrollableEl = logsBoxEl.value?.$el
     nextTick(() => scrollableEl?.scrollTo?.({ top: scrollableEl.scrollHeight, behavior: 'smooth' }))
+
+    return true
   }
 })
 
