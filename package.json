@@ -1,6 +1,6 @@
 {
   "name": "vue-cal",
-  "version": "5.0.1-rc.4",
+  "version": "5.0.1-rc.5",
   "description": "A Vue JS full calendar, no dependency, no BS. :metal:",
   "author": "Antoni Andre <antoniandre.web@gmail.com>",
   "homepage": "https://antoniandre.github.io/vue-cal",
@@ -21,8 +21,12 @@
       "import": "./dist/vue-cal.es.js",
       "require": "./dist/vue-cal.cjs.js"
     },
-    "./style": { "default": "./dist/vue-cal.css" },
-    "./style.css": { "default": "./dist/vue-cal.css" },
+    "./style": {
+      "default": "./dist/vue-cal.css"
+    },
+    "./style.css": {
+      "default": "./dist/vue-cal.css"
+    },
     "./i18n/*": "./dist/i18n/*",
     "./package.json": "./package.json"
   },
