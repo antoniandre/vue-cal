@@ -3,6 +3,13 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.6
+    ul
+      li Prevent emitting the #[span.code view-change] event before the calendar is ready.
+      li Updated the #[span.code event-dropped] payload for consistency.
+      li Removed the obsolete #[span.code event-change] event.
+
+  li.patch
     strong.version 5.0.1-rc.4
     ul
       li Fixed event resizing on touch devices.
