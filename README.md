@@ -45,7 +45,7 @@ Experience Vue Cal in action or dive into the docs for setup instructions and AP
 
 ### V4 (Stable)
 
-> [**V4 Demo & Documentation**](https://antoniandre.github.io/vue-cal)
+> [**V4 Demo & Documentation**](https://antoniandre.github.io/vue-cal-v4)
 
 > [**V4 Repo**](https://antoniandre.github.io/vue-cal-v4)
 
