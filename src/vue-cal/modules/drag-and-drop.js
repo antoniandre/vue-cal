@@ -312,10 +312,15 @@ export function useDragAndDrop (vuecal) {
     cancelViewChange = false
     dragging.toVueCal = vuecalUid
 
-    // Emit `event-dropped` & `event-change` events and return the updated event.
+    // Emit `event-dropped` and return the updated event.
     // `external` is when the event is not coming from this Vue Cal instance.
-    emit('event-dropped', { event, originalEvent: incomingEvent, external: dragging.fromVueCal !== vuecalUid })
-    emit('event-change', { event, originalEvent: incomingEvent })
+    emit('event-dropped', {
+      e,
+      cell,
+      event,
+      originalEvent: incomingEvent,
+      external: dragging.fromVueCal !== vuecalUid
+    })
   }
 
   return {
