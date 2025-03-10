@@ -992,135 +992,186 @@ w-accordion.mt2(
 .todo-tag.d-iflex.mt6 ADD SLOTS &amp; EMITTED EVENTS?
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="emitted-events") Emitted Events
-  w-switch.my1.body(@update:model-value="expandedEmittedEvents = Array(30).fill($event)") Expand All
+  w-switch.my1.body(@update:model-value="expandedEmittedEvents = Array(50).fill($event)") Expand All
 
 w-accordion(
   v-model="expandedEmittedEvents"
   expand-icon-rotate90
   title-class="pa0 bd0 body"
-  content-class="pt0 pb3")
-  .todo-tag.d-iflex REVIEW &amp; COMPLETE
-  h5.mt2.base-color View-related
+  content-class="pt1 pr0 pb6 pl7")
+  h5.mt2.base-color Core Events
   w-accordion-item
     template(#title)
       code ready
-    template(#content) Fired as soon as Vue Cal is mounted in the DOM and ready.
+    template(#content)
+      p Fired as soon as Vue Cal is mounted in the DOM and ready.
+      p Returns an object containing:
+      ul
+        li #[code config]: The Vue Cal configuration object.
+        li #[code view]: The Vue Cal view object.
   w-accordion-item
     template(#title)
       code view-change
     template(#content)
-      p Fired on every view change.
+      p Fired on every view change, navigation, or when events are added/removed.
       p Returns an object containing:
       ul
         li #[code id] #[code {String}]: The view ID. Possible values: 'day', 'days', 'week', 'month', 'year', 'years'.
-        li #[code title] #[code {String}]: The view computed title.
-        li #[code start] #[code {Date}]: The view start date as a navite JavaScript Date.
-        li #[code end] #[code {Date}]: The view end date as a navite JavaScript Date.
-        li #[code extendedStart] #[code {Date}]: The view extended start date as a navite JavaScript Date.
-        li #[code extendedEnd] #[code {Date}]: The view extended end date as a navite JavaScript Date.
-        li #[code cellDates] #[code {Array}]: An array containing all the view cells.
-        li #[code containsToday] #[code {Bool}]: Whether the view contains the current date or not.
-        li #[code events] #[code {Array}]: An array containing all the events that are currently in view.
+        li #[code title] #[code {String}]: The view computed title, e.g. "October 2024".
+        li #[code start] #[code {Date}]: The view primary start date (active days only).
+        li #[code end] #[code {Date}]: The view primary end date (active days only).
+        li #[code fullRangeStart] #[code {Date}]: The view extended start date including out-of-scope days.
+        li #[code fullRangeEnd] #[code {Date}]: The view extended end date including out-of-scope days.
+        li #[code cellDates] #[code {Array}]: An array of objects containing start and end dates for each cell in view.
+        li #[code containsToday] #[code {Boolean}]: Whether the view contains the current date.
+        li #[code events] #[code {Array}]: An array containing all the events in the current view.
+        li #[code viewDate] #[code {Date}]: The reference date used to calculate the view.
+        li #[code selectedDate] #[code {Date}]: The currently selected date (if any).
+        li #[code now] #[code {Date}]: The current date and time.
+        li View-specific flags: #[code isDay], #[code isDays], #[code isWeek], #[code isMonth], #[code isYear], #[code isYears]
+  w-accordion-item
+    template(#title)
+      code update:view
+    template(#content)
+      p Fired when the view changes. Part of v-model binding for the view property.
+      p Returns: #[code {String}] The ID of the current view (e.g. 'day', 'week', 'month', etc.)
+  w-accordion-item
+    template(#title)
+      code update:selectedDate
+    template(#content)
+      p Fired when a date is selected in the calendar. Part of v-model binding for the selectedDate property.
+      p Returns: #[code {Date}] The selected date as a JavaScript Date object.
+  w-accordion-item
+    template(#title)
+      code update:viewDate
+    template(#content)
+      p Fired when the view date changes (e.g., when navigating to different dates). Part of v-model binding for the viewDate property.
+      p Returns: #[code {Date}] The new view date as a JavaScript Date object.
+  w-accordion-item
+    template(#title)
+      code update:events
+    template(#content)
+      p Fired when events are created, modified, or deleted. Part of v-model binding for the events property.
+      p Returns: #[code {Array}] The updated array of calendar events.
 
-  h5.mt2.base-color Cell-related
+  h5.mt2.base-color Cell-related Events
   w-accordion-item
     template(#title)
       code cell-*
-    template(#content) where star is any valid JavaScript DOM event that your app is listening for.
-  w-accordion-item
-    template(#title)
-      code cell-delayed-click
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Vue Cal forwards any DOM event on cells, where * can be any valid DOM event name.
+      p Returns: The native event object plus cell date information.
   w-accordion-item
     template(#title)
       code cell-drag-start
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Fired when starting to drag on a cell (when creating events by dragging).
+      p Returns: #[code {Date}] The cell's date with time at cursor position.
   w-accordion-item
     template(#title)
       code cell-drag
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Fired continuously while dragging on cells (when creating events by dragging).
+      p Returns: #[code {Date}] The current cell's date with time at cursor position.
   w-accordion-item
     template(#title)
       code cell-drag-end
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Fired when ending a drag on cells (when creating events by dragging).
+      p Returns: #[code {Date}] The final cell's date with time at cursor position.
   w-accordion-item
     template(#title)
       code cell-hold
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Fired when a cell is clicked and held for a specific duration.
+      p Returns: #[code {Date}] The cell's date.
 
-  h5.mt2.base-color Event-related
+  h5.mt2.base-color Event-related Events
   w-accordion-item
     template(#title)
       code event-*
-    template(#content) where star is any valid JavaScript DOM event that your app is listening for.
-  w-accordion-item
-    template(#title)
-      code event-delayed-click
-    template(#content) returns a JS native #[span.code Date] object.
-  w-accordion-item
-    template(#title)
-      code event-drag-start
-    template(#content) returns a JS native #[span.code Date] object.
-  w-accordion-item
-    template(#title)
-      code event-drag
-    template(#content) returns a JS native #[span.code Date] object.
-  w-accordion-item
-    template(#title)
-      code event-drag-end
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Vue Cal forwards any DOM event on events, where * can be any valid DOM event name.
+      p Returns: The native event object plus the calendar event object.
   w-accordion-item
     template(#title)
       code event-hold
-    template(#content) returns a JS native #[span.code Date] object.
+    template(#content)
+      p Fired when an event is clicked and held for a specific duration.
+      p Returns: #[code {Object}] The associated calendar event object.
   w-accordion-item
     template(#title)
       code event-create
     template(#content)
-      p.
-        Fired on mouseup after the event drag creation or programmatic creation via the Vue Cal
-        #[code view.createEvent()] method.
-      p Returns the associated calendar event object.
+      p Fired when an event is created via drag creation or programmatically via the Vue Cal #[code view.createEvent()] method.
+      p Returns: #[code {Object}] The newly created calendar event object.
   w-accordion-item
     template(#title)
       code event-created
     template(#content)
-      p.
-        Fired on first mounted after an event is created via drag creation or programmatically
-        via the Vue Cal #[code view.createEvent()] method. Can be used to trigger an event
-        scroll into view for instance:
+      p Fired after an event has been created and its DOM node has been mounted. Useful for UI operations like scrolling to the new event.
+      p Example use:
       ssh-pre.mt1(language="js" :dark="store.darkMode").
         @event-created="event => event._.$el.scrollIntoView({ behavior: 'smooth', block: 'center' })")
-      p Returns the associated calendar event object.
+      p Returns: #[code {Object}] The created calendar event object with its DOM node reference accessible via #[code event._.$el].
   w-accordion-item
     template(#title)
       code event-delete
-    template(#content) returns the associated calendar event object.
+    template(#content)
+      p Fired when an event is being deleted.
+      p Returns: #[code {Object}] The calendar event object being deleted.
+  w-accordion-item
+    template(#title)
+      code event-drag-start
+    template(#content)
+      p Fired when starting to drag an existing event.
+      p Returns: #[code {Object}] The calendar event object with current cursor position information.
+  w-accordion-item
+    template(#title)
+      code event-drag
+    template(#content)
+      p Fired continuously while dragging an event.
+      p Returns: #[code {Object}] The calendar event object with current cursor position information.
+  w-accordion-item
+    template(#title)
+      code event-drag-end
+    template(#content)
+      p Fired when ending the drag of an event.
+      p Returns: #[code {Object}] The calendar event object with final position information.
+  w-accordion-item
+    template(#title)
+      code event-resize-start
+    template(#content)
+      p Fired when starting to resize an event.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code event]: The calendar event object being resized.
   w-accordion-item
     template(#title)
       code event-resize
     template(#content)
-      span.grey Fired repeatedly while resizing#[br]
-      | For performance while dragging, returns a lighter object containing:
+      p Fired repeatedly while resizing an event.
+      p.grey For performance reasons, returns a lighter object containing:
       ul
-        li #[span.code _eid], the calendar event internal id.
-        li #[span.code end], the calendar event new end Date.
-        li #[span.code endTimeMinutes], the calendar event new end time in minutes.
+        li #[code _eid]: The calendar event internal ID.
+        li #[code end]: The calendar event new end Date.
+        li #[code endTimeMinutes]: The calendar event new end time in minutes.
       alert(warning).
-        You should only listen to this event if you have no choice. In most of cases you should
-        listen to #[span.code event-duration-change] instead (fired only once at the end of the resizing).
+        You should only listen to this event if you have no choice. In most cases you should
+        listen to #[code event-resize-end] instead (fired only once at the end of the resizing).
   w-accordion-item
     template(#title)
       code event-resize-end
     template(#content)
-      span.grey Fired when the event resizing is ended.
-      | #[br]Returns an object containing:
+      p Fired when the event resizing is ended.
+      p Returns an object containing:
       ul
-        li #[span.code e], the native DOM event object
-        li #[span.code event], the calendar event object with updated start, end and schedule properties
-        li #[span.code overlaps], an array of all the overlapping events, or empty array if none
-        li #[span.code cell], the cell object where the event was resized
-        li #[span.code external], true if the event is not coming from this Vue Cal instance
+        li #[code e]: The native DOM event object.
+        li #[code event]: The calendar event object with updated start, end and schedule properties.
+        li #[code overlaps]: An array of all the overlapping events, or empty array if none.
+        li #[code cell]: The cell object where the event was resized.
+        li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
   w-accordion-item
     template(#title)
       code event-drop
@@ -1128,24 +1179,26 @@ w-accordion(
       p.
         Fired as soon as the event is dropped. If there is a listener, it must return true or false to
         accept or reject the event drop at the new position.
-        Returns an object containing:
+      p Returns an object containing:
       ul
-        li #[span.code e], the native DOM event object
-        li #[span.code event], the calendar event object with updated start, end and schedule properties
-        li #[span.code overlaps], an array of all the overlapping events, or empty array if none
-        li #[span.code cell], the cell object where the event was dropped
-        li #[span.code external], true if the event is not coming from this Vue Cal instance
+        li #[code e]: The native DOM event object.
+        li #[code event]: The calendar event object with updated start, end and schedule properties.
+        li #[code overlaps]: An array of all the overlapping events, or empty array if none.
+        li #[code cell]: The cell object where the event was dropped.
+        li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
   w-accordion-item
     template(#title)
       code event-dropped
     template(#content)
-      p Fired on event drop after the drop has been validated (not denied). Returns an object containing:
+      p Fired after an event drop has been validated (not denied).
+      p Returns an object containing:
       ul
-        li #[span.code e], the native DOM event object
-        li #[span.code cell], the cell object where the event was dropped
-        li #[span.code event], the calendar event object that was dropped
-        li #[span.code originalEvent], the calendar original event object before the drag and drop
-        li #[span.code external], true if the event is not coming from this Vue Cal instance
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object where the event was dropped.
+        li #[code event]: The calendar event object that was dropped with its updated properties.
+        li #[code originalEvent]: The calendar original event object before the drag and drop.
+        li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
+
   //- alert(tip)
     ul
       li.
@@ -1210,7 +1263,7 @@ const expandedViews = ref([...views].fill(false))
 const expandedViewObject = ref(Array(10).fill(false))
 const expandedEventObject = ref(Array(15).fill(false))
 const expandedOptions = ref(Array(99).fill(false))
-const expandedEmittedEvents = ref(Array(99).fill(false))
+const expandedEmittedEvents = ref(Array(50).fill(false))
 const expandedSlots = ref(Array(30).fill(false))
 </script>
 
