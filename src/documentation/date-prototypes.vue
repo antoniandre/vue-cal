@@ -80,6 +80,35 @@ ssh-pre.mt1(language="js" :dark="store.darkMode").
   const currentTime = new Date()
   console.log(currentTime.formatTime()) // outputs: {{ (new Date()).formatTime() }}
 
+alert.pa0(info no-icon)
+  w-accordion.ml-4(expand-icon-rotate90)
+    w-accordion-item.pa0
+      template(#title)
+        .title4 Using a locale? Read this.
+      template(#content)
+        p.
+          If you want to localize the prototypes (if you need texts translations like #[span.code January], etc.),
+          it's more efficient to first load the locale using #[span.code useLocale(locale)].
+          If no locale is provided, it will default to English.
+          For example:
+
+        ssh-pre.d-iflex.pr6(language="js" :dark="store.darkMode").
+          import { useLocale, addDatePrototypes } from '@/vue-cal'
+          import Fr from '@/vue-cal/i18n/fr.json'
+
+          useLocale(Fr)
+          addDatePrototypes()
+
+        p.
+          If you ever need to switch locale again afterwards and update the prototypes translations,
+          you can simply load the new locale and call #[span.code addDatePrototypes()] again:
+
+        ssh-pre.d-iflex.pr6(language="js" :dark="store.darkMode").
+          import Es from '@/vue-cal/i18n/es.json'
+
+          useLocale(Es)
+          addDatePrototypes()
+
 //- Prototypes.
 h2.w-flex.justify-space-between.align-center.mb2
   title-link(div anchor="prototypes") Prototypes

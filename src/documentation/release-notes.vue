@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.7
+    ul
+      li Always localize texts before using prototypes, or default to EnUs. #28
+
+  li.patch
     strong.version 5.0.1-rc.6
     ul
       li Prevent emitting the #[span.code view-change] event before the calendar is ready.
