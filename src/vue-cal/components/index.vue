@@ -133,8 +133,6 @@ onMounted(async () => {
   emit('ready', { config, view })
 })
 
-watch(() => config.locale, newLocale => config.loadTexts(newLocale))
-
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
 

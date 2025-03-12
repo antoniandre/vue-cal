@@ -263,8 +263,9 @@ export const useConfig = (vuecal, props, attrs) => {
   }
 
   // Keep a local copy of the events so the prop is not mandatory.
-  let events = reactive(props.events || [])
+  const events = reactive(props.events || [])
   watch(() => props.events, evts => events.splice(0, events.length, ...evts))
+  watch(() => props.locale, newLocale => loadTexts(newLocale || 'en-us'))
 
   // If a locale is requested via prop, load it (async call).
   // But if a locale is directly provided from external source using useLocale(),
