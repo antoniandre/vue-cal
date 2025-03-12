@@ -4,13 +4,14 @@ import { useDragAndDrop } from '../modules/drag-and-drop'
 import { useDateUtils } from '../utils/date'
 import { useEvents } from './events'
 import { useView } from './view'
+import EnUs from '../i18n/en-us.json'
 
 // Shared global reactive store: common to all the VueCal instances.
 // The global store is also used when the user wants to use Date prototypes with localized texts
 // before or without the Vue Cal component.
 export const globalState = reactive({
   texts: { ...defaults.texts }, // Make texts reactive before a locale is loaded.
-  dateUtils: useDateUtils(defaults.texts) // Some Date utils functions need localized texts.
+  dateUtils: useDateUtils(defaults.texts, EnUs) // Some Date utils functions need localized texts.
 })
 
 /**
@@ -55,7 +56,7 @@ export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
     }
   })
 
-  state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts))
+  state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts), EnUs)
   state.config = useConfig(state, props, attrs)
   state.eventsManager = useEvents(state)
   state.view = useView(state, vuecalEl)

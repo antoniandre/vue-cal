@@ -4,13 +4,15 @@
 
 import { ref } from 'vue'
 
-export const useDateUtils = initTexts => {
+export const useDateUtils = (initTexts, EnUs) => {
   let now, todayDate, todayF
   let _dateObject = {}
   let _timeObject = {}
   const texts = ref(initTexts)
 
   const addDatePrototypes = () => {
+    if (!texts.value.today) texts.value = EnUs // If no texts, use EnUs.
+
     /* eslint-disable no-extend-native */
     Date.prototype.addDays = function (days) { return addDays(this, days || 0) }
     Date.prototype.subtractDays = function (days) { return subtractDays(this, days || 0) }
@@ -40,7 +42,12 @@ export const useDateUtils = initTexts => {
     delete Date.prototype.formatTime
   }
 
-  const updateTexts = newTexts => (texts.value = newTexts)
+  const updateTexts = newTexts => {
+    texts.value = newTexts
+    // If the prototypes are already added, override them.
+    // Otherwise, the user did not use the `useDatePrototypes` option.
+    if (Date.prototype.subtractDays) addDatePrototypes()
+  }
 
   // Cache Today's date (to a maximum) for better isToday() performances. Formatted without leading 0.
   // We still need to update Today's date when Today changes without page refresh.
