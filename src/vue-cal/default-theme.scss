@@ -367,7 +367,7 @@
     &-details {
       flex-grow: 1;
       overflow: hidden;
-      padding: 2px;
+      padding: 7px 2px;
       font-size: 12px;
     }
     &-time {
@@ -380,7 +380,12 @@
 
     &-resizer {
       // Over border (so there's no risk of triggering the event drag instead).
-      inset: auto -1px -1px;
+      &--top {
+        inset: -1px -1px auto;
+      }
+      &--bottom {
+        inset: auto -1px -1px;
+      }
       border-bottom-left-radius: inherit;
       border-bottom-right-radius: inherit;
     }
