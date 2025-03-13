@@ -31,7 +31,7 @@ import VueCalCell from './cell.vue'
 import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 
 const vuecal = inject('vuecal')
-let { view, config, dateUtils } = vuecal
+const { view, config, dateUtils } = vuecal
 
 const bodyEl = ref(null)
 const cursorYPercent = ref(null)
@@ -49,7 +49,7 @@ const bodyStyles = computed(() => ({
 const timeAtCursor = computed(() => {
   const time = dateUtils.formatTime(percentageToMinutes(cursorYPercent.value, config))
   return {
-    style: { top: cursorYPercent.value + '%' },
+    style: { top: `${cursorYPercent.value}%` },
     time
   }
 })

@@ -73,7 +73,7 @@ export function useDragAndDrop (vuecal) {
 
   /**
    * On event drag start, only possible if editableEvent is true.
-   * /!\ This is using the native HTML5 drag & drop, not supported on touch devices.
+   * /!\ This is using the native HTML5 drag & drop.
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} event The event being dragged.
