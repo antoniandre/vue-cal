@@ -3,9 +3,14 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.8
+    ul
+      li Updated the #[span.code cell]-related slots payloads for consistency, providing the cell object to all of them.
+
+  li.patch
     strong.version 5.0.1-rc.7
     ul
-      li Always localize texts before using prototypes, or default to EnUs. #28
+      li Always localize texts before using prototypes, or default to #[span.code en-us]. #28
 
   li.patch
     strong.version 5.0.1-rc.6
