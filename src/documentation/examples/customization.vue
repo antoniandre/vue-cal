@@ -59,8 +59,8 @@ example(title="Simple Slots" anchor="slots")
         &lt;/w-tooltip&gt;
       &lt;/template&gt;
 
-      &lt;template #title="{ title }"&gt;
-        &lt;code v-html="title"&gt;&lt;/code&gt;
+      &lt;template #title="view"&gt;
+        &lt;code v-html="view.title"&gt;&lt;/code&gt;
       &lt;/template&gt;
 
       &lt;template #previous-button&gt;
@@ -214,34 +214,26 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
       Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
-    h5.mt6.subtitle-1.font-weight-medium
-      w-icon(size="22") mdi mdi-arrow-right
+    h3.title3.mt6
+      w-icon(size="22") wi-chevron-right
       | Custom title
-    p.ml2.mb2.
-      2 arguments are available through the scoped slot: #[span.code #title="{ title, view }"]
+    p.ml2.mb2 Accessible payload through the #[span.code #title] scoped slot:
     ul
-      li
-        | #[span.code title], the formatted title (different on all the views). E.g.
-        em.ml2 "Week 2 (January 2019)"
-      li
-        | #[span.code view], an object containing the active view info.
-        ssh-pre(language="js" :dark="store.darkMode").mt2.mb3.
-          {
-            id: {String}, // Current view, one of: years, year, month, week, day.
-            start: {Date}, // JavaScript Date object.
-            end: {Date}, // JavaScript Date object.
-            selectedDate: {Date} // JavaScript Date object.
-          }
+      li.
+        #[strong.code view]:
+        the object containing the active view info, the precomputed formatted title, the start and end dates.
     p.
-      You can use one or the other to format the title as you wish.#[br]
-      Using the pre-formatted #[span.code title] will be easy but not very flexible.#[br]
-      If you render the date yourself from #[span.code view.start], don't forget
-      the different formats for all the views: years, year, month, week, day.
+      If you plan a custom title, you can use the pre-formatted #[span.code view.title] or build your own.#[br]
+      The Vue Cal's Date prototypes will help you go faster.#[br]
+      Remember to handle all the different views: #[code.mx1 day], #[code.mx1 days], #[code.mx1 week],
+      #[code.mx1 month], #[code.mx1 year], #[code.mx1 years].#[br]
+      In the view object, you can use the #[code.mx1 view.isDay], #[code.mx1 view.isWeek], etc. properties to
+      check the current view, or use #[code.mx1 view.id].
 
-    h5.mt6.subtitle-1.font-weight-medium
-      w-icon(size="22") mdi mdi-arrow-right
+    h3.title3.mt6
+      w-icon(size="22") wi-chevron-right
       | Custom cells
-    p.ml2.mb2.
+    p.ml2.mb2 Accessible payload through the #[span.code #cell-content] scoped slot:
       In this example, only the cell number is clickable on month view.#[br]
       5 arguments are available through the scoped slot:#[br]
       #[span.code #cell-content="{ cell, view, schedule, events, goNarrower }"]
