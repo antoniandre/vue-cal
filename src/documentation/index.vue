@@ -231,31 +231,19 @@ main.main {
       0 0 6px color-mix(in srgb, var(--w-primary-color) 40%, transparent);
     transform: translateY(-120%) scaleY(0);
     transition: 0.2s;
-    animation: data-stream-up 10s ease-in infinite;
+    animation: data-stream-up 8s ease-in infinite;
   }
   [data-theme="light"] &:before,
   [data-theme="light"] &:after {box-shadow: none;}
 
   &:before {
     transform-origin: bottom;
-    background: linear-gradient(to top,
-      transparent 0%,
-      var(--w-primary-color) 40%,
-      color-mix(in srgb, var(--w-primary-color) 90%, transparent) 50%,
-      var(--w-primary-color) 60%,
-      transparent 100%
-    );
+    background: linear-gradient(to top, transparent, var(--w-primary-color));
   }
   &:after {
     transform-origin: top;
     transform: translateY(30%) scaleY(0);
-    background: linear-gradient(to bottom,
-      transparent 0%,
-      var(--w-primary-color) 40%,
-      color-mix(in srgb, var(--w-primary-color) 90%, transparent) 50%,
-      var(--w-primary-color) 60%,
-      transparent 100%
-    );
+    background: linear-gradient(to bottom, transparent, var(--w-primary-color));
     animation-name: data-stream-down;
   }
 }
@@ -265,7 +253,7 @@ main.main {
   0% {opacity: 0;transform: translateY(-120%) scaleY(0);animation-timing-function: ease-in;}
   4% {opacity: 1;transform: translateY(-90%) scaleY(1);animation-timing-function: linear;}
   15% {opacity: 1;}
-  25%, 100% {opacity: 0;transform: translateY(-350px);}
+  20%, 100% {opacity: 0;transform: translateY(-350px);}
 }
 
 // Animation for downward stream.
