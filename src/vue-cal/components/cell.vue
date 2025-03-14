@@ -421,7 +421,11 @@ const cellInfo = computed(() => ({
   start: props.start,
   end: props.end,
   events: cellEvents,
-  ...(touch.schedule ? { schedule: touch.schedule } : {})
+  ...(touch.schedule ? { schedule: touch.schedule } : {}),
+  goNarrower: () => view.narrower(),
+  goBroader: () => view.broader(),
+  broader: view.broaderView,
+  narrower: view.narrowerView
 }))
 
 // Get cursor information including position and date.
