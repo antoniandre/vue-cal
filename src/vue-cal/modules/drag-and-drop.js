@@ -82,14 +82,35 @@ export function useDragAndDrop (vuecal) {
     // Cancel the drag if trying to drag event from a text selection or from the resizer.
     if (e.target.nodeType === 3 || vuecal.touch.isResizingEvent) return e.preventDefault()
 
+    e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.dropEffect = 'move'
+
+    // Fix for Chrome on Windows: use a small transparent image as drag image
+    // const img = new Image()
+    // img.src = 'data:image/gifbase64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' // 1px transparent GIF
+    // try {
+    //   // Some browsers might not support this, so use try/catch
+    //   e.dataTransfer.setDragImage(img, 0, 0)
+    // }
+    // catch (err) {
+    //   console.warn('Failed to set drag image:', err)
+    // }
+
     // Transfer the event's data to the receiver (when successfully drag & dropping out of Vue Cal).
     // Notice: in Firefox the drag is prevented if there is no dataTransfer.setData().
     const cleanEvent = { ...event, _: { id: event._.id, duration: deltaMinutes(event.start, event.end) } }
-    e.dataTransfer.setData('event', JSON.stringify(cleanEvent))
-    // When click and drag an event the cursor can be anywhere in the event,
-    // when later dropping the event, we need to subtract the cursor position in the event.
-    e.dataTransfer.setData('cursor-grab-at', e.offsetY) // In pixels.
+
+    try {
+      e.dataTransfer.setData('text/plain', '') // Add fallback data type for Chrome.
+      e.dataTransfer.setData('event', JSON.stringify(cleanEvent))
+      // When click and drag an event the cursor can be anywhere in the event,
+      // when later dropping the event, we need to subtract the cursor position in the event.
+      e.dataTransfer.setData('cursor-grab-at', e.offsetY) // In pixels.
+    }
+    catch (err) {
+      console.warn('Vue Cal: Failed to set drag data:', err)
+      return e.preventDefault() // Prevent drag if we can't set the data.
+    }
 
     dragging.eventId = event._.id
     dragging.fromVueCal = vuecalUid
@@ -239,6 +260,7 @@ export function useDragAndDrop (vuecal) {
     // ----------------------------------------------------
     let event
     const { start: newStart, end: newEnd } = computeNewEventStartEnd(e, incomingEvent, cell.start)
+
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
     let onAcceptedDrop = () => {}
