@@ -134,7 +134,7 @@ example(title="Simple Slots" anchor="slots")
       strong.orange-light2 {{ format24 }}
     template(#cell-content v-if="exSlots.cellContent")
       w-icon.orange-light2(lg) mdi mdi-party-popper
-    template(#diy="{ vuecal, view }" v-if="exSlots.diy") {{ view }}<br><br>{{ vuecal }}
+    template(#diy="{ vuecal }" v-if="exSlots.diy") {{ vuecal }}
 
 //- Example.
 example(title="Custom Events Count" anchor="custom-events-count")
