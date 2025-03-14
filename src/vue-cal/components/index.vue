@@ -7,9 +7,7 @@
   slot(
     v-if="$slots.diy"
     name="diy"
-    :vuecal="vuecal"
-    :view="view"
-    :available-views="config.availableViews")
+    :vuecal="vuecal")
   template(v-else)
     VueCalHeader
       template(v-if="$slots.header" #header="params")
