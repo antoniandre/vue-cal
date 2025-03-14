@@ -210,13 +210,14 @@ example(title="Custom Events Count" anchor="custom-events-count")
 //- Example.
 example(title="Custom Title & Cells" anchor="custom-title-and-cells")
   template(#desc)
+    .todo-tag.d-iflex TO REVIEW
     alert(tip).
       Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
     h3.title3.mt6
       w-icon(size="22") wi-chevron-right
-      | Custom title
+      | Custom Title
     p.ml2.mb2 Accessible payload through the #[span.code #title] scoped slot:
     ul
       li.
@@ -232,8 +233,11 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
 
     h3.title3.mt6
       w-icon(size="22") wi-chevron-right
-      | Custom cells
+      | Custom Cells
     p.ml2.mb2 Accessible payload through the #[span.code #cell-content] scoped slot:
+    ul
+      li #[span.code cell], object containing the cell date range and the cell events.
+    p.
       In this example, only the cell number is clickable on month view.#[br]
       5 arguments are available through the scoped slot:#[br]
       #[span.code #cell-content="{ cell, view, schedule, events, goNarrower }"]
@@ -321,6 +325,9 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
       span(v-else-if="view.id === 'days'") {{ view.start.format('D MMMM YYYY') }} - {{ view.end.format('D MMMM YYYY') }}
       span(v-else-if="view.id === 'day'") {{ view.start.format('dddd D MMMM YYYY') }}
       | &nbsp;🎉
+    template(#cell-date="{ cell }")
+      button(@click="cell.goBroader") {{ cell.start.format() }}
+
     //- template(#cell-content="{ cell, view, events, goNarrower }")
       span.vuecal__cell-date.clickable(v-if="view.id !== 'day'" :class="view.id" @click="goNarrower") {{ cell.content }}
       .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
@@ -328,6 +335,7 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
 //- Example.
 example(title="Custom event Rendering" anchor="custom-event-rendering")
   template(#desc)
+    .todo-tag.d-iflex.prod TO BE UPDATED SOON
     p.mb2 Using Vue.js scoped slots, you can override the events rendering.
 
     alert.my2(tip).
