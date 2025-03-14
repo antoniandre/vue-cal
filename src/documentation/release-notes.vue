@@ -8,6 +8,7 @@ ul.history.ml2
       li Updated the #[span.code diy] payload: only keep the Vue Cal instance that contains everything you need.
       li Updated the #[span.code cell]-related slots payloads for consistency, providing the cell object to all of them.
       li Added #[span.code goNarrower] and #[span.code goBroader] methods and #[span.code broader] and #[span.code narrower] properties to the cell object.
+      li Added more browser compatibility checks and catches for the event drag &amp; drop.
 
   li.patch
     strong.version 5.0.1-rc.7
