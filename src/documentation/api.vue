@@ -297,7 +297,6 @@ w-accordion.mt2(
       | ,
       .body.grey.mx1 default:
       strong.default.code false
-      w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content)
       //- ul
         li.mb2.
@@ -989,7 +988,6 @@ w-accordion.mt2(
         When set to #[span.code true], allows resizing an event across multiple days.#[br]
         Resizing on the X axis is only available on #[span.code week] view.
 
-.todo-tag.d-iflex.mt6 ADD SLOTS &amp; EMITTED EVENTS?
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="emitted-events") Emitted Events
   w-switch.my1.body(@update:model-value="expandedEmittedEvents = Array(50).fill($event)") Expand All
@@ -1186,18 +1184,6 @@ w-accordion(
         li #[code overlaps]: An array of all the overlapping events, or empty array if none.
         li #[code cell]: The cell object where the event was dropped.
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
-  w-accordion-item
-    template(#title)
-      code event-dropped
-    template(#content)
-      p Fired after an event drop has been validated (not denied).
-      p Returns an object containing:
-      ul
-        li #[code e]: The native DOM event object.
-        li #[code cell]: The cell object where the event was dropped.
-        li #[code event]: The calendar event object that was dropped with its updated properties.
-        li #[code originalEvent]: The calendar original event object before the drag and drop.
-        li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
 
   //- alert(tip)
     ul
@@ -1237,6 +1223,274 @@ w-accordion(
         objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
         So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
         You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
+
+h2.w-flex.justify-space-between.mb2
+  title-link(div anchor="slots") Slots
+  w-switch.my1.body(@update:model-value="expandedSlots = Array(50).fill($event)") Expand All
+
+w-accordion(
+  v-model="expandedSlots"
+  expand-icon-rotate90
+  title-class="pa0 bd0 body"
+  content-class="pt1 pr0 pb6 pl7")
+  w-accordion-item
+    template(#title)
+      code diy
+    template(#content)
+      p The "Do It Yourself" slot allows complete customization of the calendar. When this slot is used, the default calendar structure is replaced entirely by your custom content.
+      p This is useful for creating entirely custom calendar interfaces while still utilizing Vue Cal's core functionality.
+      p Available parameters:
+      ul
+        li #[code.base-color vuecal] - The core Vue Cal object with all methods and properties
+        li #[code.base-color view] - The current view object with all its properties
+        li #[code.base-color available-views] - An object containing all the available views
+
+  w-accordion-item
+    template(#title)
+      code header
+    template(#content)
+      p Allows complete customization of the calendar's header section, replacing the title bar and views bar.
+      p Available parameters:
+      ul
+        li #[code.base-color view] - The current view object
+        li #[code.base-color available-views] - An object containing all the available views
+        li #[code.base-color vuecal] - The core Vue Cal object with all methods and properties
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #header="{ view, availableViews, vuecal }"&gt;
+          &lt;div class="custom-header"&gt;
+            &lt;h2&gt;{{ '\{\{ view.title \}\}' }}&lt;/h2&gt;
+            &lt;div class="view-buttons"&gt;
+              &lt;button
+                v-for="(grid, viewId) in availableViews"
+                @click="vuecal.view.switch(viewId)"
+                :class="{ active: view.id === viewId }"&gt;
+                {{ '\{\{ viewId \}\}' }}
+              &lt;/button&gt;
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code title
+    template(#content)
+      p Customizes the title display in the calendar header. This slot is ignored if the header slot is used.
+      p Available parameters:
+      p This slot receives the full view object which contains:
+      ul
+        li #[code.base-color title] - The formatted title string for the current view
+        li #[code.base-color id] - The ID of the current view (e.g., 'day', 'week', 'month')
+        li #[code.base-color start] - The start date of the view
+        li #[code.base-color end] - The end date of the view
+        li View-specific flags like #[code.base-color isDay], #[code.base-color isWeek], etc.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #title="view"&gt;
+          &lt;code&gt;{{ '\{\{ view.title \}\}' }}&lt;/code&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code previous-button
+    template(#content)
+      p Customizes the previous navigation button. This slot is ignored if the header slot is used.
+      p Example:
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #previous-button&gt;
+          &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code next-button
+    template(#content)
+      p Customizes the next navigation button. This slot is ignored if the header slot is used.
+      p Example:
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #next-button&gt;
+          &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code today-button
+    template(#content)
+      p Customizes the "Today" button. This slot is ignored if the header slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color navigate] - A function to navigate to today's date
+        li #[code.base-color active] - Boolean indicating if the current view already contains today
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #today-button="{ navigate, active }"&gt;
+          &lt;button @click="navigate" :disabled="active" class="custom-today-btn"&gt;
+            Today
+          &lt;/button&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code weekday-heading
+    template(#content)
+      p Customizes the weekday headings in day, days, week, and month views.
+      p Available parameters:
+      ul
+        li #[code.base-color label] - The day label (varies based on calendar size - full, abbreviated, or single letter)
+        li #[code.base-color id] - The day identifier (mon, tue, wed, etc.)
+        li #[code.base-color date] - The date of this particular day
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #weekday-heading="{ label, id, date }"&gt;
+          &lt;strong :class="id"&gt;{{ '\{\{ label \}\}' }}&lt;/strong&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code schedule-heading
+    template(#content)
+      p Customizes the schedule headings when schedules are enabled.
+      p Available parameters:
+      ul
+        li #[code.base-color schedule] - The schedule object containing id, label, and class
+        li #[code.base-color view] - The current view object
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #schedule-heading="{ schedule, view }"&gt;
+          &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
+          &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code time-cell
+    template(#content)
+      p Customizes the time column cells in views that display time (day, days, week).
+      p Available parameters:
+      ul
+        li #[code.base-color index] - The index of the time cell
+        li #[code.base-color minutes] - Minutes component of the time (0-59)
+        li #[code.base-color hours] - Hours component of the time (0-23)
+        li #[code.base-color minutesSum] - The total time in minutes
+        li #[code.base-color format12] - Formatted 12-hour time string (e.g., "7am")
+        li #[code.base-color format24] - Formatted 24-hour time string (e.g., "07:00")
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #time-cell="{ format24, format12 }"&gt;
+          &lt;strong&gt;{{ '\{\{ format24 \}\}' }}&lt;/strong&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code week-number-cell
+    template(#content)
+      p Customizes the week number cells when the weekNumbers option is enabled.
+      p By default, this slot has no parameters and simply displays the week number.
+      p Example:
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #week-number-cell&gt;
+          &lt;span class="custom-week-number"&gt;W{{ '\{\{ weekNumber \}\}' }}&lt;/span&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code cell
+    template(#content)
+      p Completely customizes a calendar cell. This is a powerful slot that replaces the entire cell content.
+      p Available parameters:
+      ul
+        li #[code.base-color cell] - The cell object containing date information and events
+      p The cell object contains:
+      ul
+        li #[code.base-color start] - Start date and time of the cell
+        li #[code.base-color end] - End date and time of the cell
+        li #[code.base-color events] - Array of events in this cell
+        li #[code.base-color formattedDate] - Formatted date string
+        li #[code.base-color view] - The current view object
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #cell="{ cell }"&gt;
+          &lt;div class="custom-cell"&gt;
+            &lt;div class="date"&gt;{{ '\{\{ cell.formattedDate \}\}' }}&lt;/div&gt;
+            &lt;div v-for="event in cell.events" class="event"&gt;
+              {{ '\{\{ event.title \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code cell-date
+    template(#content)
+      p Customizes the date display in a calendar cell. This slot is ignored if the cell slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color cell] - The cell object with all its properties
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #cell-date="{ cell }"&gt;
+          &lt;div class="custom-date-display"&gt;{{ '\{\{ cell.formattedDate \}\}' }}&lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code cell-content
+    template(#content)
+      p Customizes additional content in a calendar cell. This slot is ignored if the cell slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color cell] - The cell object with all its properties
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #cell-content="{ cell }"&gt;
+          &lt;div class="custom-content"&gt;
+            &lt;i class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code cell-events
+    template(#content)
+      p Customizes how events are displayed within a cell. This slot is ignored if the cell slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color cell] - The cell object containing the events array
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #cell-events="{ cell }"&gt;
+          &lt;div v-for="event in cell.events" class="custom-event"&gt;
+            {{ '\{\{ event.title \}\}' }} ({{ '\{\{ event.start.formatTime() \}\}' }})
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code event
+    template(#content)
+      p Customizes the display of individual events. This slot is ignored if the cell-events slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color event] - The full event object
+      p This allows you to access any custom properties you've added to your events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event="{ event }"&gt;
+          &lt;div class="custom-event-content"&gt;
+            &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
+            &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;
+            &lt;div v-if="event.location" class="location"&gt;
+              &lt;i class="mdi mdi-map-marker"&gt;&lt;/i&gt; {{ '\{\{ event.location \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      code event-count
+    template(#content)
+      p Customizes the event count display when the eventCount option is enabled.
+      p Available parameters:
+      ul
+        li #[code.base-color events] - Array of events in the cell
+      p This allows you to modify how events are counted or displayed, such as counting only specific types of events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event-count="{ events }"&gt;
+          &lt;div v-if="events.length" class="custom-events-count"&gt;
+            {{ '\{\{ events.filter(e => e.class === \'important\').length \}\}' }} important
+            /
+            {{ '\{\{ events.length \}\}' }} total
+          &lt;/div&gt;
+        &lt;/template&gt;
 </template>
 
 <script setup>
@@ -1264,7 +1518,7 @@ const expandedViewObject = ref(Array(10).fill(false))
 const expandedEventObject = ref(Array(15).fill(false))
 const expandedOptions = ref(Array(99).fill(false))
 const expandedEmittedEvents = ref(Array(50).fill(false))
-const expandedSlots = ref(Array(30).fill(false))
+const expandedSlots = ref(Array(50).fill(false))
 </script>
 
 <style lang="scss">
