@@ -120,6 +120,12 @@ ul
     #[code .vuecal__event--ghost] (as commonly named), and #[code .vuecal__event--static]
     was renamed #[code .vuecal__event--original]
 
+title-link(h2 anchor="slots-changes") Slots Changes
+p Many slots payload have changed for more consistency and increased flexibility.
+p.
+  If some of your existing slots don't work as expected from V4, you should, review the list of slots
+  and their payloads in the #[router-link(to="/documentation/api#slots") API documentation page].
+
 title-link(h2 anchor="props-changes") Props Changes
 ul
   li #[code activeView] was renamed #[code view].

@@ -24,6 +24,7 @@ alert
 //- Example.
 example(title="Simple Slots" anchor="slots")
   template(#desc)
+    .todo-tag.d-iflex UPDATE THE EXAMPLE SOURCE CODE
     p.
       Vue Cal is designed to be as flexible and customizable as possible, offering a variety of slots to
       help you go beyond the standard features and tailor it to your needs.#[br]
@@ -249,7 +250,11 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
             start: {Date}, // JavaScript Date object.
             end: {Date}, // JavaScript Date object.
             formattedDate: {String}, // formatted start date. E.g. "2019-04-05".
-            today: {Boolean}
+            today: {Boolean}, // Whether the cell is today.
+            broader: {Function}, // Function to navigate to broader view if possible.
+            narrower: {Function}, // Function to navigate to narrower view if possible.
+            broaderView: {String}, // String containing the broader view ID.
+            narrowerView: {String}, // String containing the narrower view ID.
           }
       li #[span.code view], object containing the active view info.
         ssh-pre(language="js" :dark="store.darkMode").mt2.mb2.
