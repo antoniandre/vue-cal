@@ -188,71 +188,71 @@ w-accordion.mt3(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
-      strong.code start
+      strong.code.title5 start
       .type [Date]
       w-tag.error--bg.ml1(round sm) REQUIRED
     template(#content) The start date and time of the event, given as a JavaScript Date.
   w-accordion-item
     template(#title)
-      strong.code end
+      strong.code.title5 end
       .type [Date]
       w-tag.error--bg.ml1(round sm) REQUIRED
     template(#content) The end date and time of the event, given as a JavaScript Date.
   w-accordion-item
     template(#title)
-      strong.code id
+      strong.code.title5 id
       .type [String]
     template(#content) The unique identifier of the event. If not provided, it will be internally identified by the key #[span.code _.id].
   w-accordion-item
     template(#title)
-      strong.code title
+      strong.code.title5 title
       .type [String]
     template(#content) The title of the event. If not provided, no title will be displayed.
   w-accordion-item
     template(#title)
-      strong.code draggable
+      strong.code.title5 draggable
       .type [Boolean]
     template(#content) Indicates if this specific event can be dragged and dropped. This property overrides the global setting.
   w-accordion-item
     template(#title)
-      strong.code resizable
+      strong.code.title5 resizable
       .type [Boolean]
     template(#content) Indicates if this specific event can be resized. This property overrides the global setting.
   w-accordion-item
     template(#title)
-      strong.code deletable
+      strong.code.title5 deletable
       .type [Boolean]
     template(#content) Indicates if this specific event can be deleted. This property overrides the global setting.
   w-accordion-item
     template(#title)
-      strong.code allDay
+      strong.code.title5 allDay
       .type [Boolean]
       w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content) Indicates if the event is an all-day event.
   w-accordion-item
     template(#title)
-      strong.code background
+      strong.code.title5 background
       .type [Boolean]
     template(#content) Indicates if the event is a background event (allows no user interaction).
   w-accordion-item
     template(#title)
-      strong.code schedule
+      strong.code.title5 schedule
       .type [Number]
     template(#content) The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
   w-accordion-item
     template(#title)
-      strong.code recurring
+      strong.code.title5 recurring
       .type [Number]
       w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content) Indicates if the event is recurring and its recurrence rule.
   w-accordion-item
     template(#title)
-      strong.code class
+      strong.code.title5 class
       .type [String]
     template(#content) The CSS class of the event.
   w-accordion-item
     template(#title)
-      strong.code _
+      strong.code.title5 _
       .type [Object]
     template(#content)
       p.
@@ -292,7 +292,7 @@ w-accordion.mt2(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
-      strong.code allDayEvents
+      strong.code.title5 allDayEvents
       .type [Boolean, String]
       | ,
       .body.grey.mx1 default:
@@ -320,7 +320,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code clickToNavigate
+      strong.code.title5 clickToNavigate
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -337,7 +337,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code dark
+      strong.code.title5 dark
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -347,7 +347,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code datePicker
+      strong.code.title5 datePicker
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -360,7 +360,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code disableDays
+      strong.code.title5 disableDays
       .type [Array]
       | ,
       .body.grey.mx1 default:
@@ -370,7 +370,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code editableEvents
+      strong.code.title5 editableEvents
       .type [Boolean, Object]
       | ,
       .body.grey.mx1 default:
@@ -394,7 +394,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code eventCount
+      strong.code.title5 eventCount
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -406,7 +406,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code events
+      strong.code.title5 events
       .type [Array]
       | ,
       .body.grey.mx1 default:
@@ -477,7 +477,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code eventCreateMinDrag
+      strong.code.title5 eventCreateMinDrag
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -491,7 +491,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code eventsOnMonthView
+      strong.code.title5 eventsOnMonthView
       .type [Boolean, String]
       | ,
       .body.grey.mx1 default:
@@ -504,7 +504,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code hideWeekdays
+      strong.code.title5 hideWeekdays
       .type [Array]
       | ,
       .body.grey.mx1 default:
@@ -515,7 +515,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code hideWeekends
+      strong.code.title5 hideWeekends
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -525,7 +525,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code locale
+      strong.code.title5 locale
       .type [String]
       | ,
       .body.grey.mx1 default:
@@ -573,7 +573,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code maxDate
+      strong.code.title5 maxDate
       .type [String, Date]
       | ,
       .body.grey.mx1 default:
@@ -587,7 +587,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code minDate
+      strong.code.title5 minDate
       .type [String, Date]
       | ,
       .body.grey.mx1 default:
@@ -600,7 +600,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code selectedDate
+      strong.code.title5 selectedDate
       .type [String, Date]
       | ,
       .body.grey.mx1 default:
@@ -614,7 +614,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code sm
+      strong.code.title5 sm
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -629,7 +629,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code specialHours
+      strong.code.title5 specialHours
       .type [Object]
       | ,
       .body.grey.mx1 default:
@@ -668,7 +668,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code schedules
+      strong.code.title5 schedules
       .type [Array]
       | ,
       .body.grey.mx1 default:
@@ -688,7 +688,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code snapToInterval
+      strong.code.title5 snapToInterval
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -702,7 +702,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code startWeekOnSunday
+      strong.code.title5 startWeekOnSunday
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -712,7 +712,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code theme
+      strong.code.title5 theme
       .type [String, Boolean]
       | ,
       .body.grey.mx1 default:
@@ -722,7 +722,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code time
+      strong.code.title5 time
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -734,7 +734,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code timeCellHeight
+      strong.code.title5 timeCellHeight
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -744,7 +744,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code timeFormat
+      strong.code.title5 timeFormat
       .type [String]
       | ,
       .body.grey.mx1 default:
@@ -768,7 +768,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code timeFrom
+      strong.code.title5 timeFrom
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -780,7 +780,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code timeStep
+      strong.code.title5 timeStep
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -792,7 +792,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code timeTo
+      strong.code.title5 timeTo
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -804,7 +804,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code titleBar
+      strong.code.title5 titleBar
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -814,7 +814,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code todayButton
+      strong.code.title5 todayButton
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -824,7 +824,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code twelveHour
+      strong.code.title5 twelveHour
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -836,7 +836,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code view
+      strong.code.title5 view
       .type [String]
       | ,
       .body.grey.mx1 default:
@@ -850,7 +850,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code viewDate
+      strong.code.title5 viewDate
       .type [String, Date]
       | ,
       .body.grey.mx1 default:
@@ -860,7 +860,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code viewDayOffset
+      strong.code.title5 viewDayOffset
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -870,7 +870,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code views
+      strong.code.title5 views
       .type [Array, Object]
       | ,
       .body.grey.mx1 default:
@@ -894,7 +894,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code viewsBar
+      strong.code.title5 viewsBar
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -904,7 +904,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code watchRealTime
+      strong.code.title5 watchRealTime
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -918,7 +918,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code weekNumbers
+      strong.code.title5 weekNumbers
       .type [Boolean, String]
       | ,
       .body.grey.mx1 default:
@@ -937,7 +937,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
-      strong.code xs
+      strong.code.title5 xs
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -953,7 +953,7 @@ w-accordion.mt2(
   //- TO DO LATER.
   //- w-accordion-item
     template(#title)
-      strong.code minEventWidth
+      strong.code.title5 minEventWidth
       .type [Number]
       | ,
       .body.grey.mx1 default:
@@ -965,7 +965,7 @@ w-accordion.mt2(
 
   //- w-accordion-item
     template(#title)
-      strong.code overlapsPerTimeStep
+      strong.code.title5 overlapsPerTimeStep
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -978,7 +978,7 @@ w-accordion.mt2(
 
   //- w-accordion-item
     template(#title)
-      strong.code resizeX
+      strong.code.title5 resizeX
       .type [Boolean]
       | ,
       .body.grey.mx1 default:
@@ -1000,7 +1000,7 @@ w-accordion(
   h5.mt2.base-color Core Events
   w-accordion-item
     template(#title)
-      code ready
+      strong.code.title5 ready
     template(#content)
       p Fired as soon as Vue Cal is mounted in the DOM and ready.
       p Returns an object containing:
@@ -1009,7 +1009,7 @@ w-accordion(
         li #[code view]: The Vue Cal view object.
   w-accordion-item
     template(#title)
-      code view-change
+      strong.code.title5 view-change
     template(#content)
       p Fired on every view change, navigation, or when events are added/removed.
       p Returns an object containing:
@@ -1029,25 +1029,25 @@ w-accordion(
         li View-specific flags: #[code isDay], #[code isDays], #[code isWeek], #[code isMonth], #[code isYear], #[code isYears]
   w-accordion-item
     template(#title)
-      code update:view
+      strong.code.title5 update:view
     template(#content)
       p Fired when the view changes. Part of v-model binding for the view property.
       p Returns: #[code {String}] The ID of the current view (e.g. 'day', 'week', 'month', etc.)
   w-accordion-item
     template(#title)
-      code update:selectedDate
+      strong.code.title5 update:selectedDate
     template(#content)
       p Fired when a date is selected in the calendar. Part of v-model binding for the selectedDate property.
       p Returns: #[code {Date}] The selected date as a JavaScript Date object.
   w-accordion-item
     template(#title)
-      code update:viewDate
+      strong.code.title5 update:viewDate
     template(#content)
       p Fired when the view date changes (e.g., when navigating to different dates). Part of v-model binding for the viewDate property.
       p Returns: #[code {Date}] The new view date as a JavaScript Date object.
   w-accordion-item
     template(#title)
-      code update:events
+      strong.code.title5 update:events
     template(#content)
       p Fired when events are created, modified, or deleted. Part of v-model binding for the events property.
       p Returns: #[code {Array}] The updated array of calendar events.
@@ -1055,31 +1055,31 @@ w-accordion(
   h5.mt2.base-color Cell-related Events
   w-accordion-item
     template(#title)
-      code cell-*
+      strong.code.title5 cell-*
     template(#content)
       p Vue Cal forwards any DOM event on cells, where * can be any valid DOM event name.
       p Returns: The native event object plus cell date information.
   w-accordion-item
     template(#title)
-      code cell-drag-start
+      strong.code.title5 cell-drag-start
     template(#content)
       p Fired when starting to drag on a cell (when creating events by dragging).
       p Returns: #[code {Date}] The cell's date with time at cursor position.
   w-accordion-item
     template(#title)
-      code cell-drag
+      strong.code.title5 cell-drag
     template(#content)
       p Fired continuously while dragging on cells (when creating events by dragging).
       p Returns: #[code {Date}] The current cell's date with time at cursor position.
   w-accordion-item
     template(#title)
-      code cell-drag-end
+      strong.code.title5 cell-drag-end
     template(#content)
       p Fired when ending a drag on cells (when creating events by dragging).
       p Returns: #[code {Date}] The final cell's date with time at cursor position.
   w-accordion-item
     template(#title)
-      code cell-hold
+      strong.code.title5 cell-hold
     template(#content)
       p Fired when a cell is clicked and held for a specific duration.
       p Returns: #[code {Date}] The cell's date.
@@ -1087,25 +1087,25 @@ w-accordion(
   h5.mt2.base-color Event-related Events
   w-accordion-item
     template(#title)
-      code event-*
+      strong.code.title5 event-*
     template(#content)
       p Vue Cal forwards any DOM event on events, where * can be any valid DOM event name.
       p Returns: The native event object plus the calendar event object.
   w-accordion-item
     template(#title)
-      code event-hold
+      strong.code.title5 event-hold
     template(#content)
       p Fired when an event is clicked and held for a specific duration.
       p Returns: #[code {Object}] The associated calendar event object.
   w-accordion-item
     template(#title)
-      code event-create
+      strong.code.title5 event-create
     template(#content)
       p Fired when an event is created via drag creation or programmatically via the Vue Cal #[code view.createEvent()] method.
       p Returns: #[code {Object}] The newly created calendar event object.
   w-accordion-item
     template(#title)
-      code event-created
+      strong.code.title5 event-created
     template(#content)
       p Fired after an event has been created and its DOM node has been mounted. Useful for UI operations like scrolling to the new event.
       p Example use:
@@ -1114,31 +1114,31 @@ w-accordion(
       p Returns: #[code {Object}] The created calendar event object with its DOM node reference accessible via #[code event._.$el].
   w-accordion-item
     template(#title)
-      code event-delete
+      strong.code.title5 event-delete
     template(#content)
       p Fired when an event is being deleted.
       p Returns: #[code {Object}] The calendar event object being deleted.
   w-accordion-item
     template(#title)
-      code event-drag-start
+      strong.code.title5 event-drag-start
     template(#content)
       p Fired when starting to drag an existing event.
       p Returns: #[code {Object}] The calendar event object with current cursor position information.
   w-accordion-item
     template(#title)
-      code event-drag
+      strong.code.title5 event-drag
     template(#content)
       p Fired continuously while dragging an event.
       p Returns: #[code {Object}] The calendar event object with current cursor position information.
   w-accordion-item
     template(#title)
-      code event-drag-end
+      strong.code.title5 event-drag-end
     template(#content)
       p Fired when ending the drag of an event.
       p Returns: #[code {Object}] The calendar event object with final position information.
   w-accordion-item
     template(#title)
-      code event-resize-start
+      strong.code.title5 event-resize-start
     template(#content)
       p Fired when starting to resize an event.
       p Returns an object containing:
@@ -1147,7 +1147,7 @@ w-accordion(
         li #[code event]: The calendar event object being resized.
   w-accordion-item
     template(#title)
-      code event-resize
+      strong.code.title5 event-resize
     template(#content)
       p Fired repeatedly while resizing an event.
       p.grey For performance reasons, returns a lighter object containing:
@@ -1160,7 +1160,7 @@ w-accordion(
         listen to #[code event-resize-end] instead (fired only once at the end of the resizing).
   w-accordion-item
     template(#title)
-      code event-resize-end
+      strong.code.title5 event-resize-end
     template(#content)
       p Fired when the event resizing is ended.
       p Returns an object containing:
@@ -1172,7 +1172,7 @@ w-accordion(
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
   w-accordion-item
     template(#title)
-      code event-drop
+      strong.code.title5 event-drop
     template(#content)
       p.
         Fired as soon as the event is dropped. If there is a listener, it must return true or false to
@@ -1235,26 +1235,37 @@ w-accordion(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
-      code diy
+      strong.code.title5 diy
     template(#content)
       p The "Do It Yourself" slot allows complete customization of the calendar. When this slot is used, the default calendar structure is replaced entirely by your custom content.
       p This is useful for creating entirely custom calendar interfaces while still utilizing Vue Cal's core functionality.
       p Available parameters:
       ul
-        li #[code.base-color vuecal] - The core Vue Cal object with all methods and properties
-        li #[code.base-color view] - The current view object with all its properties
-        li #[code.base-color available-views] - An object containing all the available views
+        li
+          | #[code.base-color vuecal] - The core Vue Cal object with all methods and properties.
+          p The core Vue Cal object contains:
+          ul
+            li #[code.base-color available-views] - An object containing all the available views
+            li #[code.base-color config] - The calendar configuration object
+            li #[code.base-color dateUtils] - The date utilities methods
+            li #[code.base-color eventsManager] - The events manager object containing the events array and methods to manipulate it
+            li #[code.base-color dnd] - The drag and drop manager object
+            li #[code.base-color now] - The current date
+            li #[code.base-color texts] - The localized texts
+            li #[code.base-color touch] - The gestures and interactions manager object
+            li #[code.base-color uid] - The unique identifier of the calendar instance
+            li #[code.base-color view] - The current view object with all its properties
 
   w-accordion-item
     template(#title)
-      code header
+      strong.code.title5 header
     template(#content)
       p Allows complete customization of the calendar's header section, replacing the title bar and views bar.
       p Available parameters:
       ul
         li #[code.base-color view] - The current view object
         li #[code.base-color available-views] - An object containing all the available views
-        li #[code.base-color vuecal] - The core Vue Cal object with all methods and properties
+        li #[code.base-color vuecal] - If you really need more, the Vue Cal object contains everything
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #header="{ view, availableViews, vuecal }"&gt;
           &lt;div class="custom-header"&gt;
@@ -1272,11 +1283,11 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code title
+      strong.code.title5 title
     template(#content)
       p Customizes the title display in the calendar header. This slot is ignored if the header slot is used.
       p Available parameters:
-      p This slot receives the full view object which contains:
+      p This slot receives the full #[code.base-color view] object which contains:
       ul
         li #[code.base-color title] - The formatted title string for the current view
         li #[code.base-color id] - The ID of the current view (e.g., 'day', 'week', 'month')
@@ -1290,7 +1301,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code previous-button
+      strong.code.title5 previous-button
     template(#content)
       p Customizes the previous navigation button. This slot is ignored if the header slot is used.
       p Example:
@@ -1301,7 +1312,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code next-button
+      strong.code.title5 next-button
     template(#content)
       p Customizes the next navigation button. This slot is ignored if the header slot is used.
       p Example:
@@ -1312,7 +1323,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code today-button
+      strong.code.title5 today-button
     template(#content)
       p Customizes the "Today" button. This slot is ignored if the header slot is used.
       p Available parameters:
@@ -1328,7 +1339,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code weekday-heading
+      strong.code.title5 weekday-heading
     template(#content)
       p Customizes the weekday headings in day, days, week, and month views.
       p Available parameters:
@@ -1343,7 +1354,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code schedule-heading
+      strong.code.title5 schedule-heading
     template(#content)
       p Customizes the schedule headings when schedules are enabled.
       p Available parameters:
@@ -1358,7 +1369,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code time-cell
+      strong.code.title5 time-cell
     template(#content)
       p Customizes the time column cells in views that display time (day, days, week).
       p Available parameters:
@@ -1376,7 +1387,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code week-number-cell
+      strong.code.title5 week-number-cell
     template(#content)
       p Customizes the week number cells when the weekNumbers option is enabled.
       p By default, this slot has no parameters and simply displays the week number.
@@ -1388,7 +1399,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code cell
+      strong.code.title5 cell
     template(#content)
       p Completely customizes a calendar cell. This is a powerful slot that replaces the entire cell content.
       p Available parameters:
@@ -1413,7 +1424,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code cell-date
+      strong.code.title5 cell-date
     template(#content)
       p Customizes the date display in a calendar cell. This slot is ignored if the cell slot is used.
       p Available parameters:
@@ -1426,7 +1437,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code cell-content
+      strong.code.title5 cell-content
     template(#content)
       p Customizes additional content in a calendar cell. This slot is ignored if the cell slot is used.
       p Available parameters:
@@ -1441,7 +1452,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code cell-events
+      strong.code.title5 cell-events
     template(#content)
       p Customizes how events are displayed within a cell. This slot is ignored if the cell slot is used.
       p Available parameters:
@@ -1456,7 +1467,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code event
+      strong.code.title5 event
     template(#content)
       p Customizes the display of individual events. This slot is ignored if the cell-events slot is used.
       p Available parameters:
@@ -1476,7 +1487,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
-      code event-count
+      strong.code.title5 event-count
     template(#content)
       p Customizes the event count display when the eventCount option is enabled.
       p Available parameters:
