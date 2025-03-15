@@ -1,11 +1,10 @@
 <template lang="pug">
-top-bar(v-if="$route.name !== 'home'" fixed)
-
+top-bar(v-if="routeReady && $route.name !== 'home'" fixed)
 .page.w-flex.grow.page-container(
   :class="`page--${$route.name}`"
   v-scroll="onScroll"
   v-bind="$attrs")
-  aside(v-if="!['test', 'home'].includes($route.name)")
+  aside(v-if="routeReady && !['test', 'home'].includes($route.name)" :class="{ hide: $route.name === 'examples' }")
     nav.nav.mb12
       ul
         li(v-for="item in navItems" :key="item.path")
@@ -46,7 +45,7 @@ top-bar(v-if="$route.name !== 'home'" fixed)
         round
         xl)
 
-footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4
+footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4(v-if="routeReady")
   .w-flex.text-center.smu-text-left.copyright.align-end
     | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
   .made-with.text-right.smd-text-center.no-grow
@@ -88,6 +87,8 @@ const goTopHidden = ref(true)
 const dataStreamStyle = ref({})
 const resetAnimation = ref(false)
 const animationKey = ref(0)
+const routeReady = ref(false)
+
 const navItems = ref([
   { title: 'Getting Started', path: '/getting-started' },
   { title: 'API', path: '/api' },
@@ -143,7 +144,10 @@ watch(() => route.path, () => {
   }, 100)
 })
 
-onMounted(() => updateDataStreamPosition()) // Initial position update.
+onMounted(() => {
+  updateDataStreamPosition() // Initial position update.
+  setTimeout(() => (routeReady.value = true), 150)
+})
 
 const scrollToTop = () => document.querySelector('#top').scrollIntoView()
 
