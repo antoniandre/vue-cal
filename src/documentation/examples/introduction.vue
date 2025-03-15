@@ -220,6 +220,7 @@ main.main--examples-intro {
     transition: transform 1.3s ease, opacity 0.3s ease;
     gap: 12px;
     line-height: 1;
+    text-align: center;
 
     .w-icon {
       width: 3rem;
