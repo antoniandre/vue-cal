@@ -139,6 +139,101 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
     &lt;/vue-cal&gt;
 
 //- Example.
+example(title="Loading Events from a Backend" anchor="loading-events-backend")
+  template(#desc)
+    p.
+      Vue Cal can easily load events from a backend service whenever the view changes.
+      This is particularly useful when dealing with large datasets or remote data sources.#[br]
+      In this example, we'll simulate loading events from a backend by generating random events
+      for the current view's date range.
+    p.mb2.
+      The key to this approach is listening to the #[span.code @view-change] event, which provides
+      the current view's start and end dates. We can then fetch events that fall within this date range.
+
+  template(#code-html).
+    &lt;vue-cal
+      :events="events"
+      @view-change="onViewChange"&gt;
+    &lt;/vue-cal&gt;
+
+  template(#code-js).
+    import { ref } from 'vue'
+    import { stringToDate, countDays } from 'vue-cal'
+
+    const events = ref([])
+
+    // This function is called whenever the calendar view changes.
+    const onViewChange = view => {
+      // `.format()` is an added Date prototype by vue-cal.
+      fetchEvents(view.start.format(), view.end.format())
+    }
+
+    // Fetch events from a backend for the given date range.
+    const fetchEvents = async (start, end) => {
+      // In a real application, you would make an API call here.
+      // For this example, we're simulating a backend response with a delay.
+      console.log('Fetching events from', start, 'to', end)
+      await new Promise(resolve => setTimeout(resolve, 500))
+
+      const startDate = stringToDate(start)
+      const endDate = stringToDate(end)
+
+      // Generate random events for demonstration.
+      events.value = generateRandomEvents(startDate, endDate)
+    }
+
+    // Generate random events for a date range (simulating backend data).
+    const generateRandomEvents = (startDate, endDate) => {
+      const daysRange = countDays(startDate, endDate)
+      const events = []
+
+      for (let i = 0; i < daysRange; i++) {
+        // Create 2-3 random events per day.
+        const eventsPerDay = Math.floor(Math.random() * 2) + 2
+
+        for (let j = 0; j < eventsPerDay; j++) {
+          // Random time between 9am and 5pm, events last 1 hour
+          const hourStart = Math.floor(Math.random() * 8) + 9
+          const minuteStart = Math.floor(Math.random() * 60)
+
+          const start = new Date(startDate.addDays(i).setHours(hourStart, minuteStart, 0, 0))
+          const end = new Date(start.getTime() + 60 * 60 * 1000) // 1 hour later
+
+          events.push({
+            title: `Event ${j+1}`,
+            start,
+            end,
+            class: ['health', 'sport', 'leisure'][Math.floor(Math.random() * 3)]
+          })
+        }
+      }
+
+      return events
+    }
+
+  template(#desc2)
+    p.mb2.
+      In the example below, try navigating between different views (day, week, month) and observe
+      how new events are loaded for each view. In a real application, you would replace the
+      #[span.code generateRandomEvents] function with an actual API call to your backend.
+
+    .example.mt2.mb2.mxa
+      vue-cal(
+        :dark="store.darkMode"
+        :time-from="9 * 60"
+        :time-to="19 * 60"
+        :views="['day', 'week', 'month']"
+        :events="exBackendEvents.events"
+        @view-change="exBackendEvents.onViewChange"
+        :style="{ height: '500px' }")
+
+      .mt2.mb2.mxa.text-center.px2
+        w-alert(info xs border-left)
+          | Loading status:
+          span.font-weight-bold(v-if="exBackendEvents.loading") Loading events...
+          span.font-weight-bold(v-else) {{ exBackendEvents.events.length }} events loaded
+
+//- Example.
 example(title="External Controls & use of Vue Cal Methods" anchor="external-controls")
   template(#desc)
     p.
@@ -293,7 +388,7 @@ example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
 <script setup>
 import { computed, nextTick, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal, stringToDate } from '@/vue-cal'
+import { VueCal, stringToDate, countDays } from '@/vue-cal'
 
 const store = useAppStore()
 const view = ref('week')
@@ -412,6 +507,53 @@ const exSyncTwoCalendars = reactive({
   selectedDate: ref(null),
   viewDate: ref(null)
 })
+
+const exBackendEvents = reactive({
+  loading: false,
+  events: [],
+  onViewChange: view => {
+    exBackendEvents.loading = true
+    // Simulate fetching events from a backend for the given formatted date range
+    // and return the events with a delay.
+    fetchEvents(view.start.format(), view.end.format())
+  }
+})
+
+/*
+ * Fetch events from a backend.
+ *
+ * @param {string} start - The start date.
+ * @param {string} end - The end date.
+ * @returns {Promise<void>}
+ */
+ const fetchEvents = async (start, end) => {
+  await new Promise(resolve => setTimeout(resolve, 500))
+  const startDate = stringToDate(start)
+  const endDate = stringToDate(end)
+  exBackendEvents.events = generateRandomEvents(startDate, endDate)
+}
+
+/*
+ * Generate random events for a given date range as if they were returned from a backend.
+ *
+ * @param {Date} startDate - The start date.
+ * @param {Date} endDate - The end date.
+ * @returns {Array} The events.
+ */
+const generateRandomEvents = (startDate, endDate) => {
+  const daysRange = countDays(startDate, endDate)
+  const events = []
+  for (let i = 0; i < daysRange; i++) {
+    for (let j = 0; j < 10; j++) {
+      // Set random start and end time in the day, events last 1 hour.
+      // The random start and end time is between 9am and 5pm.
+      const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
+      const end = start.addHours(1)
+      events.push({ title: `Event ${j}`, start, end })
+    }
+  }
+  return events
+}
 </script>
 
 <style lang="scss">
