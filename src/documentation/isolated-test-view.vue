@@ -32,6 +32,7 @@
       v-model:selected-date="mainVuecalConfig.selectedDate"
       v-model:view-date="mainVuecalConfig.viewDate"
       v-bind="mainVuecalConfig"
+      @view-change="onViewChange"
       @event-create="log('event-create', $event)"
       @event-click="log('event-click', $event)"
       @event-drag="log('event-drag', $event)"
@@ -45,7 +46,7 @@
 
 <script setup>
 import { ref, reactive, computed } from 'vue'
-import { VueCal, addDatePrototypes } from '@/vue-cal'
+import { VueCal, addDatePrototypes, stringToDate, countDays } from '@/vue-cal'
 import { useAppStore } from '@/store'
 
 addDatePrototypes()
@@ -70,8 +71,8 @@ const mainVuecalConfig = reactive({
   todayButton: ref(true),
   xs: ref(false),
   sm: ref(false),
-  // timeFrom: 7 * 60,
-  // timeTo: 20 * 60,
+  timeFrom: 8 * 60,
+  timeTo: 19 * 60,
   timeStep: 60,
   twelveHour: ref(false),
   hideWeekends: ref(false),
@@ -80,7 +81,7 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   events: ref([]),
-  schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
+  // schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
   eventsOnMonthView: true,
   // specialHours: {
   //   mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
@@ -134,6 +135,48 @@ const addEventFromVueCal = () => {
 }
 
 const log = (...args) => console.log(...args)
+
+const onViewChange = (view) => {
+  fetchEvents(view.start.format(), view.end.format())
+}
+
+/*
+ * Fetch events from a backend.
+ *
+ * @param {string} start - The start date.
+ * @param {string} end - The end date.
+ * @returns {Promise<void>}
+ */
+const fetchEvents = async (start, end) => {
+  console.log('fetchEvents', start, end)
+  await new Promise(resolve => setTimeout(resolve, 500))
+  const startDate = stringToDate(start)
+  const endDate = stringToDate(end)
+  mainVuecalConfig.events = generateRandomEvents(startDate, endDate)
+}
+
+/*
+ * Generate random events for a given date range as if they were returned from a backend.
+ *
+ * @param {Date} startDate - The start date.
+ * @param {Date} endDate - The end date.
+ * @returns {Array} The events.
+ */
+const generateRandomEvents = (startDate, endDate) => {
+  const daysRange = countDays(startDate, endDate)
+  const events = []
+  for (let i = 0; i < daysRange; i++) {
+    for (let j = 0; j < 10; j++) {
+      // Set random start and end time in the day, events last 1 hour.
+      // The random start and end time is between 9am and 5pm.
+      const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
+      const end = start.addHours(1)
+      events.push({ title: `Event ${j}`, start, end })
+    }
+  }
+  console.log('events', events)
+  return events
+}
 </script>
 
 <style lang="scss">
