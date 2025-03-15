@@ -72,11 +72,11 @@ export const useConfig = (vuecal, props, attrs) => {
     const kebabize = str => str.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase()
     // Forward any cell and calendar-events event listener attached to VueCal to the cell and event components.
     // For instance, convert vuecal.onCellMouseenter to cell.mouseenter.
-    Object.entries(attrs).forEach(([attr, value]) => {
+    for (const [attr, value] of Object.entries(attrs)) {
       const [m0, m1, m2] = attr.match(/^on(Cell|Event)(.+)$/) || []
       // Allow both camelCase and kebab-case for event handlers names, but store as kebab-case.
       if (m0) listeners[m1.toLowerCase()][kebabize(m2).replace(/^-+|-+$/g, '')] = value
-    })
+    }
 
     return listeners
   })
@@ -156,7 +156,7 @@ export const useConfig = (vuecal, props, attrs) => {
 
     const validDates = []
     if (Array.isArray(props.disableDays)) {
-      props.disableDays.forEach(date => {
+      for (let date of props.disableDays) {
         let jsDate = date
         if (typeof date === 'string') jsDate = dateUtils.stringToDate(date)
         else if (date instanceof Date) date = dateUtils.formatDate(date, 'YYYY-MM-DD')
@@ -165,8 +165,8 @@ export const useConfig = (vuecal, props, attrs) => {
           validDates.push(date)
           return
         }
-        else console.warn('Vue Cal: The provided `disableDays` prop contains an invalid date:', date)
-      })
+        console.warn('Vue Cal: The provided `disableDays` prop contains an invalid date:', date)
+      }
     }
     else console.warn('Vue Cal: The provided `disableDays` prop is invalid:', props.disableDays)
 

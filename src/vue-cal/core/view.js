@@ -9,7 +9,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // ------------------------------------------------------
   // Preset at now date on load, but updated every minute if watchRealTime,
   // or updated at least on each cells rerender, in order to keep Today's date accurate.
-  let now = ref(new Date())
+  const now = ref(new Date())
 
   // The view date is the one given in prop. It can be any date within the view that will be
   // computed around it - not necessarily the first day of the view range.
@@ -36,7 +36,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
 
   const extendedStart = computed(() => {
     if (viewId.value === 'week') return dateUtils.getPreviousFirstDayOfWeek(firstCellDate.value, config.startWeekOnSunday)
-    else if (viewId.value === 'month') return firstCellDate.value
+    if (viewId.value === 'month') return firstCellDate.value
     return start.value
   })
   const extendedEnd = computed(() => {
@@ -45,7 +45,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
       endWeek.setMilliseconds(-1)
       return endWeek
     }
-    else if (viewId.value === 'month') return lastCellDate.value
+    if (viewId.value === 'month') return lastCellDate.value
     return end.value
   })
 
@@ -112,7 +112,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
       if (config.viewDayOffset) weekday -= config.viewDayOffset
       return dateUtils.subtractDays(startTheoretical.value, weekday - 1)
     }
-    else if (viewId.value === 'week') {
+    if (viewId.value === 'week') {
       const visibleDays = '1234567'.split('').filter(day => !Object.keys(config.hideWeekdays).includes(day))
       let firstVisibleDay = Math.min(...visibleDays)
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) firstVisibleDay = 1
@@ -121,7 +121,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
       return dateUtils.addDays(startTheoretical.value, firstVisibleDay - 1)
     }
 
-    else return startTheoretical.value
+    return startTheoretical.value
   })
 
   // Generates an array of dates for each cell in the view: 1 cell = 1 date range [start, end].
@@ -246,18 +246,16 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     if (crossingYear) {
       // Different years.
       if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay}, ${startYear} - ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endDay}, ${endYear}`
-      else return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endYear}`
+      return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endYear}`
     }
-    else if (crossingMonth) {
+    if (crossingMonth) {
       // Same year, different months.
       if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay} - ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${endDay}, ${startYear}`
-      else return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${startYear}`
+      return `${startDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} - ${endDay} ${getMonthName(endMonth, monthsArray, shouldTruncate)} ${startYear}`
     }
-    else {
-      // Same month and year.
-      if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay}-${endDay}, ${startYear}`
-      else return `${startDay}-${endDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear}`
-    }
+    // Same month and year.
+    if (monthBeforeDay) return `${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startDay}-${endDay}, ${startYear}`
+    return `${startDay}-${endDay} ${getMonthName(startMonth, monthsArray, shouldTruncate)} ${startYear}`
   }
 
   const title = computed(() => {
@@ -490,13 +488,11 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   function updateSelectedDate (date, emitUpdate = true) {
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t update the selected date: invalid date provided to `updateSelectedDate(date)`.')
 
-    else {
-      const { isValid, isSameDate } = dateUtils
-      if (!selectedDate.value || !isValid(selectedDate.value) || !isSameDate(date, selectedDate.value)) {
-        date.setHours(0, 0, 0, 0)
+    const { isValid, isSameDate } = dateUtils
+    if (!selectedDate.value || !isValid(selectedDate.value) || !isSameDate(date, selectedDate.value)) {
+      date.setHours(0, 0, 0, 0)
         selectedDate.value = date
-        if (emitUpdate) emit('update:selectedDate', date)
-      }
+      if (emitUpdate) emit('update:selectedDate', date)
     }
   }
 
