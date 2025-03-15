@@ -24,7 +24,7 @@ export const useEvents = vuecal => {
     // higher z-index for readability when overlapping.
     const sortedEvents = config.events.sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
-    sortedEvents.forEach(event => {
+    for (const event of sortedEvents) {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
       normalizeEventDates(event)
 
@@ -89,7 +89,7 @@ export const useEvents = vuecal => {
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
         events.byDate[event._.startFormatted].push(event._.id)
       }
-    })
+    }
 
     return events
   })
@@ -143,11 +143,11 @@ export const useEvents = vuecal => {
   // Returns an object of cell events arrays indexed by the cell string date.
   const getViewEvents = cellDates => {
     const events = {}
-    cellDates.forEach(({ startFormatted }) => {
+    for (const { startFormatted } of cellDates) {
       events[startFormatted] = []
       const eventsByDate = getEventsByDate(startFormatted, false, true)
       if (eventsByDate.length) events[startFormatted].push(...eventsByDate)
-    })
+    }
     return events
   }
 
@@ -240,7 +240,7 @@ export const useEvents = vuecal => {
     const cellEvents = getEventsByDate(cellDate, true)
     if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
 
-    let cellOverlaps = {}
+    const cellOverlaps = {}
     let activeEvents = []
     // Overlaps streak is the longest horizontal set of simultaneous events.
     // This is determining the width of events in a streak.

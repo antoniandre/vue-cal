@@ -45,17 +45,15 @@ export const useConfig = (vuecal, props, attrs) => {
   const ready = false
   const view = computed(() => {
     if (availableViews.value[props.view]) return props.view
-    else {
-      const fallbackView = props.datePicker ? 'month' : 'week'
-      const view = props.view || fallbackView
-      if (availableViews.value[view]) return view
-      else {
-        console.warn(
-          `Vue Cal: the provided or default view \`${view}\` is either invalid or not in the list of available views.` +
-          ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
-        return Object.keys(availableViews.value)[0]
-      }
-    }
+
+    const fallbackView = props.datePicker ? 'month' : 'week'
+    const view = props.view || fallbackView
+    if (availableViews.value[view]) return view
+
+    console.warn(
+      `Vue Cal: the provided or default view \`${view}\` is either invalid or not in the list of available views.` +
+      ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
+    return Object.keys(availableViews.value)[0]
   })
   const sm = computed(() => props.sm && !props.xs)
   const xs = computed(() => props.xs || props.datePicker)
@@ -106,7 +104,7 @@ export const useConfig = (vuecal, props, attrs) => {
       year: { ...defaults.availableViews.year },
       years: { ...defaults.availableViews.years }
     }
-    else if (views) {
+    if (views) {
       if (Array.isArray(views)) {
         availViews = views.reduce((obj, view) => {
           if (typeof view === 'string' && defaults.availableViews[view]) obj[view] = defaults.availableViews[view]
@@ -139,14 +137,14 @@ export const useConfig = (vuecal, props, attrs) => {
 
   const defaultView = computed(() => {
     if (props.datePicker) return 'month'
-    else if (availableViews.value.week) return 'week'
-    else return Object.keys(availableViews.value)[0]
+    if (availableViews.value.week) return 'week'
+    return Object.keys(availableViews.value)[0]
   })
 
   const selectedDate = computed(() => {
     if (typeof props.selectedDate === 'string') return dateUtils.stringToDate(props.selectedDate)
-    else if (props.selectedDate instanceof Date) return props.selectedDate
-    else if (!props.selectedDate) console.log('Vue Cal: Info - The provided selected date is undefined.')
+    if (props.selectedDate instanceof Date) return props.selectedDate
+    if (!props.selectedDate) console.log('Vue Cal: Info - The provided selected date is undefined.')
     else console.warn('Vue Cal: The provided selected date is invalid:', props.selectedDate)
   })
 
@@ -210,7 +208,7 @@ export const useConfig = (vuecal, props, attrs) => {
       create: true
     }
     if (props.editableEvents === true) return defaults
-    else if (props.editableEvents === false) return Object.keys(defaults).map(key => defaults[key] = false)
+    if (props.editableEvents === false) return Object.keys(defaults).map(key => defaults[key] = false)
     return { ...defaults, ...props.editableEvents }
   })
 
