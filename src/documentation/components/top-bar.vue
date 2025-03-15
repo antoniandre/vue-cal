@@ -81,7 +81,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount, ref, computed, nextTick, watch } from 'vue'
+import { ref, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAppStore } from '@/store'
 import ExamplesMenu from './examples-menu.vue'
@@ -94,8 +94,6 @@ const store = useAppStore()
 const route = useRoute()
 const todayDate = ref((new Date()).getDate())
 const isProduction = import.meta.env.PROD
-
-const observer = ref(null) // Store observer reference for tracking page active sections.
 
 // Example sections for the menu.
 const docs = [
@@ -111,63 +109,6 @@ const docs = [
 
 // Compute version dynamically.
 const version = computed(() => process.env.VITE_APP_VERSION)
-
-async function initializeObserver () {
-  // Wait for DOM updates to ensure sections are available.
-  await nextTick()
-
-  // Cleanup previous observer if it exists.
-  if (observer.value) observer.value.disconnect()
-
-  const sections = document.querySelectorAll('[id^="ex--"]')
-
-  if (!sections.length) return console.info('No matching sections found in the DOM.')
-
-  const minThreshold = window.innerHeight * 0.01 // 1% of viewport height.
-  const maxThreshold = window.innerHeight * 0.47 // 47% of viewport height.
-
-  observer.value = new IntersectionObserver(entries => {
-    let topmostSection = null
-    let nextVisibleSection = null
-
-    entries.forEach(entry => {
-      const { top } = entry.boundingClientRect
-
-      // If section's top is between 1%-47% of viewport, consider it as the topmost candidate.
-      if ((top >= minThreshold && top <= maxThreshold) && (!topmostSection || top < topmostSection.top)) {
-        topmostSection = { id: entry.target.id, top }
-      }
-
-      // If section's top is between 0%-47% of viewport, consider it as the next visible section.
-      if ((top >= 0 && top <= maxThreshold) && (!nextVisibleSection || top < nextVisibleSection.top)) {
-        nextVisibleSection = { id: entry.target.id, top }
-      }
-    })
-
-    // Highlight the correct section:
-    // - If a section is within 1%-47%, highlight it.
-    // - Otherwise, highlight the next visible section (whose top is in 0%-47% of viewport).
-    if (topmostSection) store.activeSection = `#${topmostSection.id}`
-    else if (nextVisibleSection) store.activeSection = `#${nextVisibleSection.id}`
-  }, {
-    root: null, // Uses the viewport as the root.
-    threshold: 0.0, // Fires when any part of an element enters/exits the viewport.
-    rootMargin: '0% 0px -60%' // Set the detection range to 0%-40% (`top sides bottom`).
-  })
-
-  sections.forEach(section => observer.value.observe(section)) // Observe all sections.
-}
-
-// Reinitialize observer when route changes (page navigation).
-watch(() => route.name, initializeObserver)
-
-// Run observer setup on initial mount.
-onMounted(initializeObserver)
-
-// Cleanup on unmount.
-onBeforeUnmount(() => {
-  if (observer.value) observer.value.disconnect()
-})
 </script>
 
 <style lang="scss">

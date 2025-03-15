@@ -78,10 +78,13 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4(v-if="routeR
 <script setup>
 import { provide, ref, onMounted, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useAppStore } from '@/store'
+import { useSectionObserver } from '@/composables/section-observer'
 import TopBar from '@/documentation/components/top-bar.vue'
 import '@/scss/index.scss'
 
 const route = useRoute()
+const store = useAppStore()
 const offsetTop = ref(0)
 const goTopHidden = ref(true)
 const dataStreamStyle = ref({})
@@ -98,6 +101,11 @@ const navItems = ref([
   { title: 'Road Map', path: '/road-map' },
   { title: 'Release Notes', path: '/release-notes' }
 ])
+
+// Initialize section observer.
+useSectionObserver({
+  onSectionChange: section => (store.activeSection = section)
+})
 
 // Update data stream position.
 const updateDataStreamPosition = async () => {
