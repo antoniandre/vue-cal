@@ -65,6 +65,7 @@ const examples = [
 
   { class: 'heading', route: '/examples/dom-events', label:'DOM EVENTS', icon: 'mdi mdi-gesture-double-tap' },
   { route: { name: 'examples-dom-events', hash: '#ex--emitted-events' }, label: 'Vue Cal Emitted Events' },
+  { route: { name: 'examples-dom-events', hash: '#ex--loading-events-from-backend' }, label: 'Loading Events from a Backend' },
   { route: { name: 'examples-dom-events', hash: '#ex--external-controls' }, label: 'External Controls & View Methods' },
   { route: { name: 'examples-dom-events', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
 

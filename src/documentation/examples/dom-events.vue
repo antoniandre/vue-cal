@@ -139,7 +139,7 @@ example(title="Vue Cal Emitted Events" anchor="emitted-events")
     &lt;/vue-cal&gt;
 
 //- Example.
-example(title="Loading Events from a Backend" anchor="loading-events-backend")
+example(title="Loading Events from a Backend" anchor="loading-events-from-backend")
   template(#desc)
     p.
       Vue Cal can easily load events from a backend service whenever the view changes.
@@ -149,6 +149,10 @@ example(title="Loading Events from a Backend" anchor="loading-events-backend")
     p.mb2.
       The key to this approach is listening to the #[span.code @view-change] event, which provides
       the current view's start and end dates. We can then fetch events that fall within this date range.
+    p.mb2.
+      In the example below, try navigating between the weeks and observe how new events are loaded for
+      each week. In a real application, you would replace the #[span.code generateRandomEvents] function
+      with an actual API call to your backend.
 
   template(#code-html).
     &lt;vue-cal
@@ -186,6 +190,7 @@ example(title="Loading Events from a Backend" anchor="loading-events-backend")
     const generateRandomEvents = (startDate, endDate) => {
       const daysRange = countDays(startDate, endDate)
       const events = []
+      let eventNumber = 0
 
       for (let i = 0; i < daysRange; i++) {
         // Create 2-3 random events per day.
@@ -200,7 +205,7 @@ example(title="Loading Events from a Backend" anchor="loading-events-backend")
           const end = new Date(start.getTime() + 60 * 60 * 1000) // 1 hour later
 
           events.push({
-            title: `Event ${j+1}`,
+            title: `Event ${++eventNumber}`,
             start,
             end,
             class: ['health', 'sport', 'leisure'][Math.floor(Math.random() * 3)]
@@ -211,27 +216,21 @@ example(title="Loading Events from a Backend" anchor="loading-events-backend")
       return events
     }
 
-  template(#desc2)
-    p.mb2.
-      In the example below, try navigating between different views (day, week, month) and observe
-      how new events are loaded for each view. In a real application, you would replace the
-      #[span.code generateRandomEvents] function with an actual API call to your backend.
+  .example.mt2.mb2.mxa
+    vue-cal(
+      :dark="store.darkMode"
+      :time-from="9 * 60"
+      :time-to="18 * 60"
+      :views-bar="false"
+      :events="exBackendEvents.events"
+      @ready="exBackendEvents.onReady"
+      @view-change="exBackendEvents.onViewChange"
+      style="height: 421px")
 
-    .example.mt2.mb2.mxa
-      vue-cal(
-        :dark="store.darkMode"
-        :time-from="9 * 60"
-        :time-to="19 * 60"
-        :views="['day', 'week', 'month']"
-        :events="exBackendEvents.events"
-        @view-change="exBackendEvents.onViewChange"
-        :style="{ height: '500px' }")
-
-      .mt2.mb2.mxa.text-center.px2
-        w-alert(info xs border-left)
-          | Loading status:
-          span.font-weight-bold(v-if="exBackendEvents.loading") Loading events...
-          span.font-weight-bold(v-else) {{ exBackendEvents.events.length }} events loaded
+    w-progress.mt-1(v-if="exBackendEvents.loading")
+    .caption.text-center
+      template(v-if="exBackendEvents.loading") Loading events...
+      template(v-else) {{ exBackendEvents.eventsTotal }} events loaded.
 
 //- Example.
 example(title="External Controls & use of Vue Cal Methods" anchor="external-controls")
@@ -499,24 +498,32 @@ const exEmittedEvents = reactive({
   }
 })
 
-const exExternalControls = reactive({
+const exBackendEvents = reactive({
+  loading: false,
+  events: [],
+  eventsTotal: ref(0),
+  onReady: ({ view: { start, end } }) => {
+    exBackendEvents.events.push({
+      title: 'NAVIGATE WEEKS TO LOAD EVENTS!',
+      start: new Date(start.addDays(3).setHours(10, 0, 0, 0)),
+      end: new Date(start.addDays(3).setHours(14, 0, 0, 0))
+    })
+  },
+  onViewChange: async view => {
+    exBackendEvents.loading = true
+    // Simulate fetching events from a backend for the given formatted date range
+    // and return the events with a delay.
+    await fetchEvents(view.start.format(), view.end.format())
+    exBackendEvents.loading = false
+  }
+})
 
+const exExternalControls = reactive({
 })
 
 const exSyncTwoCalendars = reactive({
   selectedDate: ref(null),
   viewDate: ref(null)
-})
-
-const exBackendEvents = reactive({
-  loading: false,
-  events: [],
-  onViewChange: view => {
-    exBackendEvents.loading = true
-    // Simulate fetching events from a backend for the given formatted date range
-    // and return the events with a delay.
-    fetchEvents(view.start.format(), view.end.format())
-  }
 })
 
 /*
@@ -526,11 +533,12 @@ const exBackendEvents = reactive({
  * @param {string} end - The end date.
  * @returns {Promise<void>}
  */
- const fetchEvents = async (start, end) => {
-  await new Promise(resolve => setTimeout(resolve, 500))
+const fetchEvents = async (start, end) => {
+  await new Promise(resolve => setTimeout(resolve, 400))
   const startDate = stringToDate(start)
   const endDate = stringToDate(end)
   exBackendEvents.events = generateRandomEvents(startDate, endDate)
+  exBackendEvents.eventsTotal += exBackendEvents.events.length
 }
 
 /*
@@ -543,13 +551,14 @@ const exBackendEvents = reactive({
 const generateRandomEvents = (startDate, endDate) => {
   const daysRange = countDays(startDate, endDate)
   const events = []
+  let eventNumber = 0
   for (let i = 0; i < daysRange; i++) {
     for (let j = 0; j < 10; j++) {
       // Set random start and end time in the day, events last 1 hour.
       // The random start and end time is between 9am and 5pm.
       const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
       const end = start.addHours(1)
-      events.push({ title: `Event ${j}`, start, end })
+      events.push({ title: `Event ${++eventNumber}`, start, end })
     }
   }
   return events
