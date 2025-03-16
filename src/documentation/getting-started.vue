@@ -48,6 +48,11 @@ ul.ml4
                 | Vue Cal #[strong 5] with Events (Vue 3 + Vite)
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
+              w-icon.mr2 wi-chevron-right
+              a.ml1(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
+                | Fetching Events from a Backend
+                w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
+            li
               w-divider.my4
             li
               w-icon.mr2 wi-chevron-right

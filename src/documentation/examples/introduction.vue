@@ -56,6 +56,11 @@ p.
         a.ml2(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
           | Calendar with Events
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
+      li
+        w-icon wi-chevron-right
+        a.ml2(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
+          | Fetching Events from a Backend
+          w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
 .highlight-box.grow.mt4
   .title2 #[strong V4] Demos on Codepen
