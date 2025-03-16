@@ -206,6 +206,7 @@ ul {
     border-radius: inherit;
     border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
     mask: linear-gradient(-145deg, #000 -40%, transparent 30%);
+    pointer-events: none;
   }
 
   &:after {
@@ -215,8 +216,18 @@ ul {
     border-radius: inherit;
     border: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
     mask: linear-gradient(45deg, #000, transparent 30%);
+    pointer-events: none;
   }
 
+  li {margin-top: 2px;}
+  a {
+    padding: 2px 12px 2px 10px;
+    border-radius: 99em;
+
+    &:hover {
+      background-color: color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
+    }
+  }
   .w-icon.bolt {
     width: 68px;
     height: 68px;
