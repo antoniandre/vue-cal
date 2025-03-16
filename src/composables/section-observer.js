@@ -2,14 +2,7 @@ import { ref, onMounted, onBeforeUnmount, nextTick, watch } from 'vue'
 import { useRoute } from 'vue-router'
 
 /**
- * Composable for observing section elements in the viewport and tracking the active section
- * @param {Object} options - Configuration options
- * @param {Function} options.onSectionChange - Callback when active section changes
- * @param {String} options.sectionSelector - Query selector for the sections to observe
- * @param {Number} options.initialDelay - Delay before initial observation in ms
- * @param {Number} options.routeChangeDelay - Delay after route changes in ms
- * @param {Number} options.scrollDebounce - Debounce time for scroll events in ms
- * @returns {Object} - Observer methods and state
+ * Composable for observing section elements in the viewport and tracking the active section.
  */
 export function useSectionObserver(options = {}) {
   const {
@@ -33,16 +26,20 @@ export function useSectionObserver(options = {}) {
     await nextTick()
 
     // Cleanup previous observer if it exists.
-    if (observer.value) observer.value.disconnect()
+    if (observer.value) {
+      observer.value.disconnect()
+      observer.value = null
+    }
 
     const sections = document.querySelectorAll(sectionSelector)
-
     if (!sections.length) return
 
     const minThreshold = window.innerHeight * 0.01 // 1% of viewport height.
     const maxThreshold = window.innerHeight * 0.47 // 47% of viewport height.
 
     observer.value = new IntersectionObserver(entries => {
+      if (!observer.value) return
+
       let topmostSection = null
       let nextVisibleSection = null
 
@@ -60,16 +57,13 @@ export function useSectionObserver(options = {}) {
         }
       }
 
-      // Set the active section.
-      if (topmostSection) {
-        updateActiveSection(`#${topmostSection.id}`)
-      } else if (nextVisibleSection) {
-        updateActiveSection(`#${nextVisibleSection.id}`)
-      }
+      // Update the active section.
+      if (topmostSection) updateActiveSection(`#${topmostSection.id}`)
+      else if (nextVisibleSection) updateActiveSection(`#${nextVisibleSection.id}`)
     }, {
       root: null, // Uses the viewport as the root.
       threshold: 0.0, // Fires when any part of an element enters/exits the viewport.
-      rootMargin: '0% 0% -60% 0%' // Set the detection range: top right bottom left.
+      rootMargin: '0% 0% -60%' // Set the detection range: top sides bottom.
     })
 
     // Observe all matching sections.
@@ -111,9 +105,17 @@ export function useSectionObserver(options = {}) {
 
   // Cleanup.
   onBeforeUnmount(() => {
-    if (observer.value) observer.value.disconnect()
+    if (observer.value) {
+      observer.value.disconnect()
+      observer.value = null
+    }
+
     window.removeEventListener('scroll', debounceScroll)
-    if (scrollTimer.value) clearTimeout(scrollTimer.value)
+
+    if (scrollTimer.value) {
+      clearTimeout(scrollTimer.value)
+      scrollTimer.value = null
+    }
   })
 
   return {

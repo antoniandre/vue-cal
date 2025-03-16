@@ -163,9 +163,11 @@ export const useConfig = (vuecal, props, attrs) => {
 
         if (jsDate instanceof Date && !isNaN(jsDate.getTime())) {
           validDates.push(date)
-          return
+          // Don't return here, we need to process all dates in the array.
         }
-        console.warn('Vue Cal: The provided `disableDays` prop contains an invalid date:', date)
+        else {
+          console.warn('Vue Cal: The provided `disableDays` prop contains an invalid date:', date)
+        }
       }
     }
     else console.warn('Vue Cal: The provided `disableDays` prop is invalid:', props.disableDays)

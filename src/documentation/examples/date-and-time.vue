@@ -211,19 +211,23 @@ example(title="Minimum / Maximum Dates" anchor="min-max-dates")
 example(title="Disable Days" anchor="disable-days")
   template(#desc)
     p.
-      You can use the #[span.code disable-days] option to provide an array of formatted dates
-      (e.g. #[span.code 2020-09-18]) to disable.#[br]
+      You can disable specific dates with the #[span.code disable-days] prop.#[br]
+      Pass it an array of dates - strings in the format #[span.code YYYY-MM-DD]
+      or Date objects.#[br]
       Disabled days will be visible but not selectable or clickable to navigate to. But you can still
       navigate through them in day view with the calendar arrows.
-    p #[strong Note:] This example uses Vue Cal's #[router-link(to="/date-prototypes") Date prototypes].
-  template(#code-html).
-    &lt;vue-cal
-      date-picker
-      :disable-days="[
+    .w-flex.my4.align-center
+      w-switch.mr4(v-model="exDisableDays.disableDays") Disable Days
+  template(#code-html)
+    | &lt;vue-cal date-picker
+    template(v-if="exDisableDays.disableDays").
+       :disable-days="[
         new Date().subtractDays(2).format(), // Using Vue Cal's Date prototypes.
         new Date().format(), // Using Vue Cal's Date prototypes.
         new Date().addDays(2).format() // Using Vue Cal's Date prototypes.
-      ]" /&gt;
+      ]"
+    template(v-else)
+    | &nbsp;/&gt;
   template(#code-css).
     .vuecal__cell--disabled {text-decoration: line-through;color: #bbb;}
 
@@ -232,7 +236,7 @@ example(title="Disable Days" anchor="disable-days")
     date-picker
     :views="['day', 'month', 'year', 'years']"
     :views-bar="false"
-    :disable-days="[new Date().subtractDays(2).format(), new Date().format(), new Date().addDays(2).format()]")
+    :disable-days="exDisableDays.computedDisabledDays")
 
 //- Example.
 example(title="Hide Particular Week Days" anchor="hiding-particular-week-days")
@@ -305,6 +309,16 @@ const exScrollToTime = reactive({
 const exMinMaxDates = reactive({
   minDate: computed(() => new Date().subtractDays(10)),
   maxDate: computed(() => new Date().addDays(10))
+})
+
+const exDisableDays = reactive({
+  disableDays: ref(true),
+  disabledDates: [
+    new Date().subtractDays(2).format(),
+    new Date().format(),
+    new Date().addDays(2).format()
+  ],
+  computedDisabledDays: computed(() => exDisableDays.disableDays ? exDisableDays.disabledDates : [])
 })
 
 const exHideWeekDays = reactive({
