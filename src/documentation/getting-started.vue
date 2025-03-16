@@ -38,41 +38,41 @@ ul.ml4
           w-icon.ml3.mr2.bolt(color="grey-light2" size="3.2rem") mdi mdi-lightning-bolt
           ul.no-bullet
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue" target="_blank")
                 | Vue Cal #[strong 5] (Vue 3 + Vite)
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
                 | Vue Cal #[strong 5] with Events (Vue 3 + Vite)
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
                 | Fetching Events from a Backend
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
               w-divider.my4
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal-vuecli?file=src%2FApp.vue" target="_blank")
                 | Vue Cal #[strong 4] + Vue 3 + Vue CLI
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal-vite?file=src%2FApp.vue" target="_blank")
                 | Vue Cal #[strong 4] + Vue 3 + Vite
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal-vite-composition-api?file=src%2FApp.vue" target="_blank")
                 | Vue Cal #[strong 4] + Vue 3 &amp; composition API + Vite
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
             li
-              w-icon.mr2 wi-chevron-right
-              a.ml1(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal-vue2?file=src%2FApp.vue" target="_blank")
                 | Vue Cal #[strong 4] + Vue 2 + Vue CLI
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 

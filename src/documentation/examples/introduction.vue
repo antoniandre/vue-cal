@@ -48,17 +48,17 @@ p.
     ul.no-bullet
       li
         w-icon wi-chevron-right
-        a.ml2(href="https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue" target="_blank")
+        a(href="https://stackblitz.com/edit/vuecal5?file=src%2FApp.vue" target="_blank")
           | Basic Calendar
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
       li
         w-icon wi-chevron-right
-        a.ml2(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
+        a(href="https://stackblitz.com/edit/vuecal5-events?file=src/App.vue" target="_blank")
           | Calendar with Events
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
       li
         w-icon wi-chevron-right
-        a.ml2(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
+        a(href="https://stackblitz.com/edit/vuecal5-events-fetching?file=src/App.vue" target="_blank")
           | Fetching Events from a Backend
           w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
 
