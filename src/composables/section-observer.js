@@ -3,6 +3,13 @@ import { useRoute } from 'vue-router'
 
 /**
  * Composable for observing section elements in the viewport and tracking the active section.
+ * @param {Object} options - Configuration options
+ * @param {Function} options.onSectionChange - Callback when active section changes
+ * @param {String} options.sectionSelector - Query selector for the sections to observe
+ * @param {Number} options.initialDelay - Delay before initial observation in ms
+ * @param {Number} options.routeChangeDelay - Delay after route changes in ms
+ * @param {Number} options.scrollDebounce - Debounce time for scroll events in ms
+ * @returns {Object} - Observer methods and state
  */
 export function useSectionObserver(options = {}) {
   const {
@@ -101,7 +108,14 @@ export function useSectionObserver(options = {}) {
   })
 
   // Watch for route and hash changes.
-  watch(() => `${route.name}${route.hash}`, () => setTimeout(initializeObserver, routeChangeDelay))
+  watch(() => `${route.name}${route.hash}`, () => {
+    // Reset observer and reinitialize after route change
+    if (observer.value) {
+      observer.value.disconnect()
+      observer.value = null
+    }
+    setTimeout(initializeObserver, routeChangeDelay)
+  })
 
   // Cleanup.
   onBeforeUnmount(() => {
