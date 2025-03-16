@@ -84,5 +84,9 @@ const showAside = computed(() => {
     padding-bottom: 20px;
     margin-left: 0.5px;
   }
+
+  .examples-menu a:hover {
+    background-color: color-mix(in srgb, var(--w-primary-color) 10%, transparent);
+  }
 }
 </style>
