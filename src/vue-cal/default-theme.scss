@@ -146,6 +146,7 @@
     text-overflow: ellipsis;
     gap: 4px;
     font-size: 0.95em;
+    background-color: var(--vuecal-secondary-color);
 
     &--today {font-weight: bold;}
 

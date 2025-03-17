@@ -602,6 +602,15 @@ onBeforeUnmount(async () => {
   &--has-schedules {align-items: stretch;}
   &--out-of-range {opacity: 0.4;}
   &--disabled {cursor: not-allowed;}
+
+  // The lines must stay in the cell when there's a min-cell-width for them to fill up the whole body width.
+  .vuecal--view-has-time &:before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
+    background-size: 100% var(--vuecal-time-cell-height);
+  }
 }
 
 .vuecal__special-hours {
