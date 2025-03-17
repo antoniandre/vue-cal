@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.9
+    ul
+      li Fix the time cell background when using the #[span.code --vuecal-min-cell-width] CSS variable. #[issue-link 29]
+  li.patch
     strong.version 5.0.1-rc.8
     ul
       li Updated the #[span.code diy] payload: only keep the Vue Cal instance that contains everything you need.
@@ -13,7 +17,8 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.7
     ul
-      li Always localize texts before using prototypes, or default to #[span.code en-us]. #28
+      li Always localize texts before using prototypes, or default to #[span.code en-us].
+      li Fix the time cell background when using the #[span.code --vuecal-min-cell-width] CSS variable. #[issue-link 28]
 
   li.patch
     strong.version 5.0.1-rc.6
@@ -677,9 +682,11 @@ w-transition-expand(y)
 
 <script setup>
 import { ref } from 'vue'
+import IssueLink from './components/issue-link.vue'
 
 const seeOldReleaseNotes = ref(false)
 </script>
+
 <style lang="scss">
 .main--release-notes {
   .history {
