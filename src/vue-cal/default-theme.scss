@@ -337,7 +337,8 @@
       border-bottom-right-radius: 0;
     }
 
-    &:not(.vuecal__event--background):hover {z-index: 10;} // Bring to front on hover.
+    // Bring to front on hover, but under the headings bar and time column.
+    &:not(.vuecal__event--background):hover {z-index: 3;}
 
     &-details {
       flex-grow: 1;

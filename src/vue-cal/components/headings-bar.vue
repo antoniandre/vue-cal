@@ -75,7 +75,7 @@ const domEvents = {
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
-    z-index: 2; // Keep it above the now-line.
+    z-index: 4; // Keep it above the now-line and hovered events.
     height: var(--vuecal-headings-bar-height);
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);

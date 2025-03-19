@@ -47,7 +47,7 @@ const timeCells = computed(() => {
   background-color: var(--vuecal-secondary-color);
   position: sticky;
   left: 0;
-  z-index: 3; // Above the cells.
+  z-index: 5; // Above the cells, headings bar and hovered events.
   border-right: 0.5px solid var(--vuecal-border-color);
   // Smoothen transition between day view and days or week view.
   transition: padding-top 0.3s ease-in-out;
