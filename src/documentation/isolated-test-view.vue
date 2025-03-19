@@ -4,6 +4,7 @@
   .w-flex.gap2
     w-button(@click="addEventFromOutside") Add event
     w-button(@click="addEventFromVueCal") Add event
+    w-button(@click="deleteEvent") Delete event
 
   .w-flex.gap2.mt4.ovh
     //- aside.no-shrink.no-grow
@@ -80,6 +81,7 @@ const mainVuecalConfig = reactive({
   viewDayOffset: ref(0),
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
+  editableEvents: ref(true),
   events: ref([]),
   // schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
   eventsOnMonthView: true,
@@ -94,23 +96,24 @@ const mainVuecalConfig = reactive({
   //   fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><em>Full day shift</em>' },
   //   sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
   //   sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  // },
-  editableEvents: ref(false)
+  // }
 })
 
 // Pretend a call to a backend.
 setTimeout(() => {
   mainVuecalConfig.events = [
     {
+      id: 123,
       title: 'Event 1',
       start: new Date(new Date().setHours(10, 0, 0, 0)),
-      end: new Date(new Date().setHours(10, 30, 0, 0)),
+      end: new Date(new Date().setHours(11, 30, 0, 0)),
       schedule: 1
     },
     {
+      id: 228,
       title: 'Event 2',
       start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
-      end: new Date(new Date().addDays(1).setHours(11, 30, 0, 0)),
+      end: new Date(new Date().addDays(1).setHours(13, 30, 0, 0)),
       schedule: 2
     }
   ]
@@ -132,6 +135,10 @@ const addEventFromVueCal = () => {
     end: new Date().subtractHours(1),
     schedule: 1
   })
+}
+
+const deleteEvent = () => {
+  vueCalRef.value.view.deleteEvent({ id: 123 })
 }
 
 const log = (...args) => console.log(...args)
