@@ -55,7 +55,7 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
           before the event creation starts. This can be useful to prevent accidental event creation when
           navigating the calendar.
 
-      w-image.bd1.bdrs2.sh2(src="/click-and-drag.webp" alt="Create Events" width="250" lazy)
+      w-image.bd1.bdrs2.sh2(:src="`${baseUrl}click-and-drag.webp`" alt="Create Events" width="250" lazy)
     alert The event creation is only available on a day cell: not on year &amp; years views.
 
     .w-flex.justify-end.gap2.mt2
@@ -811,6 +811,7 @@ import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
+const baseUrl = computed(() => import.meta.env.BASE_URL)
 const events = [
   {
     start: new Date(new Date().setHours(11, 0)).subtractDays(2),
