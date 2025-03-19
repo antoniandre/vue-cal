@@ -275,4 +275,10 @@ main.main {
   15% {opacity: 1;}
   25%, 100% {opacity: 0;transform: translateY(350px);}
 }
+
+// Media queries.
+// --------------------------------------------------------
+@media (max-width: 750px) {
+  .main:before, .main:after {display: none;}
+}
 </style>
