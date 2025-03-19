@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.11
+    ul
+      li Bring events to front on hover, but under the headings bar. #[issue-link 37]
+  li.patch
     strong.version 5.0.1-rc.10
     ul
       li Add ability to delete an event by custom event property. #[issue-link 39]
