@@ -133,7 +133,7 @@ export const useEvents = vuecal => {
     let evts = events.value.byDate[dateFormatted] || []
     evts = fullEvents || includeBackgroundEvents ? evts.map(getEvent) : evts
     if (!includeBackgroundEvents) {
-      evts = evts.filter(event => !event.background)
+      evts = evts.filter(event => !event.background && !event._.deleted)
       if (!fullEvents) evts = evts.map(event => event._.id)
     }
     return evts
@@ -179,9 +179,9 @@ export const useEvents = vuecal => {
   }
 
   /**
-   * Deletes an event based on the provided eventId and forcedStage.
+   * Deletes an event based on the provided eventId or criteria and forcedStage.
    *
-   * @param {string} eventId - The ID of the event to delete.
+   * @param {string|number|Object} eventIdOrCriteria - The ID of the event to delete or an object with criteria to find the event.
    * @param {number} [forcedStage=0] - The stage of deletion to force.
    *    0: Initial deletion stage, toggles deleting and deleted flags.
    *    1: Sets the deleting flag to true.
@@ -189,7 +189,15 @@ export const useEvents = vuecal => {
    *    3: Removes the event from the source of truth, emits 'update:events' and 'event-delete' events, and dispatches 'event-deleted' event.
    * @returns {boolean} - Returns true for chaining.
    */
-  const deleteEvent = (eventId, forcedStage = 0) => {
+  const deleteEvent = async (eventIdOrCriteria, forcedStage = 0) => {
+    if (!eventIdOrCriteria) return console.warn('Vue Cal: Cannot delete event without its ID or criteria.')
+    let eventId = typeof eventIdOrCriteria === 'string' || !isNaN(eventIdOrCriteria) ? eventIdOrCriteria : null
+    const eventCriteria = typeof eventIdOrCriteria === 'object' ? Object.entries(eventIdOrCriteria) : null
+    if (eventCriteria) {
+      const [criteriaKey, criteriaValue] = eventCriteria[0]
+      eventId = config.events.find(event => event[criteriaKey] === criteriaValue)?._.id
+    }
+
     if (!config.editableEvents.delete) {
       return console.info('Vue Cal: Event deletion is disabled. Enable it with the `editable-events` props.')
     }
