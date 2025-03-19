@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.10
+    ul
+      li Add ability to delete an event by custom field. #[issue-link 39]
+  li.patch
     strong.version 5.0.1-rc.9
     ul
       li Fix the time cell background when using the #[span.code --vuecal-min-cell-width] CSS variable. #[issue-link 29]
