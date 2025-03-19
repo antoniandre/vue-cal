@@ -346,30 +346,6 @@ example(title="Custom event Rendering" anchor="custom-event-rendering")
     alert.my2(tip).
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]].
-    alert.my3(info)
-      | By default an event is rendered as follows.#[br]
-      | It is a good idea to reuse the same CSS classes as the different elements have associated styles:#[br]
-      ssh-pre.mt3.mb1(language="html-vue" :dark="store.darkMode").
-        &lt;div class="vuecal__event"&gt;
-            &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
-            &lt;div class="vuecal__event-delete" /&gt;
-      ssh-pre.my2.ml5(language="html-vue" style="background-color: rgba(0, 177, 255, 0.08)" :dark="store.darkMode").
-        Now this is the part you can customize:
-
-        &lt;!-- Will be added if a title is set --&gt;
-        &lt;div class="vuecal__event-title" /&gt;
-        &lt;!-- or if title is set and `editable-events` option is set to `true` --&gt;
-        &lt;div class="vuecal__event-title vuecal__event-title--edit" contenteditable /&gt;
-
-        &lt;!-- Will be added if `time` option is set to `true` --&gt;
-        &lt;div class="vuecal__event-time" /&gt;
-
-        &lt;!-- Will be added if a content is set --&gt;
-        &lt;div class="vuecal__event-content" /&gt;
-      ssh-pre.my1(language="html-vue" :dark="store.darkMode").
-            &lt;!-- Will be added if `editable-events` option is set to `true` --&gt;
-            &lt;div class="vuecal__event-resize-handle" /&gt;
-        &lt;/div&gt;
     p.mb2.
       Two parameters are passed through the scoped slot:
     ul

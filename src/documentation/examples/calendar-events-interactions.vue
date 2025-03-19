@@ -289,9 +289,11 @@ example(title="Delete Events" anchor="delete-events")
       li.
         #[code 3]: The event is deleted both visually and in the source of truth (automatically called on
         cell unmount after using stage #[code 2]).
-    p.
-      For more flexibility, there is also a #[code view.deleteEvent(eventId, stage)] function which takes
-      two arguments: the ID of the event to delete and a "deletion stage" integer just as described.
+    p.mt4.
+      For more flexibility, there is also a #[code view.deleteEvent(eventId, stage)] function:
+    ul
+      li Which takes two arguments: the internal ID of the event (found in #[code event._.id]) to delete and a "deletion stage" integer just as described.
+      li Can also delete an event by a specific custom event property, like #[code event.id] or #[code event.doctorId], etc. by passing a key-value pair as an object in the first argument. E.g. #[code view.deleteEvent({ id: 1 }, 3)].
 
     p.mt6 Now let's view all this in action!
     .w-flex.align-start.gap3.justify-end

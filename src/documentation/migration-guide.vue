@@ -38,6 +38,7 @@ ul
   li Directly #[strong preload a locale externally] to avoid handling Promises.
   li Reworked options for #[strong more intuitive usage].
   li Fine-grain event deletion in 3 stages: 1. show the delete button, 2. delete the event from the view, 3. delete the event in the source of truth.
+  li Events are deleted by their internal ID, or by a provided custom key-value pair (e.g. `{ id: 123 }`).
   li New animation on event deletion.
   li New event v-model for more control over events.
   li More intuitive and flexible event creation.
