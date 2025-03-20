@@ -7,7 +7,7 @@
   "repository": "https://github.com/antoniandre/vue-cal",
   "license": "MIT",
   "funding": "https://github.com/sponsors/antoniandre",
-  "main": "dist/vue-cal.cjs.js",
+  "main": "dist/vue-cal.umd.js",
   "module": "dist/vue-cal.es.js",
   "type": "module",
   "files": [
