@@ -152,8 +152,8 @@ const eventPlaceholder = computed(() => {
 
   return {
     style: {
-      top: startPercentage + '%',
-      height: Math.abs(endPercentage - startPercentage) + '%'
+      top: `${startPercentage}%`,
+      height: `${Math.abs(endPercentage - startPercentage)}%`
     },
     startMinutes,
     endMinutes,
@@ -337,7 +337,7 @@ const cellEventListeners = computed(() => {
   const eventListeners = { ...config.eventListeners.cell }
 
   // Inject the cell details in each eventListener handler call as 2nd param.
-  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
+  for (const [eventListener, handler] of Object.entries(eventListeners)) {
     eventListeners[eventListener] = e => {
       // When interacting with an event, skip calling the cell DOM event handler.
       // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
@@ -347,7 +347,7 @@ const cellEventListeners = computed(() => {
       // Check if e.type to not rewrap the DOM event in an object if already done.
       handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
     }
-  })
+  }
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
   // touchstart, mousedown.
@@ -557,9 +557,9 @@ const createEventIfAllowed = async e => {
 }
 
 const removeEventListeners = () => {
-  Object.keys(cellEventListeners.value).forEach(event => {
+  for (const event of Object.keys(cellEventListeners.value)) {
     cellEl.value?.removeEventListener(event, cellEventListeners.value[event])
-  })
+  }
 }
 
 const recalculateOverlaps = () => {
@@ -580,7 +580,7 @@ watch(
 onBeforeUnmount(async () => {
   // Removing the calendar events will trigger a rerender of all the cells in the view because the array
   // of events is a reactive object. So only remove them from the source of truth when the cell is unmounted.
-  eventsDeleted.value.forEach(eventId => eventsManager.deleteEvent(eventId, 3))
+  for (const eventId of eventsDeleted.value) eventsManager.deleteEvent(eventId, 3)
 
   removeEventListeners() // Prevent potential memory leaks.
   await nextTick() // Batch updates to avoid multiple re-renders.
