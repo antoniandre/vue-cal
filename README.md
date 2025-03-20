@@ -96,6 +96,7 @@ A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see y
 <a href="https://github.com/crbast"><img src="https://avatars.githubusercontent.com/crbast?s=25" alt="crbast" width="25"></a>
 <a href="https://github.com/codecov"><img src="https://avatars.githubusercontent.com/codecov?s=25" alt="codecov" width="25"></a>
 <a href="https://github.com/zeidanbm"><img src="https://avatars.githubusercontent.com/zeidanbm?s=25" alt="zeidanbm" width="25"></a>
+<a href="https://github.com/cesar-lizurey"><img src="https://avatars.githubusercontent.com/cesar-lizurey?s=25" alt="cesar-lizurey" width="25"></a>
 
 ---
 
