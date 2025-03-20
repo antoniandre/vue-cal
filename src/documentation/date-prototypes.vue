@@ -94,7 +94,7 @@ alert.pa0(info no-icon)
 
         ssh-pre.d-iflex.pr6(language="js" :dark="store.darkMode").
           import { useLocale, addDatePrototypes } from '@/vue-cal'
-          import Fr from '@/vue-cal/i18n/fr.json'
+          import Fr from '@/vue-cal/i18n/fr'
 
           useLocale(Fr)
           addDatePrototypes()
@@ -104,7 +104,7 @@ alert.pa0(info no-icon)
           you can simply load the new locale and call #[span.code addDatePrototypes()] again:
 
         ssh-pre.d-iflex.pr6(language="js" :dark="store.darkMode").
-          import Es from '@/vue-cal/i18n/es.json'
+          import Es from '@/vue-cal/i18n/es'
 
           useLocale(Es)
           addDatePrototypes()

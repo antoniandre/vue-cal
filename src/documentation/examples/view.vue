@@ -98,17 +98,15 @@ example(title="Internationalization" anchor="internationalization")
     &lt;vue-cal locale="{{ exI18n.locale }}" /&gt;
   template(#code-js v-if="exI18n.preload").
     import { VueCal, useLocale } from '@/vue-cal'
-    import Translations from '@/vue-cal/i18n/{{ exI18n.locale }}.json'
+    import Translations from '@/vue-cal/i18n/{{ exI18n.locale }}'
 
     useLocale(Translations)
   alert(v-if="exI18n.preload")
-    | When preloading, the locale is loaded upfront, so we don't need to preload the default English
-    | locale first. No big deal, but:
+    | When preloading, the locale is loaded upfront. No big deal, but it:
     ul
       li Saves 1 request of less than ~1kb
       li.
-        Can potentially avoid a blink of texts while switching locales when Vue Cal renders and
-        your locale file is not yet loaded.
+        Can potentially avoid a blink of texts if Vue Cal renders before the locale file is loaded.
 
   vue-cal(
     :locale="exI18n.locale"

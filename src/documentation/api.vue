@@ -566,11 +566,6 @@ w-accordion.mt2(
           full-letter month, #[span.code D] stands for the date of the month (0-31),
           #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
 
-      alert(tip).
-        Note that 2 media queries will shorten the days of the week to 3 letters then 1 letter when it does not fit.
-        #[br]You can read more about it in the # Responsiveness &amp; Media Queries section in the
-        #[router-link(to="/getting-started#css-notes") CSS Notes].
-
   w-accordion-item
     template(#title)
       strong.code.title5 maxDate
@@ -1507,10 +1502,8 @@ w-accordion(
 <script setup>
 import { inject, ref } from 'vue'
 import { useAppStore } from '@/store'
-import EnUs from '@/vue-cal/i18n/fr.json'
-import { useLocale, addDatePrototypes } from '@/vue-cal'
+import { addDatePrototypes } from '@/vue-cal'
 
-useLocale(EnUs)
 addDatePrototypes()
 
 const store = useAppStore()

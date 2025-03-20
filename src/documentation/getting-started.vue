@@ -53,6 +53,11 @@ ul.ml4
                 | Fetching Events from a Backend
                 w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
             li
+              w-icon wi-chevron-right
+              a(href="https://stackblitz.com/edit/vuecal5-nuxt?file=pages/index.vue" target="_blank")
+                | Vue Cal + Nuxt 3 - Full SSR support
+                w-icon.ml2(sm style="margin-top: -2px") mdi mdi-open-in-new
+            li
               w-divider.my4
             li
               w-icon wi-chevron-right

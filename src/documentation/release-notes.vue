@@ -3,9 +3,9 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
-    strong.version 5.0.1-rc.12
+    strong.version 5.0.1-rc.13
     ul
-      li Fix a Nuxt issue related to raw JSON import. #[issue-link 35]
+      li Convert all raw JSON i18n files to ES modules (JS). Fixes a Nuxt issue. #[issue-link 35]
   li.patch
     strong.version 5.0.1-rc.11
     ul

@@ -22,6 +22,7 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Support SSR
       .task Improve the event range accuracy while resizing upwards
       .task Events accept dynamic colors
       .task Events snap-to-interval while resizing
@@ -122,6 +123,8 @@ ul.kanban
   align-items: flex-start;
 
   &__column {
+    position: sticky;
+    top: 0;
     display: flex;
     flex-direction: column;
     flex-grow: 1;
