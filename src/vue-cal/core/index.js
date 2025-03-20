@@ -4,7 +4,8 @@ import { useDragAndDrop } from '../modules/drag-and-drop'
 import { useDateUtils } from '../utils/date'
 import { useEvents } from './events'
 import { useView } from './view'
-import EnUs from '../i18n/en-us.json'
+// `with { type: 'json' }` syntax fixes an error in Nuxt. Support for this syntax may be limited.
+import EnUs from '../i18n/en-us.json' with { type: 'json' }
 
 // Shared global reactive store: common to all the VueCal instances.
 // The global store is also used when the user wants to use Date prototypes with localized texts
