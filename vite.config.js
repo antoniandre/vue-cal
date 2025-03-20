@@ -2,7 +2,6 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 import { resolve } from 'path'
 import autoprefixer from 'autoprefixer'
-import { viteStaticCopy } from 'vite-plugin-static-copy'
 import pkg from './package.json'
 
 const banner = `/**
@@ -22,12 +21,15 @@ const bundlingConf = {
     // Make sure to externalize deps that shouldn't be bundled into library.
     external: id => {
       if (id === 'vue') return true // Externalize vue.
-      if (id.endsWith('.json')) return true // Externalize JSON files.
       return false
     },
     output: {
       banner,
-      globals: { vue: 'Vue' } // Vue should be treated as external and available as a global variable.
+      globals: { vue: 'Vue' }, // Vue should be treated as external and available as a global variable.
+      chunkFileNames: chunkInfo => {
+        if (chunkInfo.facadeModuleId.endsWith('.json')) return 'i18n/[name].js' // Match JSON to JS name without a hash.
+        return '[name]-[hash].js' // Default behavior.
+      }
     }
   },
   copyPublicDir: false // Prevent copying `public/` to `dist` folder.
@@ -48,14 +50,6 @@ export default defineConfig({
           whitespace: 'preserve'
         }
       }
-    }),
-    viteStaticCopy({
-      targets: [
-        {
-          src: 'src/vue-cal/i18n/*.json',
-          dest: 'i18n' // Destination in the dist folder.
-        }
-      ]
     })
   ], // https://vitejs.dev/config/
   resolve: {
