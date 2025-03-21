@@ -33,6 +33,7 @@
       v-model:selected-date="mainVuecalConfig.selectedDate"
       v-model:view-date="mainVuecalConfig.viewDate"
       v-bind="mainVuecalConfig"
+      @ready="log('ready', $event)"
       @view-change="onViewChange"
       @event-create="log('event-create', $event)"
       @event-click="log('event-click', $event)"
@@ -41,6 +42,7 @@
       @event-drop="log('event-drop', $event)"
       @event-resize="log('event-resize', $event)"
       @event-resize-end="log('event-resize-end', $event)"
+      @cell-click="log('cell-click', $event)"
       @cell-drag="log('cell-drag', $event)"
       @cell-drag-end="log('cell-drag-end', $event)")
 </template>

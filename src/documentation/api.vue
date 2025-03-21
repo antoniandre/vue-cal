@@ -511,7 +511,7 @@ w-accordion.mt2(
       strong.default.code () => []
     template(#content)
       p Accepts an array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
-      p Hide specific weekdays in month, week and days views.
+      p Hide specific weekdays in #[span.code month], #[span.code week] and #[span.code days] views.
 
   w-accordion-item
     template(#title)
@@ -521,7 +521,7 @@ w-accordion.mt2(
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      p Show or hide both Saturday and Sunday in days, week and month views.
+      p Show or hide both Saturday and Sunday in #[span.code days], #[span.code week] and #[span.code month] views.
 
   w-accordion-item
     template(#title)
