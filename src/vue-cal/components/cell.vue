@@ -357,14 +357,16 @@ const cellEventListeners = computed(() => {
   let clickTimeout = null
   eventListeners.click = e => {
     onCellClick()
-    externalHandlers.click?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    const cursor = getTimeAtCursor(e)
+
+    externalHandlers.click?.({ e, cell: cellInfo.value, cursor })
 
     if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
     else {
       clickTimeout = setTimeout(() => {
         clickTimeout = null
         // Handle delayed single click.
-        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor })
       }, 400)
     }
   }
@@ -388,19 +390,7 @@ const cellEventListeners = computed(() => {
     // work because the dblclick can have a fast click and a long hold second click and it should
     // still fire.
     eventListeners.dblclick = e => {
-      const clientY = (e.touches?.[0] || e).clientY
-      const { top } = cellEl.value.getBoundingClientRect()
-      const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
-
-      const minutes = percentageToMinutes(cursorYPercent, config)
-      const date = new Date(props.start)
-      date.setMinutes(minutes)
-
-      const cursor = {
-        y: cursorYPercent,
-        date
-      }
-      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor })
+      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e) })
     }
   }
 
@@ -427,6 +417,23 @@ const cellInfo = computed(() => ({
   broader: view.broaderView,
   narrower: view.narrowerView
 }))
+
+/**
+ * Get the time at the cursor position.
+ *
+ * @param {Event} e - The event object.
+ * @returns {Object} An object containing the cursor position in percentage and the associate date.
+ */
+const getTimeAtCursor = e => {
+  const clientY = (e.touches?.[0] || e).clientY
+  const { top } = cellEl.value.getBoundingClientRect()
+  const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
+
+  const date = new Date(props.start)
+  date.setMinutes(percentageToMinutes(cursorYPercent, config))
+
+  return { y: cursorYPercent, date }
+}
 
 // Get cursor information including position and date.
 const cursorInfo = computed(() => {
