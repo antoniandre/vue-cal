@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.14
+    ul
+      li Correct the time at cursor value on #[code cell-click]. #[issue-link 38]
+  li.patch
     strong.version 5.0.1-rc.13
     ul
       li Convert all raw JSON i18n files to ES modules (JS). Fixes a Nuxt issue. #[issue-link 35]
@@ -17,27 +21,27 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.9
     ul
-      li Fix the time cell background when using the #[span.code --vuecal-min-cell-width] CSS variable. #[issue-link 29]
+      li Fix the time cell background when using the #[code --vuecal-min-cell-width] CSS variable. #[issue-link 29]
   li.patch
     strong.version 5.0.1-rc.8
     ul
-      li Updated the #[span.code diy] payload: only keep the Vue Cal instance that contains everything you need.
-      li Updated the #[span.code cell]-related slots payloads for consistency, providing the cell object to all of them.
-      li Added #[span.code goNarrower] and #[span.code goBroader] methods and #[span.code broader] and #[span.code narrower] properties to the cell object.
+      li Updated the #[code diy] payload: only keep the Vue Cal instance that contains everything you need.
+      li Updated the #[code cell]-related slots payloads for consistency, providing the cell object to all of them.
+      li Added #[code goNarrower] and #[code goBroader] methods and #[code broader] and #[code narrower] properties to the cell object.
       li Added more browser compatibility checks and catches for the event drag &amp; drop.
 
   li.patch
     strong.version 5.0.1-rc.7
     ul
-      li Always localize texts before using prototypes, or default to #[span.code en-us].
-      li Fix the time cell background when using the #[span.code --vuecal-min-cell-width] CSS variable. #[issue-link 28]
+      li Always localize texts before using prototypes, or default to #[code en-us].
+      li Fix the time cell background when using the #[code --vuecal-min-cell-width] CSS variable. #[issue-link 28]
 
   li.patch
     strong.version 5.0.1-rc.6
     ul
-      li Prevent emitting the #[span.code view-change] event before the calendar is ready.
-      li Updated the #[span.code event-dropped] payload for consistency.
-      li Removed the obsolete #[span.code event-change] event.
+      li Prevent emitting the #[code view-change] event before the calendar is ready.
+      li Updated the #[code event-dropped] payload for consistency.
+      li Removed the obsolete #[code event-change] event.
 
   li.patch
     strong.version 5.0.1-rc.4
@@ -103,14 +107,14 @@ w-transition-expand(y)
     li.minor
       strong.version Version 4.6.0
       p.
-        Skip the hidden days on #[span.code day] view (days listed in #[span.code hideWeekends]
-        and #[span.code hideWeekdays]).
+        Skip the hidden days on #[code day] view (days listed in #[code hideWeekends]
+        and #[code hideWeekdays]).
 
     li.patch
       strong.version Version 4.5.1
       p.
         Fix wrong starting day on week view when the week starts on sunday
-        &amp; #[span.code hideWeekends] is true.
+        &amp; #[code hideWeekends] is true.
 
     li.minor
       strong.version Version 4.5.0
@@ -122,7 +126,7 @@ w-transition-expand(y)
 
     li.minor
       strong.version Version 4.4.0
-      p Added a v-model on the #[span.code selected-date].
+      p Added a v-model on the #[code selected-date].
 
     li.patch
       strong.version Version 4.3.4
@@ -142,7 +146,7 @@ w-transition-expand(y)
 
     li.patch
       strong.version Version 3.9.1
-      p Fix: Prevent disabling full month or year when using #[span.code disable-days].
+      p Fix: Prevent disabling full month or year when using #[code disable-days].
 
     li.minor
       strong.version Version 3.9.0
@@ -154,11 +158,11 @@ w-transition-expand(y)
 
     li.patch
       strong.version Version 3.8.3
-      p Return the full original DOM event from #[span.code cell-contextmenu].
+      p Return the full original DOM event from #[code cell-contextmenu].
 
     li.patch
       strong.version Version 3.8.2
-      p Add #[span.code active-view] validations and raise warning if incorrect.
+      p Add #[code active-view] validations and raise warning if incorrect.
 
     li.patch
       strong.version Version 3.8.1
@@ -170,7 +174,7 @@ w-transition-expand(y)
 
     li.minor
       strong.version Version 3.7.0
-      p Add a new #[span.code disable-days] option.
+      p Add a new #[code disable-days] option.
 
     li.patch
       strong.version Version 3.6.5
@@ -180,9 +184,9 @@ w-transition-expand(y)
       strong.version Version 3.6.4
       ul
         li Fix events ending at 00:00, now ends at 23.59.59 of the previous day or of the same day if time is false.
-        li When #[span.code time] is #[span.code true], keep 23:59:59 internally, but format string to 24:00.
+        li When #[code time] is #[code true], keep 23:59:59 internally, but format string to 24:00.
         li Fix previous / next navigation on day view when date prototypes are disabled.
-        li Add shortWeekDays to the #[span.code uk] locale.
+        li Add shortWeekDays to the #[code uk] locale.
 
     li.patch
       strong.version Version 3.6.3
@@ -190,7 +194,7 @@ w-transition-expand(y)
 
     li.patch
       strong.version Version 3.6.2
-      | Fix all-day events not showing up and fix error when using #[span.code hide-body].
+      | Fix all-day events not showing up and fix error when using #[code hide-body].
 
     li.patch
       strong.version Version 3.6.1
@@ -202,7 +206,7 @@ w-transition-expand(y)
 
     li.patch
       strong.version Version 3.5.6
-      | Fix multiple day events display across days when #[span.code time] is false
+      | Fix multiple day events display across days when #[code time] is false
 
     li.patch
       strong.version Version 3.5.4
@@ -214,7 +218,7 @@ w-transition-expand(y)
         li Provide the split (if any) to event creation from cell click &amp; hold.
         li.
           Add mousemove &amp; mouseup event handlers if drag-creation is allowed but
-          #[span.code editableEvents.resize] is set to false.
+          #[code editableEvents.resize] is set to false.
 
     li.patch
       strong.version 3.5.1
@@ -232,12 +236,12 @@ w-transition-expand(y)
       strong.version 3.4.1
       p.
         Also return the original event from the emitted
-        #[span.code event-duration-change] event
+        #[code event-duration-change] event
 
     li.minor
       strong.version 3.4.0
       p.
-        Add a #[span.code split-label] slot for day splits labels.
+        Add a #[code split-label] slot for day splits labels.
         Refer to the #[a(href="#ex--custom-day-split-labels") Custom day split labels] example.
 
     li.patch #[strong.version 3.3.1] Add custom event renderer back in all-day bar events
@@ -245,40 +249,40 @@ w-transition-expand(y)
     li.minor
       strong.version 3.3.0
       p.
-        Added the #[span.code allDayBarHeight] option and fix the all-day
-        bar layout when using #[span.code minCellWidth] or day splits &amp; #[span.code minSplitWidth]
+        Added the #[code allDayBarHeight] option and fix the all-day
+        bar layout when using #[code minCellWidth] or day splits &amp; #[code minSplitWidth]
     li.patch
       strong.version 3.2.8
       p.
-        Call #[span.code onEventClick()] (if any) on event click if events
+        Call #[code onEventClick()] (if any) on event click if events
         are not editable or on event creation
-    li.patch #[strong.version 3.2.7] Don't call #[span.code onEventClick()] (if any) on event click &amp; hold
+    li.patch #[strong.version 3.2.7] Don't call #[code onEventClick()] (if any) on event click &amp; hold
     li.patch #[strong.version 3.2.6] Display the no-event slot accurately per slot if there are
     li.patch
       strong.version 3.2.5
       p.
-        Fix emitting #[span.code view-change] between #[span.code week]
-        &amp; #[span.code day] views
+        Fix emitting #[code view-change] between #[code week]
+        &amp; #[code day] views
     li.patch #[strong.version 3.2.4] Prevent calling onEventClick after event resize &amp; focus event on resize
     li.minor
       strong.version 3.2.0
       p.
-        The new two way binding #[span.code active-view] prop replaces the #[span.code default-view] prop.#[br]
+        The new two way binding #[code active-view] prop replaces the #[code default-view] prop.#[br]
         Refer to the #[a(href="#ex--external-controls") external controls] example.
     li.patch
       strong.version 3.1.1
-      p Allow disabling event #[span.code titleEditable] individually
+      p Allow disabling event #[code titleEditable] individually
     li.minor
       strong.version 3.1.0
       alert(warning).
-        The event properties #[span.code startDate] and #[span.code endDate] have been merged into
-        #[span.code start] and #[span.code end] which now accept both a String and a Javascript Date.#[br]
+        The event properties #[code startDate] and #[code endDate] have been merged into
+        #[code start] and #[code end] which now accept both a String and a Javascript Date.#[br]
         #[strong Vue Cal always returns the Date object and not the string, even if you defined it as a string],
         but Vue Cal offers Date prototype functions to easily format the date how you want.
       ul
         li Fixed multiple day events resizing on x and y axis.
         li Allow disabling Date prototypes
-        li Emit an #[span.code event-resizing] repeatedly while resizing an event
+        li Emit an #[code event-resizing] repeatedly while resizing an event
 
     li.major
       strong.version 3.0.0
@@ -299,46 +303,46 @@ w-transition-expand(y)
             h4.mt2.pt0 Events drag &amp; drop
             p.
               Drag &amp; drop is a module (to keep Vue Cal light weight) and must be loaded
-              separately: #[br]#[span.code import 'vue-cal/dist/drag-and-drop.js']
+              separately: #[br]#[code import 'vue-cal/dist/drag-and-drop.js']
 
           li
             h4.mt0 Drop an external (HTML5 draggable) event into Vue Cal or between 2 Vue Cal instances
           li
-            h4.mt0 #[span.code snapToTime] option on event drop and event resize
-            p Refer to the #[span.code snapToTime] option in the #[a(href="#api") API section].
+            h4.mt0 #[code snapToTime] option on event drop and event resize
+            p Refer to the #[code snapToTime] option in the #[a(href="#api") API section].
           li
-            h4.mt0 The #[span.code editableEvents] option now also accept an object to precisely allow specific edition
-            p Refer to the #[span.code editableEvents] option in the #[a(href="#api") API section].
+            h4.mt0 The #[code editableEvents] option now also accept an object to precisely allow specific edition
+            p Refer to the #[code editableEvents] option in the #[a(href="#api") API section].
         h3.mt0.mb2 Big changes
         ul
           li.error
             strong In the coming version 3.1:
             p.
               Now that Vue Cal has Date prototypes and it is so easy to format a date,
-              the event properties #[span.code startDate] and #[span.code endDate] will be removed
-              and the start and end of event will be exlusively defined through #[span.code start]
-              and #[span.code end]. It will accept both a String and a Javascript Date.#[br]
+              the event properties #[code startDate] and #[code endDate] will be removed
+              and the start and end of event will be exlusively defined through #[code start]
+              and #[code end]. It will accept both a String and a Javascript Date.#[br]
               Vue Cal will always return the Date object and not the string, even if you defined it
               as a string.
           li.
-            The #[span.code event-change] emitted event now returns an object containing the
-            #[span.code event] and the #[span.code originalEvent].
+            The #[code event-change] emitted event now returns an object containing the
+            #[code event] and the #[code originalEvent].
           li.
-            the #[span.code event-title-change] and #[span.code event-duration-change] events now return an object
-            containing the #[span.code event] and the #[span.code oldTitle] or #[span.code oldDate].
+            the #[code event-title-change] and #[code event-duration-change] events now return an object
+            containing the #[code event] and the #[code oldTitle] or #[code oldDate].
           li.
-            Vue Cal's #[span.code createEvent()] function now accepts a duration parameter to easily override
+            Vue Cal's #[code createEvent()] function now accepts a duration parameter to easily override
             the default 2 hours.
             (ref. #[a(href="#ex--create-events") Create events] example)
           li.
-            The internal event #[span.code classes] property is replaced with
-            #[span.code class] like in the external event definition. This means you can now
-            update the #[span.code class] property seemlessly like the initial event definition.
-            (From your component methods called from Vue Cal fired events or from #[span.code onEventCreate])
+            The internal event #[code classes] property is replaced with
+            #[code class] like in the external event definition. This means you can now
+            update the #[code class] property seemlessly like the initial event definition.
+            (From your component methods called from Vue Cal fired events or from #[code onEventCreate])
 
           li
             h4.mt3.pt0 Renamed slot
-            p The #[span.code event-renderer] slot is renamed into #[span.code event]
+            p The #[code event-renderer] slot is renamed into #[code event]
           li
             h4.mt3.pt0 Huge code refactoring
             p.
@@ -348,14 +352,14 @@ w-transition-expand(y)
         h3.mt0.mb2 Other noticeable changes
         ul
           li.
-            When creating an event with a given #[span.code endDate], the required
-            #[span.code endTimeMinutes] is automatically add.
+            When creating an event with a given #[code endDate], the required
+            #[code endTimeMinutes] is automatically add.
           li
-            h4.mt3.pt0 You don't need to call #[span.code alignAllDayBar()] anymore
+            h4.mt3.pt0 You don't need to call #[code alignAllDayBar()] anymore
             p.
               Previously, in some cases you would need to call this function to realign the
               all-day bar with the scrollbar when the scrollbar is fixed (E.g. on Windows).#[br]
-              Now the function (renamed to #[span.code alignWithScrollbar]) is triggered automatically
+              Now the function (renamed to #[code alignWithScrollbar]) is triggered automatically
               and in all the cases, once, in mounted.#[br]
               It will now also align the weekdays headings if needed.
           li
@@ -365,49 +369,49 @@ w-transition-expand(y)
               you might want to update them:#[br]
             strong Cells
             ul
-              li #[span.code .current] becomes #[span.code .vuecal__cell--current]
-              li #[span.code .today] becomes #[span.code .vuecal__cell--today]
-              li #[span.code .out-of-scope] becomes #[span.code .vuecal__cell--out-of-scope]
-              li #[span.code .before-min] becomes #[span.code .vuecal__cell--before-min]
-              li #[span.code .after-max] becomes #[span.code .vuecal__cell--after-max]
-              li #[span.code .disabled] becomes #[span.code .vuecal__cell--disabled]
-              li #[span.code .selected] becomes #[span.code .vuecal__cell--selected]
-              li #[span.code .vuecal__cell--has-splits] &amp; #[span.code .vuecal__cell--has-events] remain the same
+              li #[code .current] becomes #[code .vuecal__cell--current]
+              li #[code .today] becomes #[code .vuecal__cell--today]
+              li #[code .out-of-scope] becomes #[code .vuecal__cell--out-of-scope]
+              li #[code .before-min] becomes #[code .vuecal__cell--before-min]
+              li #[code .after-max] becomes #[code .vuecal__cell--after-max]
+              li #[code .disabled] becomes #[code .vuecal__cell--disabled]
+              li #[code .selected] becomes #[code .vuecal__cell--selected]
+              li #[code .vuecal__cell--has-splits] &amp; #[code .vuecal__cell--has-events] remain the same
             strong View selector buttons
             ul
-              li Added class: #[span.code .vuecal__view-btn]
-              li #[span.code .active] becomes #[span.code .vuecal__view-btn--active]
+              li Added class: #[code .vuecal__view-btn]
+              li #[code .active] becomes #[code .vuecal__view-btn--active]
 
           li
             h4.mt0 New CSS classes when an event is dragged
             ul
-              li Over a cell: #[span.code .vuecal__cell--highlighted]
-              li Over a menu arrow (previous &amp; next): #[span.code .vuecal__arrow--highlighted]
-              li Over a menu view button: #[span.code .vuecal__view-btn--highlighted]
-              li Event dragging class: #[span.code .vuecal__event-dragging]
+              li Over a cell: #[code .vuecal__cell--highlighted]
+              li Over a menu arrow (previous &amp; next): #[code .vuecal__arrow--highlighted]
+              li Over a menu view button: #[code .vuecal__view-btn--highlighted]
+              li Event dragging class: #[code .vuecal__event-dragging]
           li
             h4.mt0 Updated color theme
             p.
               If you have a custom color theme, these new classes should be added:
-              #[span.code .vuecal__view-btn--highlighted],
-              #[span.code .vuecal__arrow--highlighted],
-              #[span.code .vuecal__cell--highlighted].#[br]
+              #[code .vuecal__view-btn--highlighted],
+              #[code .vuecal__arrow--highlighted],
+              #[code .vuecal__cell--highlighted].#[br]
               Refer to the #[a(href="#css-notes") CSS Notes].
 
     li.patch #[strong.version 2.24.4] Fire `event-focus` only once, always return a date from `cell-click`
     li.patch #[strong.version 2.24.3] Fix the all-day bar label cell horizontal alignment
     li.patch #[strong.version 2.24.1] Disable special hours in the all-day bar
     li.minor #[strong.version 2.24.0] Allow toggling day splits
-    li.minor #[strong.version 2.23.0] Added #[span.code special-hours] option
+    li.minor #[strong.version 2.23.0] Added #[code special-hours] option
     li.patch #[strong.version 2.22.1] Fix the selected cell CSS class not added on selectedDate change.
     li.minor.
-      #[strong.version 2.22.0] Added the #[span.code addHours], #[span.code subtractHours],
-      #[span.code addMinutes], #[span.code subtractMinutes] Date prototypes
+      #[strong.version 2.22.0] Added the #[code addHours], #[code subtractHours],
+      #[code addMinutes], #[code subtractMinutes] Date prototypes
     li.minor #[strong.version 2.21.0] Align the all-day bar on devices with fixed scrollbar width
-    li.patch #[strong.version 2.20.1] Fix wrong week number with #[span.code startWeekOnSunday]
+    li.patch #[strong.version 2.20.1] Fix wrong week number with #[code startWeekOnSunday]
     li.minor #[strong.version 2.20.0] Added Icelandic language
-    li.minor #[strong.version 2.19.0] Emit an event on #[span.code cell-keypress-enter]
-    li.minor #[strong.version 2.18.0] Added a #[span.code cell-contextmenu] option and emitted event
+    li.minor #[strong.version 2.19.0] Emit an event on #[code cell-keypress-enter]
+    li.minor #[strong.version 2.18.0] Added a #[code cell-contextmenu] option and emitted event
     li.minor #[strong.version 2.17.0] Added Lithuanian language
     li.minor #[strong.version 2.16.0]
       ul
@@ -426,32 +430,32 @@ w-transition-expand(y)
               the formatting keywords have changed, since the month and minutes keywords were
               both #[strong.code.base-color mm] but in 2 different functions.#[br]
               The new formatting keywords are more commonly used, the default format is now
-              #[span.code `YYYY-MM-DD`].#[br]
+              #[code `YYYY-MM-DD`].#[br]
               Ref. #[a(href="#date-prototypes") Date prototypes]
 
     li.minor
       strong.version 2.15.0
       ul
-        li Allow ending an event at #[span.code 00:00] both from #[span.code event.end] and #[span.code event.endDate]
+        li Allow ending an event at #[code 00:00] both from #[code event.end] and #[code event.endDate]
         li Prevent resizing an event below a 1 minute duration or a minimum height of 5px.
-    li.minor #[strong.version 2.14.0] Allow custom weekday render (#[span.code month] &amp; #[span.code week] views)
+    li.minor #[strong.version 2.14.0] Allow custom weekday render (#[code month] &amp; #[code week] views)
     li.minor #[strong.version 2.13.0] Added Indonesian language
-    li.minor #[strong.version 2.12.0] Added the #[span.code overlapsPerTimeStep] option
+    li.minor #[strong.version 2.12.0] Added the #[code overlapsPerTimeStep] option
     li.minor #[strong.version 2.11.0] Added Greek language
-    li.minor #[strong.version 2.10.0] Added the #[span.code watchRealTime] option
-    li.minor #[strong.version 2.9.0] Added the #[span.code minEventWidth] option
-    li.minor #[strong.version 2.8.0] Added the #[span.code showWeekNumbers] option
-    li.minor #[strong.version 2.7.0] Added #[span.code minSplitWidth] option for #[span.code splitDays]
+    li.minor #[strong.version 2.10.0] Added the #[code watchRealTime] option
+    li.minor #[strong.version 2.9.0] Added the #[code minEventWidth] option
+    li.minor #[strong.version 2.8.0] Added the #[code showWeekNumbers] option
+    li.minor #[strong.version 2.7.0] Added #[code minSplitWidth] option for #[code splitDays]
     li.minor #[strong.version 2.6.0] Added Bangla language
     li.minor #[strong.version 2.5.0] Control Previous &amp; Next externally
     li.minor #[strong.version 2.4.0] Added Korean language
     li.minor #[strong.version 2.3.0] Added Turkish language
-    li.minor #[strong.version 2.2.0] Allow rejecting event creation through #[span.code on-event-create]
+    li.minor #[strong.version 2.2.0] Allow rejecting event creation through #[code on-event-create]
     li.minor
       strong.version 2.1.0
       p.
-        Added clicked split id in #[span.code cell-click], #[span.code cell-dblclick]
-        &amp; #[span.code cell-focus] emitted events
+        Added clicked split id in #[code cell-click], #[code cell-dblclick]
+        &amp; #[code cell-focus] emitted events
 
     li.major #[strong.version 2.0.0]
       alert(warning) Due to the new scoped slots syntax, Vue Cal now requires Vue@2.6.0+
@@ -460,13 +464,13 @@ w-transition-expand(y)
         ul
           li
             | Added an option to hide particular days of the week
-            em.grey.ml1 (ref. #[span.code hideWeekdays] in the #[a(href="#api") API] section)
+            em.grey.ml1 (ref. #[code hideWeekdays] in the #[a(href="#api") API] section)
           li
-            | Added new emitted event #[span.code cell-dblclick]
+            | Added new emitted event #[code cell-dblclick]
             em.grey.ml1 (ref. #[a(href="#ex--emitted-events") Emitted events] example)
           li
             | Added ability to resize horizontally
-            em.grey.ml1 (ref. #[span.code resizeX] in the #[a(href="#api") API] section)
+            em.grey.ml1 (ref. #[code resizeX] in the #[a(href="#api") API] section)
           li
             | Added ability to create events on cell single/double click
             em.grey.ml1 (ref. #[a(href="#ex--create-events") Create events] example)
@@ -476,13 +480,13 @@ w-transition-expand(y)
           li
             | Now support displaying more than 3 overlapping events!
           li
-            | Events start &amp; end can now also be defined with Date objects through #[span.code startDate] &amp; #[span.code endDate]
-            em.grey.ml1 (ref. #[span.code events] in the #[a(href="#api") API] section)
+            | Events start &amp; end can now also be defined with Date objects through #[code startDate] &amp; #[code endDate]
+            em.grey.ml1 (ref. #[code events] in the #[a(href="#api") API] section)
           li
             | Added an option to display day splits labels in the header
-            em.grey.ml1 (ref. #[span.code stickySplitLabels] in the #[a(href="#api") API] section)
+            em.grey.ml1 (ref. #[code stickySplitLabels] in the #[a(href="#api") API] section)
           li
-            | Added #[span.code deletable], #[span.code resizable] attributes on events to override globals
+            | Added #[code deletable], #[code resizable] attributes on events to override globals
             em.grey.ml1 (ref. #[a(href="#ex--edit-and-delete-events") Edit &amp; delete events] example)
           li.
             Vue Cal is now more accessible (WAI-ARIA). You can now navigate through the calendar with the keyboard.#[br]
@@ -493,20 +497,20 @@ w-transition-expand(y)
         h3.mt3 Big changes
         ul
           li New scoped slots syntax #[em.grey.ml1 (internal change - requires Vue 2.6+)]
-          li the #[span.code no-event-overlaps] option is now useless and removed
+          li the #[code no-event-overlaps] option is now useless and removed
           li.
             Externalize all locales from main library
             #[em.grey.ml1 (ref. #[a(href="#ex--internationalization") Internationalization] example)]#[br]
             Now, only the locale you need will be loaded on demand (as a separate request).#[br]
             This will ensure Vue Cal keeps its file size as light as possible.
           li.
-            If you have a custom color theme, you need to edit #[span.code .vuecal__menu li] to
-            #[span.code .vuecal__menu button]. #[em.grey.ml1 (ref. #[a(href="#css-notes") CSS Notes])].#[br]
+            If you have a custom color theme, you need to edit #[code .vuecal__menu li] to
+            #[code .vuecal__menu button]. #[em.grey.ml1 (ref. #[a(href="#css-notes") CSS Notes])].#[br]
             This is for accessibility purpose.
 
         h3.mt3 Other noticeable changes
         ul
-          li #[span.code event-duration-change] is now only fired after resizing an event
+          li #[code event-duration-change] is now only fired after resizing an event
           li Added a resizing class on events being resized
           li A click on a cell (outside of events) removes the focus state of event
           li Cancel event deletion with escape key
@@ -514,14 +518,14 @@ w-transition-expand(y)
           li Calculate event segments within current view only (great performance gain on long events)
           li Improve rendering performances on event resizing
           li Improve resizing events logic
-          li Week view returned date range (through emitted events) takes #[span.code hideWeekends] in consideration
+          li Week view returned date range (through emitted events) takes #[code hideWeekends] in consideration
           li.
-            Renamed the option #[span.code dblClickToNavigate] to #[span.code dblclickToNavigate]
+            Renamed the option #[code dblClickToNavigate] to #[code dblclickToNavigate]
             for consistency.
           li.
-            Renamed the option #[span.code 12-hour] (invalid HTML attribute) to
-            #[span.code twelve-hour] and the corresponding css class to
-            #[span.code .vuecal--twelve-hour].
+            Renamed the option #[code 12-hour] (invalid HTML attribute) to
+            #[code twelve-hour] and the corresponding css class to
+            #[code .vuecal--twelve-hour].
           li Fix bug: allow date selection before the Epoch time!
           li Fix bug: days count calculation when multiple-day event crosses a daylight saving change
           li.
@@ -533,14 +537,14 @@ w-transition-expand(y)
             ul
               li Refactored multiple day events &amp; save 'segments' inside events
               li.
-                #[span.code startDate]/#[span.code endDate] previously containing strings are now Date Objects.#[br]
-                If you want formatted strings, use #[span.code start]/#[span.code end] instead
+                #[code startDate]/#[code endDate] previously containing strings are now Date Objects.#[br]
+                If you want formatted strings, use #[code start]/#[code end] instead
               li.
-                #[span.code startTime] &amp; #[span.code endTime] are removed as redundant,
-                use #[span.code start]/#[span.code end] or #[span.code startDate]/#[span.code endDate] instead
+                #[code startTime] &amp; #[code endTime] are removed as redundant,
+                use #[code start]/#[code end] or #[code startDate]/#[code endDate] instead
               li.
-                Due to accessibility, multiple elements of the headers are converted to #[span.code button]#[br]
-              li Few nesting levels were removed from html markup by using #[span.code &lt;template&gt;] tags
+                Due to accessibility, multiple elements of the headers are converted to #[code button]#[br]
+              li Few nesting levels were removed from html markup by using #[code &lt;template&gt;] tags
 
     li.minor #[strong.version 1.63.0] Added Japanese language
     li.minor #[strong.version 1.62.0] Added Arabic &amp; Farsi languages
@@ -550,69 +554,69 @@ w-transition-expand(y)
     li.minor #[strong.version 1.58.0] Added Ukrainian language
     li.minor #[strong.version 1.57.0] Added an option to display a Today button
       alert(success).
-        The CSS class of the title bar has changed from #[span.code .vuecal__title] to #[span.code .vuecal__title-bar].#[br]
-        The class #[span.code .vuecal__title] is now only wrapping the title, inside the #[span.code .vuecal__title-bar].#[br]
+        The CSS class of the title bar has changed from #[code .vuecal__title] to #[code .vuecal__title-bar].#[br]
+        The class #[code .vuecal__title] is now only wrapping the title, inside the #[code .vuecal__title-bar].#[br]
       alert(tip).
         If you have a custom theme, you will need to update it as per the theme example in the #[a(href="#css-notes") CSS Notes].
-    li.minor #[strong.version 1.56.0] Allow #[span.code minCellWidth] independently of #[span.code splitDays]
+    li.minor #[strong.version 1.56.0] Allow #[code minCellWidth] independently of #[code splitDays]
     li.minor #[strong.version 1.55.0] Set view and cells end dates to 23:59:59
       alert(success)
         ul
           li This update ensures the coverage of the full range of days when fetching your events from an AJAX call.
           li.
-            The #[span.code day-click] &amp; #[span.code day-focus] emitted events are renamed to
-            #[span.code cell-click] &amp; #[span.code cell-focus] as they are also triggered on
-            #[span.code years] &amp; #[span.code year] views.
+            The #[code day-click] &amp; #[code day-focus] emitted events are renamed to
+            #[code cell-click] &amp; #[code cell-focus] as they are also triggered on
+            #[code years] &amp; #[code year] views.
           li Adaptive width on events-count (for count numbers on more than 1 digit)
           li On month view, removed redundant css classes from events (classes related to event overlaps)
     li.minor #[strong.version 1.54.0] Added min &amp; max dates for cell selection
       alert(success)
         ul
           li.
-            The CSS class #[span.code .splitted] (appearing on the #[span.code .vuecal__cell] element
-            when the cell is split) is renamed to #[span.code .vuecal__cell--has-splits].
+            The CSS class #[code .splitted] (appearing on the #[code .vuecal__cell] element
+            when the cell is split) is renamed to #[code .vuecal__cell--has-splits].
           li.
-            The #[span.code selectedDate] option, like min &amp; max dates, now also accept a
+            The #[code selectedDate] option, like min &amp; max dates, now also accept a
             plain JS Date Object.
     li.minor #[strong.version 1.53.0] Added click/dblclick ability on weekdays headings on week view
-    li.minor #[strong.version 1.52.0] Separate #[span.code outOfScopeEvents] &amp; #[span.code events] in month view
+    li.minor #[strong.version 1.52.0] Separate #[code outOfScopeEvents] &amp; #[code events] in month view
       alert(success).
-        In month view only, the emitted events #[span.code ready] &amp; #[span.code view-change]
-        now return an object containing a new #[span.code outOfScopeEvents] array separated from the events array
+        In month view only, the emitted events #[code ready] &amp; #[code view-change]
+        now return an object containing a new #[code outOfScopeEvents] array separated from the events array
     li.minor #[strong.version 1.51.0] Added Bosnian &amp; Serbian languages
     li.minor #[strong.version 1.50.0] Create a new event on cell click &amp; hold
     li.minor #[strong.version 1.49.0] Added Hebrew language
     li.minor #[strong.version 1.48.0] Added Bulgarian language
-    li.minor #[strong.version 1.47.0] Added events count on #[span.code years] &amp; #[span.code year] views
+    li.minor #[strong.version 1.47.0] Added events count on #[code years] &amp; #[code year] views
       alert(success).
-        As it can now be used on #[span.code years] &amp; #[span.code year] views, the former
-        #[span.code events-count-month-view] slot is now renamed to #[span.code events-count].
+        As it can now be used on #[code years] &amp; #[code year] views, the former
+        #[code events-count-month-view] slot is now renamed to #[code events-count].
     li.minor #[strong.version 1.46.0] Allow cell customization
       alert(success).
-        For consistency, the slots #[span.code arrowPrev] &amp; #[span.code arrowNext]
-        are now renamed to #[span.code arrow-prev] &amp; #[span.code arrow-next].
+        For consistency, the slots #[code arrowPrev] &amp; #[code arrowNext]
+        are now renamed to #[code arrow-prev] &amp; #[code arrow-next].
 
-    li.minor #[strong.version 1.45.0] Added #[span.code cell-click] emitted event
+    li.minor #[strong.version 1.45.0] Added #[code cell-click] emitted event
     li.minor #[strong.version 1.44.0] Added Slovenian &amp; Hungarian languages
     li.minor #[strong.version 1.43.0] Added Catalan language
     li.minor #[strong.version 1.42.0] Added Norwegian language
     li.minor #[strong.version 1.41.0] Added Romanian language
     li.minor #[strong.version 1.39.0] Added Vietnamese language
-    li.minor #[strong.version 1.38.0] #[span.code showAllDayEvents] now also accepts string 'short'
+    li.minor #[strong.version 1.38.0] #[code showAllDayEvents] now also accepts string 'short'
     li.minor #[strong.version 1.37.0] Added text 'All day' in all i18n files
     li.minor #[strong.version 1.36.0] Added out of scope events in month view
       alert(success).
         On a month view, the events from the out of scope days
         (cells before and after the current month) are now also be displayed when using
-        the #[span.code eventsOnMonthView] option, and returned in the array of events in
-        the #[span.code ready] &amp; #[span.code view-change] emited events.
+        the #[code eventsOnMonthView] option, and returned in the array of events in
+        the #[code ready] &amp; #[code view-change] emited events.
     li.minor #[strong.version 1.35.0] Allow displaying all-day events in fixed top bar
     li.minor #[strong.version 1.34.0] Allow starting week on Sunday
     li.minor
       strong.version 1.33.0
       p Minor internal structure improvements
       alert(success).
-        In order to make the internal structure less verbose, the #[span.code events-count] slot
+        In order to make the internal structure less verbose, the #[code events-count] slot
         use has been simplified.#[br]
         Refer to the #[a(href="#ex--events-indicators") Month view with events indicators] example.
         A few default CSS rules have also been updated.#[br]
@@ -620,8 +624,8 @@ w-transition-expand(y)
       strong.version 1.32.0
       p Allow Syncing 2 vue-cal instances
       alert(success).
-        The #[span.code selected-date] option now also accepts a native Javascript Date object.#[br]
-        Refer to the #[span.code selectedDate] option in the #[a(href="#api") API] section.
+        The #[code selected-date] option now also accepts a native Javascript Date object.#[br]
+        Refer to the #[code selectedDate] option in the #[a(href="#api") API] section.
     li.minor #[strong.version 1.31.0] Added CSS transitions option
     li.minor #[strong.version 1.30.0] Allow custom event rendering
     li.minor #[strong.version 1.29.0] Accept a callback function on event click / dblclick
@@ -630,9 +634,9 @@ w-transition-expand(y)
       strong.version 1.27.0
       p Allow overriding 'No event' text
       alert(success).
-        The #[span.code events-on-month-view] option now also accepts the string '#[span.code short]'.#[br]
+        The #[code events-on-month-view] option now also accepts the string '#[code short]'.#[br]
         Refer to the #[a(href="#ex--events-on-month-view") Display events on month view] example.
-    li.minor #[strong.version 1.26.0] Emitted events #[span.code ready] &amp; #[span.code view-change] return events
+    li.minor #[strong.version 1.26.0] Emitted events #[code ready] &amp; #[code view-change] return events
     li.minor #[strong.version 1.25.0] Support multiple day events
     li.minor
       strong.version 1.24.0
@@ -648,10 +652,10 @@ w-transition-expand(y)
     li.minor #[strong.version 1.15.0] Added German language
     li.minor
       strong.version 1.14.0
-      p Added custom time format &amp; emit event on #[span.code cell-focus]
+      p Added custom time format &amp; emit event on #[code cell-focus]
       alert(success)
         ul
-          li The emitted #[span.code view-change] event now returns an object with a view name and startDate.
+          li The emitted #[code view-change] event now returns an object with a view name and startDate.
           li The emitted events-related events now also return native JS Date objects.
           li Refer to the #[a(href="#ex--emitted-events") emitted events example].
     li.minor #[strong.version 1.13.0] Added Swedish language
@@ -661,9 +665,9 @@ w-transition-expand(y)
       p Added events indicators in month view
       alert(tip).
         If you have created a custom theme, you will need to update it adding the new indicator
-        #[span.code .vuecal__cell-events-count], as per the theme example in the #[a(href="#css-notes") CSS Notes].
+        #[code .vuecal__cell-events-count], as per the theme example in the #[a(href="#css-notes") CSS Notes].
       alert(success).
-        The default #[span.code time-step] option value is now 60 minutes (previously 30).
+        The default #[code time-step] option value is now 60 minutes (previously 30).
     li.minor #[strong.version 1.10.0] Allow no event overlaps
     li.minor #[strong.version 1.9.0] Added Dutch language
     li.minor #[strong.version 1.8.0] Display up to 3 simultaneous events &amp; redraw overlaps on event resize &amp; delete
@@ -676,10 +680,10 @@ w-transition-expand(y)
       alert(success)
         ul
           li The delete button now appears on click and hold.
-          li All the events are now read-only by default you can add the option #[span.code editableEvents] to allow edition.
+          li All the events are now read-only by default you can add the option #[code editableEvents] to allow edition.
           li.
-            The #[span.code editableEvents] option triggers all the editing features on and off.#[br]
-            Refer to the #[span.code editableEvents] option in the #[a(href="#api") API] section.
+            The #[code editableEvents] option triggers all the editing features on and off.#[br]
+            Refer to the #[code editableEvents] option in the #[a(href="#api") API] section.
     li.minor #[strong.version 1.3.0] Added Simplified Chinese language &amp; bug fixes
     li.minor
       strong.version 1.2.0
@@ -811,10 +815,7 @@ const seeOldReleaseNotes = ref(false)
       line-height: 1.2;
     }
 
-    code {
-      padding: 0 4px;
-      font-size: 1em;
-    }
+    code {padding: 0 4px;}
 
     strong.code:first-child:not(.black) {
       color: var(--w-primary-color);

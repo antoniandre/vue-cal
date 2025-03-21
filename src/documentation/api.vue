@@ -1180,44 +1180,125 @@ w-accordion(
         li #[code cell]: The cell object where the event was dropped.
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
 
-  //- alert(tip)
-    ul
-      li.
-        #[span.code cell-click] is fired every time you click a day, whereas
-        #[span.code cell-focus] is fired only when the selected day changes.
-      li.
-        #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-contextmenu]
-        and #[span.code cell-focus] return the time at cursor position, unless the cell
-        was focused from tab key.
-        It would then return the cell start date (at midnight).
-      li.
-        If schedules is provided, #[span.code cell-click], #[span.code cell-dblclick], #[span.code cell-keypress-enter]
-        and #[span.code cell-focus] emitted events will return an object containing the date and the clicked schedule id.
+  w-accordion-item
+    template(#title)
+      strong.code.title5 event-dropped
+    template(#content)
+      p.
+        Fired after an event has been successfully dropped and the drop has been accepted. Unlike #[code event-drop],
+        this event is purely informational and doesn't expect a return value.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code event]: The updated calendar event object.
+        li #[code originalEvent]: The original event object before it was dropped.
+        li #[code cell]: The cell object where the event was dropped.
+        li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
 
-  //- alert
-    | The emitted events #[span.code ready] &amp; #[span.code view-change] return an object:#[br]
-    ssh-pre.mt2(language="js" :dark="store.darkMode").
-      {
-        view: [String],
-        start: [Date], // View start - JS native Date object.
-        end: [Date], // View end - JS native Date object.
-        firstCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
-        lastCellDate: [Date], // Month view only, in case cell is out of current month - JS native Date object.
-        outOfScopeEvents: [Array], // Month view only, all the events that are out of the current month.
-        events: [Array], // All the events in the current view.
-        week: [Integer] // Week number. Only returned if view is 'week'.
-      }
-    strong.
-      Note that on a month view, the events from the out of scope days
-      (cells before and after the current month) are also returned in the array.
+  h5.mt2.base-color Event Payload Structure Details
 
-  //- alert(tip)
-    ul
-      li.mt3.
-        To help you manipulate an event's date, Vue Cal returns native #[span.code Date]
-        objects in the event properties #[span.code start] &amp; #[span.code end].#[br]
-        So for instance, you can easily access the day of the week of an event with #[span.code event.start.getDay()].#[br]
-        You can then use Vue Cal #[a(href="#date-prototypes") Date prototypes] to manipulate and format the Date as you want.
+  w-accordion-item
+    template(#title)
+      strong.code.title5 Cell Event Payload Structure
+    template(#content)
+      p All cell-related events (like #[code cell-click], #[code cell-drag], etc.) return a consistent payload with:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          e: {Event}, // The native DOM event
+          cell: {
+            start: {Date}, // The cell start date & time
+            end: {Date}, // The cell end date & time
+            events: {ComputedRef}, // List of events in this cell
+            schedule: {Number}, // (if applicable) The schedule ID
+            // Navigation methods
+            goNarrower: {Function},
+            goBroader: {Function},
+            broader: {String}, // ID of the broader view
+            narrower: {String} // ID of the narrower view
+          },
+          cursor: {
+            x: {Number}, // Cursor X position in percentage within cell
+            y: {Number}, // Cursor Y position in percentage within cell
+            date: {Date} // Date at cursor position (includes time)
+          }
+        }
+      p.
+        For events triggered by the cell's DOM events (like #[code cell-click], #[code cell-dblclick], etc.), the cursor
+        position is calculated at the moment of the event, providing the exact time at the click position.
+      p.
+        For drag events (#[code cell-drag-start], #[code cell-drag], #[code cell-drag-end]), the cursor position is
+        continuously tracked during the drag operation.
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 Event Event Payload Structure
+    template(#content)
+      p All event-related events (like #[code event-click], #[code event-drag], etc.) return a consistent payload with:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          e: {Event}, // The native DOM event
+          event: {Object} // The full calendar event object
+        }
+      p.
+        The event object contains all the properties of the calendar event, including both custom properties
+        and internal properties (accessible via the #[code _] property).
+      p For specialized events like #[code event-resize], the payload contains additional context:
+      ssh-pre(language="js" :dark="store.darkMode").
+        // event-resize-start and event-resize-end
+        {
+          e: {Event}, // The native DOM event
+          event: {Object}, // The event being resized
+          original: {Object}, // For resize-end: Original event before resizing
+          overlaps: {Array} // Events that overlap with the resized event
+        }
+
+        // event-resize (during resize)
+        {
+          _eid: {Number}, // Internal event ID
+          end: {Date}, // New end date during resize
+          endTimeMinutes: {Number} // New end time in minutes
+        }
+
+      p For drag &amp; drop operations, the payload includes context about the source and destination:
+      ssh-pre(language="js" :dark="store.darkMode").
+        // event-drop
+        {
+          e: {Event}, // The native DOM event
+          event: {Object}, // The event being dropped with updated properties
+          overlaps: {Array}, // Events that overlap with the dropped event
+          cell: {Object}, // The cell where the event is being dropped
+          external: {Boolean} // If the event comes from another Vue Cal instance
+        }
+
+  w-accordion-item
+    template(#title)
+      .title5 Additional Notes About The Internal Manual Event Forwarding
+    template(#content)
+      p.
+        Vue Cal uses two different mechanisms for event handling: the standard Vue event emission system
+        and direct DOM event forwarding.
+      p.
+        For DOM events on cells and events (like click, dblclick, mousedown, etc.), Vue Cal automatically
+        forwards these events by adding listeners to the cell and event elements. When these events occur,
+        Vue Cal enriches them with additional context (cell info, event info, cursor position) before
+        passing them to your handlers.
+      ssh-pre(language="js" :dark="store.darkMode").
+        // Example of what happens internally:
+        eventListeners.click = e => {
+          // First process internal logic
+          onCellClick();
+
+          // Then forward to external handler with enriched context
+          externalHandlers.click?.({
+            e,
+            cell: cellInfo.value,
+            cursor: getTimeAtCursor(e)
+          });
+        }
+      p.
+        This approach allows Vue Cal to provide a consistent, rich API for all events while still
+        maintaining the natural DOM event behavior. It also enables advanced features like the
+        "delayed-click" event that waits to ensure it's not part of a double-click.
 
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="slots") Slots
