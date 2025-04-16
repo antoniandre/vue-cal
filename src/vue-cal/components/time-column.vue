@@ -1,6 +1,6 @@
 <template lang="pug">
 .vuecal__time-column
-  .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i")
+  .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i" :style="{ height: time.height || null }")
     slot(
       name="time-cell"
       :index="i"
@@ -21,17 +21,28 @@ const { config, texts } = vuecal
 const timeCells = computed(() => {
   const cells = []
   const noon = 12 * 60
+
   for (let i = config.timeFrom; i < config.timeTo; i += config.timeStep) {
+    const isLastCell = i + config.timeStep > config.timeTo
     const hours = ~~(i / 60) // 0 to 23.
     const mins = i % 60
     const amPm = texts[i < noon ? 'am' : 'pm']
+
+    let cellHeight = null
+    // If last cell, check if the cell is full or truncated.
+    // E.g. timeStep = 1h, timeTo = 19h30. -> The last cell will be --vuecal-time-cell-height * 0.5%.
+    if (isLastCell) {
+      const percentageOfFullCell = (config.timeTo - i) / config.timeStep
+      cellHeight = `calc(var(--vuecal-time-cell-height) * ${percentageOfFullCell})`
+    }
 
     cells.push({
       minutesSum: i, // The sum of hours + minutes in minutes.
       hours,
       minutes: mins,
-      formatted12: `${!(hours % 12) ? 12 : (hours % 12)}${mins ? ':' + mins.toString().padStart(2, 0) : ''}${amPm}`,
-      formatted24: `${hours.toString().padStart(2, 0)}:${mins.toString().padStart(2, 0)}`
+      formatted12: `${!(hours % 12) ? 12 : (hours % 12)}${mins ? `:${mins.toString().padStart(2, 0)}` : ''}${amPm}`,
+      formatted24: `${hours.toString().padStart(2, 0)}:${mins.toString().padStart(2, 0)}`,
+      height: cellHeight
     })
   }
   return cells
