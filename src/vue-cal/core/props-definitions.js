@@ -2,7 +2,7 @@ export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
   allDayEvents: { type: [Boolean, String], default: false }, // Coming soon.
-  stackEvents: { type: Boolean, default: true },
+  stackEvents: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   dark: { type: Boolean, default: false }, // Dark theme.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.

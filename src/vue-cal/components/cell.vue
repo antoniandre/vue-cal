@@ -65,6 +65,7 @@
         :key="event._.id"
         :event="event"
         @event-deleted="onEventDelete"
+        :class="eventClasses[event._.id]"
         :style="eventStyles[event._.id]")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
@@ -255,13 +256,31 @@ const eventStyles = computed(() => {
     styles[eventId] = { left: `${(100 / maxConcurrent) * position}%` }
     // Stack overlapping events on top of each other if the stackEvents prop is set to true.
     if (config.stackEvents) {
-      styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 10)}%`
+      styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
     }
     else {
       styles[eventId].width = `${100 / maxConcurrent}%`
     }
   }
   return styles
+})
+
+/**
+ * Generates an object containing event classes based on the stack position and length.
+ * This lets the user style visually stacked events in full control.
+ *
+ * @returns {Object} An object where keys are event IDs, and values are strings
+ *                   representing the event class.
+ */
+const eventClasses = computed(() => {
+  const classes = {}
+  for (const event of cellEvents.value) {
+    const eventId = event._.id
+    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
+
+    classes[eventId] = `vuecal__event--stack-${position + 1}-${maxConcurrent}`
+  }
+  return classes
 })
 
 const showCellEventsCount = computed(() => {
