@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.15
+    ul
+      li Fix the events positioning when the last time cell is truncated. #[issue-link 48]
+  li.patch
     strong.version 5.0.1-rc.14
     ul
       li Correct the time at cursor value on #[code cell-click]. #[issue-link 38]
