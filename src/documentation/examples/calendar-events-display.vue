@@ -345,7 +345,7 @@ example(title="Overlapping Events" anchor="overlapping-events")
 
     alert.mb6(tip).
       Alternatively, you can use the event stacking class (based on the stack position and length) to override
-      the default stacking behavior to your liking. #[br]
+      the default stacking behavior to your liking via CSS (you will need to use #[code !important]).#[br]
       Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
   template(#code-html).
     &lt;vue-cal
