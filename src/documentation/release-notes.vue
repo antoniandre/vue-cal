@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.16
+    ul
+      li Added the #[code stackEvents] prop to stack overlapping events on top of each other. #[issue-link 49]
+  li.patch
     strong.version 5.0.1-rc.15
     ul
       li Fix the events positioning when the last time cell is truncated. #[issue-link 48]
