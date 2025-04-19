@@ -5,7 +5,10 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.16
     ul
-      li Added the #[code stackEvents] prop to stack overlapping events on top of each other. #[issue-link 49]
+      li.
+        Added the #[code stackEvents] prop to stack overlapping events on top of each other.<br>
+        Additionally, each event receives an event stacking class based on the stack position and length
+        in order to give the user full control on event stacking style. #[issue-link 49]
   li.patch
     strong.version 5.0.1-rc.15
     ul

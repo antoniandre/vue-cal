@@ -334,29 +334,22 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 //- Example.
 example(title="Overlapping Events" anchor="overlapping-events")
   template(#desc)
-    .todo-tag.d-iflex TO REVIEW
     p.
       Overlapping, editable &amp; deletable events.#[br]
       Try to resize &amp; delete events to see the overlapping redrawn.
+      #[br]
+      You can also stack events on top of each other by setting the #[code stack-events] prop to #[code true].
 
-    .w-flex.mb3.align-center
-      | Optionally you can set a min width (in percent) to the events:
-      w-button.ml2(@click="exOverlappingEvents.minEventWidth = exOverlappingEvents.minEventWidth ? 0 : 50")
-        w-icon.mr1 mdi mdi-{{ exOverlappingEvents.minEventWidth ? 'close' : 'plus' }}
-        | {{ exOverlappingEvents.minEventWidth ? 'min-event-width="50"' : 'Add min-event-width' }}
-    div(style="min-height: 40px")
-      w-transition-expand(y)
-        .grey(v-if="exOverlappingEvents.minEventWidth").
-          #[code min-event-width="50"] will only apply a min width of 50% on simultaneous
-          events that would be smaller than that (e.g. with 3 events side by side)
-    alert.mb6.
-      In some cases you may want to set the events overlaps calculation only per same time step
-      (default time step is 1 hour), like in
-      #[a(href="https://github.com/antoniandre/vue-cal/pull/182" target="_blank") this use case].#[br]
-      You can achieve this event overlaps grouping with the option #[code overlaps-per-time-step].
+    .w-flex.justify-end.mb3
+      w-switch(v-model="exOverlappingEvents.stackEvents" label-on-left) Stack Events
+
+    alert.mb6(tip).
+      Alternatively, you can use the event stacking class (based on the stack position and length) to override
+      the default stacking behavior to your liking. #[br]
+      Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
   template(#code-html).
     &lt;vue-cal
-      editable-events
+      editable-events{{ exOverlappingEvents.stackEvents ? '\n  stack-events' : '' }}
       :min-event-width="minEventWidth"
       :events="events"&gt;
     &lt;/vue-cal&gt;
@@ -392,6 +385,7 @@ example(title="Overlapping Events" anchor="overlapping-events")
   vue-cal(
     :events="exOverlappingEvents.events"
     editable-events
+    :stack-events="exOverlappingEvents.stackEvents"
     :min-event-width="exOverlappingEvents.minEventWidth"
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
@@ -893,8 +887,33 @@ const exEventsMonthView = reactive({
 const exOverlappingEvents = reactive({
   events: ref([
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
+    {
+      start: new Date(new Date().setHours(12, 0)).addDays(1),
+      end: new Date(new Date().setHours(14, 0)).addDays(1),
+      title: 'Event 1',
+      class: 'event-1'
+    },
+    {
+      start: new Date(new Date().setHours(12, 0)).addDays(1),
+      end: new Date(new Date().setHours(14, 0)).addDays(1),
+      title: 'Event 2',
+      class: 'event-2'
+    },
+    {
+      start: new Date(new Date().setHours(11, 0)).addDays(2),
+      end: new Date(new Date().setHours(13, 0)).addDays(2),
+      title: 'Event 3',
+      class: 'event-3'
+    },
+    {
+      start: new Date(new Date().setHours(12, 0)).addDays(2),
+      end: new Date(new Date().setHours(14, 0)).addDays(2),
+      title: 'Event 4',
+      class: 'event-4'
+    }
   ]),
-  minEventWidth: ref(0)
+  minEventWidth: ref(0),
+  stackEvents: ref(false)
 })
 
 const exRecurringEvents = reactive({
