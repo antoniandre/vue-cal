@@ -271,11 +271,11 @@ export const useEvents = vuecal => {
       activeEvents = activeEvents.filter(active => active.end > e.start)
 
       // Find all current overlaps in the current cell or schedule.
-      let currentOverlaps = activeEvents.filter(active => {
+      const currentOverlaps = activeEvents.filter(active => {
         const sameSchedule = !config.schedules?.length || e.schedule === active.schedule
         return sameSchedule && active.start < e.end
       })
-      let takenPositions = new Set(currentOverlaps.map(ev => cellOverlaps[ev._.id]?.position ?? 0))
+      const takenPositions = new Set(currentOverlaps.map(ev => cellOverlaps[ev._.id]?.position ?? 0))
 
       // Assign the lowest available column position.
       let position = 0
@@ -285,7 +285,7 @@ export const useEvents = vuecal => {
       activeEvents.push(e)
 
       // Calculate inherited maxConcurrent from overlaps.
-      let inheritedMax = Math.max(1, ...currentOverlaps.map(ev => cellOverlaps[ev._.id]?.maxConcurrent ?? 1))
+      const inheritedMax = Math.max(1, ...currentOverlaps.map(ev => cellOverlaps[ev._.id]?.maxConcurrent ?? 1))
 
       // Set maxConcurrent for this event.
       cellOverlaps[id].maxConcurrent = Math.max(currentOverlaps.length + 1, inheritedMax)
