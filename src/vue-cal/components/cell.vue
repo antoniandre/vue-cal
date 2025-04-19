@@ -252,9 +252,13 @@ const eventStyles = computed(() => {
     const eventId = event._.id
     const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
 
-    styles[eventId] = {
-      width: `${100 / maxConcurrent}%`,
-      left: `${(100 / maxConcurrent) * position}%`
+    styles[eventId] = { left: `${(100 / maxConcurrent) * position}%` }
+    // Stack overlapping events on top of each other if the stackEvents prop is set to true.
+    if (config.stackEvents) {
+      styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 10)}%`
+    }
+    else {
+      styles[eventId].width = `${100 / maxConcurrent}%`
     }
   }
   return styles
