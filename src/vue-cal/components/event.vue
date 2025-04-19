@@ -108,7 +108,7 @@ const eventListeners = computed(() => {
   const eventListeners = { ...config.eventListeners.event }
 
   // Inject the event details in each eventListener handler call as 2nd param.
-  Object.entries(eventListeners).forEach(([eventListener, handler]) => {
+  for (const [eventListener, handler] of Object.entries(eventListeners)) {
     // `event-resize-end` is handled in `onDocMouseup` in this file.
     if (!['resize-end'].includes(eventListener)) {
       eventListeners[eventListener] = e => {
@@ -122,7 +122,7 @@ const eventListeners = computed(() => {
         if (e.type !== 'drop') handler(e.type ? { e, event } : e)
       }
     }
-  })
+  }
 
   // Store a copy of any potential external handler to combine with internal handlers like click,
   // touchstart, mousedown.
@@ -335,9 +335,9 @@ onBeforeUnmount(() => {
   event._.unregister()
 
   // Clean up all document event listeners to prevent memory leaks
-  documentListeners.forEach(({ event, handler, options }) => {
+  for (const { event, handler, options } of documentListeners) {
     document.removeEventListener(event, handler, options)
-  })
+  }
 })
 </script>
 
