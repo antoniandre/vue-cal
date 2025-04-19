@@ -707,6 +707,20 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      strong.code.title5 stackEvents
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+      p Stack events on top of each other when they overlap.
+      alert(tip).
+        Alternatively, you can use the event stacking class (based on the stack position and length) to override
+        the default stacking behavior to your liking. #[br]
+        Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
+
+  w-accordion-item
+    template(#title)
       strong.code.title5 theme
       .type [String, Boolean]
       | ,
