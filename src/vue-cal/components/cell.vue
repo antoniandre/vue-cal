@@ -534,7 +534,7 @@ const onDocMouseup = async e => {
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
-    cellEventListeners.value.dragEnd?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
     globalTouchState.isDraggingCell = false // Add a CSS class on wrapper while dragging.
 
     if (config.editableEvents.create) {

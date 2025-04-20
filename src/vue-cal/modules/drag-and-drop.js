@@ -151,14 +151,21 @@ export function useDragAndDrop (vuecal) {
     // When dropping the event to an external source, the event has to be deleted manually.
     if (toVueCal && fromVueCal !== toVueCal) eventsManager.deleteEvent(event._.id, 3)
 
-    dragging.fromVueCal = null
-    dragging.toVueCal = null
-
     // When dropping the event, cancel view change if no cell received the event (in cellDragDrop).
     if (viewChanged && cancelViewChange && viewBeforeDrag.id) {
       view.switchView(viewBeforeDrag.id, viewBeforeDrag.date, true)
     }
 
+    // Emit `event-drag-end` and return the updated event.
+    // `external` is when the event is not coming from this Vue Cal instance.
+    emit('event-drag-end', {
+      e,
+      event,
+      external: dragging.fromVueCal !== vuecalUid
+    })
+
+    dragging.fromVueCal = null
+    dragging.toVueCal = null
     vuecal.touch.isDraggingEvent = false // For the global dragging class and cursor.
   }
 
