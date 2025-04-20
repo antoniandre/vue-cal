@@ -115,6 +115,13 @@ export function useDragAndDrop (vuecal) {
     dragging.eventId = event._.id
     dragging.fromVueCal = vuecalUid
 
+    // Emit `event-drag-start` and return the updated event.
+    // `external` is when the event is not coming from this Vue Cal instance.
+    emit('event-drag-start', {
+      e,
+      event
+    })
+
     // Add CSS class to the event clone and original for styling while dragging.
     const eventDomNode = e.target.closest('.vuecal__event')
     eventDomNode.classList.add('vuecal__event--dragging-ghost') // Add a class to the dragging clone.
