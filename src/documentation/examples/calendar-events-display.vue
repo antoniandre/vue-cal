@@ -218,7 +218,7 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
       w-switch(
         v-model="exEventsMonthView.showEventCount"
         @update:model-value="exEventsMonthView.showEventCount && (exEventsMonthView.showEvents = false)"
-        label-on-left) Show Events Count
+        label-on-left) Show Event Count
       w-radios(
         v-model="exEventsMonthView.eventCountStyle"
         inline
@@ -320,7 +320,7 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
     :event-count="exEventsMonthView.showEventCount"
     :time-from="8 * 60"
     :time-to="18 * 60"
-    :views="{ days: { cols: 5, rows: 1 }, month: { cols: 6, rows: 7 } }"
+    :views="{ days: { cols: 5, rows: 1 }, month: {}, year: {} }"
     view="month"
     :dark="store.darkMode"
     :class="exEventsMonthView.classes")
