@@ -510,7 +510,7 @@ const onDocMousemove = e => {
     globalTouchState.isDraggingCell = true // Add a CSS class on wrapper while dragging.
 
     // If there's a @cell-drag-start external listener, call it.
-    cellEventListeners.value.dragStart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    cellEventListeners.value['drag-start']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
   }
   touch.dragging = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
