@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.17
+    ul
+      li.
+        Fixed emitting the #[code event-drag-end] and #[code cell-drag-end] events. #[issue-link 42]
+  li.patch
     strong.version 5.0.1-rc.16
     ul
       li.
