@@ -73,7 +73,7 @@
       | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   slot(v-if="$slots['event-count']" name="event-count" :events="cellForegroundEvents")
-  .vuecal__cell-events-count(v-else-if="showCellEventsCount") {{ cellForegroundEvents.length }}
+  .vuecal__cell-events-count(v-else-if="showCellEventCount") {{ cellForegroundEvents.length }}
 
   .vuecal__now-line(
     v-if="nowLine.show"
@@ -283,7 +283,7 @@ const eventClasses = computed(() => {
   return classes
 })
 
-const showCellEventsCount = computed(() => {
+const showCellEventCount = computed(() => {
   return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellForegroundEvents.value.length
 })
 

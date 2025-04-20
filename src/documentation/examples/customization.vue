@@ -154,8 +154,8 @@ example(title="Custom Events Count" anchor="custom-events-count")
       events-count-on-year-view
       :events="events"&gt;
       &lt;template #events-count="{ events, view }"&gt;
-        &lt;span v-if="customEventsCount(events)"&gt;
-          {{ '\{\{ customEventsCount(events) \}\}' }}
+        &lt;span v-if="customEventCount(events)"&gt;
+          {{ '\{\{ customEventCount(events) \}\}' }}
         &lt;/span&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
@@ -172,15 +172,15 @@ example(title="Custom Events Count" anchor="custom-events-count")
         &lt;/span&gt;
         &lt;span
           class="vuecal__cell-events-count"
-          v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventsCount(events)"&gt;
-          {{ '\{\{ customEventsCount(events) \}\}' }}
+          v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventCount(events)"&gt;
+          {{ '\{\{ customEventCount(events) \}\}' }}
         &lt;/span&gt;
       &lt;/template&gt;
 
     ssh-pre(language="js" :dark="store.darkMode").
       // In your Vue component.
       methods: {
-        customEventsCount: events => {
+        customEventCount: events => {
           return events ? events.filter(e => e.class === 'leisure').length : 0
         }
       }
@@ -206,7 +206,7 @@ example(title="Custom Events Count" anchor="custom-events-count")
     :events="events")
     template(#events-count="{ events, view }"
     style="width: 300px;height: 360px;max-width: 100%")
-      span(v-if="customEventsCount(events)") {{ customEventsCount(events) }}
+      span(v-if="customEventCount(events)") {{ customEventCount(events) }}
 
 //- Example.
 example(title="Custom Title & Cells" anchor="custom-title-and-cells")
@@ -619,7 +619,7 @@ const cancelEventCreation = () => {
   closeCreationDialog()
   (deleteEventFunction.value || deleteDragEventFunction.value)()
 }
-const customEventsCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
+const customEventCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
 </script>
 
 <style lang="scss">
