@@ -14,6 +14,9 @@ export const useEvents = vuecal => {
   // Computed property to manage and organize events.
   const events = computed(() => {
     const events = {
+      // A map of events indexed by { YYYY: { MM: [] } }.
+      // Each year contains a map of 12 months starting from 1, each containing an array of events.
+      byYear: {},
       byDate: {}, // A map of single-day events indexed by date.
       recurring: [], // An array of events IDs that are recurring.
       multiday: [], // An array of events IDs that are multiday.
@@ -28,49 +31,7 @@ export const useEvents = vuecal => {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
       normalizeEventDates(event)
 
-      // Inject a unique ID in each event.
-      if (!event._) event._ = {}
-      event._.id = event._.id || ++uid
-
-      // Inject a delete function in each event and set the deleting flag to false.
-      if (!event.delete) event.delete = forcedStage => deleteEvent(event._.id, forcedStage)
-      event._.deleting = false
-      event._.deleted = false
-
-      /**
-       * Inject a function to check if the event is overlapping with any another event.
-       *
-       * @param {Object} at - An optional object with start and end dates to check the overlap at.
-       *                      If not provided, the event's own start and end dates will be used.
-       * @returns {Boolean} - True if the event is overlapping with another event.
-       */
-      event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
-      event.getOverlappingEvents = (at = null) => {
-        return getEventsInRange(
-          getEventsByDate(dateUtils.formatDate(at?.start || event.start), true),
-          { start: at?.start || event.start, end: at?.end || event.end },
-          { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at?.schedule || event.schedule) : null }
-        )
-      }
-
-      // Register the event DOM node in the event in order to emit DOM events.
-      event._.register = domNode => {
-        event._.$el = domNode
-        if (event._.fireCreated) {
-          vuecal.emit('event-created', event)
-          delete event._.fireCreated
-        }
-      }
-      // Unregister the event DOM node and cleanup preventing potential memory leaks.
-      event._.unregister = () => {
-        // Break any circular references in the event object.
-        event._.$el = null
-        event._.register = null
-        // Clear any methods that might create closures.
-        event.isOverlapping = null
-        event.getOverlappingEvents = null
-        event.delete = null
-      }
+      injectInEvent(event) // Inject core logic and utilities in each event.
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -88,6 +49,13 @@ export const useEvents = vuecal => {
         // Index this event by its start date.
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
         events.byDate[event._.startFormatted].push(event._.id)
+
+        // Index this event by its start year and month.
+        const year = event._.startFormatted.substring(0, 4)
+        const month = event._.startFormatted.substring(5, 7)
+        if (!events.byYear[year]) events.byYear[year] = {}
+        if (!events.byYear[year][month]) events.byYear[year][month] = []
+        events.byYear[year][month].push(event._.id)
       }
     }
 
@@ -123,6 +91,53 @@ export const useEvents = vuecal => {
     event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
     event._.endTimeFormatted12 = `${(endHours % 12) || 12}${endMinutes ? `:${endMinutes}` : ''} ${endHours < 12 ? 'AM' : 'PM'}`
     event._.duration = Math.abs(~~((event.end - event.start) / 60000)) // Integer (minutes).
+  }
+
+  // Inject core logic and utilities in each event.
+  const injectInEvent = event => {
+    // Inject a unique ID in each event.
+    if (!event._) event._ = {}
+    event._.id = event._.id || ++uid
+
+    // Inject a delete function in each event and set the deleting flag to false.
+    if (!event.delete) event.delete = forcedStage => deleteEvent(event._.id, forcedStage)
+    event._.deleting = false
+    event._.deleted = false
+
+    /**
+     * Inject a function to check if the event is overlapping with any another event.
+     *
+     * @param {Object} at - An optional object with start and end dates to check the overlap at.
+     *                      If not provided, the event's own start and end dates will be used.
+     * @returns {Boolean} - True if the event is overlapping with another event.
+     */
+    event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
+    event.getOverlappingEvents = (at = null) => {
+      return getEventsInRange(
+        getEventsByDate(dateUtils.formatDate(at?.start || event.start), true),
+        { start: at?.start || event.start, end: at?.end || event.end },
+        { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at?.schedule || event.schedule) : null }
+      )
+    }
+
+    // Register the event DOM node in the event in order to emit DOM events.
+    event._.register = domNode => {
+      event._.$el = domNode
+      if (event._.fireCreated) {
+        vuecal.emit('event-created', event)
+        delete event._.fireCreated
+      }
+    }
+    // Unregister the event DOM node and cleanup preventing potential memory leaks.
+    event._.unregister = () => {
+      // Break any circular references in the event object.
+      event._.$el = null
+      event._.register = null
+      // Clear any methods that might create closures.
+      event.isOverlapping = null
+      event.getOverlappingEvents = null
+      event.delete = null
+    }
   }
 
   // Retrieve an event by its ID.
@@ -319,7 +334,7 @@ export const useEvents = vuecal => {
    * @param {Number} options.schedule The schedule to filter events by.
    * @return {Array} The list of events that are in the provided date range.
    */
-  const getEventsInRange = (events = [], { start, end }, { excludeIds = [], schedule = null }) => {
+  const getEventsInRange = (events = [], { start, end }, { excludeIds = [], schedule = null } = {}) => {
     const excludeSet = new Set(excludeIds)
     const result = []
     for (const event of events) {
