@@ -116,8 +116,8 @@ export const useEvents = vuecal => {
     event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
     event.getOverlappingEvents = (at = null) => {
       return getEventsInRange(
-        getEventsByDate(dateUtils.formatDate(at?.start || event.start), true),
-        { start: at?.start || event.start, end: at?.end || event.end },
+        at?.start || event.start,
+        at?.end || event.end,
         { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at?.schedule || event.schedule) : null }
       )
     }
@@ -327,25 +327,59 @@ export const useEvents = vuecal => {
   /**
    * Returns a list of events that are in the provided date range.
    * Optionally exclude some events by their IDs and optionally filter by schedule.
-   * Not the most readable function, but it's optimized for performance (Set and for loop).
+   * This implementation is optimized for performance and follows the structure of the events object.
    *
-   * @param {Array} events The list of events to filter.
-   * @param {Object} range The date range to filter events by.
+   * @param {Object} range The date range to filter events by ({ start, end }).
    * @param {Object} options Additional options for filtering.
    * @param {Array} options.excludeIds An array of event IDs to exclude from the results.
-   * @param {Number} options.schedule The schedule to filter events by.
+   * @param {Number|null} options.schedule The schedule to filter events by.
+   * @param {Boolean} options.background Whether to include background events.
    * @return {Array} The list of events that are in the provided date range.
    */
-  const getEventsInRange = (events = [], { start, end }, { excludeIds = [], schedule = null } = {}) => {
-    const excludeSet = new Set(excludeIds)
+  const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true } = {}) => {
+    const startYear = start.getFullYear()
+    const endYear = end.getFullYear()
+    const startMonth = start.getMonth() + 1
+    const endMonth = end.getMonth() + 1
+    const startDay = start.getDate()
+    const endDay = end.getDate()
+    const startTime = start.getTime()
+    const endTime = end.getTime()
+
     const result = []
-    for (const event of events) {
-      if (
-        !excludeSet.has(event._?.id) &&
-        (schedule === null || schedule === event.schedule) &&
-        isEventInRange(event, start, end)
-      ) result.push(event)
+    const excludeSet = new Set(excludeIds)
+
+    for (let year = startYear; year <= endYear; year++) {
+      const yearStr = `${year}`
+      const months = events.value.byYear[yearStr]
+      if (!months) continue
+
+      const monthFrom = year === startYear ? startMonth : 1
+      const monthTo = year === endYear ? endMonth : 12
+
+      for (let month = monthFrom; month <= monthTo; month++) {
+        const monthStr = String(month).padStart(2, '0')
+        const days = months[monthStr]
+        if (!days) continue
+
+        for (const dayStr in days) {
+          const day = +dayStr
+          if ((year === startYear && month === startMonth && day < startDay) ||
+              (year === endYear && month === endMonth && day > endDay)) continue
+
+          const dayEventIds = days[dayStr]
+          for (let i = 0; i < dayEventIds.length; i++) {
+            const e = events.value.byId[dayEventIds[i]]
+            if (!e || excludeSet.has(e._.id)) continue
+            if (schedule !== null && schedule !== e.schedule) continue
+            if (background === false && e.background) continue
+
+            if (e.end.getTime() > startTime && e.start.getTime() < endTime) result.push(e)
+          }
+        }
+      }
     }
+
     return result
   }
 
