@@ -14,8 +14,8 @@ export const useEvents = vuecal => {
   // Computed property to manage and organize events.
   const events = computed(() => {
     const events = {
-      // A map of events indexed by { YYYY: { MM: [] } }.
-      // Each year contains a map of 12 months starting from 1, each containing an array of event IDs.
+      // A map of events indexed by { YYYY: { MM: { DD: [] } } }.
+      // Each year contains a map of 12 months starting from 1, each containing a map of days starting from 1, each containing an array of event IDs.
       byYear: {},
       byDate: {}, // A map of single-day events indexed by date.
       recurring: [], // An array of events IDs that are recurring.
@@ -53,9 +53,11 @@ export const useEvents = vuecal => {
         // Index this event by its start year and month.
         const year = event._.startFormatted.substring(0, 4)
         const month = event._.startFormatted.substring(5, 7)
+        const day = event._.startFormatted.substring(8, 10)
         if (!events.byYear[year]) events.byYear[year] = {}
-        if (!events.byYear[year][month]) events.byYear[year][month] = []
-        events.byYear[year][month].push(event._.id)
+        if (!events.byYear[year][month]) events.byYear[year][month] = {}
+        if (!events.byYear[year][month][day]) events.byYear[year][month][day] = []
+        events.byYear[year][month][day].push(event._.id)
       }
     }
 
