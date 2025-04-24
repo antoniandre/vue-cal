@@ -15,12 +15,12 @@ export const useEvents = vuecal => {
   const events = computed(() => {
     const events = {
       // A map of events indexed by { YYYY: { MM: [] } }.
-      // Each year contains a map of 12 months starting from 1, each containing an array of events.
+      // Each year contains a map of 12 months starting from 1, each containing an array of event IDs.
       byYear: {},
       byDate: {}, // A map of single-day events indexed by date.
       recurring: [], // An array of events IDs that are recurring.
       multiday: [], // An array of events IDs that are multiday.
-      byId: {} // A map of all the events indexed by ID for fast lookup.
+      byId: {} // A map of all the events indexed by ID for fast lookup. Each event is the original full event object.
     }
 
     // First sort the events by start date so the latest comes last in the DOM and has a natural
