@@ -214,6 +214,13 @@ export const useConfig = (vuecal, props, attrs) => {
     return { ...defaults, ...props.editableEvents }
   })
 
+  const showCellEventCount = computed(() => {
+    const { view } = vuecal
+    const { eventCount } = props
+    const showEventCount = Array.isArray(eventCount) ? eventCount.includes(view.id) : eventCount
+    return showEventCount && ((view.isMonth && !props.eventsOnMonthView) || view.isYear)
+  })
+
   /**
    * Asynchronously loads translation texts for the given locale.
    *
@@ -291,6 +298,7 @@ export const useConfig = (vuecal, props, attrs) => {
     schedules,
     selectedDate,
     editableEvents,
+    showCellEventCount,
     view,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },

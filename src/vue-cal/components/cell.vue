@@ -284,7 +284,7 @@ const eventClasses = computed(() => {
 })
 
 const showCellEventCount = computed(() => {
-  return view.isMonth && config.eventCount && !config.eventsOnMonthView && cellForegroundEvents.value.length
+  return config.showCellEventCount && cellForegroundEvents.value.length
 })
 
 /**
