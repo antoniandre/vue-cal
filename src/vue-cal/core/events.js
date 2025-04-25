@@ -145,25 +145,13 @@ export const useEvents = vuecal => {
   // Retrieve an event by its ID.
   const getEvent = id => events.value.byId[id]
 
-  // Retrieve events by a formatted date and optionally return the full event objects.
-  const getEventsByDate = (dateFormatted, fullEvents = false, includeBackgroundEvents = false) => {
-    let evts = events.value.byDate[dateFormatted] || []
-    evts = fullEvents || includeBackgroundEvents ? evts.map(getEvent) : evts
-    if (!includeBackgroundEvents) {
-      evts = evts.filter(event => !event.background && !event._.deleted)
-      if (!fullEvents) evts = evts.map(event => event._.id)
-    }
-    return evts
-  }
-
   // Get events for the view based on cell dates.
   // Returns an object of cell events arrays indexed by the cell string date.
   const getViewEvents = cellDates => {
-    const events = {}
-    for (const { startFormatted } of cellDates) {
-      events[startFormatted] = []
-      const eventsByDate = getEventsByDate(startFormatted, false, true)
-      if (eventsByDate.length) events[startFormatted].push(...eventsByDate)
+    const events = []
+    for (const { start, end } of cellDates) {
+      const eventsByDate = getEventsInRange(start, end)
+      if (eventsByDate.length) events.push(...eventsByDate)
     }
     return events
   }
@@ -261,8 +249,8 @@ export const useEvents = vuecal => {
 
   // Will recalculate all the overlaps of the current cell OR schedule.
   // cellEvents will contain only the current schedule events if in a schedule.
-  const getCellOverlappingEvents = cellDate => {
-    const cellEvents = getEventsByDate(cellDate, true)
+  const getCellOverlappingEvents = (cellStart, cellEnd) => {
+    const cellEvents = getEventsInRange(cellStart, cellEnd)
     if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
 
     const cellOverlaps = {}
@@ -327,14 +315,15 @@ export const useEvents = vuecal => {
   /**
    * Returns a list of events that are in the provided date range.
    * Optionally exclude some events by their IDs and optionally filter by schedule.
-   * This implementation is optimized for performance and follows the structure of the events object.
+   * Optimized implementation that avoids unnecessary computations.
    *
-   * @param {Object} range The date range to filter events by ({ start, end }).
-   * @param {Object} options Additional options for filtering.
-   * @param {Array} options.excludeIds An array of event IDs to exclude from the results.
-   * @param {Number|null} options.schedule The schedule to filter events by.
-   * @param {Boolean} options.background Whether to include background events.
-   * @return {Array} The list of events that are in the provided date range.
+   * @param {Date} start Start date of the range
+   * @param {Date} end End date of the range
+   * @param {Object} options Additional options for filtering
+   *                         options.excludeIds An array of event IDs to exclude from the results.
+   *                         options.schedule The schedule to filter events by.
+   *                         options.background Whether to include background events.
+   * @returns {Array} Array of events in the range
    */
   const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true } = {}) => {
     const startYear = start.getFullYear()
@@ -407,7 +396,6 @@ export const useEvents = vuecal => {
   return {
     events,
     getEvent,
-    getEventsByDate,
     getViewEvents,
     getCellOverlappingEvents,
     getEventsInRange,

@@ -225,8 +225,7 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
-  return eventsManager.getEventsByDate(startFormatted.value, true, true)
-    .filter(event => !eventsDeleted.value.includes(event._.id))
+  return eventsManager.getEventsInRange(props.start, props.end, { excludeIds: eventsDeleted.value })
 })
 
 const cellForegroundEvents = computed(() => {
@@ -593,12 +592,12 @@ const removeEventListeners = () => {
 }
 
 const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getCellOverlappingEvents(startFormatted.value)
+  overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end)
 }
 
 watch(
   // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
-  () => cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
+  () => !view.isYears && !view.isYear && cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
   async () => {
     await nextTick() // Use nextTick to avoid recursive updates.
     // Recalculate overlaps when events change (added, deleted, date change, schedule change).

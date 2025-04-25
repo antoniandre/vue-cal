@@ -251,7 +251,7 @@ export const useConfig = (vuecal, props, attrs) => {
         const data = await fs.readFile(filePath, 'utf-8')
         translations = JSON.parse(data)
       }
-      catch (error) {
+      catch (_) {
         throw new Error(`Vue Cal: the locale \`${locale}\` does not exist. Falling back to \`en-us\`.`)
       }
     }

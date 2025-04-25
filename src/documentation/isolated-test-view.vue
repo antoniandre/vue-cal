@@ -145,7 +145,7 @@ const deleteEvent = () => {
 
 const log = (...args) => console.log(...args)
 
-const onViewChange = (view) => {
+const onViewChange = view => {
   fetchEvents(view.start.format(), view.end.format())
 }
 
