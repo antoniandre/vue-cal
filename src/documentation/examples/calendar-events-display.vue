@@ -1078,6 +1078,8 @@ const exMultipleDayEvents = reactive({
     }
     &.vuecal--highlight-cells .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #fffacda8;}
     &.vuecal--highlight-cells.vuecal--dark .vuecal__scrollable--month-view .vuecal__cell--has-events {background-color: #00dbff1c;}
+    &.vuecal--highlight-cells .vuecal__scrollable--year-view .vuecal__cell--has-events {background-color: #fffacda8;}
+    &.vuecal--highlight-cells.vuecal--dark .vuecal__scrollable--year-view .vuecal__cell--has-events {background-color: #00dbff1c;}
 
     &.event-count--caption .vuecal__cell-events-count {
       position: absolute;
@@ -1113,6 +1115,12 @@ const exMultipleDayEvents = reactive({
       background-color: var(--vuecal-base-color);
       opacity: 0.5;
       border-radius: 100rem;
+    }
+    &.event-count--dot .vuecal__scrollable--year-view .vuecal__cell-events-count,
+    &.event-count--dash .vuecal__scrollable--year-view .vuecal__cell-events-count {
+      top: 65%;
+      left: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
