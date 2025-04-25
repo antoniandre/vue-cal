@@ -209,6 +209,9 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
         When #[code event-count] is set to true, the events count will be shown on every cell that has
         events (you can customize via CSS or via the #[code #event-count] slots). In this example you will
         see 3 different (random) options that you can achieve with CSS.
+      li.
+        For more precision, the #[code event-count] prop can also be set to an array of views to show the
+        count in. E.g. #[code=":event-count=\"['month', 'year']\""]
       li In order to keep the same cell height on this view, you can set a height in CSS.
     .w-flex.column.align-end.gap1
       w-switch(
