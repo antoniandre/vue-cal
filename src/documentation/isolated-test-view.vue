@@ -183,7 +183,6 @@ const generateRandomEvents = (startDate, endDate) => {
       events.push({ title: `Event ${j}`, start, end })
     }
   }
-  console.log('events', events)
   return events
 }
 </script>

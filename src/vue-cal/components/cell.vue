@@ -55,7 +55,7 @@
       slot(name="cell-events" :cell="cellInfo")
     //- Animate event deletions.
     transition-group.vuecal__cell-events(
-      v-else-if="(cellEvents.length || transitioning) && !(view.isMonth && !config.eventsOnMonthView)"
+      v-else-if="!(view.isMonth && !config.eventsOnMonthView) && !view.isYear && !view.isYears && (cellEvents.length || transitioning)"
       name="vuecal-event-delete"
       @before-leave="transitioning = true"
       @after-leave="afterDelete"
@@ -247,6 +247,7 @@ const cellEventsPerSchedule = computed(() => {
 
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
+  if (view.isMonth || view.isYear || view.isYears) return {}
   const styles = {}
   for (const event of cellEvents.value) {
     const eventId = event._.id

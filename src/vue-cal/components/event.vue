@@ -55,7 +55,10 @@ const touch = reactive({
 })
 
 const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
-const isResizable = computed(() => config.time && config.editableEvents.resize && event.resizable !== false && !event.background)
+const isResizable = computed(() => {
+  if (view.isMonth || view.isYear || view.isYears) return false
+  return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
+})
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
 const classes = computed(() => ({
