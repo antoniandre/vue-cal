@@ -212,7 +212,10 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
       li.
         For more precision, the #[code event-count] prop can also be set to an array of views to show the
         count in. E.g. #[code=":event-count=\"['month', 'year']\""]
-      li In order to keep the same cell height on this view, you can set a height in CSS.
+      li.
+        You can further customize the events display on month view by using a bit of CSS like in this example:
+        #[router-link(to="/examples/customization#ex--events-on-month-view") Events on Month View Customization].
+
     .w-flex.column.align-end.gap1
       w-switch(
         v-model="exEventsMonthView.showEvents"

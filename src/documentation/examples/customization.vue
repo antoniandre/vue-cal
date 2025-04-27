@@ -430,7 +430,6 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-    // In data.
     customDayScheduleHeadings: [
       { label: 'John', color: 'blue', class: 'schedule1' },
       { label: 'Tom', color: 'green', class: 'schedule2' },
@@ -496,12 +495,92 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       .spacer
       w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
       w-button.ma1(@click="closeCreationDialog") Save
+
+example(title="Events on month view" anchor="events-on-month-view")
+  template(#desc)
+    p.
+      You can define a custom schedule look when displaying a lot of events on the month view
+      with a little bit of CSS.
+      In this example, all the cells have the same adaptive height with an overflow: auto.
+
+  template(#code-html).
+    &lt;vue-cal
+      :events="events"
+      v-model:view="view"
+      :views="['day', 'days', 'week', 'month']"
+      :time-from="9 * 60"
+      :time-to="18 * 60"
+      :time-cell-height="view === 'day' ? 59.4 : 56.6"
+      events-on-month-view
+      @ready="({ view }) => onViewChange(view)"
+      @view-change="onViewChange"
+      style="height: 600px"&gt;
+    &lt;/vue-cal&gt;
+
+  template(#code-js).
+    import { ref } from 'vue'
+    import { VueCal, countDays } from '@/vue-cal'
+
+    const events = ref([])
+    const view = ref('month')
+    const onViewChange = view => {
+      events.value = generateRandomEvents(view.start, view.end)
+    }
+
+    /**
+      * Generate random events for a given date range as if they were returned from a backend.
+      *
+      * @param {Date} startDate - The start date.
+      * @param {Date} endDate - The end date.
+      * @returns {Array} The events.
+      */
+    const generateRandomEvents = (startDate, endDate) => {
+      const daysRange = countDays(startDate, endDate)
+      const events = []
+      for (let i = 0; i < daysRange; i++) {
+        for (let j = 0; j < 10; j++) {
+          // Set random start and end time in the day, events last 1 hour.
+          // The random start and end time is between 9am and 5pm.
+          const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
+          const end = start.addHours(1)
+          events.push({ title: `Event ${j}`, start, end })
+        }
+      }
+      return events
+    }
+
+  template(#code-css).
+    .vuecal__body-wrap {overflow: hidden;}
+    .vuecal__body {
+      aspect-ratio: 13 / 9;
+      overflow: auto;
+    }
+    .vuecal__cell {overflow: auto;}
+    .vuecal__event {padding: 0 2px;}
+    .vuecal__scrollable--month-view .vuecal__cell-date {
+      font-size: 11px;
+      margin: 1px;
+      width: 1.7em;
+    }
+
+  vue-cal(
+    :dark="store.darkMode"
+    :events="exEventsMonthView.events"
+    v-model:view="exEventsMonthView.view"
+    :views="['day', 'days', 'week', 'month']"
+    :time-from="9 * 60"
+    :time-to="18 * 60"
+    :time-cell-height="exEventsMonthView.view === 'day' ? 59.4 : 56.6"
+    events-on-month-view
+    @ready="({ view }) => exEventsMonthView.onViewChange(view)"
+    @view-change="exEventsMonthView.onViewChange"
+    style="height: 600px;")
 </template>
 
 <script setup>
 import { reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal, stringToDate } from '@/vue-cal'
+import { VueCal, stringToDate, countDays  } from '@/vue-cal'
 
 const store = useAppStore()
 
@@ -620,12 +699,46 @@ const cancelEventCreation = () => {
   (deleteEventFunction.value || deleteDragEventFunction.value)()
 }
 const customEventCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
+
+const exEventsMonthView = reactive({
+  events: [...events],
+  view: ref('month'),
+  onViewChange: view => {
+    exEventsMonthView.fetchEvents(view.start.format(), view.end.format())
+  },
+  fetchEvents: async (start, end) => {
+    const startDate = stringToDate(start)
+    const endDate = stringToDate(end)
+    exEventsMonthView.events = exEventsMonthView.generateRandomEvents(startDate, endDate)
+  },
+  /**
+   * Generate random events for a given date range as if they were returned from a backend.
+   *
+   * @param {Date} startDate - The start date.
+   * @param {Date} endDate - The end date.
+   * @returns {Array} The events.
+   */
+  generateRandomEvents: (startDate, endDate) => {
+    const daysRange = countDays(startDate, endDate)
+    const events = []
+    for (let i = 0; i < daysRange; i++) {
+      for (let j = 0; j < 10; j++) {
+        // Set random start and end time in the day, events last 1 hour.
+        // The random start and end time is between 9am and 5pm.
+        const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
+        const end = start.addHours(1)
+        events.push({ title: `Event ${j}`, start, end })
+      }
+    }
+    return events
+  }
+})
 </script>
 
 <style lang="scss">
 .main--examples-customization {
   // Custom vue-cal title & "no event" text example.
-  .ex--custom-title-and-cells {
+  .example--custom-title-and-cells {
     .vuecal__cell-events-count {margin-top: -2px;}
 
     .vuecal__cell .clickable {display: block;}
@@ -642,6 +755,21 @@ const customEventCount = events => events ? events.filter(e => e.class === 'leis
     }
 
     .vuecal__cell .vuecal__cell-content {height: 100%;}
+  }
+
+  .example--events-on-month-view {
+    .vuecal__body-wrap {overflow: hidden;}
+    .vuecal__body {
+      aspect-ratio: 13 / 9;
+      overflow: auto;
+    }
+    .vuecal__cell {overflow: auto;}
+    .vuecal__event {padding: 0 2px;}
+    .vuecal__scrollable--month-view .vuecal__cell-date {
+      font-size: 11px;
+      margin: 1px;
+      width: 1.7em;
+    }
   }
 }
 </style>
