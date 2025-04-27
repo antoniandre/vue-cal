@@ -338,7 +338,7 @@ example(title="Custom Title & Cells" anchor="custom-title-and-cells")
       .vuecal__cell-events-count(v-if="['years', 'year', 'month'].includes(view.id) && events.length") {{ events.length }}
 
 //- Example.
-example(title="Custom event Rendering" anchor="custom-event-rendering")
+example(title="Custom Event Rendering" anchor="custom-event-rendering")
   template(#desc)
     .todo-tag.d-iflex.prod TO BE UPDATED SOON
     p.mb2 Using Vue.js scoped slots, you can override the events rendering.
@@ -496,7 +496,7 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
       w-button.ma1(@click="closeCreationDialog") Save
 
-example(title="Events on month view" anchor="events-on-month-view")
+example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
     p.
       You can define a custom schedule look when displaying a lot of events on the month view

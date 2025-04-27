@@ -247,27 +247,27 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
     .mxa.my2(style="max-width: 500px")
       .w-flex.gap2.basis-zero
         w-button.px2.grow(
-          v-bind="{ [view === 'day' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          v-bind="view === 'day' && { 'bg-color': 'primary-dark1', color: 'white' }"
           :outline="view !== 'day'"
           @click="view = 'day'")
           | Day
         w-button.px2.grow(
-          v-bind="{ [view === 'week' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          v-bind="view === 'week' && { 'bg-color': 'primary-dark1', color: 'white' }"
           :outline="view !== 'week'"
           @click="view = 'week'")
           | Week
         w-button.px2.grow(
-          v-bind="{ [view === 'month' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          v-bind="view === 'month' && { 'bg-color': 'primary-dark1', color: 'white' }"
           :outline="view !== 'month'"
           @click="view = 'month'")
           | Month
         w-button.px2.grow(
-          v-bind="{ [view === 'year' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          v-bind="view === 'year' && { 'bg-color': 'primary-dark1', color: 'white' }"
           :outline="view !== 'year'"
           @click="view = 'year'")
           | Year
         w-button.px2.grow(
-          v-bind="{ [view === 'years' ? 'bg-color' : 'color']: 'primary-dark1' }"
+          v-bind="view === 'years' && { 'bg-color': 'primary-dark1', color: 'white' }"
           :outline="view !== 'years'"
           @click="view = 'years'")
           | Years
@@ -336,7 +336,7 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
         #[a(href="date-prototypes") #[span.code Date] prototypes section].
 
 //- Example.
-example(title="Sync two vue-cal instances" anchor="sync-two-calendars")
+example(title="Sync Two Vue Cal Instances" anchor="sync-two-calendars")
   template(#desc)
     p.
       In this example the right calendar is used as a date picker and the selected date is

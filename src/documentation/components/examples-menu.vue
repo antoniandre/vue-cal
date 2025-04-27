@@ -67,15 +67,16 @@ const examples = [
   { route: { name: 'examples-dom-events', hash: '#ex--emitted-events' }, label: 'Vue Cal Emitted Events' },
   { route: { name: 'examples-dom-events', hash: '#ex--loading-events-from-backend' }, label: 'Loading Events from a Backend' },
   { route: { name: 'examples-dom-events', hash: '#ex--external-controls' }, label: 'External Controls & View Methods' },
-  { route: { name: 'examples-dom-events', hash: '#ex--sync-two-calendars' }, label: 'Sync two vue-cal instances' },
+  { route: { name: 'examples-dom-events', hash: '#ex--sync-two-calendars' }, label: 'Sync Two Vue Cal Instances' },
 
   { class: 'heading', route: '/examples/customization', label:'CUSTOMIZATION', icon: 'mdi mdi-tune' },
   { route: { name: 'examples-customization', hash: '#ex--slots' }, label: 'Simple Slots' },
   { route: { name: 'examples-customization', hash: '#ex--custom-events-count' }, label: 'Custom Events Count' },
   { route: { name: 'examples-customization', hash: '#ex--custom-title-and-cells' }, label: 'Custom Title & Cells' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-event-rendering' }, label: 'Custom event Rendering' },
+  { route: { name: 'examples-customization', hash: '#ex--custom-event-rendering' }, label: 'Custom Event Rendering' },
   { route: { name: 'examples-customization', hash: '#ex--custom-schedules-headings' }, label: 'Custom Day Schedules Headings' },
-  { route: { name: 'examples-customization', hash: '#ex--external-controls' }, label: 'External Controls' }
+  { route: { name: 'examples-customization', hash: '#ex--external-controls' }, label: 'External Controls' },
+  { route: { name: 'examples-customization', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' }
 
   // w-tag.ml2(color="primary" outline) NEW
   // w-tag.ml2(color="blue" outline) UPDATED
