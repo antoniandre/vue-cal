@@ -395,14 +395,15 @@ w-accordion.mt2(
   w-accordion-item
     template(#title)
       strong.code.title5 eventCount
-      .type [Boolean]
+      .type [Boolean, Array]
       | ,
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
       p.
         When set to #[code true], the events will be counted on the #[code month] views and a number will appear in each cell that contain one or more events.#[br]
-        You can customize the events count via CSS or via the #[code #events-count] slot.
+        You can customize the events count via CSS or via the #[code #events-count] slot.#[br]
+        You can also set the #[code eventCount] prop to an array of views to individually show the count in. E.g. #[code=":event-count=\"['month', 'year']\""]
 
   w-accordion-item
     template(#title)
@@ -1579,7 +1580,7 @@ w-accordion(
     template(#title)
       strong.code.title5 event-count
     template(#content)
-      p Customizes the event count display when the eventCount option is enabled.
+      p Customizes the event count display when the #[code event-count] prop is enabled.
       p Available parameters:
       ul
         li #[code.base-color events] - Array of events in the cell
