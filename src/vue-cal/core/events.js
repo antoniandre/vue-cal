@@ -369,6 +369,22 @@ export const useEvents = vuecal => {
       }
     }
 
+    // Also check multiday and recurring events
+    // for (const id of [...store.multiday, ...store.recurring]) {
+    //   if (excludeSet.has(id)) continue
+    //   const e = store.byId[id]
+    //   if (!e) continue
+    //   if (schedule !== null && schedule !== e.schedule) continue
+    //   if (background === false && e.background) continue
+
+    //   if (e.end.getTime() > startTime && e.start.getTime() < endTime) {
+    //     // Avoid duplicates
+    //     if (!result.some(event => event._.id === e._.id)) {
+    //       result.push(e)
+    //     }
+    //   }
+    // }
+
     return result
   }
 
