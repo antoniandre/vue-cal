@@ -244,7 +244,7 @@ export const useConfig = (vuecal, props, attrs) => {
 
     if (import.meta.env.SSR) {
       let fs
-      (async () => (fs = await import('fs').then(mod => mod.promises)))()
+      (async () => (fs = await import('node:fs').then(mod => mod.promises)))()
 
       const filePath = new URL(`../i18n/${locale}.json`, import.meta.url).pathname
       try {
