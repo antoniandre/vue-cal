@@ -3,6 +3,15 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.18
+    ul
+      li.
+        Added the #[code title.[view]] slot to customize the title per view.
+      li.
+        Added support for the #[code event-count] prop on the year view. #[issue-link 43]
+      li.
+        Fixed display of events on the month view. #[issue-link 43]
+  li.patch
     strong.version 5.0.1-rc.17
     ul
       li.
