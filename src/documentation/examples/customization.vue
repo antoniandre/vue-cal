@@ -22,9 +22,8 @@ alert
     li #[span.code event]
 
 //- Example.
-example(title="Simple Slots" anchor="slots")
+example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
   template(#desc)
-    .todo-tag.d-iflex UPDATE THE EXAMPLE SOURCE CODE
     p.
       Vue Cal is designed to be as flexible and customizable as possible, offering a variety of slots to
       help you go beyond the standard features and tailor it to your needs.#[br]
@@ -40,64 +39,100 @@ example(title="Simple Slots" anchor="slots")
       w-switch(v-model="exSlots.cellContent" :disabled="exSlots.diy") Custom cell content via #[code.mx1 cell-content] slot
       w-switch(v-model="exSlots.diy") DIY via #[code.mx1 diy] slot: you've got the power, build something nice!
 
-  template(#code-html).
-    &lt;vue-cal
-      ref="vuecal"
-      xs
-      :views="['day', 'month', 'year']"
-      today-button
-      date-picker
-      :selected-date="selectedDate"&gt;
-      &lt;!-- Optional slot for the custom button. --&gt;
-      &lt;template #today-button&gt;
-        &lt;!-- Using Wave UI --&gt;
-        &lt;w-tooltip&gt;
-          &lt;template #activator="{ on }"&gt;
-            &lt;w-btn v-on="on" icon="mdi mdi-calendar-today"&gt;
-            &lt;/w-btn&gt;
-            &lt;span&gt;Go to Today's date&lt;/span&gt;
-          &lt;/template&gt;
-        &lt;/w-tooltip&gt;
-      &lt;/template&gt;
+  template(#code-html)
+    | &lt;vue-cal :time-from="9 * 60" :time-to="14 * 60"&gt;
+    template(v-if="exSlots.diy")
+      |
+      |
+      |   &lt;template #diy="{ vuecal, view }"&gt;
+      |     {{ '\{\{ view \}\}' }}<br><br>{{ '\{\{ vuecal \}\}' }}
+      |   &lt;/template&gt;
+    template(v-else)
+      template(v-if="exSlots.header")
+        |
+        |
+        |   &lt;template #header="{ view, availableViews }"&gt;
+        |     &lt;i class="icon mdi mdi-chevron-left" @click="view.previous"&gt;&lt;/i&gt;
+        |     &lt;div v-html="view.title"&gt;&lt;/div&gt;
+        |     &lt;i class="icon mdi mdi-chevron-right" @click="view.next"&gt;&lt;/i&gt;
+        |
+        |     &lt;button
+        |       v-for="(grid, viewId) in availableViews"
+        |       @click="view = viewId"
+        |       :class="{ active: view.id === viewId }"&gt;
+        |       {{ '\{\{ viewId \}\}' }}
+        |     &lt;/button&gt;
+        |   &lt;/template&gt;
+      template(v-else)
 
-      &lt;template #title="view"&gt;
-        &lt;code v-html="view.title"&gt;&lt;/code&gt;
-      &lt;/template&gt;
+        template(v-if="exSlots.title")
+          |
+          |
+          |   &lt;template #title="view"&gt;
+          |     &lt;code v-html="view.title"&gt;&lt;/code&gt;
+          |   &lt;/template&gt;
+        template(v-else)
 
-      &lt;template #previous-button&gt;
-        &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
-      &lt;/template&gt;
+        template(v-if="exSlots.prevNextButtons")
+          |
+          |
+          |   &lt;template #previous-button&gt;
+          |     &lt;i class="icon mdi mdi-arrow-left"&gt;&lt;/i&gt;
+          |   &lt;/template&gt;
+          |
+          |   &lt;template #next-button&gt;
+          |     &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
+          |   &lt;/template&gt;
+        template(v-else)
 
-      &lt;template #next-button&gt;
-        &lt;i class="icon mdi mdi-arrow-right"&gt;&lt;/i&gt;
-      &lt;/template&gt;
+        template(v-if="exSlots.todayButton")
+          |
+          |
+          |   &lt;template #today-button&gt;
+          |     &lt;!-- Using Wave UI --&gt;
+          |     &lt;w-tooltip&gt;
+          |       &lt;template #activator="{ on }"&gt;
+          |         &lt;w-btn v-on="on" icon="mdi mdi-calendar-today"&gt;
+          |         &lt;/w-btn&gt;
+          |         &lt;span&gt;Go to Today's date&lt;/span&gt;
+          |       &lt;/template&gt;
+          |     &lt;/w-tooltip&gt;
+          |   &lt;/template&gt;
+        template(v-else)
 
-      &lt;template #time-cell="{ format24 }"&gt;
-        &lt;strong&gt;{{ '\{\{ format24 \}\}' }}&lt;/strong&gt;
-      &lt;/template&gt;
+        template(v-if="exSlots.weekdayHeading")
+          |
+          |
+          |   &lt;template #weekday-heading="{ label, id }"&gt;
+          |     &lt;strong&gt;{{ '\{\{ label \}\}' }}&lt;/strong&gt;
+          |   &lt;/template&gt;
+        template(v-else)
 
-      &lt;template #cell-content&gt;
-        &lt;i class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
-      &lt;/template&gt;
+      template(v-if="exSlots.timeCell")
+        |
+        |
+        |   &lt;template #time-cell="{ format24 }"&gt;
+        |     &lt;strong&gt;{{ '\{\{ format24 \}\}' }}&lt;/strong&gt;
+        |   &lt;/template&gt;
+      template(v-else)
 
-      &lt;template #diy="{ vuecal, view }"&gt;
-        {{ '\{\{ view \}\}' }}<br><br>{{ '\{\{ vuecal \}\}' }}
-      &lt;/template&gt;
-    &lt;/vue-cal&gt;
+      template(v-if="exSlots.cellContent")
+        |
+        |
+        |   &lt;template #cell-content&gt;
+        |     &lt;i class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
+        |   &lt;/template&gt;
+      template(v-else)
 
-  template(#code-js).
-    data: () => ({
-      // Default to next new year eve.
-      selectedDate: new Date(new Date().getFullYear(), 11, 31)
-    })
+    |
+    | &lt;/vue-cal&gt;
 
   vue-cal.grow(
-    ref="vuecal2"
-    :dark="store.darkMode"
-    :time-from="9 * 60"
-    :time-to="14 * 60"
     v-model:view="exSlots.view"
-    style="overflow: auto")
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :dark="store.darkMode"
+    style="height: 331px")
     template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
       w-tooltip(left)
         template(#activator="{ on }")
@@ -112,9 +147,9 @@ example(title="Simple Slots" anchor="slots")
         span Go to Today's date
     template(#header="{ view, availableViews }" v-if="exSlots.header")
       .w-flex.gap2.pa1.align-center(:class="store.darkMode ? 'orange-dark3--bg' : 'orange-light5--bg'")
-        w-button(color="base-color" icon="wi-chevron-left")
+        w-button(color="base-color" icon="wi-chevron-left" @click="view.previous")
         .base-color(v-html="view.title")
-        w-button(color="base-color" icon="wi-chevron-right")
+        w-button(color="base-color" icon="wi-chevron-right" @click="view.next")
         .w-flex.gap2.mla.no-grow
           w-button.text-upper(
             v-for="(grid, viewId) in availableViews"
@@ -135,78 +170,6 @@ example(title="Simple Slots" anchor="slots")
     template(#cell-content v-if="exSlots.cellContent")
       w-icon.orange-light2(lg) mdi mdi-party-popper
     template(#diy="{ vuecal }" v-if="exSlots.diy") {{ vuecal }}
-
-//- Example.
-example(title="Custom Events Count" anchor="custom-events-count")
-  template(#desc)
-    alert(tip).
-      Using Vue.js scoped slots, you can also override the counting events method if you need.#[br]
-      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
-    p.
-      In the following example, we only count the events which have the custom
-      #[span.code leisure] CSS class (orange color).
-  template(#code-html).
-    &lt;vue-cal
-      :time-from="10 * 60"
-      :time-step="2 * 60"
-      date-picker
-      events-count-on-year-view
-      :events="events"&gt;
-      &lt;template #events-count="{ events, view }"&gt;
-        &lt;span v-if="customEventCount(events)"&gt;
-          {{ '\{\{ customEventCount(events) \}\}' }}
-        &lt;/span&gt;
-      &lt;/template&gt;
-    &lt;/vue-cal&gt;
-  template(#desc2)
-    p.
-      Alternatively, you could also use the #[span.code cell-content] slot
-      instead of the #[span.code events-count] slot to perform the same task:#[br]
-      (Refer to the next example to know more:
-      #[a(href="#ex--custom-title-and-cells") Custom title &amp; cells])
-    ssh-pre.mt2(language="html-vue" :dark="store.darkMode").
-      &lt;template #cell-content="{ cell, view, events }"&gt;
-        &lt;span class="vuecal__cell-date"&gt;
-          {{ '\{\{ cell.content \}\}' }}
-        &lt;/span&gt;
-        &lt;span
-          class="vuecal__cell-events-count"
-          v-if="['years', 'year', 'month'].includes(view.id) &amp;&amp; customEventCount(events)"&gt;
-          {{ '\{\{ customEventCount(events) \}\}' }}
-        &lt;/span&gt;
-      &lt;/template&gt;
-
-    ssh-pre(language="js" :dark="store.darkMode").
-      // In your Vue component.
-      methods: {
-        customEventCount: events => {
-          return events ? events.filter(e => e.class === 'leisure').length : 0
-        }
-      }
-
-    ssh-pre(language="css" :dark="store.darkMode").
-      .vuecal__cell-events-count {background: transparent;}
-      .vuecal__cell-events-count span {
-        background: #fd9c42;
-        height: 100%;
-        min-width: 12px;
-        padding: 0 3px;
-        border-radius: 12px;
-        display: block;
-      }
-
-  vue-cal.ex--custom-events-count(
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="10 * 60"
-    :time-step="2 * 60"
-    date-picker
-    events-count-on-year-view
-    :dark="store.darkMode"
-    :events="events")
-    template(#events-count="{ events, view }"
-    style="width: 300px;height: 360px;max-width: 100%")
-      span(v-if="customEventCount(events)") {{ customEventCount(events) }}
 
 //- Example.
 example(title="Custom Title & Cells" anchor="custom-title-and-cells")
@@ -496,6 +459,7 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
       w-button.ma1(@click="closeCreationDialog") Save
 
+//- Example.
 example(title="Events on Month View" anchor="events-on-month-view")
   template(#desc)
     p.
@@ -578,17 +542,19 @@ example(title="Events on Month View" anchor="events-on-month-view")
 </template>
 
 <script setup>
-import { reactive, ref } from 'vue'
+import { reactive, ref, watch } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate, countDays  } from '@/vue-cal'
 
 const store = useAppStore()
 
 const cl = (...args) => console.log(...args)
+const exSlotsExampleEl = ref(null)
 const exSlots = reactive({
-  todayButton: ref(false),
+  title: ref(false),
   prevNextButtons: ref(false),
   nextButton: ref(false),
+  todayButton: ref(false),
   weekdayHeading: ref(false),
   timeCell: ref(false),
   cellContent: ref(false),
@@ -596,6 +562,10 @@ const exSlots = reactive({
   diy: ref(false),
   view: ref('week')
 })
+watch(
+  () => `${exSlots.title} ${exSlots.prevNextButtons} ${exSlots.nextButton} ${exSlots.todayButton} ${exSlots.weekdayHeading} ${exSlots.timeCell} ${exSlots.cellContent} ${exSlots.header} ${exSlots.diy}`,
+  () => exSlotsExampleEl.value?.refreshHeight?.()
+)
 
 const customDayScheduleHeadings = [
   { label: 'John', color: 'blue', class: 'schedule1' },
