@@ -25,10 +25,11 @@
         transition(:name="`vuecal-slide-fade--${view.transitionDirection}`")
           div(:key="view.id + view.start.getTime()")
             component.vuecal__title(
-              v-if="$slots.title"
+              v-if="$slots.title || $slots[`title.${view.id}`]"
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
               v-on="titleEventHandlers")
-              slot(name="title" v-bind="view")
+              slot(v-if="$slots[`title.${view.id}`]" :name="`title.${view.id}`" v-bind="view")
+              slot(v-else name="title" v-bind="view")
             component.vuecal__title(
               v-else
               :is="config.clickToNavigate && view.broaderView ? 'button' : 'div'"
