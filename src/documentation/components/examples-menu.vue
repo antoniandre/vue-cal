@@ -71,7 +71,8 @@ const examples = [
 
   { class: 'heading', route: '/examples/customization', label:'CUSTOMIZATION', icon: 'mdi mdi-tune' },
   { route: { name: 'examples-customization', hash: '#ex--slots' }, label: 'Simple Slots' },
-  { route: { name: 'examples-customization', hash: '#ex--custom-title-and-cells' }, label: 'Custom Title & Cells' },
+  { route: { name: 'examples-customization', hash: '#ex--custom-title-per-view' }, label: 'Custom Title Per View' },
+  { route: { name: 'examples-customization', hash: '#ex--custom-cells' }, label: 'Custom Cells' },
   { route: { name: 'examples-customization', hash: '#ex--custom-event-rendering' }, label: 'Custom Event Rendering' },
   { route: { name: 'examples-customization', hash: '#ex--custom-schedules-headings' }, label: 'Custom Day Schedules Headings' },
   { route: { name: 'examples-customization', hash: '#ex--external-controls' }, label: 'External Controls' },

@@ -29,7 +29,7 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
       help you go beyond the standard features and tailor it to your needs.#[br]
       This example highlights the simplest and most commonly used slots.
 
-    .w-flex.column.gap1
+    .w-flex.column.gap1.mt2
       w-switch(v-model="exSlots.title" :disabled="exSlots.header || exSlots.diy") Custom title via #[code.mx1 title] slot
       w-switch(v-model="exSlots.prevNextButtons" :disabled="exSlots.header || exSlots.diy") Custom arrows via #[code.mx1 previous-button] &amp; #[code.mx1 next-button] slots
       w-switch(v-model="exSlots.todayButton" :disabled="exSlots.header || exSlots.diy") Custom today button via #[code.mx1 today-button] slot
@@ -172,33 +172,35 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
     template(#diy="{ vuecal }" v-if="exSlots.diy") {{ vuecal }}
 
 //- Example.
-example(title="Custom Title & Cells" anchor="custom-title-and-cells")
+example(title="Custom Title Per View" anchor="custom-title-per-view")
   template(#desc)
-    .todo-tag.d-iflex TO REVIEW
+    p.
+      If you need a custom title only on a specific view and want to keep it simple,
+      you can define a custom title for that view by using the #[code.mx1="title.[view]"] slot where #[code.mx1="[view]"] is the view id.
+    p.
+      The view object is available through the slot-scope, and you can use the #[code.mx1 view.id] property to
+      check the current view.
+
+  template(#code-html).
+    &lt;vue-cal&gt;
+      &lt;template #title.day="view"&gt;
+        {{ '\{\{ view.start.format("D MMMM YYYY") \}\}' }} ❤️
+      &lt;/template&gt;
+    &lt;/vue-cal&gt;
+
+  vue-cal(:dark="store.darkMode" view="day")
+    template(#title.day="view") {{ view.start.format('D MMMM YYYY') }} ❤️
+
+//- Example.
+example(title="Custom Cells" anchor="custom-cells")
+  template(#desc)
+    .todo-tag.d-iflex.prod TO BE UPDATED SOON
     alert(tip).
-      Using Vue.js scoped slots, you can override the calendar main date title and calendar cells.#[br]
+      Using Vue.js scoped slots, you can override the calendar cells.#[br]
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]]
-    h3.title3.mt6
-      w-icon(size="22") wi-chevron-right
-      | Custom Title
-    p.ml2.mb2 Accessible payload through the #[span.code #title] scoped slot:
-    ul
-      li.
-        #[strong.code view]:
-        the object containing the active view info, the precomputed formatted title, the start and end dates.
-    p.
-      If you plan a custom title, you can use the pre-formatted #[span.code view.title] or build your own.#[br]
-      The Vue Cal's Date prototypes will help you go faster.#[br]
-      Remember to handle all the different views: #[code.mx1 day], #[code.mx1 days], #[code.mx1 week],
-      #[code.mx1 month], #[code.mx1 year], #[code.mx1 years].#[br]
-      In the view object, you can use the #[code.mx1 view.isDay], #[code.mx1 view.isWeek], etc. properties to
-      check the current view, or use #[code.mx1 view.id].
 
-    h3.title3.mt6
-      w-icon(size="22") wi-chevron-right
-      | Custom Cells
-    p.ml2.mb2 Accessible payload through the #[span.code #cell-content] scoped slot:
+    p.mt6.mb2 Accessible payload through the #[span.code #cell-content] scoped slot:
     ul
       li #[span.code cell], object containing the cell date range and the cell events.
     p.

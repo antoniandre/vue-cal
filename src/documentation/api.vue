@@ -1392,6 +1392,30 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      strong.code.title5 title.[view]
+    template(#content)
+      p.
+        Customizes the title display in the calendar header for a specific view only.
+        This slot is ignored if the header slot is used.
+      p Available parameters:
+      p This slot receives the full #[code.base-color view] object which contains:
+      ul
+        li #[code.base-color title] - The formatted title string for the current view
+        li #[code.base-color id] - The ID of the current view (e.g., 'day', 'week', 'month')
+        li #[code.base-color start] - The start date of the view
+        li #[code.base-color end] - The end date of the view
+        li View-specific flags like #[code.base-color isDay], #[code.base-color isWeek], etc.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #title.day="view"&gt;
+          &lt;em&gt;{{ '\{\{ view.title \}\}' }} ❤️&lt;/em&gt;
+        &lt;/template&gt;
+
+        &lt;template #title.month="view"&gt;
+          &lt;strong&gt;{{ '\{\{ view.title \}\}' }} 📆&lt;/strong&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
       strong.code.title5 previous-button
     template(#content)
       p Customizes the previous navigation button. This slot is ignored if the header slot is used.
