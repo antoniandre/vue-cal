@@ -70,14 +70,16 @@ export const useEvents = vuecal => {
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
 
     event.start.setSeconds(0, 0) // For more accurate range and overlap comparison.
-    event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
+    // Set the event end to the next minute if the end time is 59 seconds.
+    if (event.end.getSeconds() >= 59) event.end.setMinutes(60, 0, 0)
+    else event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
 
-    if (isNaN(event.start) || isNaN(event.end)) {
+    if (isNaN(event.start) || isNaN(event.end) || (event.end.getTime() < event.start.getTime())) {
       if (isNaN(event.start)) console.error(`Vue Cal: invalid start date for event "${event.title}".`, event.start)
-      else console.error(`Vue Cal: invalid end date for event "${event.title}".`, event.end)
+      else if (isNaN(event.end)) console.error(`Vue Cal: invalid end date for event "${event.title}".`, event.end)
+      else console.error(`Vue Cal: invalid event dates for event "${event.title}". The event ends before it starts.`, event.start, event.end)
       return
     }
-    else if (event.end.getTime() < event.start.getTime()) console.error(`Vue Cal: invalid event dates for event "${event.title}". The event ends before it starts.`, event.start, event.end)
 
     if (!event._) event._ = {}
     event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.

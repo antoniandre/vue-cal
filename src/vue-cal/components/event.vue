@@ -94,7 +94,7 @@ const styles = computed(() => {
   if (hasPosition) {
     // Ensure that the event start and end stay in range.
     const from = Math.max(config.timeFrom, event._.startMinutes)
-    const to = Math.min(config.timeTo, event._.endMinutes)
+    const to = Math.min(config.timeTo, event._.endMinutes) + (event._.duration && !event._.endMinutes ? 24 * 60 : 0)
     const top = minutesToPercentage(from, config)
     const height = minutesToPercentage(to, config) - top
 
