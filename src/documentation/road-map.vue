@@ -10,18 +10,19 @@ ul.kanban
       .task Drag events over years/year/month views
       .task Drag &amp; drop timeless events
       .task Further optimize events recomputation
-      .task All-day events
       .task Multiple day events
       .task Recurring events
 
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Events overlap size option
+      .task All-day events
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Event count on year views
+      .task Events overlap size option
       .task Support SSR
       .task Improve the event range accuracy while resizing upwards
       .task Events accept dynamic colors
