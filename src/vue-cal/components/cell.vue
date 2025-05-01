@@ -226,12 +226,14 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
-  return eventsManager.getEventsInRange(props.start, props.end, { excludeIds: eventsDeleted.value })
+  return eventsManager.getEventsInRange(
+    props.start,
+    props.end,
+    { excludeIds: eventsDeleted.value, allDay: props.allDay }
+  )
 })
 
-const cellForegroundEvents = computed(() => {
-  return cellEvents.value.filter(event => !event.background)
-})
+const cellForegroundEvents = computed(() => cellEvents.value.filter(event => !event.background))
 
 /**
  * Generates an object containing events grouped by schedule ID.

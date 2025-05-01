@@ -325,9 +325,10 @@ export const useEvents = vuecal => {
    *                         options.excludeIds An array of event IDs to exclude from the results.
    *                         options.schedule The schedule to filter events by.
    *                         options.background Whether to include background events.
+   *                         options.allDay Whether to include all-day events.
    * @returns {Array} Array of events in the range
    */
-  const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true } = {}) => {
+  const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false } = {}) => {
     const startYear = start.getFullYear()
     const endYear = end.getFullYear()
     const startMonth = start.getMonth() + 1
@@ -364,7 +365,7 @@ export const useEvents = vuecal => {
             if (!e || excludeSet.has(e._.id)) continue
             if (schedule !== null && schedule !== e.schedule) continue
             if (background === false && e.background) continue
-
+            if ((allDay && !e.allDay) || (!allDay && e.allDay)) continue
             if (e.end.getTime() > startTime && e.start.getTime() < endTime) result.push(e)
           }
         }
