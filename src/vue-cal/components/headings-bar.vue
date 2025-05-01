@@ -39,8 +39,8 @@ const { view, config, dateUtils } = vuecal
 
 const dayLabelSize = computed(() => {
   if (config.xs) return 'day-xs'
-  else if (config.sm || view.isDays || view.isMonth) return 'day-sm'
-  else return 'day'
+  if (config.sm || view.isDays || view.isMonth) return 'day-sm'
+  return 'day'
 })
 
 const showHeadings = computed(() => {
