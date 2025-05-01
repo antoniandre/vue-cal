@@ -26,13 +26,22 @@
           v-html="schedule.label")
   .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents && !view.isMonth")
     .vuecal__all-day-label
-      slot(name="all-day-label")
-        span {{ vuecal.texts.allDay }}
+      slot(name="all-day-label") {{ vuecal.texts.allDay }}
+
+    cell.vuecal__all-day-cell(
+      v-for="(day, i) in weekDays"
+      :key="i"
+      :class="{ 'vuecal__weekday--today': day.isToday }"
+      :start="day.date"
+      :end="new Date(day.date.getTime() + 24 * 60 * 60 * 1000 - 1)"
+      :index="i"
+      all-day)
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 import { weekdays } from '../core/config'
+import Cell from './cell.vue'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
@@ -80,7 +89,7 @@ const domEvents = {
     flex-direction: column;
     flex-shrink: 0;
     z-index: 4; // Keep it above the now-line and hovered events.
-    height: var(--vuecal-headings-bar-height);
+    height: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
   }
@@ -101,10 +110,12 @@ const domEvents = {
 
   &__all-day {
     display: flex;
-    align-items: center;
-    justify-content: center;
     height: var(--vuecal-all-day-height);
     background-color: var(--vuecal-secondary-color);
+  }
+  &__all-day-cell {
+    display: flex;
+    flex: 1 1 0;
   }
 }
 </style>

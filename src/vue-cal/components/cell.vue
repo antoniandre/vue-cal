@@ -93,7 +93,8 @@ const props = defineProps({
   // events to a specific date.
   start: { type: Date, required: true },
   end: { type: Date, required: true },
-  index: { type: Number, required: true }
+  index: { type: Number, required: true },
+  allDay: { type: Boolean, default: false } // True when the cell is an all-day cell.
 })
 
 const vuecal = inject('vuecal')
