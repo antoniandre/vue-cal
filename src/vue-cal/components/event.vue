@@ -10,7 +10,7 @@
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time")
+      .vuecal__event-time(v-if="config.time && !event.allDay")
         | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
@@ -56,7 +56,7 @@ const touch = reactive({
 
 const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
 const isResizable = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears) return false
+  if (view.isMonth || view.isYear || view.isYears || (config.allDayEvents && event.allDay)) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)

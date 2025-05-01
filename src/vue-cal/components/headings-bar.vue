@@ -25,7 +25,7 @@
           :class="schedule.class"
           v-html="schedule.label")
   .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents && !view.isMonth")
-    .vuecal__all-day-label
+    //- .vuecal__all-day-label
       slot(name="all-day-label") {{ vuecal.texts.allDay }}
 
     cell.vuecal__all-day-cell(
@@ -92,6 +92,8 @@ const domEvents = {
     height: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
+
+    .vuecal__scrollable--month-view & {height: var(--vuecal-headings-bar-height);}
   }
 
   &__weekdays-headings {display: flex;}

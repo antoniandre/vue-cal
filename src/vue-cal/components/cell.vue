@@ -343,7 +343,7 @@ const isDisabled = computed(() => {
 const nowLine = reactive({
   show: computed(() => {
     if (!view.isDay && !view.isDays && !view.isWeek) return
-    if (!isToday.value || !config.time) return
+    if (!isToday.value || !config.time || props.allDay) return
     if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
     if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
     return true
