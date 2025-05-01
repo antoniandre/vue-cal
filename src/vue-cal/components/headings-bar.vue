@@ -24,6 +24,10 @@
           v-else
           :class="schedule.class"
           v-html="schedule.label")
+  .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents && !view.isMonth")
+    .vuecal__all-day-label
+      slot(name="all-day-label")
+        span {{ vuecal.texts.allDay }}
 </template>
 
 <script setup>
@@ -94,5 +98,13 @@ const domEvents = {
 
   &__schedules-headings {display: flex;}
   &__schedule-heading {height: 12px;}
+
+  &__all-day {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: var(--vuecal-all-day-height);
+    background-color: var(--vuecal-secondary-color);
+  }
 }
 </style>
