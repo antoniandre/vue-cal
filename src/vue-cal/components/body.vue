@@ -27,8 +27,8 @@
 
 <script setup>
 import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
-import VueCalCell from './cell.vue'
 import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
+import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
 const { view, config, dateUtils } = vuecal
