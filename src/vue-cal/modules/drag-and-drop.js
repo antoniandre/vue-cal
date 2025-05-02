@@ -254,10 +254,9 @@ export function useDragAndDrop (vuecal) {
    *
    * @param {Object} e The associated DOM event.
    * @param {Object} cell The cell component's $data.
-   * @param {Date} cellDate The hovered cell starting date.
-   * @param {Number|String} schedule The optional schedule being dropped into, if any.
+   * @param {Boolean} allDay Whether the event is dropped as all-day.
    */
-  const cellDragDrop = async (e, cell) => {
+  const cellDragDrop = async (e, cell, allDay = false) => {
     // Needed to prevent navigation to the text set in dataTransfer from eventDragStart().
     e.preventDefault()
 
@@ -273,7 +272,13 @@ export function useDragAndDrop (vuecal) {
     // Step 2: Compute the new event start and end times from the dropped coords in cell.
     // ----------------------------------------------------
     let event
-    const { start: newStart, end: newEnd } = computeNewEventStartEnd(e, incomingEvent, cell.start)
+    let newStart
+    let newEnd
+    if (allDay) {
+      newStart = new Date(cell.start)
+      newEnd = new Date(cell.end)
+    }
+    else ({ start: newStart, end: newEnd } = computeNewEventStartEnd(e, incomingEvent, cell.start))
 
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
