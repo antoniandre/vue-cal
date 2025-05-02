@@ -10,7 +10,7 @@
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time && !event.allDay")
+      .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
         | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
@@ -82,7 +82,7 @@ const classes = computed(() => ({
 }))
 
 const styles = computed(() => {
-  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time
+  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !(config.allDayEvents && event.allDay)
 
   if (!hasPosition && !event.backgroundColor && !event.color) return false
 
@@ -324,15 +324,14 @@ const computeStartEnd = event => {
   return { newStart, newEnd }
 }
 
-// Register the DOM node within the event in order to emit `event-deleted` to the cell.
-onMounted(() => event._.register(eventEl.value))
-
 const documentListeners = []
-
 const attachDocumentListener = (event, handler, options) => {
   document.addEventListener(event, handler, options)
   documentListeners.push({ event, handler, options })
 }
+
+// Register the DOM node within the event in order to emit `event-deleted` to the cell.
+onMounted(() => event._.register(eventEl.value))
 
 onBeforeUnmount(() => {
   event._.unregister()
