@@ -297,6 +297,7 @@ export function useDragAndDrop (vuecal) {
         onAcceptedDrop = () => {
           event.start = newStart
           event.end = newEnd
+          event.allDay = allDay
           if (newSchedule !== undefined) event.schedule = ~~newSchedule
         }
       }

@@ -40,7 +40,7 @@
           template(v-if="$slots.event" #event="params")
             slot(name="event" v-bind="params")
       .vuecal__event-placeholder(
-        v-if="isCreatingEvent && touch.schedule === schedule.id"
+        v-if="isCreatingEvent && touch.schedule === schedule.id && !props.allDay"
         :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -250,7 +250,7 @@ const cellEventsPerSchedule = computed(() => {
 
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears) return {}
+  if (view.isMonth || view.isYear || view.isYears || (config.allDayEvents && props.allDay)) return {}
   const styles = {}
   for (const event of cellEvents.value) {
     const eventId = event._.id
@@ -261,9 +261,7 @@ const eventStyles = computed(() => {
     if (config.stackEvents) {
       styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
     }
-    else {
-      styles[eventId].width = `${100 / maxConcurrent}%`
-    }
+    else styles[eventId].width = `${100 / maxConcurrent}%`
   }
   return styles
 })
@@ -427,7 +425,7 @@ const cellEventListeners = computed(() => {
       dnd.cellDragOver(e, cellInfo.value)
     }
     eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
-    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
+    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value, props.allDay)
   }
 
   return eventListeners

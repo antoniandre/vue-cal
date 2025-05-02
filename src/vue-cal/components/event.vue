@@ -353,7 +353,8 @@ onBeforeUnmount(() => {
   &--dragging-ghost {z-index: 100;} // The clone at cursor.
   &--dragging-original {opacity: 0;transition: opacity 0.1s;} // The original event at original position.
 
-  .vuecal__scrollable--month-view & {position: relative;}
+  .vuecal__scrollable--month-view &,
+  .vuecal__all-day & {position: relative;}
 
   &--resizing {z-index: 100;}
   &-resizer {
