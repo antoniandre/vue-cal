@@ -1,5 +1,8 @@
 <template lang="pug">
 .vuecal__time-column
+  .vuecal__all-day-label(v-if="config.allDayEvents")
+    slot(name="all-day-label") {{ vuecal.texts.allDay }}
+
   .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i" :style="{ height: time.height || null }")
     slot(
       name="time-cell"
@@ -66,6 +69,20 @@ const timeCells = computed(() => {
   .vuecal__scrollable--day-view & {padding-top: 0;}
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   .vuecal--has-schedules .vuecal__scrollable--day-view & {padding-top: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));}
+}
+
+.vuecal__all-day-label {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--vuecal-time-cell-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-bottom: 0.5px solid var(--vuecal-border-color);
+  line-height: 1;
+  font-size: 0.85em;
 }
 
 .vuecal__time-cell {

@@ -25,9 +25,6 @@
           :class="schedule.class"
           v-html="schedule.label")
   .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents && !view.isMonth")
-    //- .vuecal__all-day-label
-      slot(name="all-day-label") {{ vuecal.texts.allDay }}
-
     cell.vuecal__all-day-cell(
       v-for="(day, i) in weekDays"
       :key="i"
