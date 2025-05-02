@@ -54,7 +54,7 @@ const dayLabelSize = computed(() => {
 
 const showHeadings = computed(() => {
   const isDayDaysWeekOrMonthView = view.isDay || view.isDays || view.isWeek || view.isMonth
-  return isDayDaysWeekOrMonthView && !(view.isDay && !config.schedules)
+  return isDayDaysWeekOrMonthView && !(view.isDay && !config.schedules && !config.allDayEvents)
 })
 
 // Only for days, week and month views.

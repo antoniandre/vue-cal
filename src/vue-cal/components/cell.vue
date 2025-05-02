@@ -250,7 +250,7 @@ const cellEventsPerSchedule = computed(() => {
 
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears || (config.allDayEvents && props.allDay)) return {}
+  if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
   const styles = {}
   for (const event of cellEvents.value) {
     const eventId = event._.id
@@ -293,7 +293,7 @@ const showCellEventCount = computed(() => {
  * returns an array if the view is day, days, week and the specialHours prop is set correctly.
  */
 const specialHours = computed(() => {
-  if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
+  if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
   const weekday = weekdays[props.start.getDay()]
 
   // The special hours ranges for the current cell day.
