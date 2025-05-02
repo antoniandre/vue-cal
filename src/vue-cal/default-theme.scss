@@ -193,8 +193,9 @@
 
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   &.vuecal--lg .vuecal__scrollable--month-view .vuecal__cell {
-    justify-content: flex-end;
-    align-items: flex-start;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
   }
   .vuecal__cell:before {
     content: '';
@@ -264,6 +265,8 @@
   .vuecal__scrollable--month-view .vuecal__cell-events {
     overflow: hidden;
     flex-grow: 1;
+    width: 100%;
+    padding-left: 4px;
   }
   &.vuecal--timeless .vuecal__cell-events {
     display: flex;
@@ -311,20 +314,20 @@
   // Calendar events.
   // ------------------------------------------------------
   .vuecal__event {
+    display: flex;
+    width: 90%;
     background-color: var(--vuecal-primary-color);
     color: var(--vuecal-event-color);
     border: 1px solid var(--vuecal-event-border-color);
     border-radius: 4px;
     line-height: 1;
-    width: 90%;
-    display: flex;
     z-index: 1;
 
     &--background {
+      width: 100%;
       border: none;
       border-radius: 0;
       overflow: visible;
-      width: 100%;
       z-index: 0;
     }
     &--cut-top {
@@ -353,6 +356,7 @@
       letter-spacing: -0.5px;
       font-size: 11px;
     }
+    &-comma {padding-right: 4px;}
 
     &-resizer {
       // Over border (so there's no risk of triggering the event drag instead).
@@ -397,6 +401,11 @@
     padding-top: 1px;
     padding-bottom: 1px;
     width: 100%;
+  }
+  .vuecal__scrollable--month-view .vuecal__event-details {
+    display: flex;
+    padding-top: 1px;
+    padding-bottom: 1px;
   }
 
   // Sm and xs layouts.
