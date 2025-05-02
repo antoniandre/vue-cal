@@ -10,9 +10,10 @@
   .vuecal__event-details
     slot(name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time")
-        | {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-        | - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+      .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
+        span.vuecal__event-comma(v-if="view.isMonth") ,
+        span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+        span.vuecal__event-end(v-if="!view.isMonth") - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
