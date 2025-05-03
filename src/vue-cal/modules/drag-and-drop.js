@@ -289,10 +289,15 @@ export function useDragAndDrop (vuecal) {
       if (event) {
         event._.dragging = false
 
-        onAcceptedDrop = () => {
+        onAcceptedDrop = modifiedEvent => {
           event.start = newStart
           event.end = newEnd
           if (newSchedule !== undefined) event.schedule = ~~newSchedule
+          // Allow event to be modified by the external handler except for the _ property.
+          if (modifiedEvent && typeof modifiedEvent === 'object') {
+            const { _, ...cleanModifiedEvent } = modifiedEvent
+            Object.assign(event, cleanModifiedEvent)
+          }
         }
       }
       else {
@@ -317,7 +322,14 @@ export function useDragAndDrop (vuecal) {
           return eventsManager.getEventsInRange(newStart, newEnd, { schedule: ~~newSchedule })
         }
       }
-      onAcceptedDrop = () => { event = eventsManager.createEvent(event) }
+      onAcceptedDrop = modifiedEvent => {
+        event = eventsManager.createEvent(event)
+        // Allow event to be modified by the external handler except for the _ property.
+        if (modifiedEvent && typeof modifiedEvent === 'object') {
+          const { _, ...cleanModifiedEvent } = modifiedEvent
+          Object.assign(event, cleanModifiedEvent)
+        }
+      }
     }
 
     // Step 4: Call the external event drop handler if any, to ask for drop approval.
@@ -337,7 +349,7 @@ export function useDragAndDrop (vuecal) {
       // Can externally use event.isOverlapping() to check if the event overlaps with other events.
     }
     // If the event drop is accepted, add the event to the events array (source of truth).
-    if (acceptDrop !== false) onAcceptedDrop()
+    if (acceptDrop !== false) onAcceptedDrop(acceptDrop)
 
     cell.highlighted = false
     cell.highlightedSchedule = null
