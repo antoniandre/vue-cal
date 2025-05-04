@@ -119,7 +119,7 @@ ul.history.ml2
       .w-divider.primary--bg.grow
 
 w-transition-expand(y)
-  ul.history.history--more.ml-2.pl3(v-if="seeOldReleaseNotes")
+  ul.history.history--more.ml-2.pl4(v-if="seeOldReleaseNotes")
     li
       br
 
