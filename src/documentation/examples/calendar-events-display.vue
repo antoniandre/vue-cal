@@ -403,78 +403,49 @@ example(title="Overlapping Events" anchor="overlapping-events")
 
 //- Example.
 example(title="All Day Events" anchor="all-day-events")
-  template(#title)
-      | All Day Events
-      .todo-tag.prod.d-iflex.ml2 COMING SOON
-  //- template(#desc)
-    ul
-      li.mb2.
-        When the #[code showAllDayEvents] is set to #[code true] the events with an
-        #[code allDay] attribute set to #[code true] will be displayed in a fixed top
-        bar on the #[code week] &amp; #[code day] views.#[br]
-        The all day events bar will only show up if the options #[code showAllDayEvents] &amp;
-        #[code time] are set to #[code true].#[br]
-        #[code time] is important since without time information every event is an all-day
-        event there is no point in separating them then.
-      li.mb2.
-        When #[code showAllDayEvents] is set to #[code false], all the all day events
-        (#[code allDay] attribute set to #[code true]), will show up as a normal
-        #[strong background event].
-      li.mb2.
-        On month view, switching #[code showAllDayEvents] on and off will not have any impact
-        since both should display the all day events.
-      li.mb2.
-        #[code showAllDayEvents] accepts a #[code Boolean] or the string
-        #[code 'short'], to display only the event title.
+  template(#desc)
+    p.
+      All-day events are events that span the whole day (from 00:00 to 23:59:59:999). They will be displayed in a fixed top bar
+      on the #[code day], #[code days] &amp; #[code week] views when the #[code allDayEvents] prop is set to #[code true] and
+      #[code time] is set to #[code true].
+    p.
+      To set an event as all-day, set its #[code allDay] attribute to #[code true].
+    p.mb2.
+      When #[code allDayEvents] is set to #[code false], all the all-day events
+      will show up as normal events.
 
-    alert.
-      Multiple-day events feature will be improved in a future version to display across
-      multiple cells in the all day bar.
-
-    w-button.ma1.code(@click="exAllDayEvents.showAllDayEvents = (exAllDayEvents.showAllDayEvents + 1) % 3")
-      span.white :show-all-day-events="{{ ["'short'", 'true', 'false'][exAllDayEvents.showAllDayEvents] }}"
-    w-button.ma1.code(@click="exAllDayEvents.shortEventsOnMonthView = !exAllDayEvents.shortEventsOnMonthView")
-      span.white :events-on-month-views="{{ ['true', "'short'"][exAllDayEvents.shortEventsOnMonthView * 1] }}"
-  //- template(#code-html).
-    &lt;button @click="showAllDayEvents = (showAllDayEvents + 1) % 3"&gt;
-      :show-all-day-events="{{ "\{\{ [\"'short'\", 'true', 'false'][showAllDayEvents] \}\}" }}"
-    &lt;/button&gt;
-    &lt;button @click="shortEventsOnMonthView = !shortEventsOnMonthView"&gt;
-      :events-on-month-views="{{ "\{\{ ['true', \"'short'\"][shortEventsOnMonthView * 1] \}\}" }}"
-    &lt;/button&gt;
-
+    //- w-button.ma1.code(@click="exAllDayEvents.allDayEvents = (exAllDayEvents.allDayEvents + 1) % 3")
+      span.white :all-day-events="{{ ['true', 'false'][exAllDayEvents.allDayEvents] }}"
+  template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2019-02-11')"
       :time-from="7 * 60"
       :views="['day', 'week', 'month']"
-      hide-weekends
-      :show-all-day-events="['short', true, false][showAllDayEvents]"
-      :events-on-month-view="[true, 'short'][shortEventsOnMonthView * 1]"
+      all-day-events
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  //- template(#code-js).
-    showAllDayEvents: 0,
-    shortEventsOnMonthView: false,
-    events: [
+  template(#code-js).
+    const allDayEvents = ref(0)
+    const shortEventsOnMonthView = ref(false)
+    const events = [
       {
-        start: '2019-02-12',
-        end: '2019-02-12',
+        start: {{ new Date().format() }},
+        end: {{ new Date().addDays(1).format() }},
+        allDay: true,
         title: 'Day off!',
         content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
-        class: 'yellow-event',
-        allDay: true
+        class: 'yellow-event'
       },
       {
-        start: '2019-02-14',
-        end: '2019-02-14',
-        title: 'Valentine\'s day',
+        start: {{ new Date().addDays(1).format() }},
+        end: {{ new Date().addDays(2).format() }},
+        allDay: true,
+        title: 'Anniversary ❤️',
         content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
-        class: 'pink-event',
-        allDay: true
+        class: 'pink-event'
       },
       ...
     ]
-  //- template(#code-css).
+  template(#code-css).
     .vuecal__cell-content {align-self: flex-start;}
     .vuecal__cell-date {text-align: right;padding: 4px;}
 
@@ -483,15 +454,13 @@ example(title="All Day Events" anchor="all-day-events")
     .vuecal--week-view .vuecal__scrollable .vuecal__event--all-day.leisure,
     .vuecal--day-view .vuecal__scrollable .vuecal__event--all-day.leisure {left: 50%;}
 
-  //- vue-cal.ex--all-day-events(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2019-02-11')"
+  vue-cal(
     :time-from="7 * 60"
     :views="['day', 'week', 'month']"
-    hide-weekends
-    :show-all-day-events="['short', true, false][exAllDayEvents.showAllDayEvents]"
-    :events-on-month-view="[true, 'short'][exAllDayEvents.shortEventsOnMonthView * 1]"
-    :events="exAllDayEvents.events")
+    all-day-events
+    :events="exAllDayEvents.events"
+    :dark="store.darkMode")
+  pre {{exAllDayEvents.events}}
 
 //- Example.
 example(title="Multiple Day Events" anchor="multiple-day-events")
@@ -583,7 +552,7 @@ example(anchor="recurring-events")
       hide-weekends
       events-count-on-year-view
       editable-events
-      show-all-day-events
+      all-day-events
       :events="events"&gt;
     &lt;/vue-cal&gt;
   //- template(#code-js).
@@ -927,90 +896,41 @@ const exRecurringEvents = reactive({
 })
 
 const exAllDayEvents = reactive({
-  showAllDayEvents: ref(0),
+  allDayEvents: ref(0),
   events: [
     {
-      start: '2019-02-12',
-      end: '2019-02-12',
+      start: new Date().format(),
+      end: new Date().addDays(1).format(),
       title: 'Day off!',
       content: '<i class="w-icon mdi mdi-umbrella-beach-outline"></i>',
       class: 'yellow-event',
       allDay: true
     },
     {
-      start: '2019-02-14',
-      end: '2019-02-14',
-      title: 'Valentine\'s day',
+      start: new Date().addDays(1).format(),
+      end: new Date().addDays(2).format(),
+      title: 'Anniversary ❤️',
       content: '<i class="w-icon mdi mdi-heart-outline"></i>',
       class: 'pink-event',
       allDay: true
     },
     {
-      start: '2019-02-14',
-      end: '2019-02-14',
+      start: new Date().addDays(1).format(),
+      end: new Date().addDays(2).format(),
       title: 'Grocery Shopping',
       content: '<i class="w-icon mdi mdi-cart-outline"></i>',
       class: 'leisure',
       allDay: true
     },
     {
-      start: '2019-02-11 10:35',
-      end: '2019-02-11 11:30',
+      start: new Date(new Date().addDays(1).setHours(10, 35)),
+      end: new Date(new Date().addDays(1).setHours(11, 30)),
       title: 'Doctor Appt.',
       content: '<i class="w-icon mdi mdi-stethoscope"></i>',
       class: 'health',
       schedule: 1
-    },
-    {
-      start: '2019-02-11 18:30',
-      end: '2019-02-11 19:15',
-      title: 'Dentist Appt.',
-      content: '<i class="w-icon mdi mdi-tooth"></i>',
-      class: 'health',
-      schedule: 2
-    },
-    {
-      start: '2019-02-12 18:30',
-      end: '2019-02-12 20:30',
-      title: 'Cross-fit',
-      content: '<i class="w-icon mdi mdi-dumbbell"></i>',
-      class: 'sport',
-      schedule: 1
-    },
-    {
-      start: '2019-02-13 11:00',
-      end: '2019-02-13 13:00',
-      title: 'Brunch with Jane',
-      content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-      class: 'leisure',
-      schedule: 1
-    },
-    {
-      start: '2019-02-13 19:30',
-      end: '2019-02-13 23:00',
-      title: 'Swimming Class',
-      content: '<i class="w-icon mdi mdi-swim"></i>',
-      class: 'sport',
-      schedule: 2
-    },
-    {
-      start: '2019-02-15 12:30',
-      end: '2019-02-15 13:00',
-      title: 'BK with Mark',
-      content: '<i class="w-icon mdi mdi-food"></i>',
-      class: 'leisure',
-      schedule: 2
-    },
-    {
-      start: '2019-02-15 21:00',
-      end: '2019-02-15 23:30',
-      title: 'Movie Theater',
-      content: '<i class="w-icon mdi mdi-ticket"></i>',
-      class: 'leisure',
-      schedule: 1
     }
-  ],
-  shortEventsOnMonthView: ref(false)
+  ]
 })
 
 const exMultipleDayEvents = reactive({
