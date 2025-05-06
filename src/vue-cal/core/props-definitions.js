@@ -1,7 +1,7 @@
 export const minutesInADay = 24 * 60 // Don't do the maths every time.
 
 export const props = {
-  allDayEvents: { type: [Boolean, String], default: false }, // Coming soon.
+  allDayEvents: { type: Boolean, default: false }, // Display all-day events in a fixed top bar on the day, days & week views.
   stackEvents: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   dark: { type: Boolean, default: false }, // Dark theme.
