@@ -227,7 +227,6 @@ w-accordion.mt3(
     template(#title)
       strong.code.title5 allDay
       .type [Boolean]
-      w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content) Indicates if the event is an all-day event.
   w-accordion-item
     template(#title)
@@ -293,30 +292,24 @@ w-accordion.mt2(
   w-accordion-item
     template(#title)
       strong.code.title5 allDayEvents
-      .type [Boolean, String]
+      .type [Boolean]
       | ,
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      //- ul
+      ul
         li.mb2.
           When the #[span.code allDayEvents] is set to #[span.code true] the events with an
           #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
-          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          bar on the #[span.code day], #[span.code days] &amp; #[span.code week] views.#[br]
           The all day events bar will only show up if the options #[span.code allDayEvents] &amp;
           #[span.code time] are set to #[span.code true].#[br]
-          #[span.code time] is important since without time information every event is an all-day
-          event there is no point in separating them then.
+          If #[span.code time] is set to #[span.code false], every event is an all-day
+          event.
         li.mb2.
-          When #[span.code allDayEvents] is set to #[span.code false], all the all day events
-          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
-          background event.
-        li.mb2.
-          On month view, switching #[span.code allDayEvents] on and off will not have any impact
-          since both should display the all day events.
-        li.mb2.
-          #[span.code allDayEvents] accepts a #[span.code Boolean] or the string
-          #[span.code 'short'], to display only the event title.
+          When #[span.code allDayEvents] is set to #[span.code false], all the all-day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as normal
+          events.
 
   w-accordion-item
     template(#title)
