@@ -33,6 +33,10 @@
       :end="new Date(day.date.getTime() + 24 * 60 * 60 * 1000 - 1)"
       :index="i"
       all-day)
+      template(v-if="$slots['event.all-day']" #event.all-day="params")
+        slot(name="event.all-day" v-bind="params")
+      template(v-else #event="params")
+        slot(name="event" v-bind="params")
 </template>
 
 <script setup>

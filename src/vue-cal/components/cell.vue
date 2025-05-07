@@ -37,6 +37,10 @@
           :event="event"
           @event-deleted="onEventDelete"
           :style="eventStyles[event._.id]")
+          template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
+            slot(name="event.all-day" v-bind="params")
+          template(v-if="$slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+            slot(:name="`event.${view.id}`" v-bind="params")
           template(v-if="$slots.event" #event="params")
             slot(name="event" v-bind="params")
       .vuecal__event-placeholder(
@@ -67,6 +71,10 @@
         @event-deleted="onEventDelete"
         :class="eventClasses[event._.id]"
         :style="eventStyles[event._.id]")
+        template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
+          slot(name="event.all-day" v-bind="params")
+        template(v-if="$slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+          slot(:name="`event.${view.id}`" v-bind="params")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")

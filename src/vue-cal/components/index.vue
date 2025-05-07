@@ -53,6 +53,10 @@
                 slot(name="weekday-heading" v-bind="params")
               template(v-if="$slots['schedule-heading']" #schedule-heading="params")
                 slot(name="schedule-heading" v-bind="params")
+              template(v-if="$slots['event.all-day']" #event.all-day="params")
+                slot(name="event.all-day" v-bind="params")
+              template(v-if="$slots.event" #event="params")
+                slot(name="event" v-bind="params")
 
             VueCalBody
               template(v-if="$slots.cell" #cell="params")
@@ -63,6 +67,12 @@
                 slot(name="cell-content" v-bind="params")
               template(v-if="!$slots.cell && $slots['cell-events']" #cell-events="params")
                 slot(name="cell-events" v-bind="params")
+              template(v-if="!$slots.cell && !$slots['cell-events'] && $slots['event.all-day']" #event.all-day="params")
+                slot(name="event.all-day" v-bind="params")
+              template(v-if="!$slots.cell && !$slots['cell-events'] && $slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+                slot(:name="`event.${view.id}`" v-bind="params")
+              template(v-if="!$slots.cell && !$slots['cell-events'] && $slots.event" #event="params")
+                slot(name="event" v-bind="params")
               template(v-if="!$slots.cell && $slots.event" #event="params")
                 slot(name="event" v-bind="params")
               template(v-if="!$slots.cell && $slots['event-count']" #event-count="params")

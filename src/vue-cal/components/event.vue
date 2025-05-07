@@ -8,7 +8,9 @@
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
   @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
-    slot(name="event" :event="event")
+    slot(v-if="$slots['event.all-day']" name="event.all-day" :event="event")
+    slot(v-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
+    slot(v-else name="event" :event="event")
       .vuecal__event-title {{ event.title }}
       .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
         span.vuecal__event-comma(v-if="view.isMonth") ,
