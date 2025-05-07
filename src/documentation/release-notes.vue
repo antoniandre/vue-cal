@@ -3,6 +3,12 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.21
+    ul
+      li Added the #[code event.[view]] slot to specifically customize the event per view.
+      li Added the #[code event.all-day] slot to specifically customize the all-day event.
+
+  li.patch
     strong.version 5.0.1-rc.20
     ul
       li Improve the default month view events layout.
