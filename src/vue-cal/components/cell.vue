@@ -670,7 +670,7 @@ onBeforeUnmount(async () => {
   height: 0;
   border-top: 1px solid;
   border-color: rgba(red, 0.6);
-  z-index: 1;
+  z-index: 3; // Keep above the hovered events.
 
   &:before {
     content: "";
