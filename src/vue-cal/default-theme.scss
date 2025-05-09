@@ -184,6 +184,14 @@
   .vuecal__scrollable--has-schedules .vuecal__weekday {padding: 0;}
   .vuecal__scrollable--has-schedules .vuecal__weekday-date {width: 1.5em;}
 
+  // Calendar Body.
+  // ------------------------------------------------------
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  .vuecal__scrollable--no-schedules {--vuecal-schedules-bar-height: 0px;}
+  .vuecal__scrollable--day-view {--vuecal-weekday-bar-height: 0px;}
+  .vuecal__scrollable--month-view,
+  .vuecal__scrollable--no-all-day-bar {--vuecal-all-day-bar-height: 0px;}
+
   // Calendar Body > Calendar Cell.
   // ------------------------------------------------------
   .vuecal__cell {

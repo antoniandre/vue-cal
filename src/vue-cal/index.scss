@@ -1,8 +1,9 @@
 .vuecal {
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-headings-bar-height: 1.7rem;
-  --vuecal-all-day-height: 2rem;
+  --vuecal-weekday-bar-height: 1.7rem;
+  --vuecal-schedules-bar-height: 1.7rem;
+  --vuecal-all-day-bar-height: 2rem;
   --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
   // When there are too many day cells to fit in the view, setting a min cell width will help
   // visualizing and a horizontal scrollbar will be added.
@@ -14,10 +15,8 @@
   user-select: none;
   z-index: 0; // Default minimal z-index to at least have visible cells :before.
 
-  &--date-picker {--vuecal-headings-bar-height: 1.3rem;}
-  &--has-schedules {--vuecal-headings-bar-height: 2.4rem;}
-  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  &--has-schedules .vuecal__scrollable--day-view {--vuecal-headings-bar-height: 1.3rem;}
+  &--date-picker {--vuecal-weekday-bar-height: 1.3rem;}
+  &--timeless {--vuecal-all-day-bar-height: 0px;}
 
   &, *, :before, :after {box-sizing: border-box;}
   .grow {flex-grow: 1;}
@@ -51,7 +50,7 @@
   &__week-numbers {
     display: flex;
     flex-direction: column;
-    padding-top: var(--vuecal-headings-bar-height);
+    padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
   }
   &__week-number {
     display: flex;
@@ -77,10 +76,6 @@
   &__schedule--heading {
     font-size: 12px;
     align-items: center;
-  }
-  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  .vuecal__scrollable--has-schedules.vuecal__scrollable--day-view &__schedule--heading {
-    height: var(--vuecal-headings-bar-height);
   }
 }
 

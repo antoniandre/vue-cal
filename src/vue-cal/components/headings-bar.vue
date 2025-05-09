@@ -24,7 +24,7 @@
           v-else
           :class="schedule.class"
           v-html="schedule.label")
-  .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents && !view.isMonth")
+  .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents")
     cell.vuecal__all-day-cell(
       v-for="(day, i) in weekDays"
       :key="i"
@@ -90,11 +90,9 @@ const domEvents = {
     flex-direction: column;
     flex-shrink: 0;
     z-index: 4; // Keep it above the now-line and hovered events.
-    height: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));
+    height: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
-
-    .vuecal__scrollable--month-view & {height: var(--vuecal-headings-bar-height);}
   }
 
   &__weekdays-headings {display: flex;}
@@ -113,12 +111,12 @@ const domEvents = {
 
   &__all-day {
     display: flex;
-    height: var(--vuecal-all-day-height);
-    background-color: var(--vuecal-secondary-color);
+    height: var(--vuecal-all-day-bar-height);
   }
   &__all-day-cell {
     display: flex;
     flex: 1 1 0;
+    background-color: var(--vuecal-secondary-color);
   }
 }
 </style>

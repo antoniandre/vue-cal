@@ -57,7 +57,7 @@ const timeCells = computed(() => {
   display: flex;
   flex-direction: column;
   align-self: flex-start; // Fill height.
-  padding-top: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));
+  padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
   background-color: var(--vuecal-secondary-color);
   position: sticky;
   left: 0;
@@ -65,24 +65,24 @@ const timeCells = computed(() => {
   border-right: 0.5px solid var(--vuecal-border-color);
   // Smoothen transition between day view and days or week view.
   transition: padding-top 0.3s ease-in-out;
-
-  .vuecal__scrollable--day-view & {padding-top: 0;}
-  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  .vuecal--has-schedules .vuecal__scrollable--day-view & {padding-top: calc(var(--vuecal-headings-bar-height) + var(--vuecal-all-day-height));}
 }
 
 .vuecal__all-day-label {
-  position: absolute;
+  position: sticky;
   top: 0;
   left: 0;
   width: 100%;
-  height: var(--vuecal-time-cell-height);
+  height: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+  margin-top: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
+  padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
   display: flex;
   align-items: center;
   justify-content: center;
-  border-bottom: 0.5px solid var(--vuecal-border-color);
   line-height: 1;
   font-size: 0.85em;
+  background: var(--vuecal-secondary-color);
+  border-bottom: 1px solid var(--vuecal-border-color);
+  z-index: 1;
 }
 
 .vuecal__time-cell {
@@ -107,9 +107,12 @@ const timeCells = computed(() => {
     padding-right: 8px;
     line-height: 0;
   }
+  // If there's an all-day bar, the first label is always smaller to fit.
+  // If there's no all-day bar, and no schedules on day view, the first label is also smaller.
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-  .vuecal__scrollable--day-view:not(.vuecal__scrollable--has-schedules) &:first-child label {
-    margin-top: 0.6em;
+  .vuecal__scrollable--day-view.vuecal__scrollable--no-schedules &:first-child label,
+  .vuecal__scrollable--has-all-day-bar &:not(& + &) label {
+    margin-top: 0.5em;
     font-size: 0.9em;
     opacity: 0.4;
   }
