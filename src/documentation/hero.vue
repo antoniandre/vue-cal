@@ -13,7 +13,8 @@
         @update:selected-date="viewDate = $event"
         :view-date="viewDate"
         :views-bar="false"
-        :dark="store.darkMode")
+        :dark="store.darkMode"
+        style="height: 225px")
       .code.base-color.transparent--bg.mt2.text-center(style="font-size: 12px").
         Selected date: {{ formatDate(selectedDate) }}
 
@@ -251,7 +252,7 @@ $kate: #406fbf;
 }
 
 .demo {
-  border-radius: 4px;
+  border-radius: 6px;
   background: var(--w-base-bg-color);
 
   // Date picker.
