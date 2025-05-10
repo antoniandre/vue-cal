@@ -51,7 +51,7 @@ const showAside = computed(() => {
   }
   .example:first-child h2 {margin-top: 20px;}
 
-  .example .vuecal:not(.vuecal--date-picker) {height: 300px;}
+  .example .vuecal:not(.vuecal--date-picker) {height: 301px;}
 }
 
 .examples-container .aside {

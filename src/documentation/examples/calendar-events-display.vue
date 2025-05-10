@@ -179,8 +179,7 @@ example(title="Open a Dialog on Event Click" anchor="open-dialog-on-event-click"
     view="days"
     :views-bar="false"
     :dark="store.darkMode"
-    @event-click="exOpenEventDetails.openDialog"
-    style="height: 301px")
+    @event-click="exOpenEventDetails.openDialog")
 //- Do not indent the w-dialog into the example:
 //- It causes to re-render the whole example on open/close and so, the calendar cells as well.
 w-dialog(
@@ -401,8 +400,7 @@ example(title="Overlapping Events" anchor="overlapping-events")
     :views-bar="false"
     :time-from="9 * 60"
     :time-to="15 * 60"
-    :dark="store.darkMode"
-    style="height: 301px")
+    :dark="store.darkMode")
 
 //- Example.
 example(title="All Day Events" anchor="all-day-events")

@@ -177,8 +177,7 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
-    :dark="store.darkMode"
-    style="height: 301px")
+    :dark="store.darkMode")
   w-dialog(
     v-if="exCreateEvents.newEvent"
     v-model="exCreateEvents.showCreationDialog"
@@ -324,8 +323,7 @@ example(title="Delete Events" anchor="delete-events")
     view="days"
     :view-date="exDeleteEvents.viewDate"
     :views-bar="false"
-    :dark="store.darkMode"
-    style="height: 301px")
+    :dark="store.darkMode")
 
 //- Example.
 example(title="Edit Events" anchor="edit-events")
@@ -386,8 +384,7 @@ example(title="Edit Events" anchor="edit-events")
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
-    :dark="store.darkMode"
-    style="height: 301px")
+    :dark="store.darkMode")
     template(#event="{ event }")
       strong {{ event.title }}
       p {{ event.start.formatTime() }} - {{ event.end.formatTime() }}
@@ -457,8 +454,7 @@ example(title="Events v-model" anchor="events-v-model")
     :views="{ days: { cols: 5, rows: 1 } }"
     view="days"
     :views-bar="false"
-    :dark="store.darkMode"
-    style="height: 301px")
+    :dark="store.darkMode")
 
 //- Example.
 example(title="Event Drag & Drop" anchor="drag-and-drop")
@@ -717,8 +713,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       :time-to="15 * 60"
       small
       :today-button="false"
-      :dark="store.darkMode"
-      style="height: 301px")
+      :dark="store.darkMode")
     vue-cal.grow(
       ref="exExternalEventsDragDropEl2"
       @event-drop="exExternalEventsDragDrop.onEventDrop"
@@ -730,8 +725,7 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       :time-to="15 * 60"
       small
       :today-button="false"
-      :dark="store.darkMode"
-      style="height: 301px")
+      :dark="store.darkMode")
 
 //- Example.
 example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or-resizing")
