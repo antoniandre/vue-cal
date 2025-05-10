@@ -44,7 +44,11 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
       w-switch(v-model="exHideElements.startOnSunday") Start week on Sunday
       w-switch(v-model="exHideElements.hideWeekends") Hide Weekends
       w-switch(v-model="exHideElements.time") Time
-      w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
+      w-tooltip
+        template(#activator="{ on }")
+          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
+            w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
+        | Show the time at the cursor on hover on day, days and month views.
       w-tooltip(align-left)
         template(#activator="{ on }")
           .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
