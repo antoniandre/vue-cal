@@ -65,10 +65,6 @@
 
     &:not([disabled]) {cursor: pointer;}
   }
-  .vuecal__view-button {
-    text-transform: uppercase;
-    font-size: 0.9em;
-  }
 
   .vuecal__view-button,
   .vuecal__nav,
@@ -85,6 +81,13 @@
     &:active {background-color: rgba(#fff, 0.25);}
     &:focus-visible {border-color: rgba(#fff, 0.75);}
   }
+
+  .vuecal__view-button {
+    text-transform: uppercase;
+    font-size: 0.9em;
+  }
+
+  button.vuecal__title {line-height: 0.9;}
 
   .vuecal__nav--prev,
   .vuecal__nav--next {
