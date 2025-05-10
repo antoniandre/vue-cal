@@ -253,21 +253,23 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
 
   template(#code-css)
     | .vuecal {
-    |   height: 441px;
+    |   height: 506px;
     |
     |   .vuecal__scrollable--month-view {
-    |     .vuecal__cell {height: 50px;}
     |     .vuecal__event {height: 15px;margin-top: 1px;}
     |     .vuecal__event-details {
     |       font-size: 11px;
     |       white-space: nowrap;
     |       padding: 0;
     |     }
+    |
     |     .vuecal__cell--has-events {
     |       flex-direction: row-reverse;
     |       overflow: hidden;
     |       justify-content: flex-start;
     |     }
+    |
+    |     .vuecal__cell--has-events .vuecal__cell-date {align-self: flex-start;}
     |   }
     |
     template(v-if="!exEventsMonthView.showEventCount")
@@ -329,7 +331,8 @@ example(title="Month View Events & Count" anchor="events-on-month-view")
     :views="{ days: { cols: 5, rows: 1 }, month: {}, year: {} }"
     view="month"
     :dark="store.darkMode"
-    :class="exEventsMonthView.classes")
+    :class="exEventsMonthView.classes"
+    style="height: 506px")
     template(
       v-if="exEventsMonthView.showEventCount && exEventsMonthView.eventCountStyle === 'slot'"
       #event-count="{ events }")
@@ -989,7 +992,6 @@ const exMultipleDayEvents = reactive({
     height: 441px;
 
     .vuecal__scrollable--month-view {
-      .vuecal__cell {height: 50px;}
       .vuecal__event {height: 15px;margin-top: 1px;}
       .vuecal__event-details {
         font-size: 11px;
@@ -1048,6 +1050,7 @@ const exMultipleDayEvents = reactive({
       left: 50%;
       transform: translate(-50%, -50%);
     }
+    .vuecal__cell--has-events .vuecal__cell-date {align-self: flex-start;}
   }
 
   .ex--multiple-day-events .vuecal__event {
