@@ -223,6 +223,8 @@ export const useConfig = (vuecal, props, attrs) => {
 
   const allDayEvents = computed(() => props.allDayEvents && props.time !== false && !view.isMonth)
 
+  const timeAtCursor = computed(() => props.timeAtCursor && props.time !== false)
+
   /**
    * Asynchronously loads translation texts for the given locale.
    *
@@ -302,6 +304,7 @@ export const useConfig = (vuecal, props, attrs) => {
     editableEvents,
     showCellEventCount,
     allDayEvents,
+    timeAtCursor,
     view,
     // Getters.
     get hasHiddenDays () { return Object.keys(hideWeekdays.value).length },
