@@ -348,13 +348,20 @@ example(title="Overlapping Events" anchor="overlapping-events")
       #[br]
       You can also stack events on top of each other by setting the #[code stack-events] prop to #[code true].
 
-    .w-flex.justify-end.mb3
+    alert(tip)
+      div.mb2.
+        Alternatively, you can use the event stacking class (based on the stack position and length) to override
+        the default stacking behavior to your liking via CSS (you will need to use #[code !important]).#[br]
+        Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
+      w-image(
+        src="/images/calendar-events-display-overlapping-events.webp"
+        lazy
+        :aspect-ratio="1076 / 336"
+        max-width="500px")
+
+    .w-flex.justify-end.mt8.mb3
       w-switch(v-model="exOverlappingEvents.stackEvents" label-on-left) Stack Events
 
-    alert.mb6(tip).
-      Alternatively, you can use the event stacking class (based on the stack position and length) to override
-      the default stacking behavior to your liking via CSS (you will need to use #[code !important]).#[br]
-      Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
   template(#code-html).
     &lt;vue-cal
       editable-events{{ exOverlappingEvents.stackEvents ? '\n  stack-events' : '' }}

@@ -5,8 +5,10 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.21
     ul
+      li Added support for all-day events. #[issue-link 44]
       li Added the #[code event.[view]] slot to specifically customize the event per view.
       li Added the #[code event.all-day] slot to specifically customize the all-day event.
+      li Minor UI improvements.
 
   li.patch
     strong.version 5.0.1-rc.20
