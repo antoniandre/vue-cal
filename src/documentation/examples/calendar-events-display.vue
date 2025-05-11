@@ -428,7 +428,7 @@ example(title="All Day Events" anchor="all-day-events")
   template(#code-html).
     &lt;vue-cal
       :events="events"{{ exAllDayEvents.allDayBarOn ? '\n  all-day-events' : '' }}
-      :views="['day', 'week', 'month']"&gt;
+      :time-from="7 * 60"
     &lt;/vue-cal&gt;
   template(#code-js).
     const allDayEvents = ref(true)
@@ -467,7 +467,6 @@ example(title="All Day Events" anchor="all-day-events")
     :all-day-events="exAllDayEvents.allDayBarOn"
     :events="exAllDayEvents.events"
     :dark="store.darkMode")
-  pre {{exAllDayEvents.events}}
 
 //- Example.
 example(title="Multiple Day Events" anchor="multiple-day-events")

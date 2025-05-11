@@ -306,11 +306,19 @@ example(title="Custom Cells" anchor="custom-cells")
 example(title="Custom Event Rendering" anchor="custom-event-rendering")
   template(#desc)
     .todo-tag.d-iflex.prod TO BE UPDATED SOON
-    p.mb2 Using Vue.js scoped slots, you can override the events rendering.
+    p.mb2 Using Vue.js scoped slots, you can customize the event rendering through the following slots.
 
     alert.my2(tip).
-      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it:
-      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") vuejs.org/guide/components/slots.htm #[w-icon(color="primary") mdi mdi-open-in-new]].
+      If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it in the
+      #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") Vue.js official documentation #[w-icon(color="primary") mdi mdi-open-in-new]].
+    ul
+      li #[span.code event.all-day]: Override the event rendering when the event is all day.
+      li #[span.code event.day]: Override the event rendering when the event is on day view.
+      li #[span.code event.days]: Override the event rendering when the event is on days view.
+      li #[span.code event.week]: Override the event rendering when the event is on week view.
+      li #[span.code event.month]: Override the event rendering when the event is on month view.
+      li #[span.code event.year]: Override the event rendering when the event is on year view.
+      li #[span.code event.years]: Override the event rendering when the event is on years view.
     p.mb2.
       Two parameters are passed through the scoped slot:
     ul
