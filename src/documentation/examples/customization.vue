@@ -312,43 +312,21 @@ example(title="Custom Event Rendering" anchor="custom-event-rendering")
       If you are not familiar with scoped slots and destructuring slot-scope, you should first read about it in the
       #[a(href="https://vuejs.org/guide/components/slots.html#scoped-slots" target="_blank") Vue.js official documentation #[w-icon(color="primary") mdi mdi-open-in-new]].
     ul
-      li #[span.code event.all-day]: Override the event rendering when the event is all day.
+      li #[span.code event]: Override the event rendering for all the cases.
+      li #[span.code event.all-day]: Override the event rendering when the event is all-day.
       li #[span.code event.day]: Override the event rendering when the event is on day view.
       li #[span.code event.days]: Override the event rendering when the event is on days view.
       li #[span.code event.week]: Override the event rendering when the event is on week view.
       li #[span.code event.month]: Override the event rendering when the event is on month view.
       li #[span.code event.year]: Override the event rendering when the event is on year view.
       li #[span.code event.years]: Override the event rendering when the event is on years view.
-    p.mb2.
-      Two parameters are passed through the scoped slot:
-    ul
-      li #[span.code event]: The event full object containing dates, time, title, content and custom attributes.
-      li #[span.code view]: The current selected view id.
     p.mt2.
-      You can set any custom attribute you want on an event, they will then be accessible in your custom event renderer!#[br]
-      Note that #[span.code _eid] is a reserved keyword.
+      You can set any custom attribute on an event, they will then be accessible in the custom event renderer.
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="9 * 60"
-      :time-to="19 * 60"
-      hide-weekends
       :events="events"&gt;
-      &lt;template #event="{ event, view }"&gt;
-        &lt;v-icon&gt;{{ '\{\{ event.icon \}\}' }}&lt;/v-icon&gt;
-
-        &lt;div class="vuecal__event-title" v-html="event.title" /&gt;
-        &lt;!-- Or if your events are editable: --&gt;
-        &lt;div class="vuecal__event-title vuecal__event-title--edit"
-              contenteditable
-              @blur="event.title = $event.target.innerHTML"
-              v-html="event.title" /&gt;
-
-        &lt;small class="vuecal__event-time"&gt;
-          &lt;!-- Using Vue Cal Date prototypes (activated by default) --&gt;
-          &lt;strong&gt;Event start:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.start.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;&lt;br/&gt;
-          &lt;strong&gt;Event end:&lt;/strong&gt; &lt;span&gt;{{ '\{\{ event.end.formatTime("h O\'clock") \}\}' }}&lt;/span&gt;
-        &lt;/small&gt;
+      &lt;template #event="{ event }"&gt;
+        &lt;pre&gt;{{ '\{\{ event \}\}' }}&lt;/pre&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
