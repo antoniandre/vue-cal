@@ -248,12 +248,14 @@ const cellEventsPerSchedule = computed(() => {
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
   if (view.isMonth || view.isYear || view.isYears) return {}
+  const isRTL = document.documentElement.getAttribute('dir') === 'rtl'
   const styles = {}
   for (const event of cellEvents.value) {
     const eventId = event._.id
     const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
 
-    styles[eventId] = { left: `${(100 / maxConcurrent) * position}%` }
+    const horizontalProperty = isRTL ? 'right' : 'left';
+    styles[eventId] = { [horizontalProperty]: `${(100 / maxConcurrent) * position}%` }
     // Stack overlapping events on top of each other if the stackEvents prop is set to true.
     if (config.stackEvents) {
       styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`

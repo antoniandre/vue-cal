@@ -91,6 +91,10 @@
     width: 2em;
     aspect-ratio: 1;
     border-radius: 99em;
+
+    &:dir(rtl) {
+      transform: rotate(180deg);
+    }
   }
 
   .vuecal__nav--today {
@@ -283,6 +287,10 @@
   .vuecal__scrollable--no-schedules.vuecal__scrollable--week-view .vuecal__cell-events {
     position: absolute;
     inset: 0 8px 0 0;
+
+    &:dir(rtl) {
+      inset: 0 0 0 8px;
+    }
   }
 
   // Calendar Body > Time column.
