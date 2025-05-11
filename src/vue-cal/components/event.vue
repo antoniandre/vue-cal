@@ -9,14 +9,14 @@
   @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
     slot(v-if="$slots['event.all-day']" name="event.all-day" :event="event")
-    slot(v-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
+    slot(v-else-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
     slot(v-else name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
+      .vuecal__event-time(v-if="config.time && !inAllDayBar")
         span.vuecal__event-comma(v-if="view.isMonth") ,
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         span.vuecal__event-end(v-if="!view.isMonth") &nbsp;- {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-      .vuecal__event-content(v-html="event.content")
+      .vuecal__event-content(v-if="!inAllDayBar" v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="event.delete(3)") Delete
@@ -60,7 +60,7 @@ const touch = reactive({
 
 const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
 const isResizable = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears || (config.allDayEvents && event.allDay)) return false
+  if (view.isMonth || view.isYear || view.isYears || props.inAllDayBar) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
@@ -87,7 +87,7 @@ const classes = computed(() => ({
 }))
 
 const styles = computed(() => {
-  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !(config.allDayEvents && event.allDay)
+  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !props.inAllDayBar
 
   if (!hasPosition && !event.backgroundColor && !event.color) return false
 
