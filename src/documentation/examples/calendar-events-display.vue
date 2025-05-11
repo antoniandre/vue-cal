@@ -422,23 +422,21 @@ example(title="All Day Events" anchor="all-day-events")
       When #[code allDayEvents] is set to #[code false], all the all-day events
       will show up as normal events.
 
-    //- w-button.ma1.code(@click="exAllDayEvents.allDayEvents = (exAllDayEvents.allDayEvents + 1) % 3")
-      span.white :all-day-events="{{ ['true', 'false'][exAllDayEvents.allDayEvents] }}"
+    .w-flex.column.gap1.align-end
+      w-switch(v-model="exAllDayEvents.allDayBarOn" label-on-left) Show All-day Bar
+      w-switch(v-model="exAllDayEvents.allDayEventsOn" label-on-left) Switch on all #[code.ml1 event.allDay]
   template(#code-html).
     &lt;vue-cal
-      :time-from="7 * 60"
-      :views="['day', 'week', 'month']"
-      all-day-events
-      :events="events"&gt;
+      :events="events"{{ exAllDayEvents.allDayBarOn ? '\n  all-day-events' : '' }}
+      :views="['day', 'week', 'month']"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-    const allDayEvents = ref(0)
-    const shortEventsOnMonthView = ref(false)
+    const allDayEvents = ref(true)
     const events = [
       {
         start: {{ new Date().format() }},
         end: {{ new Date().addDays(1).format() }},
-        allDay: true,
+        allDay: {{ exAllDayEvents.allDayEventsOn ? 'true' : 'false' }},
         title: 'Day off!',
         content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
         class: 'yellow-event'
@@ -446,7 +444,7 @@ example(title="All Day Events" anchor="all-day-events")
       {
         start: {{ new Date().addDays(1).format() }},
         end: {{ new Date().addDays(2).format() }},
-        allDay: true,
+        allDay: {{ exAllDayEvents.allDayEventsOn ? 'true' : 'false' }},
         title: 'Anniversary ❤️',
         content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
         class: 'pink-event'
@@ -464,8 +462,9 @@ example(title="All Day Events" anchor="all-day-events")
 
   vue-cal(
     :time-from="7 * 60"
-    :views="['day', 'week', 'month']"
-    all-day-events
+    view="days"
+    :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {} }"
+    :all-day-events="exAllDayEvents.allDayBarOn"
     :events="exAllDayEvents.events"
     :dark="store.darkMode")
   pre {{exAllDayEvents.events}}
@@ -905,14 +904,16 @@ const exRecurringEvents = reactive({
 
 const exAllDayEvents = reactive({
   allDayEvents: ref(0),
-  events: [
+  allDayBarOn: ref(true),
+  allDayEventsOn: ref(true),
+  events: computed(() => [
     {
       start: new Date().format(),
       end: new Date().addDays(1).format(),
       title: 'Day off!',
       content: '<i class="w-icon mdi mdi-umbrella-beach-outline"></i>',
       class: 'yellow-event',
-      allDay: true
+      allDay: exAllDayEvents.allDayEventsOn
     },
     {
       start: new Date().addDays(1).format(),
@@ -920,7 +921,7 @@ const exAllDayEvents = reactive({
       title: 'Anniversary ❤️',
       content: '<i class="w-icon mdi mdi-heart-outline"></i>',
       class: 'pink-event',
-      allDay: true
+      allDay: exAllDayEvents.allDayEventsOn
     },
     {
       start: new Date().addDays(1).format(),
@@ -928,7 +929,7 @@ const exAllDayEvents = reactive({
       title: 'Grocery Shopping',
       content: '<i class="w-icon mdi mdi-cart-outline"></i>',
       class: 'leisure',
-      allDay: true
+      allDay: exAllDayEvents.allDayEventsOn
     },
     {
       start: new Date(new Date().addDays(1).setHours(10, 35)),
@@ -938,7 +939,7 @@ const exAllDayEvents = reactive({
       class: 'health',
       schedule: 1
     }
-  ]
+  ])
 })
 
 const exMultipleDayEvents = reactive({
