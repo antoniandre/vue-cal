@@ -15,7 +15,7 @@
       .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
         span.vuecal__event-comma(v-if="view.isMonth") ,
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-        span.vuecal__event-end(v-if="!view.isMonth") - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+        span.vuecal__event-end(v-if="!view.isMonth") &nbsp;- {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
@@ -30,7 +30,8 @@ const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-st
 const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
 
 const props = defineProps({
-  event: { type: Object, required: true }
+  event: { type: Object, required: true },
+  inAllDayBar: { type: Boolean, default: false }
 })
 
 const eventEl = ref(null)
@@ -69,9 +70,10 @@ const classes = computed(() => ({
   [event.class]: !!event.class,
   'vuecal__event--recurring': !!event.recurring,
   'vuecal__event--background': !!event.background,
+  'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
   'vuecal__event--multiday': !!event._?.multiday,
-  'vuecal__event--cut-top': !event.allDay && event._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': !event.allDay && event._?.endMinutes > config.timeTo || event._.multiday,
+  'vuecal__event--cut-top': !props.inAllDayBar && event._?.startMinutes < config.timeFrom,
+  'vuecal__event--cut-bottom': !props.inAllDayBar && event._?.endMinutes > config.timeTo || event._.multiday,
   // Only apply the dragging class on the event copy that is being dragged.
   'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
   // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being

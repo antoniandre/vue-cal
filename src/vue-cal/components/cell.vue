@@ -36,6 +36,7 @@
           :key="event._.id"
           :event="event"
           @event-deleted="onEventDelete"
+          :in-all-day-bar="props.allDay"
           :style="eventStyles[event._.id]")
           template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
             slot(name="event.all-day" v-bind="params")
@@ -69,6 +70,7 @@
         :key="event._.id"
         :event="event"
         @event-deleted="onEventDelete"
+        :in-all-day-bar="props.allDay"
         :class="eventClasses[event._.id]"
         :style="eventStyles[event._.id]")
         template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
@@ -237,7 +239,7 @@ const cellEvents = computed(() => {
   return eventsManager.getEventsInRange(
     props.start,
     props.end,
-    { excludeIds: eventsDeleted.value, allDay: props.allDay }
+    { excludeIds: eventsDeleted.value, ...(config.allDayEvents ? { allDay: props.allDay } : {}) }
   )
 })
 
