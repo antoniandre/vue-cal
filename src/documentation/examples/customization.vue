@@ -181,15 +181,23 @@ example(title="Custom Title Per View" anchor="custom-title-per-view")
       The view object is available through the slot-scope, and you can use the #[code.mx1 view.id] property to
       check the current view.
 
+    .w-flex.gap2.my2.justify-end
+      span.text-right Override title only on:
+      w-radios(
+        v-model="exCustomTitlePerView.view"
+        :items="['day', 'days', 'week', 'month', 'year', 'years'].map(v => ({ label: v, value: v }))"
+        inline)
+      span view.
+
   template(#code-html).
     &lt;vue-cal&gt;
-      &lt;template #title.day="view"&gt;
+      &lt;template #title.{{ exCustomTitlePerView.view }}="view"&gt;
         {{ '\{\{ view.start.format("D MMMM YYYY") \}\}' }} ❤️
       &lt;/template&gt;
     &lt;/vue-cal&gt;
 
-  vue-cal(:dark="store.darkMode" view="day")
-    template(#title.day="view") {{ view.start.format('D MMMM YYYY') }} ❤️
+  vue-cal(:dark="store.darkMode" :view="exCustomTitlePerView.view")
+    template(#[`title.${exCustomTitlePerView.view}`]="view") {{ view.start.format('D MMMM YYYY') }} ❤️
 
 //- Example.
 example(title="Custom Cells" anchor="custom-cells")
@@ -280,7 +288,7 @@ example(title="Custom Cells" anchor="custom-cells")
     &lt;/vue-cal&gt;
   template(#desc2)
 
-  vue-cal.ex--custom-title-and-cells(
+  vue-cal(
     :dark="store.darkMode"
     :time="false"
     :dblclick-to-navigate="false"
@@ -330,39 +338,56 @@ example(title="Custom Event Rendering" anchor="custom-event-rendering")
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-    events: [
+    const events = [
       {
-        start: '2018-11-20 14:00',
-        end: '2018-11-20 18:00',
-        title: 'Need to go shopping',
-        icon: 'mdi mdi-cart-outline', // Custom attribute.
-        class: 'leisure'
+        start: new Date(new Date().subtractDays(1).setHours(9, 0, 0, 0)),
+        end: new Date(new Date().subtractDays(1).setHours(12, 0, 0, 0)),
+        title: 'Golf with John',
+        icon: 'mdi mdi-golf',
+        class: 'text-center sport'
       },
       {
-        start: '2018-11-22 10:00',
-        end: '2018-11-22 15:00',
-        title: 'Golf with John',
-        icon: 'mdi mdi-golf', // Custom attribute.
-        class: 'sport'
+        start: new Date(new Date().addDays(1).setHours(12, 0, 0, 0)),
+        end: new Date(new Date().addDays(1).setHours(15, 0, 0, 0)),
+        title: 'Shopping',
+        icon: 'mdi mdi-cart-outline',
+        class: 'text-center leisure'
+      },
+      {
+        start: '{{ new Date().format() }}',
+        end: '{{ new Date().addDays(1).format() }}',
+        allDay: true,
+        title: 'Day off!',
+        content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
+        class: 'yellow-event'
+      },
+      {
+        start: '{{ new Date().addDays(1).format() }}',
+        end: '{{ new Date().addDays(2).format() }}',
+        allDay: true,
+        title: 'Anniversary ❤️',
+        content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
+        class: 'pink-event'
       }
     ]
-  template(#desc2)
 
-  vue-cal.ex--custom-event-rendering(
-    :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
+  vue-cal(
     :time-from="9 * 60"
-    :time-to="19 * 60"
-    hide-weekends
-    :events="eventsCopy")
-    template(#event="{ event, view }")
-      w-icon.mt2(color="white" xl) {{ event.icon }}
-      .vuecal__event-title.mb6(v-html="event.title")
-      small.vuecal__event-time
-        strong.mr1 Event start:
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :view-date="exCustomEventRendering.viewDate"
+    :views-bar="false"
+    :events="exCustomEventRendering.events"
+    :dark="store.darkMode")
+    template(#event="{ event }")
+      w-icon.ma2(color="white" xl) {{ event.icon }}
+      .title3.mb2(v-html="event.title")
+      div.mta
+        strong.mr1 Start:
         span {{ event.start.formatTime('h O\'clock') }}
         br
-        strong.mr1 Event end:
+        strong.mr1 End:
         span {{ event.end.formatTime('h O\'clock') }}
 
 //- Example.
@@ -403,49 +428,6 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
     template(#schedule-heading="{ schedule, view }")
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
-
-  w-dialog(
-    v-model="showDialog"
-    width="600"
-    dialog-class="bdrs2"
-    title-class="primary--bg white py2")
-    template(#title)
-      w-icon.mr3 {{ selectedEvent.icon }}
-      span.title3.text-upper {{ selectedEvent.title }}
-      .spacer
-      strong {{ selectedEvent.start && selectedEvent.start.format('DD/MM/YYYY') }}
-
-    p(v-html="selectedEvent.contentFull")
-    .text-bold.mt3 Event details:
-    ul
-      li Event starts at: {{ selectedEvent.start && selectedEvent.start.formatTime() }}
-      li Event ends at: {{ selectedEvent.end && selectedEvent.end.formatTime() }}
-
-  w-dialog(
-    v-model="showEventCreationDialog"
-    persistent
-    width="420"
-    title-class="primary--bg white px5"
-    content-class="pa5")
-    template(#title)
-      w-input.ma0.pa0(v-model="selectedEvent.title" placeholder="Event Title" color="white")
-    div
-      w-textarea.pa0(v-model="selectedEvent.content" placeholder="Event Content" rows="3")
-      .w-flex.justify-space-between.mt4
-        w-select(
-          :items="eventsCssClasses"
-          placeholder="Event CSS Class"
-          @input="selectedEvent.class = $event"
-          :model-value="selectedEvent.class"
-          style="max-width: 170px")
-        w-switch.no-grow(
-          v-model="selectedEvent.background"
-          label="Background Event"
-          label-color="grey")
-    .w-flex.mt6
-      .spacer
-      w-button.ma1(bg-color="light-grey" @click="cancelEventCreation") Cancel
-      w-button.ma1(@click="closeCreationDialog") Save
 
 //- Example.
 example(title="Events on Month View" anchor="events-on-month-view")
@@ -563,8 +545,6 @@ const customDayScheduleHeadings = [
 ]
 const selectedDate = ref(null)
 const selectedEvent = ref({})
-const showDialog = ref(false)
-const showEventCreationDialog = ref(false)
 const eventsCssClasses = ref([{ label: 'leisure' }, { label: 'sport' }, { label: 'health' }])
 
 const events = [
@@ -657,6 +637,30 @@ const cancelEventCreation = () => {
   (deleteEventFunction.value || deleteDragEventFunction.value)()
 }
 const customEventCount = events => events ? events.filter(e => e.class === 'leisure').length : 0
+
+const exCustomTitlePerView = reactive({
+  view: ref('day')
+})
+
+const exCustomEventRendering = reactive({
+  viewDate: new Date().subtractDays(2),
+  events: [
+    {
+      start: new Date(new Date().subtractDays(1).setHours(9, 0, 0, 0)),
+      end: new Date(new Date().subtractDays(1).setHours(12, 0, 0, 0)),
+      title: 'Golf with John',
+      icon: 'mdi mdi-golf',
+      class: 'text-center sport'
+    },
+    {
+      start: new Date(new Date().addDays(1).setHours(12, 0, 0, 0)),
+      end: new Date(new Date().addDays(1).setHours(15, 0, 0, 0)),
+      title: 'Shopping',
+      icon: 'mdi mdi-cart-outline',
+      class: 'text-center leisure'
+    }
+  ]
+})
 
 const exEventsMonthView = reactive({
   events: [...events],

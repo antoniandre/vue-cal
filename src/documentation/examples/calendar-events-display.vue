@@ -434,16 +434,16 @@ example(title="All Day Events" anchor="all-day-events")
     const allDayEvents = ref(true)
     const events = [
       {
-        start: {{ new Date().format() }},
-        end: {{ new Date().addDays(1).format() }},
+        start: '{{ new Date().format() }}',
+        end: '{{ new Date().addDays(1).format() }}',
         allDay: {{ exAllDayEvents.allDayEventsOn ? 'true' : 'false' }},
         title: 'Day off!',
         content: '&lt;i class="icon mdi mdi-umbrella-beach-outline"&gt;&lt;/i&gt;',
         class: 'yellow-event'
       },
       {
-        start: {{ new Date().addDays(1).format() }},
-        end: {{ new Date().addDays(2).format() }},
+        start: '{{ new Date().addDays(1).format() }}',
+        end: '{{ new Date().addDays(2).format() }}',
         allDay: {{ exAllDayEvents.allDayEventsOn ? 'true' : 'false' }},
         title: 'Anniversary ❤️',
         content: '&lt;i class="icon mdi mdi-heart-outline"&gt;&lt;/i&gt;',
