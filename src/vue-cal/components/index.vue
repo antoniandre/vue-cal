@@ -157,6 +157,7 @@ onMounted(async () => {
 
 // Share the vuecal object across all the Vue components.
 provide('vuecal', vuecal)
+provide('$vuecalEl', vuecalEl)
 
 defineExpose({ view: vuecal.view })
 </script>

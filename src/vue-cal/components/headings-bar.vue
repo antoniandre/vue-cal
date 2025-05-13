@@ -37,14 +37,18 @@
         slot(name="event.all-day" v-bind="params")
       template(v-else #event="params")
         slot(name="event" v-bind="params")
+    .vuecal__all-day-resizer(
+      @mousedown="allDayResizer.handleMouseDown"
+      @touchstart="allDayResizer.handleTouchStart")
 </template>
 
 <script setup>
-import { computed, inject } from 'vue'
+import { computed, inject, ref, onBeforeUnmount } from 'vue'
 import { weekdays } from '../core/config'
 import Cell from './cell.vue'
 
 const vuecal = inject('vuecal')
+const $vuecalEl = inject('$vuecalEl')
 const { view, config, dateUtils } = vuecal
 
 const dayLabelSize = computed(() => {
@@ -79,6 +83,89 @@ const domEvents = {
     if (view.isDays || view.isWeek) view.updateSelectedDate(date)
   }
 }
+
+const allDayResizer = {
+  isResizing: ref(false),
+  startY: ref(0),
+  initialHeight: ref(0),
+  defaultHeight: 25, // Default height in pixels.
+
+  // Cleanup event listeners.
+  cleanup () {
+    if (typeof document !== 'undefined') {
+      document.removeEventListener('mousemove', this.handleMouseMove)
+      document.removeEventListener('mouseup', this.handleMouseUp)
+      document.removeEventListener('touchmove', this.handleTouchMove, { passive: false })
+      document.removeEventListener('touchend', this.handleTouchEnd)
+    }
+    this.isResizing.value = false
+  },
+
+  startResize (clientY) {
+    this.isResizing.value = true
+    this.startY.value = clientY
+
+    if (typeof document !== 'undefined') {
+      const rootEl = $vuecalEl.value
+      const computedStyle = rootEl ? getComputedStyle(rootEl) : null
+      this.initialHeight.value = computedStyle
+        ? parseInt(computedStyle.getPropertyValue('--vuecal-all-day-bar-height'), 10) || this.defaultHeight
+        : this.defaultHeight
+
+      // Add document event listeners.
+      document.addEventListener('mousemove', this.handleMouseMove)
+      document.addEventListener('mouseup', this.handleMouseUp)
+      document.addEventListener('touchmove', this.handleTouchMove, { passive: false })
+      document.addEventListener('touchend', this.handleTouchEnd)
+    }
+  },
+
+  // Update height based on mouse/touch movement.
+  updateHeight (clientY) {
+    if (!this.isResizing.value) return
+
+    const delta = clientY - this.startY.value
+    const newHeight = Math.max(20, this.initialHeight.value + delta) // Minimum height of 20px.
+
+    if (typeof document !== 'undefined') {
+      $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newHeight}px`)
+    }
+  },
+
+  // Mouse event handlers.
+  handleMouseDown (e) {
+    this.startResize(e.clientY)
+  },
+
+  handleMouseMove (e) {
+    allDayResizer.updateHeight(e.clientY)
+  },
+
+  handleMouseUp () {
+    allDayResizer.cleanup()
+  },
+
+  // Touch event handlers.
+  handleTouchStart (e) {
+    e.touches?.[0] && this.startResize(e.touches[0].clientY)
+  },
+
+  handleTouchMove (e) {
+    if (e.touches?.[0]) {
+      allDayResizer.updateHeight(e.touches[0].clientY)
+      e.preventDefault() // Prevent scrolling while resizing.
+    }
+  },
+
+  handleTouchEnd () {
+    allDayResizer.cleanup()
+  }
+}
+
+// Clean up on component unmount.
+onBeforeUnmount(() => {
+  allDayResizer.cleanup()
+})
 </script>
 
 <style lang="scss">
@@ -110,6 +197,7 @@ const domEvents = {
   &__schedule-heading {height: 12px;}
 
   &__all-day {
+    position: relative;
     display: flex;
     height: var(--vuecal-all-day-bar-height);
   }
@@ -117,6 +205,27 @@ const domEvents = {
     display: flex;
     flex: 1 1 0;
     background-color: var(--vuecal-secondary-color);
+  }
+  &__all-day-resizer {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 100%;
+    height: 1px;
+    cursor: row-resize;
+    background-color: var(--vuecal-secondary-color);
+    z-index: 10;
+
+    &:hover {
+      height: 2px;
+      background-color: var(--vuecal-primary-color);
+    }
+
+    &:before {
+      content: '';
+      position: absolute;
+      inset: -5px 0;
+    }
   }
 }
 </style>
