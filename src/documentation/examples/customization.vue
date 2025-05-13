@@ -383,12 +383,11 @@ example(title="Custom Event Rendering" anchor="custom-event-rendering")
     template(#event="{ event }")
       w-icon.ma2(color="white" xl) {{ event.icon }}
       .title3.mb2(v-html="event.title")
-      div.mta
-        strong.mr1 Start:
-        span {{ event.start.formatTime('h O\'clock') }}
-        br
-        strong.mr1 End:
-        span {{ event.end.formatTime('h O\'clock') }}
+      .mt2.w-flex.wrap.justify-center.lh0
+        span From
+        strong.mx1 {{ event.start.formatTime('h{am}') }}
+        span to
+        strong.ml1 {{ event.end.formatTime('h{am}') }}
 
 //- Example.
 example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings")
