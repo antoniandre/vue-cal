@@ -12,5 +12,7 @@
   "allDay": "All-day",
   "deleteEvent": "Delete",
   "createEvent": "Create an event",
-  "dateFormat": "dddd, MMMM D, YYYY"
+  "dateFormat": "dddd, MMMM D, YYYY",
+  "am": "am",
+  "pm": "pm"
 }
