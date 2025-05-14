@@ -421,6 +421,9 @@ example(title="All Day Events" anchor="all-day-events")
     p.mb2.
       When #[code allDayEvents] is set to #[code false], all the all-day events
       will show up as normal events.
+    p.mb2.
+      You can also customize the all-day bar height via CSS using the #[code --vuecal-all-day-bar-height] CSS variable,
+      and you can also use the built-in bottom resizer to change the height dynamically.
 
     .w-flex.column.gap1.align-end
       w-switch(v-model="exAllDayEvents.allDayBarOn" label-on-left) Show All-day Bar
