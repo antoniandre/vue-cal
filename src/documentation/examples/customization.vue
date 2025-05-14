@@ -10,6 +10,12 @@ alert
   | Here is the list of available slots:
   ul
     li #[span.code title]
+    li #[span.code title.day]
+    li #[span.code title.days]
+    li #[span.code title.week]
+    li #[span.code title.month]
+    li #[span.code title.year]
+    li #[span.code title.years]
     li #[span.code previous-button]
     li #[span.code next-button]
     li #[span.code today-button]
@@ -17,9 +23,18 @@ alert
     li #[span.code schedule-heading]
     li #[span.code time-cell]
     li #[span.code week-number-cell]
+    li #[span.code cell]
     li #[span.code cell-content]
-    li #[span.code events-count]
+    li #[span.code cell-events]
     li #[span.code event]
+    li #[span.code event.all-day]
+    li #[span.code event.day]
+    li #[span.code event.days]
+    li #[span.code event.week]
+    li #[span.code event.month]
+    li #[span.code event.year]
+    li #[span.code event.years]
+    li #[span.code events-count]
 
 //- Example.
 example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
@@ -313,7 +328,6 @@ example(title="Custom Cells" anchor="custom-cells")
 //- Example.
 example(title="Custom Event Rendering" anchor="custom-event-rendering")
   template(#desc)
-    .todo-tag.d-iflex.prod TO BE UPDATED SOON
     p.mb2 Using Vue.js scoped slots, you can customize the event rendering through the following slots.
 
     alert.my2(tip).

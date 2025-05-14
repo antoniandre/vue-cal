@@ -1595,6 +1595,46 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      strong.code.title5 event.all-day
+    template(#content)
+      p Customizes the display of all-day events. This slot is ignored if the cell-events slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color event] - The full event object
+      p This allows you to access any custom properties you've added to your events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event.all-day="{ event }"&gt;
+          &lt;div class="custom-event-content"&gt;
+            &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
+            &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;
+            &lt;div v-if="event.location" class="location"&gt;
+              &lt;i class="mdi mdi-map-marker"&gt;&lt;/i&gt; {{ '\{\{ event.location \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 event.[view]
+    template(#content)
+      p Customizes the display of events in a specific view where #[code="[view]"] is one of: day, days, week, month, year, years.<br>This slot is ignored if the cell-events slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color event] - The full event object
+      p This allows you to access any custom properties you've added to your events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event.day="{ event }"&gt;
+          &lt;div class="custom-event-content"&gt;
+            &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
+            &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;
+            &lt;div v-if="event.location" class="location"&gt;
+              &lt;i class="mdi mdi-map-marker"&gt;&lt;/i&gt; {{ '\{\{ event.location \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
       strong.code.title5 event-count
     template(#content)
       p Customizes the event count display when the #[code event-count] prop is enabled.
