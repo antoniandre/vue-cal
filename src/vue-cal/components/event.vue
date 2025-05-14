@@ -208,7 +208,7 @@ const onDocMousemove = async e => {
     globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
 
     // If there's an @event-resize-start external listener, call it.
-    eventListeners.value.resizeStart?.({ e, event })
+    eventListeners.value['resize-start']?.({ e, event })
   }
 
   touch.holdTimer = clearTimeout(touch.holdTimer)
