@@ -261,8 +261,9 @@ const cellEventsPerSchedule = computed(() => {
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
   if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
-  const isRTL = document.documentElement.getAttribute('dir') === 'rtl'
+  const isRTL = typeof document !== 'undefined' && document.documentElement.getAttribute('dir') === 'rtl'
   const styles = {}
+
   for (const event of cellEvents.value) {
     const eventId = event._.id
     const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
