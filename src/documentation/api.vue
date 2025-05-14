@@ -237,7 +237,7 @@ w-accordion.mt3(
     template(#title)
       strong.code.title5 schedule
       .type [Number]
-    template(#content) The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
+    template(#content) Must be an integer of less than 10 digits.<br>The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
   w-accordion-item
     template(#title)
       strong.code.title5 recurring
@@ -422,7 +422,7 @@ w-accordion.mt2(
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
             background: {Boolean} // Optional. (Event type not CSS property)
-            schedule: {Number|String} // Optional.
+            schedule: {Number} // Optional.
             allDay: {Boolean} // Optional.
             deletable: false // optional - force undeletable when events are editable.
             resizable: false // optional - force unresizable when events are editable.
@@ -444,7 +444,7 @@ w-accordion.mt2(
             When using #[span.code schedules], the #[span.code schedule] attribute accepts a number,
             starting from 1, corresponding to the schedule you want the event to appear in.#[br]
             Optionally, if you have set the #[span.code id] property in #[span.code schedules],
-            you have to use the same #[span.code id] here (Integer or String).
+            you have to use the same #[span.code id] here (Integer of less than 10 digits).
           li.
             When the #[span.code allDayEvents] and #[span.code time] options are set to
             #[span.code true], all the events with an attribute #[span.code allDay] set to
@@ -669,7 +669,7 @@ w-accordion.mt2(
         Accepts an array of objects defined like follows, where all attributes are optional:#[br]
       ssh-pre(language="js" :dark="store.darkMode").
         {
-          id: {Integer | String}, // All ids must be set if using `hide`.
+          id: {Integer}, // All ids must be set if using `hide`.
           class: {String},
           label: {String},
           hide: {Boolean} // You can toggle the column on and of with this.

@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.23
+    ul
+      li Fix emitting the #[code event-resize-start] event.
+
+  li.patch
     strong.version 5.0.1-rc.22
     ul
       li Fix invisible time lines on day view when cell is today or selected. #[issue-link 58]
