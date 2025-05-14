@@ -40,6 +40,7 @@
       @event-drag="log('event-drag', $event)"
       @event-drag-end="log('event-drag', $event)"
       @event-drop="onEventDrop($event)"
+      @event-resize-start="log('event-resize-start', $event)"
       @event-resize="log('event-resize', $event)"
       @event-resize-end="log('event-resize-end', $event)"
       @cell-click="log('cell-click', $event)"
