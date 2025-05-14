@@ -227,7 +227,6 @@ w-accordion.mt3(
     template(#title)
       strong.code.title5 allDay
       .type [Boolean]
-      w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content) Indicates if the event is an all-day event.
   w-accordion-item
     template(#title)
@@ -238,7 +237,7 @@ w-accordion.mt3(
     template(#title)
       strong.code.title5 schedule
       .type [Number]
-    template(#content) The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
+    template(#content) Must be an integer of less than 10 digits.<br>The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
   w-accordion-item
     template(#title)
       strong.code.title5 recurring
@@ -293,30 +292,24 @@ w-accordion.mt2(
   w-accordion-item
     template(#title)
       strong.code.title5 allDayEvents
-      .type [Boolean, String]
+      .type [Boolean]
       | ,
       .body.grey.mx1 default:
       strong.default.code false
     template(#content)
-      //- ul
+      ul
         li.mb2.
           When the #[span.code allDayEvents] is set to #[span.code true] the events with an
           #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
-          bar on the #[span.code week] &amp; #[span.code day] views.#[br]
+          bar on the #[span.code day], #[span.code days] &amp; #[span.code week] views.#[br]
           The all day events bar will only show up if the options #[span.code allDayEvents] &amp;
           #[span.code time] are set to #[span.code true].#[br]
-          #[span.code time] is important since without time information every event is an all-day
-          event there is no point in separating them then.
+          If #[span.code time] is set to #[span.code false], every event is an all-day
+          event.
         li.mb2.
-          When #[span.code allDayEvents] is set to #[span.code false], all the all day events
-          (#[span.code allDay] attribute set to #[span.code true]), will show up as a normal
-          background event.
-        li.mb2.
-          On month view, switching #[span.code allDayEvents] on and off will not have any impact
-          since both should display the all day events.
-        li.mb2.
-          #[span.code allDayEvents] accepts a #[span.code Boolean] or the string
-          #[span.code 'short'], to display only the event title.
+          When #[span.code allDayEvents] is set to #[span.code false], all the all-day events
+          (#[span.code allDay] attribute set to #[span.code true]), will show up as normal
+          events.
 
   w-accordion-item
     template(#title)
@@ -429,7 +422,7 @@ w-accordion.mt2(
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
             background: {Boolean} // Optional. (Event type not CSS property)
-            schedule: {Number|String} // Optional.
+            schedule: {Number} // Optional.
             allDay: {Boolean} // Optional.
             deletable: false // optional - force undeletable when events are editable.
             resizable: false // optional - force unresizable when events are editable.
@@ -451,7 +444,7 @@ w-accordion.mt2(
             When using #[span.code schedules], the #[span.code schedule] attribute accepts a number,
             starting from 1, corresponding to the schedule you want the event to appear in.#[br]
             Optionally, if you have set the #[span.code id] property in #[span.code schedules],
-            you have to use the same #[span.code id] here (Integer or String).
+            you have to use the same #[span.code id] here (Integer of less than 10 digits).
           li.
             When the #[span.code allDayEvents] and #[span.code time] options are set to
             #[span.code true], all the events with an attribute #[span.code allDay] set to
@@ -676,7 +669,7 @@ w-accordion.mt2(
         Accepts an array of objects defined like follows, where all attributes are optional:#[br]
       ssh-pre(language="js" :dark="store.darkMode").
         {
-          id: {Integer | String}, // All ids must be set if using `hide`.
+          id: {Integer}, // All ids must be set if using `hide`.
           class: {String},
           label: {String},
           hide: {Boolean} // You can toggle the column on and of with this.
@@ -1591,6 +1584,46 @@ w-accordion(
       p This allows you to access any custom properties you've added to your events.
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #event="{ event }"&gt;
+          &lt;div class="custom-event-content"&gt;
+            &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
+            &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;
+            &lt;div v-if="event.location" class="location"&gt;
+              &lt;i class="mdi mdi-map-marker"&gt;&lt;/i&gt; {{ '\{\{ event.location \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 event.all-day
+    template(#content)
+      p Customizes the display of all-day events. This slot is ignored if the cell-events slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color event] - The full event object
+      p This allows you to access any custom properties you've added to your events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event.all-day="{ event }"&gt;
+          &lt;div class="custom-event-content"&gt;
+            &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
+            &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;
+            &lt;div v-if="event.location" class="location"&gt;
+              &lt;i class="mdi mdi-map-marker"&gt;&lt;/i&gt; {{ '\{\{ event.location \}\}' }}
+            &lt;/div&gt;
+          &lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 event.[view]
+    template(#content)
+      p Customizes the display of events in a specific view where #[code="[view]"] is one of: day, days, week, month, year, years.<br>This slot is ignored if the cell-events slot is used.
+      p Available parameters:
+      ul
+        li #[code.base-color event] - The full event object
+      p This allows you to access any custom properties you've added to your events.
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #event.day="{ event }"&gt;
           &lt;div class="custom-event-content"&gt;
             &lt;i v-if="event.icon" :class="event.icon"&gt;&lt;/i&gt;
             &lt;div class="title"&gt;{{ '\{\{ event.title \}\}' }}&lt;/div&gt;

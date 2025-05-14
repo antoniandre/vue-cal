@@ -36,11 +36,16 @@
           :key="event._.id"
           :event="event"
           @event-deleted="onEventDelete"
+          :in-all-day-bar="props.allDay"
           :style="eventStyles[event._.id]")
+          template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
+            slot(name="event.all-day" v-bind="params")
+          template(v-if="$slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+            slot(:name="`event.${view.id}`" v-bind="params")
           template(v-if="$slots.event" #event="params")
             slot(name="event" v-bind="params")
       .vuecal__event-placeholder(
-        v-if="isCreatingEvent && touch.schedule === schedule.id"
+        v-if="isCreatingEvent && touch.schedule === schedule.id && !props.allDay"
         :style="eventPlaceholder.style")
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
@@ -65,8 +70,13 @@
         :key="event._.id"
         :event="event"
         @event-deleted="onEventDelete"
+        :in-all-day-bar="props.allDay"
         :class="eventClasses[event._.id]"
         :style="eventStyles[event._.id]")
+        template(v-if="$slots['event.all-day'] && props.allDay" #event.all-day="params")
+          slot(name="event.all-day" v-bind="params")
+        template(v-if="$slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+          slot(:name="`event.${view.id}`" v-bind="params")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
     .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
@@ -93,7 +103,8 @@ const props = defineProps({
   // events to a specific date.
   start: { type: Date, required: true },
   end: { type: Date, required: true },
-  index: { type: Number, required: true }
+  index: { type: Number, required: true },
+  allDay: { type: Boolean, default: false } // True when the cell is an all-day cell.
 })
 
 const vuecal = inject('vuecal')
@@ -225,12 +236,14 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
-  return eventsManager.getEventsInRange(props.start, props.end, { excludeIds: eventsDeleted.value })
+  return eventsManager.getEventsInRange(
+    props.start,
+    props.end,
+    { excludeIds: eventsDeleted.value, ...(config.allDayEvents ? { allDay: props.allDay } : {}) }
+  )
 })
 
-const cellForegroundEvents = computed(() => {
-  return cellEvents.value.filter(event => !event.background)
-})
+const cellForegroundEvents = computed(() => cellEvents.value.filter(event => !event.background))
 
 /**
  * Generates an object containing events grouped by schedule ID.
@@ -247,7 +260,7 @@ const cellEventsPerSchedule = computed(() => {
 
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears) return {}
+  if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
   const isRTL = document.documentElement.getAttribute('dir') === 'rtl'
   const styles = {}
   for (const event of cellEvents.value) {
@@ -260,9 +273,7 @@ const eventStyles = computed(() => {
     if (config.stackEvents) {
       styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
     }
-    else {
-      styles[eventId].width = `${100 / maxConcurrent}%`
-    }
+    else styles[eventId].width = `${100 / maxConcurrent}%`
   }
   return styles
 })
@@ -294,7 +305,7 @@ const showCellEventCount = computed(() => {
  * returns an array if the view is day, days, week and the specialHours prop is set correctly.
  */
 const specialHours = computed(() => {
-  if (!config.specialHours || view.isMonth || view.isYear || view.isYears) return
+  if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
   const weekday = weekdays[props.start.getDay()]
 
   // The special hours ranges for the current cell day.
@@ -344,7 +355,7 @@ const isDisabled = computed(() => {
 const nowLine = reactive({
   show: computed(() => {
     if (!view.isDay && !view.isDays && !view.isWeek) return
-    if (!isToday.value || !config.time) return
+    if (!isToday.value || !config.time || props.allDay) return
     if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
     if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
     return true
@@ -426,7 +437,7 @@ const cellEventListeners = computed(() => {
       dnd.cellDragOver(e, cellInfo.value)
     }
     eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
-    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value)
+    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value, props.allDay)
   }
 
   return eventListeners
@@ -663,7 +674,7 @@ onBeforeUnmount(async () => {
   height: 0;
   border-top: 1px solid;
   border-color: rgba(red, 0.6);
-  z-index: 1;
+  z-index: 3; // Keep above the hovered events.
 
   &:before {
     content: "";
@@ -681,11 +692,6 @@ onBeforeUnmount(async () => {
     opacity: 0.7;
     pointer-events: none; // Let interactions go through on events.
   }
-}
-
-.vuecal__scrollable--day-view {
-  .vuecal__cell--today:before,
-  .vuecal__cell--selected:before {display: none;}
 }
 
 .vuecal__event-placeholder {

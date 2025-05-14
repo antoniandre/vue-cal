@@ -323,7 +323,7 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
       ul
         li
           code switchToNarrowerView()
-          p Will drilldown the current view on selected date if there is a narrower view available.
+          p Will drill down the current view on selected date if there is a narrower view available.
         li
           code minutesAtCursor(e)
           p.
@@ -347,28 +347,25 @@ example(title="Sync Two Vue Cal Instances" anchor="sync-two-calendars")
     &lt;vue-cal
       date-picker
       :views-bar="false"
-      hide-weekends
       @cell-focus="selectedDate = $event"&gt;
     &lt;/vue-cal&gt;
+
     &lt;vue-cal
       sm
       :time="false"
       :views-bar="false"
       view="week"
       :views="['day', 'week']"
-      hide-weekends
       :selected-date="selectedDate"
       class="vuecal--blue-theme"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
-      data: () => ({
-        selectedDate: null
-      })
+    const selectedDate = ref(null)
   template(#desc2)
     .w-flex.align-center.justify-center.wrap.gap2
       vue-cal(
-        :views-bar="false"
         date-picker
+        :views-bar="false"
         v-model:selected-date="exSyncTwoCalendars.selectedDate"
         @update:selected-date="exSyncTwoCalendars.viewDate = $event"
         :view-date="exSyncTwoCalendars.viewDate"

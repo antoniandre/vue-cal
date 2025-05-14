@@ -65,10 +65,6 @@
 
     &:not([disabled]) {cursor: pointer;}
   }
-  .vuecal__view-button {
-    text-transform: uppercase;
-    font-size: 0.9em;
-  }
 
   .vuecal__view-button,
   .vuecal__nav,
@@ -85,6 +81,13 @@
     &:active {background-color: rgba(#fff, 0.25);}
     &:focus-visible {border-color: rgba(#fff, 0.75);}
   }
+
+  .vuecal__view-button {
+    text-transform: uppercase;
+    font-size: 0.9em;
+  }
+
+  button.vuecal__title {line-height: 0.9;}
 
   .vuecal__nav--prev,
   .vuecal__nav--next {
@@ -104,7 +107,7 @@
     font-size: 0.85em;
   }
 
-  // Calendar Weekdays Headers.
+  // Calendar scrollable.
   // ------------------------------------------------------
   .vuecal__scrollable-wrap {
     background-color: color-mix(in srgb, var(--vuecal-primary-color) 4%, transparent);
@@ -122,13 +125,22 @@
       border-top-right-radius: var(--vuecal-border-radius);
     }
   }
+
   .vuecal__scrollable {
     display: grid;
     grid-template-columns: 1fr 0fr;
 
     &--row {grid-template-columns: 0fr 1fr;}
+
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+    &--no-schedules {--vuecal-schedules-bar-height: 0px;}
+    &--day-view {--vuecal-weekday-bar-height: 0px;}
+    &--month-view, &--no-all-day-bar {--vuecal-all-day-bar-height: 0px;}
+    &--year-view, &--years-view {overflow: hidden;} // Useful while transitioning.
   }
 
+  // Calendar Weekdays Headers.
+  // ------------------------------------------------------
   .vuecal__week-number small {
     width: 1.4em;
     display: flex;
@@ -194,13 +206,13 @@
     overflow: hidden;
     box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
   }
-
   // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   &.vuecal--lg .vuecal__scrollable--month-view .vuecal__cell {
     flex-direction: column;
     justify-content: flex-start;
     align-items: flex-end;
   }
+
   .vuecal__cell:before {
     content: '';
     position: absolute;
@@ -292,6 +304,7 @@
       inset: 0 0 0 8px;
     }
   }
+  .vuecal__all-day .vuecal__cell-events {width: 100%;inset: 0;}
 
   // Calendar Body > Time column.
   // ------------------------------------------------------

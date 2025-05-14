@@ -9,8 +9,10 @@
   "day": "Day",
   "today": "Today",
   "noEvent": "No Event",
-  "allDay": "All day",
+  "allDay": "All-day",
   "deleteEvent": "Delete",
   "createEvent": "Create an event",
-  "dateFormat": "dddd, MMMM D, YYYY"
+  "dateFormat": "dddd, MMMM D, YYYY",
+  "am": "am",
+  "pm": "pm"
 }

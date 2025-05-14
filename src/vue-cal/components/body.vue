@@ -19,9 +19,13 @@
       slot(name="cell-content" v-bind="params")
     template(v-if="$slots['cell-events']" #cell-events="params")
       slot(name="cell-events" v-bind="params")
-    template(v-else-if="$slots.event" #event="params")
+    template(v-if="$slots[`event.${view.id}`]" #[`event.${view.id}`]="params")
+      slot(:name="`event.${view.id}`" v-bind="params")
+    template(v-if="$slots['event.all-day']" #event.all-day="params")
+      slot(name="event.all-day" v-bind="params")
+    template(v-if="$slots.event" #event="params")
       slot(name="event" v-bind="params")
-    template(v-else-if="$slots['event-count']" #event-count="params")
+    template(v-if="$slots['event-count']" #event-count="params")
       slot(name="event-count" v-bind="params")
 </template>
 

@@ -313,6 +313,10 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   /**
    * This function is called after each view variable update and will recompute the theoretical view
    * [start-end] date range.
+   * `startTheoretical` is updated
+   *  > triggers a recomputation of `firstCellDate`
+   *    > triggers a recomputation of `cellDates`
+   *      > triggers a recomputation of `events`.
    * The practical view date range may differ when hiding weekdays, or on month view due to out of
    * scope dates.
    */

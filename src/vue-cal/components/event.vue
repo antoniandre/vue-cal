@@ -8,13 +8,15 @@
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
   @dragend="isDraggable && dnd.eventDragEnd($event, event)")
   .vuecal__event-details
-    slot(name="event" :event="event")
+    slot(v-if="$slots['event.all-day']" name="event.all-day" :event="event")
+    slot(v-else-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
+    slot(v-else name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time && !(config.allDayEvents && event.allDay)")
+      .vuecal__event-time(v-if="config.time && !inAllDayBar")
         span.vuecal__event-comma(v-if="view.isMonth") ,
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-        span.vuecal__event-end(v-if="!view.isMonth") - {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-      .vuecal__event-content(v-html="event.content")
+        span.vuecal__event-end(v-if="!view.isMonth") &nbsp;- {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+      .vuecal__event-content(v-if="!inAllDayBar" v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="event.delete(3)") Delete
@@ -28,7 +30,8 @@ const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-st
 const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
 
 const props = defineProps({
-  event: { type: Object, required: true }
+  event: { type: Object, required: true },
+  inAllDayBar: { type: Boolean, default: false }
 })
 
 const eventEl = ref(null)
@@ -57,7 +60,7 @@ const touch = reactive({
 
 const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
 const isResizable = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears) return false
+  if (view.isMonth || view.isYear || view.isYears || props.inAllDayBar) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
@@ -67,9 +70,10 @@ const classes = computed(() => ({
   [event.class]: !!event.class,
   'vuecal__event--recurring': !!event.recurring,
   'vuecal__event--background': !!event.background,
+  'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
   'vuecal__event--multiday': !!event._?.multiday,
-  'vuecal__event--cut-top': event._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': event._?.endMinutes > config.timeTo || event._.multiday,
+  'vuecal__event--cut-top': !props.inAllDayBar && event._?.startMinutes < config.timeFrom,
+  'vuecal__event--cut-bottom': !props.inAllDayBar && event._?.endMinutes > config.timeTo || event._.multiday,
   // Only apply the dragging class on the event copy that is being dragged.
   'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
   // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
@@ -83,7 +87,7 @@ const classes = computed(() => ({
 }))
 
 const styles = computed(() => {
-  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time
+  const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !props.inAllDayBar
 
   if (!hasPosition && !event.backgroundColor && !event.color) return false
 
@@ -204,7 +208,7 @@ const onDocMousemove = async e => {
     globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
 
     // If there's an @event-resize-start external listener, call it.
-    eventListeners.value.resizeStart?.({ e, event })
+    eventListeners.value['resize-start']?.({ e, event })
   }
 
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -325,15 +329,14 @@ const computeStartEnd = event => {
   return { newStart, newEnd }
 }
 
-// Register the DOM node within the event in order to emit `event-deleted` to the cell.
-onMounted(() => event._.register(eventEl.value))
-
 const documentListeners = []
-
 const attachDocumentListener = (event, handler, options) => {
   document.addEventListener(event, handler, options)
   documentListeners.push({ event, handler, options })
 }
+
+// Register the DOM node within the event in order to emit `event-deleted` to the cell.
+onMounted(() => event._.register(eventEl.value))
 
 onBeforeUnmount(() => {
   event._.unregister()
@@ -355,7 +358,8 @@ onBeforeUnmount(() => {
   &--dragging-ghost {z-index: 100;} // The clone at cursor.
   &--dragging-original {opacity: 0;transition: opacity 0.1s;} // The original event at original position.
 
-  .vuecal__scrollable--month-view & {position: relative;}
+  .vuecal__scrollable--month-view &,
+  .vuecal__all-day & {position: relative;}
 
   &--resizing {z-index: 100;}
   &-resizer {

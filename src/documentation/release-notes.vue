@@ -3,6 +3,24 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.23
+    ul
+      li Fix emitting the #[code event-resize-start] event.
+
+  li.patch
+    strong.version 5.0.1-rc.22
+    ul
+      li Fix invisible time lines on day view when cell is today or selected. #[issue-link 58]
+
+  li.patch
+    strong.version 5.0.1-rc.21
+    ul
+      li Added support for all-day events. #[issue-link 44]
+      li Added the #[code event.[view]] slot to specifically customize the event per view.
+      li Added the #[code event.all-day] slot to specifically customize the all-day event.
+      li Minor UI improvements.
+
+  li.patch
     strong.version 5.0.1-rc.20
     ul
       li Improve the default month view events layout.
@@ -119,7 +137,7 @@ ul.history.ml2
       .w-divider.primary--bg.grow
 
 w-transition-expand(y)
-  ul.history.history--more.ml-2.pl3(v-if="seeOldReleaseNotes")
+  ul.history.history--more.ml-2.pl4(v-if="seeOldReleaseNotes")
     li
       br
 

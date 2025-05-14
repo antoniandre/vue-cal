@@ -39,7 +39,8 @@
       @event-click="log('event-click', $event)"
       @event-drag="log('event-drag', $event)"
       @event-drag-end="log('event-drag', $event)"
-      @event-drop="log('event-drop', $event)"
+      @event-drop="onEventDrop($event)"
+      @event-resize-start="log('event-resize-start', $event)"
       @event-resize="log('event-resize', $event)"
       @event-resize-end="log('event-resize-end', $event)"
       @cell-click="log('cell-click', $event)"
@@ -158,10 +159,12 @@ const onViewChange = view => {
  */
 const fetchEvents = async (start, end) => {
   console.log('fetchEvents', start, end)
-  await new Promise(resolve => setTimeout(resolve, 500))
-  const startDate = stringToDate(start)
-  const endDate = stringToDate(end)
-  mainVuecalConfig.events = generateRandomEvents(startDate, endDate)
+}
+
+const onEventDrop = ({ event, cell }) => {
+  event.start = new Date(Math.max(event.start.getTime(), new Date(cell.start).setHours(8, 0, 0, 0)))
+  event.end = new Date(Math.min(event.end.getTime(), new Date(cell.end).setHours(19, 0, 0, 0)))
+  return event
 }
 
 /*
