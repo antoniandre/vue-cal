@@ -93,31 +93,27 @@ const allDayResizer = {
   // Cleanup event listeners.
   cleanup () {
     if (typeof document !== 'undefined') {
-      document.removeEventListener('mousemove', this.handleMouseMove)
-      document.removeEventListener('mouseup', this.handleMouseUp)
-      document.removeEventListener('touchmove', this.handleTouchMove, { passive: false })
-      document.removeEventListener('touchend', this.handleTouchEnd)
+      document.removeEventListener('mousemove', allDayResizer.handleMouseMove)
+      document.removeEventListener('mouseup', allDayResizer.cleanup)
+      document.removeEventListener('touchmove', allDayResizer.handleTouchMove, { passive: false })
+      document.removeEventListener('touchend', allDayResizer.cleanup)
     }
-    this.isResizing.value = false
+    allDayResizer.isResizing.value = false
   },
 
   startResize (clientY) {
     this.isResizing.value = true
     this.startY.value = clientY
 
-    if (typeof document !== 'undefined') {
-      const rootEl = $vuecalEl.value
-      const computedStyle = rootEl ? getComputedStyle(rootEl) : null
-      this.initialHeight.value = computedStyle
-        ? parseInt(computedStyle.getPropertyValue('--vuecal-all-day-bar-height'), 10) || this.defaultHeight
-        : this.defaultHeight
+    // Get actual computed height from element.
+    const allDayEl = $vuecalEl.value?.querySelector('.vuecal__all-day')
+    if (allDayEl) this.initialHeight.value = allDayEl.offsetHeight
 
-      // Add document event listeners.
-      document.addEventListener('mousemove', this.handleMouseMove)
-      document.addEventListener('mouseup', this.handleMouseUp)
-      document.addEventListener('touchmove', this.handleTouchMove, { passive: false })
-      document.addEventListener('touchend', this.handleTouchEnd)
-    }
+    // Add document event listeners.
+    document.addEventListener('mousemove', allDayResizer.handleMouseMove)
+    document.addEventListener('mouseup', allDayResizer.cleanup)
+    document.addEventListener('touchmove', allDayResizer.handleTouchMove, { passive: false })
+    document.addEventListener('touchend', allDayResizer.cleanup)
   },
 
   // Update height based on mouse/touch movement.
@@ -127,9 +123,7 @@ const allDayResizer = {
     const delta = clientY - this.startY.value
     const newHeight = Math.max(20, this.initialHeight.value + delta) // Minimum height of 20px.
 
-    if (typeof document !== 'undefined') {
-      $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newHeight}px`)
-    }
+    $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newHeight}px`)
   },
 
   // Mouse event handlers.
@@ -139,10 +133,6 @@ const allDayResizer = {
 
   handleMouseMove (e) {
     allDayResizer.updateHeight(e.clientY)
-  },
-
-  handleMouseUp () {
-    allDayResizer.cleanup()
   },
 
   // Touch event handlers.
@@ -155,10 +145,6 @@ const allDayResizer = {
       allDayResizer.updateHeight(e.touches[0].clientY)
       e.preventDefault() // Prevent scrolling while resizing.
     }
-  },
-
-  handleTouchEnd () {
-    allDayResizer.cleanup()
   }
 }
 
