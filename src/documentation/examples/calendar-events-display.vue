@@ -428,7 +428,7 @@ example(title="All Day Events" anchor="all-day-events")
   template(#code-html).
     &lt;vue-cal
       :events="events"{{ exAllDayEvents.allDayBarOn ? '\n  all-day-events' : '' }}
-      :time-from="7 * 60"
+      :time-from="7 * 60"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
     const allDayEvents = ref(true)
