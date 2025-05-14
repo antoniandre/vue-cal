@@ -692,11 +692,6 @@ onBeforeUnmount(async () => {
   }
 }
 
-.vuecal__scrollable--day-view {
-  .vuecal__cell--today:before,
-  .vuecal__cell--selected:before {display: none;}
-}
-
 .vuecal__event-placeholder {
   background-color: rgb(35, 181, 181);
   position: absolute;
