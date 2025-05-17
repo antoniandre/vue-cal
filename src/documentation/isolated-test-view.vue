@@ -85,6 +85,7 @@ const mainVuecalConfig = reactive({
   clickToNavigate: ref(false),
   watchRealTime: ref(true),
   editableEvents: ref(true),
+  allDayEvents: ref(true),
   events: ref([]),
   // schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
   eventsOnMonthView: true,
@@ -106,18 +107,30 @@ const mainVuecalConfig = reactive({
 setTimeout(() => {
   mainVuecalConfig.events = [
     {
-      id: 123,
       title: 'Event 1',
       start: new Date(new Date().setHours(10, 0, 0, 0)),
       end: new Date(new Date().setHours(11, 30, 0, 0)),
-      schedule: 1
+      // schedule: 1,
+      allDay: true
     },
     {
-      id: 228,
       title: 'Event 2',
       start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
       end: new Date(new Date().addDays(1).setHours(13, 30, 0, 0)),
-      schedule: 2
+      // schedule: 2,
+      allDay: true
+    },
+    {
+      title: 'Event 3',
+      start: new Date(new Date().setHours(10, 0, 0, 0)),
+      end: new Date(new Date().setHours(11, 30, 0, 0)),
+      // schedule: 1
+    },
+    {
+      title: 'Event 4',
+      start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
+      end: new Date(new Date().addDays(1).setHours(13, 30, 0, 0)),
+      // schedule: 2
     }
   ]
 }, 1000)
