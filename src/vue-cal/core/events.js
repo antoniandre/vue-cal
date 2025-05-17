@@ -251,8 +251,8 @@ export const useEvents = vuecal => {
 
   // Will recalculate all the overlaps of the current cell OR schedule.
   // cellEvents will contain only the current schedule events if in a schedule.
-  const getCellOverlappingEvents = (cellStart, cellEnd) => {
-    const allDayFilter = config.allDayEvents ? { allDay: true } : {}
+  const getCellOverlappingEvents = (cellStart, cellEnd, allDay) => {
+    const allDayFilter = config.allDayEvents ? { allDay } : {}
     const cellEvents = getEventsInRange(cellStart, cellEnd, { background: false, ...allDayFilter })
     if (!cellEvents.length) return { cellOverlaps: {}, longestStreak: 0 }
 

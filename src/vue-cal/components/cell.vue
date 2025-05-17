@@ -607,7 +607,7 @@ const removeEventListeners = () => {
 }
 
 const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end)
+  overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end, props.allDay)
 }
 
 watch(
