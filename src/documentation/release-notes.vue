@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.25
+    ul
+      li Fix the display of overlapped events if allDayEvents is true. #[issue-link 59]
+
+  li.patch
     strong.version 5.0.1-rc.24
     ul
       li Added RTL support. #[issue-link 50]
