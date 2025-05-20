@@ -138,6 +138,11 @@
     &--month-view, &--no-all-day-bar {--vuecal-all-day-bar-height: 0px;}
     &--year-view, &--years-view {overflow: hidden;} // Useful while transitioning.
   }
+  .vuecal__scrollable--day-view .vuecal__body,
+  .vuecal__scrollable--days-view .vuecal__body,
+  .vuecal__scrollable--week-view .vuecal__body {
+    max-height: var(--vuecal-body-max-height, initial);
+  }
 
   // Calendar Weekdays Headers.
   // ------------------------------------------------------

@@ -46,7 +46,8 @@ const cursorYPercent = ref(null)
 // different values of these CSS variables at the same time. Beautiful :)
 const bodyStyles = computed(() => ({
   '--vuecal-grid-columns': view.cols,
-  '--vuecal-grid-rows': view.rows
+  '--vuecal-grid-rows': view.rows,
+  '--vuecal-body-max-height': config.time ? `${config.timeCellHeight * (config.timeTo - config.timeFrom) / config.timeStep}px` : null
 }))
 
 // Computes the time at the current cursor position.
