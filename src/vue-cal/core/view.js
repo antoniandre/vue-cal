@@ -177,7 +177,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     }
 
     return dates
-  }, { shallow: true })
+  })
 
   const lastCellDate = computed(() => cellDates.value[cellDates.value.length - 1].end)
   // ------------------------------------------------------
