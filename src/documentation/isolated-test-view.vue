@@ -5,6 +5,7 @@
     w-button(@click="addEventFromOutside") Add event
     w-button(@click="addEventFromVueCal") Add event
     w-button(@click="deleteEvent") Delete event
+    w-button(@click="mainVuecalConfig.hideWeekends = !mainVuecalConfig.hideWeekends") Hide weekends
 
   .w-flex.gap2.mt4.ovh
     //- aside.no-shrink.no-grow
