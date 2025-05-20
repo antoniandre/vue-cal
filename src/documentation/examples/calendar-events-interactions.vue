@@ -611,7 +611,7 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     :views-bar="false"
     :dark="store.darkMode"
     :class="{ 'override-drag-css': exDragAndDrop.overrideDragCss }"
-    style="height: 312px")
+    style="height: 327px")
 
 //- Example.
 example(title="External Events Drag & Drop" anchor="external-events-drag-and-drop")
@@ -799,11 +799,65 @@ example(title="Reject Event Drag & Drop or Resizing" anchor="reject-event-dnd-or
     :time-from="9 * 60"
     :time-to="15 * 60"
     :dark="store.darkMode"
-    style="height: 341px")
+    style="height: 331px")
+
+//- Example.
+example(title="Events Reactivity" anchor="events-reactivity")
+  template(#desc)
+    p.
+      The events are reactive and will update when the external data changes.<br>
+      For instance, in this example, the events are changing their background color every second from
+      the external array and the calendar will keep the events up to date.<br>
+      Note that #[code backgroundColor] is a special event property that Vue Cal parses to apply to
+      the events.
+    p.
+  template(#code-html).
+    &lt;vue-cal
+      :events="events"
+      editable-events
+      @ready="onReady"&gt;
+    &lt;/vue-cal&gt;
+  template(#code-js).
+    const events = [
+      {
+        start: new Date(new Date().setHours(12, 30)),
+        end: new Date(new Date().setHours(13, 30)),
+        title: 'Event 1'
+      },
+      {
+        start: new Date(new Date().setHours(11, 30)).addDays(1), // Using Vue Cal's Date prototypes.
+        end: new Date(new Date().setHours(12, 30)).addDays(1), // Using Vue Cal's Date prototypes.
+        title: 'Event 2'
+      }
+    ]
+    const colors = ['crimson', 'cornflowerblue', 'darkgreen', 'blueviolet', 'darkmagenta', 'teal']
+    const interval = null
+
+    const onReady = () => {
+      // Mutate the event objects externally, Vue Cal keeps them reactive.
+      interval = setInterval(() => {
+        events[0].backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+        events[1].backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+      }, 1000)
+    }
+
+  template(#code-css).
+    .vuecal__event {transition: background-color 1s;}
+
+  vue-cal(
+    :views="{ days: { cols: 3, rows: 1 } }"
+    view="days"
+    :views-bar="false"
+    :events="exEventsReactivity.events"
+    editable-events
+    @ready="exEventsReactivity.onReady"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :dark="store.darkMode")
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, onBeforeUnmount } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
@@ -1083,6 +1137,33 @@ const exRejectDndOrResize = reactive({
     return !overlaps.length || (overlaps.length && !exRejectDndOrResize.preventOverlapAfterResizing)
   }
 })
+
+const exEventsReactivity = reactive({
+  events: [
+    {
+      start: new Date(new Date().setHours(12, 30)),
+      end: new Date(new Date().setHours(13, 30)),
+      title: 'Event 1'
+    },
+    {
+      start: new Date(new Date().setHours(11, 30)).addDays(1),
+      end: new Date(new Date().setHours(12, 30)).addDays(1),
+      title: 'Event 2'
+    }
+  ],
+  interval: null,
+  onReady: () => {
+    exEventsReactivity.interval = setInterval(() => {
+      const colors = ['crimson', 'cornflowerblue', 'darkgreen', 'blueviolet', 'darkmagenta', 'teal']
+      exEventsReactivity.events[0].backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+      exEventsReactivity.events[1].backgroundColor = colors[Math.floor(Math.random() * colors.length)]
+    }, 1000)
+  }
+})
+
+onBeforeUnmount(() => {
+  clearInterval(exEventsReactivity.interval)
+})
 </script>
 
 <style lang="scss">
@@ -1153,6 +1234,10 @@ const exRejectDndOrResize = reactive({
 
       .caption {color: rgba(255, 255, 255, 0.7);}
     }
+  }
+
+  .example--events-reactivity {
+    .vuecal__event {transition: background-color 1s;}
   }
 }
 </style>

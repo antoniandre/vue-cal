@@ -62,6 +62,7 @@ const examples = [
   { route: { name: 'examples-events-interactions', hash: '#ex--drag-and-drop' }, label: 'Event Drag &amp; Drop' },
   { route: { name: 'examples-events-interactions', hash: '#ex--external-events-drag-and-drop' }, label: 'External Events Drag &amp; Drop' },
   { route: { name: 'examples-events-interactions', hash: '#ex--reject-event-dnd-or-resizing' }, label: 'Reject Event D&amp;D or Resizing' },
+  { route: { name: 'examples-events-interactions', hash: '#ex--events-reactivity' }, label: 'Events Reactivity' },
 
   { class: 'heading', route: '/examples/dom-events', label:'DOM EVENTS', icon: 'mdi mdi-gesture-double-tap' },
   { route: { name: 'examples-dom-events', hash: '#ex--emitted-events' }, label: 'Vue Cal Emitted Events' },
