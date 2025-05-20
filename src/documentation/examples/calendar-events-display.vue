@@ -1058,7 +1058,7 @@ const exMultipleDayEvents = reactive({
       left: 50%;
       transform: translate(-50%, -50%);
     }
-    .vuecal__cell--has-events .vuecal__cell-date {align-self: flex-start;}
+    .vuecal__scrollable--month-view .vuecal__cell--has-events .vuecal__cell-date {align-self: flex-start;}
   }
 
   .ex--multiple-day-events .vuecal__event {

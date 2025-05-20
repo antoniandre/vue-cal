@@ -995,7 +995,6 @@ const exEditEvents = reactive({
     {
       start: new Date(new Date().addDays(2).setHours(11, 0, 0, 0)), // Using Vue Cal's Date prototypes.
       end: new Date(new Date().addDays(2).setHours(13, 0, 0, 0)), // Using Vue Cal's Date prototypes.
-      class: 'blue-event',
       title: 'Boring Event',
       content: '<i class="w-icon mdi mdi-cancel"></i><br>Can&rsquo;t drag, resize or delete me!',
       class: 'blue-event',
