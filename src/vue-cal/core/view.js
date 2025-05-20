@@ -385,7 +385,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     if (availableViews.includes(id)) {
       transitionDirection.value = availableViews.indexOf(id) < availableViews.indexOf(viewId.value) ? 'left' : 'right'
       viewId.value = id
-      emit('update:view', id)
+      if (emitUpdate) emit('update:view', id)
       updateView()
     }
     else !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
@@ -556,7 +556,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
 
   watch(() => config.view, view => switchView(view, false))
   watch(() => config.availableViews, updateViewIfNeeded)
-  watch(() => config.datePicker, () => switchView('month', false))
+  watch(() => config.datePicker, () => switchView('month'))
   watch(() => config.viewDate, date => updateViewDate(date, false))
   watch(() => config.selectedDate, date => updateSelectedDate(date, false))
   watch(() => config.startWeekOnSunday, bool => switchWeekStart(bool))
