@@ -1,4 +1,4 @@
-import { ref, computed, watch, onBeforeUnmount } from 'vue'
+import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
 
 export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vuecalEl) => {
   const { availableViews } = config
@@ -320,7 +320,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * The practical view date range may differ when hiding weekdays, or on month view due to out of
    * scope dates.
    */
-  function updateView () {
+  async function updateView () {
     startTheoretical.value = new Date(viewDate.value || now.value)
     startTheoretical.value.setHours(0, 0, 0, 0)
 
@@ -345,7 +345,15 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         break
     }
 
+    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
+    // Does not cost much to update when not watching real time as it is only computed when the view
+    // is updated.
+    now.value = new Date()
+
     if (config.ready) {
+      // Use nextTick to emit after the current update cycle is complete,
+      // to ensure all computed values are up to date and to prevent cascading updates.
+      await nextTick()
       emit('view-change', {
         id: viewId.value,
         title: title.value,
@@ -358,11 +366,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         events: events.value
       })
     }
-
-    // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
-    // Does not cost much to update when not watching real time as it is only computed when the view
-    // is updated.
-    now.value = new Date()
   }
 
   /**
@@ -528,6 +531,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    */
   function toggleWeekdays () {
     console.log('toggling weekdays', config.hideWeekdays)
+    updateView()
   }
 
   function scrollToTime (minutes) {
