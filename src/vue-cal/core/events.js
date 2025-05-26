@@ -30,12 +30,21 @@ export const useEvents = vuecal => {
 
     for (const event of sortedEvents) {
       // Check if event needs processing.
-      const needsProcessing = !event._?.cachedStart || !event._?.cachedEnd ||
-        event.start.getTime() !== event._?.cachedStart ||
-        event.end.getTime() !== event._?.cachedEnd ||
-        !event._?.register || !event.delete
+      // --------------------------------------------------
+      // First check if dates are strings (need normalization) or methods are missing.
+      const hasStringDates = typeof event.start === 'string' || typeof event.end === 'string'
+      const missingMethods = !event._?.register || !event.isOverlapping || !event.delete
 
-      if (needsProcessing) {
+      // Only check cached timestamps if we have Date objects and cached values.
+      let datesChanged = false
+      if (!hasStringDates && event._?.cachedStart && event._?.cachedEnd) {
+        datesChanged = event.start.getTime() !== event._?.cachedStart ||
+        event.end.getTime() !== event._?.cachedEnd
+      }
+      // --------------------------------------------------
+
+      // If any of the conditions are true, we need to process the event.
+      if (hasStringDates || missingMethods || datesChanged) {
         // Make sure the dates are valid Date objects, and add formatted start date in `event._`.
         if (!normalizeEventDates(event)) continue // Skip if invalid.
 
