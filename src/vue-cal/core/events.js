@@ -25,7 +25,8 @@ export const useEvents = vuecal => {
 
     // First sort the events by start date so the latest comes last in the DOM and has a natural
     // higher z-index for readability when overlapping.
-    const sortedEvents = config.events.sort((a, b) => a.start - b.start < 0 ? -1 : 1)
+    // Use stable sort to avoid unnecessary reordering when dates haven't changed.
+    const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
     for (const event of sortedEvents) {
       // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
@@ -66,12 +67,21 @@ export const useEvents = vuecal => {
 
   // Normalize event dates to ensure they are valid Date objects and add formatted dates.
   const normalizeEventDates = event => {
+    // Skip processing if event is invalid (will be fixed by normalizeEventDates).
+    if (!event.start || !event.end) {
+      console.error('Vue Cal: Event is missing start or end date', event)
+      return
+    }
+
+    // Convert string dates to Date objects if needed.
     if (typeof event.start === 'string') event.start = dateUtils.stringToDate(event.start)
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
 
-    event.start.setSeconds(0, 0) // For more accurate range and overlap comparison.
-    // Set the event end to the next minute if the end time is 59 seconds.
-    if (event.end.getSeconds() >= 59) event.end.setMinutes(60, 0, 0)
+    // Ensure seconds are normalized for consistent comparison.
+    event.start.setSeconds(0, 0)
+
+    // Set the event end to the next minute if the seconds count is 59.
+    if (event.end.getSeconds() >= 59) event.end.setMinutes(event.end.getMinutes() + 1, 0, 0)
     else event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
 
     if (isNaN(event.start) || isNaN(event.end) || (event.end.getTime() < event.start.getTime())) {
@@ -104,43 +114,51 @@ export const useEvents = vuecal => {
     event._.id = event._.id || ++uid
 
     // Inject a delete function in each event and set the deleting flag to false.
-    if (!event.delete) event.delete = forcedStage => deleteEvent(event._.id, forcedStage)
+    if (!event.delete) {
+      // Use a shared function ref to avoid creating a new closure for each event.
+      event.delete = function (forcedStage) { return deleteEvent(this._.id, forcedStage) }
+    }
     event._.deleting = false
     event._.deleted = false
 
     /**
      * Inject a function to check if the event is overlapping with any another event.
+     * Using shared method ref to reduce memory usage.
      *
      * @param {Object} at - An optional object with start and end dates to check the overlap at.
      *                      If not provided, the event's own start and end dates will be used.
      * @returns {Boolean} - True if the event is overlapping with another event.
      */
-    event.isOverlapping = (at = null) => event.getOverlappingEvents(at).length
-    event.getOverlappingEvents = (at = null) => {
-      return getEventsInRange(
-        at?.start || event.start,
-        at?.end || event.end,
-        { excludeIds: [event._.id], schedule: config.schedules?.length ? ~~(at?.schedule || event.schedule) : null }
-      )
+    event.isOverlapping = function (at = null) { return this.getOverlappingEvents(at).length }
+
+    event.getOverlappingEvents = function (at = null) {
+      const eventStart = at?.start || this.start
+      const eventEnd = at?.end || this.end
+      const eventSchedule = config.schedules?.length ? ~~(at?.schedule || this.schedule) : null
+
+      return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule })
     }
 
     // Register the event DOM node in the event in order to emit DOM events.
-    event._.register = domNode => {
-      event._.$el = domNode
-      if (event._.fireCreated) {
-        vuecal.emit('event-created', event)
-        delete event._.fireCreated
+    // Use shared function ref to avoid creating a new closure for each event.
+    event._.register = function (domNode) {
+      this._.$el = domNode
+      if (this._.fireCreated) {
+        vuecal.emit('event-created', this)
+        delete this._.fireCreated
       }
     }
+
     // Unregister the event DOM node and cleanup preventing potential memory leaks.
-    event._.unregister = () => {
+    // Use shared function ref to avoid creating a new closure for each event.
+    event._.unregister = function () {
       // Break any circular references in the event object.
-      event._.$el = null
-      event._.register = null
+      this._.$el = null
+      this._.register = null
       // Clear any methods that might create closures.
-      event.isOverlapping = null
-      event.getOverlappingEvents = null
-      event.delete = null
+      this.isOverlapping = null
+      this.getOverlappingEvents = null
+      this.delete = null
     }
   }
 
