@@ -29,10 +29,22 @@ export const useEvents = vuecal => {
     const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
     for (const event of sortedEvents) {
-      // Make sure the dates are valid Date objects, and add formatted start date in `event._`.
-      if (!normalizeEventDates(event)) continue
+      // Check if event needs processing.
+      const needsProcessing = !event._?.cachedStart || !event._?.cachedEnd ||
+        event.start.getTime() !== event._?.cachedStart ||
+        event.end.getTime() !== event._?.cachedEnd ||
+        !event._?.register || !event.delete
 
-      injectMetaData(event) // Inject core logic and utilities in each event.
+      if (needsProcessing) {
+        // Make sure the dates are valid Date objects, and add formatted start date in `event._`.
+        if (!normalizeEventDates(event)) continue // Skip if invalid.
+
+        injectMetaData(event) // Inject core logic and utilities in each event.
+
+        // Cache the timestamps to detect future changes.
+        event._.cachedStart = event.start.getTime()
+        event._.cachedEnd = event.end.getTime()
+      }
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -99,10 +111,9 @@ export const useEvents = vuecal => {
 
   // Inject core logic and utilities in each event.
   const injectMetaData = event => {
-    // Skip if already injected.
-    // if (event._.id && event.isOverlapping) return
-
     if (!event._) event._ = {}
+
+    // Always update these core properties as they depend on dates.
     event._.id = event._.id || ++uid
     event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
@@ -123,47 +134,58 @@ export const useEvents = vuecal => {
       // Use a shared function ref to avoid creating a new closure for each event.
       event.delete = function (forcedStage) { return deleteEvent(this._.id, forcedStage) }
     }
-    event._.deleting = false
-    event._.deleted = false
 
-    /**
-     * Inject a function to check if the event is overlapping with any another event.
-     * Using shared method ref to reduce memory usage.
-     *
-     * @param {Object} at - An optional object with start and end dates to check the overlap at.
-     *                      If not provided, the event's own start and end dates will be used.
-     * @returns {Boolean} - True if the event is overlapping with another event.
-     */
-    event.isOverlapping = function (at = null) { return this.getOverlappingEvents(at).length }
+    if (event._.deleting === undefined) event._.deleting = false
+    if (event._.deleted === undefined) event._.deleted = false
 
-    event.getOverlappingEvents = function (at = null) {
-      const eventStart = at?.start || this.start
-      const eventEnd = at?.end || this.end
-      const eventSchedule = config.schedules?.length ? ~~(at?.schedule || this.schedule) : null
-
-      return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule })
+    // Only inject overlap methods if they don't exist
+    if (!event.isOverlapping) {
+      /**
+       * Inject a function to check if the event is overlapping with any another event.
+       * Using shared method ref to reduce memory usage.
+       *
+       * @param {Object} at - An optional object with start and end dates to check the overlap at.
+       *                      If not provided, the event's own start and end dates will be used.
+       * @returns {Boolean} - True if the event is overlapping with another event.
+       */
+      event.isOverlapping = function (at = null) { return this.getOverlappingEvents(at).length }
     }
 
-    // Register the event DOM node in the event in order to emit DOM events.
-    // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
-    event._.register = domNode => {
-      event._.$el = domNode
-      if (event._.fireCreated) {
-        vuecal.emit('event-created', event)
-        delete event._.fireCreated
+    if (!event.getOverlappingEvents) {
+      event.getOverlappingEvents = function (at = null) {
+        const eventStart = at?.start || this.start
+        const eventEnd = at?.end || this.end
+        const eventSchedule = config.schedules?.length ? ~~(at?.schedule || this.schedule) : null
+
+        return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule })
       }
     }
 
-    // Unregister the event DOM node and cleanup preventing potential memory leaks.
-    // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
-    event._.unregister = () => {
-      // Break any circular references in the event object.
-      event._.$el = null
-      event._.register = null
-      // Clear any methods that might create closures.
-      event.isOverlapping = null
-      event.getOverlappingEvents = null
-      event.delete = null
+    // Only inject register/unregister methods if they don't exist
+    if (!event._.register) {
+      // Register the event DOM node in the event in order to emit DOM events.
+      // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
+      event._.register = domNode => {
+        event._.$el = domNode
+        if (event._.fireCreated) {
+          vuecal.emit('event-created', event)
+          delete event._.fireCreated
+        }
+      }
+    }
+
+    if (!event._.unregister) {
+      // Unregister the event DOM node and cleanup preventing potential memory leaks.
+      // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
+      event._.unregister = () => {
+        // Break any circular references in the event object.
+        event._.$el = null
+        event._.register = null
+        // Clear any methods that might create closures.
+        event.isOverlapping = null
+        event.getOverlappingEvents = null
+        event.delete = null
+      }
     }
   }
 
