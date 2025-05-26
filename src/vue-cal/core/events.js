@@ -330,6 +330,9 @@ export const useEvents = vuecal => {
    * @returns {Array} Array of events in the range
    */
   const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false } = {}) => {
+    // Fast path: if there are no events, return empty array immediately.
+    if (!Object.keys(events.value.byId).length) return []
+
     const startYear = start.getFullYear()
     const endYear = end.getFullYear()
     const startMonth = start.getMonth() + 1
@@ -361,6 +364,9 @@ export const useEvents = vuecal => {
               (year === endYear && month === endMonth && day > endDay)) continue
 
           const dayEventIds = days[dayStr]
+          if (!dayEventIds?.length) continue
+
+          // Process events in this day in bulk.
           for (let i = 0; i < dayEventIds.length; i++) {
             const e = events.value.byId[dayEventIds[i]]
             if (!e || excludeSet.has(e._.id)) continue
