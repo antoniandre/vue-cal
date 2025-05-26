@@ -29,10 +29,10 @@ export const useEvents = vuecal => {
     const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
     for (const event of sortedEvents) {
-      // Makes sure the dates are valid Date objects, and add formatted start date in `event._`.
-      normalizeEventDates(event)
+      // Make sure the dates are valid Date objects, and add formatted start date in `event._`.
+      if (!normalizeEventDates(event)) continue
 
-      injectInEvent(event) // Inject core logic and utilities in each event.
+      injectMetaData(event) // Inject core logic and utilities in each event.
 
       events.byId[event._.id] = event // Save and index the event in the byId map.
 
@@ -70,8 +70,11 @@ export const useEvents = vuecal => {
     // Skip processing if event is invalid (will be fixed by normalizeEventDates).
     if (!event.start || !event.end) {
       console.error('Vue Cal: Event is missing start or end date', event)
-      return
+      return false
     }
+
+    // Skip processing if already normalized or invalid.
+    // if (event._ && event._.startFormatted) return
 
     // Convert string dates to Date objects if needed.
     if (typeof event.start === 'string') event.start = dateUtils.stringToDate(event.start)
@@ -88,10 +91,19 @@ export const useEvents = vuecal => {
       if (isNaN(event.start)) console.error(`Vue Cal: invalid start date for event "${event.title}".`, event.start)
       else if (isNaN(event.end)) console.error(`Vue Cal: invalid end date for event "${event.title}".`, event.end)
       else console.error(`Vue Cal: invalid event dates for event "${event.title}". The event ends before it starts.`, event.start, event.end)
-      return
+      return false
     }
 
+    return true
+  }
+
+  // Inject core logic and utilities in each event.
+  const injectMetaData = event => {
+    // Skip if already injected.
+    // if (event._.id && event.isOverlapping) return
+
     if (!event._) event._ = {}
+    event._.id = event._.id || ++uid
     event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
     event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
@@ -105,13 +117,6 @@ export const useEvents = vuecal => {
     event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
     event._.endTimeFormatted12 = `${(endHours % 12) || 12}${endMinutes ? `:${endMinutes}` : ''} ${endHours < 12 ? 'AM' : 'PM'}`
     event._.duration = Math.abs(~~((event.end - event.start) / 60000)) // Integer (minutes).
-  }
-
-  // Inject core logic and utilities in each event.
-  const injectInEvent = event => {
-    // Inject a unique ID in each event.
-    if (!event._) event._ = {}
-    event._.id = event._.id || ++uid
 
     // Inject a delete function in each event and set the deleting flag to false.
     if (!event.delete) {
@@ -140,25 +145,25 @@ export const useEvents = vuecal => {
     }
 
     // Register the event DOM node in the event in order to emit DOM events.
-    // Use shared function ref to avoid creating a new closure for each event.
-    event._.register = function (domNode) {
-      this._.$el = domNode
-      if (this._.fireCreated) {
-        vuecal.emit('event-created', this)
-        delete this._.fireCreated
+    // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
+    event._.register = domNode => {
+      event._.$el = domNode
+      if (event._.fireCreated) {
+        vuecal.emit('event-created', event)
+        delete event._.fireCreated
       }
     }
 
     // Unregister the event DOM node and cleanup preventing potential memory leaks.
-    // Use shared function ref to avoid creating a new closure for each event.
-    event._.unregister = function () {
+    // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
+    event._.unregister = () => {
       // Break any circular references in the event object.
-      this._.$el = null
-      this._.register = null
+      event._.$el = null
+      event._.register = null
       // Clear any methods that might create closures.
-      this.isOverlapping = null
-      this.getOverlappingEvents = null
-      this.delete = null
+      event.isOverlapping = null
+      event.getOverlappingEvents = null
+      event.delete = null
     }
   }
 
