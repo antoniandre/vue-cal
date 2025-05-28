@@ -7,7 +7,8 @@
     w-button(@click="deleteEvent") Delete event
     w-button(@click="mainVuecalConfig.hideWeekends = !mainVuecalConfig.hideWeekends") Hide weekends
 
-  .w-flex.gap2.mt4.ovh
+  .w-flex.column.gap2.mt4.ovh
+    w-button(@click="goToEvent") Go to Event 1
     //- aside.no-shrink.no-grow
       vue-cal.no-shrink.no-grow(
         v-model:selected-date="pickerConfig.selectedDate"
@@ -40,7 +41,7 @@
       @event-click="log('event-click', $event)"
       @event-drag="log('event-drag', $event)"
       @event-drag-end="log('event-drag', $event)"
-      @event-drop="onEventDrop($event)"
+      @event-drop="log('event-drop', $event)"
       @event-resize-start="log('event-resize-start', $event)"
       @event-resize="log('event-resize', $event)"
       @event-resize-end="log('event-resize-end', $event)"
@@ -76,8 +77,8 @@ const mainVuecalConfig = reactive({
   todayButton: ref(true),
   xs: ref(false),
   sm: ref(false),
-  timeFrom: 8 * 60,
-  timeTo: 19 * 60,
+  // timeFrom: 8 * 60,
+  // timeTo: 19 * 60,
   timeStep: 60,
   twelveHour: ref(false),
   hideWeekends: ref(false),
@@ -134,7 +135,7 @@ setTimeout(() => {
       // schedule: 2
     }
   ]
-}, 1000)
+}, 0)
 
 const addEventFromOutside = () => {
   mainVuecalConfig.events.push({
@@ -164,6 +165,14 @@ const onViewChange = view => {
   fetchEvents(view.start.format(), view.end.format())
 }
 
+const goToEvent = async () => {
+  await vueCalRef.value.view.switch('week', new Date())
+  // need to wait for the current view to be week..
+  // await new Promise(resolve => setTimeout(resolve, 300))
+
+  vueCalRef.value.view.scrollToCurrentTime()
+}
+
 /*
  * Fetch events from a backend.
  *
@@ -173,12 +182,10 @@ const onViewChange = view => {
  */
 const fetchEvents = async (start, end) => {
   console.log('fetchEvents', start, end)
-}
-
-const onEventDrop = ({ event, cell }) => {
-  event.start = new Date(Math.max(event.start.getTime(), new Date(cell.start).setHours(8, 0, 0, 0)))
-  event.end = new Date(Math.min(event.end.getTime(), new Date(cell.end).setHours(19, 0, 0, 0)))
-  return event
+  await new Promise(resolve => setTimeout(resolve, 500))
+  const startDate = stringToDate(start)
+  const endDate = stringToDate(end)
+  mainVuecalConfig.events = generateRandomEvents(startDate, endDate)
 }
 
 /*
