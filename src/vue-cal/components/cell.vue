@@ -93,7 +93,7 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, onBeforeUnmount, reactive, ref, watch } from 'vue'
+import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 import Event from './event.vue'
@@ -131,6 +131,8 @@ const touch = reactive({
   holding: false, // When the cell is clicked and hold for a certain amount of time.
   holdTimer: null, // Cell click and hold detection.
   thresholdPassed: false, // If the drag threshold has been passed.
+  canTouchAndDrag: null, // Wait for 500ms before allowing an event to be dragged after touchstart.
+  touchAndDragTimer: null, // Timer for canTouchAndDrag.
   startX: 0, // The x position at the start of the drag (mousedown or touchstart).
   startY: 0, // The y position at the start of the drag (mousedown or touchstart).
   moveX: 0,
@@ -178,7 +180,8 @@ const eventPlaceholder = computed(() => {
 const isCreatingEvent = computed(() => {
   const isCreating = config.editableEvents.create && (touch.dragging || awaitingEventCreation.value)
   const hasPassedMinDrag = ((config.eventCreateMinDrag && touch.thresholdPassed) || !config.eventCreateMinDrag)
-  return isCreating && hasPassedMinDrag
+  const canCreateEvent = touch.canTouchAndDrag !== false // Allow if null (mouse) or true (touch after delay).
+  return isCreating && hasPassedMinDrag && canCreateEvent
 })
 
 const classes = computed(() => {
@@ -500,6 +503,21 @@ const onCellClick = () => {
 
 // On mousedown OR TOUCHSTART of the cell.
 const onMousedown = e => {
+  const isTouchEvent = e.type === 'touchstart'
+
+  // On touch devices, wait for 500ms then trigger event creation.
+  if (isTouchEvent) {
+    touch.canTouchAndDrag = false
+    touch.touchAndDragTimer = setTimeout(() => {
+      touch.canTouchAndDrag = true
+      // Now we can start the event creation process if still touching
+      // Prevent default scrolling behavior from this point.
+      if (touch.holding || touch.dragging) e.preventDefault()
+    }, 500)
+  }
+  // For mouse events, allow immediate event creation.
+  else touch.canTouchAndDrag = true
+
   touch.schedule = ~~e.target.dataset.schedule
   const rect = cellEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
@@ -508,8 +526,8 @@ const onMousedown = e => {
   touch.startPercentageY = touch.startY * 100 / rect.height
   touch.thresholdPassed = false
 
-  document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
-  document.addEventListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
+  document.addEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !isTouchEvent })
+  document.addEventListener(isTouchEvent ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
@@ -519,6 +537,27 @@ const onMousedown = e => {
 }
 
 const onDocMousemove = e => {
+  const isTouchEvent = e.type === 'touchmove'
+
+  // For touch events, if the 500ms hasn't passed yet, cancel event creation and allow scrolling.
+  if (isTouchEvent && !touch.canTouchAndDrag) {
+    // Cancel the touch and drag timer.
+    if (touch.touchAndDragTimer) {
+      clearTimeout(touch.touchAndDragTimer)
+      touch.touchAndDragTimer = null
+    }
+    // Don't prevent default - allow natural scrolling.
+    // Clean up and exit early.
+    onDocMouseup(e)
+    return
+  }
+
+  if (isTouchEvent) {
+    // If we reach here, either it's a mouse event or touch event after 500ms delay.
+    // Prevent default scrolling when click/tap and move so we can create events instead.
+    e.preventDefault()
+  }
+
   // Internal emit to the root component to add a CSS class on wrapper while dragging.
   if (!touch.dragging) {
     globalTouchState.isDraggingCell = true // Add a CSS class on wrapper while dragging.
@@ -544,14 +583,21 @@ const onDocMousemove = e => {
 }
 
 const onDocMouseup = async e => {
-  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
+  const isTouchEvent = e.type === 'touchend'
+  document.removeEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
+
+  // Clean up touch and drag timer
+  if (touch.touchAndDragTimer) {
+    clearTimeout(touch.touchAndDragTimer)
+    touch.touchAndDragTimer = null
+  }
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
     cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
     globalTouchState.isDraggingCell = false // Add a CSS class on wrapper while dragging.
 
-    if (config.editableEvents.create) {
+    if (config.editableEvents.create && touch.canTouchAndDrag) {
       awaitingEventCreation.value = true
       await createEventIfAllowed(e)
       awaitingEventCreation.value = false
@@ -571,6 +617,7 @@ const onDocMouseup = async e => {
   touch.movePercentageY = 0
   touch.thresholdPassed = false
   touch.schedule = null
+  touch.canTouchAndDrag = null
 }
 
 const createEventIfAllowed = async e => {
@@ -638,7 +685,7 @@ onBeforeUnmount(async () => {
   justify-content: center;
   align-items: center;
   user-select: none;
-  touch-action: none; // Prevents browser default touch handling.
+  // touch-action: none; // Prevents browser default touch handling.
 
   .vuecal__scrollable--days-view &,
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}

@@ -78,7 +78,7 @@
 </template>
 
 <script setup>
-import { computed, nextTick, onMounted, provide, useAttrs, useId, useTemplateRef, watch } from 'vue'
+import { computed, nextTick, onBeforeUnmount, onMounted, provide, useAttrs, useId, useTemplateRef } from 'vue'
 import { props as propsDefinitions } from '../core/props-definitions'
 import { useVueCal } from '../core/index'
 import VueCalHeader from './header.vue'
@@ -150,9 +150,22 @@ const scrollableElClasses = computed(() => ({
 }))
 
 onMounted(async () => {
+  // If touch device, prevent contextmenu on the cell so we can scroll on the cell on touch devices
+  // or create an event on long press.
+  if (typeof window !== 'undefined' && window.hasOwnProperty('ontouchstart')) {
+    const contextMenuHandler = e => {
+      if (e.target.closest('.vuecal__cell')) e.preventDefault()
+    }
+    vuecalEl.value.addEventListener('contextmenu', contextMenuHandler)
+  }
+
   await nextTick()
   config.ready = true
   emit('ready', { config, view })
+})
+
+onBeforeUnmount(() => {
+  vuecalEl?.value?.removeEventListener('contextmenu', contextMenuHandler)
 })
 
 // Share the vuecal object across all the Vue components.

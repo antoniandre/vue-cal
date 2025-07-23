@@ -43,6 +43,8 @@ const touch = reactive({
   fromResizer: false, // If the drag originates from the resizer element.
   holding: false, // When the event is clicked and hold for a certain amount of time.
   holdTimer: null, // event click and hold detection.
+  canTouchAndDrag: null, // Wait for 500ms before allowing an event to be dragged after touchstart.
+  touchAndDragTimer: null, // Timer for canTouchAndDrag.
   startX: 0, // The X coords at the start of the drag.
   startY: 0, // The Y coords at the start of the drag.
   startPercentageX: 0, // The X coords in percentage at the start of the drag.
@@ -58,7 +60,10 @@ const touch = reactive({
   schedule: null
 })
 
-const isDraggable = computed(() => config.editableEvents.drag && event.draggable !== false && !event.background)
+const isDraggable = computed(() => {
+  return config.editableEvents.drag && event.draggable !== false && !event.background && touch.canTouchAndDrag !== false
+})
+
 const isResizable = computed(() => {
   if (view.isMonth || view.isYear || view.isYears || props.inAllDayBar) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
@@ -138,6 +143,9 @@ const eventListeners = computed(() => {
 
   eventListeners.touchstart = e => {
     e.stopPropagation()
+    touch.touchAndDragTimer = setTimeout(() => {
+      touch.canTouchAndDrag = true
+    }, 500)
     onMousedown(e)
 
     externalHandlers.touchstart?.({ e, event })
@@ -200,6 +208,12 @@ const onMousedown = e => {
 
 const onDocMousemove = async e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
+
+  if (!touch.canTouchAndDrag) {
+    touch.canTouchAndDrag = false
+    touch.touchAndDragTimer = clearTimeout(touch.touchAndDragTimer)
+    return
+  }
 
   // Only the first touchmove to set the dragging flag.
   if (touch.fromResizer && !touch.resizing) {
