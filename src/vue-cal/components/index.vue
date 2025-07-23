@@ -149,13 +149,14 @@ const scrollableElClasses = computed(() => ({
   'vuecal__scrollable--has-all-day-bar': config.allDayEvents
 }))
 
+const contextMenuHandler = e => {
+  if (e.target.closest('.vuecal__cell')) e.preventDefault()
+}
+
 onMounted(async () => {
   // If touch device, prevent contextmenu on the cell so we can scroll on the cell on touch devices
   // or create an event on long press.
   if (typeof window !== 'undefined' && window.hasOwnProperty('ontouchstart')) {
-    const contextMenuHandler = e => {
-      if (e.target.closest('.vuecal__cell')) e.preventDefault()
-    }
     vuecalEl.value.addEventListener('contextmenu', contextMenuHandler)
   }
 
