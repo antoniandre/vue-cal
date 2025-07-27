@@ -195,6 +195,9 @@ provide('locales', [
   { code: 'fa', label: 'Farsi' },
   { code: 'fr', label: 'French' },
   { code: 'ka', label: 'Georgian' },
+  { code: 'kaa', label: 'Qaraqalpaq' },
+  { code: 'kk', label: 'Kazakh' },
+  { code: 'ky', label: 'Kyrgyz' },
   { code: 'de', label: 'German' },
   { code: 'el', label: 'Greek' },
   { code: 'he', label: 'Hebrew' },
@@ -218,6 +221,7 @@ provide('locales', [
   { code: 'sv', label: 'Swedish' },
   { code: 'tr', label: 'Turkish' },
   { code: 'uk', label: 'Ukrainian' },
+  { code: 'uz', label: 'Uzbek' },
   { code: 'vi', label: 'Vietnamese' }
 ])
 </script>
