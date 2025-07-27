@@ -645,6 +645,7 @@ const createEventIfAllowed = async e => {
     if (eventToCreate && typeof eventToCreate === 'boolean') view.createEvent(eventCopy)
   }
   else view.createEvent(eventToCreate)
+  navigator.vibrate?.(200) // Haptic feedback on supported devices and browsers.
 }
 
 const removeEventListeners = () => {
