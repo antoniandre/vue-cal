@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.28
+    ul
+      li Added Kazakh, Uzbek (Latin &amp; Cyrillic), Qaraqalpaq and Kyrgyz locales. #[issue-link 68] &amp;#[issue-link 76]
+
+  li.patch
     strong.version 5.0.1-rc.27
     ul
       li Prevent natural scrolling while resizing event.
