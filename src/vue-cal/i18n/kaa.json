@@ -1,0 +1,15 @@
+{
+  "weekDays": ["Dúysenbi", "Seysenbi", "Sársenbi", "Beysenbi", "Juma", "Senbi", "Jeksenbi"],
+  "months": ["Yanwar", "Fevral", "Mart", "Aprel", "May", "Iýn", "Iýl", "Awgust", "Sentýabr", "Októabr", "Nóýabr", "Dekábr"],
+  "years": "Jıllar",
+  "year": "Jıl",
+  "month": "Ay",
+  "week": "Ha'pte",
+  "day": "Kún",
+  "today": "Búgin",
+  "noEvent": "Ta'dbir joq",
+  "allDay": "Bárlıq kún",
+  "deleteEvent": "Óshiriw",
+  "createEvent": "Ta'dbir sho'lkemlestriw",
+  "dateFormat": "dddd D MMMM YYYY"
+}
