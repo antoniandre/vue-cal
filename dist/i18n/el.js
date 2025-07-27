@@ -1,44 +1,44 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"], n = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"], o = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"], s = "Έτη", e = "Έτος", c = "Μήνας", a = "Εβδομάδα", d = "Ημέρες", y = "Ημέρα", m = "Σήμερα", l = "Κανένα συμβάν", r = "Ημερήσιο συμβάν", v = "Διαγραφή", M = "Δημιουργία συμβάντος", Y = "dddd D MMMMG YYYY", h = "π.μ.", D = "μ.μ.", E = {
+const t = ["Δευτέρα", "Τρίτη", "Τετάρτη", "Πέμπτη", "Παρασκευή", "Σάββατο", "Κυριακή"], n = ["Ιανουάριος", "Φεβρουάριος", "Μάρτιος", "Απρίλιος", "Μάιος", "Ιούνιος", "Ιούλιος", "Αύγουστος", "Σεπτέμβριος", "Οκτώβριος", "Νοέμβριος", "Δεκέμβριος"], o = ["Ιανουαρίου", "Φεβρουαρίου", "Μαρτίου", "Απριλίου", "Μαΐου", "Ιουνίου", "Ιουλίου", "Αυγούστου", "Σεπτεμβρίου", "Οκτωβρίου", "Νοεμβρίου", "Δεκεμβρίου"], D = "Έτη", s = "Έτος", e = "Μήνας", c = "Εβδομάδα", a = "Ημέρες", d = "Ημέρα", y = "Σήμερα", m = "Κανένα συμβάν", r = "Ημερήσιο συμβάν", l = "Διαγραφή", v = "Δημιουργία συμβάντος", M = "dddd D MMMMG YYYY", Y = "π.μ.", h = "μ.μ.", E = {
   weekDays: t,
   months: n,
   monthsGenitive: o,
-  years: s,
-  year: e,
-  month: c,
-  week: a,
-  days: d,
-  day: y,
-  today: m,
-  noEvent: l,
+  years: "Έτη",
+  year: s,
+  month: e,
+  week: c,
+  days: a,
+  day: d,
+  today: y,
+  noEvent: m,
   allDay: r,
-  deleteEvent: v,
-  createEvent: M,
-  dateFormat: Y,
-  am: h,
-  pm: D
+  deleteEvent: l,
+  createEvent: v,
+  dateFormat: M,
+  am: Y,
+  pm: h
 };
 export {
   r as allDay,
-  h as am,
-  M as createEvent,
-  Y as dateFormat,
-  y as day,
-  d as days,
+  Y as am,
+  v as createEvent,
+  M as dateFormat,
+  d as day,
+  a as days,
   E as default,
-  v as deleteEvent,
-  c as month,
+  l as deleteEvent,
+  e as month,
   n as months,
   o as monthsGenitive,
-  l as noEvent,
-  D as pm,
-  m as today,
-  a as week,
+  m as noEvent,
+  h as pm,
+  y as today,
+  c as week,
   t as weekDays,
-  e as year,
-  s as years
+  s as year,
+  D as years
 };

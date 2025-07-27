@@ -1,38 +1,38 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const e = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbăta", "Duminică"], t = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"], n = "Ani", i = "An", o = "Lună", a = "Săptămână", c = "Zile", r = "Zi", s = "Azi", u = "Nici o interacțiune", d = "Toată ziua", m = "Șterge", M = "Adaugă un eveniment", l = "dddd D MMMM YYYY", y = {
+const e = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbăta", "Duminică"], t = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"], d = "Ani", m = "An", n = "Lună", i = "Săptămână", a = "Zile", y = "Zi", M = "Azi", o = "Nici o interacțiune", r = "Toată ziua", c = "Șterge", s = "Adaugă un eveniment", u = "dddd D MMMM YYYY", l = {
   weekDays: e,
   months: t,
-  years: n,
-  year: i,
-  month: o,
-  week: a,
-  days: c,
-  day: r,
-  today: s,
-  noEvent: u,
-  allDay: d,
-  deleteEvent: m,
-  createEvent: M,
-  dateFormat: l
+  years: "Ani",
+  year: "An",
+  month: n,
+  week: i,
+  days: a,
+  day: "Zi",
+  today: "Azi",
+  noEvent: o,
+  allDay: r,
+  deleteEvent: c,
+  createEvent: s,
+  dateFormat: u
 };
 export {
-  d as allDay,
-  M as createEvent,
-  l as dateFormat,
-  r as day,
-  c as days,
-  y as default,
-  m as deleteEvent,
-  o as month,
+  r as allDay,
+  s as createEvent,
+  u as dateFormat,
+  y as day,
+  a as days,
+  l as default,
+  c as deleteEvent,
+  n as month,
   t as months,
-  u as noEvent,
-  s as today,
-  a as week,
+  o as noEvent,
+  M as today,
+  i as week,
   e as weekDays,
-  i as year,
-  n as years
+  m as year,
+  d as years
 };

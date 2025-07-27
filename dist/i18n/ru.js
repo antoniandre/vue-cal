@@ -1,40 +1,40 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"], o = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], n = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"], s = "Годы", e = "Год", c = "Месяц", a = "Неделя", d = "Дни", y = "День", r = "Сегодня", l = "Нет событий", D = "Весь день", M = "Удалить", Y = "Создать событие", h = "dddd D MMMM YYYY", k = {
+const t = ["Понедельник", "Вторник", "Среда", "Четверг", "Пятница", "Суббота", "Воскресенье"], o = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"], s = ["Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"], n = "Годы", Y = "Год", e = "Месяц", c = "Неделя", h = "Дни", a = "День", d = "Сегодня", y = "Нет событий", r = "Весь день", l = "Удалить", D = "Создать событие", M = "dddd D MMMM YYYY", k = {
   weekDays: t,
   weekDaysShort: o,
-  months: n,
-  years: s,
-  year: e,
-  month: c,
-  week: a,
-  days: d,
-  day: y,
-  today: r,
-  noEvent: l,
-  allDay: D,
-  deleteEvent: M,
-  createEvent: Y,
-  dateFormat: h
+  months: s,
+  years: n,
+  year: "Год",
+  month: e,
+  week: c,
+  days: "Дни",
+  day: a,
+  today: d,
+  noEvent: y,
+  allDay: r,
+  deleteEvent: l,
+  createEvent: D,
+  dateFormat: M
 };
 export {
-  D as allDay,
-  Y as createEvent,
-  h as dateFormat,
-  y as day,
-  d as days,
+  r as allDay,
+  D as createEvent,
+  M as dateFormat,
+  a as day,
+  h as days,
   k as default,
-  M as deleteEvent,
-  c as month,
-  n as months,
-  l as noEvent,
-  r as today,
-  a as week,
+  l as deleteEvent,
+  e as month,
+  s as months,
+  y as noEvent,
+  d as today,
+  c as week,
   t as weekDays,
   o as weekDaysShort,
-  e as year,
-  s as years
+  Y as year,
+  n as years
 };

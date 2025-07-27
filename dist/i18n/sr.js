@@ -1,9 +1,9 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const a = ["Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota", "Nedelja"], e = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"], t = "Godine", n = "Godina", o = "Mesec", s = "Sedmica", r = "Dana", c = "Dan", d = "Danas", l = "Nema događaja", i = "Celi dan", m = "Obriši", b = "Kreiraj događaj", k = "dddd D MMMM YYYY", u = {
+const a = ["Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota", "Nedelja"], e = ["Januar", "Februar", "Mart", "April", "Maj", "Jun", "Jul", "Avgust", "Septembar", "Oktobar", "Novembar", "Decembar"], t = "Godine", n = "Godina", o = "Mesec", s = "Sedmica", r = "Dana", b = "Dan", d = "Danas", c = "Nema događaja", l = "Celi dan", i = "Obriši", m = "Kreiraj događaj", y = "dddd D MMMM YYYY", k = {
   weekDays: a,
   months: e,
   years: t,
@@ -11,25 +11,25 @@ const a = ["Ponedeljak", "Utorak", "Sreda", "Četvrtak", "Petak", "Subota", "Ned
   month: o,
   week: s,
   days: r,
-  day: c,
+  day: "Dan",
   today: d,
-  noEvent: l,
-  allDay: i,
-  deleteEvent: m,
-  createEvent: b,
-  dateFormat: k
+  noEvent: c,
+  allDay: l,
+  deleteEvent: i,
+  createEvent: m,
+  dateFormat: y
 };
 export {
-  i as allDay,
-  b as createEvent,
-  k as dateFormat,
-  c as day,
+  l as allDay,
+  m as createEvent,
+  y as dateFormat,
+  b as day,
   r as days,
-  u as default,
-  m as deleteEvent,
+  k as default,
+  i as deleteEvent,
   o as month,
   e as months,
-  l as noEvent,
+  c as noEvent,
   d as today,
   s as week,
   a as weekDays,

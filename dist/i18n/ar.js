@@ -1,42 +1,42 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"], n = ["ن", "ث", "ر", "خ", "ج", "س", "ح"], o = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", " ديسمبر"], s = "سنوات", c = "سنة", e = "شهر", a = "أسبوع", d = "أيام", r = "يوم", y = "اليوم", l = "لا حدث", D = "طوال اليوم", M = "حذف", Y = "إنشاء حدث", h = "dddd D MMMM YYYY", k = !1, m = {
+const t = ["الإثنين", "الثلاثاء", "الأربعاء", "الخميس", "الجمعة", "السبت", "الأحد"], n = ["ن", "ث", "ر", "خ", "ج", "س", "ح"], o = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", " ديسمبر"], s = "سنوات", h = "سنة", m = "شهر", e = "أسبوع", a = "أيام", v = "يوم", c = "اليوم", d = "لا حدث", r = "طوال اليوم", D = "حذف", y = "إنشاء حدث", l = "dddd D MMMM YYYY", E = !1, M = {
   weekDays: t,
   weekDaysShort: n,
   months: o,
   years: s,
-  year: c,
-  month: e,
-  week: a,
-  days: d,
-  day: r,
-  today: y,
-  noEvent: l,
-  allDay: D,
-  deleteEvent: M,
-  createEvent: Y,
-  dateFormat: h,
+  year: "سنة",
+  month: "شهر",
+  week: e,
+  days: a,
+  day: "يوم",
+  today: c,
+  noEvent: d,
+  allDay: r,
+  deleteEvent: "حذف",
+  createEvent: y,
+  dateFormat: l,
   truncations: !1
 };
 export {
-  D as allDay,
-  Y as createEvent,
-  h as dateFormat,
-  r as day,
-  d as days,
-  m as default,
-  M as deleteEvent,
-  e as month,
+  r as allDay,
+  y as createEvent,
+  l as dateFormat,
+  v as day,
+  a as days,
+  M as default,
+  D as deleteEvent,
+  m as month,
   o as months,
-  l as noEvent,
-  y as today,
-  k as truncations,
-  a as week,
+  d as noEvent,
+  c as today,
+  E as truncations,
+  e as week,
   t as weekDays,
   n as weekDaysShort,
-  c as year,
+  h as year,
   s as years
 };

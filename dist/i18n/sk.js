@@ -1,38 +1,38 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const e = ["Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota", "Nedeľa"], t = ["Január", "Február", "Marec", "Apríl", "Máj", "Jún", "Júl", "August", "September", "Október", "November", "December"], o = "Roky", n = "Rok", s = "Mesiac", a = "Týždeň", c = "Dni", r = "Deň", d = "Dnes", k = "Bez udalosti", l = "Celý deň", y = "Odstrániť", u = "Vytvoriť udalosť", D = "dddd D. MMMM YYYY", M = {
+const e = ["Pondelok", "Utorok", "Streda", "Štvrtok", "Piatok", "Sobota", "Nedeľa"], t = ["Január", "Február", "Marec", "Apríl", "Máj", "Jún", "Júl", "August", "September", "Október", "November", "December"], o = "Roky", l = "Rok", s = "Mesiac", n = "Týždeň", u = "Dni", D = "Deň", a = "Dnes", d = "Bez udalosti", r = "Celý deň", c = "Odstrániť", y = "Vytvoriť udalosť", k = "dddd D. MMMM YYYY", M = {
   weekDays: e,
   months: t,
   years: o,
-  year: n,
+  year: "Rok",
   month: s,
-  week: a,
-  days: c,
-  day: r,
-  today: d,
-  noEvent: k,
-  allDay: l,
-  deleteEvent: y,
-  createEvent: u,
-  dateFormat: D
+  week: n,
+  days: "Dni",
+  day: "Deň",
+  today: a,
+  noEvent: d,
+  allDay: r,
+  deleteEvent: c,
+  createEvent: y,
+  dateFormat: k
 };
 export {
-  l as allDay,
-  u as createEvent,
-  D as dateFormat,
-  r as day,
-  c as days,
+  r as allDay,
+  y as createEvent,
+  k as dateFormat,
+  D as day,
+  u as days,
   M as default,
-  y as deleteEvent,
+  c as deleteEvent,
   s as month,
   t as months,
-  k as noEvent,
-  d as today,
-  a as week,
+  d as noEvent,
+  a as today,
+  n as week,
   e as weekDays,
-  n as year,
+  l as year,
   o as years
 };

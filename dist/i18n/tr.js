@@ -1,38 +1,38 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"], a = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"], n = "Yıllar", s = "Yıl", e = "Ay", o = "Hafta", c = "Günler", l = "Gün", r = "Bugün", m = "Etkinlik Yok", k = "Tüm gün", d = "Sil", i = "Etkinlik ekle", y = "dddd D MMMM YYYY", u = {
+const t = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"], a = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"], e = "Yıllar", d = "Yıl", y = "Ay", n = "Hafta", s = "Günler", k = "Gün", o = "Bugün", c = "Etkinlik Yok", l = "Tüm gün", i = "Sil", r = "Etkinlik ekle", m = "dddd D MMMM YYYY", E = {
   weekDays: t,
   months: a,
-  years: n,
-  year: s,
-  month: e,
-  week: o,
-  days: c,
-  day: l,
-  today: r,
-  noEvent: m,
-  allDay: k,
-  deleteEvent: d,
-  createEvent: i,
-  dateFormat: y
+  years: e,
+  year: "Yıl",
+  month: "Ay",
+  week: n,
+  days: s,
+  day: "Gün",
+  today: o,
+  noEvent: c,
+  allDay: l,
+  deleteEvent: "Sil",
+  createEvent: r,
+  dateFormat: m
 };
 export {
-  k as allDay,
-  i as createEvent,
-  y as dateFormat,
-  l as day,
-  c as days,
-  u as default,
-  d as deleteEvent,
-  e as month,
+  l as allDay,
+  r as createEvent,
+  m as dateFormat,
+  k as day,
+  s as days,
+  E as default,
+  i as deleteEvent,
+  y as month,
   a as months,
-  m as noEvent,
-  r as today,
-  o as week,
+  c as noEvent,
+  o as today,
+  n as week,
   t as weekDays,
-  s as year,
-  n as years
+  d as year,
+  e as years
 };

@@ -1,40 +1,40 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const e = ["Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte", "Diumenge"], t = ["Dl", "Dt", "Dc", "Dj", "Dv", "Ds", "Dg"], s = ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Juliol", "Agost", "Setembre", "Octubre", "Novembre", "Desembre"], n = "Anys", o = "Any", a = "Mes", c = "Setmana", r = "Dies", D = "Dia", i = "Avui", d = "No hi ha esdeveniments", m = "Tot el dia", l = "Eliminar", y = "Crear un esdeveniment", u = "dddd D MMMM YYYY", v = {
+const e = ["Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte", "Diumenge"], t = ["Dl", "Dt", "Dc", "Dj", "Dv", "Ds", "Dg"], s = ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Juliol", "Agost", "Setembre", "Octubre", "Novembre", "Desembre"], n = "Anys", y = "Any", l = "Mes", o = "Setmana", a = "Dies", u = "Dia", r = "Avui", c = "No hi ha esdeveniments", D = "Tot el dia", i = "Eliminar", d = "Crear un esdeveniment", m = "dddd D MMMM YYYY", v = {
   weekDays: e,
   weekDaysShort: t,
   months: s,
   years: n,
-  year: o,
-  month: a,
-  week: c,
-  days: r,
-  day: D,
-  today: i,
-  noEvent: d,
-  allDay: m,
-  deleteEvent: l,
-  createEvent: y,
-  dateFormat: u
+  year: "Any",
+  month: "Mes",
+  week: o,
+  days: a,
+  day: "Dia",
+  today: r,
+  noEvent: c,
+  allDay: D,
+  deleteEvent: i,
+  createEvent: d,
+  dateFormat: m
 };
 export {
-  m as allDay,
-  y as createEvent,
-  u as dateFormat,
-  D as day,
-  r as days,
+  D as allDay,
+  d as createEvent,
+  m as dateFormat,
+  u as day,
+  a as days,
   v as default,
-  l as deleteEvent,
-  a as month,
+  i as deleteEvent,
+  l as month,
   s as months,
-  d as noEvent,
-  i as today,
-  c as week,
+  c as noEvent,
+  r as today,
+  o as week,
   e as weekDays,
   t as weekDaysShort,
-  o as year,
+  y as year,
   n as years
 };

@@ -1,38 +1,38 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["Даваа", "Мягмар", "Лхавга", "Пүрэв", "Баасан", "Бямба", "Ням"], n = ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", "9-р сар", "10-р сар", "11-р сар", "12-р сар"], o = "Жилүүд", s = "Жил", e = "Сар", c = "Долоо хоног", a = "Өдрийн", d = "Өдөр", y = "Өнөөдөр", r = "Тэмдэглэлгүй", l = "Бүх өдөр", m = "Устгах", M = "Шинэ тэмдэглэл", Y = "dddd D MMMM YYYY", v = {
+const t = ["Даваа", "Мягмар", "Лхавга", "Пүрэв", "Баасан", "Бямба", "Ням"], n = ["1-р сар", "2-р сар", "3-р сар", "4-р сар", "5-р сар", "6-р сар", "7-р сар", "8-р сар", "9-р сар", "10-р сар", "11-р сар", "12-р сар"], o = "Жилүүд", M = "Жил", Y = "Сар", s = "Долоо хоног", e = "Өдрийн", c = "Өдөр", a = "Өнөөдөр", d = "Тэмдэглэлгүй", y = "Бүх өдөр", r = "Устгах", m = "Шинэ тэмдэглэл", l = "dddd D MMMM YYYY", h = {
   weekDays: t,
   months: n,
   years: o,
-  year: s,
-  month: e,
-  week: c,
-  days: a,
-  day: d,
-  today: y,
-  noEvent: r,
-  allDay: l,
-  deleteEvent: m,
-  createEvent: M,
-  dateFormat: Y
+  year: "Жил",
+  month: "Сар",
+  week: s,
+  days: e,
+  day: c,
+  today: a,
+  noEvent: d,
+  allDay: y,
+  deleteEvent: r,
+  createEvent: m,
+  dateFormat: l
 };
 export {
-  l as allDay,
-  M as createEvent,
-  Y as dateFormat,
-  d as day,
-  a as days,
-  v as default,
-  m as deleteEvent,
-  e as month,
+  y as allDay,
+  m as createEvent,
+  l as dateFormat,
+  c as day,
+  e as days,
+  h as default,
+  r as deleteEvent,
+  Y as month,
   n as months,
-  r as noEvent,
-  y as today,
-  c as week,
+  d as noEvent,
+  a as today,
+  s as week,
   t as weekDays,
-  s as year,
+  M as year,
   o as years
 };

@@ -1,9 +1,9 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const e = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], t = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], a = "Years", n = "Year", o = "Month", s = "Week", y = "Days", d = "Day", r = "Today", c = "No Event", u = "All-day", l = "Delete", M = "Create an event", D = "dddd D{S} MMMM YYYY", b = {
+const e = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"], t = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"], a = "Years", n = "Year", o = "Month", s = "Week", y = "Days", D = "Day", d = "Today", r = "No Event", c = "All-day", u = "Delete", l = "Create an event", M = "dddd D{S} MMMM YYYY", b = {
   weekDays: e,
   months: t,
   years: a,
@@ -11,26 +11,26 @@ const e = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "
   month: o,
   week: s,
   days: y,
-  day: d,
-  today: r,
-  noEvent: c,
-  allDay: u,
-  deleteEvent: l,
-  createEvent: M,
-  dateFormat: D
+  day: "Day",
+  today: d,
+  noEvent: r,
+  allDay: c,
+  deleteEvent: u,
+  createEvent: l,
+  dateFormat: M
 };
 export {
-  u as allDay,
-  M as createEvent,
-  D as dateFormat,
-  d as day,
+  c as allDay,
+  l as createEvent,
+  M as dateFormat,
+  D as day,
   y as days,
   b as default,
-  l as deleteEvent,
+  u as deleteEvent,
   o as month,
   t as months,
-  c as noEvent,
-  r as today,
+  r as noEvent,
+  d as today,
   s as week,
   e as weekDays,
   n as year,

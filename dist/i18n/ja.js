@@ -1,40 +1,40 @@
 /**
-  * vue-cal v5.0.1-rc.25
+  * vue-cal v5.0.1-rc.27
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const t = ["月", "火", "水", "木", "金", "土", "日"], n = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"], o = "年", s = "今年", c = "月", e = "週", a = "日々", d = "日", r = "今日", y = "イベントなし", l = "終日", M = "削除", Y = "イベント作成", m = "YYYY年 MMMM D日 (dddd)", u = !1, v = {
+const t = ["月", "火", "水", "木", "金", "土", "日"], n = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"], a = "年", c = "今年", d = "月", y = "週", r = "日々", l = "日", m = "今日", e = "イベントなし", v = "終日", D = "削除", o = "イベント作成", s = "YYYY年 MMMM D日 (dddd)", E = !1, M = {
   weekDays: t,
   months: n,
-  years: o,
-  year: s,
-  month: c,
-  week: e,
-  days: a,
-  day: d,
-  today: r,
-  noEvent: y,
-  allDay: l,
-  deleteEvent: M,
-  createEvent: Y,
-  dateFormat: m,
+  years: "年",
+  year: "今年",
+  month: "月",
+  week: "週",
+  days: "日々",
+  day: "日",
+  today: "今日",
+  noEvent: e,
+  allDay: "終日",
+  deleteEvent: "削除",
+  createEvent: o,
+  dateFormat: s,
   truncations: !1
 };
 export {
-  l as allDay,
-  Y as createEvent,
-  m as dateFormat,
-  d as day,
-  a as days,
-  v as default,
-  M as deleteEvent,
-  c as month,
+  v as allDay,
+  o as createEvent,
+  s as dateFormat,
+  l as day,
+  r as days,
+  M as default,
+  D as deleteEvent,
+  d as month,
   n as months,
-  y as noEvent,
-  r as today,
-  u as truncations,
-  e as week,
+  e as noEvent,
+  m as today,
+  E as truncations,
+  y as week,
   t as weekDays,
-  s as year,
-  o as years
+  c as year,
+  a as years
 };
