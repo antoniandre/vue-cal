@@ -195,8 +195,8 @@ const onMousedown = e => {
   touch.cellEl = eventEl.value.closest('.vuecal__cell')
   // Store the event start to apply on event end when resizing and end < start.
   touch.resizeStartDate = event.start
-
-  attachDocumentListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove)
+  // Make the event listener non-passive if resizing so we can prevent default scrolling.
+  attachDocumentListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
   attachDocumentListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
 
   touch.holdTimer = setTimeout(() => {
@@ -208,12 +208,6 @@ const onMousedown = e => {
 
 const onDocMousemove = async e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
-
-  if (!touch.canTouchAndDrag) {
-    touch.canTouchAndDrag = false
-    touch.touchAndDragTimer = clearTimeout(touch.touchAndDragTimer)
-    return
-  }
 
   // Only the first touchmove to set the dragging flag.
   if (touch.fromResizer && !touch.resizing) {
@@ -256,6 +250,10 @@ const onDocMousemove = async e => {
       event.end = newEnd
       // Reset last accepted event details if existing and accepting again.
       if (touch.resizingLastAcceptedEvent) touch.resizingLastAcceptedEvent = null
+
+      // Prevent scrolling while resizing.
+      // Can only be done when event handler is not passive.
+      e.preventDefault()
     }
     else {
       // If the event resizing is refused, store the last accepted original event details
@@ -296,7 +294,7 @@ const onDocMouseup = async e => {
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
   }
 
-  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove)
+  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
   touch.resizing = false
   touch.fromResizer = false
   touch.dragging = false
