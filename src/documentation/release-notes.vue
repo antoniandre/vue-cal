@@ -3,6 +3,12 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.27
+    ul
+      li Prevent natural scrolling while resizing event.
+      li Allow touch panning on calendar for scrolling and event creation on long press on touch devices. #[issue-link 53]
+
+  li.patch
     strong.version 5.0.1-rc.26
     ul
       li Added a body dynamic max-height so the events are never stretched out. #[issue-link 60]
