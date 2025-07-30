@@ -59,14 +59,14 @@
     "pinia": "^3.0.3",
     "postcss": "^8.5.6",
     "pug": "^3.0.3",
-    "rollup": "^4.45.1",
+    "rollup": "^4.46.2",
     "sass": "^1.89.2",
     "simple-syntax-highlighter": "^3.1.1",
     "vite": "^6.3.5",
     "vite-plugin-static-copy": "^2.3.1",
     "vue": "^3.5.18",
     "vue-router": "^4.5.1",
-    "wave-ui": "^3.25.2"
+    "wave-ui": "^3.25.3"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
