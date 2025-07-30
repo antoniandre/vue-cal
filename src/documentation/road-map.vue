@@ -5,7 +5,6 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task Multiple day events
       .task Horizontal layout guidance
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
@@ -17,11 +16,12 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Improve touch device UX (events VS scroll)
+      .task Multiple day events
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Improve touch device UX (events VS scroll)
       .task All-day events
       .task Event count on year views
       .task Events overlap size option
