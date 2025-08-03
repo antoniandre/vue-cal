@@ -476,7 +476,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
   template(#title)
       | Multiple Day Events
       .todo-tag.prod.d-iflex.ml2 COMING SOON
-  //- template(#desc)
+  template(#desc)
     p.
       Multiple day events work like a set of single day events linked together.#[br]
       Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
@@ -488,9 +488,8 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     alert(tip).
       3 CSS classes are available to target the event first day, the last day and all the days in between:
       #[code event-start], #[code event-middle], #[code event-end].
-  //- template(#code-html).
+  template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
       :views="['day', 'week']"
@@ -499,7 +498,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
       resize-x
       :events="events"&gt;
     &lt;/vue-cal&gt;
-  //- template(#code-js).
+  template(#code-js).
     data: () => ({
       events: [
         {
@@ -525,16 +524,17 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
         }
       ]
     })
-  //- vue-cal.ex--multiple-day-events(
+  vue-cal(
+    :time-from="7 * 60"
+    view="days"
+    :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {} }"
     :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-to="23 * 60"
-    hide-weekends
     events-count-on-year-view
     editable-events
     resize-x
-    :events="multipleDayEvents")
+    :events="exMultipleDayEvents.events")
+    template(#event="params")
+      pre {{ params }}
 
 //- Example.
 example(anchor="recurring-events")
@@ -555,7 +555,6 @@ example(anchor="recurring-events")
       li Whether it's single-day, multiple-day, background, all-day, with time or timeless.
   //- template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
       :time-from="8 * 60"
       :time-to="23 * 60"
       hide-weekends
@@ -658,7 +657,7 @@ example(anchor="recurring-events")
 <script setup>
 import { computed, reactive, ref } from 'vue'
 import { useAppStore } from '@/store'
-import { VueCal, stringToDate } from '@/vue-cal'
+import { VueCal } from '@/vue-cal'
 
 const store = useAppStore()
 
@@ -900,10 +899,6 @@ const exOverlappingEvents = reactive({
   stackEvents: ref(false)
 })
 
-const exRecurringEvents = reactive({
-
-})
-
 const exAllDayEvents = reactive({
   allDayEvents: ref(0),
   allDayBarOn: ref(true),
@@ -947,27 +942,30 @@ const exAllDayEvents = reactive({
 const exMultipleDayEvents = reactive({
   events: [
     {
-      start: '2018-11-16 10:00',
-      end: '2018-11-20 12:37',
+      start: new Date().addDays(1),
+      end: new Date().addDays(2),
       title: 'Running Marathon',
       content: '<i class="w-icon mdi mdi-run"></i>',
       class: 'sport'
     },
     {
-      start: '2018-11-20 10:00',
-      end: '2018-11-20 10:25',
+      start: new Date().addDays(1),
+      end: new Date().addDays(1).addHours(1),
       title: 'Drink water!',
       content: '<i class="w-icon mdi mdi-glass-cocktail"></i>',
       class: 'health drink-water'
     },
     {
-      start: '2018-11-21 19:00',
-      end: '2018-11-23 11:30',
+      start: new Date().addDays(2),
+      end: new Date().addDays(3),
       title: 'Trip to India',
       content: '<i class="w-icon mdi mdi-airplane"></i>',
       class: 'leisure'
     }
   ]
+})
+
+const exRecurringEvents = reactive({
 })
 </script>
 
