@@ -61,7 +61,8 @@ export const useEvents = vuecal => {
         events.recurring.push(event._.id)
         // @todo: Possibly do other things here.
       }
-      else if (event._.multiday) {
+      else if (event._.startFormatted !== event._.endFormatted) {
+        event._.multiday = true
         events.multiday.push(event._.id)
         // @todo: handle multiday events. For now, index the event by its start date.
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
@@ -126,6 +127,7 @@ export const useEvents = vuecal => {
     event._.id = event._.id || ++uid
     event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.
     event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
+    event._.endFormatted = dateUtils.formatDate(event.end) // yyyy-mm-dd formatted date string.
     event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
     event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).
     const startHours = event.start.getHours()
