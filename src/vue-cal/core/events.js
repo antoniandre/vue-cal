@@ -397,10 +397,27 @@ export const useEvents = vuecal => {
     const endDay = end.getDate()
     const startTime = start.getTime()
     const endTime = end.getTime()
+    const rangeStartTimestamp = start.setHours(0, 0, 0, 0)
+    const rangeEndTimestamp = end.setHours(23, 59, 59, 999)
 
-    const result = []
     const excludeSet = new Set(excludeIds)
+    const eventsArray = []
 
+    // If there are less than 100 events, we can use a simple loop to find events in the range.
+    if (Object.keys(events.value.byId).length <= 100) {
+      for (const event of Object.values(events.value.byId)) {
+        if (!event || excludeSet.has(event._.id)) continue
+        if (schedule !== null && schedule !== event.schedule) continue
+        if (background === false && event.background) continue
+        if (config.allDayEvents && ((allDay && !event.allDay) || (!allDay && event.allDay))) continue
+        // Accept events that overlap the range.
+        if (event.start.getTime() < rangeEndTimestamp && event.end.getTime() > rangeStartTimestamp) eventsArray.push(event)
+      }
+      return eventsArray
+    }
+
+    // If there are more than 100 events, we need to use a more efficient approach.
+    // We'll use the byYear index to find events in the range.
     for (let year = startYear; year <= endYear; year++) {
       const yearStr = `${year}`
       const months = events.value.byYear[yearStr]
@@ -416,8 +433,8 @@ export const useEvents = vuecal => {
 
         for (const dayStr in days) {
           const day = +dayStr
-          if ((year === startYear && month === startMonth && day < startDay) ||
-              (year === endYear && month === endMonth && day > endDay)) continue
+          // Skip events that are starting after the end of the range or ending before the start of the range.
+          if (day > endDay || day < startDay) continue
 
           const dayEventIds = days[dayStr]
           if (!dayEventIds?.length) continue
@@ -429,29 +446,14 @@ export const useEvents = vuecal => {
             if (schedule !== null && schedule !== e.schedule) continue
             if (background === false && e.background) continue
             if (config.allDayEvents && ((allDay && !e.allDay) || (!allDay && e.allDay))) continue
-            if (e.end.getTime() > startTime && e.start.getTime() < endTime) result.push(e)
+            // Accept events that overlap the range.
+            if (e.start.getTime() < rangeEndTimestamp && e.end.getTime() > rangeStartTimestamp) eventsArray.push(e)
           }
         }
       }
     }
 
-    // Also check multiday and recurring events
-    // for (const id of [...store.multiday, ...store.recurring]) {
-    //   if (excludeSet.has(id)) continue
-    //   const e = store.byId[id]
-    //   if (!e) continue
-    //   if (schedule !== null && schedule !== e.schedule) continue
-    //   if (background === false && e.background) continue
-
-    //   if (e.end.getTime() > startTime && e.start.getTime() < endTime) {
-    //     // Avoid duplicates
-    //     if (!result.some(event => event._.id === e._.id)) {
-    //       result.push(e)
-    //     }
-    //   }
-    // }
-
-    return result
+    return eventsArray
   }
 
   /**
