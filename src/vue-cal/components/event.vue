@@ -23,15 +23,22 @@
 </template>
 
 <script setup>
+/**
+ * This component renders an event in full in a cell if the event is not multi-day.
+ * If the event is multi-day, it renders a fragment of the event only.
+ */
+
 import { computed, inject, onMounted, reactive, ref, onBeforeUnmount } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
-const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
+const { config, view, dnd, touch: globalTouchState } = inject('vuecal')
 
 const props = defineProps({
   event: { type: Object, required: true },
-  inAllDayBar: { type: Boolean, default: false }
+  inAllDayBar: { type: Boolean, default: false },
+  cellStart: { type: Date, required: true },
+  cellEnd: { type: Date, required: true }
 })
 
 const eventEl = ref(null)
@@ -70,26 +77,34 @@ const isResizable = computed(() => {
 })
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
-const classes = computed(() => ({
-  [`vuecal__event--${event._.id}`]: true,
-  [event.class]: !!event.class,
-  'vuecal__event--recurring': !!event.recurring,
-  'vuecal__event--background': !!event.background,
-  'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
-  'vuecal__event--multiday': !!event._?.multiday,
-  'vuecal__event--cut-top': !props.inAllDayBar && event._?.startMinutes < config.timeFrom,
-  'vuecal__event--cut-bottom': !props.inAllDayBar && event._?.endMinutes > config.timeTo || event._.multiday,
-  // Only apply the dragging class on the event copy that is being dragged.
-  'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
-  // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
-  // dragged. Sometimes when dragging fast the dragging-ghost class would get stuck and events stays
-  // invisible, so if dragging is false, disable the dragging-ghost class as well.
-  // On event drop, if the new position of the event is approved, only remove the dragging-ghost class
-  // after event deletion (event._.dragging is already false) so the event ghost does not flash in before
-  // deletion.
-  'vuecal__event--dragging-ghost': event._.draggingGhost,
-  'vuecal__event--resizing': touch.resizing
-}))
+const classes = computed(() => {
+  let eventStartsInThisCell = true
+  let eventEndsInThisCell = true
+  if (event._.multiday) {
+    eventStartsInThisCell = new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
+    eventEndsInThisCell = new Date(event.end).setHours(0, 0, 0, 0) === props.cellEnd.getTime()
+  }
+  return {
+    [`vuecal__event--${event._.id}`]: true,
+    [event.class]: !!event.class,
+    'vuecal__event--recurring': !!event.recurring,
+    'vuecal__event--background': !!event.background,
+    'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
+    'vuecal__event--multiday': !!event._?.multiday,
+    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (event._.multiday && !eventStartsInThisCell)),
+    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (event._.multiday && !eventEndsInThisCell)),
+    // Only apply the dragging class on the event copy that is being dragged.
+    'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
+    // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
+    // dragged. Sometimes when dragging fast the dragging-ghost class would get stuck and events stays
+    // invisible, so if dragging is false, disable the dragging-ghost class as well.
+    // On event drop, if the new position of the event is approved, only remove the dragging-ghost class
+    // after event deletion (event._.dragging is already false) so the event ghost does not flash in before
+    // deletion.
+    'vuecal__event--dragging-ghost': event._.draggingGhost,
+    'vuecal__event--resizing': touch.resizing
+  }
+})
 
 const styles = computed(() => {
   const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !props.inAllDayBar
@@ -102,9 +117,19 @@ const styles = computed(() => {
   }
 
   if (hasPosition) {
+    let startMinutes = event._.startMinutes
+    let endMinutes = event._.endMinutes
+
+    if (event._.multiday) {
+      const eventStartsInThisCell = new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
+      const eventEndsInThisCell = new Date(event.end).setHours(0, 0, 0, 0) === props.cellEnd.getTime()
+      if (!eventStartsInThisCell) startMinutes = 0
+      if (!eventEndsInThisCell) endMinutes = 24 * 60
+    }
+
     // Ensure that the event start and end stay in range.
-    const from = Math.max(config.timeFrom, event._.startMinutes)
-    const to = Math.min(config.timeTo, event._.endMinutes) + (event._.duration && !event._.endMinutes ? 24 * 60 : 0)
+    const from = Math.max(config.timeFrom, startMinutes)
+    const to = Math.min(config.timeTo, endMinutes) + (event._.duration && !endMinutes ? 24 * 60 : 0)
     const top = minutesToPercentage(from, config)
     const height = minutesToPercentage(to, config) - top
 

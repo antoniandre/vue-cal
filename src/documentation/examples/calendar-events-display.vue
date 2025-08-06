@@ -525,7 +525,6 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
       ]
     })
   vue-cal(
-    :time-from="7 * 60"
     view="days"
     :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {} }"
     :dark="store.darkMode"
@@ -533,8 +532,6 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     editable-events
     resize-x
     :events="exMultipleDayEvents.events")
-    template(#event="params")
-      pre {{ params }}
 
 //- Example.
 example(anchor="recurring-events")
