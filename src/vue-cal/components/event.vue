@@ -7,6 +7,7 @@
   :draggable="isDraggable ? 'true' : undefined"
   @dragstart="isDraggable && dnd.eventDragStart($event, event)"
   @dragend="isDraggable && dnd.eventDragEnd($event, event)")
+  .vuecal__event-resizer.vuecal__event-resizer--top(v-if="isResizable" @dragstart.prevent.stop)
   .vuecal__event-details
     slot(v-if="$slots['event.all-day']" name="event.all-day" :event="event")
     slot(v-else-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
@@ -17,7 +18,7 @@
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         span.vuecal__event-end(v-if="!view.isMonth") &nbsp;- {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
       .vuecal__event-content(v-if="!inAllDayBar" v-html="event.content")
-  .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
+  .vuecal__event-resizer.vuecal__event-resizer--bottom(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
     .vuecal__event-delete(v-if="event._.deleting" @click.stop="event.delete(3)") Delete
 </template>
@@ -47,7 +48,8 @@ const event = reactive(props.event)
 const touch = reactive({
   dragging: false,
   resizing: false,
-  fromResizer: false, // If the drag originates from the resizer element.
+  fromBottomResizer: false, // If the drag originates from the resizer element.
+  fromTopResizer: false, // If the drag originates from the top resizer element.
   holding: false, // When the event is clicked and hold for a certain amount of time.
   holdTimer: null, // event click and hold detection.
   canTouchAndDrag: null, // Wait for 500ms before allowing an event to be dragged after touchstart.
@@ -209,7 +211,9 @@ const eventListeners = computed(() => {
 const onMousedown = e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
   // If the event target is the resizer, set the resizing flag.
-  touch.fromResizer = domEvent.target.matches('.vuecal__event-resizer, .vuecal__event-resizer *')
+  touch.fromBottomResizer = domEvent.target.matches('.vuecal__event-resizer--bottom, .vuecal__event-resizer--bottom *')
+  // Check if it's the top resizer
+  touch.fromTopResizer = domEvent.target.matches('.vuecal__event-resizer--top, .vuecal__event-resizer--top *')
 
   const rect = eventEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
@@ -235,7 +239,7 @@ const onDocMousemove = async e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
 
   // Only the first touchmove to set the dragging flag.
-  if (touch.fromResizer && !touch.resizing) {
+  if ((touch.fromBottomResizer || touch.fromTopResizer) && !touch.resizing) {
     touch.resizing = true
     touch.resizingOriginalEvent = { ...event, _: { ...event._ } }
     globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
@@ -255,7 +259,7 @@ const onDocMousemove = async e => {
     touch.movePercentageY = touch.moveY * 100 / height
   }
 
-  if (touch.fromResizer) {
+  if (touch.fromBottomResizer || touch.fromTopResizer) {
     const { newStart, newEnd } = computeStartEnd(event)
 
     // If there's an @event-resize external listener, call it and ask for resizing approval.
@@ -321,7 +325,8 @@ const onDocMouseup = async e => {
 
   document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
   touch.resizing = false
-  touch.fromResizer = false
+  touch.fromBottomResizer = false
+  touch.fromTopResizer = false
   touch.dragging = false
 
   touch.startX = 0
@@ -355,12 +360,16 @@ const computeStartEnd = event => {
   }
 
   let newStart = event.start
-  let newEnd = new Date(startMidnight.getTime() + minutes * 60000)
+  let newEnd = event.end
+  const newValue = new Date(startMidnight.getTime() + minutes * 60000)
 
-  // While resizing and event end is before event start.
-  if (newEnd < touch.resizeStartDate) {
-    newStart = newEnd
-    newEnd = touch.resizeStartDate
+  if (touch.fromTopResizer && newValue < event.end) {
+    // When resizing from the top, modify the start time
+    newStart = newValue
+  }
+  if(touch.fromBottomResizer && newValue > event.start) {
+    // When resizing from the bottom, modify the end time
+    newEnd = newValue
   }
 
   return { newStart, newEnd }
@@ -401,12 +410,23 @@ onBeforeUnmount(() => {
   &--resizing {z-index: 100;}
   &-resizer {
     position: absolute;
-    inset: auto 0 0;
+    left: 0;
+    right: 0;
     height: 8px;
     background-color: #fff;
     opacity: 0.1;
     transition: 0.25s;
     cursor: ns-resize;
+
+    &--top {
+      top: 0;
+      bottom: auto;
+    }
+
+    &--bottom {
+      top: auto;
+      bottom: 0;
+    }
 
     &:hover {opacity: 0.25;}
   }
