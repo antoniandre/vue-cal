@@ -63,8 +63,14 @@ export const useEvents = vuecal => {
         // @todo: Possibly do other things here.
       }
       else if (event._.startFormatted !== event._.endFormatted) {
-        event._.multiday = true
-        events.multiday.push(event._.id)
+        event._.multiday = config.multidayEvents
+        if (!config.multidayEvents) {
+          console.info('Vue Cal: Multi-day events provided without being enabled. Truncating event end to next midnight.')
+          event.end = new Date(new Date(event.start).setHours(23, 59, 59, 999 + 1))
+          injectMetaData(event) // Re-inject the event metadata for the new end date.
+        }
+        else events.multiday.push(event._.id)
+
         // @todo: handle multiday events. For now, index the event by its start date.
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
         events.byDate[event._.startFormatted].push(event._.id)

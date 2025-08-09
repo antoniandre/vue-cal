@@ -26,6 +26,7 @@ export const props = {
   locale: { type: String, default: '' }, // A language to use for all the texts.
   maxDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a maximum date for cell interactions.
   minDate: { type: [String, Date], default: '' }, // Mostly for date pickers, sets a minimum date for cell interactions.
+  multidayEvents: { type: Boolean, default: true }, // Allow events to span multiple days.
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate: { type: [String, Date], default: '' }, // The selected date in the calendar !== viewDate.
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
