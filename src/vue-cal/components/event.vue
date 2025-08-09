@@ -353,12 +353,14 @@ const onDocMouseup = async e => {
   touch.schedule = null
 }
 
+/**
+ * Compute the new start and end of the event based on the touch move percentage while resizing.
+ * @param {Object} event - The event object.
+ * @returns {Object} - The new start and end of the event.
+ */
 const computeStartEnd = event => {
-  const startMidnight = new Date(event.start.getFullYear(), event.start.getMonth(), event.start.getDate())
-  const nextMidnight = new Date(startMidnight)
-  nextMidnight.setDate(startMidnight.getDate() + 1)
-
   let minutes = percentageToMinutes(touch.movePercentageY, config)
+
   // While resizing, cap the newEnd between the previous midnight and next midnight.
   minutes = Math.max(0, Math.min(minutes, 24 * 60))
 
@@ -369,7 +371,7 @@ const computeStartEnd = event => {
   }
 
   let newStart = event.start
-  let newEnd = new Date(startMidnight.getTime() + minutes * 60000)
+  let newEnd = new Date(props.cellStart.getTime() + minutes * 60000)
 
   // While resizing and event end is before event start.
   if (newEnd < touch.resizeStartDate) {
