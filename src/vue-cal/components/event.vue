@@ -75,6 +75,7 @@ const isDraggable = computed(() => {
 
 const isResizable = computed(() => {
   if (view.isMonth || view.isYear || view.isYears || props.inAllDayBar) return false
+  if (event._.multiday && !eventEndsInThisCell.value) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
