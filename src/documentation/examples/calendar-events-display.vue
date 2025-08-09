@@ -531,10 +531,12 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     events-count-on-year-view
     editable-events
     resize-x
-    :events="exMultipleDayEvents.events")
+    :events="exMultipleDayEvents.events"
+    @ready="({ view }) => view.scrollToCurrentTime()"
+    style="height: 506px")
 
 //- Example.
-example(anchor="recurring-events")
+//- example(anchor="recurring-events")
   template(#title)
     | Recurring Events
     .todo-tag.prod.d-iflex.ml2 COMING SOON
@@ -939,8 +941,8 @@ const exAllDayEvents = reactive({
 const exMultipleDayEvents = reactive({
   events: [
     {
-      start: new Date().addDays(1),
-      end: new Date().addDays(2),
+      start: new Date(new Date().setMinutes(0, 0, 0)),
+      end: new Date(new Date().setHours(23, 0, 0, 0)).addDays(1),
       title: 'Running Marathon',
       content: '<i class="w-icon mdi mdi-run"></i>',
       class: 'sport'
@@ -953,8 +955,8 @@ const exMultipleDayEvents = reactive({
       class: 'health drink-water'
     },
     {
-      start: new Date().addDays(2),
-      end: new Date().addDays(3),
+      start: new Date(new Date().setHours(6, 0, 0, 0)).addDays(2),
+      end: new Date(new Date().setHours(21, 0, 0, 0)).addDays(4),
       title: 'Trip to India',
       content: '<i class="w-icon mdi mdi-airplane"></i>',
       class: 'leisure'
