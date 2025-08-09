@@ -29,7 +29,6 @@ export const useEvents = vuecal => {
     const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
     for (let event of sortedEvents) {
-      event = { ...event } // Create a clean deep copy of the event to prevent reference issues.
       // Check if event needs processing.
       // --------------------------------------------------
       // First check if dates are strings (need normalization) or methods are missing.
@@ -62,11 +61,12 @@ export const useEvents = vuecal => {
         events.recurring.push(event._.id)
         // @todo: Possibly do other things here.
       }
-      else if (event._.startFormatted !== event._.endFormatted) {
+      // Remove 1ms in case the event ends at next midnight 00:00:00.
+      else if (!dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1))) {
         event._.multiday = config.multidayEvents
         if (!config.multidayEvents) {
           console.info('Vue Cal: Multi-day events provided without being enabled. Truncating event end to next midnight.')
-          event.end = new Date(new Date(event.start).setHours(23, 59, 59, 999 + 1))
+          event.end = new Date(new Date(event.start).setHours(23, 59, 59, 999))
           injectMetaData(event) // Re-inject the event metadata for the new end date.
         }
         else events.multiday.push(event._.id)
@@ -102,9 +102,6 @@ export const useEvents = vuecal => {
       return false
     }
 
-    // Skip processing if already normalized or invalid.
-    // if (event._ && event._.startFormatted) return
-
     // Convert string dates to Date objects if needed.
     if (typeof event.start === 'string') event.start = dateUtils.stringToDate(event.start)
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
@@ -113,7 +110,7 @@ export const useEvents = vuecal => {
     event.start.setSeconds(0, 0)
 
     // Set the event end to the next minute if the seconds count is 59.
-    if (event.end.getSeconds() >= 59) event.end.setMinutes(event.end.getMinutes() + 1, 0, 0)
+    if (event.end.getSeconds() === 59) event.end.setMinutes(event.end.getMinutes() + 1, 0, 0)
     else event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
 
     if (isNaN(event.start) || isNaN(event.end) || (event.end.getTime() < event.start.getTime())) {

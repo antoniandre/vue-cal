@@ -34,7 +34,7 @@ import { computed, inject, onMounted, reactive, ref, onBeforeUnmount } from 'vue
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
 const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
-const { config, view, dnd, touch: globalTouchState } = inject('vuecal')
+const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
 
 const props = defineProps({
   event: { type: Object, required: true },
@@ -111,15 +111,13 @@ const eventStartsInThisCell = computed(() => {
 
 const eventEndsInThisCell = computed(() => {
   if (event._.multiday) {
-    return new Date(event.end).setHours(23, 59, 59, 999) === props.cellEnd.getTime()
+    return dateUtils.isSameDate(new Date(new Date(event.end).setMilliseconds(-1)), props.cellEnd)
   }
   return true
 })
 
 const eventDurationInDays = computed(() => {
-  if (event._.multiday) {
-    return Math.ceil((event.end - event.start) / (1000 * 60 * 60 * 24))
-  }
+  if (event._.multiday) return Math.ceil((event.end - event.start) / (1000 * 60 * 60 * 24))
   return 1
 })
 
