@@ -12,10 +12,12 @@
     slot(v-else-if="$slots[`event.${view.id}`]" :name="`event.${view.id}`" :event="event")
     slot(v-else name="event" :event="event")
       .vuecal__event-title {{ event.title }}
-      .vuecal__event-time(v-if="config.time && !inAllDayBar")
+      .vuecal__event-time(v-if="config.time && !inAllDayBar && !(event._.multiday && !eventStartsInThisCell)")
         span.vuecal__event-comma(v-if="view.isMonth") ,
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-        span.vuecal__event-end(v-if="!view.isMonth") &nbsp;- {{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+        span.vuecal__event-end(v-if="!view.isMonth")
+          | &nbsp;-&nbsp;{{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
+          span(v-if="event._.multiday && eventStartsInThisCell") +{{ eventDurationInDays - 1 }}d
       .vuecal__event-content(v-if="!inAllDayBar" v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
@@ -78,12 +80,6 @@ const isResizable = computed(() => {
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
 const classes = computed(() => {
-  let eventStartsInThisCell = true
-  let eventEndsInThisCell = true
-  if (event._.multiday) {
-    eventStartsInThisCell = new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
-    eventEndsInThisCell = new Date(event.end).setHours(0, 0, 0, 0) === props.cellEnd.getTime()
-  }
   return {
     [`vuecal__event--${event._.id}`]: true,
     [event.class]: !!event.class,
@@ -91,8 +87,8 @@ const classes = computed(() => {
     'vuecal__event--background': !!event.background,
     'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
     'vuecal__event--multiday': !!event._?.multiday,
-    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (event._.multiday && !eventStartsInThisCell)),
-    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (event._.multiday && !eventEndsInThisCell)),
+    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (event._.multiday && !eventStartsInThisCell.value)),
+    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (event._.multiday && !eventEndsInThisCell.value)),
     // Only apply the dragging class on the event copy that is being dragged.
     'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
     // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
@@ -104,6 +100,27 @@ const classes = computed(() => {
     'vuecal__event--dragging-ghost': event._.draggingGhost,
     'vuecal__event--resizing': touch.resizing
   }
+})
+
+const eventStartsInThisCell = computed(() => {
+  if (event._.multiday) {
+    return new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
+  }
+  return true
+})
+
+const eventEndsInThisCell = computed(() => {
+  if (event._.multiday) {
+    return new Date(event.end).setHours(23, 59, 59, 999) === props.cellEnd.getTime()
+  }
+  return true
+})
+
+const eventDurationInDays = computed(() => {
+  if (event._.multiday) {
+    return Math.ceil((event.end - event.start) / (1000 * 60 * 60 * 24))
+  }
+  return 1
 })
 
 const styles = computed(() => {
@@ -121,10 +138,8 @@ const styles = computed(() => {
     let endMinutes = event._.endMinutes
 
     if (event._.multiday) {
-      const eventStartsInThisCell = new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
-      const eventEndsInThisCell = new Date(event.end).setHours(0, 0, 0, 0) === props.cellEnd.getTime()
-      if (!eventStartsInThisCell) startMinutes = 0
-      if (!eventEndsInThisCell) endMinutes = 24 * 60
+      if (!eventStartsInThisCell.value) startMinutes = 0
+      if (!eventEndsInThisCell.value) endMinutes = 24 * 60
     }
 
     // Ensure that the event start and end stay in range.
