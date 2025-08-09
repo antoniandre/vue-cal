@@ -28,7 +28,8 @@ export const useEvents = vuecal => {
     // Use stable sort to avoid unnecessary reordering when dates haven't changed.
     const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
 
-    for (const event of sortedEvents) {
+    for (let event of sortedEvents) {
+      event = { ...event } // Create a clean deep copy of the event to prevent reference issues.
       // Check if event needs processing.
       // --------------------------------------------------
       // First check if dates are strings (need normalization) or methods are missing.
