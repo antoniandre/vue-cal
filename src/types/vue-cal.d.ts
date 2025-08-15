@@ -204,3 +204,26 @@ export interface VueCalEmits extends Record<string, ((...args: any[]) => any)> {
 }
 
 export declare const VueCal: DefineSetupFnComponent<VueCalConfig, VueCalEmits>
+
+
+export declare function addDatePrototypes(): void
+
+declare global {
+  interface Date {
+    addDays(days: number): Date
+    addHours(hours: number): Date
+    addMinutes(minutes: number): Date
+    
+    subtractDays(days: number): Date
+    subtractHours(hours: number): Date
+    subtractMinutes(minutes: number): Date
+    
+    getWeek(): number
+    isToday(): boolean
+    isLeapYear(): boolean
+    
+    format(format: string): string
+    formatTime(format: string): string
+  }
+}
+
