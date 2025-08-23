@@ -347,17 +347,19 @@ example(title="Sync Two Vue Cal Instances" anchor="sync-two-calendars")
     &lt;vue-cal
       date-picker
       :views-bar="false"
-      @cell-focus="selectedDate = $event"&gt;
+      v-model:selected-date="selectedDate"
+      @update:selected-date="viewDate = $event"
+      :view-date="viewDate"&gt;
     &lt;/vue-cal&gt;
 
     &lt;vue-cal
-      sm
-      :time="false"
-      :views-bar="false"
+      v-model:view-date="exSyncTwoCalendars.viewDate"
+      v-model:selected-date="exSyncTwoCalendars.selectedDate"
+      @update:view-date="exSyncTwoCalendars.viewDate = $event"
       view="week"
       :views="['day', 'week']"
-      :selected-date="selectedDate"
-      class="vuecal--blue-theme"&gt;
+      :views-bar="false"
+      sm&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
     const selectedDate = ref(null)
