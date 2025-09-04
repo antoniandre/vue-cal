@@ -8,7 +8,7 @@ export const props = {
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
   // Can be true false or a finer grain permissions object like:
-  // { drag: bool, resize: bool, create: bool, delete: bool }
+  // { drag: bool, resize: bool, resizeX: bool, create: bool, delete: bool }
   editableEvents: { type: [Boolean, Object], default: false },
   // Minimum drag distance in pixels to create an event (prevents accidental event creation when trying to navigate).
   eventCreateMinDrag: { type: Number, default: 15 }, // The minimum drag distance in pixels to create an event.
@@ -58,11 +58,10 @@ export const props = {
   viewsBar: { type: Boolean, default: true }, // Show or hide the headers view selection bar.
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   weekNumbers: { type: Boolean, default: false }, // Show the weeks numbers in a column on month view.
-  xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
+  xs: { type: Boolean, default: false } // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO:
   // minEventWidth: { type: Number, default: 0 },
   // minScheduleWidth: { type: Number, default: 0 },
   // overlapsPerTimeStep: { type: Boolean, default: false },
-  // resizeX: { type: Boolean, default: false },
 }

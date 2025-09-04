@@ -35,7 +35,7 @@ import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
-const { view, config, dateUtils } = vuecal
+const { view, config, dateUtils, touch } = vuecal
 
 const bodyEl = ref(null)
 const cursorYPercent = ref(null)
@@ -65,10 +65,31 @@ const onMousemove = e => {
   const clientY = (e.touches?.[0] || e).clientY
   const { top } = bodyEl.value.getBoundingClientRect()
   cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
+
+  // When resizing an event horizontally, update the current hovered cell from the body element,
+  // so there is only one event listener and no need for cell coordinates calculation.
+  if (touch.isResizingEvent && config.editableEvents.resizeX) {
+    touch.currentHoveredCell = getCellUnderMouse(e.clientX, e.clientY)
+  }
 }
 
 const onMouseleave = () => {
   cursorYPercent.value = null
+}
+
+/**
+ * Get the cell element that the mouse is currently over.
+ *
+ * @param {number} mouseX - The mouse X position in document coordinates
+ * @param {number} mouseY - The mouse Y position in document coordinates
+ * @returns {HTMLElement|null} - The cell element or null if not over a cell
+ */
+const getCellUnderMouse = (mouseX, mouseY) => {
+  // Use elementFromPoint for better performance as it's optimized by the browser.
+  const element = document.elementFromPoint(mouseX, mouseY)
+
+  // Check if the element or its parent is a cell.
+  return element?.closest('.vuecal__cell') || null
 }
 
 onMounted(() => {

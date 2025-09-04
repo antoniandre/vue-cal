@@ -62,6 +62,8 @@ const touch = reactive({
   moveY: 0, // The Y coords while dragging.
   movePercentageX: 0, // The X coords in percentage while dragging.
   movePercentageY: 0, // The Y coords in percentage while dragging.
+  documentMouseX: 0, // Document mouse X position for horizontal resizing
+  documentMouseY: 0, // Document mouse Y position for horizontal resizing
   resizeStartDate: null, // When resizing and going above the start date (end before start) update the start instead of the end.
   resizingOriginalEvent: null, // Store the original event details while resizing.
   resizingLastAcceptedEvent: null, // Store the last accepted event details while resizing.
@@ -78,6 +80,7 @@ const isResizable = computed(() => {
   if (event._.multiday && !eventEndsInThisCell.value) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
+
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
 const classes = computed(() => {
@@ -269,6 +272,10 @@ const onDocMousemove = async e => {
     touch.movePercentageY = touch.moveY * 100 / height
   }
 
+  // Store the current document mouse position for horizontal resizing
+  touch.documentMouseX = domEvent.clientX
+  touch.documentMouseY = domEvent.clientY
+
   if (touch.fromResizer) {
     const { newStart, newEnd } = computeStartEnd(event)
 
@@ -331,6 +338,7 @@ const onDocMouseup = async e => {
       event.end = touch.resizingOriginalEvent.end
     }
     globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
+    globalTouchState.currentHoveredCell = null // Reset current hovered cell.
   }
 
   document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
@@ -346,6 +354,8 @@ const onDocMouseup = async e => {
   touch.startPercentageY = 0
   touch.movePercentageX = 0
   touch.movePercentageY = 0
+  touch.documentMouseX = 0
+  touch.documentMouseY = 0
   touch.cellEl = null
   touch.resizeStartDate = null
   touch.resizingOriginalEvent = null
@@ -372,6 +382,18 @@ const computeStartEnd = event => {
 
   let newStart = event.start
   let newEnd = new Date(props.cellStart.getTime() + minutes * 60000)
+
+  // If the event is resizing horizontally by the user dragging and crossing a cell,
+  // Set the end date to the hovered cell's start date while preserving the time at cursor position.
+  if (touch.moveX && globalTouchState.currentHoveredCell && touch.cellEl) {
+    // Get the current hovered cell date from global touch state.
+    const currentCellDate = new Date(globalTouchState.currentHoveredCell.__vueParentComponent.props.start)
+
+    // Set the event end date to the hovered cell's date.
+    newEnd.setDate(currentCellDate.getDate())
+    newEnd.setMonth(currentCellDate.getMonth())
+    newEnd.setYear(currentCellDate.getFullYear())
+  }
 
   // While resizing and event end is before event start.
   if (newEnd < touch.resizeStartDate) {
