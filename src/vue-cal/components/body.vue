@@ -30,15 +30,18 @@
 </template>
 
 <script setup>
-import { computed, inject, onBeforeUnmount, onMounted, ref } from 'vue'
+import { computed, inject, onBeforeUnmount, onMounted, ref, reactive } from 'vue'
 import { percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 import VueCalCell from './cell.vue'
 
 const vuecal = inject('vuecal')
-const { view, config, dateUtils, touch } = vuecal
+const { view, config, dateUtils, touch: globalTouchState, eventsManager } = vuecal
 
 const bodyEl = ref(null)
 const cursorYPercent = ref(null)
+
+// Use resizing state from events composable.
+const { resizeState } = eventsManager
 
 // These CSS variables must stay at this level and not at the root, because they need to be "dead"
 // and frozen with the animated container when leaving in a vue transition, for a successful smooth
@@ -59,21 +62,22 @@ const timeAtCursor = computed(() => {
   }
 })
 
-const onMousemove = e => {
+const onBodyMousemove = e => {
   if (view.isMonth || view.isYear || view.isYears) return
 
-  const clientY = (e.touches?.[0] || e).clientY
+  const domEvent = e.touches?.[0] || e // Handle click or touch event.
+  const { clientX, clientY } = domEvent
   const { top } = bodyEl.value.getBoundingClientRect()
   cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
 
   // When resizing an event horizontally, update the current hovered cell from the body element,
   // so there is only one event listener and no need for cell coordinates calculation.
-  if (touch.isResizingEvent && config.editableEvents.resizeX) {
-    touch.currentHoveredCell = getCellUnderMouse(e.clientX, e.clientY)
+  if (globalTouchState.isResizingEvent && config.editableEvents.resizeX) {
+    resizeState.cellEl = getCellUnderMouse(clientX, clientY)
   }
 }
 
-const onMouseleave = () => {
+const onBodyMouseleave = () => {
   cursorYPercent.value = null
 }
 
@@ -87,24 +91,24 @@ const onMouseleave = () => {
 const getCellUnderMouse = (mouseX, mouseY) => {
   // Use elementFromPoint for better performance as it's optimized by the browser.
   const element = document.elementFromPoint(mouseX, mouseY)
-
+  console.log(element?.closest('.vuecal__cell'))
   // Check if the element or its parent is a cell.
   return element?.closest('.vuecal__cell') || null
 }
 
 onMounted(() => {
-  bodyEl.value.addEventListener('mousemove', onMousemove)
-  bodyEl.value.addEventListener('touchmove', onMousemove)
-  bodyEl.value.addEventListener('mouseleave', onMouseleave)
-  bodyEl.value.addEventListener('touchend', onMouseleave)
+  bodyEl.value.addEventListener('mousemove', onBodyMousemove)
+  bodyEl.value.addEventListener('touchmove', onBodyMousemove)
+  bodyEl.value.addEventListener('mouseleave', onBodyMouseleave)
+  bodyEl.value.addEventListener('touchend', onBodyMouseleave)
 })
 
 onBeforeUnmount(() => {
   if (bodyEl.value) {
-    bodyEl.value.removeEventListener('mousemove', onMousemove)
-    bodyEl.value.removeEventListener('touchmove', onMousemove)
-    bodyEl.value.removeEventListener('mouseleave', onMouseleave)
-    bodyEl.value.removeEventListener('touchend', onMouseleave)
+    bodyEl.value.removeEventListener('mousemove', onBodyMousemove)
+    bodyEl.value.removeEventListener('touchmove', onBodyMousemove)
+    bodyEl.value.removeEventListener('mouseleave', onBodyMouseleave)
+    bodyEl.value.removeEventListener('touchend', onBodyMouseleave)
   }
 })
 </script>

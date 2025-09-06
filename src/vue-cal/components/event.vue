@@ -33,9 +33,6 @@
 import { computed, inject, onMounted, reactive, ref, onBeforeUnmount } from 'vue'
 import { minutesToPercentage, percentageToMinutes } from '@/vue-cal/utils/conversions'
 
-const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
-const { config, view, dnd, touch: globalTouchState, dateUtils } = inject('vuecal')
-
 const props = defineProps({
   event: { type: Object, required: true },
   inAllDayBar: { type: Boolean, default: false },
@@ -43,12 +40,15 @@ const props = defineProps({
   cellEnd: { type: Date, required: true }
 })
 
+const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-start', 'event-resize-end'])
+
+const { config, view, dnd, touch: globalTouchState, dateUtils, eventsManager } = inject('vuecal')
+const { handleEventResize } = eventsManager
 const eventEl = ref(null)
 const event = reactive(props.event)
 
 const touch = reactive({
   dragging: false,
-  resizing: false,
   fromResizer: false, // If the drag originates from the resizer element.
   holding: false, // When the event is clicked and hold for a certain amount of time.
   holdTimer: null, // event click and hold detection.
@@ -102,7 +102,7 @@ const classes = computed(() => {
     // after event deletion (event._.dragging is already false) so the event ghost does not flash in before
     // deletion.
     'vuecal__event--dragging-ghost': event._.draggingGhost,
-    'vuecal__event--resizing': touch.resizing
+    'vuecal__event--resizing': globalTouchState.isResizingEvent
   }
 })
 
@@ -237,9 +237,10 @@ const onMousedown = e => {
   touch.cellEl = eventEl.value.closest('.vuecal__cell')
   // Store the event start to apply on event end when resizing and end < start.
   touch.resizeStartDate = event.start
-  // Make the event listener non-passive if resizing so we can prevent default scrolling.
-  attachDocumentListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
-  attachDocumentListener(e.type === 'touchstart' ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
+
+  if (touch.fromResizer) {
+    handleEventResize(e, event, eventEl.value)
+  }
 
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
@@ -248,178 +249,11 @@ const onMousedown = e => {
   }, 1000)
 }
 
-const onDocMousemove = async e => {
-  const domEvent = e.touches?.[0] || e // Handle click or touch event.
-
-  // Only the first touchmove to set the dragging flag.
-  if (touch.fromResizer && !touch.resizing) {
-    touch.resizing = true
-    touch.resizingOriginalEvent = { ...event, _: { ...event._ } }
-    globalTouchState.isResizingEvent = true // Add a CSS class on wrapper while resizing.
-
-    // If there's an @event-resize-start external listener, call it.
-    eventListeners.value['resize-start']?.({ e, event })
-  }
-
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
-
-  if (touch.cellEl) {
-    const { top, left, width, height } = touch.cellEl.getBoundingClientRect()
-    touch.moveX = domEvent.clientX - left
-    touch.moveY = domEvent.clientY - top
-    touch.movePercentageX = touch.moveX * 100 / width
-    touch.movePercentageY = touch.moveY * 100 / height
-  }
-
-  // Store the current document mouse position for horizontal resizing
-  touch.documentMouseX = domEvent.clientX
-  touch.documentMouseY = domEvent.clientY
-
-  if (touch.fromResizer) {
-    const { newStart, newEnd } = computeStartEnd(event)
-
-    // If there's an @event-resize external listener, call it and ask for resizing approval.
-    let acceptResize = true
-    const { resize: resizeEventHandler } = config.eventListeners?.event
-    // Call external validation of event resizing. If successful, update the event details.
-    if (resizeEventHandler) {
-      acceptResize = await resizeEventHandler({
-        e,
-        event: { ...event, start: newStart, end: newEnd },
-        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
-      })
-    }
-    // If the event resizing is accepted, apply to new time range to the event.
-    if (acceptResize !== false) {
-      event.start = newStart
-      event.end = newEnd
-      // Reset last accepted event details if existing and accepting again.
-      if (touch.resizingLastAcceptedEvent) touch.resizingLastAcceptedEvent = null
-
-      // Prevent scrolling while resizing.
-      // Can only be done when event handler is not passive.
-      e.preventDefault()
-    }
-    else {
-      // If the event resizing is refused, store the last accepted original event details
-      // so it can be used to revert to this stage on event-resize-end (in `onDocMouseup`).
-      if (resizeEventHandler) touch.resizingLastAcceptedEvent = { ...event, _: { ...event._ } }
-    }
-  }
-}
-
-const onDocMouseup = async e => {
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
-
-  if (touch.resizing) {
-    const { newStart, newEnd } = computeStartEnd(event)
-
-    // If there's an @event-resize-end external listener, call it.
-    let acceptResize = true
-    const resizeEndHandler = eventListeners.value['resize-end']
-    // Call external validation of event resize-end. If successful, update the event details.
-    if (resizeEndHandler) {
-      acceptResize = await resizeEndHandler({
-        e,
-        event,
-        original: touch.resizingOriginalEvent, // Original event details before resizing.
-        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd })
-      })
-    }
-
-    // If the event resize is accepted apply new range, if refused (SPECIFICALLY FALSE) revert to original.
-    event.start = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).start : (touch.resizingLastAcceptedEvent?.start || newStart)
-    event.end = acceptResize === false ? (touch.resizingLastAcceptedEvent || touch.resizingOriginalEvent).end : (touch.resizingLastAcceptedEvent?.end || newEnd)
-    // If resizing to less than 1 minute, revert to original.
-    if (event._.duration < 1) {
-      event.start = touch.resizingOriginalEvent.start
-      event.end = touch.resizingOriginalEvent.end
-    }
-    globalTouchState.isResizingEvent = false // Add a CSS class on wrapper while resizing.
-    globalTouchState.currentHoveredCell = null // Reset current hovered cell.
-  }
-
-  document.removeEventListener(e.type === 'touchend' ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !touch.fromResizer })
-  touch.resizing = false
-  touch.fromResizer = false
-  touch.dragging = false
-
-  touch.startX = 0
-  touch.startY = 0
-  touch.moveX = 0
-  touch.moveY = 0
-  touch.startPercentageX = 0
-  touch.startPercentageY = 0
-  touch.movePercentageX = 0
-  touch.movePercentageY = 0
-  touch.documentMouseX = 0
-  touch.documentMouseY = 0
-  touch.cellEl = null
-  touch.resizeStartDate = null
-  touch.resizingOriginalEvent = null
-  touch.resizingLastAcceptedEvent = null
-  touch.schedule = null
-}
-
-/**
- * Compute the new start and end of the event based on the touch move percentage while resizing.
- * @param {Object} event - The event object.
- * @returns {Object} - The new start and end of the event.
- */
-const computeStartEnd = event => {
-  let minutes = percentageToMinutes(touch.movePercentageY, config)
-
-  // While resizing, cap the newEnd between the previous midnight and next midnight.
-  minutes = Math.max(0, Math.min(minutes, 24 * 60))
-
-  // On drop, snap to time every X minutes if the option is on.
-  if (config.snapToInterval) {
-    const plusHalfSnapTime = minutes + config.snapToInterval / 2
-    minutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
-  }
-
-  let newStart = event.start
-  let newEnd = new Date(props.cellStart.getTime() + minutes * 60000)
-
-  // If the event is resizing horizontally by the user dragging and crossing a cell,
-  // Set the end date to the hovered cell's start date while preserving the time at cursor position.
-  if (touch.moveX && globalTouchState.currentHoveredCell && touch.cellEl) {
-    // Get the current hovered cell date from global touch state.
-    const currentCellDate = new Date(globalTouchState.currentHoveredCell.__vueParentComponent.props.start)
-
-    // Set the event end date to the hovered cell's date.
-    newEnd.setDate(currentCellDate.getDate())
-    newEnd.setMonth(currentCellDate.getMonth())
-    newEnd.setYear(currentCellDate.getFullYear())
-  }
-
-  // While resizing and event end is before event start.
-  if (newEnd < touch.resizeStartDate) {
-    newStart = newEnd
-    newEnd = touch.resizeStartDate
-  }
-
-  return { newStart, newEnd }
-}
-
-const documentListeners = []
-const attachDocumentListener = (event, handler, options) => {
-  document.addEventListener(event, handler, options)
-  documentListeners.push({ event, handler, options })
-}
-
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
 onMounted(() => event._.register(eventEl.value))
 
 onBeforeUnmount(() => {
   event._.unregister()
-
-  // Clean up all document event listeners to prevent memory leaks
-  for (const { event, handler, options } of documentListeners) {
-    document.removeEventListener(event, handler, options)
-  }
 })
 </script>
 
