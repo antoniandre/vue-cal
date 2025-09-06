@@ -345,6 +345,11 @@ example(title="Edit Events" anchor="edit-events")
         #[strong.code resize]: Resize an event by dragging the resizer handle.
         #[strong Not available if no timeline, not allowed on background events.]
       li.
+        #[strong.code resizeX]: Allow horizontal resizing of an event by dragging the resizer handle.
+        This converts to adding or removing days to the event and possibly switch from a single day event
+        to a multi-day event and vice versa.
+        #[strong Not available if no timeline, not allowed on background events.]
+      li.
         #[strong.code drag]: Drag &amp; drop an event (not allowed on background events).
       li #[strong.code delete]: Delete an event (by double clicking an event by default).
 
@@ -356,12 +361,13 @@ example(title="Edit Events" anchor="edit-events")
     .w-flex.justify-end.wrap.gap2
       w-switch(v-model="exEditEvents.creatable") Create Events
       w-switch(v-model="exEditEvents.resizable") Resize Events
+      w-switch(v-model="exEditEvents.resizableX") Resize Events horizontally
       w-switch(v-model="exEditEvents.draggable") Drag Events
       w-switch(v-model="exEditEvents.deletable") Delete Events
 
   template(#code-html).
     &lt;vue-cal
-      :editable-events="{ create: {{ exEditEvents.creatable ? 'true' : 'false' }}, resize: {{ exEditEvents.resizable ? 'true' : 'false' }},  drag: {{ exEditEvents.draggable ? 'true' : 'false' }}, delete: {{ exEditEvents.deletable ? 'true' : 'false' }} }"
+      :editable-events="{ create: {{ exEditEvents.creatable ? 'true' : 'false' }}, resize: {{ exEditEvents.resizable ? 'true' : 'false' }}, resizeX: {{ exEditEvents.resizableX ? 'true' : 'false' }},  drag: {{ exEditEvents.draggable ? 'true' : 'false' }}, delete: {{ exEditEvents.deletable ? 'true' : 'false' }} }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -381,7 +387,7 @@ example(title="Edit Events" anchor="edit-events")
 
   vue-cal(
     ref="exEditEventsVuecalRef"
-    :editable-events="{ create: exEditEvents.creatable, resize: exEditEvents.resizable, drag: exEditEvents.draggable, delete: exEditEvents.deletable }"
+    :editable-events="{ create: exEditEvents.creatable, resize: exEditEvents.resizable, resizeX: exEditEvents.resizableX, drag: exEditEvents.draggable, delete: exEditEvents.deletable }"
     :events="exEditEvents.events"
     :time-from="9 * 60"
     :time-to="15 * 60"
@@ -1054,11 +1060,13 @@ const exEditEvents = reactive({
       class: 'blue-event',
       deletable: false,
       resizable: false,
+      resizableX: false,
       draggable: false
     }
   ],
   deletable: ref(false),
   resizable: ref(false),
+  resizableX: ref(false),
   draggable: ref(false),
   creatable: ref(false)
 })

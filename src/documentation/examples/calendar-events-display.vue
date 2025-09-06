@@ -482,7 +482,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
       Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
       Updating the duration by dragging will also update on all the days.#[br]
       Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
-      the option #[code resize-x].
+      the option #[code editableEvents.resizeX].
     strong Drag &amp; drop is not available on multiple day events for now.
 
     alert(tip).
@@ -494,8 +494,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
       :time-to="23 * 60"
       :views="['day', 'week']"
       hide-weekends
-      editable-events
-      resize-x
+      :editable-events="{ resizeX: true }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -529,8 +528,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {} }"
     :dark="store.darkMode"
     events-count-on-year-view
-    editable-events
-    resize-x
+    :editable-events="{ resizeX: true }"
     :events="exMultipleDayEvents.events"
     @ready="({ view }) => view.scrollToCurrentTime()"
     style="height: 506px")
