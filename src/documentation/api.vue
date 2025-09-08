@@ -380,7 +380,7 @@ w-accordion.mt2(
           li
             | You can set more accurately which edition you want to allow by passing an object.#[br]
             | For instance, this object will allow all the above editions except the drag &amp; drop:
-            div.code.base-color { drag: false, resize: true, delete: true, create: true }
+            div.code.base-color { drag: false, resize: true, resizeX: true, delete: true, create: true }
           li.
             You can also set the #[span.code deletable], #[span.code resizable] and #[span.code draggable] properties
             directly in the event object to override the global setting.
