@@ -16,11 +16,12 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
-      .task Multiple day events
+      .task Resize Multiple day events on touch devices
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Multiple day events
       .task Improve touch device UX (events VS scroll)
       .task All-day events
       .task Event count on year views
