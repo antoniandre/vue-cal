@@ -17,7 +17,7 @@
         span.vuecal__event-start {{ event._[`startTimeFormatted${config.twelveHour ? 12 : 24}`] }}
         span.vuecal__event-end(v-if="!view.isMonth")
           | &nbsp;-&nbsp;{{ event._[`endTimeFormatted${config.twelveHour ? 12 : 24}`] }}
-          span(v-if="event._.multiday && eventStartsInThisCell") +{{ eventDurationInDays - 1 }}d
+          span(v-if="event._.multiday && eventStartsInThisCell") +{{ plusDaysIndicator }}d
       .vuecal__event-content(v-if="!inAllDayBar" v-html="event.content")
   .vuecal__event-resizer(v-if="isResizable" @dragstart.prevent.stop)
   transition(name="vuecal-delete-btn")
@@ -120,9 +120,10 @@ const eventEndsInThisCell = computed(() => {
   return true
 })
 
-const eventDurationInDays = computed(() => {
-  if (event._.multiday) return Math.ceil((event.end - event.start) / (1000 * 60 * 60 * 24))
-  return 1
+const plusDaysIndicator = computed(() => {
+  const start = new Date(event.start).setHours(0, 0, 0, 0)
+  const end = new Date(event.end).setHours(0, 0, 0, 0)
+  return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
 })
 
 const styles = computed(() => {
