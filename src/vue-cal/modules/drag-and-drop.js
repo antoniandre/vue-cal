@@ -266,8 +266,8 @@ export function useDragAndDrop (vuecal) {
     // Step 1: Extract the event data from the dataTransfer and cell data from the cell param.
     // ----------------------------------------------------
     const incomingEvent = JSON.parse(e.dataTransfer.getData('event') || '{}')
-    if (incomingEvent.start) incomingEvent.start = new Date(incomingEvent.start)
-    if (incomingEvent.end) incomingEvent.end = new Date(incomingEvent.end)
+    if (incomingEvent.start) incomingEvent.start = new Date(incomingEvent.start) // Convert the string to Date.
+    if (incomingEvent.end) incomingEvent.end = new Date(incomingEvent.end) // Convert the string to Date.
 
     // Step 2: Compute the new event start and end times from the dropped coords in cell.
     // ----------------------------------------------------
@@ -345,6 +345,7 @@ export function useDragAndDrop (vuecal) {
     const { drop: dropEventHandler } = config.eventListeners?.event
     // Call external validation of event drop. If successful, update the event details.
     if (dropEventHandler) {
+      // acceptDrop may be false, true or a modified event object.
       acceptDrop = await dropEventHandler({
         e,
         event: { ...event, start: newStart, end: newEnd, schedule: ~~newSchedule },
