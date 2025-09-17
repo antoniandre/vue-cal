@@ -235,7 +235,7 @@ const onMousedown = e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
 
   // If the event target is the resizer, set the resizing flag.
-  touch.fromResizer = domEvent.target.matches('.vuecal__event-resizer, .vuecal__event-resizer *')
+  touch.fromResizer = domEvent.target.closest('.vuecal__event-resizer')
 
   // Cache getBoundingClientRect calls for better performance.
   const now = Date.now()
