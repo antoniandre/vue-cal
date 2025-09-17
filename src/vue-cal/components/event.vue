@@ -84,15 +84,17 @@ const isResizable = computed(() => {
 const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
 
 const classes = computed(() => {
+  const isMultiday = !!event._?.multiday
+
   return {
     [`vuecal__event--${event._.id}`]: true,
     [event.class]: !!event.class,
     'vuecal__event--recurring': !!event.recurring,
     'vuecal__event--background': !!event.background,
-    'vuecal__event--all-day': event.allDay || event._?.startMinutes === 0 && event._?.duration === 24 * 60,
-    'vuecal__event--multiday': !!event._?.multiday,
-    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (event._.multiday && !eventStartsInThisCell.value)),
-    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (event._.multiday && !eventEndsInThisCell.value)),
+    'vuecal__event--all-day': event.allDay || (event._?.startMinutes === 0 && event._?.duration === 24 * 60),
+    'vuecal__event--multiday': isMultiday,
+    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (isMultiday && !eventStartsInThisCell.value)),
+    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (isMultiday && !eventEndsInThisCell.value)),
     // Only apply the dragging class on the event copy that is being dragged.
     'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
     // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
@@ -223,13 +225,26 @@ const eventListeners = computed(() => {
   return eventListeners
 })
 
+// Cache DOM queries to avoid repeated getBoundingClientRect calls.
+let cachedRect = null
+let rectCacheTime = 0
+const RECT_CACHE_DURATION = 16 // ~60fps
+
 // On mousedown OR TOUCHSTART on the event.
 const onMousedown = e => {
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
+
   // If the event target is the resizer, set the resizing flag.
   touch.fromResizer = domEvent.target.matches('.vuecal__event-resizer, .vuecal__event-resizer *')
 
-  const rect = eventEl.value.getBoundingClientRect()
+  // Cache getBoundingClientRect calls for better performance.
+  const now = Date.now()
+  if (!cachedRect || now - rectCacheTime > RECT_CACHE_DURATION) {
+    cachedRect = eventEl.value.getBoundingClientRect()
+    rectCacheTime = now
+  }
+
+  const rect = cachedRect
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.startPercentageX = touch.startX * 100 / rect.width
@@ -239,9 +254,7 @@ const onMousedown = e => {
   // Store the event start to apply on event end when resizing and end < start.
   touch.resizeStartDate = event.start
 
-  if (touch.fromResizer) {
-    handleEventResize(e, event, eventEl.value)
-  }
+  if (touch.fromResizer) handleEventResize(e, event, eventEl.value)
 
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
@@ -254,6 +267,10 @@ const onMousedown = e => {
 onMounted(() => event._.register(eventEl.value))
 
 onBeforeUnmount(() => {
+  // Clean up timers to prevent memory leaks.
+  if (touch.holdTimer) touch.holdTimer = clearTimeout(touch.holdTimer)
+  if (touch.touchAndDragTimer) touch.touchAndDragTimer = clearTimeout(touch.touchAndDragTimer)
+
   event._.unregister()
 })
 </script>
