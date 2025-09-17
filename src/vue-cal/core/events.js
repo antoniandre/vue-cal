@@ -402,8 +402,8 @@ export const useEvents = vuecal => {
     const endDay = end.getDate()
     const startTime = start.getTime()
     const endTime = end.getTime()
-    const rangeStartTimestamp = start.setHours(0, 0, 0, 0)
-    const rangeEndTimestamp = end.setHours(23, 59, 59, 999)
+    const rangeStartTimestamp = new Date(start).setHours(0, 0, 0, 0) // Don't modify the original date!
+    const rangeEndTimestamp = new Date(end).setHours(23, 59, 59, 999) // Don't modify the original date!
 
     const excludeSet = new Set(excludeIds)
     const eventsArray = []
