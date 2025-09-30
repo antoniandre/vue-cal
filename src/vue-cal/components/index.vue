@@ -132,7 +132,8 @@ const wrapperClasses = computed(() => ({
   'vuecal--dragging-cell': touchState.isDraggingCell,
   'vuecal--dragging-event': touchState.isDraggingEvent,
   'vuecal--resizing-event': touchState.isResizingEvent,
-  'vuecal--has-schedules': config.schedules?.length
+  'vuecal--has-schedules': config.schedules?.length,
+  'vuecal--horizontal': config.horizontal
 }))
 
 const wrapperStyles = computed(() => ({

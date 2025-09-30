@@ -433,6 +433,132 @@
     padding-bottom: 1px;
   }
 
+  // Horizontal layout.
+  // ------------------------------------------------------
+  &.vuecal--horizontal {
+    --vuecal-all-day-bar-height: 10rem;
+
+    .vuecal__scrollable {
+      grid-template-columns: auto;
+      grid-template-rows: 0fr 1fr;
+    }
+
+    .vuecal__time-column {
+      flex-direction: row;
+      align-self: flex-start;
+      padding-top: 0;
+      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      top: 0;
+      left: 0;
+      border-right: none;
+      border-bottom: 0.5px solid var(--vuecal-border-color);
+      transition: padding-left 0.3s ease-in-out;
+      height: 25px;
+    }
+
+    .vuecal__all-day-label {
+      top: 0;
+      left: 0;
+      height: 100%;
+      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      margin-top: 0;
+      margin-left: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
+      padding-top: 0;
+      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
+      border-bottom: none;
+      border-right: 0.5px solid var(--vuecal-border-color);
+    }
+
+    .vuecal__time-cell {
+      width: var(--vuecal-time-cell-height);
+      height: 100%;
+      align-items: center;
+
+      label {
+        padding: 0;
+        line-height: 1;
+      }
+    }
+
+    .vuecal__scrollable--day-view.vuecal__scrollable--no-schedules .vuecal__time-cell:first-child label,
+    .vuecal__scrollable--has-all-day-bar .vuecal__time-cell:not(.vuecal__time-cell + .vuecal__time-cell) label {
+      margin-top: 0;
+      font-size: inherit;
+      opacity: 0.5;
+    }
+
+    .vuecal__body-wrap {
+      flex-direction: row;
+      min-width: unset;
+      min-height: 0;
+    }
+
+    .vuecal__headings {
+      top: auto;
+      left: 0;
+      flex-direction: row;
+      flex-shrink: 0;
+      height: 100%;
+      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+    }
+
+    .vuecal__body {
+      --vuecal-grid-columns: 1;
+      --vuecal-grid-rows: 7;
+
+      grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
+      grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
+      width: 100%;
+      height: auto;
+    }
+
+    .vuecal__weekdays-headings {
+      flex-direction: column;
+      text-align: right;
+    }
+
+    .vuecal__weekday {
+      justify-content: flex-end;
+      padding: 0 6px;
+    }
+
+    .vuecal__all-day {
+      flex-direction: column;
+      height: 100%;
+      width: var(--vuecal-all-day-bar-height);
+    }
+
+    .vuecal__now-line {
+      left: auto;
+      top: 0;
+      width: 0;
+      height: 100%;
+      border-top: none;
+      border-left: 1px solid;
+      border-color: rgba(255, 0, 0, 0.6);
+      z-index: 3;
+
+      &:before {
+        left: -6px;
+        top: auto;
+        bottom: 0;
+        border-left-color: transparent;
+        border-bottom-color: inherit;
+      }
+    }
+
+    .vuecal__scrollable--no-schedules.vuecal__scrollable--day-view .vuecal__cell-events,
+    .vuecal__scrollable--no-schedules.vuecal__scrollable--days-view .vuecal__cell-events,
+    .vuecal__scrollable--no-schedules.vuecal__scrollable--week-view .vuecal__cell-events {
+      inset: 0 0 8px;
+    }
+
+    .vuecal--default-theme .vuecal__event {
+      width: auto;
+      height: 90%;
+    }
+  }
+
   // Sm and xs layouts.
   // ------------------------------------------------------
   &.vuecal--sm {

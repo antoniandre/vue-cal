@@ -5,10 +5,9 @@
     w-button(@click="addEventFromOutside") Add event
     w-button(@click="addEventFromVueCal") Add event
     w-button(@click="deleteEvent") Delete event
-    w-button(@click="mainVuecalConfig.hideWeekends = !mainVuecalConfig.hideWeekends") Hide weekends
+    w-button(@click="mainVuecalConfig.horizontal = !mainVuecalConfig.horizontal") Horizontal
 
   .w-flex.column.gap2.mt4.ovh
-    w-button(@click="goToEvent") Go to Event 1
     //- aside.no-shrink.no-grow
       vue-cal.no-shrink.no-grow(
         v-model:selected-date="pickerConfig.selectedDate"
@@ -91,6 +90,7 @@ const mainVuecalConfig = reactive({
   events: ref([]),
   // schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
   eventsOnMonthView: true,
+  horizontal: ref(true),
   // specialHours: {
   //   mon: { from: 0 * 60, to: 23 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><em>Full day shift</em>' },
   //   tue: { from: 4 * 60, to: 5 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><em>Full day shift</em>' },
