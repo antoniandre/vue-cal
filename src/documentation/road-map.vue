@@ -5,7 +5,6 @@ ul.kanban
   li.kanban__column.kanban__column--todo
     .title 🎯 To Do
     .w-flex.column.gap1.pa1
-      .task Horizontal layout guidance
       .task Drag &amp; drop events on edges
       .task Drag &amp; drop events on disabled day
       .task Drag events over years/year/month views
@@ -17,6 +16,7 @@ ul.kanban
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
       .task Resize Multiple day events on touch devices
+      .task Horizontal layout option
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
