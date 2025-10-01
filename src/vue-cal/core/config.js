@@ -104,6 +104,11 @@ export const useConfig = (vuecal, props, attrs) => {
       year: { ...defaults.availableViews.year },
       years: { ...defaults.availableViews.years }
     }
+    // If horizontal view, flip the default rows and cols.
+    else if (props.horizontal && !views) return {
+      days: { cols: defaults.availableViews.days.rows, rows: defaults.availableViews.days.cols },
+      week: { cols: defaults.availableViews.week.rows, rows: defaults.availableViews.week.cols }
+    }
     if (views) {
       if (Array.isArray(views)) {
         availViews = views.reduce((obj, view) => {

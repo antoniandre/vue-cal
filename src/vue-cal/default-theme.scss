@@ -520,14 +520,24 @@
     .vuecal__weekday {
       justify-content: flex-end;
       padding: 0 6px;
+      box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
     }
 
     .vuecal__all-day {
       flex-direction: column;
       height: 100%;
       width: var(--vuecal-all-day-bar-height);
-    }
 
+      &-resizer {
+        bottom: 0;
+        right: 0;
+        height: 100%;
+        width: 1px;
+        cursor: col-resize;
+
+        &:before {inset: 0 -5px;}
+      }
+    }
     .vuecal__now-line {
       left: auto;
       top: 0;
