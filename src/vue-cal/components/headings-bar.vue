@@ -67,7 +67,7 @@ const showHeadings = computed(() => {
 const weekDays = computed(() => {
   // Regardless of how many view rows, we always want to display a maximum of view cols headings,
   // hence the slice(0, view.cols).
-  return view.cellDates.slice(0, view.cols).map(({ start }) => ({
+  return view.cellDates.slice(0, config.horizontal ? view.rows : view.cols).map(({ start }) => ({
     id: weekdays[start.getDay()],
     date: start,
     dateNumber: start.getDate(),
@@ -90,6 +90,11 @@ const allDayResizer = {
   initialHeight: ref(0),
   defaultHeight: 25, // Default height in pixels.
 
+  // Or in the case of horizontal layout.
+  startX: ref(0),
+  initialWidth: ref(0),
+  defaultWidth: 25, // Default width in pixels.
+
   // Cleanup event listeners.
   cleanup () {
     if (typeof document !== 'undefined') {
@@ -101,13 +106,16 @@ const allDayResizer = {
     allDayResizer.isResizing.value = false
   },
 
-  startResize (clientY) {
+  startResize (clientX, clientY) {
     this.isResizing.value = true
-    this.startY.value = clientY
+    const isHzl = config.horizontal
+    this[isHzl ? 'startX' : 'startY'].value = isHzl ? clientX : clientY
 
-    // Get actual computed height from element.
+    // Get actual computed height/width from element.
     const allDayEl = $vuecalEl.value?.querySelector('.vuecal__all-day')
-    if (allDayEl) this.initialHeight.value = allDayEl.offsetHeight
+    if (allDayEl) {
+      this[isHzl ? 'initialWidth' : 'initialHeight'].value = allDayEl[isHzl ? 'offsetWidth' : 'offsetHeight']
+    }
 
     // Add document event listeners.
     document.addEventListener('mousemove', allDayResizer.handleMouseMove)
@@ -116,33 +124,35 @@ const allDayResizer = {
     document.addEventListener('touchend', allDayResizer.cleanup)
   },
 
-  // Update height based on mouse/touch movement.
-  updateHeight (clientY) {
+  // Update height/width based on mouse/touch movement.
+  updateSize (clientX, clientY) {
     if (!this.isResizing.value) return
 
-    const delta = clientY - this.startY.value
-    const newHeight = Math.max(20, this.initialHeight.value + delta) // Minimum height of 20px.
+    const isHzl = config.horizontal
+    const delta = isHzl ? (clientX - this.startX.value) : (clientY - this.startY.value)
+    // Minimum height/width of 20px.
+    const newSize = Math.max(20, this[isHzl ? 'initialWidth' : 'initialHeight'].value + delta)
 
-    $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newHeight}px`)
+    $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newSize}px`)
   },
 
   // Mouse event handlers.
   handleMouseDown (e) {
-    this.startResize(e.clientY)
+    this.startResize(e.clientX, e.clientY)
   },
 
   handleMouseMove (e) {
-    allDayResizer.updateHeight(e.clientY)
+    allDayResizer.updateSize(e.clientX, e.clientY)
   },
 
   // Touch event handlers.
   handleTouchStart (e) {
-    e.touches?.[0] && this.startResize(e.touches[0].clientY)
+    e.touches?.[0] && this.startResize(e.touches[0].clientX, e.touches[0].clientY)
   },
 
   handleTouchMove (e) {
     if (e.touches?.[0]) {
-      allDayResizer.updateHeight(e.touches[0].clientY)
+      allDayResizer.updateSize(e.touches[0].clientX, e.touches[0].clientY)
       e.preventDefault() // Prevent scrolling while resizing.
     }
   }
