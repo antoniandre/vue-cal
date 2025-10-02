@@ -3,6 +3,16 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.30
+    ul
+      li Fix event start and end date side-effect on drop. #[issue-link 90]
+
+  li.patch
+    strong.version 5.0.1-rc.29
+    ul
+      li Added support for multi-day events. #[issue-link 33]
+
+  li.patch
     strong.version 5.0.1-rc.28
     ul
       li Added Kazakh, Uzbek (Latin &amp; Cyrillic), Qaraqalpaq and Kyrgyz locales. #[issue-link 68] &amp;#[issue-link 76]
