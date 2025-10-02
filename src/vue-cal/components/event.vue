@@ -130,6 +130,7 @@ const plusDaysIndicator = computed(() => {
 
 const styles = computed(() => {
   const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !props.inAllDayBar
+  const isHzl = config.horizontal
 
   if (!hasPosition && !event.backgroundColor && !event.color) return false
 
@@ -153,8 +154,8 @@ const styles = computed(() => {
     const top = minutesToPercentage(from, config)
     const height = minutesToPercentage(to, config) - top
 
-    styles.top = `${top}%`
-    styles.height = `${height}%`
+    styles[isHzl ? 'left' : 'top'] = `${top}%`
+    styles[isHzl ? 'width' : 'height'] = `${height}%`
   }
 
   return styles

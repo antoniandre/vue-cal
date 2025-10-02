@@ -269,19 +269,21 @@ const cellEventsPerSchedule = computed(() => {
 const eventStyles = computed(() => {
   if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
   const isRTL = typeof document !== 'undefined' && document.documentElement.getAttribute('dir') === 'rtl'
+  const isHzl = config.horizontal
   const styles = {}
 
   for (const event of cellEvents.value) {
     const eventId = event._.id
     const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
 
-    const horizontalProperty = isRTL ? 'right' : 'left';
-    styles[eventId] = { [horizontalProperty]: `${(100 / maxConcurrent) * position}%` }
+    const rightOrLeft = isRTL ? 'right' : 'left'
+    const widthOrHeight = isHzl ? 'height' : 'width'
+    styles[eventId] = { [isHzl ? 'top' : rightOrLeft]: `${(100 / maxConcurrent) * position}%` }
     // Stack overlapping events on top of each other if the stackEvents prop is set to true.
     if (config.stackEvents) {
-      styles[eventId].width = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
+      styles[eventId][widthOrHeight] = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
     }
-    else styles[eventId].width = `${100 / maxConcurrent}%`
+    else styles[eventId][widthOrHeight] = `${100 / maxConcurrent}%`
   }
   return styles
 })
@@ -370,7 +372,7 @@ const nowLine = reactive({
   }),
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
   todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
-  style: computed(() => `top: ${nowLine.todaysTimePosition}%`),
+  style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
   currentTime: computed(() => dateUtils.formatTime(view.now))
 })
 

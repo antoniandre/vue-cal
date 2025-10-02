@@ -538,6 +538,7 @@
         &:before {inset: 0 -5px;}
       }
     }
+
     .vuecal__now-line {
       left: auto;
       top: 0;
@@ -555,6 +556,8 @@
         border-left-color: transparent;
         border-bottom-color: inherit;
       }
+
+      span {left: 2px;}
     }
 
     .vuecal__scrollable--no-schedules.vuecal__scrollable--day-view .vuecal__cell-events,
@@ -566,6 +569,11 @@
     .vuecal--default-theme .vuecal__event {
       width: auto;
       height: 90%;
+    }
+
+    &.vuecal--view-has-time .vuecal__cell:before {
+      background: linear-gradient(90deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
+      background-size: var(--vuecal-time-cell-height) 100%;
     }
   }
 
