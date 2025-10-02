@@ -59,7 +59,8 @@ export const props = {
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   weekNumbers: { type: Boolean, default: false }, // Show the weeks numbers in a column on month view.
   xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
-  horizontal: { type: Boolean, default: false } // Show the calendar timeline horizontally.
+  // Temporarily disabled until fully implemented.
+  // horizontal: { type: Boolean, default: false } // Show the calendar timeline horizontally.
 
   // TODO:
   // minEventWidth: { type: Number, default: 0 },
