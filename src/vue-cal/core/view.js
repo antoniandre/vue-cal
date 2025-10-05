@@ -530,7 +530,6 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * When toggling weekdays, update the view.
    */
   function toggleWeekdays () {
-    console.log('toggling weekdays', config.hideWeekdays)
     updateView()
   }
 
