@@ -6,6 +6,15 @@
     w-button(@click="addEventFromVueCal") Add event
     w-button(@click="deleteEvent") Delete event
     w-button(@click="mainVuecalConfig.horizontal = !mainVuecalConfig.horizontal") Horizontal
+    w-button(@click="vueCalRef.view.switch('day', new Date())") Switch to today
+
+  div
+    pre
+      strong.mr2 Selected date:
+      | {{ mainVuecalConfig.selectedDate }}
+    pre
+      strong.mr2 View date:
+      | {{ mainVuecalConfig.viewDate }}
 
   .w-flex.column.gap2.mt4.ovh
     //- aside.no-shrink.no-grow
