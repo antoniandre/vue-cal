@@ -239,10 +239,12 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
       You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
       This example shows how to control the Previous, Next and Today functions and the view selections
       from external buttons.#[br]
-      One important thing to notice is that you can use a v-model on the #[span.code view] (or #[span.code :view.sync] for Vue 2)
-      in order to keep your variable updated when Vue Cal changes the view internally. For instance when you click the title to go
-      to a broader view.#[br]
-      A v-model can also be used on the #[span.code selected-date] (or #[span.code :selected-date.sync] for Vue 2)
+      It's important to note the difference between the #[span.code view-date] and #[span.code selected-date] properties:
+    ul
+      li The #[span.code view-date] property is the first visible cell date that is currently displayed in the calendar.
+      li The #[span.code selected-date] property is the date that is currently selected in the calendar.
+    p.
+      These two props are two-way binding, which means that you can use a v-model to update them (read and write).
 
     .mxa.my2(style="max-width: 500px")
       .w-flex.gap2.basis-zero
@@ -285,16 +287,18 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
       vue-cal(
         ref="vuecal4"
         v-model:view="view"
-        v-model:selected-date="selectedDate"
+        v-model:view-date="exExternalControls.viewDate"
+        v-model:selected-date="exExternalControls.selectedDate"
         :time="false"
         :views-bar="false"
         :dark="store.darkMode"
-        small)
+        sm)
     p
-      strong Variables kept in sync thanks to v-model:
+      strong Variables kept in sync with v-model:
     ul
       li #[code view]: #[strong.code {{ view }} ],
-      li #[code selectedDate]: #[strong.code {{ selectedDate && selectedDate.format() }} ]
+      li #[code viewDate]: #[strong.code {{ exExternalControls.viewDate?.format() }} ]
+      li #[code selectedDate]: #[strong.code {{ exExternalControls.selectedDate?.format() }} ]
   template(#code-html).
     &lt;button @click="view = 'day'"&gt;Day&lt;/button&gt;
     &lt;button @click="view = 'week'"&gt;Week&lt;/button&gt;
@@ -309,10 +313,11 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
     &lt;vue-cal
       ref="vuecal"
       v-model:view="view"
+      v-model:view-date="viewDate"
       v-model:selected-date="selectedDate"
       :time="false"
       :views-bar="false"
-      small&gt;
+      sm&gt;
     &lt;/vue-cal&gt;
 
   template(#desc2)
@@ -391,6 +396,7 @@ import { VueCal, stringToDate, countDays } from '@/vue-cal'
 const store = useAppStore()
 const view = ref('week')
 const selectedDate = ref(null)
+const viewDate = ref(null)
 
 const events = [
   {
@@ -518,6 +524,8 @@ const exBackendEvents = reactive({
 })
 
 const exExternalControls = reactive({
+  selectedDate: ref(null),
+  viewDate: ref(null)
 })
 
 const exSyncTwoCalendars = reactive({

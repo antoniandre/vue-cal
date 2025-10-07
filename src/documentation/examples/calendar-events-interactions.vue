@@ -721,7 +721,6 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       view="days"
       :time-from="9 * 60"
       :time-to="15 * 60"
-      small
       :today-button="false"
       :dark="store.darkMode")
     vue-cal.grow(
@@ -733,7 +732,6 @@ example(title="External Events Drag & Drop" anchor="external-events-drag-and-dro
       view="days"
       :time-from="9 * 60"
       :time-to="15 * 60"
-      small
       :today-button="false"
       :dark="store.darkMode")
 

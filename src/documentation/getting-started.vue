@@ -161,7 +161,7 @@ alert
   .title3 That's it! You're up and running.
   p.mt1 Vue Cal comes with a default height of 500px, you can override this via CSS.
 
-vue-cal(small :dark="store.darkMode")
+vue-cal(sm :dark="store.darkMode")
 
 //- CSS notes.
 title-link(h2 anchor="css-notes") CSS Notes
