@@ -133,7 +133,7 @@ export interface VueCalConfig {
   snapToInterval?: number, // Snap the event start and end to a specific interval in minutes.
   startWeekOnSunday?: boolean, // Shows Sunday before Monday in days, week and month views.
   stackEvents?: boolean,
-  theme?: boolean | 'default',
+  theme?: boolean | string,
   time?: boolean, // Show or hide the time column.
   timeCellHeight?: number, // In pixels.
   timeFormat?: string, // Overrides the default time format.
