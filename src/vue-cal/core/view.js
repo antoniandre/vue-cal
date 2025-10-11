@@ -381,15 +381,17 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     }
   }
 
-  function switchView (id, emitUpdate = true) {
+  function switchView (id, emitUpdate = true, date = null) {
     const availableViews = Object.keys(config.availableViews)
 
-    if (viewId.value === id) return
+    if (viewId.value === id && !date) return
     if (availableViews.includes(id)) {
       transitionDirection.value = availableViews.indexOf(id) < availableViews.indexOf(viewId.value) ? 'left' : 'right'
+
+      if (emitUpdate && viewId.value !== id) emit('update:view', id) // Emit the view change only if the view is actually changing.
       viewId.value = id
-      if (emitUpdate) emit('update:view', id)
-      updateView()
+      if (date) updateViewDate(date) // Then calls updateView().
+      else updateView()
     }
     else !!console.warn(`Vue Cal: the \`${id}\` view is not available.`)
   }
@@ -606,7 +608,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     // and multi-day events.
     events,
     transitionDirection,
-    switch: switchView,
+    switch: (id, date) => switchView(id, true, date),
     broader: switchToBroaderView,
     narrower: switchToNarrowerView,
     previous,
