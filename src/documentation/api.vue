@@ -1603,6 +1603,20 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      strong.code.title5 now-line
+    template(#content)
+      p Customizes how the current time line is displayed.
+      p Available parameters:
+      ul
+        li #[code.base-color now] - The current date
+        li #[code.base-color time-formatted] - The formatted time string
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #now-line="{ now, time-formatted }"&gt;
+          &lt;div class="custom-now-line"&gt;{{ '\{\{ time-formatted \}\}' }}&lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
       strong.code.title5 event
     template(#content)
       p Customizes the display of individual events. This slot is ignored if the cell-events slot is used.
