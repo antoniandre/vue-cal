@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.31
+    ul
+      li Added an optional date parameter to the #[code view.switch] method. #[issue-link 80]
+
+  li.patch
     strong.version 5.0.1-rc.30
     ul
       li Fix event start and end date side-effect on drop. #[issue-link 90]
