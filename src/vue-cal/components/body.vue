@@ -27,6 +27,8 @@
       slot(name="event" v-bind="params")
     template(v-if="$slots['event-count']" #event-count="params")
       slot(name="event-count" v-bind="params")
+    template(v-if="$slots['now-line']" #now-line="params")
+      slot(name="now-line" v-bind="params")
 </template>
 
 <script setup>

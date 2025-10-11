@@ -93,7 +93,8 @@
     v-if="nowLine.show"
     :style="nowLine.style"
     :title="nowLine.currentTime")
-    span {{ nowLine.currentTime }}
+    slot(name="now-line" :now="view.now" :time-formatted="nowLine.currentTime")
+      span {{ nowLine.currentTime }}
 </template>
 
 <script setup>
