@@ -1,6 +1,6 @@
-import { computed as b, reactive as be, watch as De, toRefs as bt, ref as ue, onBeforeUnmount as Re, nextTick as Xe, inject as He, createElementBlock as P, openBlock as V, renderSlot as j, createCommentVNode as x, unref as $, Fragment as de, renderList as we, normalizeClass as pe, createElementVNode as he, createVNode as Oe, Transition as Ue, withCtx as B, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as se, onMounted as Ze, toDisplayString as ce, createTextVNode as qe, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as at, guardReactiveProps as re } from "vue";
+import { computed as b, reactive as be, watch as De, toRefs as bt, ref as ue, onBeforeUnmount as Re, nextTick as Xe, inject as He, createElementBlock as P, openBlock as V, renderSlot as O, createCommentVNode as x, unref as $, Fragment as de, renderList as we, normalizeClass as pe, createElementVNode as he, createVNode as Oe, Transition as Ue, withCtx as N, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as ne, onMounted as Ze, toDisplayString as ce, createTextVNode as qe, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as nt, guardReactiveProps as le } from "vue";
 /**
-  * vue-cal v5.0.1-rc.31
+  * vue-cal v5.0.1-rc.32
   * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
@@ -47,9 +47,9 @@ const fe = {
       event: {}
       // All possible event listeners to attach to calendar events.
     }, u = (p) => p.replace(/([a-z])([A-Z])/g, "$1-$2").toLowerCase();
-    for (const [p, a] of Object.entries(d)) {
-      const [O, X, U] = p.match(/^on(Cell|Event)(.+)$/) || [];
-      O && (c[X.toLowerCase()][u(U).replace(/^-+|-+$/g, "")] = a);
+    for (const [p, n] of Object.entries(d)) {
+      const [j, X, U] = p.match(/^on(Cell|Event)(.+)$/) || [];
+      j && (c[X.toLowerCase()][u(U).replace(/^-+|-+$/g, "")] = n);
     }
     return c;
   }), L = b(() => {
@@ -59,17 +59,17 @@ const fe = {
   }), l = b(() => t.hideWeekends || L.value[6] && L.value[7]), E = b(() => {
     const c = t.datePicker;
     let u = 0, p = {};
-    const a = t.views;
-    return c && !a ? {
+    const n = t.views;
+    return c && !n ? {
       month: { ...fe.availableViews.month },
       year: { ...fe.availableViews.year },
       years: { ...fe.availableViews.years }
-    } : t.horizontal && !a ? {
+    } : t.horizontal && !n ? {
       days: { cols: fe.availableViews.days.rows, rows: fe.availableViews.days.cols },
       week: { cols: fe.availableViews.week.rows, rows: fe.availableViews.week.cols }
-    } : (a ? (Array.isArray(a) ? p = a.reduce((O, X) => (typeof X == "string" && fe.availableViews[X] ? O[X] = fe.availableViews[X] : u++, O), {}) : typeof a == "object" && (p = Object.entries(a).reduce((O, [X, U]) => {
-      const { cols: Q, rows: te } = fe.availableViews[X];
-      return O[X] = { cols: U.cols || Q, rows: U.rows || te }, O;
+    } : (n ? (Array.isArray(n) ? p = n.reduce((j, X) => (typeof X == "string" && fe.availableViews[X] ? j[X] = fe.availableViews[X] : u++, j), {}) : typeof n == "object" && (p = Object.entries(n).reduce((j, [X, U]) => {
+      const { cols: K, rows: te } = fe.availableViews[X];
+      return j[X] = { cols: U.cols || K, rows: U.rows || te }, j;
     }, {})), u && console.warn("Vue Cal: the provided `views` prop contains invalid views that will be ignored."), Object.keys(p).length || (console.warn("Vue Cal: No valid view in the provided `views` prop. Falling back to default views."), p = { ...fe.availableViews })) : p = { ...fe.availableViews }, p);
   }), F = b(() => t.datePicker ? "month" : E.value.week ? "week" : Object.keys(E.value)[0]), m = b(() => {
     if (typeof t.selectedDate == "string") return r.stringToDate(t.selectedDate);
@@ -88,13 +88,13 @@ const fe = {
   }), S = b(() => {
     let c = null;
     return t.minDate && typeof t.minDate == "string" ? c = r.stringToDate(t.minDate) : t.minDate && t.minDate instanceof Date && (c = t.minDate), (c == null ? void 0 : c.getTime()) || null;
-  }), n = b(() => {
+  }), a = b(() => {
     let c = null;
     return t.maxDate && typeof t.maxDate == "string" ? c = r.stringToDate(t.maxDate) : t.maxDate && t.maxDate instanceof Date && (c = t.maxDate), (c == null ? void 0 : c.getTime()) || null;
   }), I = b(() => {
     var p;
     const { view: c } = y;
-    return t.schedules.length && (c.isDay || c.isDays || c.isWeek) && ((p = t.schedules) == null ? void 0 : p.map((a, O) => ({ ...a, id: a.id ?? O + 1 }))) || void 0;
+    return t.schedules.length && (c.isDay || c.isDays || c.isWeek) && ((p = t.schedules) == null ? void 0 : p.map((n, j) => ({ ...n, id: n.id ?? j + 1 }))) || void 0;
   }), e = b(() => {
     const c = {
       drag: !0,
@@ -108,7 +108,7 @@ const fe = {
     return (Array.isArray(u) ? u.includes(c.id) : u) && (c.isMonth && !t.eventsOnMonthView || c.isYear);
   }), H = b(() => t.allDayEvents && t.time !== !1 && !C.isMonth), Y = b(() => t.timeAtCursor && t.time !== !1), _ = async (c) => {
     var p;
-    let u = /* @__PURE__ */ Object.assign({ "../i18n/ar.json": () => import("./i18n/ar.js").then((a) => a.default), "../i18n/bg.json": () => import("./i18n/bg.js").then((a) => a.default), "../i18n/bn.json": () => import("./i18n/bn.js").then((a) => a.default), "../i18n/bs.json": () => import("./i18n/bs.js").then((a) => a.default), "../i18n/ca.json": () => import("./i18n/ca.js").then((a) => a.default), "../i18n/cs.json": () => import("./i18n/cs.js").then((a) => a.default), "../i18n/da.json": () => import("./i18n/da.js").then((a) => a.default), "../i18n/de.json": () => import("./i18n/de.js").then((a) => a.default), "../i18n/el.json": () => import("./i18n/el.js").then((a) => a.default), "../i18n/en-gb.json": () => import("./i18n/en-gb.js").then((a) => a.default), "../i18n/en-us.json": () => Promise.resolve().then(() => jt).then((a) => a.default), "../i18n/es.json": () => import("./i18n/es.js").then((a) => a.default), "../i18n/et.json": () => import("./i18n/et.js").then((a) => a.default), "../i18n/fa.json": () => import("./i18n/fa.js").then((a) => a.default), "../i18n/fi.json": () => import("./i18n/fi.js").then((a) => a.default), "../i18n/fr.json": () => import("./i18n/fr.js").then((a) => a.default), "../i18n/he.json": () => import("./i18n/he.js").then((a) => a.default), "../i18n/hr.json": () => import("./i18n/hr.js").then((a) => a.default), "../i18n/hu.json": () => import("./i18n/hu.js").then((a) => a.default), "../i18n/id.json": () => import("./i18n/id.js").then((a) => a.default), "../i18n/is.json": () => import("./i18n/is.js").then((a) => a.default), "../i18n/it.json": () => import("./i18n/it.js").then((a) => a.default), "../i18n/ja.json": () => import("./i18n/ja.js").then((a) => a.default), "../i18n/ka.json": () => import("./i18n/ka.js").then((a) => a.default), "../i18n/kaa.json": () => import("./i18n/kaa.js").then((a) => a.default), "../i18n/kk.json": () => import("./i18n/kk.js").then((a) => a.default), "../i18n/ko.json": () => import("./i18n/ko.js").then((a) => a.default), "../i18n/ky.json": () => import("./i18n/ky.js").then((a) => a.default), "../i18n/lt.json": () => import("./i18n/lt.js").then((a) => a.default), "../i18n/mn.json": () => import("./i18n/mn.js").then((a) => a.default), "../i18n/nl.json": () => import("./i18n/nl.js").then((a) => a.default), "../i18n/no.json": () => import("./i18n/no.js").then((a) => a.default), "../i18n/pl.json": () => import("./i18n/pl.js").then((a) => a.default), "../i18n/pt-br.json": () => import("./i18n/pt-br.js").then((a) => a.default), "../i18n/pt-pt.json": () => import("./i18n/pt-pt.js").then((a) => a.default), "../i18n/ro.json": () => import("./i18n/ro.js").then((a) => a.default), "../i18n/ru.json": () => import("./i18n/ru.js").then((a) => a.default), "../i18n/sk.json": () => import("./i18n/sk.js").then((a) => a.default), "../i18n/sl.json": () => import("./i18n/sl.js").then((a) => a.default), "../i18n/sq.json": () => import("./i18n/sq.js").then((a) => a.default), "../i18n/sr.json": () => import("./i18n/sr.js").then((a) => a.default), "../i18n/sv.json": () => import("./i18n/sv.js").then((a) => a.default), "../i18n/tr.json": () => import("./i18n/tr.js").then((a) => a.default), "../i18n/uk.json": () => import("./i18n/uk.js").then((a) => a.default), "../i18n/uz-cryl.json": () => import("./i18n/uz-cryl.js").then((a) => a.default), "../i18n/uz.json": () => import("./i18n/uz.js").then((a) => a.default), "../i18n/vi.json": () => import("./i18n/vi.js").then((a) => a.default), "../i18n/zh-cn.json": () => import("./i18n/zh-cn.js").then((a) => a.default), "../i18n/zh-hk.json": () => import("./i18n/zh-hk.js").then((a) => a.default) });
+    let u = /* @__PURE__ */ Object.assign({ "../i18n/ar.json": () => import("./i18n/ar.js").then((n) => n.default), "../i18n/bg.json": () => import("./i18n/bg.js").then((n) => n.default), "../i18n/bn.json": () => import("./i18n/bn.js").then((n) => n.default), "../i18n/bs.json": () => import("./i18n/bs.js").then((n) => n.default), "../i18n/ca.json": () => import("./i18n/ca.js").then((n) => n.default), "../i18n/cs.json": () => import("./i18n/cs.js").then((n) => n.default), "../i18n/da.json": () => import("./i18n/da.js").then((n) => n.default), "../i18n/de.json": () => import("./i18n/de.js").then((n) => n.default), "../i18n/el.json": () => import("./i18n/el.js").then((n) => n.default), "../i18n/en-gb.json": () => import("./i18n/en-gb.js").then((n) => n.default), "../i18n/en-us.json": () => Promise.resolve().then(() => jt).then((n) => n.default), "../i18n/es.json": () => import("./i18n/es.js").then((n) => n.default), "../i18n/et.json": () => import("./i18n/et.js").then((n) => n.default), "../i18n/fa.json": () => import("./i18n/fa.js").then((n) => n.default), "../i18n/fi.json": () => import("./i18n/fi.js").then((n) => n.default), "../i18n/fr.json": () => import("./i18n/fr.js").then((n) => n.default), "../i18n/he.json": () => import("./i18n/he.js").then((n) => n.default), "../i18n/hr.json": () => import("./i18n/hr.js").then((n) => n.default), "../i18n/hu.json": () => import("./i18n/hu.js").then((n) => n.default), "../i18n/id.json": () => import("./i18n/id.js").then((n) => n.default), "../i18n/is.json": () => import("./i18n/is.js").then((n) => n.default), "../i18n/it.json": () => import("./i18n/it.js").then((n) => n.default), "../i18n/ja.json": () => import("./i18n/ja.js").then((n) => n.default), "../i18n/ka.json": () => import("./i18n/ka.js").then((n) => n.default), "../i18n/kaa.json": () => import("./i18n/kaa.js").then((n) => n.default), "../i18n/kk.json": () => import("./i18n/kk.js").then((n) => n.default), "../i18n/ko.json": () => import("./i18n/ko.js").then((n) => n.default), "../i18n/ky.json": () => import("./i18n/ky.js").then((n) => n.default), "../i18n/lt.json": () => import("./i18n/lt.js").then((n) => n.default), "../i18n/mn.json": () => import("./i18n/mn.js").then((n) => n.default), "../i18n/nl.json": () => import("./i18n/nl.js").then((n) => n.default), "../i18n/no.json": () => import("./i18n/no.js").then((n) => n.default), "../i18n/pl.json": () => import("./i18n/pl.js").then((n) => n.default), "../i18n/pt-br.json": () => import("./i18n/pt-br.js").then((n) => n.default), "../i18n/pt-pt.json": () => import("./i18n/pt-pt.js").then((n) => n.default), "../i18n/ro.json": () => import("./i18n/ro.js").then((n) => n.default), "../i18n/ru.json": () => import("./i18n/ru.js").then((n) => n.default), "../i18n/sk.json": () => import("./i18n/sk.js").then((n) => n.default), "../i18n/sl.json": () => import("./i18n/sl.js").then((n) => n.default), "../i18n/sq.json": () => import("./i18n/sq.js").then((n) => n.default), "../i18n/sr.json": () => import("./i18n/sr.js").then((n) => n.default), "../i18n/sv.json": () => import("./i18n/sv.js").then((n) => n.default), "../i18n/tr.json": () => import("./i18n/tr.js").then((n) => n.default), "../i18n/uk.json": () => import("./i18n/uk.js").then((n) => n.default), "../i18n/uz-cryl.json": () => import("./i18n/uz-cryl.js").then((n) => n.default), "../i18n/uz.json": () => import("./i18n/uz.js").then((n) => n.default), "../i18n/vi.json": () => import("./i18n/vi.js").then((n) => n.default), "../i18n/zh-cn.json": () => import("./i18n/zh-cn.js").then((n) => n.default), "../i18n/zh-hk.json": () => import("./i18n/zh-hk.js").then((n) => n.default) });
     {
       if (!u[`../i18n/${c}.json`]) {
         console.warn(`Vue Cal: the locale \`${c}\` does not exist. Falling back to \`en-us\`.`), c = "en-us";
@@ -133,7 +133,7 @@ const fe = {
     hideWeekdays: L,
     hideWeekends: l,
     minTimestamp: S,
-    maxTimestamp: n,
+    maxTimestamp: a,
     schedules: I,
     selectedDate: m,
     editableEvents: e,
@@ -160,7 +160,7 @@ const fe = {
   const d = t.clientHeight;
   return y * 100 / d;
 }, We = be({ id: null, date: null });
-let nt = !1, Je = !0;
+let at = !1, Je = !0;
 const _e = be({ el: null, cell: null, timeout: null }), ke = be({
   eventId: null,
   fromVueCal: null,
@@ -169,10 +169,10 @@ const _e = be({ el: null, cell: null, timeout: null }), ke = be({
 function zt(y) {
   const { config: t, view: d, eventsManager: r, emit: h, uid: C, dateUtils: W } = y, v = (S) => {
     var _;
-    const { timeStep: n, timeCellHeight: I, timeFrom: e } = t, z = (((_ = S.touches) == null ? void 0 : _[0]) || S).clientY, { top: H } = S.currentTarget.getBoundingClientRect(), Y = z - H - ~~S.dataTransfer.getData("cursor-grab-at");
+    const { timeStep: a, timeCellHeight: I, timeFrom: e } = t, z = (((_ = S.touches) == null ? void 0 : _[0]) || S).clientY, { top: H } = S.currentTarget.getBoundingClientRect(), Y = z - H - ~~S.dataTransfer.getData("cursor-grab-at");
     return je(Ke(Y, S.currentTarget), t);
-  }, A = (S, n, I) => {
-    const e = n.duration || Z(n.start, n.end) || t.timeStep;
+  }, A = (S, a, I) => {
+    const e = a.duration || Z(a.start, a.end) || t.timeStep;
     let z = Math.max(v(S), 0);
     if (t.snapToInterval) {
       const f = z + t.snapToInterval / 2;
@@ -180,88 +180,88 @@ function zt(y) {
     }
     const H = new Date(new Date(I).setMinutes(z)), Y = Math.min(z + e, 1440), _ = new Date(new Date(I).setMinutes(Y));
     return { start: H, end: _ };
-  }, Z = (S, n) => Math.round((n - S) / 6e4);
+  }, Z = (S, a) => Math.round((a - S) / 6e4);
   return {
-    eventDragStart: (S, n) => {
+    eventDragStart: (S, a) => {
       if (S.target.nodeType === 3 || y.touch.isResizingEvent) return S.preventDefault();
       S.dataTransfer.effectAllowed = "move", S.dataTransfer.dropEffect = "move";
-      const I = { ...n, _: { id: n._.id, duration: Z(n.start, n.end) } };
+      const I = { ...a, _: { id: a._.id, duration: Z(a.start, a.end) } };
       try {
         S.dataTransfer.setData("text/plain", ""), S.dataTransfer.setData("event", JSON.stringify(I)), S.dataTransfer.setData("cursor-grab-at", S.offsetY);
       } catch (z) {
         return console.warn("Vue Cal: Failed to set drag data:", z), S.preventDefault();
       }
-      ke.eventId = n._.id, ke.fromVueCal = C, h("event-drag-start", {
+      ke.eventId = a._.id, ke.fromVueCal = C, h("event-drag-start", {
         e: S,
-        event: n
+        event: a
       });
       const e = S.target.closest(".vuecal__event");
       e.classList.add("vuecal__event--dragging-ghost"), setTimeout(() => {
         e.classList.add("vuecal__event--dragging-original"), e.classList.remove("vuecal__event--dragging-ghost");
-      }, 0), nt = !1, Object.assign(We, { id: d.id, date: d.firstCellDate }), Je = !0, y.touch.isDraggingEvent = !0;
+      }, 0), at = !1, Object.assign(We, { id: d.id, date: d.firstCellDate }), Je = !0, y.touch.isDraggingEvent = !0;
     },
-    eventDragEnd: (S, n) => {
+    eventDragEnd: (S, a) => {
       ke.eventId = null, S.target.closest(".vuecal__event").classList.remove("vuecal__event--dragging-original");
       const { fromVueCal: I, toVueCal: e } = ke;
-      e && I !== e && r.deleteEvent(n._.id, 3), nt && Je && We.id && d.switchView(We.id, We.date, !0), h("event-drag-end", {
+      e && I !== e && r.deleteEvent(a._.id, 3), at && Je && We.id && d.switchView(We.id, We.date, !0), h("event-drag-end", {
         e: S,
-        event: n,
+        event: a,
         external: ke.fromVueCal !== C
       }), ke.fromVueCal = null, ke.toVueCal = null, y.touch.isDraggingEvent = !1;
     },
-    cellDragEnter: (S, n) => {
-      const { start: I } = n, e = S.currentTarget;
+    cellDragEnter: (S, a) => {
+      const { start: I } = a, e = S.currentTarget;
       if (!S.currentTarget.contains(S.relatedTarget)) {
         if (e === _e.el || !e.className.includes("vuecal__cell-content")) return !1;
-        _e.el && (_e.cell.highlighted = !1), Object.assign(_e, { el: e, cell: n, timeout: clearTimeout(_e.timeout) }), n.highlighted = !0, ["years", "year", "month"].includes(d.id) && (_e.timeout = setTimeout(() => y.switchToNarrowerView(I), 2e3));
+        _e.el && (_e.cell.highlighted = !1), Object.assign(_e, { el: e, cell: a, timeout: clearTimeout(_e.timeout) }), a.highlighted = !0, ["years", "year", "month"].includes(d.id) && (_e.timeout = setTimeout(() => y.switchToNarrowerView(I), 2e3));
       }
     },
-    cellDragOver: (S, n) => {
-      const { start: I, schedule: e } = n;
-      S.preventDefault(), n.highlighted = !0, (e || e === 0) && (n.highlightedSchedule = e);
+    cellDragOver: (S, a) => {
+      const { start: I, schedule: e } = a;
+      S.preventDefault(), a.highlighted = !0, (e || e === 0) && (a.highlightedSchedule = e);
     },
-    cellDragLeave: (S, n) => {
-      S.preventDefault(), !S.currentTarget.contains(S.relatedTarget) && (n.highlightedSchedule = !1, _e.cell === n && (clearTimeout(_e.timeout), Object.assign(_e, { el: null, cell: null, timeout: null }), n.highlighted = !1));
+    cellDragLeave: (S, a) => {
+      S.preventDefault(), !S.currentTarget.contains(S.relatedTarget) && (a.highlightedSchedule = !1, _e.cell === a && (clearTimeout(_e.timeout), Object.assign(_e, { el: null, cell: null, timeout: null }), a.highlighted = !1));
     },
-    cellDragDrop: async (S, n, I = !1) => {
-      var p, a, O;
+    cellDragDrop: async (S, a, I = !1) => {
+      var p, n, j;
       S.preventDefault(), clearTimeout(_e.timeout), Object.assign(_e, { el: null, cell: null, timeout: null });
       const e = JSON.parse(S.dataTransfer.getData("event") || "{}");
       e.start && (e.start = new Date(e.start)), e.end && (e.end = new Date(e.end));
       let z, H, Y;
-      I ? (H = new Date(n.start), Y = new Date(n.end)) : { start: H, end: Y } = A(S, e, n.start);
+      I ? (H = new Date(a.start), Y = new Date(a.end)) : { start: H, end: Y } = A(S, e, a.start);
       const { schedule: _ } = ((p = S.target.closest("[data-schedule]")) == null ? void 0 : p.dataset) || {};
       let f = () => {
       };
       ke.fromVueCal === C ? (z = r.getEvent(e._.id), z && (z._.dragging = !1, f = (X) => {
         if (z.start = H, z.end = Y, z.allDay = I, _ !== void 0 && (z.schedule = ~~_), X && typeof X == "object") {
-          const { _: U, ...Q } = X;
-          Object.assign(z, Q);
+          const { _: U, ...K } = X;
+          Object.assign(z, K);
         }
       })) : (z = {
         ...e,
         start: H,
         end: Y,
         ..._ !== void 0 && { schedule: ~~_ },
-        _: { id: ((a = e._) == null ? void 0 : a.id) || e.id, duration: Z(H, Y) },
+        _: { id: ((n = e._) == null ? void 0 : n.id) || e.id, duration: Z(H, Y) },
         getOverlappingEvents: () => r.getEventsInRange(H, Y, { schedule: ~~_ })
       }, f = (X) => {
         if (z = r.createEvent(z), X && typeof X == "object") {
-          const { _: U, ...Q } = X;
-          Object.assign(z, Q);
+          const { _: U, ...K } = X;
+          Object.assign(z, K);
         }
       });
       let c = !0;
-      const { drop: u } = (O = t.eventListeners) == null ? void 0 : O.event;
+      const { drop: u } = (j = t.eventListeners) == null ? void 0 : j.event;
       u && (c = await u({
         e: S,
         event: { ...z, start: H, end: Y, schedule: ~~_ },
         overlaps: z.getOverlappingEvents({ start: H, end: Y, schedule: ~~_ }),
-        cell: n,
+        cell: a,
         external: ke.fromVueCal !== C
-      })), c !== !1 && f(c), n.highlighted = !1, n.highlightedSchedule = null, Je = !1, ke.toVueCal = C, h("event-dropped", {
+      })), c !== !1 && f(c), a.highlighted = !1, a.highlightedSchedule = null, Je = !1, ke.toVueCal = C, h("event-dropped", {
         e: S,
-        cell: n,
+        cell: a,
         event: z,
         originalEvent: e,
         external: ke.fromVueCal !== C
@@ -283,7 +283,7 @@ const lt = (y, t) => {
     }, Date.prototype.addMinutes = function(s) {
       return S(this, s || 0);
     }, Date.prototype.subtractMinutes = function(s) {
-      return n(this, s || 0);
+      return a(this, s || 0);
     }, Date.prototype.getWeek = function() {
       return e(this);
     }, Date.prototype.isToday = function() {
@@ -293,7 +293,7 @@ const lt = (y, t) => {
     }, Date.prototype.format = function(s = "YYYY-MM-DD") {
       return X(this, s);
     }, Date.prototype.formatTime = function(s = "HH:mm") {
-      return Q(this, s);
+      return K(this, s);
     };
   }, Z = () => {
     delete Date.prototype.addDays, delete Date.prototype.subtractDays, delete Date.prototype.addHours, delete Date.prototype.subtractHours, delete Date.prototype.addMinutes, delete Date.prototype.subtractMinutes, delete Date.prototype.getWeek, delete Date.prototype.isToday, delete Date.prototype.isLeapYear, delete Date.prototype.format, delete Date.prototype.formatTime;
@@ -314,13 +314,13 @@ const lt = (y, t) => {
   }, S = (s, k) => {
     const D = new Date(s.valueOf());
     return D.setMinutes(D.getMinutes() + k), D;
-  }, n = (s, k) => {
+  }, a = (s, k) => {
     const D = new Date(s.valueOf());
     return D.setMinutes(D.getMinutes() - k), D;
   }, I = (s, k) => {
     const D = (J) => {
-      const ne = J % k;
-      return ne !== 0 && (J += ne >= k / 2 ? k - ne : -ne), J;
+      const se = J % k;
+      return se !== 0 && (J += se >= k / 2 ? k - se : -se), J;
     };
     if (typeof s == "number") return D(s);
     if (s instanceof Date) {
@@ -330,15 +330,15 @@ const lt = (y, t) => {
   }, e = (s, k = !1) => {
     const D = new Date(Date.UTC(s.getFullYear(), s.getMonth(), s.getDate())), J = D.getUTCDay() || 7;
     D.setUTCDate(D.getUTCDate() + 4 - J);
-    const ne = new Date(Date.UTC(D.getUTCFullYear(), 0, 1));
-    return Math.ceil(((D - ne) / 864e5 + 1) / 7) + (k ? 1 : 0);
+    const se = new Date(Date.UTC(D.getUTCFullYear(), 0, 1));
+    return Math.ceil(((D - se) / 864e5 + 1) / 7) + (k ? 1 : 0);
   }, z = (s) => `${s.getFullYear()}-${s.getMonth()}-${s.getDate()}` === l(), H = (s, k) => {
     if (!s || !k) return console.warn(`Vue Cal: missing date${s ? "2" : "1"} parameter for comparison with \`isSameDate(date1, date2)\`.`);
-    if (O(s)) {
-      if (!O(k)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${k}\`.`);
+    if (j(s)) {
+      if (!j(k)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${k}\`.`);
     } else return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${s}\`.`);
     return s.getFullYear() === k.getFullYear() && s.getMonth() === k.getMonth() && s.getDate() === k.getDate();
-  }, Y = (s, k, D) => O(s) ? s.getTime() >= k && s.getTime() <= D : console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${s}\`.`), _ = (s) => {
+  }, Y = (s, k, D) => j(s) ? s.getTime() >= k && s.getTime() <= D : console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${s}\`.`), _ = (s) => {
     const k = s.getFullYear();
     return !(k % 400) || k % 100 && !(k % 4);
   }, f = (s = null, k) => {
@@ -348,7 +348,7 @@ const lt = (y, t) => {
     typeof s == "string" && (s = s.replace(/-/g, "/")), typeof k == "string" && (k = k.replace(/-/g, "/")), s = new Date(s).setHours(0, 0, 0, 0), k = new Date(k).setHours(0, 0, 1, 0);
     const D = (new Date(k).getTimezoneOffset() - new Date(s).getTimezoneOffset()) * 60 * 1e3;
     return Math.ceil((k - s - D) / (24 * 3600 * 1e3));
-  }, a = (s, k, D) => Math.abs(s.getTime() - k.getTime()) <= D * 60 * 1e3, O = (s) => s && s instanceof Date && !isNaN(s), X = (s, k = "YYYY-MM-DD", D = null) => {
+  }, n = (s, k, D) => Math.abs(s.getTime() - k.getTime()) <= D * 60 * 1e3, j = (s) => s && s instanceof Date && !isNaN(s), X = (s, k = "YYYY-MM-DD", D = null) => {
     if (D || (D = v.value), k || (k = "YYYY-MM-DD"), k === "YYYY-MM-DD") return U(s);
     C = {}, W = {};
     const J = {
@@ -376,33 +376,33 @@ const lt = (y, t) => {
       m: () => ve(s, D).m,
       s: () => ve(s, D).s
     };
-    return k.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (ne, me) => {
+    return k.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (se, me) => {
       const o = J[me.replace(/\{|\}/g, "")];
       return o !== void 0 ? o() : me;
     });
   }, U = (s) => {
     const k = s.getMonth() + 1, D = s.getDate();
     return `${s.getFullYear()}-${k < 10 ? "0" : ""}${k}-${D < 10 ? "0" : ""}${D}`;
-  }, Q = (s, k = "HH:mm", D = null, J = !1) => {
-    let ne = !1;
+  }, K = (s, k = "HH:mm", D = null, J = !1) => {
+    let se = !1;
     if (J) {
       const [T, M, w] = [s.getHours(), s.getMinutes(), s.getSeconds()];
-      T + M + w === 141 && (ne = !0);
+      T + M + w === 141 && (se = !0);
     }
-    if (s instanceof Date && k === "HH:mm") return ne ? "24:00" : te(s);
+    if (s instanceof Date && k === "HH:mm") return se ? "24:00" : te(s);
     W = {}, D || (D = v.value);
     const me = ve(s, D), o = k.replace(/(\{[a-zA-Z]+\}|[a-zA-Z]+)/g, (T, M) => {
       const w = me[M.replace(/\{|\}/g, "")];
       return w !== void 0 ? w : M;
     });
-    return ne ? o.replace("23:59", "24:00") : o;
+    return se ? o.replace("23:59", "24:00") : o;
   }, te = (s) => {
     const k = s.getHours(), D = s.getMinutes();
     return `${(k < 10 ? "0" : "") + k}:${(D < 10 ? "0" : "") + D}`;
   }, q = (s) => {
     const k = Math.floor(s / 60).toString().padStart(2, 0), D = (s % 60).toString().padStart(2, 0);
     return `${k}:${D}`;
-  }, le = (s) => {
+  }, re = (s) => {
     if (s > 3 && s < 21) return "th";
     switch (s % 10) {
       case 1:
@@ -416,7 +416,7 @@ const lt = (y, t) => {
     }
   }, ae = (s, k) => {
     if (C.D) return C;
-    const D = s.getFullYear(), J = s.getMonth() + 1, ne = s.getDate(), o = (s.getDay() - 1 + 7) % 7;
+    const D = s.getFullYear(), J = s.getMonth() + 1, se = s.getDate(), o = (s.getDay() - 1 + 7) % 7;
     return C = {
       // Year.
       YYYY: D,
@@ -435,11 +435,11 @@ const lt = (y, t) => {
       MMMMG: () => (k.monthsGenitive || k.months)[J - 1],
       // January to December in genitive form (Greek...)
       // Day.
-      D: ne,
+      D: se,
       // 1 to 31.
-      DD: () => ne.toString().padStart(2, 0),
+      DD: () => se.toString().padStart(2, 0),
       // 01 to 31.
-      S: () => le(ne),
+      S: () => re(se),
       // st, nd, rd, th.
       // Day of the week.
       d: o + 1,
@@ -454,8 +454,8 @@ const lt = (y, t) => {
     }, C;
   }, ve = (s, k) => {
     if (W.am) return W;
-    let D, J, ne;
-    s instanceof Date ? (D = s.getHours(), J = s.getMinutes(), ne = s.getSeconds()) : (D = Math.floor(s / 60), J = Math.floor(s % 60));
+    let D, J, se;
+    s instanceof Date ? (D = s.getHours(), J = s.getMinutes(), se = s.getSeconds()) : (D = Math.floor(s / 60), J = Math.floor(s % 60));
     const me = D % 12 ? D % 12 : 12, o = (k || { am: "am", pm: "pm" })[D === 24 || D < 12 ? "am" : "pm"];
     return W = {
       H: D,
@@ -466,7 +466,7 @@ const lt = (y, t) => {
       AM: o.toUpperCase(),
       m: J,
       mm: J.toString().padStart(2, 0),
-      s: ne
+      s: se
     }, W;
   };
   return {
@@ -478,7 +478,7 @@ const lt = (y, t) => {
     addHours: m,
     subtractHours: i,
     addMinutes: S,
-    subtractMinutes: n,
+    subtractMinutes: a,
     snapToInterval: I,
     getWeek: e,
     isToday: z,
@@ -489,11 +489,11 @@ const lt = (y, t) => {
     stringToDate: c,
     dateToMinutes: u,
     countDays: p,
-    datesInSameTimeStep: a,
-    isValid: O,
+    datesInSameTimeStep: n,
+    isValid: j,
     formatDate: X,
     formatDateLite: U,
-    formatTime: Q,
+    formatTime: K,
     formatTimeLite: te,
     formatMinutes: q
   };
@@ -516,9 +516,9 @@ const lt = (y, t) => {
       // A map of all the events indexed by ID for fast lookup. Each event is the original full event object.
     }, z = d.events.slice().sort((u, p) => u.start - p.start < 0 ? -1 : 1);
     for (let u of z) {
-      const p = typeof u.start == "string" || typeof u.end == "string", a = !((H = u._) != null && H.register) || !u.isOverlapping || !u.delete;
-      let O = !1;
-      if (!p && ((Y = u._) != null && Y.cachedStart) && ((_ = u._) != null && _.cachedEnd) && (O = u.start.getTime() !== ((f = u._) == null ? void 0 : f.cachedStart) || u.end.getTime() !== ((c = u._) == null ? void 0 : c.cachedEnd)), p || a || O) {
+      const p = typeof u.start == "string" || typeof u.end == "string", n = !((H = u._) != null && H.register) || !u.isOverlapping || !u.delete;
+      let j = !1;
+      if (!p && ((Y = u._) != null && Y.cachedStart) && ((_ = u._) != null && _.cachedEnd) && (j = u.start.getTime() !== ((f = u._) == null ? void 0 : f.cachedStart) || u.end.getTime() !== ((c = u._) == null ? void 0 : c.cachedEnd)), p || n || j) {
         if (!C(u)) continue;
         W(u), u._.cachedStart = u.start.getTime(), u._.cachedEnd = u.end.getTime();
       }
@@ -528,8 +528,8 @@ const lt = (y, t) => {
         u._.multiday = d.multidayEvents, d.multidayEvents ? e.multiday.push(u._.id) : (console.info("Vue Cal: Multi-day events provided without being enabled. Truncating event end to next midnight."), u.end = new Date(new Date(u.start).setHours(23, 59, 59, 999)), W(u)), e.byDate[u._.startFormatted] || (e.byDate[u._.startFormatted] = []), e.byDate[u._.startFormatted].push(u._.id);
       else {
         e.byDate[u._.startFormatted] || (e.byDate[u._.startFormatted] = []), e.byDate[u._.startFormatted].push(u._.id);
-        const X = u._.startFormatted.substring(0, 4), U = u._.startFormatted.substring(5, 7), Q = u._.startFormatted.substring(8, 10);
-        e.byYear[X] || (e.byYear[X] = {}), e.byYear[X][U] || (e.byYear[X][U] = {}), e.byYear[X][U][Q] || (e.byYear[X][U][Q] = []), e.byYear[X][U][Q].push(u._.id);
+        const X = u._.startFormatted.substring(0, 4), U = u._.startFormatted.substring(5, 7), K = u._.startFormatted.substring(8, 10);
+        e.byYear[X] || (e.byYear[X] = {}), e.byYear[X][U] || (e.byYear[X][U] = {}), e.byYear[X][U][K] || (e.byYear[X][U][K] = []), e.byYear[X][U][K].push(u._.id);
       }
     }
     return e;
@@ -541,8 +541,8 @@ const lt = (y, t) => {
     }), e._.deleting === void 0 && (e._.deleting = !1), e._.deleted === void 0 && (e._.deleted = !1), e.isOverlapping || (e.isOverlapping = function(f = null) {
       return this.getOverlappingEvents(f).length;
     }), e.getOverlappingEvents || (e.getOverlappingEvents = function(f = null) {
-      var a;
-      const c = (f == null ? void 0 : f.start) || this.start, u = (f == null ? void 0 : f.end) || this.end, p = (a = d.schedules) != null && a.length ? ~~((f == null ? void 0 : f.schedule) || this.schedule) : null;
+      var n;
+      const c = (f == null ? void 0 : f.start) || this.start, u = (f == null ? void 0 : f.end) || this.end, p = (n = d.schedules) != null && n.length ? ~~((f == null ? void 0 : f.schedule) || this.schedule) : null;
       return E(c, u, { excludeIds: [this._.id], schedule: p });
     }), e._.register || (e._.register = (f) => {
       e._.$el = f, e._.fireCreated && (y.emit("event-created", e), delete e._.fireCreated);
@@ -568,8 +568,8 @@ const lt = (y, t) => {
     let H = typeof e == "string" || !isNaN(e) ? e : null;
     const Y = typeof e == "object" ? Object.entries(e) : null;
     if (Y) {
-      const [p, a] = Y[0];
-      H = (c = d.events.find((O) => O[p] === a)) == null ? void 0 : c._.id;
+      const [p, n] = Y[0];
+      H = (c = d.events.find((j) => j[p] === n)) == null ? void 0 : c._.id;
     }
     if (!d.editableEvents.delete)
       return console.info("Vue Cal: Event deletion is disabled. Enable it with the `editable-events` props.");
@@ -603,56 +603,56 @@ const lt = (y, t) => {
     if (!_.length) return { cellOverlaps: {}, longestStreak: 0 };
     const f = {};
     let c = [], u = 0;
-    _.sort((p, a) => p.start - a.start || p.end - p.start - (a.end - a.start));
+    _.sort((p, n) => p.start - n.start || p.end - p.start - (n.end - n.start));
     for (const p of _) {
-      const a = p._.id;
-      f[a] || (f[a] = { overlaps: /* @__PURE__ */ new Set(), maxConcurrent: 1, position: 0 }), c = c.filter((te) => te.end > p.start);
-      const O = c.filter((te) => {
-        var le;
-        return (!((le = d.schedules) != null && le.length) || p.schedule === te.schedule) && te.start < p.end;
-      }), X = new Set(O.map((te) => {
+      const n = p._.id;
+      f[n] || (f[n] = { overlaps: /* @__PURE__ */ new Set(), maxConcurrent: 1, position: 0 }), c = c.filter((te) => te.end > p.start);
+      const j = c.filter((te) => {
+        var re;
+        return (!((re = d.schedules) != null && re.length) || p.schedule === te.schedule) && te.start < p.end;
+      }), X = new Set(j.map((te) => {
         var q;
         return ((q = f[te._.id]) == null ? void 0 : q.position) ?? 0;
       }));
       let U = 0;
       for (; X.has(U); ) U++;
-      f[a].position = U, c.push(p);
-      const Q = Math.max(1, ...O.map((te) => {
+      f[n].position = U, c.push(p);
+      const K = Math.max(1, ...j.map((te) => {
         var q;
         return ((q = f[te._.id]) == null ? void 0 : q.maxConcurrent) ?? 1;
       }));
-      f[a].maxConcurrent = Math.max(O.length + 1, Q);
-      for (const te of O)
-        f[te._.id].overlaps.add(a), f[a].overlaps.add(te._.id), f[te._.id].maxConcurrent = f[a].maxConcurrent;
-      u = Math.max(u, f[a].maxConcurrent);
+      f[n].maxConcurrent = Math.max(j.length + 1, K);
+      for (const te of j)
+        f[te._.id].overlaps.add(n), f[n].overlaps.add(te._.id), f[te._.id].maxConcurrent = f[n].maxConcurrent;
+      u = Math.max(u, f[n].maxConcurrent);
     }
     for (const p in f) f[p].overlaps = [...f[p].overlaps];
     return { cellOverlaps: f, longestStreak: u };
   }, E = (e, z, { excludeIds: H = [], schedule: Y = null, background: _ = !0, allDay: f = !1 } = {}) => {
     if (!Object.keys(h.value.byId).length) return [];
-    const c = e.getFullYear(), u = z.getFullYear(), p = e.getMonth() + 1, a = z.getMonth() + 1, O = e.getDate(), X = z.getDate();
+    const c = e.getFullYear(), u = z.getFullYear(), p = e.getMonth() + 1, n = z.getMonth() + 1, j = e.getDate(), X = z.getDate();
     e.getTime(), z.getTime();
-    const U = new Date(e).setHours(0, 0, 0, 0), Q = new Date(z).setHours(23, 59, 59, 999), te = new Set(H), q = [];
+    const U = new Date(e).setHours(0, 0, 0, 0), K = new Date(z).setHours(23, 59, 59, 999), te = new Set(H), q = [];
     if (Object.keys(h.value.byId).length <= 100) {
-      for (const le of Object.values(h.value.byId))
-        !le || te.has(le._.id) || Y !== null && Y !== le.schedule || _ === !1 && le.background || d.allDayEvents && (f && !le.allDay || !f && le.allDay) || le.start.getTime() < Q && le.end.getTime() > U && q.push(le);
+      for (const re of Object.values(h.value.byId))
+        !re || te.has(re._.id) || Y !== null && Y !== re.schedule || _ === !1 && re.background || d.allDayEvents && (f && !re.allDay || !f && re.allDay) || re.start.getTime() < K && re.end.getTime() > U && q.push(re);
       return q;
     }
-    for (let le = c; le <= u; le++) {
-      const ae = `${le}`, ve = h.value.byYear[ae];
+    for (let re = c; re <= u; re++) {
+      const ae = `${re}`, ve = h.value.byYear[ae];
       if (!ve) continue;
-      const s = le === c ? p : 1, k = le === u ? a : 12;
+      const s = re === c ? p : 1, k = re === u ? n : 12;
       for (let D = s; D <= k; D++) {
-        const J = String(D).padStart(2, "0"), ne = ve[J];
-        if (ne)
-          for (const me in ne) {
+        const J = String(D).padStart(2, "0"), se = ve[J];
+        if (se)
+          for (const me in se) {
             const o = +me;
-            if (o > X || o < O) continue;
-            const T = ne[me];
+            if (o > X || o < j) continue;
+            const T = se[me];
             if (T != null && T.length)
               for (let M = 0; M < T.length; M++) {
                 const w = h.value.byId[T[M]];
-                !w || te.has(w._.id) || Y !== null && Y !== w.schedule || _ === !1 && w.background || d.allDayEvents && (f && !w.allDay || !f && w.allDay) || w.start.getTime() < Q && w.end.getTime() > U && q.push(w);
+                !w || te.has(w._.id) || Y !== null && Y !== w.schedule || _ === !1 && w.background || d.allDayEvents && (f && !w.allDay || !f && w.allDay) || w.start.getTime() < K && w.end.getTime() > U && q.push(w);
               }
           }
       }
@@ -698,26 +698,26 @@ const lt = (y, t) => {
       (c = p["resize-start"]) == null || c.call(p, { e, event: m.resizingEvent });
     }
     if (m.cellEl) {
-      const { top: p, left: a, width: O, height: X } = m.cellEl.getBoundingClientRect();
-      m.moveX = z - a, m.moveY = H - p, m.movePercentageX = m.moveX * 100 / O, m.movePercentageY = m.moveY * 100 / X;
+      const { top: p, left: n, width: j, height: X } = m.cellEl.getBoundingClientRect();
+      m.moveX = z - n, m.moveY = H - p, m.movePercentageX = m.moveX * 100 / j, m.movePercentageY = m.moveY * 100 / X;
     }
     if (m.documentMouseX = z, m.documentMouseY = H, m.fromResizer && m.resizingEvent) {
-      const p = m.cellEl.__vueParentComponent.props.start, { newStart: a, newEnd: O } = i(m.resizingEvent, p);
+      const p = m.cellEl.__vueParentComponent.props.start, { newStart: n, newEnd: j } = i(m.resizingEvent, p);
       let X = !0;
       const { resize: U } = ((u = d.eventListeners) == null ? void 0 : u.event) || {};
       U && (X = await U({
         e,
-        event: { ...m.resizingEvent, start: a, end: O },
-        overlaps: m.resizingEvent.getOverlappingEvents({ start: a, end: O })
-      })), X !== !1 ? (m.resizingEvent.start = a, m.resizingEvent.end = O, m.resizingLastAcceptedEvent && (m.resizingLastAcceptedEvent = null), e.preventDefault()) : U && (m.resizingLastAcceptedEvent = { ...m.resizingEvent, _: { ...m.resizingEvent._ } });
+        event: { ...m.resizingEvent, start: n, end: j },
+        overlaps: m.resizingEvent.getOverlappingEvents({ start: n, end: j })
+      })), X !== !1 ? (m.resizingEvent.start = n, m.resizingEvent.end = j, m.resizingLastAcceptedEvent && (m.resizingLastAcceptedEvent = null), e.preventDefault()) : U && (m.resizingLastAcceptedEvent = { ...m.resizingEvent, _: { ...m.resizingEvent._ } });
     }
-  }, n = async (e) => {
+  }, a = async (e) => {
     var z, H, Y, _;
     if ((z = y.touch) != null && z.isResizingEvent && m.resizingEvent) {
       const f = m.cellEl.__vueParentComponent.props.start, { newStart: c, newEnd: u } = i(m.resizingEvent, f);
       let p = !0;
-      const O = (((H = d.eventListeners) == null ? void 0 : H.event) || {})["resize-end"];
-      O && (p = await O({
+      const j = (((H = d.eventListeners) == null ? void 0 : H.event) || {})["resize-end"];
+      j && (p = await j({
         e,
         event: m.resizingEvent,
         original: m.resizingOriginalEvent,
@@ -742,7 +742,7 @@ const lt = (y, t) => {
       const Y = ((_ = e.touches) == null ? void 0 : _[0]) || e;
       if (m.fromResizer = !!Y.target.closest(".vuecal__event-resizer"), m.fromResizer) {
         const f = H.getBoundingClientRect();
-        m.startX = Y.clientX - f.left, m.startY = Y.clientY - f.top, m.startPercentageX = m.startX * 100 / f.width, m.startPercentageY = m.startY * 100 / f.height, m.cellEl = H.closest(".vuecal__cell"), m.resizeStartDate = z.start, m.resizingEvent = z, document.addEventListener(e.type === "touchstart" ? "touchmove" : "mousemove", S, { passive: !m.fromResizer }), document.addEventListener(e.type === "touchstart" ? "touchend" : "mouseup", n, { once: !0 });
+        m.startX = Y.clientX - f.left, m.startY = Y.clientY - f.top, m.startPercentageX = m.startX * 100 / f.width, m.startPercentageY = m.startY * 100 / f.height, m.cellEl = H.closest(".vuecal__cell"), m.resizeStartDate = z.start, m.resizingEvent = z, document.addEventListener(e.type === "touchstart" ? "touchmove" : "mousemove", S, { passive: !m.fromResizer }), document.addEventListener(e.type === "touchstart" ? "touchend" : "mouseup", a, { once: !0 });
       }
     }
   };
@@ -757,7 +757,7 @@ const lt = (y, t) => {
       return g.setMilliseconds(-1), g;
     }
     return v.value === "month" ? c.value : m.value;
-  }), n = b(() => {
+  }), a = b(() => {
     const g = Z.value.getTime();
     if (v.value === "week")
       return i.value.getTime() <= g && g <= S.value.getTime();
@@ -791,13 +791,13 @@ const lt = (y, t) => {
   }), f = b(() => {
     const g = [], R = ["days", "week", "month"].includes(v.value);
     let ee = 0;
-    for (let K = 0; K < Y.value + ee; K++)
+    for (let Q = 0; Q < Y.value + ee; Q++)
       switch (v.value) {
         case "day":
         case "days":
         case "week":
         case "month": {
-          const ye = t.addDays(_.value, K), Ne = ye.getDay() || 7;
+          const ye = t.addDays(_.value, Q), Ne = ye.getDay() || 7;
           if (R && y.hasHiddenDays && y.hideWeekdays[Ne]) {
             ee++;
             continue;
@@ -808,14 +808,14 @@ const lt = (y, t) => {
         }
         case "year":
           g.push({
-            start: new Date(_.value.getFullYear(), K, 1, 0, 0, 0, 0),
-            end: new Date(_.value.getFullYear(), K + 1, 0, 23, 59, 59, 999)
+            start: new Date(_.value.getFullYear(), Q, 1, 0, 0, 0, 0),
+            end: new Date(_.value.getFullYear(), Q + 1, 0, 23, 59, 59, 999)
           });
           break;
         case "years":
           g.push({
-            start: new Date(_.value.getFullYear() + K, 0, 1, 0, 0, 0, 0),
-            end: new Date(_.value.getFullYear() + K + 1, 0, 0, 23, 59, 59, 999)
+            start: new Date(_.value.getFullYear() + Q, 0, 1, 0, 0, 0, 0),
+            end: new Date(_.value.getFullYear() + Q + 1, 0, 0, 23, 59, 59, 999)
           });
           break;
       }
@@ -823,21 +823,21 @@ const lt = (y, t) => {
   }), c = b(() => f.value[f.value.length - 1].end), u = ue("right"), p = b(() => {
     const g = Object.keys(y.availableViews);
     return g[g.indexOf(v.value) + 1];
-  }), a = b(() => {
+  }), n = b(() => {
     const g = Object.keys(y.availableViews);
     return g[g.indexOf(v.value) - 1];
   });
-  function O(g, R, ee = !1) {
+  function j(g, R, ee = !1) {
     if (!R || !R[g]) return g + 1;
-    const K = R[g];
-    return ee && typeof K == "string" ? K.substring(0, 3) : K;
+    const Q = R[g];
+    return ee && typeof Q == "string" ? Q.substring(0, 3) : Q;
   }
   function X(g, R, ee) {
-    const { monthsArray: K, monthBeforeDay: ye, canTruncate: Ne, xs: ze } = ee, Me = g.getMonth(), Ee = g.getFullYear(), Ye = R.getMonth(), Pe = R.getFullYear(), Be = Me !== Ye, $t = Ee !== Pe, Te = Ne && (ze || Be), Le = g.getDate(), Ae = R.getDate();
-    return $t ? ye ? `${O(Me, K, Te)} ${Le}, ${Ee} - ${O(Ye, K, Te)} ${Ae}, ${Pe}` : `${Le} ${O(Me, K, Te)} ${Ee} - ${Ae} ${O(Ye, K, Te)} ${Pe}` : Be ? ye ? `${O(Me, K, Te)} ${Le} - ${O(Ye, K, Te)} ${Ae}, ${Ee}` : `${Le} ${O(Me, K, Te)} - ${Ae} ${O(Ye, K, Te)} ${Ee}` : ye ? `${O(Me, K, Te)} ${Le}-${Ae}, ${Ee}` : `${Le}-${Ae} ${O(Me, K, Te)} ${Ee}`;
+    const { monthsArray: Q, monthBeforeDay: ye, canTruncate: Ne, xs: ze } = ee, Me = g.getMonth(), Ee = g.getFullYear(), Ye = R.getMonth(), Pe = R.getFullYear(), Be = Me !== Ye, $t = Ee !== Pe, Te = Ne && (ze || Be), Le = g.getDate(), Ae = R.getDate();
+    return $t ? ye ? `${j(Me, Q, Te)} ${Le}, ${Ee} - ${j(Ye, Q, Te)} ${Ae}, ${Pe}` : `${Le} ${j(Me, Q, Te)} ${Ee} - ${Ae} ${j(Ye, Q, Te)} ${Pe}` : Be ? ye ? `${j(Me, Q, Te)} ${Le} - ${j(Ye, Q, Te)} ${Ae}, ${Ee}` : `${Le} ${j(Me, Q, Te)} - ${Ae} ${j(Ye, Q, Te)} ${Ee}` : ye ? `${j(Me, Q, Te)} ${Le}-${Ae}, ${Ee}` : `${Le}-${Ae} ${j(Me, Q, Te)} ${Ee}`;
   }
   const U = b(() => {
-    const { dateFormat: g, months: R, monthsGenitive: ee, week: K, truncations: ye } = r, Ne = y.locale, ze = ye !== !1, Me = g.indexOf("M") < g.indexOf("D"), Ee = ee && Ne === "el" ? ee : R;
+    const { dateFormat: g, months: R, monthsGenitive: ee, week: Q, truncations: ye } = r, Ne = y.locale, ze = ye !== !1, Me = g.indexOf("M") < g.indexOf("D"), Ee = ee && Ne === "el" ? ee : R;
     switch (v.value) {
       case "day":
         return t.formatDate(_.value, g);
@@ -855,7 +855,7 @@ const lt = (y, t) => {
             _.value,
             y.startWeekOnSunday && !y.hideWeekdays[7]
           );
-          Pe += ` <small>${K} ${Be}</small>`;
+          Pe += ` <small>${Q} ${Be}</small>`;
         }
         return Pe;
       }
@@ -869,7 +869,7 @@ const lt = (y, t) => {
         return `${_.value.getFullYear()} - ${m.value.getFullYear()}`;
     }
   });
-  async function Q() {
+  async function K() {
     switch (l.value = new Date(L.value || Z.value), l.value.setHours(0, 0, 0, 0), v.value) {
       case "day":
         break;
@@ -896,23 +896,23 @@ const lt = (y, t) => {
       extendedStart: i.value,
       extendedEnd: S.value,
       cellDates: f.value,
-      containsToday: n.value,
+      containsToday: a.value,
       events: G.value
     }));
   }
   function te(g) {
     const R = v.value, ee = y.availableViews[R];
-    g[R] && JSON.stringify(g[R]) === JSON.stringify(ee) || Q();
+    g[R] && JSON.stringify(g[R]) === JSON.stringify(ee) || K();
   }
   function q(g, R = !0, ee = null) {
-    const K = Object.keys(y.availableViews);
-    v.value === g && !ee || (K.includes(g) ? (u.value = K.indexOf(g) < K.indexOf(v.value) ? "left" : "right", R && v.value !== g && d("update:view", g), v.value = g, ee ? J(ee) : Q()) : console.warn(`Vue Cal: the \`${g}\` view is not available.`));
+    const Q = Object.keys(y.availableViews);
+    v.value === g && !ee || (Q.includes(g) ? (u.value = Q.indexOf(g) < Q.indexOf(v.value) ? "left" : "right", R && v.value !== g && d("update:view", g), v.value = g, ee ? J(ee) : K()) : console.warn(`Vue Cal: the \`${g}\` view is not available.`));
   }
-  function le() {
+  function re() {
     p.value ? q(p.value) : console.warn("Vue Cal: no broader view is available.");
   }
   function ae() {
-    a.value ? q(a.value) : console.warn("Vue Cal: no narrower view is available.");
+    n.value ? q(n.value) : console.warn("Vue Cal: no narrower view is available.");
   }
   function ve() {
     k(!1);
@@ -955,45 +955,45 @@ const lt = (y, t) => {
   }
   function J(g, R = !0, ee = !1) {
     if (!t.isValid(g)) return console.warn("Vue Cal: can't navigate to the given date: invalid date provided to `updateViewDate(date)`.");
-    let [K, ye] = [_.value, c.value];
-    v.value === "month" && ([K, ye] = [F.value, m.value]), (!t.isInRange(g, K, ye) || ee) && (g.setHours(0, 0, 0, 0), u.value = g.getTime() < K.getTime() ? "left" : "right", L.value = g, R && d("update:viewDate", g), Q());
+    let [Q, ye] = [_.value, c.value];
+    v.value === "month" && ([Q, ye] = [F.value, m.value]), (!t.isInRange(g, Q, ye) || ee) && (g.setHours(0, 0, 0, 0), u.value = g.getTime() < Q.getTime() ? "left" : "right", L.value = g, R && d("update:viewDate", g), K());
   }
-  function ne(g, R = !0) {
+  function se(g, R = !0) {
     if (!t.isValid(g)) return console.warn("Vue Cal: can't update the selected date: invalid date provided to `updateSelectedDate(date)`.");
-    const { isValid: ee, isSameDate: K } = t;
-    (!A.value || !ee(A.value) || !K(g, A.value)) && (g.setHours(0, 0, 0, 0), A.value = g, R && d("update:selectedDate", g));
+    const { isValid: ee, isSameDate: Q } = t;
+    (!A.value || !ee(A.value) || !Q(g, A.value)) && (g.setHours(0, 0, 0, 0), A.value = g, R && d("update:selectedDate", g));
   }
   function me(g) {
-    !g && !l.value.getDay() ? J(t.addDays(l.value, 1), !0, !0) : (u.value = "left", Q());
+    !g && !l.value.getDay() ? J(t.addDays(l.value, 1), !0, !0) : (u.value = "left", K());
   }
   function o(g) {
     g && y.startWeekOnSunday && !l.value.getDay() ? J(t.addDays(l.value, 1), !0, !0) : !g && y.startWeekOnSunday && l.value.getDay() === 1 && J(t.subtractDays(l.value, 1), !0, !0);
   }
   function T() {
-    Q();
+    K();
   }
   function M(g) {
-    var K;
-    const R = (K = C.value) == null ? void 0 : K.querySelector(".vuecal__scrollable"), ee = g ? g * y.timeCellHeight / y.timeStep : 0;
+    var Q;
+    const R = (Q = C.value) == null ? void 0 : Q.querySelector(".vuecal__scrollable"), ee = g ? g * y.timeCellHeight / y.timeStep : 0;
     R == null || R.scrollTo({ top: ee, behavior: "smooth" });
   }
   function w() {
     const g = /* @__PURE__ */ new Date();
     M(g.getHours() * 60 + g.getMinutes());
   }
-  function N() {
+  function B() {
     M(0);
   }
   const G = b(() => h.getViewEvents(f.value)), oe = h.createEvent, ge = h.deleteEvent;
-  return De(() => y.view, (g) => q(g, !1)), De(() => y.availableViews, te), De(() => y.datePicker, () => q("month")), De(() => y.viewDate, (g) => J(g, !1)), De(() => y.selectedDate, (g) => ne(g, !1)), De(() => y.startWeekOnSunday, (g) => me(g)), De(() => y.hideWeekends, (g) => o(g)), De(() => y.hideWeekdays, T), De(() => Y.value, () => {
+  return De(() => y.view, (g) => q(g, !1)), De(() => y.availableViews, te), De(() => y.datePicker, () => q("month")), De(() => y.viewDate, (g) => J(g, !1)), De(() => y.selectedDate, (g) => se(g, !1)), De(() => y.startWeekOnSunday, (g) => me(g)), De(() => y.hideWeekends, (g) => o(g)), De(() => y.hideWeekdays, T), De(() => Y.value, () => {
     Y.value > 90 && console.warn("Vue Cal: high cell count detected. Performance may degrade when interactions are enabled.");
   }), De(() => y.watchRealTime, (g) => {
     g && y.time ? e() : E = clearTimeout(E);
-  }), Q(), y.time && y.watchRealTime && e(), Re(() => E = clearTimeout(E)), {
+  }), K(), y.time && y.watchRealTime && e(), Re(() => E = clearTimeout(E)), {
     now: Z,
     id: v,
     broaderView: p,
-    narrowerView: a,
+    narrowerView: n,
     title: U,
     viewDate: L,
     start: F,
@@ -1004,7 +1004,7 @@ const lt = (y, t) => {
     // Full range, including out of scope month days, and hidden leading/trailing days.
     firstCellDate: _,
     lastCellDate: c,
-    containsToday: n,
+    containsToday: a,
     selectedDate: A,
     cellDates: f,
     cols: z,
@@ -1015,17 +1015,17 @@ const lt = (y, t) => {
     events: G,
     transitionDirection: u,
     switch: (g, R) => q(g, !0, R),
-    broader: le,
+    broader: re,
     narrower: ae,
     previous: ve,
     next: s,
     navigate: k,
     goToToday: D,
     updateViewDate: J,
-    updateSelectedDate: ne,
+    updateSelectedDate: se,
     scrollToCurrentTime: w,
     scrollToTime: M,
-    scrollTop: N,
+    scrollTop: B,
     createEvent: oe,
     deleteEvent: ge,
     // Getters.
@@ -1230,7 +1230,7 @@ const lt = (y, t) => {
       r.clickToNavigate && d.broader();
     }, C = b(() => r.clickToNavigate ? { click: h } : {});
     return (W, v) => (V(), P("div", At, [
-      j(W.$slots, "header", {
+      O(W.$slots, "header", {
         view: $(d),
         availableViews: $(r).availableViews,
         vuecal: $(t)
@@ -1250,13 +1250,13 @@ const lt = (y, t) => {
             onClick: v[0] || (v[0] = (...A) => $(d).previous && $(d).previous(...A)),
             type: "button"
           }, [
-            j(W.$slots, "previous-button")
+            O(W.$slots, "previous-button")
           ], 2),
           he("div", Bt, [
             Oe(Ue, {
               name: `vuecal-slide-fade--${$(d).transitionDirection}`
             }, {
-              default: B(() => [
+              default: N(() => [
                 (V(), P("div", {
                   key: $(d).id + $(d).start.getTime()
                 }, [
@@ -1264,8 +1264,8 @@ const lt = (y, t) => {
                     key: 0,
                     class: "vuecal__title"
                   }, Ie(C.value)), {
-                    default: B(() => [
-                      W.$slots[`title.${$(d).id}`] ? j(W.$slots, `title.${$(d).id}`, se(ie({ key: 0 }, $(d)))) : j(W.$slots, "title", se(ie({ key: 1 }, $(d))))
+                    default: N(() => [
+                      W.$slots[`title.${$(d).id}`] ? O(W.$slots, `title.${$(d).id}`, ne(ie({ key: 0 }, $(d)))) : O(W.$slots, "title", ne(ie({ key: 1 }, $(d))))
                     ]),
                     _: 3
                   }, 16)) : (V(), Se(xe($(r).clickToNavigate && $(d).broaderView ? "button" : "div"), ie({
@@ -1280,7 +1280,7 @@ const lt = (y, t) => {
             }, 8, ["name"])
           ]),
           $(r).todayButton ? (V(), P(de, { key: 0 }, [
-            W.$slots["today-button"] ? j(W.$slots, "today-button", {
+            W.$slots["today-button"] ? O(W.$slots, "today-button", {
               key: 0,
               navigate: () => !$(d).containsToday && $(d).goToToday(),
               active: $(d).containsToday
@@ -1298,7 +1298,7 @@ const lt = (y, t) => {
             onClick: v[2] || (v[2] = (...A) => $(d).next && $(d).next(...A)),
             type: "button"
           }, [
-            j(W.$slots, "next-button")
+            O(W.$slots, "next-button")
           ], 2)
         ])) : x("", !0)
       ], 64))
@@ -1313,7 +1313,7 @@ const lt = (y, t) => {
 }, Zt = { class: "vuecal__event-start" }, Kt = {
   key: 1,
   class: "vuecal__event-end"
-}, Qt = { key: 0 }, xt = ["innerHTML"], ea = 16, st = {
+}, Qt = { key: 0 }, xt = ["innerHTML"], en = 16, st = {
   __name: "event",
   props: {
     event: { type: Object, required: !0 },
@@ -1364,10 +1364,10 @@ const lt = (y, t) => {
       cellEl: null,
       // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
       schedule: null
-    }), F = b(() => r.editableEvents.drag && l.draggable !== !1 && !l.background && E.canTouchAndDrag !== !1), m = b(() => h.isMonth || h.isYear || h.isYears || d.inAllDayBar || l._.multiday && !n.value ? !1 : r.time && r.editableEvents.resize && l.resizable !== !1 && !l.background);
+    }), F = b(() => r.editableEvents.drag && l.draggable !== !1 && !l.background && E.canTouchAndDrag !== !1), m = b(() => h.isMonth || h.isYear || h.isYears || d.inAllDayBar || l._.multiday && !a.value ? !1 : r.time && r.editableEvents.resize && l.resizable !== !1 && !l.background);
     b(() => r.editableEvents.delete && l.deletable !== !1 && !l.background);
     const i = b(() => {
-      var c, u, p, a, O;
+      var c, u, p, n, j;
       const f = !!((c = l._) != null && c.multiday);
       return {
         [`vuecal__event--${l._.id}`]: !0,
@@ -1376,8 +1376,8 @@ const lt = (y, t) => {
         "vuecal__event--background": !!l.background,
         "vuecal__event--all-day": l.allDay || ((u = l._) == null ? void 0 : u.startMinutes) === 0 && ((p = l._) == null ? void 0 : p.duration) === 1440,
         "vuecal__event--multiday": f,
-        "vuecal__event--cut-top": !d.inAllDayBar && (((a = l._) == null ? void 0 : a.startMinutes) < r.timeFrom || f && !S.value),
-        "vuecal__event--cut-bottom": !d.inAllDayBar && (((O = l._) == null ? void 0 : O.endMinutes) > r.timeTo || f && !n.value),
+        "vuecal__event--cut-top": !d.inAllDayBar && (((n = l._) == null ? void 0 : n.startMinutes) < r.timeFrom || f && !S.value),
+        "vuecal__event--cut-bottom": !d.inAllDayBar && (((j = l._) == null ? void 0 : j.endMinutes) > r.timeTo || f && !a.value),
         // Only apply the dragging class on the event copy that is being dragged.
         "vuecal__event--dragging": !l._.draggingGhost && l._.dragging,
         // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
@@ -1389,7 +1389,7 @@ const lt = (y, t) => {
         "vuecal__event--dragging-ghost": l._.draggingGhost,
         "vuecal__event--resizing": W.isResizingEvent
       };
-    }), S = b(() => l._.multiday ? new Date(l.start).setHours(0, 0, 0, 0) === d.cellStart.getTime() : !0), n = b(() => l._.multiday ? v.isSameDate(new Date(new Date(l.end).setMilliseconds(-1)), d.cellEnd) : !0), I = b(() => {
+    }), S = b(() => l._.multiday ? new Date(l.start).setHours(0, 0, 0, 0) === d.cellStart.getTime() : !0), a = b(() => l._.multiday ? v.isSameDate(new Date(new Date(l.end).setMilliseconds(-1)), d.cellEnd) : !0), I = b(() => {
       const f = new Date(l.start).setHours(0, 0, 0, 0), c = new Date(l.end).setHours(0, 0, 0, 0);
       return Math.ceil((c - f) / (1e3 * 60 * 60 * 24));
     }), e = b(() => {
@@ -1400,34 +1400,34 @@ const lt = (y, t) => {
         color: l.color || null
       };
       if (f) {
-        let p = l._.startMinutes, a = l._.endMinutes;
-        l._.multiday && (S.value || (p = 0), n.value || (a = 1440));
-        const O = Math.max(r.timeFrom, p), X = Math.min(r.timeTo, a) + (l._.duration && !a ? 1440 : 0), U = Ve(O, r), Q = Ve(X, r) - U;
-        u[c ? "left" : "top"] = `${U}%`, u[c ? "width" : "height"] = `${Q}%`;
+        let p = l._.startMinutes, n = l._.endMinutes;
+        l._.multiday && (S.value || (p = 0), a.value || (n = 1440));
+        const j = Math.max(r.timeFrom, p), X = Math.min(r.timeTo, n) + (l._.duration && !n ? 1440 : 0), U = Ve(j, r), K = Ve(X, r) - U;
+        u[c ? "left" : "top"] = `${U}%`, u[c ? "width" : "height"] = `${K}%`;
       }
       return u;
     }), z = b(() => {
       const f = { ...r.eventListeners.event };
-      for (const [p, a] of Object.entries(f))
-        ["resize-end"].includes(p) || (f[p] = (O) => {
-          O.type !== "drop" && a(O.type ? { e: O, event: l } : O);
+      for (const [p, n] of Object.entries(f))
+        ["resize-end"].includes(p) || (f[p] = (j) => {
+          j.type !== "drop" && n(j.type ? { e: j, event: l } : j);
         });
       const c = { ...f };
       f.touchstart = (p) => {
-        var a;
+        var n;
         p.stopPropagation(), E.touchAndDragTimer = setTimeout(() => {
           E.canTouchAndDrag = !0;
-        }, 500), _(p), (a = c.touchstart) == null || a.call(c, { e: p, event: l });
+        }, 500), _(p), (n = c.touchstart) == null || n.call(c, { e: p, event: l });
       }, f.mousedown = (p) => {
-        var a;
-        p.stopPropagation(), _(p), (a = c.mousedown) == null || a.call(c, { e: p, event: l });
+        var n;
+        p.stopPropagation(), _(p), (n = c.mousedown) == null || n.call(c, { e: p, event: l });
       };
       let u = null;
       return f.click = (p) => {
-        var a;
-        (a = c.click) == null || a.call(c, { e: p, event: l }), u ? u = clearTimeout(u) : u = setTimeout(() => {
-          var O;
-          u = null, (O = c["delayed-click"]) == null || O.call(c, { e: p, event: l });
+        var n;
+        (n = c.click) == null || n.call(c, { e: p, event: l }), u ? u = clearTimeout(u) : u = setTimeout(() => {
+          var j;
+          u = null, (j = c["delayed-click"]) == null || j.call(c, { e: p, event: l });
         }, 400);
       }, f.dblclick = (p) => {
         c.dblclick ? c.dblclick({ e: p, event: l }) : l.delete(1);
@@ -1435,15 +1435,15 @@ const lt = (y, t) => {
     });
     let H = null, Y = 0;
     const _ = (f) => {
-      var a, O, X;
-      const c = ((a = f.touches) == null ? void 0 : a[0]) || f;
+      var n, j, X;
+      const c = ((n = f.touches) == null ? void 0 : n[0]) || f;
       E.fromResizer = c.target.closest(".vuecal__event-resizer");
       const u = Date.now();
-      (!H || u - Y > ea) && (H = L.value.getBoundingClientRect(), Y = u);
+      (!H || u - Y > en) && (H = L.value.getBoundingClientRect(), Y = u);
       const p = H;
-      E.startX = (((O = f.touches) == null ? void 0 : O[0]) || f).clientX - p.left, E.startY = (((X = f.touches) == null ? void 0 : X[0]) || f).clientY - p.top, E.startPercentageX = E.startX * 100 / p.width, E.startPercentageY = E.startY * 100 / p.height, E.cellEl = L.value.closest(".vuecal__cell"), E.resizeStartDate = l.start, E.fromResizer && Z(f, l, L.value), E.holdTimer = setTimeout(() => {
-        var U, Q;
-        E.holding = !0, (Q = (U = z.value).hold) == null || Q.call(U, { e: f, event: l });
+      E.startX = (((j = f.touches) == null ? void 0 : j[0]) || f).clientX - p.left, E.startY = (((X = f.touches) == null ? void 0 : X[0]) || f).clientY - p.top, E.startPercentageX = E.startX * 100 / p.width, E.startPercentageY = E.startY * 100 / p.height, E.cellEl = L.value.closest(".vuecal__cell"), E.resizeStartDate = l.start, E.fromResizer && Z(f, l, L.value), E.holdTimer = setTimeout(() => {
+        var U, K;
+        E.holding = !0, (K = (U = z.value).hold) == null || K.call(U, { e: f, event: l });
       }, 1e3);
     };
     return Ze(() => l._.register(L.value)), Re(() => {
@@ -1458,13 +1458,13 @@ const lt = (y, t) => {
       onDragend: c[3] || (c[3] = (u) => F.value && $(C).eventDragEnd(u, l))
     }), [
       he("div", qt, [
-        f.$slots["event.all-day"] ? j(f.$slots, "event.all-day", {
+        f.$slots["event.all-day"] ? O(f.$slots, "event.all-day", {
           key: 0,
           event: l
-        }) : f.$slots[`event.${$(h).id}`] ? j(f.$slots, `event.${$(h).id}`, {
+        }) : f.$slots[`event.${$(h).id}`] ? O(f.$slots, `event.${$(h).id}`, {
           key: 1,
           event: l
-        }) : j(f.$slots, "event", {
+        }) : O(f.$slots, "event", {
           key: 2,
           event: l
         }, () => [
@@ -1491,7 +1491,7 @@ const lt = (y, t) => {
         }, ["prevent", "stop"]))
       }, null, 32)) : x("", !0),
       Oe(Ue, { name: "vuecal-delete-btn" }, {
-        default: B(() => [
+        default: N(() => [
           l._.deleting ? (V(), P("div", {
             key: 0,
             class: "vuecal__event-delete",
@@ -1502,28 +1502,28 @@ const lt = (y, t) => {
       })
     ], 16, It));
   }
-}, ta = ["innerHTML"], aa = ["data-schedule"], na = {
+}, tn = ["innerHTML"], nn = ["data-schedule"], an = {
   key: 1,
   class: "vuecal__cell-date"
-}, sa = {
+}, sn = {
   key: 2,
   class: "vuecal__cell-content"
-}, la = {
+}, ln = {
   key: 3,
   class: "vuecal__cell-events"
-}, ra = {
+}, rn = {
   key: 1,
   class: "vuecal__cell-date"
-}, oa = {
+}, on = {
   key: 2,
   class: "vuecal__cell-content"
-}, ia = {
+}, un = {
   key: 3,
   class: "vuecal__cell-events"
-}, ua = {
+}, cn = {
   key: 5,
   class: "vuecal__cell-events-count"
-}, ca = ["title"], kt = {
+}, dn = ["title"], kt = {
   __name: "cell",
   props: {
     // Even with time=false, the date of the cell will still be provided in order to attach
@@ -1562,7 +1562,7 @@ const lt = (y, t) => {
       movePercentageX: 0,
       movePercentageY: 0,
       schedule: null
-    }), S = ue(!1), n = ue({ cellOverlaps: {}, longestStreak: 0 }), I = b(() => {
+    }), S = ue(!1), a = ue({ cellOverlaps: {}, longestStreak: 0 }), I = b(() => {
       let o = Math.min(i.startPercentageY, i.movePercentageY), T = Math.max(i.startPercentageY, i.movePercentageY), M = je(o, h), w = je(T, h);
       return h.snapToInterval && (M = C.snapToInterval(M, h.snapToInterval), w = C.snapToInterval(w, h.snapToInterval), o = Ve(M, h), T = Ve(w, h)), {
         style: {
@@ -1580,16 +1580,16 @@ const lt = (y, t) => {
       return o && T && M;
     }), z = b(() => {
       var oe;
-      const o = /* @__PURE__ */ new Date(), T = r.start.getFullYear(), M = r.start.getMonth(), w = t.start.getFullYear(), N = t.start.getMonth();
+      const o = /* @__PURE__ */ new Date(), T = r.start.getFullYear(), M = r.start.getMonth(), w = t.start.getFullYear(), B = t.start.getMonth();
       return {
         [`vuecal__cell--${Ge[t.start.getDay()]}`]: r.isDay || r.isDays || r.isWeek || r.isMonth,
-        [`vuecal__cell--${Yt[N]}`]: r.isYear,
+        [`vuecal__cell--${Yt[B]}`]: r.isYear,
         [`vuecal__cell--${w}`]: r.isYears,
         "vuecal__cell--today": Z.value,
-        "vuecal__cell--current-month": r.isYear && w === o.getFullYear() && N === o.getMonth(),
+        "vuecal__cell--current-month": r.isYear && w === o.getFullYear() && B === o.getMonth(),
         "vuecal__cell--current-year": r.isYears && w === o.getFullYear(),
-        "vuecal__cell--out-of-range": r.isMonth && (w !== T || N !== M),
-        "vuecal__cell--before-min": U.value && O.value,
+        "vuecal__cell--out-of-range": r.isMonth && (w !== T || B !== M),
+        "vuecal__cell--before-min": U.value && j.value,
         "vuecal__cell--after-max": U.value && X.value,
         "vuecal__cell--disabled": U.value,
         "vuecal__cell--selected": r.selectedDate && r.selectedDate.getTime() >= t.start.getTime() && r.selectedDate.getTime() <= t.end.getTime(),
@@ -1625,73 +1625,73 @@ const lt = (y, t) => {
       if (r.isMonth || r.isYear || r.isYears || t.allDay) return {};
       const o = typeof document < "u" && document.documentElement.getAttribute("dir") === "rtl", T = h.horizontal, M = {};
       for (const w of Y.value) {
-        const N = w._.id, { maxConcurrent: G = 1, position: oe = 0 } = n.value.cellOverlaps[N] || {}, ge = o ? "right" : "left", g = T ? "height" : "width";
-        M[N] = { [T ? "top" : ge]: `${100 / G * oe}%` }, h.stackEvents ? M[N][g] = `${100 / G + (oe === G - 1 ? 0 : 15)}%` : M[N][g] = `${100 / G}%`;
+        const B = w._.id, { maxConcurrent: G = 1, position: oe = 0 } = a.value.cellOverlaps[B] || {}, ge = o ? "right" : "left", g = T ? "height" : "width";
+        M[B] = { [T ? "top" : ge]: `${100 / G * oe}%` }, h.stackEvents ? M[B][g] = `${100 / G + (oe === G - 1 ? 0 : 15)}%` : M[B][g] = `${100 / G}%`;
       }
       return M;
     }), u = b(() => {
       const o = {};
       for (const T of Y.value) {
-        const M = T._.id, { maxConcurrent: w = 1, position: N = 0 } = n.value.cellOverlaps[M] || {};
-        o[M] = `vuecal__event--stack-${N + 1}-${w}`;
+        const M = T._.id, { maxConcurrent: w = 1, position: B = 0 } = a.value.cellOverlaps[M] || {};
+        o[M] = `vuecal__event--stack-${B + 1}-${w}`;
       }
       return o;
-    }), p = b(() => h.showCellEventCount && _.value.length), a = b(() => {
+    }), p = b(() => h.showCellEventCount && _.value.length), n = b(() => {
       var M;
       if (!h.specialHours || r.isMonth || r.isYear || r.isYears || t.allDay) return;
       const o = Ge[t.start.getDay()];
       let T = (M = h.specialHours) == null ? void 0 : M[o];
       if (T)
         return Array.isArray(T) || (T = [T]), T.map((w) => {
-          let { from: N, to: G, class: oe, label: ge } = w;
-          if (isNaN(N) || isNaN(G) || h.timeFrom >= G || h.timeTo <= N) return;
-          N = Math.max(h.timeFrom, N), G = Math.min(h.timeTo, G);
-          const g = Ve(N, h), R = Ve(G, h) - g;
+          let { from: B, to: G, class: oe, label: ge } = w;
+          if (isNaN(B) || isNaN(G) || h.timeFrom >= G || h.timeTo <= B) return;
+          B = Math.max(h.timeFrom, B), G = Math.min(h.timeTo, G);
+          const g = Ve(B, h), R = Ve(G, h) - g;
           return {
             style: { top: `${g}%`, height: `${R}%` },
             label: ge,
             class: oe
           };
         }).filter((w) => !!w);
-    }), O = b(() => h.minTimestamp !== null && h.minTimestamp > t.end.getTime()), X = b(() => h.maxTimestamp && h.maxTimestamp < t.start.getTime()), U = b(() => {
+    }), j = b(() => h.minTimestamp !== null && h.minTimestamp > t.end.getTime()), X = b(() => h.maxTimestamp && h.maxTimestamp < t.start.getTime()), U = b(() => {
       const { disableDays: o } = h, T = r.isYear || r.isYears;
-      return o.length && o.includes(C.formatDate(t.start)) && !T ? !0 : O.value || X.value;
-    }), Q = be({
+      return o.length && o.includes(C.formatDate(t.start)) && !T ? !0 : j.value || X.value;
+    }), K = be({
       show: b(() => {
         if (!(!r.isDay && !r.isDays && !r.isWeek) && !(!Z.value || !h.time || t.allDay) && !(h.timeFrom > C.dateToMinutes(r.now)) && !(C.dateToMinutes(r.now) > h.timeTo))
           return !0;
       }),
       nowInMinutes: b(() => C.dateToMinutes(r.now)),
-      todaysTimePosition: b(() => Ve(Q.nowInMinutes, h)),
-      style: b(() => `${h.horizontal ? "left" : "top"}: ${Q.todaysTimePosition}%`),
-      currentTime: b(() => C.formatTime(r.now))
+      todaysTimePosition: b(() => Ve(K.nowInMinutes, h)),
+      style: b(() => `${h.horizontal ? "left" : "top"}: ${K.todaysTimePosition}%`),
+      currentTime: b(() => C.formatTime(r.now, h.twelveHour ? "h:mm {am}" : "HH:mm"))
     }), te = b(() => {
       if (U.value) return {};
       const o = { ...h.eventListeners.cell };
-      for (const [w, N] of Object.entries(o))
+      for (const [w, B] of Object.entries(o))
         o[w] = (G) => {
           var oe, ge, g;
-          (g = (ge = G.target || ((oe = G.e) == null ? void 0 : oe.target)).closest) != null && g.call(ge, ".vuecal__event") || N(G.type ? { e: G, cell: q.value, cursor: ae.value } : G);
+          (g = (ge = G.target || ((oe = G.e) == null ? void 0 : oe.target)).closest) != null && g.call(ge, ".vuecal__event") || B(G.type ? { e: G, cell: q.value, cursor: ae.value } : G);
         };
       const T = { ...o };
       let M = null;
       return o.click = (w) => {
         var G;
         ve();
-        const N = le(w);
-        (G = T.click) == null || G.call(T, { e: w, cell: q.value, cursor: N }), M ? M = clearTimeout(M) : M = setTimeout(() => {
+        const B = re(w);
+        (G = T.click) == null || G.call(T, { e: w, cell: q.value, cursor: B }), M ? M = clearTimeout(M) : M = setTimeout(() => {
           var oe;
-          M = null, (oe = T["delayed-click"]) == null || oe.call(T, { e: w, cell: q.value, cursor: N });
+          M = null, (oe = T["delayed-click"]) == null || oe.call(T, { e: w, cell: q.value, cursor: B });
         }, 400);
       }, (h.time && r.isDay || r.isDays || r.isWeek) && (o.touchstart = (w) => {
-        var N;
-        s(w.e || w), (N = T.touchstart) == null || N.call(T, { e: w, cell: q.value, cursor: ae.value });
+        var B;
+        s(w.e || w), (B = T.touchstart) == null || B.call(T, { e: w, cell: q.value, cursor: ae.value });
       }, o.mousedown = (w) => {
-        var N;
-        s(w.e || w), (N = T.mousedown) == null || N.call(T, { e: w, cell: q.value, cursor: ae.value });
+        var B;
+        s(w.e || w), (B = T.mousedown) == null || B.call(T, { e: w, cell: q.value, cursor: ae.value });
       }), T.dblclick && (o.dblclick = (w) => {
-        var N;
-        (N = T.dblclick) == null || N.call(T, { e: w, cell: q.value, cursor: le(w) });
+        var B;
+        (B = T.dblclick) == null || B.call(T, { e: w, cell: q.value, cursor: re(w) });
       }), h.editableEvents.drag && (o.dragenter = (w) => v.cellDragEnter(w, q.value), o.dragover = (w) => {
         w.preventDefault(), v.cellDragOver(w, q.value);
       }, o.dragleave = (w) => v.cellDragLeave(w, q.value), o.drop = (w) => v.cellDragDrop(w, q.value, t.allDay)), o;
@@ -1704,10 +1704,10 @@ const lt = (y, t) => {
       goBroader: () => r.broader(),
       broader: r.broaderView,
       narrower: r.narrowerView
-    })), le = (o) => {
+    })), re = (o) => {
       var G;
-      const T = (((G = o.touches) == null ? void 0 : G[0]) || o).clientY, { top: M } = L.value.getBoundingClientRect(), w = Ke(T - M, L.value), N = new Date(t.start);
-      return N.setMinutes(je(w, h)), { y: w, date: N };
+      const T = (((G = o.touches) == null ? void 0 : G[0]) || o).clientY, { top: M } = L.value.getBoundingClientRect(), w = Ke(T - M, L.value), B = new Date(t.start);
+      return B.setMinutes(je(w, h)), { y: w, date: B };
     }, ae = b(() => {
       const o = je(i.movePercentageY || i.startPercentageY, h), T = new Date(t.start);
       return T.setMinutes(o), {
@@ -1718,24 +1718,24 @@ const lt = (y, t) => {
     }), ve = () => {
       r.updateSelectedDate(t.start), h.clickToNavigate && ((r.isMonth || r.isDays || r.isWeek) && h.availableViews.day ? r.switch("day") : r.isYear && h.availableViews.month ? r.switch("month") : r.isYears && h.availableViews.year && r.switch("year")), r.updateViewDate(t.start);
     }, s = (o) => {
-      var w, N;
+      var w, B;
       const T = o.type === "touchstart";
       T ? (i.canTouchAndDrag = !1, i.touchAndDragTimer = setTimeout(() => {
         i.canTouchAndDrag = !0, (i.holding || i.dragging) && o.preventDefault();
       }, 500)) : i.canTouchAndDrag = !0, i.schedule = ~~o.target.dataset.schedule;
       const M = L.value.getBoundingClientRect();
-      i.startX = (((w = o.touches) == null ? void 0 : w[0]) || o).clientX - M.left, i.startY = (((N = o.touches) == null ? void 0 : N[0]) || o).clientY - M.top, i.startPercentageX = i.startX * 100 / M.width, i.startPercentageY = i.startY * 100 / M.height, i.thresholdPassed = !1, document.addEventListener(T ? "touchmove" : "mousemove", k, { passive: !T }), document.addEventListener(T ? "touchend" : "mouseup", D, { once: !0 }), i.holdTimer = setTimeout(() => {
+      i.startX = (((w = o.touches) == null ? void 0 : w[0]) || o).clientX - M.left, i.startY = (((B = o.touches) == null ? void 0 : B[0]) || o).clientY - M.top, i.startPercentageX = i.startX * 100 / M.width, i.startPercentageY = i.startY * 100 / M.height, i.thresholdPassed = !1, document.addEventListener(T ? "touchmove" : "mousemove", k, { passive: !T }), document.addEventListener(T ? "touchend" : "mouseup", D, { once: !0 }), i.holdTimer = setTimeout(() => {
         var G, oe;
         i.holding = !0, (oe = (G = te.value).hold) == null || oe.call(G, { e: o, cell: q.value, cursor: ae.value });
       }, 1e3);
     }, k = (o) => {
-      var w, N, G, oe, ge, g;
+      var w, B, G, oe, ge, g;
       const T = o.type === "touchmove";
       if (T && !i.canTouchAndDrag) {
         i.touchAndDragTimer && (clearTimeout(i.touchAndDragTimer), i.touchAndDragTimer = null), D(o);
         return;
       }
-      T && o.preventDefault(), i.dragging || (A.isDraggingCell = !0, (N = (w = te.value)["drag-start"]) == null || N.call(w, { e: o, cell: q.value, cursor: ae.value })), i.dragging = !0, i.holdTimer = clearTimeout(i.holdTimer), i.holding = !1;
+      T && o.preventDefault(), i.dragging || (A.isDraggingCell = !0, (B = (w = te.value)["drag-start"]) == null || B.call(w, { e: o, cell: q.value, cursor: ae.value })), i.dragging = !0, i.holdTimer = clearTimeout(i.holdTimer), i.holding = !1;
       const M = L.value.getBoundingClientRect();
       i.moveX = (((G = o.touches) == null ? void 0 : G[0]) || o).clientX - M.left, i.moveY = (((oe = o.touches) == null ? void 0 : oe[0]) || o).clientY - M.top, i.movePercentageX = i.moveX * 100 / M.width, i.movePercentageY = i.moveY * 100 / M.height, h.eventCreateMinDrag && Math.abs(i.startY - i.moveY) > h.eventCreateMinDrag && (i.thresholdPassed = !0), (g = (ge = te.value).drag) == null || g.call(ge, { e: o, cell: q.value, cursor: ae.value });
     }, D = async (o) => {
@@ -1745,8 +1745,8 @@ const lt = (y, t) => {
     }, J = async (o) => {
       var ge;
       if (!e.value) return;
-      let { start: T, end: M, startMinutes: w, endMinutes: N } = I.value;
-      T = new Date(t.start), T.setMinutes(w), M = new Date(t.start), M.setMinutes(N);
+      let { start: T, end: M, startMinutes: w, endMinutes: B } = I.value;
+      T = new Date(t.start), T.setMinutes(w), M = new Date(t.start), M.setMinutes(B);
       let G = { ...I.value, start: T, end: M };
       const { create: oe } = h.eventListeners.event;
       if (typeof oe == "function") {
@@ -1754,12 +1754,12 @@ const lt = (y, t) => {
         G = await new Promise((R) => oe({ e: o, event: G, cell: q.value, resolve: R, cursor: ae.value })), G && typeof G == "object" && r.createEvent(G), G && typeof G == "boolean" && r.createEvent(g);
       } else r.createEvent(G);
       (ge = navigator.vibrate) == null || ge.call(navigator, 200);
-    }, ne = () => {
+    }, se = () => {
       var o;
       for (const T of Object.keys(te.value))
         (o = L.value) == null || o.removeEventListener(T, te.value[T]);
     }, me = () => {
-      n.value = W.getCellOverlappingEvents(t.start, t.end, t.allDay);
+      a.value = W.getCellOverlappingEvents(t.start, t.end, t.allDay);
     };
     return De(
       // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
@@ -1771,41 +1771,41 @@ const lt = (y, t) => {
       // Use flush: 'post' to prevent infinite updates.
     ), Re(async () => {
       for (const o of l.value) W.deleteEvent(o, 3);
-      ne(), await Xe();
+      se(), await Xe();
     }), (o, T) => (V(), P("div", ie({
       class: ["vuecal__cell", z.value],
       ref_key: "cellEl",
       ref: L
     }, Ie(te.value, !0)), [
-      o.$slots.cell ? j(o.$slots, "cell", {
+      o.$slots.cell ? O(o.$slots, "cell", {
         key: 0,
         cell: q.value
       }) : x("", !0),
-      a.value ? (V(!0), P(de, { key: 1 }, we(a.value, (M, w) => (V(), P("div", {
+      n.value ? (V(!0), P(de, { key: 1 }, we(n.value, (M, w) => (V(), P("div", {
         class: pe(["vuecal__special-hours", M.class]),
         style: $e(M.style),
         innerHTML: M.label || ""
-      }, null, 14, ta))), 256)) : x("", !0),
+      }, null, 14, tn))), 256)) : x("", !0),
       !o.$slots.cell && $(h).schedules ? (V(!0), P(de, { key: 2 }, we($(h).schedules, (M) => (V(), P("div", {
         class: pe(["vuecal__schedule vuecal__schedule--cell", M.class]),
         key: M.id,
         style: $e(M.style || null),
         "data-schedule": M.id
       }, [
-        o.$slots["cell-events"] ? j(o.$slots, "cell-events", {
+        o.$slots["cell-events"] ? O(o.$slots, "cell-events", {
           key: 0,
           cell: q.value
         }) : x("", !0),
-        H.value || o.$slots["cell-date"] ? (V(), P("div", na, [
-          j(o.$slots, "cell-date", { cell: q.value }, () => [
+        H.value || o.$slots["cell-date"] ? (V(), P("div", an, [
+          O(o.$slots, "cell-date", { cell: q.value }, () => [
             qe(ce(H.value), 1)
           ])
         ])) : x("", !0),
-        o.$slots["cell-content"] ? (V(), P("div", sa, [
-          j(o.$slots, "cell-content", { cell: q.value })
+        o.$slots["cell-content"] ? (V(), P("div", sn, [
+          O(o.$slots, "cell-content", { cell: q.value })
         ])) : x("", !0),
-        o.$slots["cell-events"] && Y.value.length ? (V(), P("div", la, [
-          j(o.$slots, "cell-events", { cell: q.value })
+        o.$slots["cell-events"] && Y.value.length ? (V(), P("div", ln, [
+          O(o.$slots, "cell-events", { cell: q.value })
         ])) : Y.value.length || E.value ? (V(), Se(tt, {
           key: 4,
           class: "vuecal__cell-events",
@@ -1814,7 +1814,7 @@ const lt = (y, t) => {
           onAfterLeave: m,
           tag: "div"
         }, {
-          default: B(() => [
+          default: N(() => [
             (V(!0), P(de, null, we(f.value[M.id], (w) => (V(), Se(st, {
               key: w._.id,
               event: w,
@@ -1826,22 +1826,22 @@ const lt = (y, t) => {
             }, Ce({ _: 2 }, [
               o.$slots["event.all-day"] && t.allDay ? {
                 name: "event.all-day",
-                fn: B((N) => [
-                  j(o.$slots, "event.all-day", ie({ ref_for: !0 }, N))
+                fn: N((B) => [
+                  O(o.$slots, "event.all-day", ie({ ref_for: !0 }, B))
                 ]),
                 key: "0"
               } : void 0,
               o.$slots[`event.${$(r).id}`] ? {
                 name: `event.${$(r).id}`,
-                fn: B((N) => [
-                  j(o.$slots, `event.${$(r).id}`, ie({ ref_for: !0 }, N))
+                fn: N((B) => [
+                  O(o.$slots, `event.${$(r).id}`, ie({ ref_for: !0 }, B))
                 ]),
                 key: "1"
               } : void 0,
               o.$slots.event ? {
                 name: "event",
-                fn: B((N) => [
-                  j(o.$slots, "event", ie({ ref_for: !0 }, N))
+                fn: N((B) => [
+                  O(o.$slots, "event", ie({ ref_for: !0 }, B))
                 ]),
                 key: "2"
               } : void 0
@@ -1854,22 +1854,22 @@ const lt = (y, t) => {
           class: "vuecal__event-placeholder",
           style: $e(I.value.style)
         }, ce(I.value.start) + " - " + ce(I.value.end), 5)) : x("", !0)
-      ], 14, aa))), 128)) : x("", !0),
+      ], 14, nn))), 128)) : x("", !0),
       !o.$slots.cell && !$(h).schedules ? (V(), P(de, { key: 3 }, [
-        o.$slots["cell-events"] ? j(o.$slots, "cell-events", {
+        o.$slots["cell-events"] ? O(o.$slots, "cell-events", {
           key: 0,
           cell: q.value
         }) : x("", !0),
-        H.value || o.$slots["cell-date"] ? (V(), P("div", ra, [
-          j(o.$slots, "cell-date", { cell: q.value }, () => [
+        H.value || o.$slots["cell-date"] ? (V(), P("div", rn, [
+          O(o.$slots, "cell-date", { cell: q.value }, () => [
             qe(ce(H.value), 1)
           ])
         ])) : x("", !0),
-        o.$slots["cell-content"] ? (V(), P("div", oa, [
-          j(o.$slots, "cell-content", { cell: q.value })
+        o.$slots["cell-content"] ? (V(), P("div", on, [
+          O(o.$slots, "cell-content", { cell: q.value })
         ])) : x("", !0),
-        o.$slots["cell-events"] && Y.value.length ? (V(), P("div", ia, [
-          j(o.$slots, "cell-events", { cell: q.value })
+        o.$slots["cell-events"] && Y.value.length ? (V(), P("div", un, [
+          O(o.$slots, "cell-events", { cell: q.value })
         ])) : !($(r).isMonth && !$(h).eventsOnMonthView) && !$(r).isYear && !$(r).isYears && (Y.value.length || E.value) ? (V(), Se(tt, {
           key: 4,
           class: "vuecal__cell-events",
@@ -1878,7 +1878,7 @@ const lt = (y, t) => {
           onAfterLeave: m,
           tag: "div"
         }, {
-          default: B(() => [
+          default: N(() => [
             (V(!0), P(de, null, we(Y.value, (M) => (V(), Se(st, {
               key: M._.id,
               event: M,
@@ -1891,22 +1891,22 @@ const lt = (y, t) => {
             }, Ce({ _: 2 }, [
               o.$slots["event.all-day"] && t.allDay ? {
                 name: "event.all-day",
-                fn: B((w) => [
-                  j(o.$slots, "event.all-day", ie({ ref_for: !0 }, w))
+                fn: N((w) => [
+                  O(o.$slots, "event.all-day", ie({ ref_for: !0 }, w))
                 ]),
                 key: "0"
               } : void 0,
               o.$slots[`event.${$(r).id}`] ? {
                 name: `event.${$(r).id}`,
-                fn: B((w) => [
-                  j(o.$slots, `event.${$(r).id}`, ie({ ref_for: !0 }, w))
+                fn: N((w) => [
+                  O(o.$slots, `event.${$(r).id}`, ie({ ref_for: !0 }, w))
                 ]),
                 key: "1"
               } : void 0,
               o.$slots.event ? {
                 name: "event",
-                fn: B((w) => [
-                  j(o.$slots, "event", ie({ ref_for: !0 }, w))
+                fn: N((w) => [
+                  O(o.$slots, "event", ie({ ref_for: !0 }, w))
                 ]),
                 key: "2"
               } : void 0
@@ -1920,36 +1920,41 @@ const lt = (y, t) => {
           style: $e(I.value.style)
         }, ce(I.value.start) + " - " + ce(I.value.end), 5)) : x("", !0)
       ], 64)) : x("", !0),
-      o.$slots["event-count"] ? j(o.$slots, "event-count", {
+      o.$slots["event-count"] ? O(o.$slots, "event-count", {
         key: 4,
         events: _.value
-      }) : p.value ? (V(), P("div", ua, ce(_.value.length), 1)) : x("", !0),
-      Q.show ? (V(), P("div", {
+      }) : p.value ? (V(), P("div", cn, ce(_.value.length), 1)) : x("", !0),
+      K.show ? (V(), P("div", {
         key: 6,
         class: "vuecal__now-line",
-        style: $e(Q.style),
-        title: Q.currentTime
+        style: $e(K.style),
+        title: K.currentTime
       }, [
-        he("span", null, ce(Q.currentTime), 1)
-      ], 12, ca)) : x("", !0)
+        O(o.$slots, "now-line", {
+          now: $(r).now,
+          timeFormatted: K.currentTime
+        }, () => [
+          he("span", null, ce(K.currentTime), 1)
+        ])
+      ], 12, dn)) : x("", !0)
     ], 16));
   }
-}, da = {
+}, vn = {
   key: 0,
   class: "vuecal__headings"
-}, va = {
+}, fn = {
   key: 0,
   class: "vuecal__weekdays-headings"
-}, fa = ["onClick"], ma = { class: "vuecal__weekday-day" }, ga = {
+}, mn = ["onClick"], gn = { class: "vuecal__weekday-day" }, hn = {
   key: 0,
   class: "vuecal__weekday-date"
-}, ha = {
+}, yn = {
   key: 1,
   class: "vuecal__schedules-headings w-flex grow"
-}, ya = ["innerHTML"], Da = {
+}, Dn = ["innerHTML"], pn = {
   key: 2,
   class: "vuecal__all-day w-flex grow"
-}, pa = {
+}, wn = {
   __name: "headings-bar",
   setup(y) {
     const t = He("vuecal"), d = He("$vuecalEl"), { view: r, config: h, dateUtils: C } = t, W = b(() => h.xs ? "day-xs" : h.sm || r.isDays || r.isMonth ? "day-sm" : "day"), v = b(() => (r.isDay || r.isDays || r.isWeek || r.isMonth) && !(r.isDay && !h.schedules && !h.allDayEvents)), A = b(() => r.cellDates.slice(0, h.horizontal ? r.rows : r.cols).map(({ start: l }) => ({
@@ -2013,31 +2018,31 @@ const lt = (y, t) => {
     };
     return Re(() => {
       L.cleanup();
-    }), (l, E) => v.value ? (V(), P("div", da, [
-      $(r).isDay ? x("", !0) : (V(), P("div", va, [
+    }), (l, E) => v.value ? (V(), P("div", vn, [
+      $(r).isDay ? x("", !0) : (V(), P("div", fn, [
         (V(!0), P(de, null, we(A.value, (F, m) => (V(), P("div", {
           class: pe(["vuecal__weekday", { "vuecal__weekday--today": F.isToday }]),
           key: m,
           onClick: (i) => Z.click(F.date)
         }, [
-          j(l.$slots, "weekday-heading", {
+          O(l.$slots, "weekday-heading", {
             label: F[W.value],
             id: F.id,
             date: F.date
           }, () => [
-            he("span", ma, ce(F[W.value]), 1),
-            $(r).isMonth ? x("", !0) : (V(), P("strong", ga, ce(F.dateNumber), 1))
+            he("span", gn, ce(F[W.value]), 1),
+            $(r).isMonth ? x("", !0) : (V(), P("strong", hn, ce(F.dateNumber), 1))
           ])
-        ], 10, fa))), 128))
+        ], 10, mn))), 128))
       ])),
-      $(h).schedules ? (V(), P("div", ha, [
+      $(h).schedules ? (V(), P("div", yn, [
         (V(!0), P(de, null, we(A.value, (F, m) => (V(), P(de, { key: m }, [
           (V(!0), P(de, null, we($(h).schedules, (i, S) => (V(), P(de, { key: S }, [
             l.$slots["schedule-heading"] ? (V(), P("div", {
               key: 0,
               class: pe(["vuecal__schedule vuecal__schedule--heading", i.class])
             }, [
-              j(l.$slots, "schedule-heading", {
+              O(l.$slots, "schedule-heading", {
                 schedule: i,
                 view: $(r)
               })
@@ -2045,11 +2050,11 @@ const lt = (y, t) => {
               key: 1,
               class: pe(["vuecal__schedule vuecal__schedule--heading", i.class]),
               innerHTML: i.label
-            }, null, 10, ya))
+            }, null, 10, Dn))
           ], 64))), 128))
         ], 64))), 128))
       ])) : x("", !0),
-      $(h).allDayEvents ? (V(), P("div", Da, [
+      $(h).allDayEvents ? (V(), P("div", pn, [
         (V(!0), P(de, null, we(A.value, (F, m) => (V(), Se(kt, {
           class: pe(["vuecal__all-day-cell", { "vuecal__weekday--today": F.isToday }]),
           key: m,
@@ -2060,14 +2065,14 @@ const lt = (y, t) => {
         }, Ce({ _: 2 }, [
           l.$slots["event.all-day"] ? {
             name: "event.all-day",
-            fn: B((i) => [
-              j(l.$slots, "event.all-day", ie({ ref_for: !0 }, i))
+            fn: N((i) => [
+              O(l.$slots, "event.all-day", ie({ ref_for: !0 }, i))
             ]),
             key: "0"
           } : {
             name: "event",
-            fn: B((i) => [
-              j(l.$slots, "event", ie({ ref_for: !0 }, i))
+            fn: N((i) => [
+              O(l.$slots, "event", ie({ ref_for: !0 }, i))
             ]),
             key: "1"
           }
@@ -2080,10 +2085,10 @@ const lt = (y, t) => {
       ])) : x("", !0)
     ])) : x("", !0);
   }
-}, wa = { class: "vuecal__time-column" }, _a = {
+}, _n = { class: "vuecal__time-column" }, kn = {
   key: 0,
   class: "vuecal__all-day-label"
-}, ka = {
+}, $n = {
   __name: "time-column",
   setup(y) {
     const t = He("vuecal"), { config: d, texts: r } = t, h = b(() => {
@@ -2103,9 +2108,9 @@ const lt = (y, t) => {
       }
       return C;
     });
-    return (C, W) => (V(), P("div", wa, [
-      $(d).allDayEvents ? (V(), P("div", _a, [
-        j(C.$slots, "all-day-label", {}, () => [
+    return (C, W) => (V(), P("div", _n, [
+      $(d).allDayEvents ? (V(), P("div", kn, [
+        O(C.$slots, "all-day-label", {}, () => [
           qe(ce($(t).texts.allDay), 1)
         ])
       ])) : x("", !0),
@@ -2114,7 +2119,7 @@ const lt = (y, t) => {
         key: A,
         style: $e({ height: v.height || null })
       }, [
-        j(C.$slots, "time-cell", {
+        O(C.$slots, "time-cell", {
           index: A,
           minutes: v.minutes,
           hours: v.hours,
@@ -2127,7 +2132,7 @@ const lt = (y, t) => {
       ], 4))), 128))
     ]));
   }
-}, $a = {
+}, bn = {
   __name: "body",
   setup(y) {
     const t = He("vuecal"), { view: d, config: r, dateUtils: h, touch: C, eventsManager: W } = t, v = ue(null), A = ue(null), { resizeState: Z } = W, L = b(() => ({
@@ -2143,13 +2148,13 @@ const lt = (y, t) => {
     }), E = (i) => {
       var z;
       if (d.isMonth || d.isYear || d.isYears) return;
-      const S = ((z = i.touches) == null ? void 0 : z[0]) || i, { clientX: n, clientY: I } = S, { top: e } = v.value.getBoundingClientRect();
-      A.value = Ke(I - e, v.value), C.isResizingEvent && r.editableEvents.resizeX && (Z.cellEl = m(n, I));
+      const S = ((z = i.touches) == null ? void 0 : z[0]) || i, { clientX: a, clientY: I } = S, { top: e } = v.value.getBoundingClientRect();
+      A.value = Ke(I - e, v.value), C.isResizingEvent && r.editableEvents.resizeX && (Z.cellEl = m(a, I));
     }, F = () => {
       A.value = null;
     }, m = (i, S) => {
-      const n = document.elementFromPoint(i, S);
-      return console.log(n == null ? void 0 : n.closest(".vuecal__cell")), (n == null ? void 0 : n.closest(".vuecal__cell")) || null;
+      const a = document.elementFromPoint(i, S);
+      return console.log(a == null ? void 0 : a.closest(".vuecal__cell")), (a == null ? void 0 : a.closest(".vuecal__cell")) || null;
     };
     return Ze(() => {
       v.value.addEventListener("mousemove", E), v.value.addEventListener("touchmove", E), v.value.addEventListener("mouseleave", F), v.value.addEventListener("touchend", F);
@@ -2162,7 +2167,7 @@ const lt = (y, t) => {
       style: $e(L.value)
     }, [
       Oe(Ue, { name: "vuecal-shrink" }, {
-        default: B(() => [
+        default: N(() => [
           $(r).timeAtCursor && A.value !== null ? (V(), P("div", {
             key: 0,
             class: "vuecal__time-at-cursor",
@@ -2173,75 +2178,82 @@ const lt = (y, t) => {
         ]),
         _: 1
       }),
-      (V(!0), P(de, null, we($(d).cellDates, (n, I) => (V(), Se(kt, {
+      (V(!0), P(de, null, we($(d).cellDates, (a, I) => (V(), Se(kt, {
         key: I,
-        start: n.start,
-        end: n.end,
+        start: a.start,
+        end: a.end,
         index: I
       }, Ce({ _: 2 }, [
         i.$slots.cell ? {
           name: "cell",
-          fn: B((e) => [
-            j(i.$slots, "cell", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "cell", ie({ ref_for: !0 }, e))
           ]),
           key: "0"
         } : void 0,
         i.$slots["cell-date"] ? {
           name: "cell-date",
-          fn: B((e) => [
-            j(i.$slots, "cell-date", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "cell-date", ie({ ref_for: !0 }, e))
           ]),
           key: "1"
         } : void 0,
         i.$slots["cell-content"] ? {
           name: "cell-content",
-          fn: B((e) => [
-            j(i.$slots, "cell-content", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "cell-content", ie({ ref_for: !0 }, e))
           ]),
           key: "2"
         } : void 0,
         i.$slots["cell-events"] ? {
           name: "cell-events",
-          fn: B((e) => [
-            j(i.$slots, "cell-events", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "cell-events", ie({ ref_for: !0 }, e))
           ]),
           key: "3"
         } : void 0,
         i.$slots[`event.${$(d).id}`] ? {
           name: `event.${$(d).id}`,
-          fn: B((e) => [
-            j(i.$slots, `event.${$(d).id}`, ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, `event.${$(d).id}`, ie({ ref_for: !0 }, e))
           ]),
           key: "4"
         } : void 0,
         i.$slots["event.all-day"] ? {
           name: "event.all-day",
-          fn: B((e) => [
-            j(i.$slots, "event.all-day", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "event.all-day", ie({ ref_for: !0 }, e))
           ]),
           key: "5"
         } : void 0,
         i.$slots.event ? {
           name: "event",
-          fn: B((e) => [
-            j(i.$slots, "event", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "event", ie({ ref_for: !0 }, e))
           ]),
           key: "6"
         } : void 0,
         i.$slots["event-count"] ? {
           name: "event-count",
-          fn: B((e) => [
-            j(i.$slots, "event-count", ie({ ref_for: !0 }, e))
+          fn: N((e) => [
+            O(i.$slots, "event-count", ie({ ref_for: !0 }, e))
           ]),
           key: "7"
+        } : void 0,
+        i.$slots["now-line"] ? {
+          name: "now-line",
+          fn: N((e) => [
+            O(i.$slots, "now-line", ie({ ref_for: !0 }, e))
+          ]),
+          key: "8"
         } : void 0
       ]), 1032, ["start", "end", "index"]))), 128))
     ], 4));
   }
-}, ba = ["data-locale"], Ta = { class: "vuecal__scrollable-wrap" }, Ma = {
+}, Tn = ["data-locale"], Mn = { class: "vuecal__scrollable-wrap" }, En = {
   key: 1,
   class: "vuecal__week-numbers"
-}, Ea = { class: "vuecal__week-number" }, Ya = { class: "vuecal__body-wrap" }, Ca = {
+}, Yn = { class: "vuecal__week-number" }, Sn = { class: "vuecal__body-wrap" }, zn = {
   __name: "index",
   props: Lt,
   emits: [
@@ -2258,8 +2270,8 @@ const lt = (y, t) => {
     "event-drag-end"
   ],
   setup(y, { expose: t, emit: d }) {
-    const r = y, h = d, C = Tt("vuecal-el"), W = Ht({ props: r, emit: h, attrs: Et(), vuecalEl: C, uid: Mt() }), { config: v, view: A, dateUtils: Z, touch: L } = W, l = b(() => v.time && (A.isDay || A.isDays || A.isWeek)), E = b(() => Array(A.rows).fill().map((n, I) => Z.getWeek(Z.addDays(A.firstCellDate, 7 * I)))), F = b(() => {
-      var n;
+    const r = y, h = d, C = Tt("vuecal-el"), W = Ht({ props: r, emit: h, attrs: Et(), vuecalEl: C, uid: Mt() }), { config: v, view: A, dateUtils: Z, touch: L } = W, l = b(() => v.time && (A.isDay || A.isDays || A.isWeek)), E = b(() => Array(A.rows).fill().map((a, I) => Z.getWeek(Z.addDays(A.firstCellDate, 7 * I)))), F = b(() => {
+      var a;
       return {
         "vuecal--ready": v.ready,
         [`vuecal--${v.theme}-theme`]: v.theme,
@@ -2273,238 +2285,245 @@ const lt = (y, t) => {
         "vuecal--dragging-cell": L.isDraggingCell,
         "vuecal--dragging-event": L.isDraggingEvent,
         "vuecal--resizing-event": L.isResizingEvent,
-        "vuecal--has-schedules": (n = v.schedules) == null ? void 0 : n.length,
+        "vuecal--has-schedules": (a = v.schedules) == null ? void 0 : a.length,
         "vuecal--horizontal": v.horizontal
       };
     }), m = b(() => ({
       "--vuecal-time-cell-height": v.timeCellHeight && `${v.timeCellHeight}px`
     })), i = b(() => {
-      var n, I;
+      var a, I;
       return {
         "vuecal__scrollable--row": l.value || v.weekNumbers && A.isMonth,
         // Keep the states inside the Vue transition wrapper for smooth CSS transitions.
         [`vuecal__scrollable--${A.id}-view`]: !0,
-        "vuecal__scrollable--has-schedules": (n = v.schedules) == null ? void 0 : n.length,
+        "vuecal__scrollable--has-schedules": (a = v.schedules) == null ? void 0 : a.length,
         "vuecal__scrollable--no-schedules": !((I = v.schedules) != null && I.length),
         "vuecal__scrollable--no-all-day-bar": !v.allDayEvents,
         "vuecal__scrollable--has-all-day-bar": v.allDayEvents
       };
-    }), S = (n) => {
-      n.target.closest(".vuecal__cell") && n.preventDefault();
+    }), S = (a) => {
+      a.target.closest(".vuecal__cell") && a.preventDefault();
     };
     return Ze(async () => {
       typeof window < "u" && window.hasOwnProperty("ontouchstart") && C.value.addEventListener("contextmenu", S), await Xe(), v.ready = !0, h("ready", { config: v, view: A });
     }), Re(() => {
-      var n;
-      (n = C == null ? void 0 : C.value) == null || n.removeEventListener("contextmenu", S);
-    }), at("vuecal", W), at("$vuecalEl", C), t({ view: W.view }), (n, I) => (V(), P("div", {
+      var a;
+      (a = C == null ? void 0 : C.value) == null || a.removeEventListener("contextmenu", S);
+    }), nt("vuecal", W), nt("$vuecalEl", C), t({ view: W.view }), (a, I) => (V(), P("div", {
       class: pe(["vuecal", F.value]),
       ref: "vuecal-el",
-      "data-locale": n.locale,
+      "data-locale": a.locale,
       style: $e(m.value)
     }, [
-      n.$slots.diy ? j(n.$slots, "diy", {
+      a.$slots.diy ? O(a.$slots, "diy", {
         key: 0,
         vuecal: $(W)
       }) : (V(), P(de, { key: 1 }, [
         Oe(Xt, null, Ce({ _: 2 }, [
-          n.$slots.header ? {
+          a.$slots.header ? {
             name: "header",
-            fn: B((e) => [
-              j(n.$slots, "header", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "header", ne(le(e)))
             ]),
             key: "0"
           } : void 0,
-          !n.$slots.header && n.$slots["previous-button"] ? {
+          !a.$slots.header && a.$slots["previous-button"] ? {
             name: "previous-button",
-            fn: B((e) => [
-              j(n.$slots, "previous-button", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "previous-button", ne(le(e)))
             ]),
             key: "1"
           } : void 0,
-          !n.$slots.header && n.$slots["next-button"] ? {
+          !a.$slots.header && a.$slots["next-button"] ? {
             name: "next-button",
-            fn: B((e) => [
-              j(n.$slots, "next-button", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "next-button", ne(le(e)))
             ]),
             key: "2"
           } : void 0,
-          !n.$slots.header && n.$slots["today-button"] ? {
+          !a.$slots.header && a.$slots["today-button"] ? {
             name: "today-button",
-            fn: B((e) => [
-              j(n.$slots, "today-button", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "today-button", ne(le(e)))
             ]),
             key: "3"
           } : void 0,
-          !n.$slots.header && n.$slots.title ? {
+          !a.$slots.header && a.$slots.title ? {
             name: "title",
-            fn: B((e) => [
-              j(n.$slots, "title", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title", ne(le(e)))
             ]),
             key: "4"
           } : void 0,
-          !n.$slots.header && n.$slots["title.day"] ? {
+          !a.$slots.header && a.$slots["title.day"] ? {
             name: "title.day",
-            fn: B((e) => [
-              j(n.$slots, "title.day", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.day", ne(le(e)))
             ]),
             key: "5"
           } : void 0,
-          !n.$slots.header && n.$slots["title.days"] ? {
+          !a.$slots.header && a.$slots["title.days"] ? {
             name: "title.days",
-            fn: B((e) => [
-              j(n.$slots, "title.days", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.days", ne(le(e)))
             ]),
             key: "6"
           } : void 0,
-          !n.$slots.header && n.$slots["title.week"] ? {
+          !a.$slots.header && a.$slots["title.week"] ? {
             name: "title.week",
-            fn: B((e) => [
-              j(n.$slots, "title.week", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.week", ne(le(e)))
             ]),
             key: "7"
           } : void 0,
-          !n.$slots.header && n.$slots["title.month"] ? {
+          !a.$slots.header && a.$slots["title.month"] ? {
             name: "title.month",
-            fn: B((e) => [
-              j(n.$slots, "title.month", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.month", ne(le(e)))
             ]),
             key: "8"
           } : void 0,
-          !n.$slots.header && n.$slots["title.year"] ? {
+          !a.$slots.header && a.$slots["title.year"] ? {
             name: "title.year",
-            fn: B((e) => [
-              j(n.$slots, "title.year", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.year", ne(le(e)))
             ]),
             key: "9"
           } : void 0,
-          !n.$slots.header && n.$slots["title.years"] ? {
+          !a.$slots.header && a.$slots["title.years"] ? {
             name: "title.years",
-            fn: B((e) => [
-              j(n.$slots, "title.years", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "title.years", ne(le(e)))
             ]),
             key: "10"
           } : void 0,
-          !n.$slots.header && n.$slots["schedule-heading"] ? {
+          !a.$slots.header && a.$slots["schedule-heading"] ? {
             name: "schedule-heading",
-            fn: B((e) => [
-              j(n.$slots, "schedule-heading", se(re(e)))
+            fn: N((e) => [
+              O(a.$slots, "schedule-heading", ne(le(e)))
             ]),
             key: "11"
           } : void 0
         ]), 1024),
-        he("div", Ta, [
+        he("div", Mn, [
           Oe(Ue, {
             name: `vuecal-slide-fade--${$(A).transitionDirection}`
           }, {
-            default: B(() => [
+            default: N(() => [
               (V(), P("div", {
                 class: pe(["vuecal__scrollable", i.value]),
                 key: $(A).id + $(A).start.getTime()
               }, [
-                l.value ? (V(), Se(ka, { key: 0 }, Ce({ _: 2 }, [
-                  n.$slots["time-cell"] ? {
+                l.value ? (V(), Se($n, { key: 0 }, Ce({ _: 2 }, [
+                  a.$slots["time-cell"] ? {
                     name: "time-cell",
-                    fn: B((e) => [
-                      j(n.$slots, "time-cell", se(re(e)))
+                    fn: N((e) => [
+                      O(a.$slots, "time-cell", ne(le(e)))
                     ]),
                     key: "0"
                   } : void 0
                 ]), 1024)) : x("", !0),
-                $(v).weekNumbers && $(A).isMonth ? (V(), P("div", Ma, [
-                  (V(!0), P(de, null, we(E.value, (e) => (V(), P("div", Ea, [
-                    j(n.$slots, "week-number", {}, () => [
+                $(v).weekNumbers && $(A).isMonth ? (V(), P("div", En, [
+                  (V(!0), P(de, null, we(E.value, (e) => (V(), P("div", Yn, [
+                    O(a.$slots, "week-number", {}, () => [
                       he("small", null, ce(e), 1)
                     ])
                   ]))), 256))
                 ])) : x("", !0),
-                he("div", Ya, [
-                  Oe(pa, null, Ce({ _: 2 }, [
-                    n.$slots["weekday-heading"] ? {
+                he("div", Sn, [
+                  Oe(wn, null, Ce({ _: 2 }, [
+                    a.$slots["weekday-heading"] ? {
                       name: "weekday-heading",
-                      fn: B((e) => [
-                        j(n.$slots, "weekday-heading", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "weekday-heading", ne(le(e)))
                       ]),
                       key: "0"
                     } : void 0,
-                    n.$slots["schedule-heading"] ? {
+                    a.$slots["schedule-heading"] ? {
                       name: "schedule-heading",
-                      fn: B((e) => [
-                        j(n.$slots, "schedule-heading", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "schedule-heading", ne(le(e)))
                       ]),
                       key: "1"
                     } : void 0,
-                    n.$slots["event.all-day"] ? {
+                    a.$slots["event.all-day"] ? {
                       name: "event.all-day",
-                      fn: B((e) => [
-                        j(n.$slots, "event.all-day", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "event.all-day", ne(le(e)))
                       ]),
                       key: "2"
                     } : void 0,
-                    n.$slots.event ? {
+                    a.$slots.event ? {
                       name: "event",
-                      fn: B((e) => [
-                        j(n.$slots, "event", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "event", ne(le(e)))
                       ]),
                       key: "3"
                     } : void 0
                   ]), 1024),
-                  Oe($a, null, Ce({ _: 2 }, [
-                    n.$slots.cell ? {
+                  Oe(bn, null, Ce({ _: 2 }, [
+                    a.$slots.cell ? {
                       name: "cell",
-                      fn: B((e) => [
-                        j(n.$slots, "cell", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "cell", ne(le(e)))
                       ]),
                       key: "0"
                     } : void 0,
-                    !n.$slots.cell && n.$slots["cell-date"] ? {
+                    !a.$slots.cell && a.$slots["cell-date"] ? {
                       name: "cell-date",
-                      fn: B((e) => [
-                        j(n.$slots, "cell-date", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "cell-date", ne(le(e)))
                       ]),
                       key: "1"
                     } : void 0,
-                    !n.$slots.cell && n.$slots["cell-content"] ? {
+                    !a.$slots.cell && a.$slots["cell-content"] ? {
                       name: "cell-content",
-                      fn: B((e) => [
-                        j(n.$slots, "cell-content", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "cell-content", ne(le(e)))
                       ]),
                       key: "2"
                     } : void 0,
-                    !n.$slots.cell && n.$slots["cell-events"] ? {
+                    !a.$slots.cell && a.$slots["cell-events"] ? {
                       name: "cell-events",
-                      fn: B((e) => [
-                        j(n.$slots, "cell-events", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "cell-events", ne(le(e)))
                       ]),
                       key: "3"
                     } : void 0,
-                    !n.$slots.cell && !n.$slots["cell-events"] && n.$slots["event.all-day"] ? {
+                    !a.$slots.cell && !a.$slots["cell-events"] && a.$slots["event.all-day"] ? {
                       name: "event.all-day",
-                      fn: B((e) => [
-                        j(n.$slots, "event.all-day", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "event.all-day", ne(le(e)))
                       ]),
                       key: "4"
                     } : void 0,
-                    !n.$slots.cell && !n.$slots["cell-events"] && n.$slots[`event.${$(A).id}`] ? {
+                    !a.$slots.cell && !a.$slots["cell-events"] && a.$slots[`event.${$(A).id}`] ? {
                       name: `event.${$(A).id}`,
-                      fn: B((e) => [
-                        j(n.$slots, `event.${$(A).id}`, se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, `event.${$(A).id}`, ne(le(e)))
                       ]),
                       key: "5"
                     } : void 0,
-                    !n.$slots.cell && !n.$slots["cell-events"] && n.$slots.event ? {
+                    !a.$slots.cell && !a.$slots["cell-events"] && a.$slots.event ? {
                       name: "event",
-                      fn: B((e) => [
-                        j(n.$slots, "event", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "event", ne(le(e)))
                       ]),
                       key: "6"
                     } : void 0,
-                    !n.$slots.cell && n.$slots["event-count"] ? {
+                    !a.$slots.cell && a.$slots["event-count"] ? {
                       name: "event-count",
-                      fn: B((e) => [
-                        j(n.$slots, "event-count", se(re(e)))
+                      fn: N((e) => [
+                        O(a.$slots, "event-count", ne(le(e)))
                       ]),
                       key: "7"
+                    } : void 0,
+                    a.$slots["now-line"] ? {
+                      name: "now-line",
+                      fn: N((e) => [
+                        O(a.$slots, "now-line", ne(le(e)))
+                      ]),
+                      key: "8"
                     } : void 0
                   ]), 1024)
                 ])
@@ -2514,63 +2533,63 @@ const lt = (y, t) => {
           }, 8, ["name"])
         ])
       ], 64))
-    ], 14, ba));
+    ], 14, Tn));
   }
-}, za = (y) => {
+}, Vn = (y) => {
   Fe.texts = { ...fe.texts, ...y }, Fe.dateUtils.updateTexts(Fe.texts);
 }, {
-  addDatePrototypes: Va,
-  removeDatePrototypes: Oa,
-  updateTexts: ja,
-  addDays: Ha,
-  subtractDays: Pa,
-  addHours: La,
-  subtractHours: Aa,
-  addMinutes: Fa,
-  subtractMinutes: Ra,
-  getWeek: Na,
-  isToday: Ba,
-  isSameDate: Wa,
-  isInRange: Xa,
-  isLeapYear: Ia,
-  getPreviousFirstDayOfWeek: qa,
-  stringToDate: Ga,
-  dateToMinutes: Ua,
-  countDays: Ja,
-  datesInSameTimeStep: Za,
-  isValid: Ka,
-  formatDate: Qa,
-  formatDateLite: xa,
-  formatTime: en,
-  formatTimeLite: tn,
-  formatMinutes: an
+  addDatePrototypes: On,
+  removeDatePrototypes: jn,
+  updateTexts: Hn,
+  addDays: Pn,
+  subtractDays: Ln,
+  addHours: An,
+  subtractHours: Fn,
+  addMinutes: Rn,
+  subtractMinutes: Nn,
+  getWeek: Bn,
+  isToday: Wn,
+  isSameDate: Xn,
+  isInRange: In,
+  isLeapYear: qn,
+  getPreviousFirstDayOfWeek: Gn,
+  stringToDate: Un,
+  dateToMinutes: Jn,
+  countDays: Zn,
+  datesInSameTimeStep: Kn,
+  isValid: Qn,
+  formatDate: xn,
+  formatDateLite: ea,
+  formatTime: ta,
+  formatTimeLite: na,
+  formatMinutes: aa
 } = Fe.dateUtils;
 export {
-  Ca as VueCal,
-  Va as addDatePrototypes,
-  Ha as addDays,
-  La as addHours,
-  Fa as addMinutes,
-  Ja as countDays,
-  Ua as dateToMinutes,
-  Za as datesInSameTimeStep,
-  Qa as formatDate,
-  xa as formatDateLite,
-  an as formatMinutes,
-  en as formatTime,
-  tn as formatTimeLite,
-  qa as getPreviousFirstDayOfWeek,
-  Na as getWeek,
-  Xa as isInRange,
-  Ia as isLeapYear,
-  Wa as isSameDate,
-  Ba as isToday,
-  Ka as isValidDate,
-  Oa as removeDatePrototypes,
-  Ga as stringToDate,
-  Pa as subtractDays,
-  Aa as subtractHours,
-  Ra as subtractMinutes,
-  ja as updateTexts,
-  za as useLocale
+  zn as VueCal,
+  On as addDatePrototypes,
+  Pn as addDays,
+  An as addHours,
+  Rn as addMinutes,
+  Zn as countDays,
+  Jn as dateToMinutes,
+  Kn as datesInSameTimeStep,
+  xn as formatDate,
+  ea as formatDateLite,
+  aa as formatMinutes,
+  ta as formatTime,
+  na as formatTimeLite,
+  Gn as getPreviousFirstDayOfWeek,
+  Bn as getWeek,
+  In as isInRange,
+  qn as isLeapYear,
+  Xn as isSameDate,
+  Wn as isToday,
+  Qn as isValidDate,
+  jn as removeDatePrototypes,
+  Un as stringToDate,
+  Ln as subtractDays,
+  Fn as subtractHours,
+  Nn as subtractMinutes,
+  Hn as updateTexts,
+  Vn as useLocale
 };
