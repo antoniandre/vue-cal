@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.32
+    ul
+      li Fixed the now line 12h format and added the #[code now-line] slot to customize the current time line. #[issue-link 91]
+
+  li.patch
     strong.version 5.0.1-rc.31
     ul
       li Added an optional date parameter to the #[code view.switch] method. #[issue-link 80]
