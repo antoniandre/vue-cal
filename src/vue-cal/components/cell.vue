@@ -373,7 +373,7 @@ const nowLine = reactive({
   nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
   todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
   style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
-  currentTime: computed(() => dateUtils.formatTime(view.now))
+  currentTime: computed(() => dateUtils.formatTime(view.now, config.twelveHour ? 'h:mm {am}' : 'HH:mm'))
 })
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
