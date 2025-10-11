@@ -236,17 +236,23 @@ example(title="Loading Events from a Backend" anchor="loading-events-from-backen
 example(title="External Controls & use of Vue Cal Methods" anchor="external-controls")
   template(#desc)
     p.
-      You can access any #[strong Vue Cal] internal method through Vue refs.#[br]
-      This example shows how to control the Previous, Next and Today functions and the view selections
-      from external buttons.#[br]
+      You can access any #[strong Vue Cal] internal method through Vue template ref.#[br]
+      For instance, you can use the #[span.code view.next()] method to navigate to the next view,
+      #[span.code view.previous()] to navigate to the previous view, or
+      #[span.code view.goToToday()] to go to today's date staying on the current view.#[br]
+      But the most important view properties are the #[span.code view-date] and #[span.code view] props that are
+      two-way binding (read and write), so you can simply update them with a v-model to switch view or date,
+      and in that case, you don't need to use the view methods from the template ref.
+    p.mt3.
       It's important to note the difference between the #[span.code view-date] and #[span.code selected-date] properties:
     ul
       li The #[span.code view-date] property is the first visible cell date that is currently displayed in the calendar.
       li The #[span.code selected-date] property is the date that is currently selected in the calendar.
-    p.
-      These two props are two-way binding, which means that you can use a v-model to update them (read and write).
+    p.mt3.
+      This example shows you one way to control the Previous, Next and Today functions and the view selections
+      from external buttons.
 
-    .mxa.my2(style="max-width: 500px")
+    .mxa.my3(style="max-width: 500px")
       .w-flex.gap2.basis-zero
         w-button.px2.grow(
           v-bind="view === 'day' && { 'bg-color': 'primary-dark1', color: 'white' }"
@@ -329,6 +335,9 @@ example(title="External Controls & use of Vue Cal Methods" anchor="external-cont
         li
           code switchToNarrowerView()
           p Will drill down the current view on selected date if there is a narrower view available.
+        li
+          code goToToday()
+          p Will go to today's date, staying on the current view.
         li
           code minutesAtCursor(e)
           p.

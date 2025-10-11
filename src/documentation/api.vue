@@ -114,20 +114,48 @@ w-accordion.mt3(
         ssh-pre.d-iblock.pr5.py0.ml1.my0(language="js" :dark="store.darkMode").
           vuecalRef.value.view.next()
         | .
-      ssh-pre(language="js" :dark="store.darkMode").
-        switch, // Switches to a different view given in param (day, days, month, year, years).
-        broader, // Navigates to the next available broader view.
-        narrower, // Navigates to the next available narrower view.
-        previous, // Navigates to the previous range of the same view.
-        next, // Navigates to the next range of the same view.
-        goToToday, // Goes to today.
-        updateViewDate, // Updates the view date to the date given in param.
-        updateSelectedDate, // Updates the selected date to the date given in param.
-        createEvent, // Creates an event given in params (requires `start`, `end`).
-        deleteEvent, // Deletes an event given its ID and a deletion stage (1, 2, 3).
-        scrollToCurrentTime, // Scrolls the calendar body to the current time.
-        scrollToTime, // Scrolls the calendar body to the given time in minutes.
-        scrollTop // Scrolls the calendar body to the top.
+
+      //- Convert this to a list of methods with params:
+      ul
+        li
+          strong.code switch(view, date)
+          |  - Switches to a different view given in param (day, days, month, year, years). Optionally accepts a Date as second param to switch to a specific date.
+        li
+          strong.code broader()
+          |  - Navigates to the next available broader view.
+        li
+          strong.code narrower()
+          |  - Navigates to the next available narrower view.
+        li
+          strong.code previous()
+          |  - Navigates to the previous range of the same view.
+        li
+          strong.code next()
+          |  - Navigates to the next range of the same view.
+        li
+          strong.code goToToday()
+          |  - Goes to today's date.
+        li
+          strong.code updateViewDate(date)
+          |  - Updates the view date to the date given in param.
+        li
+          strong.code updateSelectedDate(date)
+          |  - Updates the selected date to the date given in param.
+        li
+          strong.code createEvent(event)
+          |  - Creates an event given in params (requires `start`, `end`).
+        li
+          strong.code deleteEvent(id, stage)
+          |  - Deletes an event given its ID and a deletion stage (1, 2, 3).
+        li
+          strong.code scrollToCurrentTime()
+          |  - Scrolls the calendar body to the current time.
+        li
+          strong.code scrollToTime(minutes)
+          |  - Scrolls the calendar body to the given time in minutes.
+        li
+          strong.code scrollTop()
+          |  - Scrolls the calendar body to the top.
 
   w-accordion-item
     template(#title)
