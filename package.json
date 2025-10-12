@@ -8,6 +8,7 @@
   "license": "MIT",
   "funding": "https://github.com/sponsors/antoniandre",
   "main": "dist/vue-cal.umd.js",
+  "types": "dist/vue-cal.d.ts",
   "module": "dist/vue-cal.es.js",
   "type": "module",
   "files": [
@@ -44,7 +45,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build --base /vue-cal/",
-    "build-bundle": "BUNDLE=true vite build",
+    "build-bundle": "BUNDLE=true vite build && cp src/types/vue-cal.ts dist/vue-cal.d.ts",
     "preview": "vite preview --base /vue-cal/",
     "lint": "vite lint",
     "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag"
