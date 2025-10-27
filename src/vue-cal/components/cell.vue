@@ -383,6 +383,33 @@ const cellEventListeners = computed(() => {
 
   const eventListeners = { ...config.eventListeners.cell }
 
+  // Helper: try to detect a schedule id from the event target (dataset or closest schedule element)
+  const detectScheduleFromDOM = (evt) => {
+    try {
+      const tgt = (evt.target || evt.e?.target)
+      // Prefer direct dataset.schedule, otherwise check the closest schedule element.
+      const ds = tgt?.dataset?.schedule ?? tgt?.closest?.('.vuecal__schedule')?.dataset?.schedule
+      if (ds !== undefined && ds !== null && ds !== '') return ~~ds
+    } catch (err) {
+      // ignore parsing errors
+    }
+    return null
+  }
+
+  // Build a cell payload that includes a schedule detected from the DOM event if possible.
+  const buildCellPayload = (evt) => {
+    // If the incoming payload is already wrapped (e.g. some code may call handlers with {e, cell, cursor}),
+    // then keep the provided cell.
+    if (!evt || !evt.target && !evt.e) return cellInfo.value
+
+    const detected = detectScheduleFromDOM(evt)
+    const schedule = (detected !== null && detected !== undefined) ? detected : touch.schedule
+    return {
+      ...cellInfo.value,
+      ...(typeof schedule === 'number' && !Number.isNaN(schedule) ? { schedule } : {})
+    }
+  }
+
   // Inject the cell details in each eventListener handler call as 2nd param.
   for (const [eventListener, handler] of Object.entries(eventListeners)) {
     eventListeners[eventListener] = e => {
@@ -392,7 +419,7 @@ const cellEventListeners = computed(() => {
       if ((e.target || e.e?.target).closest?.('.vuecal__event')) return
 
       // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
+      handler(e.type ? { e, cell: buildCellPayload(e), cursor: cursorInfo.value } : e)
     }
   }
 
@@ -406,14 +433,14 @@ const cellEventListeners = computed(() => {
     onCellClick()
     const cursor = getTimeAtCursor(e)
 
-    externalHandlers.click?.({ e, cell: cellInfo.value, cursor })
+    externalHandlers.click?.({ e, cell: buildCellPayload(e), cursor })
 
     if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
     else {
       clickTimeout = setTimeout(() => {
         clickTimeout = null
         // Handle delayed single click.
-        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor })
+        externalHandlers['delayed-click']?.({ e, cell: buildCellPayload(e), cursor })
       }, 400)
     }
   }
@@ -421,12 +448,12 @@ const cellEventListeners = computed(() => {
   if (config.time && view.isDay || view.isDays || view.isWeek) {
     eventListeners.touchstart = e => {
       onMousedown(e.e || e)
-      externalHandlers.touchstart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      externalHandlers.touchstart?.({ e, cell: buildCellPayload(e), cursor: cursorInfo.value })
     }
     eventListeners.mousedown = e => {
       onMousedown(e.e || e)
 
-      externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      externalHandlers.mousedown?.({ e, cell: buildCellPayload(e), cursor: cursorInfo.value })
     }
   }
 
@@ -436,8 +463,10 @@ const cellEventListeners = computed(() => {
     // Note: increasing the touch object longevity to keep the cursor position and date would not
     // work because the dblclick can have a fast click and a long hold second click and it should
     // still fire.
+
+    // dblclick can happen after mouseup which cleared touch.schedule; detect schedule from DOM instead.
     eventListeners.dblclick = e => {
-      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e) })
+      externalHandlers.dblclick?.({ e, cell: buildCellPayload(e), cursor: getTimeAtCursor(e) })
     }
   }
 
