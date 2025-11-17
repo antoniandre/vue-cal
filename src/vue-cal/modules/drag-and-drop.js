@@ -50,7 +50,6 @@ export function useDragAndDrop (vuecal) {
     // If no duration calculate it from event end - event start
     // before we modify the start and end.
     const duration = transferData.duration || deltaMinutes(transferData.start, transferData.end) || config.timeStep
-
     // Force the start of the event at previous midnight minimum.
     let startTimeMinutes = Math.max(getEventStart(e), 0)
 
@@ -84,7 +83,6 @@ export function useDragAndDrop (vuecal) {
 
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.dropEffect = 'move'
-
     // Fix for Chrome on Windows: use a small transparent image as drag image
     // const img = new Image()
     // img.src = 'data:image/gifbase64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' // 1px transparent GIF

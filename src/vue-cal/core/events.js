@@ -505,11 +505,11 @@ export const useEvents = vuecal => {
   })
 
   /**
-   * Compute the new start and end of the event based on the touch move percentage while resizing.
-   * @param {Object} event - The event object.
-   * @param {Object} cellStart - The cell start date.
-   * @returns {Object} - The new start and end of the event.
-   */
+ * Compute the new start and end of the event based on the touch move percentage while resizing.
+ * @param {Object} event - The event object.
+ * @param {Object} cellStart - The cell start date.
+ * @returns {Object} - The new start and end of the event.
+ */
   const computeEventStartEnd = (event, cellStart) => {
     let minutes = percentageToMinutes(resizeState.movePercentageY, config)
 
@@ -525,16 +525,33 @@ export const useEvents = vuecal => {
     let newStart = event.start
     let newEnd = new Date(cellStart.getTime() + minutes * 60000)
 
-    // If the event is resizing horizontally by the user dragging and crossing a cell,
-    // Set the end date to the hovered cell's start date while preserving the time at cursor position.
+    // NEW: Handle horizontal resizing to create multi-day events
     if (resizeState.moveX && vuecal.touch?.currentHoveredCell && resizeState.cellEl) {
       // Get the current hovered cell date from global touch state.
       const currentCellDate = new Date(vuecal.touch.currentHoveredCell.__vueParentComponent.props.start)
+      const originalCellDate = new Date(cellStart)
 
-      // Set the event end date to the hovered cell's date.
-      // newEnd.setDate(currentCellDate.getDate())
-      // newEnd.setMonth(currentCellDate.getMonth())
-      // newEnd.setYear(currentCellDate.getFullYear())
+      // Check if we're dragging to a different day
+      if (!dateUtils.isSameDate(currentCellDate, originalCellDate)) {
+        const daysDifference = Math.floor((currentCellDate.getTime() - originalCellDate.getTime()) / (24 * 60 * 60 * 1000))
+
+        if (daysDifference > 0) {
+          // Dragging to future days - create multi-day event
+          // End first day at 23:59
+          const firstDayEnd = new Date(originalCellDate)
+          firstDayEnd.setHours(23, 59, 59, 999)
+
+          // Start next day at 00:00 with the time from cursor position
+          const nextDayStart = new Date(currentCellDate)
+          nextDayStart.setHours(0, 0, 0, 0)
+
+          // Set end to current cursor position
+          newEnd = new Date(currentCellDate.getTime() + minutes * 60000)
+
+          // Create the multi-day structure
+          return createMultiDayEventStructure(newStart, newEnd, firstDayEnd, nextDayStart)
+        }
+      }
     }
 
     // While resizing and event end is before event start.
@@ -546,6 +563,18 @@ export const useEvents = vuecal => {
     return { newStart, newEnd }
   }
 
+  /**
+   * Helper function to create multi-day event structure
+   */
+  const createMultiDayEventStructure = (originalStart, finalEnd, firstDayEnd, nextDayStart) => {
+    // For now, return a single event that spans multiple days
+    // Vue Cal will handle the multi-day rendering based on the dates
+    return {
+      newStart: originalStart,
+      newEnd: finalEnd,
+      isMultiDay: true
+    }
+  }
   // Document event handlers for event resizing.
   const onDocumentMousemove = async e => {
     const { clientX, clientY } = e.touches?.[0] || e // Handle click or touch event.

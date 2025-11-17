@@ -974,7 +974,7 @@ const exCreateEvents = reactive({
     e.preventDefault()
     event = {
       ...(event || {}),
-      title: 'New Event! 🎉',
+      title: 'New Event! 🎉xxx',
       start: event?.start || cursor.date,
       end: event?.end || cursor.date.addHours(1),
       class: 'blue-event'
@@ -989,6 +989,13 @@ const exCreateEvents = reactive({
   eventCreateMinDrag: ref(false),
   resolve: null,
   events: ref([]),
+  multidayEvents: true,
+  editableEvents: {
+    create: true,
+    resize: true,
+    resizeX: true, // Ermöglicht horizontales Resizing
+    drag: true
+  },
   newEvent: {
     title: '',
     background: false,
