@@ -18,7 +18,7 @@ const dragging = reactive({
   toVueCal: null
 })
 
-export function useDragAndDrop (vuecal) {
+export function useDragAndDrop(vuecal) {
   const { config, view, eventsManager, emit, uid: vuecalUid, dateUtils } = vuecal
 
   /**
@@ -50,6 +50,7 @@ export function useDragAndDrop (vuecal) {
     // If no duration calculate it from event end - event start
     // before we modify the start and end.
     const duration = transferData.duration || deltaMinutes(transferData.start, transferData.end) || config.timeStep
+
     // Force the start of the event at previous midnight minimum.
     let startTimeMinutes = Math.max(getEventStart(e), 0)
 
@@ -83,6 +84,7 @@ export function useDragAndDrop (vuecal) {
 
     e.dataTransfer.effectAllowed = 'move'
     e.dataTransfer.dropEffect = 'move'
+
     // Fix for Chrome on Windows: use a small transparent image as drag image
     // const img = new Image()
     // img.src = 'data:image/gifbase64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7' // 1px transparent GIF
@@ -280,7 +282,7 @@ export function useDragAndDrop (vuecal) {
 
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
-    let onAcceptedDrop = () => {}
+    let onAcceptedDrop = () => { }
 
     // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
     // for drop approval request.
