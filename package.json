@@ -20,7 +20,8 @@
   "exports": {
     ".": {
       "import": "./dist/vue-cal.es.js",
-      "require": "./dist/vue-cal.cjs.js"
+      "require": "./dist/vue-cal.cjs.js",
+      "types": "./dist/vue-cal.d.ts"
     },
     "./style": {
       "default": "./dist/vue-cal.css"
