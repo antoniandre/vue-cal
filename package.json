@@ -70,7 +70,7 @@
     "wave-ui": "^3.25.6"
   },
   "peerDependencies": {
-    "vue": "^3.5.0"
+    "vue": "^3.5.11"
   },
   "packageManager": "pnpm@10.26.0"
 }
