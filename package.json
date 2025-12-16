@@ -51,26 +51,26 @@
     "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag"
   },
   "devDependencies": {
-    "@babel/core": "^7.28.4",
-    "@babel/eslint-parser": "^7.28.4",
+    "@babel/core": "^7.28.5",
+    "@babel/eslint-parser": "^7.28.5",
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^5.2.4",
-    "autoprefixer": "^10.4.21",
+    "autoprefixer": "^10.4.23",
     "eslint": "^8.57.1",
-    "pinia": "^3.0.3",
+    "pinia": "^3.0.4",
     "postcss": "^8.5.6",
     "pug": "^3.0.3",
-    "rollup": "^4.52.4",
-    "sass": "^1.93.2",
+    "rollup": "^4.53.5",
+    "sass": "^1.97.0",
     "simple-syntax-highlighter": "^3.1.1",
-    "vite": "^6.3.6",
+    "vite": "^6.4.1",
     "vite-plugin-static-copy": "^2.3.2",
-    "vue": "^3.5.22",
-    "vue-router": "^4.5.1",
-    "wave-ui": "^3.25.4"
+    "vue": "^3.5.25",
+    "vue-router": "^4.6.4",
+    "wave-ui": "^3.25.6"
   },
   "peerDependencies": {
     "vue": "^3.5.0"
   },
-  "packageManager": "pnpm@10.11.0"
+  "packageManager": "pnpm@10.26.0"
 }
