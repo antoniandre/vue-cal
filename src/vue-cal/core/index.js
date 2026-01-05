@@ -53,7 +53,10 @@ export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
       isDraggingCell: false,
       isDraggingEvent: false,
       isResizingEvent: false,
-      currentHoveredCell: null // Track the cell currently being hovered during event resizing.
+      currentHoveredCell: null,
+      // NEU: Multi-Day Event State
+      multiDayEventRange: null, // { startCell, endCell, startDate, endDate }
+      dragStartCell: null
     }
   })
 

@@ -48,8 +48,15 @@
             slot(name="event" v-bind="params")
       .vuecal__event-placeholder(
         v-if="isCreatingEvent && touch.schedule === schedule.id && !props.allDay"
+        :class="{ 'vuecal__event-placeholder--multi-day': eventPlaceholder.isMultiDay }"
         :style="eventPlaceholder.style")
-        | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
+        template(v-if="eventPlaceholder.isMultiDay")
+          span(v-if="eventPlaceholder.isStartCell") {{ eventPlaceholder.start }} - 23:59
+          span(v-else-if="eventPlaceholder.isEndCell") 00:00 - {{ eventPlaceholder.end }}
+          span(v-else-if="eventPlaceholder.isMiddleCell") 00:00 - 23:59
+          span(v-else) {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
+        template(v-else)
+          | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   template(v-if="!$slots.cell && !config.schedules")
     template(v-if="$slots['cell-events']")
@@ -83,8 +90,17 @@
           slot(:name="`event.${view.id}`" v-bind="params")
         template(v-if="$slots.event" #event="params")
           slot(name="event" v-bind="params")
-    .vuecal__event-placeholder(v-if="isCreatingEvent" :style="eventPlaceholder.style")
-      | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
+    .vuecal__event-placeholder(
+      v-if="isCreatingEvent"
+      :class="{ 'vuecal__event-placeholder--multi-day': eventPlaceholder.isMultiDay }"
+      :style="eventPlaceholder.style")
+      template(v-if="eventPlaceholder.isMultiDay")
+        span(v-if="eventPlaceholder.isStartCell") {{ eventPlaceholder.start }} - 23:59
+        span(v-else-if="eventPlaceholder.isEndCell") 00:00 - {{ eventPlaceholder.end }}
+        span(v-else-if="eventPlaceholder.isMiddleCell") 00:00 - 23:59
+        span(v-else) {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
+      template(v-else)
+        | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   slot(v-if="$slots['event-count']" name="event-count" :events="cellForegroundEvents")
   .vuecal__cell-events-count(v-else-if="showCellEventCount") {{ cellForegroundEvents.length }}
@@ -98,667 +114,958 @@
 </template>
 
 <script setup>
-import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
-import { months, weekdays } from '@/vue-cal/core/config'
-import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
-import Event from './event.vue'
+  import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
+  import { months, weekdays } from '@/vue-cal/core/config'
+  import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
+  import Event from './event.vue'
 
-const props = defineProps({
-  // Even with time=false, the date of the cell will still be provided in order to attach
-  // events to a specific date.
-  start: { type: Date, required: true },
-  end: { type: Date, required: true },
-  index: { type: Number, required: true },
-  allDay: { type: Boolean, default: false } // True when the cell is an all-day cell.
-})
+  const props = defineProps({
+    // Even with time=false, the date of the cell will still be provided in order to attach
+    // events to a specific date.
+    start: { type: Date, required: true },
+    end: { type: Date, required: true },
+    index: { type: Number, required: true },
+    allDay: { type: Boolean, default: false } // True when the cell is an all-day cell.
+  })
 
-const vuecal = inject('vuecal')
-const { view, config, dateUtils, eventsManager, dnd, touch: globalTouchState } = vuecal
-const isToday = computed(() => dateUtils.isToday(props.start))
+  const vuecal = inject('vuecal')
+  const { view, config, dateUtils, eventsManager, dnd, touch: globalTouchState } = vuecal
+  const isToday = computed(() => dateUtils.isToday(props.start))
 
-const cellEl = ref(null)
-// Store deleted events per cell and filter them out in that specific cell.
-// Only delete the events for good when unmounting the cell, in order to avoid re-rendering all the
-// cells in the view when deleting in the source of truth.
-const eventsDeleted = ref([])
-// Wait for the event deletion transition end before unmounting the events container if no event.
-const transitioning = ref(false)
-const onEventDelete = e => {
-  eventsDeleted.value.push(e.detail)
-  transitioning.value = true
-}
-const afterDelete = () => setTimeout(() => (transitioning.value = false), 300)
-
-// The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
-// display the event placeholder in that schedule.
-const touch = reactive({
-  dragging: false,
-  holding: false, // When the cell is clicked and hold for a certain amount of time.
-  holdTimer: null, // Cell click and hold detection.
-  thresholdPassed: false, // If the drag threshold has been passed.
-  canTouchAndDrag: null, // Wait for 500ms before allowing an event to be dragged after touchstart.
-  touchAndDragTimer: null, // Timer for canTouchAndDrag.
-  startX: 0, // The x position at the start of the drag (mousedown or touchstart).
-  startY: 0, // The y position at the start of the drag (mousedown or touchstart).
-  moveX: 0,
-  moveY: 0,
-  startPercentageX: 0, // The x position in percentage at the start of the drag (mousedown or touchstart).
-  startPercentageY: 0, // The y position in percentage at the start of the drag (mousedown or touchstart).
-  movePercentageX: 0,
-  movePercentageY: 0,
-  schedule: null
-})
-const awaitingEventCreation = ref(false)
-
-// Overlapping events calculation (only updates when event IDs or date ranges change).
-const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
-
-// While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
-// The calendar creation could be canceled for different wanted reasons at the end of dragging.
-const eventPlaceholder = computed(() => {
-  let startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
-  let endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
-  let startMinutes = percentageToMinutes(startPercentage, config)
-  let endMinutes = percentageToMinutes(endPercentage, config)
-
-  // Snap the event to the nearest interval if set.
-  if (config.snapToInterval) {
-    startMinutes = dateUtils.snapToInterval(startMinutes, config.snapToInterval)
-    endMinutes = dateUtils.snapToInterval(endMinutes, config.snapToInterval)
-    startPercentage = minutesToPercentage(startMinutes, config)
-    endPercentage = minutesToPercentage(endMinutes, config)
+  const cellEl = ref(null)
+  // Store deleted events per cell and filter them out in that specific cell.
+  // Only delete the events for good when unmounting the cell, in order to avoid re-rendering all the
+  // cells in the view when deleting in the source of truth.
+  const eventsDeleted = ref([])
+  // Wait for the event deletion transition end before unmounting the events container if no event.
+  const transitioning = ref(false)
+  const onEventDelete = e => {
+    eventsDeleted.value.push(e.detail)
+    transitioning.value = true
   }
+  const afterDelete = () => setTimeout(() => (transitioning.value = false), 300)
 
-  return {
-    style: {
-      top: `${startPercentage}%`,
-      height: `${Math.abs(endPercentage - startPercentage)}%`
-    },
-    startMinutes,
-    endMinutes,
-    start: dateUtils.formatMinutes(startMinutes),
-    end: dateUtils.formatMinutes(endMinutes),
-    ...(touch.schedule ? { schedule: touch.schedule } : {})
-  }
-})
+  // The touch/mouse events listeners are always attached to the cell, but if the event.target is a schedule,
+  // display the event placeholder in that schedule.
+  const touch = reactive({
+    dragging: false,
+    holding: false, // When the cell is clicked and hold for a certain amount of time.
+    holdTimer: null, // Cell click and hold detection.
+    thresholdPassed: false, // If the drag threshold has been passed.
+    canTouchAndDrag: null, // Wait for 500ms before allowing an event to be dragged after touchstart.
+    touchAndDragTimer: null, // Timer for canTouchAndDrag.
+    startX: 0, // The x position at the start of the drag (mousedown or touchstart).
+    startY: 0, // The y position at the start of the drag (mousedown or touchstart).
+    moveX: 0,
+    moveY: 0,
+    startPercentageX: 0, // The x position in percentage at the start of the drag (mousedown or touchstart).
+    startPercentageY: 0, // The y position in percentage at the start of the drag (mousedown or touchstart).
+    movePercentageX: 0,
+    movePercentageY: 0,
+    schedule: null
+  })
+  const awaitingEventCreation = ref(false)
 
-const isCreatingEvent = computed(() => {
-  const isCreating = config.editableEvents.create && (touch.dragging || awaitingEventCreation.value)
-  const hasPassedMinDrag = ((config.eventCreateMinDrag && touch.thresholdPassed) || !config.eventCreateMinDrag)
-  const canCreateEvent = touch.canTouchAndDrag !== false // Allow if null (mouse) or true (touch after delay).
-  return isCreating && hasPassedMinDrag && canCreateEvent
-})
+  // Overlapping events calculation (only updates when event IDs or date ranges change).
+  const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 
-const classes = computed(() => {
-  const now = new Date()
-  const viewYear = view.start.getFullYear()
-  const viewMonth = view.start.getMonth()
-  const y = props.start.getFullYear()
-  const m = props.start.getMonth()
-  const weekday = weekdays[props.start.getDay()]
+  // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
+  // The calendar creation could be canceled for different wanted reasons at the end of dragging.
+  // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
+  // The calendar creation could be canceled for different wanted reasons at the end of dragging.
+  const eventPlaceholder = computed(() => {
+    let startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
+    let endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
+    let startMinutes = percentageToMinutes(startPercentage, config)
+    let endMinutes = percentageToMinutes(endPercentage, config)
 
-  return {
-    [`vuecal__cell--${weekday}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
-    [`vuecal__cell--${months[m]}`]: view.isYear,
-    [`vuecal__cell--${y}`]: view.isYears,
-    'vuecal__cell--today': isToday.value,
-    'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
-    'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
-    'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
-    'vuecal__cell--before-min': isDisabled.value && isBeforeMinDate.value,
-    'vuecal__cell--after-max': isDisabled.value && isAfterMaxDate.value,
-    'vuecal__cell--disabled': isDisabled.value,
-    'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
-    'vuecal__cell--has-schedules': config.schedules?.length,
-    'vuecal__cell--dragging': touch.dragging,
-    'vuecal__cell--has-events': cellEvents.value.length
-  }
-})
+    // NEW: Check if this cell is part of a multi-day event
+    const isMultiDay = globalTouchState.multiDayEventRange && globalTouchState.isDraggingCell
+    let isStartCell = false
+    let isEndCell = false
+    let isMiddleCell = false
 
-const startFormatted = computed(() => dateUtils.formatDate(props.start))
+    if (isMultiDay) {
+      try {
+        const currentCellDate = new Date(props.start)
+        const { startDate, endDate, cursorPercentageY, cursorMinutes, originalStartMinutes } = globalTouchState.multiDayEventRange
 
-// Note: This will recompute when the locale changes (from formatDate) or xs prop changes for instance.
-// So it needs to be a distinct computed from the events.
-const formattedCellDate = computed(() => {
-  // ! \ IMPORTANT NOTE:
-  // If the selectedDate prop would be added to the vuecal.view, any click on any cell
-  // (triggering an emit of the selectedDate), would trigger a rerendering of all the
-  // cells of the view. The following marker is here to monitor that this does not happen
-  // with any prop while developing.
-  switch (view.id) {
-    case 'day':
-      return ''
-    case 'days':
-      if (config.availableViews.days.rows > 1) dateUtils.formatDate(props.start, 'D')
-      return ''
-    case 'week':
-      return ''
-    case 'month':
-      return dateUtils.formatDate(props.start, 'D')
-    case 'year':
-      return dateUtils.formatDate(props.start, config.xs ? 'MMM' : 'MMMM')
-    case 'years':
-      return dateUtils.formatDate(props.start, 'YYYY')
-  }
-})
+        // Determine if this is start, middle, or end cell
+        isStartCell = dateUtils.isSameDate(currentCellDate, startDate)
+        isEndCell = dateUtils.isSameDate(currentCellDate, endDate)
 
-const cellEvents = computed(() => {
-  if (config.datePicker) return []
-  return eventsManager.getEventsInRange(
-    props.start,
-    props.end,
-    { excludeIds: eventsDeleted.value, ...(config.allDayEvents ? { allDay: props.allDay } : {}) }
-  )
-})
+        // For cells between start and end
+        const rangeStartDate = startDate.getTime() < endDate.getTime() ? startDate : endDate
+        const rangeEndDate = startDate.getTime() > endDate.getTime() ? startDate : endDate
+        isMiddleCell = !isStartCell && !isEndCell &&
+          currentCellDate.getTime() > rangeStartDate.getTime() &&
+          currentCellDate.getTime() < rangeEndDate.getTime()
 
-const cellForegroundEvents = computed(() => cellEvents.value.filter(event => !event.background))
-
-/**
- * Generates an object containing events grouped by schedule ID.
- *
- * @returns {Object} An object where keys are schedule IDs, and values are arrays of event IDs
- *                   that correspond to each schedule.
- */
-const cellEventsPerSchedule = computed(() => {
-  return config.schedules?.reduce((obj, schedule) => {
-    obj[schedule.id] = cellEvents.value.filter(event => event.schedule === schedule.id)
-    return obj
-  }, {})
-})
-
-// Compute styles for event width & offset.
-const eventStyles = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
-  const isRTL = typeof document !== 'undefined' && document.documentElement.getAttribute('dir') === 'rtl'
-  const isHzl = config.horizontal
-  const styles = {}
-
-  for (const event of cellEvents.value) {
-    const eventId = event._.id
-    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
-
-    const rightOrLeft = isRTL ? 'right' : 'left'
-    const widthOrHeight = isHzl ? 'height' : 'width'
-    styles[eventId] = { [isHzl ? 'top' : rightOrLeft]: `${(100 / maxConcurrent) * position}%` }
-    // Stack overlapping events on top of each other if the stackEvents prop is set to true.
-    if (config.stackEvents) {
-      styles[eventId][widthOrHeight] = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
+        if (isStartCell && startDate.getTime() < endDate.getTime()) {
+          // This is the start cell - use ORIGINAL start time and extend to end of day
+          const originalStartPercentage = minutesToPercentage(originalStartMinutes || startMinutes, config)
+          startPercentage = originalStartPercentage
+          startMinutes = originalStartMinutes || startMinutes // Use original time!
+          endPercentage = 100 // Go to end of day
+          endMinutes = 24 * 60 - 1 // 23:59
+        } else if (isEndCell && startDate.getTime() < endDate.getTime()) {
+          // This is the end cell - start from beginning of day and go to cursor position
+          startPercentage = 0 // Start from beginning of day
+          endPercentage = Math.max(0, Math.min(100, cursorPercentageY)) // Use cursor position
+          startMinutes = 0 // 00:00
+          endMinutes = Math.max(0, Math.min(24 * 60 - 1, cursorMinutes)) // Use cursor minutes
+        } else if (isStartCell && startDate.getTime() > endDate.getTime()) {
+          // Dragging backwards - this is start but we're going backward
+          const originalStartPercentage = minutesToPercentage(originalStartMinutes || startMinutes, config)
+          startPercentage = originalStartPercentage
+          startMinutes = originalStartMinutes || startMinutes // Use original time!
+          endPercentage = 100 // Go to end of day
+          endMinutes = 24 * 60 - 1 // 23:59
+        } else if (isEndCell && startDate.getTime() > endDate.getTime()) {
+          // Dragging backwards - this is the end cell
+          startPercentage = 0 // Start from beginning of day
+          endPercentage = Math.max(0, Math.min(100, cursorPercentageY)) // Use cursor position
+          startMinutes = 0 // 00:00
+          endMinutes = Math.max(0, Math.min(24 * 60 - 1, cursorMinutes)) // Use cursor minutes
+        } else if (isMiddleCell) {
+          // Middle cells - full day
+          startPercentage = 0 // Start from beginning of day
+          endPercentage = 100 // Go to end of day
+          startMinutes = 0 // 00:00
+          endMinutes = 24 * 60 - 1 // 23:59
+        }
+      } catch (error) {
+        console.warn('Failed to process multi-day placeholder:', error)
+      }
     }
-    else styles[eventId][widthOrHeight] = `${100 / maxConcurrent}%`
-  }
-  return styles
-})
 
-/**
- * Generates an object containing event classes based on the stack position and length.
- * This lets the user style visually stacked events in full control.
- *
- * @returns {Object} An object where keys are event IDs, and values are strings
- *                   representing the event class.
- */
-const eventClasses = computed(() => {
-  const classes = {}
-  for (const event of cellEvents.value) {
-    const eventId = event._.id
-    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
-
-    classes[eventId] = `vuecal__event--stack-${position + 1}-${maxConcurrent}`
-  }
-  return classes
-})
-
-const showCellEventCount = computed(() => {
-  return config.showCellEventCount && cellForegroundEvents.value.length
-})
-
-/**
- * The special hours of the current cell day.
- * returns an array if the view is day, days, week and the specialHours prop is set correctly.
- */
-const specialHours = computed(() => {
-  if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
-  const weekday = weekdays[props.start.getDay()]
-
-  // The special hours ranges for the current cell day.
-  let daySpecialHours = config.specialHours?.[weekday]
-  if (!daySpecialHours) return
-
-  if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
-
-  // Foreach of the given ranges, return an object with CSS positioning in percentage.
-  return daySpecialHours.map(dayRanges => {
-    let { from, to, class: classes, label } = dayRanges
-
-    // Return if the special hours are incorrect or completely out of range.
-    if (isNaN(from) || isNaN(to) || config.timeFrom >= to || config.timeTo <= from) return
-
-    from = Math.max(config.timeFrom, from) // Ensure that from is in range.
-    to = Math.min(config.timeTo, to) // Ensure that to is in range.
-
-    const top = minutesToPercentage(from, config)
-    const height = minutesToPercentage(to, config) - top
+    // Snap the event to the nearest interval if set.
+    if (config.snapToInterval && !isMultiDay) {
+      startMinutes = dateUtils.snapToInterval(startMinutes, config.snapToInterval)
+      endMinutes = dateUtils.snapToInterval(endMinutes, config.snapToInterval)
+      startPercentage = minutesToPercentage(startMinutes, config)
+      endPercentage = minutesToPercentage(endMinutes, config)
+    }
 
     return {
-      style: { top: `${top}%`, height: `${height}%` },
-      label,
-      class: classes
+      style: {
+        top: `${startPercentage}%`,
+        height: `${Math.abs(endPercentage - startPercentage)}%`
+      },
+      startMinutes,
+      endMinutes,
+      start: dateUtils.formatMinutes(startMinutes),
+      end: dateUtils.formatMinutes(endMinutes),
+      isMultiDay: isMultiDay && (isStartCell || isEndCell || isMiddleCell),
+      isStartCell,
+      isEndCell,
+      isMiddleCell,
+      ...(touch.schedule ? { schedule: touch.schedule } : {})
     }
-  }).filter(specialRanges => !!specialRanges)
-})
+  })
+  const isCreatingEvent = computed(() => {
+    const isCreating = config.editableEvents.create && (touch.dragging || awaitingEventCreation.value)
+    const hasPassedMinDrag = ((config.eventCreateMinDrag && touch.thresholdPassed) || !config.eventCreateMinDrag)
+    const canCreateEvent = touch.canTouchAndDrag !== false // Allow if null (mouse) or true (touch after delay).
 
-const isBeforeMinDate = computed(() => {
-  return config.minTimestamp !== null && config.minTimestamp > props.end.getTime()
-})
+    // Original cell creating event
+    const isOriginatingCell = isCreating && hasPassedMinDrag && canCreateEvent
 
-const isAfterMaxDate = computed(() => {
-  return config.maxTimestamp && config.maxTimestamp < props.start.getTime()
-})
+    // NEW: Check if this cell is part of a multi-day event being created
+    const isPartOfMultiDayEvent = globalTouchState.multiDayEventRange && globalTouchState.isDraggingCell
 
-// Is the current cell disabled or not (disabled date or before min date or after max date).
-const isDisabled = computed(() => {
-  const { disableDays } = config
-  const isYearsOrYearView = view.isYear || view.isYears
-  if (disableDays.length && disableDays.includes(dateUtils.formatDate(props.start)) && !isYearsOrYearView) return true
-  return isBeforeMinDate.value || isAfterMaxDate.value
-})
+    if (isPartOfMultiDayEvent) {
+      try {
+        const currentCellDate = new Date(props.start)
+        const { startDate, endDate } = globalTouchState.multiDayEventRange
 
-// Draw a line in today's cell at the exact current time.
-const nowLine = reactive({
-  show: computed(() => {
-    if (!view.isDay && !view.isDays && !view.isWeek) return
-    if (!isToday.value || !config.time || props.allDay) return
-    if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
-    if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
-    return true
-  }),
-  nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
-  todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
-  style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
-  currentTime: computed(() => dateUtils.formatTime(view.now, config.twelveHour ? 'h:mm {am}' : 'HH:mm'))
-})
+        const rangeStartDate = startDate.getTime() < endDate.getTime() ? startDate : endDate
+        const rangeEndDate = startDate.getTime() > endDate.getTime() ? startDate : endDate
 
-// Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
-const cellEventListeners = computed(() => {
-  if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
+        // Check if current cell is within the multi-day range
+        const cellInRange = currentCellDate.getTime() >= rangeStartDate.getTime() &&
+          currentCellDate.getTime() <= rangeEndDate.getTime()
 
-  const eventListeners = { ...config.eventListeners.cell }
-
-  // Inject the cell details in each eventListener handler call as 2nd param.
-  for (const [eventListener, handler] of Object.entries(eventListeners)) {
-    eventListeners[eventListener] = e => {
-      // When interacting with an event, skip calling the cell DOM event handler.
-      // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
-      // we can receive the on mouseup from the document and stop event drag&drop.
-      if ((e.target || e.e?.target).closest?.('.vuecal__event')) return
-
-      // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
+        if (cellInRange) {
+          return true
+        }
+      } catch (error) {
+        console.warn('Error checking multi-day range:', error)
+      }
     }
-  }
 
-  // Store a copy of any potential external handler to combine with internal handlers like click,
-  // touchstart, mousedown.
-  const externalHandlers = { ...eventListeners }
+    return isOriginatingCell
+  })
 
-  // `cell-delayed-click` is only fired after 400ms if there was no dblclick.
-  let clickTimeout = null
-  eventListeners.click = e => {
-    onCellClick()
-    const cursor = getTimeAtCursor(e)
+  const classes = computed(() => {
+    const now = new Date()
+    const viewYear = view.start.getFullYear()
+    const viewMonth = view.start.getMonth()
+    const y = props.start.getFullYear()
+    const m = props.start.getMonth()
+    const weekday = weekdays[props.start.getDay()]
 
-    externalHandlers.click?.({ e, cell: cellInfo.value, cursor })
-
-    if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
-    else {
-      clickTimeout = setTimeout(() => {
-        clickTimeout = null
-        // Handle delayed single click.
-        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor })
-      }, 400)
+    return {
+      [`vuecal__cell--${weekday}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
+      [`vuecal__cell--${months[m]}`]: view.isYear,
+      [`vuecal__cell--${y}`]: view.isYears,
+      'vuecal__cell--today': isToday.value,
+      'vuecal__cell--current-month': view.isYear && y === now.getFullYear() && m === now.getMonth(),
+      'vuecal__cell--current-year': view.isYears && y === now.getFullYear(),
+      'vuecal__cell--out-of-range': view.isMonth && (y !== viewYear || m !== viewMonth),
+      'vuecal__cell--before-min': isDisabled.value && isBeforeMinDate.value,
+      'vuecal__cell--after-max': isDisabled.value && isAfterMaxDate.value,
+      'vuecal__cell--disabled': isDisabled.value,
+      'vuecal__cell--selected': view.selectedDate && view.selectedDate.getTime() >= props.start.getTime() && view.selectedDate.getTime() <= props.end.getTime(),
+      'vuecal__cell--has-schedules': config.schedules?.length,
+      'vuecal__cell--dragging': touch.dragging,
+      'vuecal__cell--has-events': cellEvents.value.length
     }
-  }
+  })
 
-  if (config.time && view.isDay || view.isDays || view.isWeek) {
-    eventListeners.touchstart = e => {
-      onMousedown(e.e || e)
-      externalHandlers.touchstart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+  const startFormatted = computed(() => dateUtils.formatDate(props.start))
+
+  // Note: This will recompute when the locale changes (from formatDate) or xs prop changes for instance.
+  // So it needs to be a distinct computed from the events.
+  const formattedCellDate = computed(() => {
+    // ! \ IMPORTANT NOTE:
+    // If the selectedDate prop would be added to the vuecal.view, any click on any cell
+    // (triggering an emit of the selectedDate), would trigger a rerendering of all the
+    // cells of the view. The following marker is here to monitor that this does not happen
+    // with any prop while developing.
+    switch (view.id) {
+      case 'day':
+        return ''
+      case 'days':
+        if (config.availableViews.days.rows > 1) dateUtils.formatDate(props.start, 'D')
+        return ''
+      case 'week':
+        return ''
+      case 'month':
+        return dateUtils.formatDate(props.start, 'D')
+      case 'year':
+        return dateUtils.formatDate(props.start, config.xs ? 'MMM' : 'MMMM')
+      case 'years':
+        return dateUtils.formatDate(props.start, 'YYYY')
     }
-    eventListeners.mousedown = e => {
-      onMousedown(e.e || e)
+  })
 
-      externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+  const cellEvents = computed(() => {
+    if (config.datePicker) return []
+    return eventsManager.getEventsInRange(
+      props.start,
+      props.end,
+      { excludeIds: eventsDeleted.value, ...(config.allDayEvents ? { allDay: props.allDay } : {}) }
+    )
+  })
+
+  const cellForegroundEvents = computed(() => cellEvents.value.filter(event => !event.background))
+
+  /**
+   * Generates an object containing events grouped by schedule ID.
+   *
+   * @returns {Object} An object where keys are schedule IDs, and values are arrays of event IDs
+   *                   that correspond to each schedule.
+   */
+  const cellEventsPerSchedule = computed(() => {
+    if (!config.schedules) return {}
+    return config.schedules.reduce((obj, schedule) => {
+      obj[schedule.id] = cellEvents.value.filter(event => event.schedule === schedule.id)
+      return obj
+    }, {})
+  })
+
+  // Compute styles for event width & offset.
+  const eventStyles = computed(() => {
+    if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
+    const isRTL = typeof document !== 'undefined' && document.documentElement.getAttribute('dir') === 'rtl'
+    const isHzl = config.horizontal
+    const styles = {}
+
+    for (const event of cellEvents.value) {
+      if (!event._ || !event._.id) continue // Safety check
+      const eventId = event._.id
+      const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
+
+      const rightOrLeft = isRTL ? 'right' : 'left'
+      const widthOrHeight = isHzl ? 'height' : 'width'
+      styles[eventId] = { [isHzl ? 'top' : rightOrLeft]: `${(100 / maxConcurrent) * position}%` }
+      // Stack overlapping events on top of each other if the stackEvents prop is set to true.
+      if (config.stackEvents) {
+        styles[eventId][widthOrHeight] = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
+      }
+      else styles[eventId][widthOrHeight] = `${100 / maxConcurrent}%`
     }
-  }
+    return styles
+  })
 
-  if (externalHandlers.dblclick) {
-    // If there's a dblclick external listener, recalculate the cursor position and date
-    // since the mouse up has already fired and cleared the touch object.
-    // Note: increasing the touch object longevity to keep the cursor position and date would not
-    // work because the dblclick can have a fast click and a long hold second click and it should
-    // still fire.
-    eventListeners.dblclick = e => {
-      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e) })
+  /**
+   * Generates an object containing event classes based on the stack position and length.
+   * This lets the user style visually stacked events in full control.
+   *
+   * @returns {Object} An object where keys are event IDs, and values are strings
+   *                   representing the event class.
+   */
+  const eventClasses = computed(() => {
+    const classes = {}
+    for (const event of cellEvents.value) {
+      if (!event._ || !event._.id) continue // Safety check
+      const eventId = event._.id
+      const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
+
+      classes[eventId] = `vuecal__event--stack-${position + 1}-${maxConcurrent}`
     }
-  }
+    return classes
+  })
 
-  if (config.editableEvents.drag) {
-    eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
-    eventListeners.dragover = e => {
-      e.preventDefault() // Explicitly prevent default to allow drop in Firefox.
-      dnd.cellDragOver(e, cellInfo.value)
+  const showCellEventCount = computed(() => {
+    return config.showCellEventCount && cellForegroundEvents.value.length
+  })
+
+  /**
+   * The special hours of the current cell day.
+   * returns an array if the view is day, days, week and the specialHours prop is set correctly.
+   */
+  const specialHours = computed(() => {
+    if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
+    const weekday = weekdays[props.start.getDay()]
+
+    // The special hours ranges for the current cell day.
+    let daySpecialHours = config.specialHours?.[weekday]
+    if (!daySpecialHours) return
+
+    if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
+
+    // Foreach of the given ranges, return an object with CSS positioning in percentage.
+    return daySpecialHours.map(dayRanges => {
+      let { from, to, class: classes, label } = dayRanges
+
+      // Return if the special hours are incorrect or completely out of range.
+      if (isNaN(from) || isNaN(to) || config.timeFrom >= to || config.timeTo <= from) return
+
+      from = Math.max(config.timeFrom, from) // Ensure that from is in range.
+      to = Math.min(config.timeTo, to) // Ensure that to is in range.
+
+      const top = minutesToPercentage(from, config)
+      const height = minutesToPercentage(to, config) - top
+
+      return {
+        style: { top: `${top}%`, height: `${height}%` },
+        label,
+        class: classes
+      }
+    }).filter(specialRanges => !!specialRanges)
+  })
+
+  const isBeforeMinDate = computed(() => {
+    return config.minTimestamp !== null && config.minTimestamp > props.end.getTime()
+  })
+
+  const isAfterMaxDate = computed(() => {
+    return config.maxTimestamp && config.maxTimestamp < props.start.getTime()
+  })
+
+  // Is the current cell disabled or not (disabled date or before min date or after max date).
+  const isDisabled = computed(() => {
+    const { disableDays } = config
+    const isYearsOrYearView = view.isYear || view.isYears
+    if (disableDays.length && disableDays.includes(dateUtils.formatDate(props.start)) && !isYearsOrYearView) return true
+    return isBeforeMinDate.value || isAfterMaxDate.value
+  })
+
+  // Draw a line in today's cell at the exact current time.
+  const nowLine = reactive({
+    show: computed(() => {
+      if (!view.isDay && !view.isDays && !view.isWeek) return
+      if (!isToday.value || !config.time || props.allDay) return
+      if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
+      if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
+      return true
+    }),
+    nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
+    todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
+    style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
+    currentTime: computed(() => dateUtils.formatTime(view.now, config.twelveHour ? 'h:mm {am}' : 'HH:mm'))
+  })
+
+  // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.
+  const cellEventListeners = computed(() => {
+    if (isDisabled.value) return {} // If the cell is disabled, completely disable any interaction.
+
+    const eventListeners = { ...config.eventListeners.cell }
+
+    // Inject the cell details in each eventListener handler call as 2nd param.
+    for (const [eventListener, handler] of Object.entries(eventListeners)) {
+      eventListeners[eventListener] = e => {
+        // When interacting with an event, skip calling the cell DOM event handler.
+        // The DOM event bubbles up to the cell from the event but we don't stop it on purpose so
+        // we can receive the on mouseup from the document and stop event drag&drop.
+        if ((e.target || e.e?.target).closest?.('.vuecal__event')) return
+
+        // Check if e.type to not rewrap the DOM event in an object if already done.
+        handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
+      }
     }
-    eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
-    eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value, props.allDay)
+
+    // Store a copy of any potential external handler to combine with internal handlers like click,
+    // touchstart, mousedown.
+    const externalHandlers = { ...eventListeners }
+
+    // `cell-delayed-click` is only fired after 400ms if there was no dblclick.
+    let clickTimeout = null
+    eventListeners.click = e => {
+      onCellClick()
+      const cursor = getTimeAtCursor(e)
+
+      externalHandlers.click?.({ e, cell: cellInfo.value, cursor })
+
+      if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
+      else {
+        clickTimeout = setTimeout(() => {
+          clickTimeout = null
+          // Handle delayed single click.
+          externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor })
+        }, 400)
+      }
+    }
+
+    if (config.time && view.isDay || view.isDays || view.isWeek) {
+      eventListeners.touchstart = e => {
+        onMousedown(e.e || e)
+        externalHandlers.touchstart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      }
+      eventListeners.mousedown = e => {
+        onMousedown(e.e || e)
+
+        externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      }
+    }
+
+    if (externalHandlers.dblclick) {
+      // If there's a dblclick external listener, recalculate the cursor position and date
+      // since the mouse up has already fired and cleared the touch object.
+      // Note: increasing the touch object longevity to keep the cursor position and date would not
+      // work because the dblclick can have a fast click and a long hold second click and it should
+      // still fire.
+      eventListeners.dblclick = e => {
+        externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e) })
+      }
+    }
+
+    if (config.editableEvents.drag) {
+      eventListeners.dragenter = e => dnd.cellDragEnter(e, cellInfo.value)
+      eventListeners.dragover = e => {
+        e.preventDefault() // Explicitly prevent default to allow drop in Firefox.
+        dnd.cellDragOver(e, cellInfo.value)
+      }
+      eventListeners.dragleave = e => dnd.cellDragLeave(e, cellInfo.value)
+      eventListeners.drop = e => dnd.cellDragDrop(e, cellInfo.value, props.allDay)
+    }
+
+    return eventListeners
+  })
+
+  const cellInfo = computed(() => ({
+    start: props.start,
+    end: props.end,
+    events: cellEvents,
+    ...(touch.schedule ? { schedule: touch.schedule } : {}),
+    goNarrower: () => view.narrower(),
+    goBroader: () => view.broader(),
+    broader: view.broaderView,
+    narrower: view.narrowerView
+  }))
+
+  /**
+   * Get the time at the cursor position.
+   *
+   * @param {Event} e - The event object.
+   * @returns {Object} An object containing the cursor position in percentage and the associate date.
+   */
+  const getTimeAtCursor = e => {
+    const clientY = (e.touches?.[0] || e).clientY
+    const { top } = cellEl.value.getBoundingClientRect()
+    const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
+
+    const date = new Date(props.start)
+    date.setMinutes(percentageToMinutes(cursorYPercent, config))
+
+    return { y: cursorYPercent, date }
   }
 
-  return eventListeners
-})
+  // Get cursor information including position and date.
+  const cursorInfo = computed(() => {
+    const minutes = percentageToMinutes(touch.movePercentageY || touch.startPercentageY, config)
+    const date = new Date(props.start)
+    date.setMinutes(minutes)
 
-const cellInfo = computed(() => ({
-  start: props.start,
-  end: props.end,
-  events: cellEvents,
-  ...(touch.schedule ? { schedule: touch.schedule } : {}),
-  goNarrower: () => view.narrower(),
-  goBroader: () => view.broader(),
-  broader: view.broaderView,
-  narrower: view.narrowerView
-}))
+    return {
+      x: touch.movePercentageX || touch.startPercentageX,
+      y: touch.movePercentageY || touch.startPercentageY,
+      date
+    }
+  })
 
-/**
- * Get the time at the cursor position.
- *
- * @param {Event} e - The event object.
- * @returns {Object} An object containing the cursor position in percentage and the associate date.
- */
-const getTimeAtCursor = e => {
-  const clientY = (e.touches?.[0] || e).clientY
-  const { top } = cellEl.value.getBoundingClientRect()
-  const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
+  // Functions.
+  // --------------------------------------------------------
+  const onCellClick = () => {
+    view.updateSelectedDate(props.start)
 
-  const date = new Date(props.start)
-  date.setMinutes(percentageToMinutes(cursorYPercent, config))
-
-  return { y: cursorYPercent, date }
-}
-
-// Get cursor information including position and date.
-const cursorInfo = computed(() => {
-  const minutes = percentageToMinutes(touch.movePercentageY || touch.startPercentageY, config)
-  const date = new Date(props.start)
-  date.setMinutes(minutes)
-
-  return {
-    x: touch.movePercentageX || touch.startPercentageX,
-    y: touch.movePercentageY || touch.startPercentageY,
-    date
+    if (config.clickToNavigate) {
+      if ((view.isMonth || view.isDays || view.isWeek) && config.availableViews.day) view.switch('day')
+      else if (view.isYear && config.availableViews.month) view.switch('month')
+      else if (view.isYears && config.availableViews.year) view.switch('year')
+    }
+    view.updateViewDate(props.start)
   }
-})
 
-// Functions.
-// --------------------------------------------------------
-const onCellClick = () => {
-  view.updateSelectedDate(props.start)
+  // On mousedown OR TOUCHSTART of the cell.
+  const onMousedown = e => {
+    const isTouchEvent = e.type === 'touchstart'
+    // On touch devices, wait for 500ms then trigger event creation.
+    if (isTouchEvent) {
+      touch.canTouchAndDrag = false
+      touch.touchAndDragTimer = setTimeout(() => {
+        touch.canTouchAndDrag = true
+        // Now we can start the event creation process if still touching
+        // Prevent default scrolling behavior from this point.
+        if (touch.holding || touch.dragging) e.preventDefault()
+      }, 500)
+    }
+    // For mouse events, allow immediate event creation.
+    else touch.canTouchAndDrag = true
 
-  if (config.clickToNavigate) {
-    if ((view.isMonth || view.isDays || view.isWeek) && config.availableViews.day) view.switch('day')
-    else if (view.isYear && config.availableViews.month) view.switch('month')
-    else if (view.isYears && config.availableViews.year) view.switch('year')
+    touch.schedule = ~~e.target.dataset.schedule
+    const rect = cellEl.value.getBoundingClientRect()
+    touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
+    touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
+    touch.startPercentageX = touch.startX * 100 / rect.width
+    touch.startPercentageY = touch.startY * 100 / rect.height
+    touch.thresholdPassed = false
+
+    document.addEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !isTouchEvent })
+    document.addEventListener(isTouchEvent ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
+
+    touch.holdTimer = setTimeout(() => {
+      touch.holding = true
+      // If there's a @cell-hold external listener, call it.
+      cellEventListeners.value.hold?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    }, 1000)
   }
-  view.updateViewDate(props.start)
-}
 
-// On mousedown OR TOUCHSTART of the cell.
-const onMousedown = e => {
-  const isTouchEvent = e.type === 'touchstart'
+  const onDocMousemove = e => {
+    const isTouchEvent = e.type === 'touchmove'
+    // For touch events, if the 500ms hasn't passed yet, cancel event creation and allow scrolling.
+    if (isTouchEvent && !touch.canTouchAndDrag) {
+      // Cancel the touch and drag timer.
+      if (touch.touchAndDragTimer) {
+        clearTimeout(touch.touchAndDragTimer)
+        touch.touchAndDragTimer = null
+      }
+      // Don't prevent default - allow natural scrolling.
+      // Clean up and exit early.
+      onDocMouseup(e)
+      return
+    }
 
-  // On touch devices, wait for 500ms then trigger event creation.
-  if (isTouchEvent) {
-    touch.canTouchAndDrag = false
-    touch.touchAndDragTimer = setTimeout(() => {
-      touch.canTouchAndDrag = true
-      // Now we can start the event creation process if still touching
-      // Prevent default scrolling behavior from this point.
-      if (touch.holding || touch.dragging) e.preventDefault()
-    }, 500)
+    if (isTouchEvent) {
+      // If we reach here, either it's a mouse event or touch event after 500ms delay.
+      // Prevent default scrolling when click/tap and move so we can create events instead.
+      e.preventDefault()
+    }
+
+    // Internal emit to the root component to add a CSS class on wrapper while dragging.
+    if (!touch.dragging) {
+      globalTouchState.isDraggingCell = true // Add a CSS class on wrapper while dragging.
+      globalTouchState.dragStartCell = cellEl.value // Store the cell where dragging started
+
+      // NEW: Store the original start time when first starting to drag
+      globalTouchState.originalStartMinutes = percentageToMinutes(touch.startPercentageY, config)
+
+      // If there's a @cell-drag-start external listener, call it.
+      cellEventListeners.value['drag-start']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    }
+    touch.dragging = true
+    touch.holdTimer = clearTimeout(touch.holdTimer)
+    touch.holding = false
+
+    // Update current mouse coordinates and percentages
+    const rect = cellEl.value.getBoundingClientRect()
+    touch.moveX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
+    touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
+    touch.movePercentageX = touch.moveX * 100 / rect.width
+    touch.movePercentageY = touch.moveY * 100 / rect.height
+
+    // NEW: Track hovered cell for horizontal event creation
+    if (touch.dragging) {
+      // Update the global touch state with the currently hovered cell
+      const clientX = (e.touches?.[0] || e).clientX
+      const clientY = (e.touches?.[0] || e).clientY
+      const cellElement = document.elementFromPoint(clientX, clientY)
+      const hoveredCell = cellElement?.closest('.vuecal__cell')
+
+      if (hoveredCell && hoveredCell !== cellEl.value) {
+        globalTouchState.currentHoveredCell = hoveredCell
+
+        // NEW: Calculate the cursor position relative to the hovered cell
+        const hoveredCellRect = hoveredCell.getBoundingClientRect()
+        const hoveredCellY = clientY - hoveredCellRect.top
+        const hoveredCellPercentageY = (hoveredCellY * 100) / hoveredCellRect.height
+
+        // NEW: Update multi-day event range with cursor position
+        try {
+          const draggedCellDate = new Date(props.start)
+          const hoveredCellDate = new Date(hoveredCell.__vueParentComponent.props.start)
+
+          // Set the multi-day range in global state
+          globalTouchState.multiDayEventRange = {
+            startCell: globalTouchState.dragStartCell,
+            endCell: hoveredCell,
+            startDate: draggedCellDate,
+            endDate: hoveredCellDate,
+            // NEW: Store cursor position for end cell
+            cursorPercentageY: hoveredCellPercentageY,
+            cursorMinutes: percentageToMinutes(hoveredCellPercentageY, config),
+            // NEW: Store the original start minutes from the first cell
+            originalStartMinutes: globalTouchState.originalStartMinutes
+          }
+
+          // Clear previous visual feedback
+          document.querySelectorAll('.vuecal__cell--drag-over, .vuecal__cell--multi-day-creating').forEach(cell => {
+            cell.classList.remove('vuecal__cell--drag-over', 'vuecal__cell--multi-day-creating')
+          })
+
+          // Mark all cells between start and end for multi-day visualization
+          if (draggedCellDate.getTime() !== hoveredCellDate.getTime()) {
+            const startDate = draggedCellDate.getTime() < hoveredCellDate.getTime() ? draggedCellDate : hoveredCellDate
+            const endDate = draggedCellDate.getTime() > hoveredCellDate.getTime() ? draggedCellDate : hoveredCellDate
+
+            document.querySelectorAll('.vuecal__cell').forEach(cell => {
+              try {
+                const cellDate = new Date(cell.__vueParentComponent?.props.start)
+                if (cellDate >= startDate && cellDate <= endDate) {
+                  cell.classList.add('vuecal__cell--multi-day-creating')
+
+                  // Force update for the cell's reactive properties
+                  cell.__vueParentComponent?.exposed?.forceUpdate?.()
+                }
+              } catch (error) {
+                // Skip cells that don't have proper Vue component data
+              }
+            })
+          }
+
+          hoveredCell.classList.add('vuecal__cell--drag-over')
+        } catch (error) {
+          console.warn('Failed to process multi-day visualization:', error)
+        }
+      } else if (hoveredCell === cellEl.value) {
+        // Back to original cell - clear multi-day state
+        globalTouchState.currentHoveredCell = null
+        globalTouchState.multiDayEventRange = null
+
+        // Clear all multi-day visual feedback
+        document.querySelectorAll('.vuecal__cell--drag-over, .vuecal__cell--multi-day-creating').forEach(cell => {
+          cell.classList.remove('vuecal__cell--drag-over', 'vuecal__cell--multi-day-creating')
+          cell.__vueParentComponent?.exposed?.forceUpdate?.()
+        })
+      }
+    }
+
+    if (config.eventCreateMinDrag && (Math.abs(touch.startY - touch.moveY) > config.eventCreateMinDrag)) {
+      touch.thresholdPassed = true
+    }
+
+    // If there's a @cell-drag external listener, call it.
+    cellEventListeners.value.drag?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
   }
-  // For mouse events, allow immediate event creation.
-  else touch.canTouchAndDrag = true
+  const onDocMouseup = async e => {
+    const isTouchEvent = e.type === 'touchend'
+    document.removeEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
 
-  touch.schedule = ~~e.target.dataset.schedule
-  const rect = cellEl.value.getBoundingClientRect()
-  touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
-  touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
-  touch.startPercentageX = touch.startX * 100 / rect.width
-  touch.startPercentageY = touch.startY * 100 / rect.height
-  touch.thresholdPassed = false
-
-  document.addEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: !isTouchEvent })
-  document.addEventListener(isTouchEvent ? 'touchend' : 'mouseup', onDocMouseup, { once: true })
-
-  touch.holdTimer = setTimeout(() => {
-    touch.holding = true
-    // If there's a @cell-hold external listener, call it.
-    cellEventListeners.value.hold?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
-  }, 1000)
-}
-
-const onDocMousemove = e => {
-  const isTouchEvent = e.type === 'touchmove'
-
-  // For touch events, if the 500ms hasn't passed yet, cancel event creation and allow scrolling.
-  if (isTouchEvent && !touch.canTouchAndDrag) {
-    // Cancel the touch and drag timer.
+    // Clean up touch and drag timer
     if (touch.touchAndDragTimer) {
       clearTimeout(touch.touchAndDragTimer)
       touch.touchAndDragTimer = null
     }
-    // Don't prevent default - allow natural scrolling.
-    // Clean up and exit early.
-    onDocMouseup(e)
-    return
+
+    // NEW: Clean up all visual feedback classes
+    document.querySelectorAll('.vuecal__cell--drag-over').forEach(cell => {
+      cell.classList.remove('vuecal__cell--drag-over')
+    })
+    document.querySelectorAll('.vuecal__cell--multi-day-creating').forEach(cell => {
+      cell.classList.remove('vuecal__cell--multi-day-creating')
+      // Force update to clear placeholders
+      cell.__vueParentComponent?.exposed?.forceUpdate?.()
+    })
+
+    // Clear global multi-day state
+    globalTouchState.currentHoveredCell = null
+    globalTouchState.multiDayEventRange = null
+    globalTouchState.dragStartCell = null
+    globalTouchState.originalStartMinutes = null // NEW: Clear original start minutes
+
+    if (touch.dragging) {
+      // If there's a @cell-drag-end external listener, call it.
+      cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      globalTouchState.isDraggingCell = false // Add a CSS class on wrapper while dragging.
+
+      if (config.editableEvents.create && touch.canTouchAndDrag) {
+        awaitingEventCreation.value = true
+        await createEventIfAllowed(e)
+        awaitingEventCreation.value = false
+      }
+    }
+
+    touch.holdTimer = clearTimeout(touch.holdTimer)
+    touch.holding = false
+    touch.dragging = false
+    touch.startX = 0
+    touch.startY = 0
+    touch.moveX = 0
+    touch.moveY = 0
+    touch.startPercentageX = 0
+    touch.startPercentageY = 0
+    touch.movePercentageX = 0
+    touch.movePercentageY = 0
+    touch.thresholdPassed = false
+    touch.schedule = null
+    touch.canTouchAndDrag = null
   }
 
-  if (isTouchEvent) {
-    // If we reach here, either it's a mouse event or touch event after 500ms delay.
-    // Prevent default scrolling when click/tap and move so we can create events instead.
-    e.preventDefault()
+  const createEventIfAllowed = async e => {
+    if (!isCreatingEvent.value) return
+
+    let { start, end, startMinutes, endMinutes } = eventPlaceholder.value
+
+    // NEW: Check if we're creating a multi-day event
+    if (globalTouchState.currentHoveredCell) {
+      try {
+        const hoveredCellEl = globalTouchState.currentHoveredCell
+        const hoveredCellDate = new Date(hoveredCellEl.__vueParentComponent.props.start)
+        const currentCellDate = new Date(props.start)
+
+        if (!dateUtils.isSameDate(hoveredCellDate, currentCellDate)) {
+          // Create multi-day event
+          const daysDifference = Math.floor((hoveredCellDate.getTime() - currentCellDate.getTime()) / (24 * 60 * 60 * 1000))
+
+          if (daysDifference > 0) {
+            // Multi-day event: Start on first day with ORIGINAL time, end on last day
+            start = new Date(currentCellDate)
+            // NEW: Use the original start time that was stored when drag began
+            const originalStartMinutes = globalTouchState.multiDayEventRange?.originalStartMinutes || startMinutes
+            start.setMinutes(originalStartMinutes)
+
+            // Get the end time from the hovered cell's cursor position
+            const { cursorMinutes } = globalTouchState.multiDayEventRange
+            end = new Date(hoveredCellDate)
+            end.setMinutes(cursorMinutes || endMinutes) // Use cursor position or fallback to endMinutes
+          } else if (daysDifference < 0) {
+            // Dragging backwards - start from hovered cell, end at current cell
+            const { cursorMinutes } = globalTouchState.multiDayEventRange
+            start = new Date(hoveredCellDate)
+            start.setMinutes(cursorMinutes || startMinutes) // Use cursor position for start
+
+            end = new Date(currentCellDate)
+            // NEW: Use the original start time for the end when dragging backwards
+            const originalStartMinutes = globalTouchState.multiDayEventRange?.originalStartMinutes || endMinutes
+            end.setMinutes(originalStartMinutes)
+          }
+        } else {
+          // Regular single-day event creation
+          start = new Date(props.start)
+          start.setMinutes(startMinutes)
+          end = new Date(props.start)
+          end.setMinutes(endMinutes)
+        }
+      } catch (error) {
+        console.warn('Failed to create multi-day event:', error)
+        // Fallback to regular single-day event
+        start = new Date(props.start)
+        start.setMinutes(startMinutes)
+        end = new Date(props.start)
+        end.setMinutes(endMinutes)
+      }
+    } else {
+      // Regular single-day event creation
+      start = new Date(props.start)
+      start.setMinutes(startMinutes)
+      end = new Date(props.start)
+      end.setMinutes(endMinutes)
+    }
+
+    let eventToCreate = { ...eventPlaceholder.value, start, end }
+
+    // If there's a @event-create listener, call it and check if it returns true to accept the event
+    // creation or false to cancel it. If no listener, create the event.
+    // The call to the handler is wrapped in a promise so the user may open an event editor and modify
+    // the event before sending in back and resolving the promise.
+    const { create: createListener } = config.eventListeners.event
+
+    if (typeof createListener === 'function') {
+      const eventCopy = eventToCreate
+      eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve, cursor: cursorInfo.value }))
+      // eventToCreate may be true, false or an updated event object to create.
+      if (eventToCreate && typeof eventToCreate === 'object') view.createEvent(eventToCreate)
+      if (eventToCreate && typeof eventToCreate === 'boolean') view.createEvent(eventCopy)
+    }
+    else view.createEvent(eventToCreate)
+    navigator.vibrate?.(200) // Haptic feedback on supported devices and browsers.
   }
 
-  // Internal emit to the root component to add a CSS class on wrapper while dragging.
-  if (!touch.dragging) {
-    globalTouchState.isDraggingCell = true // Add a CSS class on wrapper while dragging.
-
-    // If there's a @cell-drag-start external listener, call it.
-    cellEventListeners.value['drag-start']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
-  }
-  touch.dragging = true
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
-
-  const rect = cellEl.value.getBoundingClientRect()
-  touch.moveX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
-  touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
-  touch.movePercentageX = touch.moveX * 100 / rect.width
-  touch.movePercentageY = touch.moveY * 100 / rect.height
-  if (config.eventCreateMinDrag && (Math.abs(touch.startY - touch.moveY) > config.eventCreateMinDrag)) {
-    touch.thresholdPassed = true
-  }
-
-  // If there's a @cell-drag external listener, call it.
-  cellEventListeners.value.drag?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
-}
-
-const onDocMouseup = async e => {
-  const isTouchEvent = e.type === 'touchend'
-  document.removeEventListener(isTouchEvent ? 'touchmove' : 'mousemove', onDocMousemove, { passive: false })
-
-  // Clean up touch and drag timer
-  if (touch.touchAndDragTimer) {
-    clearTimeout(touch.touchAndDragTimer)
-    touch.touchAndDragTimer = null
-  }
-
-  if (touch.dragging) {
-    // If there's a @cell-drag-end external listener, call it.
-    cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
-    globalTouchState.isDraggingCell = false // Add a CSS class on wrapper while dragging.
-
-    if (config.editableEvents.create && touch.canTouchAndDrag) {
-      awaitingEventCreation.value = true
-      await createEventIfAllowed(e)
-      awaitingEventCreation.value = false
+  const removeEventListeners = () => {
+    for (const event of Object.keys(cellEventListeners.value)) {
+      cellEl.value?.removeEventListener(event, cellEventListeners.value[event])
     }
   }
 
-  touch.holdTimer = clearTimeout(touch.holdTimer)
-  touch.holding = false
-  touch.dragging = false
-  touch.startX = 0
-  touch.startY = 0
-  touch.moveX = 0
-  touch.moveY = 0
-  touch.startPercentageX = 0
-  touch.startPercentageY = 0
-  touch.movePercentageX = 0
-  touch.movePercentageY = 0
-  touch.thresholdPassed = false
-  touch.schedule = null
-  touch.canTouchAndDrag = null
-}
-
-const createEventIfAllowed = async e => {
-  if (!isCreatingEvent.value) return
-
-  let { start, end, startMinutes, endMinutes } = eventPlaceholder.value
-  start = new Date(props.start)
-  start.setMinutes(startMinutes)
-  end = new Date(props.start)
-  end.setMinutes(endMinutes)
-
-  let eventToCreate = { ...eventPlaceholder.value, start, end }
-
-  // If there's a @event-create listener, call it and check if it returns true to accept the event
-  // creation or false to cancel it. If no listener, create the event.
-  // The call to the handler is wrapped in a promise so the user may open an event editor and modify
-  // the event before sending in back and resolving the promise.
-  const { create: createListener } = config.eventListeners.event
-
-  if (typeof createListener === 'function') {
-    const eventCopy = eventToCreate
-    eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve, cursor: cursorInfo.value }))
-    // eventToCreate may be true, false or an updated event object to create.
-    if (eventToCreate && typeof eventToCreate === 'object') view.createEvent(eventToCreate)
-    if (eventToCreate && typeof eventToCreate === 'boolean') view.createEvent(eventCopy)
+  const recalculateOverlaps = () => {
+    overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end, props.allDay)
   }
-  else view.createEvent(eventToCreate)
-  navigator.vibrate?.(200) // Haptic feedback on supported devices and browsers.
-}
 
-const removeEventListeners = () => {
-  for (const event of Object.keys(cellEventListeners.value)) {
-    cellEl.value?.removeEventListener(event, cellEventListeners.value[event])
+  watch(
+    // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
+    () => !view.isYears && !view.isYear && cellForegroundEvents.value.map(e => e?._ && e._.id ? `${e._.id}${e.start.getTime()}${e.end.getTime()}` : '').filter(Boolean).join(),
+    async () => {
+      await nextTick() // Use nextTick to avoid recursive updates.
+      // Recalculate overlaps when events change (added, deleted, date change, schedule change).
+      recalculateOverlaps()
+    },
+    { immediate: true, flush: 'post' } // Use flush: 'post' to prevent infinite updates.
+  )
+
+  onBeforeUnmount(async () => {
+    // Removing the calendar events will trigger a rerender of all the cells in the view because the array
+    // of events is a reactive object. So only remove them from the source of truth when the cell is unmounted.
+    for (const eventId of eventsDeleted.value) eventsManager.deleteEvent(eventId, 3)
+
+    removeEventListeners() // Prevent potential memory leaks.
+    await nextTick() // Batch updates to avoid multiple re-renders.
+  })
+
+  // Expose forceUpdate method for external components to trigger reactivity
+  const forceUpdateCounter = ref(0)
+  const forceUpdate = () => {
+    forceUpdateCounter.value++
   }
-}
 
-const recalculateOverlaps = () => {
-  overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end, props.allDay)
-}
+  // Make the method available to parent components
+  defineExpose({
+    forceUpdate
+  })
 
-watch(
-  // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
-  () => !view.isYears && !view.isYear && cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
-  async () => {
-    await nextTick() // Use nextTick to avoid recursive updates.
-    // Recalculate overlaps when events change (added, deleted, date change, schedule change).
-    recalculateOverlaps()
-  },
-  { immediate: true, flush: 'post' } // Use flush: 'post' to prevent infinite updates.
-)
-
-onBeforeUnmount(async () => {
-  // Removing the calendar events will trigger a rerender of all the cells in the view because the array
-  // of events is a reactive object. So only remove them from the source of truth when the cell is unmounted.
-  for (const eventId of eventsDeleted.value) eventsManager.deleteEvent(eventId, 3)
-
-  removeEventListeners() // Prevent potential memory leaks.
-  await nextTick() // Batch updates to avoid multiple re-renders.
-})
+  // Watch the force update counter to trigger reactivity
+  watch(forceUpdateCounter, () => {
+    // This will cause reactive properties to re-evaluate
+  })
 </script>
 
 <style lang="scss">
-.vuecal__cell {
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  user-select: none;
-  // touch-action: none; // Prevents browser default touch handling.
+  .vuecal__cell {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    user-select: none;
+    // touch-action: none; // Prevents browser default touch handling.
 
-  .vuecal__scrollable--days-view &,
-  .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+    .vuecal__scrollable--days-view &,
+    .vuecal__scrollable--week-view & {
+      min-width: var(--vuecal-min-cell-width, 0);
+    }
 
-  &--has-schedules {align-items: stretch;}
-  &--out-of-range {opacity: 0.4;}
-  &--disabled {cursor: not-allowed;}
+    &--has-schedules {
+      align-items: stretch;
+    }
 
-  // The lines must stay in the cell when there's a min-cell-width for them to fill up the whole body width.
-  .vuecal--view-has-time &:before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
-    background-size: 100% var(--vuecal-time-cell-height);
+    &--out-of-range {
+      opacity: 0.4;
+    }
+
+    &--disabled {
+      cursor: not-allowed;
+    }
+
+   
+    &--multi-day-creating {
+      background-color: rgba(35, 181, 181, 0.05) !important;
+    }
+    // The lines must stay in the cell when there's a min-cell-width for them to fill up the whole body width.
+    .vuecal--view-has-time &:before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
+      background-size: 100% var(--vuecal-time-cell-height);
+    }
   }
-}
 
-.vuecal__special-hours {
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  left: 0;
-  right: 0;
-  pointer-events: none; // Under the day schedules if enabled.
-}
-
-.vuecal__now-line {
-  position: absolute;
-  left: 0;
-  width: 100%;
-  height: 0;
-  border-top: 1px solid;
-  border-color: rgba(red, 0.6);
-  z-index: 3; // Keep above the hovered events.
-
-  &:before {
-    content: "";
+  .vuecal__special-hours {
     position: absolute;
-    top: -6px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     left: 0;
-    border: 5px solid transparent;
-    border-left-color: inherit;
+    right: 0;
+    pointer-events: none; // Under the day schedules if enabled.
   }
 
-  span {
+  .vuecal__now-line {
     position: absolute;
-    right: 1px;
-    font-size: 10px;
-    opacity: 0.7;
-    pointer-events: none; // Let interactions go through on events.
-  }
-}
+    left: 0;
+    width: 100%;
+    height: 0;
+    border-top: 1px solid;
+    border-color: rgba(red, 0.6);
+    z-index: 3; // Keep above the hovered events.
 
-.vuecal__event-placeholder {
-  background-color: rgb(35, 181, 181);
-  position: absolute;
-  left: 0;
-  right: 0;
-  padding-top: 2px;
-  padding-left: 4px;
-  border-radius: 4px;
-  font-size: 11px;
-  line-height: 1;
-}
+    &:before {
+      content: "";
+      position: absolute;
+      top: -6px;
+      left: 0;
+      border: 5px solid transparent;
+      border-left-color: inherit;
+    }
+
+    span {
+      position: absolute;
+      right: 1px;
+      font-size: 10px;
+      opacity: 0.7;
+      pointer-events: none; // Let interactions go through on events.
+    }
+  }
+
+  .vuecal__event-placeholder {
+    background-color: rgb(35, 181, 181);
+    position: absolute;
+    left: 0;
+    right: 0;
+    padding-top: 2px;
+    padding-left: 4px;
+    border-radius: 4px;
+    font-size: 11px;
+    line-height: 1;
+    z-index: 10;
+
+    &--multi-day {
+      background: rgb(35, 181, 181) !important; // Gleiche Farbe für alle Teile
+      border-left: 3px solid #1a9999;
+      opacity: 0.9;
+      // Visuelle Verbindung zwischen den Tagen
+      &::before {
+        content: '';
+        position: absolute;
+        right: -2px;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 4px;
+        height: 2px;
+        background-color: inherit;
+        border-radius: 0 2px 2px 0;
+      }
+    }
+  }
 </style>

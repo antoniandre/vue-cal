@@ -1,101 +1,121 @@
 .vuecal {
-  --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
-  --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-weekday-bar-height: 1.7rem;
-  --vuecal-schedules-bar-height: 1.7rem;
-  --vuecal-all-day-bar-height: 2rem;
-  --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
-  // When there are too many day cells to fit in the view, setting a min cell width will help
-  // visualizing and a horizontal scrollbar will be added.
-  --vuecal-min-cell-width: 0;
-  --vuecal-transition-duration: 0.25s;
+	--vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
+	--vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
+	--vuecal-weekday-bar-height: 1.7rem;
+	--vuecal-schedules-bar-height: 1.7rem;
+	--vuecal-all-day-bar-height: 2rem;
+	--vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
+	// When there are too many day cells to fit in the view, setting a min cell width will help
+	// visualizing and a horizontal scrollbar will be added.
+	--vuecal-min-cell-width: 0;
+	--vuecal-transition-duration: 0.25s;
+	display: flex;
+	flex-direction: column;
+	user-select: none;
+	z-index: 0; // Default minimal z-index to at least have visible cells :before.
 
-  display: flex;
-  flex-direction: column;
-  user-select: none;
-  z-index: 0; // Default minimal z-index to at least have visible cells :before.
+	&--date-picker {
+		--vuecal-weekday-bar-height: 1.3rem;
+	}
 
-  &--date-picker {--vuecal-weekday-bar-height: 1.3rem;}
-  &--timeless {--vuecal-all-day-bar-height: 0px;}
+	&--timeless {
+		--vuecal-all-day-bar-height: 0px;
+	}
 
-  &, *, :before, :after {box-sizing: border-box;}
-  .grow {flex-grow: 1;}
+	&, *, :before, :after {
+		box-sizing: border-box;
+	}
 
-  &__body-wrap {
-    display: flex;
-    flex-direction: column;
-    flex-grow: 1;
-    // Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
-    min-width: 0;
-  }
+	.grow {
+		flex-grow: 1;
+	}
 
-  &__scrollable-wrap {
-    position: relative;
-    flex: 1;
-    display: flex;
-    min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
-  }
+	&__body-wrap {
+		display: flex;
+		flex-direction: column;
+		flex-grow: 1;
+		// Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
+		min-width: 0;
+	}
 
-  &__scrollable {
-    position: relative; // For the time cells lines to fill up the whole calendar width.
-    overflow: auto;
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+	&__scrollable-wrap {
+		position: relative;
+		flex: 1;
+		display: flex;
+		min-height: 1px; // Fix the famous issue of the container overflowing the flex parent.
+	}
 
-    &--row {flex-direction: row;}
-    &--has-week-numbers {flex-direction: row;}
-  }
+	&__scrollable {
+		position: relative; // For the time cells lines to fill up the whole calendar width.
+		overflow: auto;
+		flex: 1;
+		display: flex;
+		flex-direction: column;
 
-  &__week-numbers {
-    display: flex;
-    flex-direction: column;
-    padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
-  }
-  &__week-number {
-    display: flex;
-    flex-grow: 1;
-    align-items: center;
-    justify-content: center;
-    width: 1.4em;
-  }
+		&--row {
+			flex-direction: row;
+		}
 
-  // Shared in headers and cells.
-  &__schedule {
-    position: relative;
-    display: flex;
-    flex-grow: 1;
-    flex-basis: 0;
-    justify-content: center;
-    overflow: hidden;
-  }
-  &__scrollable--days-view &__schedule,
-  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-width, 0);}
+		&--has-week-numbers {
+			flex-direction: row;
+		}
+	}
 
-  &__schedules-headings {display: flex;}
-  &__schedule--heading {
-    font-size: 12px;
-    align-items: center;
-  }
+	&__week-numbers {
+		display: flex;
+		flex-direction: column;
+		padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+	}
+
+	&__week-number {
+		display: flex;
+		flex-grow: 1;
+		align-items: center;
+		justify-content: center;
+		width: 1.4em;
+	}
+	// Shared in headers and cells.
+	&__schedule {
+		position: relative;
+		display: flex;
+		flex-grow: 1;
+		flex-basis: 0;
+		justify-content: center;
+		overflow: hidden;
+	}
+
+	&__scrollable--days-view &__schedule,
+	&__scrollable--week-view &__schedule {
+		min-width: var(--vuecal-min-schedule-width, 0);
+	}
+
+	&__schedules-headings {
+		display: flex;
+	}
+
+	&__schedule--heading {
+		font-size: 12px;
+		align-items: center;
+	}
 }
 
 // Transitions.
 // --------------------------------------------------------
 .vuecal-slide-fade--left-enter-active, .vuecal-slide-fade--left-leave-active,
 .vuecal-slide-fade--right-enter-active, .vuecal-slide-fade--right-leave-active {
-  transition: var(--vuecal-transition-duration) ease-in-out;
+	transition: var(--vuecal-transition-duration) ease-in-out;
 }
 
 .vuecal-slide-fade--left-enter-from,
 .vuecal-slide-fade--right-leave-to {
-  transform: translateX(-12px);
-  opacity: 0;
+	transform: translateX(-12px);
+	opacity: 0;
 }
 
 .vuecal-slide-fade--left-leave-to,
 .vuecal-slide-fade--right-enter-from {
-  transform: translateX(12px);
-  opacity: 0;
+	transform: translateX(12px);
+	opacity: 0;
 }
 
 .vuecal-slide-fade--left-enter-active,
@@ -104,22 +124,25 @@
 // so it does not briefly appear below the calendar.
 .vuecal-slide-fade--left-leave-active ~ .vuecal-slide-fade--left-leave-active,
 .vuecal-slide-fade--right-leave-active ~ .vuecal-slide-fade--right-leave-active {
-  position: absolute !important;
-  inset: 0;
+	position: absolute !important;
+	inset: 0;
 }
 
-.vuecal-event-delete-leave-active {transition: 0.15s ease-out;}
+.vuecal-event-delete-leave-active {
+	transition: 0.15s ease-out;
+}
+
 .vuecal-event-delete-leave-to {
-  opacity: 0;
-  transform: translateY(0.5rem);
+	opacity: 0;
+	transform: translateY(0.5rem);
 }
 
 .vuecal-shrink-enter-active,
 .vuecal-shrink-leave-active {
-  transition: transform 0.2s, opacity 0.2s;
+	transition: transform 0.2s, opacity 0.2s;
 }
 
 .vuecal-shrink-enter-from,
 .vuecal-shrink-leave-to {
-  opacity: 0;
+	opacity: 0;
 }

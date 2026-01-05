@@ -18,7 +18,7 @@ const dragging = reactive({
   toVueCal: null
 })
 
-export function useDragAndDrop (vuecal) {
+export function useDragAndDrop(vuecal) {
   const { config, view, eventsManager, emit, uid: vuecalUid, dateUtils } = vuecal
 
   /**
@@ -282,7 +282,7 @@ export function useDragAndDrop (vuecal) {
 
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
     const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
-    let onAcceptedDrop = () => {}
+    let onAcceptedDrop = () => { }
 
     // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
     // for drop approval request.
