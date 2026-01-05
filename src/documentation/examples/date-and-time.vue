@@ -88,8 +88,9 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
         code view.scrollTop()
         p Scrolls the calendar body to the top.
       li.mt3
-        code view.scrollToTime(minutes)
+        code view.scrollToTime(minutes, scrollToOptions)
         p Scrolls the calendar body to the given time in minutes. E.g. #[code view.scrollToCurrentTime(13 * 60)].
+        p If you need to disable smooth behavior, you can set second argument of the function as options, e.g. #[code view.scrollToCurrentTime(13 * 60, { behavior: undefined })].
       li.mt3
         code view.scrollToCurrentTime()
         p Scrolls the calendar body to the current time.
@@ -98,9 +99,12 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
       w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
         w-icon mdi mdi-format-vertical-align-top
         | Scroll top
+      w-button.mt2.mr2(@click="exScrollToTime.scrollToTime(12 * 60, { behavior: undefined })")
+        w-icon mdi mdi-format-vertical-align-center
+        | Scroll to 12:00, fast
       w-button.mt2.mr2(@click="exScrollToTime.scrollToTime(12 * 60)")
         w-icon mdi mdi-format-vertical-align-center
-        | Scroll to 12:00
+        | Scroll to 12:00, smooth
       w-button.mt2.mr2(@click="exScrollToTime.scrollToCurrentTime")
         w-icon mdi mdi-format-vertical-align-bottom
         | Scroll to current time

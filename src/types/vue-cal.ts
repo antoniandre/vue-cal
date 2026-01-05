@@ -186,7 +186,7 @@ export interface VueCalView {
   createEvent: (event: VueCalEvent) => void
   deleteEvent: (eventId: number, forceStage?: number) => void
   scrollToCurrentTime: () => void
-  scrollToTime: (minutes: number) => void
+  scrollToTime: (minutes: number, scrollToOptions?: ScrollToOptions) => void
   scrollTop: () => void
   // Others
   viewDate: Date
