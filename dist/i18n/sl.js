@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Ponedeljek", "Torek", "Sreda", "Četrtek", "Petek", "Sobota", "Nedelja"], t = ["Januar", "Februar", "Marec", "April", "Maj", "Junij", "Julij", "Avgust", "September", "Oktober", "November", "December"], o = "Leta", n = "Leto", a = "Mesec", s = "Teden", i = "Dni", v = "Dan", d = "Danes", c = "Ni dogodkov", r = "Cel dan", l = "Odstrani", k = "Ustvari dogodek", y = "dddd MMMM D, YYYY", D = {

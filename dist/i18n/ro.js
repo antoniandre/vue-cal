@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Luni", "Marți", "Miercuri", "Joi", "Vineri", "Sâmbăta", "Duminică"], t = ["Ianuarie", "Februarie", "Martie", "Aprilie", "Mai", "Iunie", "Iulie", "August", "Septembrie", "Octombrie", "Noiembrie", "Decembrie"], d = "Ani", m = "An", n = "Lună", i = "Săptămână", a = "Zile", y = "Zi", M = "Azi", o = "Nici o interacțiune", r = "Toată ziua", c = "Șterge", s = "Adaugă un eveniment", u = "dddd D MMMM YYYY", l = {

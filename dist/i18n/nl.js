@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const a = ["Maandag", "Dinsdag", "Woensdag", "Donderdag", "Vrijdag", "Zaterdag", "Zondag"], e = ["Januari", "Februari", "Maart", "April", "Mei", "Juni", "Juli", "Augustus", "September", "Oktober", "November", "December"], n = "Jaren", t = "Jaar", o = "Maand", s = "Week", d = "Dagen", y = "Dag", r = "Vandaag", c = "Geen afspraken", g = "Hele dag", i = "Verwijderen", u = "Nieuwe afspraak aanmaken", l = "dddd D MMMM YYYY", D = {

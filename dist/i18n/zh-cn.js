@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const t = ["星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"], e = ["一", "二", "三", "四", "五", "六", "日"], n = ["一月", "二月", "三月", "四月", "五月", "六月", "七月", "八月", "九月", "十月", "十一月", "十二月"], c = "年", d = "本年", y = "月", r = "周", l = "多日", h = "日", D = "今日", o = "暂无活动", k = "整天", m = "删除", s = "新建活动", a = "YYYY MMMM D dddd", v = {

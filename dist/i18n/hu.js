@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Hétfo", "Kedd", "Szerda", "Csütörtök", "Péntek", "Szombat", "Vasárnap"], t = ["Január", "Február", "Március", "Április", "Május", "Június", "Július", "Augusztus", "Szeptember", "Október", "November", "December"], s = "Évek", m = "Év", n = "Hónap", p = "Hét", a = "Napok", k = "Nap", o = "Mai nap", r = "Nincs esemény", c = "Egész nap", d = "Esemény törlese", y = "Esemény létrehozása", u = "dddd D MMMM YYYY", l = {

@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const t = ["Maanantai", "Tiistai", "Keskiviikko", "Torstai", "Perjantai", "Lauantai", "Sunnuntai"], a = ["Tammikuu", "Helmikuu", "Maaliskuu", "Huhtikuu", "Toukokuu", "Kesäkuu", "Heinäkuu", "Elokuu", "Syyskuu", "Lokakuu", "Marraskuu", "Joulukuu"], u = "Vuodet", o = "Vuosi", n = "Kuukausi", s = "Viikko", i = "Päivät", e = "Päivä", k = "Tänään", c = "Ei tapahtumia", d = "Koko päivä", m = "Poista tapahtuma", r = "Luo tapahtuma", y = "dddd, D MMMM YYYY", l = {

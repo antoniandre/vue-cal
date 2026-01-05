@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const t = ["E Hënë", "E Martë", "E Mërkurë", "E Enjte", "E Premte", "E Shtunë", "E Diel"], n = ["Hë", "Ma", "Mr", "Enj", "Pr", "Sh", "D"], o = ["Janar", "Shkurt", "Mars", "Prill", "Maj", "Qershor", "Korrik", "Gusht", "Shtator", "Tetor", "Nëntor", "Dhjetor"], e = "Vitet", a = "Viti", s = "Muaji", r = "Java", c = "Ditë", d = "Dita", D = "Sot", i = "Nuk ka event", E = "Tërë ditën", h = "Fshijë", M = "Krijo një event", y = "dddd D MMMM YYYY", j = {

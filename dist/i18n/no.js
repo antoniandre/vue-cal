@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Mandag", "Tirsdag", "Onsdag", "Torsdag", "Fredag", "Lørdag", "Søndag"], a = ["Januar", "Februar", "Mars", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Desember"], n = "Velg år", y = "År", t = "Måned", M = "Uke", s = "Dager", u = "Dag", o = "Idag", d = "Ingen hendelse", r = "Hele dagen", c = "Ta bort", g = "Ny hendelse", l = "dddd, D. MMMM YYYY", b = {
