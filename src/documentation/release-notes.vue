@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.34
+    ul
+      li Added Russian genitive case for month names. #[issue-link 100] &amp; #[issue-link 101]
+
+  li.patch
     strong.version 5.0.1-rc.33
     ul
       li Added a new bundle build to include the TypeScript types. #[issue-link 92]
