@@ -153,7 +153,8 @@ const locales = [
   { value: 'zh-cn', label: 'zh-cn' },
   { value: 'ar', label: 'ar' },
   { value: 'fr', label: 'fr' },
-  { value: 'ca', label: 'ca' }
+  { value: 'ca', label: 'ca' },
+  { value: 'ru', label: 'ru' }
 ]
 
 const views = {
