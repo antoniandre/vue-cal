@@ -99,6 +99,20 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // Create as many grid cells as defined in the availableViews map (cols * rows).
   const cellsCount = computed(() => cols.value * rows.value)
 
+  /**
+   * {Number|undefined} The number of weeks in the current view.
+   */
+  const numberOfWeek = computed(() => {
+    if (viewId.value === 'week') {
+      return dateUtils.getWeek(
+        firstCellDate.value,
+        config.startWeekOnSunday && !config.hideWeekdays[7]
+      )
+    }
+
+    return undefined;
+  });
+
   const firstCellDate = computed(() => {
     if (viewId.value === 'month') {
       // By default, the month view has 6 rows of 7 days. If the first day of the month is not
@@ -590,6 +604,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     id: viewId,
     broaderView,
     narrowerView,
+    numberOfWeek,
     title,
     viewDate,
     start,
