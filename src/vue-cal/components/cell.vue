@@ -152,6 +152,7 @@ const awaitingEventCreation = ref(false)
 
 // Overlapping events calculation (only updates when event IDs or date ranges change).
 const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
+const overlappingBackgroundEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
 // The calendar creation could be canceled for different wanted reasons at the end of dragging.
@@ -266,6 +267,21 @@ const cellEventsPerSchedule = computed(() => {
   }, {})
 })
 
+// Assign the proper styles (width or height) to the event if it's overlapping
+const assignStylesForOverlappingEvents = (globalStyles, isRTL, isHzl, event, knownOverlappingEvents, shouldStackEvents) => {
+  const eventId = event._.id
+  const { maxConcurrent = 1, position = 0 } = knownOverlappingEvents.value.cellOverlaps[eventId] || {}
+
+  const rightOrLeft = isRTL ? 'right' : 'left'
+  const widthOrHeight = isHzl ? 'height' : 'width'
+  globalStyles[eventId] = { [isHzl ? 'top' : rightOrLeft]: `${(100 / maxConcurrent) * position}%` }
+  // Stack overlapping events on top of each other if the stackEvents prop is set to true.
+  if (shouldStackEvents) {
+    globalStyles[eventId][widthOrHeight] = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
+  }
+  else globalStyles[eventId][widthOrHeight] = `${100 / maxConcurrent}%`
+}
+
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
   if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
@@ -273,19 +289,16 @@ const eventStyles = computed(() => {
   const isHzl = config.horizontal
   const styles = {}
 
-  for (const event of cellEvents.value) {
-    const eventId = event._.id
-    const { maxConcurrent = 1, position = 0 } = overlappingEvents.value.cellOverlaps[eventId] || {}
-
-    const rightOrLeft = isRTL ? 'right' : 'left'
-    const widthOrHeight = isHzl ? 'height' : 'width'
-    styles[eventId] = { [isHzl ? 'top' : rightOrLeft]: `${(100 / maxConcurrent) * position}%` }
-    // Stack overlapping events on top of each other if the stackEvents prop is set to true.
-    if (config.stackEvents) {
-      styles[eventId][widthOrHeight] = `${(100 / maxConcurrent) + (position === maxConcurrent - 1 ? 0 : 15)}%`
-    }
-    else styles[eventId][widthOrHeight] = `${100 / maxConcurrent}%`
+  const foregroundEvents = cellEvents.value.filter(event => !event.background)
+  for (const event of foregroundEvents) {
+    assignStylesForOverlappingEvents(styles, isRTL, isHzl, event, overlappingEvents, config.stackEvents)
   }
+
+  const backgroundEvents = cellEvents.value.filter(event => event.background)
+  for (const event of backgroundEvents) {
+    assignStylesForOverlappingEvents(styles, isRTL, isHzl, event, overlappingBackgroundEvents, config.stackBackgroundEvents)
+  }
+
   return styles
 })
 
@@ -663,6 +676,7 @@ const removeEventListeners = () => {
 
 const recalculateOverlaps = () => {
   overlappingEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end, props.allDay)
+  overlappingBackgroundEvents.value = eventsManager.getCellOverlappingEvents(props.start, props.end, props.allDay, true)
 }
 
 watch(
