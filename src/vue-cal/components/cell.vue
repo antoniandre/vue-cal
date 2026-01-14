@@ -667,13 +667,17 @@ const recalculateOverlaps = () => {
 
 watch(
   // Watch event IDs and start/end dates (only) to detect event resizing/dnd.
-  () => !view.isYears && !view.isYear && cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
+  // Also check if the schedules change in case the events are the same
+  [
+    () => !view.isYears && !view.isYear && cellForegroundEvents.value.map(e => `${e._.id}${e.start.getTime()}${e.end.getTime()}`).join(),
+    () => config.schedules
+  ],
   async () => {
     await nextTick() // Use nextTick to avoid recursive updates.
     // Recalculate overlaps when events change (added, deleted, date change, schedule change).
     recalculateOverlaps()
   },
-  { immediate: true, flush: 'post' } // Use flush: 'post' to prevent infinite updates.
+  { immediate: true, deep: true, flush: 'post' } // Use flush: 'post' to prevent infinite updates.
 )
 
 onBeforeUnmount(async () => {
