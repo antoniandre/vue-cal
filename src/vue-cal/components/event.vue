@@ -85,6 +85,11 @@ const isDeletable = computed(() => config.editableEvents.delete && event.deletab
 
 const classes = computed(() => {
   const isMultiday = !!event._?.multiday
+  const isHzl = config.horizontal
+
+  // Determine if event should be visually cut at start/end.
+  const isCutStart = !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (isMultiday && !eventStartsInThisCell.value))
+  const isCutEnd = !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (isMultiday && !eventEndsInThisCell.value))
 
   return {
     [`vuecal__event--${event._.id}`]: true,
@@ -93,8 +98,11 @@ const classes = computed(() => {
     'vuecal__event--background': !!event.background,
     'vuecal__event--all-day': event.allDay || (event._?.startMinutes === 0 && event._?.duration === 24 * 60),
     'vuecal__event--multiday': isMultiday,
-    'vuecal__event--cut-top': !props.inAllDayBar && (event._?.startMinutes < config.timeFrom || (isMultiday && !eventStartsInThisCell.value)),
-    'vuecal__event--cut-bottom': !props.inAllDayBar && (event._?.endMinutes > config.timeTo || (isMultiday && !eventEndsInThisCell.value)),
+    // In horizontal mode, cut-top becomes cut-left and cut-bottom becomes cut-right.
+    'vuecal__event--cut-top': !isHzl && isCutStart,
+    'vuecal__event--cut-bottom': !isHzl && isCutEnd,
+    'vuecal__event--cut-left': isHzl && isCutStart,
+    'vuecal__event--cut-right': isHzl && isCutEnd,
     // Only apply the dragging class on the event copy that is being dragged.
     'vuecal__event--dragging': !event._.draggingGhost && event._.dragging,
     // Only apply the dragging-ghost class on the event original that remains fixed while a copy is being
@@ -300,6 +308,13 @@ onBeforeUnmount(() => {
     cursor: ns-resize;
 
     &:hover {opacity: 0.25;}
+
+    .vuecal--horizontal & {
+      inset: 0 0 0 auto;
+      height: auto;
+      width: 8px;
+      cursor: ew-resize;
+    }
   }
 }
 

@@ -2,7 +2,7 @@
 .vuecal__body(ref="bodyEl" :style="bodyStyles")
   transition(name="vuecal-shrink")
     .vuecal__time-at-cursor(
-      v-if="config.timeAtCursor && cursorYPercent !== null"
+      v-if="config.timeAtCursor && (cursorXPercent !== null || cursorYPercent !== null)"
       :style="timeAtCursor.style")
       label {{ timeAtCursor.time }}
   VueCalCell(
@@ -40,6 +40,7 @@ const vuecal = inject('vuecal')
 const { view, config, dateUtils, touch: globalTouchState, eventsManager } = vuecal
 
 const bodyEl = ref(null)
+const cursorXPercent = ref(null)
 const cursorYPercent = ref(null)
 
 // Use resizing state from events composable.
@@ -57,9 +58,11 @@ const bodyStyles = computed(() => ({
 
 // Computes the time at the current cursor position.
 const timeAtCursor = computed(() => {
-  const time = dateUtils.formatTime(percentageToMinutes(cursorYPercent.value, config))
+  const isHzl = config.horizontal
+  const cursorPercent = isHzl ? cursorXPercent.value : cursorYPercent.value
+  const time = dateUtils.formatTime(percentageToMinutes(cursorPercent, config))
   return {
-    style: { top: `${cursorYPercent.value}%` },
+    style: { [isHzl ? 'left' : 'top']: `${cursorPercent}%` },
     time
   }
 })
@@ -69,8 +72,10 @@ const onBodyMousemove = e => {
 
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
   const { clientX, clientY } = domEvent
-  const { top } = bodyEl.value.getBoundingClientRect()
-  cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
+  const { top, left } = bodyEl.value.getBoundingClientRect()
+
+  if (config.horizontal) cursorXPercent.value = (clientX - left) * 100 / bodyEl.value.clientWidth
+  else cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
 
   // When resizing an event horizontally, update the current hovered cell from the body element,
   // so there is only one event listener and no need for cell coordinates calculation.
@@ -80,6 +85,7 @@ const onBodyMousemove = e => {
 }
 
 const onBodyMouseleave = () => {
+  cursorXPercent.value = null
   cursorYPercent.value = null
 }
 
@@ -143,6 +149,25 @@ onBeforeUnmount(() => {
     font-size: 0.7rem;
     backdrop-filter: blur(10px);
     border-radius: 99em;
+  }
+
+  .vuecal--horizontal & {
+    left: auto;
+    right: auto;
+    top: 0;
+    bottom: 0;
+    border-top: none;
+    border-left: 1px dashed var(--vuecal-border-color);
+
+    label {
+      top: auto;
+      bottom: 100%;
+      right: auto;
+      left: 50%;
+      transform: translateX(-50%);
+      margin-right: 0;
+      margin-bottom: 4px;
+    }
   }
 }
 </style>

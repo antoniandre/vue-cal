@@ -19,6 +19,7 @@
 
   &.vuecal--dragging-event {cursor: grabbing;}
   &.vuecal--resizing-event {cursor: ns-resize;}
+  &.vuecal--horizontal.vuecal--resizing-event {cursor: ew-resize;}
 
   // Dark theme.
   // ------------------------------------------------------
@@ -365,6 +366,16 @@
       border-bottom-left-radius: 0;
       border-bottom-right-radius: 0;
     }
+    &--cut-left {
+      border-left: none;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+    &--cut-right {
+      border-right: none;
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
 
     // Bring to front on hover, but under the headings bar and time column.
     &:not(.vuecal__event--background):hover {z-index: 3;}
@@ -566,9 +577,20 @@
       inset: 0 0 8px;
     }
 
-    .vuecal--default-theme .vuecal__event {
+    .vuecal__event {
+      left: auto;
+      right: auto;
+      top: 0;
+      bottom: 0;
       width: auto;
       height: 90%;
+
+      &-resizer {
+        inset: -1px -1px -1px auto;
+        border-bottom-left-radius: 0;
+        border-bottom-right-radius: inherit;
+        border-top-right-radius: inherit;
+      }
     }
 
     &.vuecal--view-has-time .vuecal__cell:before {
