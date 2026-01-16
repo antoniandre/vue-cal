@@ -156,8 +156,12 @@ const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
 // While dragging in the cell render an event placeholder, before it becomes a normal calendar event.
 // The calendar creation could be canceled for different wanted reasons at the end of dragging.
 const eventPlaceholder = computed(() => {
-  let startPercentage = Math.min(touch.startPercentageY, touch.movePercentageY)
-  let endPercentage = Math.max(touch.startPercentageY, touch.movePercentageY)
+  const isHzl = config.horizontal
+  const startPercentageVal = isHzl ? touch.startPercentageX : touch.startPercentageY
+  const movePercentageVal = isHzl ? touch.movePercentageX : touch.movePercentageY
+
+  let startPercentage = Math.min(startPercentageVal, movePercentageVal)
+  let endPercentage = Math.max(startPercentageVal, movePercentageVal)
   let startMinutes = percentageToMinutes(startPercentage, config)
   let endMinutes = percentageToMinutes(endPercentage, config)
 
@@ -171,8 +175,8 @@ const eventPlaceholder = computed(() => {
 
   return {
     style: {
-      top: `${startPercentage}%`,
-      height: `${Math.abs(endPercentage - startPercentage)}%`
+      [isHzl ? 'left' : 'top']: `${startPercentage}%`,
+      [isHzl ? 'width' : 'height']: `${Math.abs(endPercentage - startPercentage)}%`
     },
     startMinutes,
     endMinutes,
@@ -318,6 +322,7 @@ const showCellEventCount = computed(() => {
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
   const weekday = weekdays[props.start.getDay()]
+  const isHzl = config.horizontal
 
   // The special hours ranges for the current cell day.
   let daySpecialHours = config.specialHours?.[weekday]
@@ -335,11 +340,14 @@ const specialHours = computed(() => {
     from = Math.max(config.timeFrom, from) // Ensure that from is in range.
     to = Math.min(config.timeTo, to) // Ensure that to is in range.
 
-    const top = minutesToPercentage(from, config)
-    const height = minutesToPercentage(to, config) - top
+    const start = minutesToPercentage(from, config)
+    const size = minutesToPercentage(to, config) - start
 
     return {
-      style: { top: `${top}%`, height: `${height}%` },
+      style: {
+        [isHzl ? 'left' : 'top']: `${start}%`,
+        [isHzl ? 'width' : 'height']: `${size}%`
+      },
       label,
       class: classes
     }
@@ -721,6 +729,14 @@ onBeforeUnmount(async () => {
   left: 0;
   right: 0;
   pointer-events: none; // Under the day schedules if enabled.
+
+  .vuecal--horizontal & {
+    flex-direction: row;
+    left: auto;
+    right: auto;
+    top: 0;
+    bottom: 0;
+  }
 }
 
 .vuecal__now-line {
@@ -760,5 +776,12 @@ onBeforeUnmount(async () => {
   border-radius: 4px;
   font-size: 11px;
   line-height: 1;
+
+  .vuecal--horizontal & {
+    left: auto;
+    right: auto;
+    top: 0;
+    bottom: 0;
+  }
 }
 </style>
