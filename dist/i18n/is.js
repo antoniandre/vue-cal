@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const a = ["Mánudagur", "Þriðjudagur", "Miðvikudagur", "Fimmtudagur", "Föstudagur", "Laugardagur", "Sunnudagur"], t = ["Janúar", "Febrúar", "Mars", "Apríl", "Maí", "Júní", "Júlí", "Ágúst", "September", "Október", "Nóvember", "Desember"], y = "Ár", l = "Ár", n = "Mánuður", r = "Vika", e = "Dagar", s = "Dagur", u = "Í dag", o = "Enginn atburður", d = "Allan daginn", c = "Eyða", g = "Búðu til viðburð", i = "dddd D MMMM YYYY", M = {

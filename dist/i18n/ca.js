@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Dilluns", "Dimarts", "Dimecres", "Dijous", "Divendres", "Dissabte", "Diumenge"], t = ["Dl", "Dt", "Dc", "Dj", "Dv", "Ds", "Dg"], s = ["Gener", "Febrer", "Març", "Abril", "Maig", "Juny", "Juliol", "Agost", "Setembre", "Octubre", "Novembre", "Desembre"], n = "Anys", y = "Any", l = "Mes", o = "Setmana", a = "Dies", u = "Dia", r = "Avui", c = "No hi ha esdeveniments", D = "Tot el dia", i = "Eliminar", d = "Crear un esdeveniment", m = "dddd D MMMM YYYY", v = {

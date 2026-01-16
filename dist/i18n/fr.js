@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"], n = ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"], t = "Années", o = "Année", r = "Mois", s = "Semaine", c = "Jours", a = "Jour", d = "Aujourd'hui", i = "Aucun événement", u = "Jour entier", m = "Supprimer", v = "Créer un événement", M = "dddd D MMMM YYYY", l = {

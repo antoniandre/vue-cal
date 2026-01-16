@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Montag", "Dienstag", "Mittwoch", "Donnerstag", "Freitag", "Samstag", "Sonntag"], t = ["Januar", "Februar", "März", "April", "Mai", "Juni", "Juli", "August", "September", "Oktober", "November", "Dezember"], n = "Jahre", a = "Jahr", o = "Monat", s = "Woche", c = "Tage", u = "Tag", r = "Heute", d = "Keine Events", g = "Ganztägig", i = "Löschen", M = "Event erstellen", l = "dddd D MMMM YYYY", y = {

@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const t = ["月", "火", "水", "木", "金", "土", "日"], n = ["1月", "2月", "3月", "4月", "5月", "6月", "7月", "8月", "9月", "10月", "11月", "12月"], a = "年", c = "今年", d = "月", y = "週", r = "日々", l = "日", m = "今日", e = "イベントなし", v = "終日", D = "削除", o = "イベント作成", s = "YYYY年 MMMM D日 (dddd)", E = !1, M = {

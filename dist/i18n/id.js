@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const a = ["Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu", "Minggu"], n = ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"], t = "Tahunan", e = "Tahun", s = "Bulan", o = "Minggu", i = "Hari", r = "Hari", c = "Hari Ini", u = "Tidak Ada Kegiatan", d = "Sepanjang Hari", m = "Hapus", b = "Tambah Kegiatan", g = "dddd, D MMMM YYYY", l = {

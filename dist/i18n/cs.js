@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const e = ["Pondělí", "Úterý", "Středa", "Čtvrtek", "Pátek", "Sobota", "Neděle"], t = ["Leden", "Únor", "Březen", "Duben", "Květen", "Červen", "Červenec", "Srpen", "Září", "Říjen", "Listopad", "Prosinec"], n = "Roky", v = "Rok", o = "Měsíc", s = "Týden", D = "Dny", k = "Den", d = "Dnes", a = "Bez událostí", c = "Celý den", r = "Odstranit", y = "Vytvořit událost", l = "dddd D. MMMM YYYY", M = {

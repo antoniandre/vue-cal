@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const t = ["Pazartesi", "Salı", "Çarşamba", "Perşembe", "Cuma", "Cumartesi", "Pazar"], a = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"], e = "Yıllar", d = "Yıl", y = "Ay", n = "Hafta", s = "Günler", k = "Gün", o = "Bugün", c = "Etkinlik Yok", l = "Tüm gün", i = "Sil", r = "Etkinlik ekle", m = "dddd D MMMM YYYY", E = {

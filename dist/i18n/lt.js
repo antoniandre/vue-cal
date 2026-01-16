@@ -1,6 +1,6 @@
 /**
-  * vue-cal v5.0.1-rc.33
-  * (c) 2024-2025 Antoni Andre <antoniandre.web@gmail.com>
+  * vue-cal v5.0.1-rc.34
+  * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
 const i = ["Pirmadienis", "Antradienis", "Trečiadienis", "Ketvirtadienis", "Penktadienis", "Šeštadienis", "Sekmadienis"], s = ["Sausis", "Vasaris", "Kovas", "Balandis", "Gegužė", "Birželis", "Liepa", "Rugpjūtis", "Rugsėjis", "Spalis", "Lapkritis", "Gruodis"], t = "Metų pasirinkimas", e = "Metai", n = "Mėnesis", a = "Savaitė", o = "Dienos", d = "Diena", c = "Šiandien", r = "Jokių įvykių", k = "Visa diena", y = "Ištrinti", l = "Sukurti įvykį", u = "dddd, D MMMM YYYY", v = {
