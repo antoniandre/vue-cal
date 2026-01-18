@@ -29,4 +29,3 @@ export const pxToPercentage = (y, containerEl) => {
   const containerElHeight = containerEl.clientHeight
   return (y * 100 / containerElHeight)
 }
-
