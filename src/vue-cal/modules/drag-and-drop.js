@@ -29,13 +29,20 @@ export function useDragAndDrop (vuecal) {
    * @param {Object} e The associated DOM event.
    */
   const getEventStart = e => {
-    const { timeStep, timeCellHeight, timeFrom } = config
-
-    const clientY = (e.touches?.[0] || e).clientY
+    const isHzl = config.horizontal
+    const { clientX, clientY } = e.touches?.[0] || e
     // currentTarget is the cell DOM node, whereas target is whatever DOM node we drop the event on.
-    const { top } = e.currentTarget.getBoundingClientRect()
-    const y = clientY - top - ~~e.dataTransfer.getData('cursor-grab-at')
-    return percentageToMinutes(pxToPercentage(y, e.currentTarget), config)
+    const { top, left } = e.currentTarget.getBoundingClientRect()
+    const cursorGrabAt = ~~e.dataTransfer.getData('cursor-grab-at')
+
+    if (isHzl) {
+      const x = clientX - left - cursorGrabAt
+      return percentageToMinutes(x * 100 / e.currentTarget.clientWidth, config)
+    }
+    else {
+      const y = clientY - top - cursorGrabAt
+      return percentageToMinutes(pxToPercentage(y, e.currentTarget), config)
+    }
   }
 
   /**
@@ -105,7 +112,8 @@ export function useDragAndDrop (vuecal) {
       e.dataTransfer.setData('event', JSON.stringify(cleanEvent))
       // When click and drag an event the cursor can be anywhere in the event,
       // when later dropping the event, we need to subtract the cursor position in the event.
-      e.dataTransfer.setData('cursor-grab-at', e.offsetY) // In pixels.
+      // Use offsetX for horizontal layout, offsetY for vertical.
+      e.dataTransfer.setData('cursor-grab-at', config.horizontal ? e.offsetX : e.offsetY) // In pixels.
     }
     catch (err) {
       console.warn('Vue Cal: Failed to set drag data:', err)

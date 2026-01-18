@@ -511,7 +511,9 @@ export const useEvents = vuecal => {
    * @returns {Object} - The new start and end of the event.
    */
   const computeEventStartEnd = (event, cellStart) => {
-    let minutes = percentageToMinutes(resizeState.movePercentageY, config)
+    // Use X percentage for horizontal layout, Y for vertical.
+    const movePercentage = resizeState[config.horizontal ? 'movePercentageX' : 'movePercentageY']
+    let minutes = percentageToMinutes(movePercentage, config)
 
     // While resizing, cap the newEnd between the previous midnight and next midnight.
     minutes = Math.max(0, Math.min(minutes, 24 * 60))
@@ -550,10 +552,9 @@ export const useEvents = vuecal => {
   const onDocumentMousemove = async e => {
     const { clientX, clientY } = e.touches?.[0] || e // Handle click or touch event.
 
-    // Only the first touchmove to set the resizing flag.
-    if (resizeState.fromResizer && !vuecal.touch?.isResizingEvent) {
+    // Only the first mousemove to store original event and fire resize-start.
+    if (resizeState.fromResizer && !resizeState.resizingOriginalEvent) {
       resizeState.resizingOriginalEvent = { ...resizeState.resizingEvent, _: { ...resizeState.resizingEvent._ } }
-      vuecal.touch.isResizingEvent = true // Add a CSS class on wrapper while resizing.
 
       // If there's an @event-resize-start external listener, call it.
       const eventListeners = config.eventListeners?.event || {}
@@ -670,6 +671,9 @@ export const useEvents = vuecal => {
     resizeState.fromResizer = !!domEvent.target.closest('.vuecal__event-resizer')
 
     if (resizeState.fromResizer) {
+      // Set the resizing flag immediately to prevent drag from starting.
+      vuecal.touch.isResizingEvent = true
+
       const rect = eventEl.getBoundingClientRect()
       resizeState.startX = domEvent.clientX - rect.left // Handle click or touch event coords.
       resizeState.startY = domEvent.clientY - rect.top // Handle click or touch event coords.

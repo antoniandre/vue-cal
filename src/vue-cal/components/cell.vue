@@ -480,19 +480,27 @@ const cellInfo = computed(() => ({
  * @returns {Object} An object containing the cursor position in percentage and the associate date.
  */
 const getTimeAtCursor = e => {
-  const clientY = (e.touches?.[0] || e).clientY
-  const { top } = cellEl.value.getBoundingClientRect()
-  const cursorYPercent = pxToPercentage(clientY - top, cellEl.value)
+  const isHzl = config.horizontal
+  const { clientX, clientY } = e.touches?.[0] || e
+  const { top, left } = cellEl.value.getBoundingClientRect()
+
+  const cursorPercent = isHzl
+    ? (clientX - left) * 100 / cellEl.value.clientWidth
+    : pxToPercentage(clientY - top, cellEl.value)
 
   const date = new Date(props.start)
-  date.setMinutes(percentageToMinutes(cursorYPercent, config))
+  date.setMinutes(percentageToMinutes(cursorPercent, config))
 
-  return { y: cursorYPercent, date }
+  return { [isHzl ? 'x' : 'y']: cursorPercent, date }
 }
 
 // Get cursor information including position and date.
 const cursorInfo = computed(() => {
-  const minutes = percentageToMinutes(touch.movePercentageY || touch.startPercentageY, config)
+  const isHzl = config.horizontal
+  const percentageVal = isHzl
+    ? (touch.movePercentageX || touch.startPercentageX)
+    : (touch.movePercentageY || touch.startPercentageY)
+  const minutes = percentageToMinutes(percentageVal, config)
   const date = new Date(props.start)
   date.setMinutes(minutes)
 
@@ -553,6 +561,7 @@ const onMousedown = e => {
 
 const onDocMousemove = e => {
   const isTouchEvent = e.type === 'touchmove'
+  const isHzl = config.horizontal
 
   // For touch events, if the 500ms hasn't passed yet, cancel event creation and allow scrolling.
   if (isTouchEvent && !touch.canTouchAndDrag) {
@@ -589,7 +598,10 @@ const onDocMousemove = e => {
   touch.moveY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.
   touch.movePercentageX = touch.moveX * 100 / rect.width
   touch.movePercentageY = touch.moveY * 100 / rect.height
-  if (config.eventCreateMinDrag && (Math.abs(touch.startY - touch.moveY) > config.eventCreateMinDrag)) {
+
+  // Check drag threshold based on layout orientation.
+  const dragDelta = isHzl ? Math.abs(touch.startX - touch.moveX) : Math.abs(touch.startY - touch.moveY)
+  if (config.eventCreateMinDrag && (dragDelta > config.eventCreateMinDrag)) {
     touch.thresholdPassed = true
   }
 
