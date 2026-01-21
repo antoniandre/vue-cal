@@ -410,6 +410,8 @@ w-accordion.mt2(
             | For instance, this object will allow all the above editions except the drag &amp; drop:
             div.code.base-color { drag: false, resize: true, resizeX: true, delete: true, create: true }
           li.
+            #[span.code resizeX] allows resizing events horizontally across multiple days (only available on #[span.code week] and #[span.code days] views).
+          li.
             You can also set the #[span.code deletable], #[span.code resizable] and #[span.code draggable] properties
             directly in the event object to override the global setting.
 
@@ -514,7 +516,7 @@ w-accordion.mt2(
   w-accordion-item
     template(#title)
       strong.code.title5 eventsOnMonthView
-      .type [Boolean, String]
+      .type [Boolean]
       | ,
       .body.grey.mx1 default:
       strong.default.code false
@@ -522,7 +524,7 @@ w-accordion.mt2(
       p.
         When set to #[span.code true], the events will also be displayed on month view
         (excluding events of out-of-scope days).#[br]
-        When set to the string '#[span.code short]', only the events titles will be displayed.
+        You can customize how events are displayed on month view using the #[span.code #event.month] slot.
 
   w-accordion-item
     template(#title)
@@ -534,6 +536,19 @@ w-accordion.mt2(
     template(#content)
       p Accepts an array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
       p Hide specific weekdays in #[span.code month], #[span.code week] and #[span.code days] views.
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 horizontal
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+      p.
+        When set to #[span.code true], displays the calendar timeline horizontally.#[br]
+        This flips the default rows and columns for the #[span.code days] and #[span.code week] views.#[br]
+        Useful for creating horizontal timelines or schedules.
 
   w-accordion-item
     template(#title)
@@ -614,6 +629,19 @@ w-accordion.mt2(
         Accepts a formatted string or plain JavaScript Date object.#[br]
         Set a minimum date for the cells to be selectable.#[br]
         By default the cell will be grayed out when out of range but CSS classes let you customize this.
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 multidayEvents
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code true
+    template(#content)
+      p.
+        When set to #[span.code true], events can span multiple days.#[br]
+        When set to #[span.code false], events will be constrained to a single day even if their
+        duration exceeds 24 hours.
 
   w-accordion-item
     template(#title)
@@ -820,6 +848,20 @@ w-accordion.mt2(
       p.
        Granularity of the time intervals (in minutes) displayed in the timeline for each day in the
        schedule view.
+
+  w-accordion-item
+    template(#title)
+      strong.code.title5 timeAtCursor
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+      p.
+        When set to #[span.code true], displays a time indicator at the cursor position on
+        #[span.code day], #[span.code days] and #[span.code week] views when #[span.code time]
+        is set to #[span.code true].#[br]
+        The indicator shows the exact time at the cursor's vertical position, or the horizontal position if #[span.code horizontal] is set to #[span.code true].
 
   w-accordion-item
     template(#title)
