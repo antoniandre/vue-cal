@@ -111,10 +111,19 @@ const allDayResizer = {
     const isHzl = config.horizontal
     this[isHzl ? 'startX' : 'startY'].value = isHzl ? clientX : clientY
 
-    // Get actual computed height/width from element.
-    const allDayEl = $vuecalEl.value?.querySelector('.vuecal__all-day')
-    if (allDayEl) {
-      this[isHzl ? 'initialWidth' : 'initialHeight'].value = allDayEl[isHzl ? 'offsetWidth' : 'offsetHeight']
+    // Get the current CSS variable value in pixels. Using a temp element to properly
+    // convert units like rem/em to pixels, preventing jumps when resizing starts.
+    const cssValue = getComputedStyle($vuecalEl.value).getPropertyValue('--vuecal-all-day-bar-height')
+    const tempEl = document.createElement('div')
+    tempEl.style.position = 'absolute'
+    tempEl.style.visibility = 'hidden'
+    tempEl.style[isHzl ? 'width' : 'height'] = cssValue
+    document.body.appendChild(tempEl)
+    const pixelValue = tempEl[isHzl ? 'offsetWidth' : 'offsetHeight']
+    tempEl.remove()
+
+    if (pixelValue > 0) {
+      this[isHzl ? 'initialWidth' : 'initialHeight'].value = pixelValue
     }
 
     // Add document event listeners.
