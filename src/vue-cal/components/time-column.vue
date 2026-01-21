@@ -63,8 +63,6 @@ const timeCells = computed(() => {
   left: 0;
   z-index: 5; // Above the cells, headings bar and hovered events.
   border-right: 0.5px solid var(--vuecal-border-color);
-  // Smoothen transition between day view and days or week view.
-  transition: padding-top 0.3s ease-in-out;
 }
 
 .vuecal__all-day-label {
