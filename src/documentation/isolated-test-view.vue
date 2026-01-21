@@ -97,7 +97,11 @@ const mainVuecalConfig = reactive({
   editableEvents: ref(true),
   allDayEvents: ref(true),
   events: ref([]),
-  // schedules: [{ label: 'Dr 1', class: 'dr-1' }, { label: 'Dr 2', class: 'dr-2' }],
+  schedules: [
+    { label: 'Room A', class: 'room-a' },
+    { label: 'Room B', class: 'room-b' },
+    { label: 'Room C', class: 'room-c' }
+  ],
   eventsOnMonthView: true,
   horizontal: ref(true),
   // specialHours: {
@@ -121,27 +125,40 @@ setTimeout(() => {
       title: 'Event 1',
       start: new Date(new Date().setHours(10, 0, 0, 0)),
       end: new Date(new Date().setHours(11, 30, 0, 0)),
-      // schedule: 1,
+      schedule: 1,
       allDay: true
     },
     {
       title: 'Event 2',
       start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
       end: new Date(new Date().addDays(1).setHours(13, 30, 0, 0)),
-      // schedule: 2,
+      schedule: 2,
       allDay: true
     },
     {
       title: 'Event 3',
       start: new Date(new Date().setHours(10, 0, 0, 0)),
       end: new Date(new Date().setHours(11, 30, 0, 0)),
-      // schedule: 1
+      schedule: 1
     },
     {
       title: 'Event 4',
       start: new Date(new Date().addDays(1).setHours(11, 0, 0, 0)),
       end: new Date(new Date().addDays(1).setHours(13, 30, 0, 0)),
-      // schedule: 2
+      schedule: 2
+    },
+    {
+      title: 'Event 5',
+      start: new Date(new Date().setHours(14, 0, 0, 0)),
+      end: new Date(new Date().setHours(16, 0, 0, 0)),
+      schedule: 3
+    },
+    {
+      title: 'Event 6',
+      start: new Date(new Date().addDays(2).setHours(9, 0, 0, 0)),
+      end: new Date(new Date().addDays(2).setHours(12, 0, 0, 0)),
+      schedule: 3,
+      allDay: true
     }
   ]
 }, 0)
