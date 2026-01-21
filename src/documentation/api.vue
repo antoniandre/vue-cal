@@ -30,6 +30,7 @@ w-accordion.mt3(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
+      a#view--id-title
       h3.title4.mt0.pt0 ID, Title
     template(#content)
       p.
@@ -44,6 +45,7 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      a#view--ranges
       h3.title4.mt0.pt0 Ranges
     template(#content)
       p In order to be flexible, straightforward and not confusing, two ranges are available:
@@ -77,6 +79,7 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      a#view--cell-dates
       h3.title4.mt0.pt0 Cell Dates
     template(#content)
       p A complete list of all the visible cells dates (start and end).<br>Example:
@@ -95,6 +98,7 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      a#view--events
       h3.title4.mt0.pt0 Events
     template(#content)
       p All the calendar events that the current view contains.<br>Example:
@@ -106,6 +110,7 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      a#view--methods
       h3.title4.mt0.pt0 Methods
     template(#content)
       p Methods that you can use from the Vue Cal instance's view (you can use a template ref).
@@ -159,6 +164,7 @@ w-accordion.mt3(
 
   w-accordion-item
     template(#title)
+      a#view--other-utilities
       h3.title4.mt0.pt0 Other Utilities
     template(#content)
       p Other utilities that you may find useful.
@@ -182,7 +188,7 @@ w-accordion.mt3(
 
 //- Event Object.
 h2.w-flex.justify-space-between.mb2
-  title-link(div anchor="view") The Event Object
+  title-link(div anchor="event") The Event Object
   w-switch.my1.body(@update:model-value="expandedEventObject = Array(15).fill($event)") Expand All
 p.caption.size--md.lh1.
   The calendar event object contains all the information about a calendar event and is used to render
@@ -216,69 +222,82 @@ w-accordion.mt3(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
+      a#event--start
       strong.code.title5 start
       .type [Date]
       w-tag.error--bg.ml1(round sm) REQUIRED
     template(#content) The start date and time of the event, given as a JavaScript Date.
   w-accordion-item
     template(#title)
+      a#event--end
       strong.code.title5 end
       .type [Date]
       w-tag.error--bg.ml1(round sm) REQUIRED
     template(#content) The end date and time of the event, given as a JavaScript Date.
   w-accordion-item
     template(#title)
+      a#event--id
       strong.code.title5 id
       .type [String]
     template(#content) The unique identifier of the event. If not provided, it will be internally identified by the key #[span.code _.id].
   w-accordion-item
     template(#title)
+      a#event--title
       strong.code.title5 title
       .type [String]
     template(#content) The title of the event. If not provided, no title will be displayed.
   w-accordion-item
     template(#title)
+      a#event--draggable
       strong.code.title5 draggable
       .type [Boolean]
     template(#content) Indicates if this specific event can be dragged and dropped. This property overrides the global setting.
   w-accordion-item
     template(#title)
+      a#event--resizable
       strong.code.title5 resizable
       .type [Boolean]
     template(#content) Indicates if this specific event can be resized. This property overrides the global setting.
   w-accordion-item
     template(#title)
+      a#event--deletable
       strong.code.title5 deletable
       .type [Boolean]
     template(#content) Indicates if this specific event can be deleted. This property overrides the global setting.
   w-accordion-item
     template(#title)
+      a#event--all-day
       strong.code.title5 allDay
       .type [Boolean]
     template(#content) Indicates if the event is an all-day event.
   w-accordion-item
     template(#title)
+      a#event--background
       strong.code.title5 background
       .type [Boolean]
     template(#content) Indicates if the event is a background event (allows no user interaction).
   w-accordion-item
     template(#title)
+      a#event--schedule
       strong.code.title5 schedule
       .type [Number]
-    template(#content) Must be an integer of less than 10 digits.<br>The schedule ID the event belongs to, when multiple schedules are defined through the #[code schedules] prop. Ignored if no schedules are defined.
+    template(#content) Must be an integer of less than 10 digits.<br>The schedule ID the event belongs to, when multiple schedules are defined through the #[router-link(to="/api#props--schedules") schedules] prop. Ignored if no schedules are defined.
   w-accordion-item
     template(#title)
+      a#event--recurring
       strong.code.title5 recurring
       .type [Number]
       w-tag.error--bg.ml1(round sm) COMING SOON
     template(#content) Indicates if the event is recurring and its recurrence rule.
   w-accordion-item
     template(#title)
+      a#event--class
       strong.code.title5 class
       .type [String]
     template(#content) The CSS class of the event.
   w-accordion-item
     template(#title)
+      a#event--internal
       strong.code.title5 _
       .type [Object]
     template(#content)
@@ -319,6 +338,7 @@ w-accordion.mt2(
   content-class="pt1 pr0 pb6 pl7")
   w-accordion-item
     template(#title)
+      a#props--all-day-events
       strong.code.title5 allDayEvents
       .type [Boolean]
       | ,
@@ -331,8 +351,8 @@ w-accordion.mt2(
           #[span.code allDay] attribute set to #[span.code true] will be displayed in a fixed top
           bar on the #[span.code day], #[span.code days] &amp; #[span.code week] views.#[br]
           The all day events bar will only show up if the options #[span.code allDayEvents] &amp;
-          #[span.code time] are set to #[span.code true].#[br]
-          If #[span.code time] is set to #[span.code false], every event is an all-day
+          #[router-link(to="/api#props--time") time] are set to #[span.code true].#[br]
+          If #[router-link(to="/api#props--time") time] is set to #[span.code false], every event is an all-day
           event.
         li.mb2.
           When #[span.code allDayEvents] is set to #[span.code false], all the all-day events
@@ -341,6 +361,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--click-to-navigate
       strong.code.title5 clickToNavigate
       .type [Boolean]
       | ,
@@ -355,9 +376,11 @@ w-accordion.mt2(
         The navigation to narrower view can be disabled by setting #[span.code clickToNavigate]
         to false.
       p Setting to false will force it off on date-picker where it is on by default.
+      p See #[router-link(to="/examples/view#ex--views") Views] example.
 
   w-accordion-item
     template(#title)
+      a#props--dark
       strong.code.title5 dark
       .type [Boolean]
       | ,
@@ -365,9 +388,11 @@ w-accordion.mt2(
       strong.default.code false
     template(#content)
       p Dark theme.
+      p See #[router-link(to="/examples/view#ex--themes") Themes] example.
 
   w-accordion-item
     template(#title)
+      a#props--date-picker
       strong.code.title5 datePicker
       .type [Boolean]
       | ,
@@ -378,9 +403,11 @@ w-accordion.mt2(
         Sets the date picker format CSS-wise and logic as well.
         This option acts like a shorthand for:
         #[code="{ xs: true, views: ['month', 'year', 'years'], clickToNavigate: true }"].
+      p See #[router-link(to="/examples/view#ex--layouts") Layouts] example.
 
   w-accordion-item
     template(#title)
+      a#props--disable-days
       strong.code.title5 disableDays
       .type [Array]
       | ,
@@ -388,9 +415,11 @@ w-accordion.mt2(
       strong.default.code () => []
     template(#content)
       p Accepts an array of formatted dates (e.g. #[span.code {{ new Date().format() }}]) or JavaScript dates (where the time is useless) of days to disable.
+      p See #[router-link(to="/examples/date-and-time#ex--disable-days") Disable Days] example.
 
   w-accordion-item
     template(#title)
+      a#props--editable-events
       strong.code.title5 editableEvents
       .type [Boolean, Object]
       | ,
@@ -400,7 +429,7 @@ w-accordion.mt2(
       p When set to #[span.code true], it allows:
       ul
         li Dragging and dropping events.
-        li Resizing events by dragging their bottom handle, when #[span.code time] is set to #[span.code true].
+        li Resizing events by dragging their bottom handle, when #[router-link(to="/api#props--time") time] is set to #[span.code true].
         li Deleting events by double click/tap by default.
         li Creating events by click and drag (refer to the #[router-link(to="/examples/calendar-events--interactions#ex--create-events") Create events] example).
       alert
@@ -417,6 +446,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--event-count
       strong.code.title5 eventCount
       .type [Boolean, Array]
       | ,
@@ -425,11 +455,13 @@ w-accordion.mt2(
     template(#content)
       p.
         When set to #[code true], the events will be counted on the #[code month] views and a number will appear in each cell that contain one or more events.#[br]
-        You can customize the events count via CSS or via the #[code #events-count] slot.#[br]
-        You can also set the #[code eventCount] prop to an array of views to individually show the count in. E.g. #[code=":event-count=\"['month', 'year']\""]
+        You can customize the events count via CSS or via the #[router-link(to="/api#slots--event-count") #event-count] slot.#[br]
+        You can also set the #[code eventCount] prop to an array of views to individually show the count in. E.g. #[code=":event-count=\"['month', 'year']\""]#[br]
+        See also #[router-link(to="/api#props--events-on-month-view") eventsOnMonthView] to display full events on month view.
 
   w-accordion-item
     template(#title)
+      a#props--events
       strong.code.title5 events
       .type [Array]
       | ,
@@ -471,12 +503,12 @@ w-accordion.mt2(
             The #[span.code background] attribute sets an event as a background event,
             which allows overlapping and disable the ability to drag &amp; resize.
           li.
-            When using #[span.code schedules], the #[span.code schedule] attribute accepts a number,
+            When using #[router-link(to="/api#props--schedules") schedules], the #[span.code schedule] attribute accepts a number,
             starting from 1, corresponding to the schedule you want the event to appear in.#[br]
-            Optionally, if you have set the #[span.code id] property in #[span.code schedules],
+            Optionally, if you have set the #[span.code id] property in #[router-link(to="/api#props--schedules") schedules],
             you have to use the same #[span.code id] here (Integer of less than 10 digits).
           li.
-            When the #[span.code allDayEvents] and #[span.code time] options are set to
+            When the #[router-link(to="/api#props--all-day-events") allDayEvents] and #[router-link(to="/api#props--time") time] options are set to
             #[span.code true], all the events with an attribute #[span.code allDay] set to
             #[span.code true] will show up in a fixed bar (week &amp; day views).
 
@@ -491,8 +523,9 @@ w-accordion.mt2(
             | or #[code="{{ (new Date()).format() }}"] if you don't want any time in the whole calendar,
             | or a JavaScript #[code Date] object. Only these formats will work.#[br]
             strong.
-              You can't mix events with time and events without, and you can only remove time if the #[span.code time]
-              option is set to #[span.code false].
+              You can't mix events with time and events without, and you can only remove time if the #[router-link(to="/api#props--time") time]
+              option is set to #[span.code false].#[br]
+            | See #[router-link(to="/date-prototypes") Date Prototypes] for date formatting utilities.
           li.mt2.
             You can set an event end at #[span.code 24:00] or #[span.code 00:00] (for the next midnight),
             #[strong but internally the date will be set at #[span.code 23:59:59]] so the date stays the same instead
@@ -501,6 +534,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--event-create-min-drag
       strong.code.title5 eventCreateMinDrag
       .type [Number]
       | ,
@@ -508,13 +542,14 @@ w-accordion.mt2(
       strong.default.code 15
     template(#content)
       p.
-        When events are editable and #[span.code time] and #[span.code editableEvents.create] are set to
+        When #[router-link(to="/api#props--editable-events") editableEvents] is enabled and #[router-link(to="/api#props--time") time] and #[span.code editableEvents.create] are set to
         #[span.code true], this option controls the minimum dragging distance before an event is created.#[br]
         This option might be useful to prevent unwanted event creation.#[br]
         Setting it to #[span.code 0] disables it.
 
   w-accordion-item
     template(#title)
+      a#props--events-on-month-view
       strong.code.title5 eventsOnMonthView
       .type [Boolean]
       | ,
@@ -524,10 +559,13 @@ w-accordion.mt2(
       p.
         When set to #[span.code true], the events will also be displayed on month view
         (excluding events of out-of-scope days).#[br]
-        You can customize how events are displayed on month view using the #[span.code #event.month] slot.
+        You can customize how events are displayed on month view using the #[router-link(to="/api#slots--event-view") #event.month] slot.#[br]
+        See also #[router-link(to="/api#props--event-count") eventCount] to show a count of events instead.
+      p See #[router-link(to="/examples/calendar-events--display#ex--events-on-month-view") Events on Month View] example.
 
   w-accordion-item
     template(#title)
+      a#props--hide-weekdays
       strong.code.title5 hideWeekdays
       .type [Array]
       | ,
@@ -536,9 +574,11 @@ w-accordion.mt2(
     template(#content)
       p Accepts an array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
       p Hide specific weekdays in #[span.code month], #[span.code week] and #[span.code days] views.
+      p See #[router-link(to="/examples/date-and-time#ex--hiding-particular-week-days") Hide Particular Week Days] example.
 
   w-accordion-item
     template(#title)
+      a#props--horizontal
       strong.code.title5 horizontal
       .type [Boolean]
       | ,
@@ -549,9 +589,11 @@ w-accordion.mt2(
         When set to #[span.code true], displays the calendar timeline horizontally.#[br]
         This flips the default rows and columns for the #[span.code days] and #[span.code week] views.#[br]
         Useful for creating horizontal timelines or schedules.
+      p See #[router-link(to="/examples/view#ex--layouts") Layouts] example.
 
   w-accordion-item
     template(#title)
+      a#props--hide-weekends
       strong.code.title5 hideWeekends
       .type [Boolean]
       | ,
@@ -562,6 +604,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--locale
       strong.code.title5 locale
       .type [String]
       | ,
@@ -569,6 +612,7 @@ w-accordion.mt2(
       strong.default.code ''
     template(#content)
       p A language to use for all the texts.
+      p See #[router-link(to="/examples/view#ex--internationalization") Internationalization] example.
       p.
         Allow translation of the calendar texts in a given language.#[br]
         Use a 2 letter locale code
@@ -601,10 +645,12 @@ w-accordion.mt2(
           date you can see in a single day view title.#[br]
           #[span.code dddd] stands for the full-letter day of week, #[span.code MMMM] stands for
           full-letter month, #[span.code D] stands for the date of the month (0-31),
-          #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.
+          #[span.code YYYY] stands for full year, #[span.code {S}] stands for st/nd/rd/th and only in English.#[br]
+          See #[router-link(to="/date-prototypes#format") Date Prototypes] for more date formatting options.
 
   w-accordion-item
     template(#title)
+      a#props--max-date
       strong.code.title5 maxDate
       .type [String, Date]
       | ,
@@ -616,9 +662,11 @@ w-accordion.mt2(
         Set a maximum date for the cells to be selectable.#[br]
         By default the cell will be grayed out when out of range but CSS classes let you
         customize this.
+      p See #[router-link(to="/examples/date-and-time#ex--min-max-dates") Minimum / Maximum Dates] example.
 
   w-accordion-item
     template(#title)
+      a#props--min-date
       strong.code.title5 minDate
       .type [String, Date]
       | ,
@@ -629,9 +677,11 @@ w-accordion.mt2(
         Accepts a formatted string or plain JavaScript Date object.#[br]
         Set a minimum date for the cells to be selectable.#[br]
         By default the cell will be grayed out when out of range but CSS classes let you customize this.
+      p See #[router-link(to="/examples/date-and-time#ex--min-max-dates") Minimum / Maximum Dates] example.
 
   w-accordion-item
     template(#title)
+      a#props--multiday-events
       strong.code.title5 multidayEvents
       .type [Boolean]
       | ,
@@ -642,9 +692,11 @@ w-accordion.mt2(
         When set to #[span.code true], events can span multiple days.#[br]
         When set to #[span.code false], events will be constrained to a single day even if their
         duration exceeds 24 hours.
+      p See #[router-link(to="/examples/calendar-events--display#ex--multiple-day-events") Multiple Day Events] example.
 
   w-accordion-item
     template(#title)
+      a#props--selected-date
       strong.code.title5 selectedDate
       .type [String, Date]
       | ,
@@ -659,6 +711,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--sm
       strong.code.title5 sm
       .type [Boolean]
       | ,
@@ -671,9 +724,11 @@ w-accordion.mt2(
         Does not apply to the title of the day view.#[br]
         2 media queries are truncating the days of the week below 450px,
         read on in the #[router-link(to="/getting-started#css-notes") CSS Notes].
+      p See #[router-link(to="/examples/view#ex--layouts") Layouts] example.
 
   w-accordion-item
     template(#title)
+      a#props--special-hours
       strong.code.title5 specialHours
       .type [Object]
       | ,
@@ -684,6 +739,7 @@ w-accordion.mt2(
       p.
         Allows an individual highlighted time range for each day of the week.#[br]
         For instance, it could represent the business hours.#[br]
+        See #[router-link(to="/examples/schedules#ex--special-hours") Special / Business Hours] example.#[br]
         The object must contain days definitions indexed by a 3-letter day ID in English, #[strong from #[code mon] to #[code sun]], of the
         days you want to highlight.#[br]
         Each day must contain an object with a #[span.code from] and #[span.code to] properties
@@ -713,6 +769,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--schedules
       strong.code.title5 schedules
       .type [Array]
       | ,
@@ -730,9 +787,14 @@ w-accordion.mt2(
           label: {String},
           hide: {Boolean} // You can toggle the column on and of with this.
         }
+      p.
+        Events must specify which schedule they belong to using the #[router-link(to="/api#event--schedule") schedule] property.#[br]
+        See also the #[router-link(to="/api#slots--schedule-heading") #schedule-heading] slot to customize schedule headers.#[br]
+        See #[router-link(to="/examples/schedules#ex--schedules") Schedules & Schedule Events] example.
 
   w-accordion-item
     template(#title)
+      a#props--snap-to-interval
       strong.code.title5 snapToInterval
       .type [Number]
       | ,
@@ -743,10 +805,12 @@ w-accordion.mt2(
         Accepts an integer number of minutes from 0 to snap a dropped event or an event end time while resizing.#[br]
         For instance, with a #[span.code snapToInterval] of 15 min, an event dropped at 10:05,
         will snap to 10:00, and if dropped at 10:11 it will snap to 10:15.#[br]
-        This option affects event resizing, event drag &amp; dropping, and event drag-creation.
+        This option affects event resizing, event drag &amp; dropping, and event drag-creation.#[br]
+        Requires #[router-link(to="/api#props--editable-events") editableEvents] to be enabled.
 
   w-accordion-item
     template(#title)
+      a#props--start-week-on-sunday
       strong.code.title5 startWeekOnSunday
       .type [Boolean]
       | ,
@@ -757,6 +821,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--stack-events
       strong.code.title5 stackEvents
       .type [Boolean]
       | ,
@@ -767,10 +832,12 @@ w-accordion.mt2(
       alert(tip).
         Alternatively, you can use the event stacking class (based on the stack position and length) to override
         the default stacking behavior to your liking via CSS (you will need to use #[code !important]).#[br]
-        Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].
+        Example of classes for three overlapping events: #[code vuecal__event--stack-1-3], #[code vuecal__event--stack-2-3], #[code vuecal__event--stack-3-3].#[br]
+        See #[router-link(to="/examples/calendar-events--display#ex--overlapping-events") Overlapping Events] and #[router-link(to="/examples/calendar-events--display#ex--all-day-events") All Day Events] examples.
 
   w-accordion-item
     template(#title)
+      a#props--theme
       strong.code.title5 theme
       .type [String, Boolean]
       | ,
@@ -778,9 +845,11 @@ w-accordion.mt2(
       strong.default.code 'default'
     template(#content)
       p Only adds a CSS class when set to default.
+      p See #[router-link(to="/examples/view#ex--themes") Themes] and #[router-link(to="/examples/view#ex--css-variables") CSS Control] examples.
 
   w-accordion-item
     template(#title)
+      a#props--time
       strong.code.title5 time
       .type [Boolean]
       | ,
@@ -789,10 +858,13 @@ w-accordion.mt2(
     template(#content)
       p.
         Whether you want to display the timeline and handle events with time or only date.#[br]
-        Note that time is made of #[span.code hours:minutes] #[strong.ml2 and no second].
+        Note that time is made of #[span.code hours:minutes] #[strong.ml2 and no second].#[br]
+        See also #[router-link(to="/api#props--time-from") timeFrom], #[router-link(to="/api#props--time-to") timeTo], and #[router-link(to="/api#props--time-step") timeStep] to control the time range and intervals.
+      p See #[router-link(to="/examples/calendar-events--display#ex--timeless-events") Timeless Events] and #[router-link(to="/examples/date-and-time#ex--timeline") Timeline] examples.
 
   w-accordion-item
     template(#title)
+      a#props--time-cell-height
       strong.code.title5 timeCellHeight
       .type [Number]
       | ,
@@ -803,6 +875,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--time-format
       strong.code.title5 timeFormat
       .type [String]
       | ,
@@ -824,9 +897,11 @@ w-accordion.mt2(
           The characters `#[strong.code {]` and `#[strong.code }]` are removed and used only to
           delimit keywords when there is no space.#[br]
           E.g. #[span.code "h:mm{am}"].
+      p See #[router-link(to="/date-prototypes#formattime") Date Prototypes] for more formatting options.
 
   w-accordion-item
     template(#title)
+      a#props--time-from
       strong.code.title5 timeFrom
       .type [Number]
       | ,
@@ -836,9 +911,11 @@ w-accordion.mt2(
       p.
         Start time (in minutes) displayed in the timeline for each day in the schedule
         view. By default it starts at midnight.
+      p See #[router-link(to="/examples/date-and-time#ex--timeline-tweaking") Timeline Tweaking] example.
 
   w-accordion-item
     template(#title)
+      a#props--time-step
       strong.code.title5 timeStep
       .type [Number]
       | ,
@@ -848,9 +925,11 @@ w-accordion.mt2(
       p.
        Granularity of the time intervals (in minutes) displayed in the timeline for each day in the
        schedule view.
+      p See #[router-link(to="/examples/date-and-time#ex--timeline-tweaking") Timeline Tweaking] example.
 
   w-accordion-item
     template(#title)
+      a#props--time-at-cursor
       strong.code.title5 timeAtCursor
       .type [Boolean]
       | ,
@@ -859,12 +938,13 @@ w-accordion.mt2(
     template(#content)
       p.
         When set to #[span.code true], displays a time indicator at the cursor position on
-        #[span.code day], #[span.code days] and #[span.code week] views when #[span.code time]
+        #[span.code day], #[span.code days] and #[span.code week] views when #[router-link(to="/api#props--time") time]
         is set to #[span.code true].#[br]
-        The indicator shows the exact time at the cursor's vertical position, or the horizontal position if #[span.code horizontal] is set to #[span.code true].
+        The indicator shows the exact time at the cursor's vertical position, or the horizontal position if #[router-link(to="/api#props--horizontal") horizontal] is set to #[span.code true].
 
   w-accordion-item
     template(#title)
+      a#props--time-to
       strong.code.title5 timeTo
       .type [Number]
       | ,
@@ -874,9 +954,11 @@ w-accordion.mt2(
       p.
         Final time (in minutes) displayed in the timeline for each day in the schedule
         view. By default it ends at midnight.
+      p See #[router-link(to="/examples/date-and-time#ex--timeline-tweaking") Timeline Tweaking] example.
 
   w-accordion-item
     template(#title)
+      a#props--title-bar
       strong.code.title5 titleBar
       .type [Boolean]
       | ,
@@ -884,9 +966,11 @@ w-accordion.mt2(
       strong.default.code true
     template(#content)
       p Show or hide the header title bar.
+      p See #[router-link(to="/examples/view#ex--hide-elements") Hide Elements & Toggles] example.
 
   w-accordion-item
     template(#title)
+      a#props--today-button
       strong.code.title5 todayButton
       .type [Boolean]
       | ,
@@ -894,9 +978,11 @@ w-accordion.mt2(
       strong.default.code true
     template(#content)
       p Show or hide the header today button that allows to quickly navigate to Today's date.
+      p See #[router-link(to="/examples/view#ex--hide-elements") Hide Elements & Toggles] example.
 
   w-accordion-item
     template(#title)
+      a#props--twelve-hour
       strong.code.title5 twelveHour
       .type [Boolean]
       | ,
@@ -905,10 +991,12 @@ w-accordion.mt2(
     template(#content)
       p.
         12-hour or 24-hour formats are respectively written like 7am and 07:00 or like 1pm and 13:00.#[br]
-        The default time format is 24-hour.
+        The default time format is 24-hour.#[br]
+        See also #[router-link(to="/api#props--time-format") timeFormat] for custom time formatting.
 
   w-accordion-item
     template(#title)
+      a#props--view
       strong.code.title5 view
       .type [String]
       | ,
@@ -919,10 +1007,12 @@ w-accordion.mt2(
         Sets a default active view, for the first time you load the calendar.#[br]
         Then control the active view from outside of Vue Cal.#[br]
         Accepts one of 'years', 'year', 'month', 'week', 'days', 'day'.#[br]
-        The active view has a two-way binding: you can use a v-model to keep your variable up to date.
+        The active view has a two-way binding: you can use a v-model to keep your variable up to date.#[br]
+        Available views can be restricted using the #[router-link(to="/api#props--views") views] prop.
 
   w-accordion-item
     template(#title)
+      a#props--view-date
       strong.code.title5 viewDate
       .type [String, Date]
       | ,
@@ -933,6 +1023,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--view-day-offset
       strong.code.title5 viewDayOffset
       .type [Number]
       | ,
@@ -943,6 +1034,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--views
       strong.code.title5 views
       .type [Array, Object]
       | ,
@@ -964,9 +1056,11 @@ w-accordion.mt2(
           year: { cols: 4, rows: 3 },
           years: { cols: 5, rows: 5 } // Arbitrary range of quarters of century (25y).
         }
+      p See the #[router-link(to="/api#views") Calendar Views] section at the top for details on each view type.
 
   w-accordion-item
     template(#title)
+      a#props--views-bar
       strong.code.title5 viewsBar
       .type [Boolean]
       | ,
@@ -974,9 +1068,11 @@ w-accordion.mt2(
       strong.default.code true
     template(#content)
       p Show or hide the headers view selection bar.
+      p See #[router-link(to="/examples/view#ex--hide-elements") Hide Elements & Toggles] example.
 
   w-accordion-item
     template(#title)
+      a#props--watch-real-time
       strong.code.title5 watchRealTime
       .type [Boolean]
       | ,
@@ -987,10 +1083,13 @@ w-accordion.mt2(
         More expensive, so only trigger on demand.#[br]
         When set to #[span.code true], the current time line in today's cell, on #[span.code week] and
         #[span.code day] views, will stay in sync with real time.#[br]
-        #[span.grey (This requires a #[span.code setTimeout] every minute)]
+        #[span.grey (This requires a #[span.code setTimeout] every minute)]#[br]
+        See also the #[router-link(to="/api#slots--now-line") #now-line] slot to customize the time line appearance.
+      p See #[router-link(to="/examples/date-and-time#ex--today-current-time") Today's Current Time] example.
 
   w-accordion-item
     template(#title)
+      a#props--week-numbers
       strong.code.title5 weekNumbers
       .type [Boolean, String]
       | ,
@@ -1001,7 +1100,7 @@ w-accordion.mt2(
         When set to #[span.code true], the weeks numbers will show in the first column on the
         #[span.code month] view (only).#[br]
         You can also provide a custom renderer to the weeks numbers cells through the
-        #[span.code week-number-cell] slot.
+        #[router-link(to="/api#slots--week-number-cell") #week-number-cell] slot.
       alert
         a#there-can-be-53-weeks-in-a-year
         strong Did you know there can be 53 weeks in the year?#[br]
@@ -1010,6 +1109,7 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--xs
       strong.code.title5 xs
       .type [Boolean]
       | ,
@@ -1022,6 +1122,7 @@ w-accordion.mt2(
         Does not apply to the title of the day view.#[br]
         In Addition, the whole calendar gets applied a smaller font size
         and the current view title size is also reduced.
+      p See #[router-link(to="/examples/view#ex--layouts") Layouts] example.
 
   //- TO DO LATER.
   //- w-accordion-item
@@ -1393,6 +1494,7 @@ w-accordion(
     template(#content)
       p The "Do It Yourself" slot allows complete customization of the calendar. When this slot is used, the default calendar structure is replaced entirely by your custom content.
       p This is useful for creating entirely custom calendar interfaces while still utilizing Vue Cal's core functionality.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Available parameters:
       ul
         li
@@ -1415,6 +1517,7 @@ w-accordion(
       strong.code.title5 header
     template(#content)
       p Allows complete customization of the calendar's header section, replacing the title bar and views bar.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Available parameters:
       ul
         li #[code.base-color view] - The current view object
@@ -1440,6 +1543,7 @@ w-accordion(
       strong.code.title5 title
     template(#content)
       p Customizes the title display in the calendar header. This slot is ignored if the header slot is used.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] and #[router-link(to="/examples/customization#ex--custom-title-per-view") Custom Title Per View] examples.
       p Available parameters:
       p This slot receives the full #[code.base-color view] object which contains:
       ul
@@ -1460,6 +1564,7 @@ w-accordion(
       p.
         Customizes the title display in the calendar header for a specific view only.
         This slot is ignored if the header slot is used.
+      p See #[router-link(to="/examples/customization#ex--custom-title-per-view") Custom Title Per View] example.
       p Available parameters:
       p This slot receives the full #[code.base-color view] object which contains:
       ul
@@ -1482,6 +1587,7 @@ w-accordion(
       strong.code.title5 previous-button
     template(#content)
       p Customizes the previous navigation button. This slot is ignored if the header slot is used.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Example:
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #previous-button&gt;
@@ -1493,6 +1599,7 @@ w-accordion(
       strong.code.title5 next-button
     template(#content)
       p Customizes the next navigation button. This slot is ignored if the header slot is used.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Example:
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #next-button&gt;
@@ -1504,6 +1611,7 @@ w-accordion(
       strong.code.title5 today-button
     template(#content)
       p Customizes the "Today" button. This slot is ignored if the header slot is used.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Available parameters:
       ul
         li #[code.base-color navigate] - A function to navigate to today's date
@@ -1520,6 +1628,7 @@ w-accordion(
       strong.code.title5 weekday-heading
     template(#content)
       p Customizes the weekday headings in day, days, week, and month views.
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Available parameters:
       ul
         li #[code.base-color label] - The day label (varies based on calendar size - full, abbreviated, or single letter)
@@ -1532,9 +1641,11 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      a#slots--schedule-heading
       strong.code.title5 schedule-heading
     template(#content)
       p Customizes the schedule headings when schedules are enabled.
+      p See #[router-link(to="/examples/customization#ex--custom-schedules-headings") Custom Day Schedules Headings] example.
       p Available parameters:
       ul
         li #[code.base-color schedule] - The schedule object containing id, label, and class
@@ -1550,6 +1661,7 @@ w-accordion(
       strong.code.title5 time-cell
     template(#content)
       p Customizes the time column cells in views that display time (day, days, week).
+      p See #[router-link(to="/examples/customization#ex--slots") Simple Slots] example.
       p Available parameters:
       ul
         li #[code.base-color index] - The index of the time cell
@@ -1565,6 +1677,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      a#slots--week-number-cell
       strong.code.title5 week-number-cell
     template(#content)
       p Customizes the week number cells when the weekNumbers option is enabled.
@@ -1580,6 +1693,7 @@ w-accordion(
       strong.code.title5 cell
     template(#content)
       p Completely customizes a calendar cell. This is a powerful slot that replaces the entire cell content.
+      p See #[router-link(to="/examples/customization#ex--custom-cells") Custom Cells] example.
       p Available parameters:
       ul
         li #[code.base-color cell] - The cell object containing date information and events
@@ -1645,6 +1759,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      a#slots--now-line
       strong.code.title5 now-line
     template(#content)
       p Customizes how the current time line is displayed.
@@ -1662,6 +1777,7 @@ w-accordion(
       strong.code.title5 event
     template(#content)
       p Customizes the display of individual events. This slot is ignored if the cell-events slot is used.
+      p See #[router-link(to="/examples/customization#ex--custom-event-rendering") Custom Event Rendering] and #[router-link(to="/examples/customization#ex--events-on-month-view") Events on Month View] examples.
       p Available parameters:
       ul
         li #[code.base-color event] - The full event object
@@ -1699,6 +1815,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      a#slots--event-view
       strong.code.title5 event.[view]
     template(#content)
       p Customizes the display of events in a specific view where #[code="[view]"] is one of: day, days, week, month, year, years.<br>This slot is ignored if the cell-events slot is used.
@@ -1719,6 +1836,7 @@ w-accordion(
 
   w-accordion-item
     template(#title)
+      a#slots--event-count
       strong.code.title5 event-count
     template(#content)
       p Customizes the event count display when the #[code event-count] prop is enabled.
@@ -1754,6 +1872,7 @@ const views = [
   { label: 'year', content: 'Displays a given year\'s months in a 4x3 cell grid. Usually for a date picker.<br>No event can be displayed on this view by default - only events counter - but you could use slots to build a custom UI.' },
   { label: 'years', content: 'Displays a range of 25 years in a 5x5 cell grid. Usually for date pickers.' }
 ]
+// See examples at /examples/view#ex--views
 const expandedViews = ref([...views].fill(false))
 const expandedViewObject = ref(Array(10).fill(false))
 const expandedEventObject = ref(Array(15).fill(false))
@@ -1780,5 +1899,12 @@ const expandedSlots = ref(Array(50).fill(false))
   .default {color: #df5151;}
   [data-theme="dark"] & .type {color: #e67ad2;}
   [data-theme="dark"] & .default {color: #adcfa4;}
+
+  // Offset scroll position to prevent top bar from covering anchors.
+  // .w-accordion__item[id] {position: relative;}
+  a[id] {
+    position: absolute;
+    top: -2.8rem;
+  }
 }
 </style>
