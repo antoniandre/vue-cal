@@ -38,7 +38,7 @@ w-accordion.mt3(
       ssh-pre(language="js" :dark="store.darkMode").
         {
           id: "month",
-          title: "October 2024",
+          title: "{{ new Date().format('MMMM YYYY') }}",
           ...
         }
 
@@ -57,8 +57,8 @@ w-accordion.mt3(
           p Example:
           ssh-pre.mt0(language="js" :dark="store.darkMode").
             {
-              start: "2024-09-30T22:00:00.000Z", // Standard JS Date object.
-              end: "2024-10-31T22:59:59.999Z", // Standard JS Date object.
+              start: "{{ new Date().toISOString() }}", // Standard JS Date object.
+              end: "{{ new Date().addDays(30).toISOString() }}", // Standard JS Date object.
               ...
             }
         li
@@ -70,8 +70,8 @@ w-accordion.mt3(
           p Example:
           ssh-pre.mt0(language="js" :dark="store.darkMode").
             {
-              fullRangeStart: "2024-09-29T22:00:00.000Z", // Standard JS Date object.
-              fullRangeEnd: "2024-11-10T22:59:59.999Z", // Standard JS Date object.
+              fullRangeStart: "{{ new Date().subtractDays(1).toISOString() }}", // Standard JS Date object.
+              fullRangeEnd: "{{ new Date().addDays(42).toISOString() }}", // Standard JS Date object.
               ...
             }
 
@@ -84,9 +84,9 @@ w-accordion.mt3(
         {
           cellDates: [
             {
-              start: "2024-09-29T22:00:00.000Z", // Standard JS Date object.
-              startFormatted: "2024-09-30", // Standard JS Date object.
-              end: "2024-09-30T21:59:59.999Z" // Standard JS Date object.
+              start: "{{ new Date().toISOString() }}", // Standard JS Date object.
+              startFormatted: "{{ new Date().format() }}", // Formatted date string.
+              end: "{{ new Date().addDays(1).subtractMinutes(1).toISOString() }}" // Standard JS Date object.
             },
             ...
           ],
@@ -165,9 +165,9 @@ w-accordion.mt3(
       p Example:
       ssh-pre(language="js" :dark="store.darkMode").
         {
-          viewDate: "2024-09-30T22:00:00.000Z", // Standard JS Date object.
-          selectedDate: "2024-10-22T19:56:41.104Z", // Standard JS Date object.
-          now: "2024-10-22T19:56:41.107Z", // Standard JS Date object.
+          viewDate: "{{ new Date().toISOString() }}", // Standard JS Date object.
+          selectedDate: "{{ new Date().toISOString() }}", // Standard JS Date object.
+          now: "{{ new Date().toISOString() }}", // Standard JS Date object.
           broaderView: "year",
           containsToday: true,
           cols: 7,
@@ -441,11 +441,11 @@ w-accordion.mt2(
       div
         ssh-pre.mt2(language="js" :dark="store.darkMode").
           {
-            start: '2018-11-19 12:00', // Required.
-            end: '2018-11-19 14:00', // Required.
+            start: '{{ new Date().format("YYYY-MM-DD") }} {{ new Date().formatTime() }}', // Required.
+            end: '{{ new Date().format("YYYY-MM-DD") }} {{ new Date().addHours(2).formatTime() }}', // Required.
             // Instead of formatted dates, you can also provide JavaScript Date objects:
-            // start: new Date(2018, 11 - 1, 19, 12, 0),
-            // end: new Date(2018, 11 - 1, 19, 14, 0),
+            // start: new Date(),
+            // end: new Date().addHours(2),
             title: {String}, // Optional.
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
@@ -1046,7 +1046,7 @@ w-accordion(
       p Returns an object containing:
       ul
         li #[code id] #[code {String}]: The view ID. Possible values: 'day', 'days', 'week', 'month', 'year', 'years'.
-        li #[code title] #[code {String}]: The view computed title, e.g. "October 2024".
+        li #[code title] #[code {String}]: The view computed title, e.g. "{{ new Date().format('MMMM YYYY') }}".
         li #[code start] #[code {Date}]: The view primary start date (active days only).
         li #[code end] #[code {Date}]: The view primary end date (active days only).
         li #[code fullRangeStart] #[code {Date}]: The view extended start date including out-of-scope days.
