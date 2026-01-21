@@ -104,11 +104,7 @@ export const useConfig = (vuecal, props, attrs) => {
       year: { ...defaults.availableViews.year },
       years: { ...defaults.availableViews.years }
     }
-    // If horizontal view, flip the default rows and cols.
-    else if (props.horizontal && !views) return {
-      days: { cols: defaults.availableViews.days.rows, rows: defaults.availableViews.days.cols },
-      week: { cols: defaults.availableViews.week.rows, rows: defaults.availableViews.week.cols }
-    }
+
     if (views) {
       if (Array.isArray(views)) {
         availViews = views.reduce((obj, view) => {
@@ -135,7 +131,15 @@ export const useConfig = (vuecal, props, attrs) => {
       }
     }
     // Default views for normal layout: ['day', 'days', 'week', 'month', 'year', 'years'] }.
-    else availViews = { ...defaults.availableViews }
+    else {
+      availViews = { ...defaults.availableViews }
+      // If horizontal view, flip the default rows and cols for the days and week views.
+      if (props.horizontal) {
+        const { days, week } = defaults.availableViews
+        availViews.days = { cols: days.rows, rows: days.cols }
+        availViews.week = { cols: week.rows, rows: week.cols }
+      }
+    }
 
     return availViews
   })
