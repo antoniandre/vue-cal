@@ -77,6 +77,116 @@
     font-size: 12px;
     align-items: center;
   }
+
+  // Horizontal layout - critical structural styles.
+  // --------------------------------------------------------
+  &.vuecal--horizontal {
+    .vuecal__scrollable {
+      display: grid;
+      grid-template-columns: auto;
+      grid-template-rows: 0fr 1fr;
+    }
+
+    .vuecal__time-column {
+      flex-direction: row;
+      align-self: flex-start;
+      padding-top: 0;
+      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+    }
+
+    .vuecal__all-day-label {
+      height: 100%;
+      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      margin-top: 0;
+      margin-left: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
+      padding-top: 0;
+      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
+    }
+
+    .vuecal__time-cell {
+      width: var(--vuecal-time-cell-height);
+      height: 100%;
+      align-items: center;
+    }
+
+    .vuecal__body-wrap {
+      flex-direction: row;
+      min-width: unset;
+      min-height: 0;
+    }
+
+    .vuecal__headings {
+      flex-direction: row;
+      flex-shrink: 0;
+      height: 100%;
+      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+    }
+
+    .vuecal__body {
+      --vuecal-grid-columns: 1;
+      --vuecal-grid-rows: 7;
+
+      display: grid;
+      grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
+      grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
+      flex: 1;
+      width: 100%;
+      height: auto;
+    }
+
+    .vuecal__weekdays-headings {
+      flex-direction: column;
+    }
+
+    .vuecal__all-day {
+      flex-direction: column;
+      height: 100%;
+      width: var(--vuecal-all-day-bar-height);
+    }
+
+    .vuecal__now-line {
+      left: auto;
+      top: 0;
+      width: 0;
+      height: 100%;
+      border-top: none;
+      border-left: 1px solid;
+    }
+
+    // Schedules in horizontal mode - display as sub-rows.
+    .vuecal__schedules-headings {
+      flex-direction: column;
+      height: 100%;
+    }
+
+    .vuecal__schedule--heading {
+      flex: 1 1 0;
+      height: auto;
+    }
+
+    .vuecal__cell--has-schedules {
+      flex-direction: column;
+    }
+
+    .vuecal__schedule--cell {
+      flex-direction: row;
+      height: 100%;
+    }
+
+    // Events positioned horizontally.
+    .vuecal__event {
+      left: auto;
+      right: auto;
+      top: 0;
+      bottom: 0;
+      width: auto;
+    }
+
+    &.vuecal--view-has-time .vuecal__cell:before {
+      background: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
+      background-size: var(--vuecal-time-cell-height) 100%;
+    }
+  }
 }
 
 // Transitions.

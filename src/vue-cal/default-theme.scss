@@ -444,23 +444,13 @@
     padding-bottom: 1px;
   }
 
-  // Horizontal layout.
+  // Horizontal layout - cosmetic styles only.
+  // Structural layout styles are in index.scss.
   // ------------------------------------------------------
   &.vuecal--horizontal {
     --vuecal-all-day-bar-height: 10rem;
 
-    .vuecal__scrollable {
-      grid-template-columns: auto;
-      grid-template-rows: 0fr 1fr;
-    }
-
     .vuecal__time-column {
-      flex-direction: row;
-      align-self: flex-start;
-      padding-top: 0;
-      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
-      top: 0;
-      left: 0;
       border-right: none;
       border-bottom: 0.5px solid var(--vuecal-border-color);
       transition: padding-left 0.3s ease-in-out;
@@ -468,27 +458,13 @@
     }
 
     .vuecal__all-day-label {
-      top: 0;
-      left: 0;
-      height: 100%;
-      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
-      margin-top: 0;
-      margin-left: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
-      padding-top: 0;
-      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
       border-bottom: none;
       border-right: 0.5px solid var(--vuecal-border-color);
     }
 
-    .vuecal__time-cell {
-      width: var(--vuecal-time-cell-height);
-      height: 100%;
-      align-items: center;
-
-      label {
-        padding: 0;
-        line-height: 1;
-      }
+    .vuecal__time-cell label {
+      padding: 0;
+      line-height: 1;
     }
 
     .vuecal__scrollable--day-view.vuecal__scrollable--no-schedules .vuecal__time-cell:first-child label,
@@ -498,33 +474,7 @@
       opacity: 0.5;
     }
 
-    .vuecal__body-wrap {
-      flex-direction: row;
-      min-width: unset;
-      min-height: 0;
-    }
-
-    .vuecal__headings {
-      top: auto;
-      left: 0;
-      flex-direction: row;
-      flex-shrink: 0;
-      height: 100%;
-      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
-    }
-
-    .vuecal__body {
-      --vuecal-grid-columns: 1;
-      --vuecal-grid-rows: 7;
-
-      grid-template-columns: repeat(var(--vuecal-grid-columns), 1fr);
-      grid-template-rows: repeat(var(--vuecal-grid-rows), 1fr);
-      width: 100%;
-      height: auto;
-    }
-
     .vuecal__weekdays-headings {
-      flex-direction: column;
       text-align: right;
     }
 
@@ -534,29 +484,17 @@
       box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
     }
 
-    .vuecal__all-day {
-      flex-direction: column;
+    .vuecal__all-day-resizer {
+      bottom: 0;
+      right: 0;
       height: 100%;
-      width: var(--vuecal-all-day-bar-height);
+      width: 1px;
+      cursor: col-resize;
 
-      &-resizer {
-        bottom: 0;
-        right: 0;
-        height: 100%;
-        width: 1px;
-        cursor: col-resize;
-
-        &:before {inset: 0 -5px;}
-      }
+      &:before {inset: 0 -5px;}
     }
 
     .vuecal__now-line {
-      left: auto;
-      top: 0;
-      width: 0;
-      height: 100%;
-      border-top: none;
-      border-left: 1px solid;
       border-color: rgba(255, 0, 0, 0.6);
       z-index: 3;
 
@@ -578,11 +516,6 @@
     }
 
     .vuecal__event {
-      left: auto;
-      right: auto;
-      top: 0;
-      bottom: 0;
-      width: auto;
       height: 90%;
 
       &-resizer {
@@ -593,9 +526,12 @@
       }
     }
 
-    &.vuecal--view-has-time .vuecal__cell:before {
-      background: linear-gradient(90deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
-      background-size: var(--vuecal-time-cell-height) 100%;
+    // Schedules cosmetic styles.
+    .vuecal__schedule--heading {
+      align-items: center;
+      justify-content: flex-end;
+      padding-right: 6px;
+      box-shadow: 0 0 0 0.5px var(--vuecal-border-color) inset;
     }
   }
 

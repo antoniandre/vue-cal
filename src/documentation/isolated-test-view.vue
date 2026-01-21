@@ -6,6 +6,7 @@
     w-button(@click="addEventFromVueCal") Add event
     w-button(@click="deleteEvent") Delete event
     w-button(@click="mainVuecalConfig.horizontal = !mainVuecalConfig.horizontal") Horizontal
+    w-button(@click="mainVuecalConfig.theme = mainVuecalConfig.theme ? false : 'default'") Toggle Theme
     w-button(@click="vueCalRef.view.switch('day', new Date())") Switch to today
 
   div
@@ -83,6 +84,7 @@ const mainVuecalConfig = reactive({
   locale: ref(''),
   startWeekOnSunday: ref(false),
   todayButton: ref(true),
+  theme: ref('default'),
   xs: ref(false),
   sm: ref(false),
   // timeFrom: 8 * 60,
@@ -275,5 +277,15 @@ const generateRandomEvents = (startDate, endDate) => {
   // Global.
   .w-app {margin: 0;padding: 0;}
   footer {display: none !important;}
+
+  // Basic styles for testing without theme.
+  .vuecal:not(.vuecal--default-theme) {
+    height: 500px;
+    border: 1px solid #ddd;
+    --vuecal-border-color: #ddd;
+    --vuecal-primary-color: #1976D2;
+    --vuecal-base-color: #000;
+    --vuecal-contrast-color: #fff;
+  }
 }
 </style>
