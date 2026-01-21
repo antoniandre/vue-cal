@@ -136,6 +136,13 @@
 
     .vuecal__weekdays-headings {
       flex-direction: column;
+      width: var(--vuecal-weekday-bar-height);
+      flex-shrink: 0;
+    }
+
+    .vuecal__schedules-headings {
+      width: var(--vuecal-schedules-bar-height);
+      flex-shrink: 0;
     }
 
     .vuecal__all-day {
