@@ -19,6 +19,7 @@
   ],
   "exports": {
     ".": {
+      "types": "./dist/vue-cal.d.ts",
       "import": "./dist/vue-cal.es.js",
       "require": "./dist/vue-cal.cjs.js"
     },
