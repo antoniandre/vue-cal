@@ -61,6 +61,7 @@ const timeCells = computed(() => {
   background-color: var(--vuecal-secondary-color);
   position: sticky;
   left: 0;
+  top: 0; // For horizontal layout.
   z-index: 5; // Above the cells, headings bar and hovered events.
   border-right: 0.5px solid var(--vuecal-border-color);
 }
@@ -82,6 +83,7 @@ const timeCells = computed(() => {
   border-bottom: 1px solid var(--vuecal-border-color);
   z-index: 1;
 }
+.vuecal--horizontal .vuecal__all-day-label {position: relative;}
 
 .vuecal__time-cell {
   position: relative;
