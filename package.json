@@ -49,7 +49,11 @@
     "build-bundle": "BUNDLE=true vite build && cp src/types/vue-cal.ts dist/vue-cal.d.ts",
     "preview": "vite preview --base /vue-cal/",
     "lint": "vite lint",
-    "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag"
+    "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag",
+    "test:e2e": "cypress open",
+    "test:e2e:headless": "cypress run",
+    "test:component": "cypress open --component",
+    "test:all": "cypress run --component && cypress run"
   },
   "devDependencies": {
     "@babel/core": "^7.28.5",
@@ -57,6 +61,7 @@
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^5.2.4",
     "autoprefixer": "^10.4.23",
+    "cypress": "^15.9.0",
     "eslint": "^8.57.1",
     "pinia": "^3.0.4",
     "postcss": "^8.5.6",

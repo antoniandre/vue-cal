@@ -42,6 +42,11 @@ export default defineConfig({
       __VUE_PROD_HYDRATION_MISMATCH_DETAILS__: false
     }
   },
+  server: {
+    host: 'localhost',
+    port: 5173,
+    strictPort: true
+  },
   plugins: [
     vue({
       template: {

@@ -1,0 +1,64 @@
+{
+  "singleDayEvents": [
+    {
+      "start": "2024-01-15 10:00",
+      "end": "2024-01-15 12:00",
+      "title": "Morning Meeting",
+      "content": "Team sync",
+      "class": "event-meeting"
+    },
+    {
+      "start": "2024-01-15 14:00",
+      "end": "2024-01-15 16:00",
+      "title": "Afternoon Workshop",
+      "content": "Training session"
+    }
+  ],
+  "multiDayEvents": [
+    {
+      "start": "2024-01-15 09:00",
+      "end": "2024-01-17 18:00",
+      "title": "Conference",
+      "content": "Annual conference"
+    }
+  ],
+  "allDayEvents": [
+    {
+      "start": "2024-01-15",
+      "end": "2024-01-15",
+      "title": "Holiday",
+      "allDay": true
+    }
+  ],
+  "overlappingEvents": [
+    {
+      "start": "2024-01-15 10:00",
+      "end": "2024-01-15 12:00",
+      "title": "Event 1"
+    },
+    {
+      "start": "2024-01-15 10:30",
+      "end": "2024-01-15 13:00",
+      "title": "Event 2"
+    },
+    {
+      "start": "2024-01-15 11:00",
+      "end": "2024-01-15 12:30",
+      "title": "Event 3"
+    }
+  ],
+  "scheduleEvents": [
+    {
+      "start": "2024-01-15 10:00",
+      "end": "2024-01-15 12:00",
+      "title": "Room A Meeting",
+      "schedule": 1
+    },
+    {
+      "start": "2024-01-15 14:00",
+      "end": "2024-01-15 16:00",
+      "title": "Room B Meeting",
+      "schedule": 2
+    }
+  ]
+}
