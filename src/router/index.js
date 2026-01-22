@@ -103,6 +103,11 @@ const routes = [
     component: () => import('@/documentation/isolated-test-view.vue')
   },
   {
+    path: '/test-comprehensive',
+    name: 'test-comprehensive',
+    component: () => import('@/documentation/comprehensive-test-view.vue')
+  },
+  {
     path: '/:pathMatch(.*)',
     name: 'not-found',
     component: () => import('@/documentation/404.vue'),
