@@ -1,13 +1,12 @@
 .vuecal {
   --vuecal-grid-columns: 7; // Default value, overridden dynamically on view change.
   --vuecal-grid-rows: 6; // Default value, overridden dynamically on view change.
-  --vuecal-weekday-bar-height: 1.7rem;
-  --vuecal-schedules-bar-height: 1.7rem;
-  --vuecal-all-day-bar-height: 2rem;
-  --vuecal-time-cell-height: 50px; // Default value, can be overridden from props.
-  // When there are too many day cells to fit in the view, setting a min cell width will help
-  // visualizing and a horizontal scrollbar will be added.
-  --vuecal-min-cell-width: 0;
+  // Size variables: applied as height in vertical mode, width in horizontal mode.
+  --vuecal-weekday-bar-size: 1.7rem;
+  --vuecal-schedules-bar-size: 1.7rem;
+  --vuecal-all-day-bar-size: 2rem;
+  --vuecal-time-cell-size: 50px; // Default value, can be overridden from props.
+  // When there are too many day cells to fit in the view, setting a min cell size will help
   --vuecal-transition-duration: 0.25s;
 
   display: flex;
@@ -15,8 +14,8 @@
   user-select: none;
   z-index: 0; // Default minimal z-index to at least have visible cells :before.
 
-  &--date-picker {--vuecal-weekday-bar-height: 1.3rem;}
-  &--timeless {--vuecal-all-day-bar-height: 0px;}
+  &--date-picker {--vuecal-weekday-bar-size: 1.3rem;}
+  &--timeless {--vuecal-all-day-bar-size: 0px;}
 
   &, *, :before, :after {box-sizing: border-box;}
   .grow {flex-grow: 1;}
@@ -25,7 +24,7 @@
     display: flex;
     flex-direction: column;
     flex-grow: 1;
-    // Crucial for the content not to overflow when using --vuecal-min-cell-width or --vuecal-min-schedule-width.
+    // Crucial for the content not to overflow when using min-cell/schedule width/height variables.
     min-width: 0;
   }
 
@@ -50,7 +49,7 @@
   &__week-numbers {
     display: flex;
     flex-direction: column;
-    padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+    padding-top: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
   }
   &__week-number {
     display: flex;
@@ -70,7 +69,7 @@
     overflow: hidden;
   }
   &__scrollable--days-view &__schedule,
-  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-width, 0);}
+  &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-size, 0);}
 
   &__schedules-headings {display: flex;}
   &__schedule--heading {
@@ -91,20 +90,20 @@
       flex-direction: row;
       align-self: flex-start;
       padding-top: 0;
-      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      padding-left: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
     }
 
     .vuecal__all-day-label {
       height: 100%;
-      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      width: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
       margin-top: 0;
-      margin-left: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
+      margin-left: calc((var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size)) * -1);
       padding-top: 0;
-      padding-left: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
+      padding-left: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size));
     }
 
     .vuecal__time-cell {
-      width: var(--vuecal-time-cell-height);
+      width: var(--vuecal-time-cell-size);
       height: 100%;
       align-items: center;
     }
@@ -119,7 +118,7 @@
       flex-direction: row;
       flex-shrink: 0;
       height: 100%;
-      width: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+      width: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
     }
 
     .vuecal__body {
@@ -136,19 +135,14 @@
 
     .vuecal__weekdays-headings {
       flex-direction: column;
-      width: var(--vuecal-weekday-bar-height);
-      flex-shrink: 0;
-    }
-
-    .vuecal__schedules-headings {
-      width: var(--vuecal-schedules-bar-height);
+      width: var(--vuecal-weekday-bar-size);
       flex-shrink: 0;
     }
 
     .vuecal__all-day {
       flex-direction: column;
       height: 100%;
-      width: var(--vuecal-all-day-bar-height);
+      width: var(--vuecal-all-day-bar-size);
     }
 
     .vuecal__now-line {
@@ -190,8 +184,8 @@
     }
 
     &.vuecal--view-has-time .vuecal__cell:before {
-      background: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-height)) 0 1px;
-      background-size: var(--vuecal-time-cell-height) 100%;
+      background: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
+      background-size: var(--vuecal-time-cell-size) 100%;
     }
   }
 }

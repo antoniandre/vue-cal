@@ -33,10 +33,10 @@ const timeCells = computed(() => {
 
     let cellHeight = null
     // If last cell, check if the cell is full or truncated.
-    // E.g. timeStep = 1h, timeTo = 19h30. -> The last cell will be --vuecal-time-cell-height * 0.5%.
+    // E.g. timeStep = 1h, timeTo = 19h30. -> The last cell will be --vuecal-time-cell-size * 0.5%.
     if (isLastCell) {
       const percentageOfFullCell = (config.timeTo - i) / config.timeStep
-      cellHeight = `calc(var(--vuecal-time-cell-height) * ${percentageOfFullCell})`
+      cellHeight = `calc(var(--vuecal-time-cell-size) * ${percentageOfFullCell})`
     }
 
     cells.push({
@@ -57,7 +57,7 @@ const timeCells = computed(() => {
   display: flex;
   flex-direction: column;
   align-self: flex-start; // Fill height.
-  padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+  padding-top: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
   background-color: var(--vuecal-secondary-color);
   position: sticky;
   left: 0;
@@ -71,9 +71,9 @@ const timeCells = computed(() => {
   top: 0;
   left: 0;
   width: 100%;
-  height: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
-  margin-top: calc((var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height)) * -1);
-  padding-top: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height));
+  height: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
+  margin-top: calc((var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size)) * -1);
+  padding-top: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,14 +83,13 @@ const timeCells = computed(() => {
   border-bottom: 1px solid var(--vuecal-border-color);
   z-index: 1;
 }
-.vuecal--horizontal .vuecal__all-day-label {position: relative;}
 
 .vuecal__time-cell {
   position: relative;
   display: flex;
   flex: 1 0 auto;
   font-size: 0.85em;
-  height: var(--vuecal-time-cell-height);
+  height: var(--vuecal-time-cell-size);
 
   &:before {
     content: '';

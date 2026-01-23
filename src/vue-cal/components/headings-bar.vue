@@ -113,7 +113,7 @@ const allDayResizer = {
 
     // Get the current CSS variable value in pixels. Using a temp element to properly
     // convert units like rem/em to pixels, preventing jumps when resizing starts.
-    const cssValue = getComputedStyle($vuecalEl.value).getPropertyValue('--vuecal-all-day-bar-height')
+    const cssValue = getComputedStyle($vuecalEl.value).getPropertyValue('--vuecal-all-day-bar-size')
     const tempEl = document.createElement('div')
     tempEl.style.position = 'absolute'
     tempEl.style.visibility = 'hidden'
@@ -142,7 +142,7 @@ const allDayResizer = {
     // Minimum height/width of 20px.
     const newSize = Math.max(20, this[isHzl ? 'initialWidth' : 'initialHeight'].value + delta)
 
-    $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-height', `${newSize}px`)
+    $vuecalEl.value?.style.setProperty('--vuecal-all-day-bar-size', `${newSize}px`)
   },
 
   // Mouse event handlers.
@@ -178,11 +178,12 @@ onBeforeUnmount(() => {
   &__headings {
     position: sticky;
     top: 0;
+    left: 0; // For horizontal layout.
     display: flex;
     flex-direction: column;
     flex-shrink: 0;
     z-index: 4; // Keep it above the now-line and hovered events.
-    height: calc(var(--vuecal-weekday-bar-height) + var(--vuecal-schedules-bar-height) + var(--vuecal-all-day-bar-height));
+    height: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
   }
@@ -195,7 +196,7 @@ onBeforeUnmount(() => {
     background-color: inherit;
 
     .vuecal__scrollable--days-view &,
-    .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+    .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
   }
 
   &__schedules-headings {display: flex;}
@@ -204,7 +205,7 @@ onBeforeUnmount(() => {
   &__all-day {
     position: relative;
     display: flex;
-    height: var(--vuecal-all-day-bar-height);
+    height: var(--vuecal-all-day-bar-size);
   }
   &__all-day-cell {
     display: flex;

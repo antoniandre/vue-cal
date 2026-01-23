@@ -9,8 +9,9 @@
   --vuecal-event-border-color: currentColor;
   --vuecal-border-radius: 6px;
   --vuecal-height: 500px;
-  --vuecal-min-schedule-width: 0;
-  --vuecal-min-cell-width: 1em; // Default to minimum 1 letter in weekdays headers.
+  // Default to minimum 1 letter in weekdays headers.
+  // Don't use em units here, as it could result in different values when applied to the different elements.
+  --vuecal-min-cell-size: 1rem;
 
   position: relative;
   border-radius: var(--vuecal-border-radius);
@@ -134,9 +135,9 @@
     &--row {grid-template-columns: 0fr 1fr;}
 
     // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
-    &--no-schedules {--vuecal-schedules-bar-height: 0px;}
-    &--day-view {--vuecal-weekday-bar-height: 0px;}
-    &--month-view, &--no-all-day-bar {--vuecal-all-day-bar-height: 0px;}
+    &--no-schedules {--vuecal-schedules-bar-size: 0px;}
+    &--day-view {--vuecal-weekday-bar-size: 0px;}
+    &--month-view, &--no-all-day-bar {--vuecal-all-day-bar-size: 0px;}
     &--year-view, &--years-view {overflow: hidden;} // Useful while transitioning.
   }
   .vuecal__scrollable--day-view .vuecal__body,
@@ -448,7 +449,7 @@
   // Structural layout styles are in index.scss.
   // ------------------------------------------------------
   &.vuecal--horizontal {
-    --vuecal-all-day-bar-height: 10rem;
+    --vuecal-all-day-bar-size: 10rem;
 
     .vuecal__time-column {
       border-right: none;
