@@ -81,7 +81,7 @@
               input(type="checkbox" v-model="config.weekNumbers" data-testid="week-numbers")
               | weekNumbers
 
-      //- Display Props
+      //- Display Props.
       section.control-section
         h3 Display Props
         .controls
@@ -116,7 +116,7 @@
               input(type="checkbox" v-model="config.horizontal" data-testid="horizontal")
               | horizontal
 
-      //- Time Props
+      //- Time Props.
       section.control-section
         h3 Time Props
         .controls
@@ -155,7 +155,7 @@
             label timeFormat:
             input(type="text" v-model="config.timeFormat" placeholder="HH:mm" data-testid="time-format")
 
-      //- Event Props
+      //- Event Props.
       section.control-section
         h3 Event Props
         .controls
@@ -197,7 +197,7 @@
             label snapToInterval (minutes):
             input(type="number" v-model.number="config.snapToInterval" min="0" max="60" data-testid="snap-to-interval")
 
-      //- Weekday Props
+      //- Weekday Props.
       section.control-section
         h3 Weekday Props
         .controls
@@ -224,7 +224,7 @@
             label viewDayOffset:
             input(type="number" v-model.number="config.viewDayOffset" min="0" max="6" data-testid="view-day-offset")
 
-      //- Schedules & Special Hours
+      //- Schedules & Special Hours.
       section.control-section
         h3 Schedules & Special Hours
         .controls
@@ -242,16 +242,16 @@
               input(type="checkbox" v-model="specialHoursEnabled" data-testid="special-hours-enabled")
               | Enable Special Hours
 
-      //- Event Actions
+      //- Event Actions.
       section.control-section
         h3 Event Actions
         .controls
-          button(@click="addEvent" data-testid="add-event-btn") Add Random Event
-          button(@click="addAllDayEvent" data-testid="add-all-day-event-btn") Add All-Day Event
-          button(@click="clearEvents" data-testid="clear-events-btn") Clear All Events
-          button(@click="loadSampleEvents" data-testid="load-sample-events-btn") Load Sample Events
+          w-button(block @click="addEvent" data-testid="add-event-btn") Add Random Event
+          w-button(block @click="addAllDayEvent" data-testid="add-all-day-event-btn") Add All-Day Event
+          w-button(block @click="clearEvents" data-testid="clear-events-btn") Clear All Events
+          w-button(block @click="loadSampleEvents" data-testid="load-sample-events-btn") Load Sample Events
 
-  .calendar-container
+  .calendar-wrap
     vue-cal(
       ref="vueCalRef"
       v-model:view="config.view"
@@ -282,7 +282,7 @@ addDatePrototypes()
 
 const vueCalRef = ref(null)
 
-// Config state
+// Config state.
 const config = reactive({
   view: 'week',
   selectedDate: null,
@@ -328,20 +328,20 @@ const config = reactive({
   events: []
 })
 
-// Helper states
+// Helper states.
 const editableEventsEnabled = ref(false)
 const eventCountEnabled = ref(false)
 const schedulesEnabled = ref(false)
 const scheduleCount = ref(3)
 const specialHoursEnabled = ref(false)
 
-// Date inputs (for easier date picking)
+// Date inputs (for easier date picking).
 const selectedDateInput = ref('')
 const viewDateInput = ref(new Date().toISOString().split('T')[0])
 const minDateInput = ref('')
 const maxDateInput = ref('')
 
-// Watch date inputs
+// Watch date inputs.
 watch(selectedDateInput, (val) => {
   config.selectedDate = val ? new Date(val) : null
 })
@@ -358,30 +358,29 @@ watch(maxDateInput, (val) => {
   config.maxDate = val ? new Date(val) : ''
 })
 
-// Watch editable events
+// Watch editable events.
 watch(editableEventsEnabled, (val) => {
   config.editableEvents = val ? { title: true, drag: true, resize: true, delete: true, create: true } : false
 })
 
-// Watch event count
+// Watch event count.
 watch(eventCountEnabled, (val) => {
   config.eventCount = val
 })
 
-// Watch schedules
+// Watch schedules.
 watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
   if (enabled) {
     config.schedules = Array.from({ length: count }, (_, i) => ({
       label: `Schedule ${i + 1}`,
       class: `schedule-${i + 1}`
     }))
-  } else {
-    config.schedules = []
   }
+  else config.schedules = []
 })
 
-// Watch special hours
-watch(specialHoursEnabled, (enabled) => {
+// Watch special hours.
+watch(specialHoursEnabled, enabled => {
   if (enabled) {
     config.specialHours = {
       mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
@@ -391,12 +390,11 @@ watch(specialHoursEnabled, (enabled) => {
       ],
       fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
     }
-  } else {
-    config.specialHours = {}
   }
+  else config.specialHours = {}
 })
 
-// Computed calendar props
+// Computed calendar props.
 const calendarProps = computed(() => {
   const props = { ...config }
   // Remove helper properties
@@ -406,66 +404,31 @@ const calendarProps = computed(() => {
   return props
 })
 
-// Event handlers
-const onReady = (event) => {
-  console.log('ready', event)
-}
-
-const onViewChange = (view) => {
-  console.log('view-change', view)
-}
-
-const onEventCreate = (event) => {
+// Event handlers.
+const onReady = event => console.log('ready', event)
+const onViewChange = view => console.log('view-change', view)
+const onEventCreate = event => {
   console.log('event-create', event)
   config.events.push(event)
 }
+const onEventClick = event => console.log('event-click', event)
+const onEventDrag = event => console.log('event-drag', event)
+const onEventDragEnd = event => console.log('event-drag-end', event)
+const onEventDrop = event => console.log('event-drop', event)
+const onEventResizeStart = event => console.log('event-resize-start', event)
+const onEventResize = event => console.log('event-resize', event)
+const onEventResizeEnd = event => console.log('event-resize-end', event)
+const onCellClick = event => console.log('cell-click', event)
+const onCellDrag = event => console.log('cell-drag', event)
+const onCellDragEnd = event => console.log('cell-drag-end', event)
 
-const onEventClick = (event) => {
-  console.log('event-click', event)
-}
-
-const onEventDrag = (event) => {
-  console.log('event-drag', event)
-}
-
-const onEventDragEnd = (event) => {
-  console.log('event-drag-end', event)
-}
-
-const onEventDrop = (event) => {
-  console.log('event-drop', event)
-}
-
-const onEventResizeStart = (event) => {
-  console.log('event-resize-start', event)
-}
-
-const onEventResize = (event) => {
-  console.log('event-resize', event)
-}
-
-const onEventResizeEnd = (event) => {
-  console.log('event-resize-end', event)
-}
-
-const onCellClick = (event) => {
-  console.log('cell-click', event)
-}
-
-const onCellDrag = (event) => {
-  console.log('cell-drag', event)
-}
-
-const onCellDragEnd = (event) => {
-  console.log('cell-drag-end', event)
-}
-
-// Event actions
+// Event actions.
 const addEvent = () => {
+  // Create event TODAY so it's visible in current view (for testing).
   const now = new Date()
-  const start = new Date(now.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000)
-  start.setMinutes(0, 0, 0)
-  const end = new Date(start.getTime() + (1 + Math.floor(Math.random() * 3)) * 60 * 60 * 1000)
+  const start = new Date(now)
+  start.setHours(10 + Math.floor(Math.random() * 6), 0, 0, 0) // Random hour between 10am and 3pm.
+  const end = new Date(start.getTime() + (1 + Math.floor(Math.random() * 2)) * 60 * 60 * 1000)
 
   const event = {
     title: `Event ${config.events.length + 1}`,
@@ -475,7 +438,7 @@ const addEvent = () => {
     class: ['event-class-' + (Math.floor(Math.random() * 3) + 1)][0]
   }
 
-  if (config.schedules.length > 0) {
+  if (config.schedules.length) {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
@@ -483,8 +446,9 @@ const addEvent = () => {
 }
 
 const addAllDayEvent = () => {
+  // Create all-day event TODAY so it's visible in current view (for testing).
   const now = new Date()
-  const start = new Date(now.getTime() + Math.random() * 7 * 24 * 60 * 60 * 1000)
+  const start = new Date(now)
   start.setHours(0, 0, 0, 0)
   const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1)
 
@@ -496,7 +460,7 @@ const addAllDayEvent = () => {
     class: 'all-day-event'
   }
 
-  if (config.schedules.length > 0) {
+  if (config.schedules.length) {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
@@ -511,7 +475,7 @@ const loadSampleEvents = () => {
   const now = new Date()
   const events = []
 
-  // Add 10 regular events
+  // Add 10 regular events.
   for (let i = 0; i < 10; i++) {
     const dayOffset = Math.floor(Math.random() * 7) - 3
     const hourOffset = Math.floor(Math.random() * 10) + 8
@@ -528,14 +492,14 @@ const loadSampleEvents = () => {
       class: `event-${(i % 3) + 1}`
     }
 
-    if (config.schedules.length > 0) {
+    if (config.schedules.length) {
       event.schedule = (i % config.schedules.length) + 1
     }
 
     events.push(event)
   }
 
-  // Add 3 all-day events if enabled
+  // Add 3 all-day events if enabled.
   if (config.allDayEvents) {
     for (let i = 0; i < 3; i++) {
       const dayOffset = Math.floor(Math.random() * 7) - 3
@@ -552,9 +516,7 @@ const loadSampleEvents = () => {
         class: 'all-day-event'
       }
 
-      if (config.schedules.length > 0) {
-        event.schedule = (i % config.schedules.length) + 1
-      }
+      if (config.schedules.length) event.schedule = (i % config.schedules.length) + 1
 
       events.push(event)
     }
@@ -563,196 +525,144 @@ const loadSampleEvents = () => {
   config.events = events
 }
 
-// Initialize with some sample events
+// Initialize with some sample events.
 setTimeout(() => {
   loadSampleEvents()
 }, 500)
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+.page--test-comprehensive aside {display: none;}
+.page--test-comprehensive main {
+  padding-left: 0;
+  border: none;
+}
+
 .comprehensive-test-view {
   display: flex;
   height: 100vh;
   overflow: hidden;
-}
 
-.controls-panel {
-  width: 350px;
-  padding: 20px;
-  background: #f5f5f5;
-  overflow-y: auto;
-  border-right: 1px solid #ddd;
-
-  h2 {
-    margin: 0 0 5px 0;
-    font-size: 20px;
-  }
-
-  .subtitle {
-    margin: 0 0 20px 0;
-    font-size: 12px;
-    color: #666;
-  }
-}
-
-.control-sections {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.control-section {
-  h3 {
-    margin: 0 0 10px 0;
-    font-size: 16px;
-    padding-bottom: 5px;
-    border-bottom: 2px solid #1976D2;
-  }
-}
-
-.controls {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.control {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-
-  label {
-    font-size: 13px;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 5px;
-
-    input[type="checkbox"] {
-      margin: 0;
-    }
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    padding: 5px 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 13px;
-
-    &:focus {
-      outline: none;
-      border-color: #1976D2;
-    }
-  }
-
-  button {
-    padding: 8px 12px;
-    background: #1976D2;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 13px;
-
-    &:hover {
-      background: #1565C0;
-    }
-
-    &:active {
-      background: #0D47A1;
-    }
-  }
-}
-
-.checkbox-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  padding: 5px;
-  background: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-
-  label {
-    font-size: 12px;
-    font-weight: normal;
-  }
-}
-
-.calendar-container {
-  flex: 1;
-  padding: 20px;
-  overflow: auto;
-
-  .vuecal {
-    height: calc(100vh - 40px);
-  }
-}
-
-// Dark mode support
-@media (prefers-color-scheme: dark) {
   .controls-panel {
-    background: #2a2a2a;
-    border-right-color: #444;
+    width: 350px;
+    padding: 20px;
+    background: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
+    overflow-y: auto;
+    border-right: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
 
-    h2, h3 {
-      color: #fff;
+    h2 {
+      margin: 0 0 5px 0;
+      font-size: 20px;
     }
 
     .subtitle {
-      color: #aaa;
+      margin: 0 0 20px 0;
+      font-size: 12px;
+      color: #666;
     }
   }
 
+  .control-sections {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .control-section h3 {
+    margin: 0 0 10px 0;
+    font-size: 16px;
+    border-bottom: 2px solid #1976D2;
+  }
+
+  .controls {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .w-button {align-self: stretch;}
+
   .control {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+
     label {
-      color: #ddd;
+      font-size: 13px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+
+      input[type="checkbox"] {margin: 0;}
     }
 
     input[type="text"],
     input[type="number"],
     input[type="date"],
     select {
-      background: #333;
-      border-color: #555;
-      color: #ddd;
+      padding: 5px 8px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 13px;
+
+      &:focus {
+        outline: none;
+        border-color: #1976D2;
+      }
+    }
+
+    button {
+      padding: 8px 12px;
+      background: #1976D2;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 13px;
+
+      &:hover {background: #1565C0;}
+      &:active {background: #0D47A1;}
     }
   }
 
   .checkbox-group {
-    background: #333;
-    border-color: #555;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding: 5px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
 
     label {
-      color: #ddd;
+      font-size: 12px;
+      font-weight: normal;
     }
   }
-}
 
-// Event classes for testing
-:deep(.event-1) {
-  background: #42A5F5;
-}
+  .calendar-wrap {
+    flex: 1;
+    margin-left: 20px;
+    overflow: auto;
 
-:deep(.event-2) {
-  background: #66BB6A;
-}
+    .vuecal {height: 100%;}
+  }
 
-:deep(.event-3) {
-  background: #FFA726;
-}
 
-:deep(.all-day-event) {
-  background: #AB47BC;
-}
+  // Event classes for testing.
+  .vuecal__event.event-1 {background: #42A5F5;}
+  .vuecal__event.event-2 {background: #66BB6A;}
+  .vuecal__event.event-3 {background: #FFA726;}
+  .vuecal__event.all-day-event {background: #AB47BC;}
 
-:deep(.special-mon),
-:deep(.special-wed-am),
-:deep(.special-wed-pm),
-:deep(.special-fri) {
-  background: rgba(255, 235, 59, 0.2);
+  .vuecal__special-hours.special-mon,
+  .vuecal__special-hours.special-wed-am,
+  .vuecal__special-hours.special-wed-pm,
+  .vuecal__special-hours.special-fri {
+    background: rgba(255, 235, 59, 0.2);
+  }
 }
 </style>

@@ -126,9 +126,12 @@ aside {
 
 main {
   padding-top: 65px; // 40 for the top bar height, + arbitrary 25 for spacing out.
-  padding-left: 4rem;
-  border-left: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
   flex-grow: 1;
+
+  aside ~ & {
+    padding-left: 4rem;
+    border-left: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 20%, transparent);
+  }
 }
 
 .page-container {
