@@ -190,7 +190,7 @@ onBeforeUnmount(() => {
     .vuecal--horizontal & {
       flex-direction: row;
       width: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
-      height: fit-content;
+      height: 100%;
     }
   }
 
@@ -203,6 +203,7 @@ onBeforeUnmount(() => {
 
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
+    .vuecal--horizontal .vuecal__scrollable--day-view &,
     .vuecal--horizontal .vuecal__scrollable--days-view &,
     .vuecal--horizontal .vuecal__scrollable--week-view & {
       min-width: 0;
