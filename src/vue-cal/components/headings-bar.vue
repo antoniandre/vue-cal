@@ -13,7 +13,7 @@
         :date="day.date")
         span.vuecal__weekday-day {{ day[dayLabelSize] }}
         strong.vuecal__weekday-date(v-if="!view.isMonth") {{ day.dateNumber }}
-  .vuecal__schedules-headings.w-flex.grow(v-if="config.schedules")
+  .vuecal__schedules-headings(v-if="config.schedules")
     template(v-for="(day, i) in weekDays" :key="i")
       template(v-for="(schedule, j) in config.schedules" :key="j")
         .vuecal__schedule.vuecal__schedule--heading(
@@ -24,7 +24,7 @@
           v-else
           :class="schedule.class"
           v-html="schedule.label")
-  .vuecal__all-day.w-flex.grow(v-if="config.allDayEvents")
+  .vuecal__all-day(v-if="config.allDayEvents")
     cell.vuecal__all-day-cell(
       v-for="(day, i) in weekDays"
       :key="i"
@@ -186,6 +186,12 @@ onBeforeUnmount(() => {
     height: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
+
+    .vuecal--horizontal & {
+      flex-direction: row;
+      width: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
+      height: fit-content;
+    }
   }
 
   &__weekdays-headings {display: flex;}
@@ -197,14 +203,17 @@ onBeforeUnmount(() => {
 
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
+    .vuecal--horizontal .vuecal__scrollable--days-view &,
+    .vuecal--horizontal .vuecal__scrollable--week-view & {
+      min-width: 0;
+      min-height: var(--vuecal-min-cell-size, 0px);
+    }
   }
-
-  &__schedules-headings {display: flex;}
-  &__schedule-heading {height: 12px;}
 
   &__all-day {
     position: relative;
     display: flex;
+    flex-grow: 1;
     height: var(--vuecal-all-day-bar-size);
   }
   &__all-day-cell {

@@ -26,6 +26,13 @@
     flex-grow: 1;
     // Crucial for the content not to overflow when using min-cell/schedule width/height variables.
     min-width: 0;
+    width: max(calc(var(--vuecal-schedules-count) * var(--vuecal-min-schedule-size) * var(--vuecal-grid-columns)), 100%);
+
+    .vuecal--horizontal & {
+      flex-direction: row;
+      width: auto;
+      height: max(calc(var(--vuecal-schedules-count) * var(--vuecal-min-schedule-size) * var(--vuecal-grid-rows)), 100%);
+    }
   }
 
   &__scrollable-wrap {
@@ -59,6 +66,11 @@
     width: 1.4em;
   }
 
+  &__schedules-headings {
+    display: flex;
+    flex-grow: 1;
+  }
+
   // Shared in headers and cells.
   &__schedule {
     position: relative;
@@ -70,12 +82,6 @@
   }
   &__scrollable--days-view &__schedule,
   &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-size, 0);}
-
-  &__schedules-headings {display: flex;}
-  &__schedule--heading {
-    font-size: 12px;
-    align-items: center;
-  }
 
   // Horizontal layout - critical structural styles.
   // --------------------------------------------------------

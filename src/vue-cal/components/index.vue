@@ -139,7 +139,8 @@ const wrapperClasses = computed(() => ({
 }))
 
 const wrapperStyles = computed(() => ({
-  '--vuecal-time-cell-size': config.timeCellHeight && `${config.timeCellHeight}px`
+  '--vuecal-time-cell-size': config.timeCellHeight && `${config.timeCellHeight}px`,
+  '--vuecal-schedules-count': config.schedules?.length
 }))
 
 const scrollableElClasses = computed(() => ({

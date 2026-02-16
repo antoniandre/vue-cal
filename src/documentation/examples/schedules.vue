@@ -129,6 +129,8 @@ example(title="Schedules & Schedule Events" anchor="schedules")
       | By default the body of the calendar will fit the container.#[br]
       | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
       | body width and it will become scrollable horizontally.
+      br
+      | It's important to note that the layout could render unexpectedly if the #[span.code min-cell-size] is defined in em units or similar font-scale units, as it could be different when applied to the different elements.
       //- ul
         li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
         li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.

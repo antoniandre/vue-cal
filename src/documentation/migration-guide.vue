@@ -155,9 +155,9 @@ ul
   li #[code editableEvents.title] was removed: you can easily edit the title of an event with custom code using slots, or in a dialog.
   li #[code snapToTime] was renamed #[code snapToInterval].
   li #[code cellClickHold] was removed: can be done externally if needed.
-  li #[code minCellWidth] was moved to a CSS variable: #[code --vuecal-min-cell-width: 0;].
-  li #[code minSplitWidth] was renamed #[code min-schedule-width] and moved to a CSS variable: #[code --vuecal-min-schedule-width: 0;]
-  li #[code allDayBarHeight] was moved to a CSS variable: #[code --vuecal-all-day-bar-height].
+  li #[code minCellWidth] was moved to a CSS variable: #[code --vuecal-min-cell-size: 0px;]. Note that even with 0, the unit is still required to work with CSS max calculations.
+  li #[code minSplitWidth] was renamed #[code min-schedule-size] and moved to a CSS variable: #[code --vuecal-min-schedule-size: 0px;]. Note that even with 0, the unit is still required to work with CSS max calculations.
+  li #[code allDayBarHeight] was moved to a CSS variable: #[code --vuecal-all-day-bar-size].
   li #[code showWeekNumbers] was renamed #[code weekNumbers].
   li #[code showAllDayEvents] was renamed #[code allDayEvents].
   li #[code showTimeInCells] was removed: if you need to render time in cells, you can use cells slots.

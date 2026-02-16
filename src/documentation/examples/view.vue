@@ -285,8 +285,8 @@ const exCssControl = reactive({
     { name: '--vuecal-event-border-color', value: 'currentColor', type: 'color' },
     { name: '--vuecal-border-radius', value: 6, type: 'number', unit: 'px' },
     { name: '--vuecal-height', value: 500, type: 'number', unit: 'px' },
-    { name: '--vuecal-min-schedule-width', value: 0, type: 'number', unit: 'px' },
-    { name: '--vuecal-min-cell-width', value: 0, type: 'number', unit: 'px' },
+    { name: '--vuecal-min-schedule-size', value: 0, type: 'number', unit: 'px' },
+    { name: '--vuecal-min-cell-size', value: 0, type: 'number', unit: 'px' },
     { name: '--vuecal-transition-duration', value: 0.25, type: 'number', unit: 's' }
   ],
   style: computed(() => exCssControl.variables.map(v => `${v.name}: ${v.value}${v.unit || ''};`).join('\n'))

@@ -716,7 +716,27 @@ onBeforeUnmount(async () => {
   // touch-action: none; // Prevents browser default touch handling.
 
   .vuecal__scrollable--days-view &,
-  .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-width, 0);}
+  .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
+  // Min-size overrides for horizontal layout (min-height instead of min-width in vertical).
+  .vuecal--horizontal .vuecal__scrollable--days-view &,
+  .vuecal--horizontal .vuecal__scrollable--week-view & {
+    min-width: 0;
+    min-height: var(--vuecal-min-cell-size, 0px);
+  }
+  .vuecal__scrollable--days-view &--has-schedules,
+  .vuecal__scrollable--week-view &--has-schedules {
+    min-width: max(var(--vuecal-min-cell-size), calc(var(--vuecal-min-schedule-size, 0px) * var(--vuecal-schedules-count, 0)));
+  }
+  .vuecal--horizontal .vuecal__scrollable--days-view &--has-schedules,
+  .vuecal--horizontal .vuecal__scrollable--week-view &--has-schedules {
+    min-width: 0;
+    min-height: max(var(--vuecal-min-cell-size), calc(var(--vuecal-min-schedule-size, 0px) * var(--vuecal-schedules-count, 0)));
+  }
+    // .vuecal__scrollable--days-view .vuecal__schedule,
+    // .vuecal__scrollable--week-view .vuecal__schedule {
+    //   min-width: 0;
+    //   min-height: var(--vuecal-min-schedule-size, 0px);
+    // }
 
   &--has-schedules {align-items: stretch;}
   &--out-of-range {opacity: 0.4;}
@@ -727,8 +747,12 @@ onBeforeUnmount(async () => {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(0deg, var(--vuecal-border-color) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
+    background: linear-gradient(0deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
     background-size: 100% var(--vuecal-time-cell-size);
+  }
+  .vuecal--view-has-time.vuecal--horizontal &:before {
+    background: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
+    background-size: var(--vuecal-time-cell-size) 100%;
   }
 }
 
