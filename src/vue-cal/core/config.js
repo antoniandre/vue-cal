@@ -230,9 +230,17 @@ export const useConfig = (vuecal, props, attrs) => {
     return showEventCount && ((view.isMonth && !props.eventsOnMonthView) || view.isYear)
   })
 
-  const allDayEvents = computed(() => props.allDayEvents && props.time !== false && !view.isMonth)
+  const allDayEvents = computed(() => {
+    const { view } = vuecal
+    return props.allDayEvents && props.time && (view.isDay || view.isDays || view.isWeek)
+  })
 
-  const timeAtCursor = computed(() => props.timeAtCursor && props.time !== false)
+  const horizontal = computed(() => {
+    const { view } = vuecal
+    return props.horizontal && (view.isDay || view.isDays || view.isWeek)
+  })
+
+  const timeAtCursor = computed(() => props.timeAtCursor && props.time)
 
   /**
    * Asynchronously loads translation texts for the given locale.
@@ -313,6 +321,7 @@ export const useConfig = (vuecal, props, attrs) => {
     editableEvents,
     showCellEventCount,
     allDayEvents,
+    horizontal,
     timeAtCursor,
     view,
     // Getters.
