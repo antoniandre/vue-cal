@@ -2,20 +2,14 @@
 //- This is an isolated test view. Just for testing purpose.
 .test-view
   .w-flex.gap2
-    w-button(@click="addEventFromOutside") Add event
-    w-button(@click="addEventFromVueCal") Add event
-    w-button(@click="deleteEvent") Delete event
-    w-button(@click="mainVuecalConfig.horizontal = !mainVuecalConfig.horizontal") Horizontal
-    w-button(@click="mainVuecalConfig.theme = mainVuecalConfig.theme ? false : 'default'") Toggle Theme
-    w-button(@click="vueCalRef.view.switch('day', new Date())") Switch to today
-
-  div
-    pre
-      strong.mr2 Selected date:
-      | {{ mainVuecalConfig.selectedDate }}
-    pre
-      strong.mr2 View date:
-      | {{ mainVuecalConfig.viewDate }}
+    w-button(@click="addEventFromOutside" outline) Add event
+    w-button(@click="addEventFromVueCal" outline) Add event
+    w-button(@click="deleteEvent" outline) Delete event
+    w-button(
+      @click="mainVuecalConfig.horizontal = !mainVuecalConfig.horizontal"
+      :outline="!mainVuecalConfig.horizontal") Horizontal
+    w-button(@click="mainVuecalConfig.theme = mainVuecalConfig.theme ? false : 'default'" outline) Toggle Theme
+    w-button(@click="vueCalRef.view.switch('day', new Date())" outline) Switch to today
 
   .w-flex.column.gap2.mt4.ovh
     //- aside.no-shrink.no-grow
