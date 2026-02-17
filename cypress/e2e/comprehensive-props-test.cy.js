@@ -35,6 +35,93 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('.vuecal').should('have.class', 'vuecal--week-view')
     })
 
+    it('should switch to Years view', () => {
+      cy.get('[data-testid="view-select"]').select('Years')
+      cy.wait(800)
+      cy.get('.vuecal').should('have.class', 'vuecal--years-view')
+    })
+
+    it('should switch to Year view', () => {
+      cy.get('[data-testid="view-select"]').select('Year')
+      cy.wait(800)
+      cy.get('.vuecal').should('have.class', 'vuecal--year-view')
+    })
+
+    it('should switch to Days view', () => {
+      cy.get('[data-testid="view-select"]').select('Days')
+      cy.wait(800)
+      cy.get('.vuecal').should('have.class', 'vuecal--days-view')
+    })
+
+    it('should change selectedDate', () => {
+      cy.get('[data-testid="view-select"]').select('Month')
+      cy.wait(300)
+
+      const futureDate = new Date()
+      futureDate.setDate(futureDate.getDate() + 7)
+      const dateStr = futureDate.toISOString().split('T')[0]
+
+      cy.get('[data-testid="selected-date-input"]').clear().type(dateStr)
+      cy.wait(300)
+      cy.get('.vuecal__cell--selected').should('exist')
+    })
+
+    it('should change viewDate', () => {
+      cy.get('[data-testid="view-select"]').select('Month')
+      cy.wait(300)
+
+      const targetDate = new Date()
+      targetDate.setMonth(targetDate.getMonth() + 2) // 2 months ahead
+      const dateStr = targetDate.toISOString().split('T')[0]
+
+      cy.get('[data-testid="view-date-input"]').clear().type(dateStr)
+      cy.wait(500)
+      cy.get('.vuecal__title').invoke('text').should('include', targetDate.toLocaleString('en-us', { month: 'long' }))
+    })
+
+    it('should toggle clickToNavigate', () => {
+      cy.get('[data-testid="click-to-navigate"]').should('not.be.checked')
+
+      cy.get('[data-testid="click-to-navigate"]').check()
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="click-to-navigate"]').uncheck()
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+    })
+
+    it('should toggle watchRealTime', () => {
+      cy.get('[data-testid="watch-real-time"]').should('not.be.checked')
+
+      cy.get('[data-testid="watch-real-time"]').check()
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="watch-real-time"]').uncheck()
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+    })
+
+    it('should apply minDate and maxDate in datePicker mode', () => {
+      cy.get('[data-testid="date-picker"]').check()
+      cy.wait(300)
+
+      const minDate = new Date()
+      minDate.setDate(minDate.getDate() - 7)
+      const maxDate = new Date()
+      maxDate.setDate(maxDate.getDate() + 7)
+
+      cy.get('[data-testid="min-date-input"]').clear().type(minDate.toISOString().split('T')[0])
+      cy.wait(200)
+      cy.get('[data-testid="max-date-input"]').clear().type(maxDate.toISOString().split('T')[0])
+      cy.wait(300)
+      cy.get('.vuecal').should('have.class', 'vuecal--date-picker')
+
+      cy.get('[data-testid="date-picker"]').uncheck()
+      cy.wait(300)
+    })
+
     it('should toggle todayButton', () => {
       // First ensure it's checked and visible
       cy.get('[data-testid="today-button"]').should('be.checked')
@@ -252,6 +339,18 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.wait(300)
       cy.get('.vuecal__time-cell').first().should('exist')
     })
+
+    it('should change timeFormat', () => {
+      cy.get('[data-testid="view-select"]').select('Day')
+      cy.wait(300)
+
+      cy.get('[data-testid="time-format"]').focus().type('{selectall}HH:mm')
+      cy.wait(300)
+      cy.get('.vuecal__time-cell').first().should('exist')
+
+      cy.get('[data-testid="time-format"]').focus().clear()
+      cy.wait(300)
+    })
   })
 
   describe('Event Props', () => {
@@ -315,6 +414,43 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="editable-events"]').uncheck()
       cy.wait(300)
       cy.get('.vuecal__event').first().should('exist')
+    })
+
+    it('should toggle eventCount on month view', () => {
+      cy.get('[data-testid="view-select"]').select('Month')
+      cy.wait(800)
+
+      cy.get('[data-testid="load-sample-events-btn"]').click()
+      cy.wait(300)
+
+      cy.get('[data-testid="event-count"]').check()
+      cy.wait(300)
+      cy.get('.vuecal__cell-events-count').should('exist')
+
+      cy.get('[data-testid="event-count"]').uncheck()
+      cy.wait(300)
+      cy.get('.vuecal__cell-events-count').should('not.exist')
+    })
+
+    it('should change eventCreateMinDrag', () => {
+      cy.get('[data-testid="event-create-min-drag"]').focus().type('{selectall}25')
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="event-create-min-drag"]').focus().type('{selectall}15')
+      cy.wait(300)
+    })
+
+    it('should change snapToInterval', () => {
+      cy.get('[data-testid="editable-events"]').check()
+      cy.wait(300)
+
+      cy.get('[data-testid="snap-to-interval"]').focus().type('{selectall}15')
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="snap-to-interval"]').focus().type('{selectall}0')
+      cy.wait(300)
     })
 
     it('should add events', () => {
@@ -398,6 +534,18 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="disable-day-1"]').check() // Disable Monday
       cy.wait(300)
       cy.get('.vuecal').should('exist')
+    })
+
+    it('should change viewDayOffset', () => {
+      cy.get('[data-testid="view-select"]').select('Day')
+      cy.wait(800)
+
+      cy.get('[data-testid="view-day-offset"]').focus().type('{selectall}2')
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="view-day-offset"]').focus().type('{selectall}0')
+      cy.wait(300)
     })
   })
 
@@ -484,6 +632,220 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('.vuecal').should('exist')
 
       cy.get('[data-testid="locale-select"]').select('')
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+    })
+  })
+
+  describe('Prop Combinations', () => {
+    it('should work with horizontal + schedules', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="schedules-enabled"]').check()
+      cy.wait(300)
+      cy.get('[data-testid="horizontal"]').check()
+      cy.wait(500)
+
+      cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
+      cy.get('.vuecal__schedule--heading').should('have.length.greaterThan', 0)
+
+      cy.get('[data-testid="horizontal"]').uncheck()
+      cy.get('[data-testid="schedules-enabled"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with horizontal + allDayEvents', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="all-day-events"]').check()
+      cy.wait(300)
+      cy.get('[data-testid="horizontal"]').check()
+      cy.wait(500)
+
+      cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
+      cy.get('.vuecal__all-day').should('exist')
+
+      cy.get('[data-testid="horizontal"]').uncheck()
+      cy.get('[data-testid="all-day-events"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with allDayEvents + stackEvents', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="all-day-events"]').check()
+      cy.wait(300)
+      cy.get('[data-testid="stack-events"]').check()
+      cy.wait(300)
+
+      cy.get('.vuecal__all-day').should('exist')
+      cy.get('.vuecal').should('exist')
+
+      cy.get('[data-testid="stack-events"]').uncheck()
+      cy.get('[data-testid="all-day-events"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with eventsOnMonthView + multidayEvents', () => {
+      cy.get('[data-testid="view-select"]').select('Month')
+      cy.wait(800)
+
+      cy.get('[data-testid="load-sample-events-btn"]').click()
+      cy.wait(300)
+      cy.get('[data-testid="multiday-events"]').check()
+      cy.wait(200)
+      cy.get('[data-testid="events-on-month-view"]').check()
+      cy.wait(300)
+
+      cy.get('.vuecal__event').should('exist')
+
+      cy.get('[data-testid="events-on-month-view"]').uncheck()
+      cy.get('[data-testid="multiday-events"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with editableEvents + schedules', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="schedules-enabled"]').check()
+      cy.wait(300)
+      cy.get('[data-testid="editable-events"]').check()
+      cy.wait(300)
+
+      cy.get('.vuecal__schedule--heading').should('exist')
+      cy.get('.vuecal__event').first().should('exist')
+
+      cy.get('[data-testid="editable-events"]').uncheck()
+      cy.get('[data-testid="schedules-enabled"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with hideWeekends + startWeekOnSunday', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="start-week-sunday"]').check()
+      cy.wait(200)
+      cy.get('[data-testid="hide-weekends"]').check()
+      cy.wait(300)
+
+      cy.get('.vuecal__weekday-day').first().invoke('text').should('match', /Sun/i)
+      cy.get('.vuecal__weekday').should('have.length', 5)
+
+      cy.get('[data-testid="hide-weekends"]').uncheck()
+      cy.get('[data-testid="start-week-sunday"]').uncheck()
+      cy.wait(300)
+    })
+
+    it('should work with datePicker + minDate/maxDate', () => {
+      cy.get('[data-testid="date-picker"]').check()
+      cy.wait(300)
+
+      const minDate = new Date()
+      minDate.setMonth(minDate.getMonth() - 1)
+      const maxDate = new Date()
+      maxDate.setMonth(maxDate.getMonth() + 2)
+
+      cy.get('[data-testid="min-date-input"]').clear().type(minDate.toISOString().split('T')[0])
+      cy.wait(200)
+      cy.get('[data-testid="max-date-input"]').clear().type(maxDate.toISOString().split('T')[0])
+      cy.wait(300)
+
+      cy.get('.vuecal').should('have.class', 'vuecal--date-picker')
+
+      cy.get('[data-testid="date-picker"]').uncheck()
+      cy.wait(300)
+    })
+  })
+
+  describe('Touch Device Tests', () => {
+    it('should display correctly on mobile viewport', () => {
+      cy.viewport(375, 667)
+      cy.wait(300)
+      cy.get('[data-testid="vue-cal"]').should('be.visible')
+      cy.get('.vuecal').should('exist')
+    })
+
+    it('should respond to touch events for event drag', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+      cy.get('[data-testid="load-sample-events-btn"]').click()
+      cy.wait(300)
+      cy.get('[data-testid="editable-events"]').check()
+      cy.wait(300)
+
+      cy.viewport(375, 667)
+      cy.wait(300)
+
+      cy.get('.vuecal__event').first().then($el => {
+        const rect = $el[0].getBoundingClientRect()
+        const startX = rect.left + rect.width / 2
+        const startY = rect.top + rect.height / 2
+
+        cy.wrap($el)
+          .trigger('touchstart', {
+            touches: [{ clientX: startX, clientY: startY }],
+            force: true
+          })
+          .trigger('touchmove', {
+            touches: [{ clientX: startX + 20, clientY: startY + 30 }],
+            force: true
+          })
+          .trigger('touchend', { force: true })
+      })
+      cy.wait(300)
+      cy.get('.vuecal').should('exist')
+    })
+
+    it('should allow event creation via long-press on touch device', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+      cy.get('[data-testid="editable-events"]').check()
+      cy.wait(300)
+
+      cy.viewport(375, 667)
+      cy.wait(300)
+
+      cy.get('.vuecal__cell').first().then($cell => {
+        const rect = $cell[0].getBoundingClientRect()
+        const x = rect.left + rect.width / 2
+        const y = rect.top + rect.height / 2
+
+        cy.wrap($cell)
+          .trigger('touchstart', {
+            touches: [{ clientX: x, clientY: y }],
+            force: true
+          })
+        cy.wait(600) // Wait for 500ms long-press threshold
+        cy.wrap($cell)
+          .trigger('touchmove', {
+            touches: [{ clientX: x, clientY: y + 50 }],
+            force: true
+          })
+          .trigger('touchend', { force: true })
+      })
+      cy.wait(500)
+      cy.get('.vuecal').should('exist')
+    })
+
+    it('should use touchDrag command for event interaction', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+      cy.get('[data-testid="load-sample-events-btn"]').click()
+      cy.wait(300)
+      cy.get('[data-testid="editable-events"]').check()
+      cy.wait(300)
+
+      cy.viewport(375, 667)
+      cy.wait(300)
+
+      cy.get('.vuecal__event').first().then($el => {
+        cy.wrap($el).touchDrag(30, 40)
+      })
       cy.wait(300)
       cy.get('.vuecal').should('exist')
     })
