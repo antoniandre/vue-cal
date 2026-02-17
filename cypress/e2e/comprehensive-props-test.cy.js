@@ -318,23 +318,34 @@ describe('Vue Cal - Comprehensive Props Test', () => {
     })
 
     it('should add events', () => {
+      // Ensure we're in Week view and showing today (where new events are added)
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(800) // View change has transition
+
       cy.get('.vuecal__event').its('length').then((initialCount) => {
         cy.get('[data-testid="add-event-btn"]').click()
         cy.wait(300)
+        // Event is added today, so it should be visible in current week
         cy.get('.vuecal__event').should('have.length', initialCount + 1)
       })
     })
 
     it('should add all-day events', () => {
       cy.get('[data-testid="view-select"]').select('Week')
-      cy.wait(300)
+      cy.wait(800) // View change has transition
 
       cy.get('[data-testid="all-day-events"]').check()
       cy.wait(300)
 
-      cy.get('[data-testid="add-all-day-event-btn"]').click()
-      cy.wait(300)
-      cy.get('.vuecal__all-day .vuecal__event').should('exist')
+      // Get initial count of all-day events
+      cy.get('.vuecal__all-day').then($allDay => {
+        const initialCount = $allDay.find('.vuecal__event').length
+
+        cy.get('[data-testid="add-all-day-event-btn"]').click()
+        cy.wait(300)
+        // Event is added today, so it should be visible
+        cy.get('.vuecal__all-day .vuecal__event').should('have.length', initialCount + 1)
+      })
     })
 
     it('should clear events', () => {
