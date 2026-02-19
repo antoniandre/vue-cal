@@ -44,8 +44,7 @@ export default defineConfig({
   },
   server: {
     host: 'localhost',
-    port: 5180,
-    strictPort: true
+    port: 5180
   },
   plugins: [
     vue({
