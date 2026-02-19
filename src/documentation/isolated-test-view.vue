@@ -220,13 +220,20 @@ const fetchEvents = async (start, end) => {
 const generateRandomEvents = (startDate, endDate) => {
   const daysRange = countDays(startDate, endDate)
   const events = []
+  const schedules = [1, 2, 3]
   for (let i = 0; i < daysRange; i++) {
     for (let j = 0; j < 10; j++) {
       // Set random start and end time in the day, events last 1 hour.
       // The random start and end time is between 9am and 5pm.
       const start = new Date(startDate.addDays(i).setHours(Math.floor(Math.random() * 8) + 9, Math.floor(Math.random() * 60), 0, 0))
       const end = start.addHours(1)
-      events.push({ title: `Event ${j}`, start, end })
+      events.push({
+        title: `Event ${j}`,
+        start,
+        end,
+        schedule: schedules[j % 3],
+        allDay: j % 4 === 0
+      })
     }
   }
   return events

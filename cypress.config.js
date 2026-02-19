@@ -1,6 +1,6 @@
 module.exports = {
   e2e: {
-    baseUrl: 'http://localhost:5180',
+    baseUrl: process.env.CYPRESS_BASE_URL || `http://localhost:${process.env.PORT || 5180}`,
     specPattern: 'cypress/e2e/**/*.cy.{js,jsx,ts,tsx}',
     supportFile: 'cypress/support/e2e.js',
     video: true,
