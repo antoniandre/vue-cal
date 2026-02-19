@@ -542,8 +542,14 @@
       inset: 0 0 8px;
     }
 
+    .vuecal__all-day .vuecal__cell-events {
+      width: 90%;
+      margin: 1px auto 0 1px;
+    }
+
     .vuecal__event {
       height: 90%;
+      width: auto;
 
       &-resizer {
         inset: -1px -1px -1px auto;
@@ -552,6 +558,7 @@
         border-top-right-radius: inherit;
       }
     }
+    .vuecal__all-day .vuecal__event {height: auto;}
 
     .vuecal__schedule--heading {
       justify-content: flex-end;
