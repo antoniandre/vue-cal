@@ -146,13 +146,13 @@ footer {
   flex-grow: 0;
   flex-wrap: wrap;
   justify-content: space-between;
-  font-size: 0.9em;
+  font-size: 0.9rem;
   font-style: italic;
   margin: 1rem 0 0.5rem;
   line-height: 1;
 
   .w-icon {
-    font-size: 1.2em;
+    font-size: 1.2rem;
 
     &.heart {transition: 1s ease-out;cursor: pointer;}
     &.heart:hover {animation: heart-pulse 1.8s ease-out infinite;}

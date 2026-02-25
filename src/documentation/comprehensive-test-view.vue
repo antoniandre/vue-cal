@@ -1,5 +1,5 @@
 <template lang="pug">
-.comprehensive-test-view
+.comprehensive-test-view.ovh.fill-height
   .controls-panel
     h2 Vue Cal - Comprehensive Test View
     p.subtitle All Props Testing Interface
@@ -61,25 +61,50 @@
             w-switch(
               v-model="config.startWeekOnSunday"
               thin
+              label-on-left
               data-testid="start-week-sunday") Start Week On Sunday
 
           .control
             w-switch(
               v-model="config.todayButton"
               thin
+              label-on-left
               data-testid="today-button") Today Button
 
           .control
             w-switch(
               v-model="config.watchRealTime"
               thin
+              label-on-left
               data-testid="watch-real-time") Watch Real Time
 
           .control
             w-switch(
               v-model="config.weekNumbers"
               thin
-              data-testid="week-numbers") Week Numbers
+              label-on-left
+              data-testid="week-numbers") Week Numbers (month view only)
+
+          .control
+            w-switch(
+              v-model="config.titleBar"
+              thin
+              label-on-left
+              data-testid="title-bar") Title Bar
+
+          .control
+            w-switch(
+              v-model="config.viewsBar"
+              thin
+              label-on-left
+              data-testid="views-bar") Views Bar
+
+          .control
+            w-switch(
+              v-model="config.clickToNavigate"
+              thin
+              label-on-left
+              data-testid="click-to-navigate") Click To Navigate
 
       //- Display Props.
       section.control-section
@@ -97,19 +122,36 @@
             w-switch(
               v-model="config.dark"
               thin
+              label-on-left
               data-testid="dark-mode") Dark Mode
 
           .control
             w-switch(
               v-model="config.datePicker"
               thin
+              label-on-left
               data-testid="date-picker") Date Picker
 
           .control
             w-switch(
               v-model="config.horizontal"
               thin
+              label-on-left
               data-testid="horizontal") Horizontal
+
+          .control
+            w-switch(
+              v-model="config.sm"
+              thin
+              label-on-left
+              data-testid="sm-size") Small (sm)
+
+          .control
+            w-switch(
+              v-model="config.xs"
+              thin
+              label-on-left
+              data-testid="xs-size") Extra Small (xs)
 
       //- Time Props.
       section.control-section
@@ -119,6 +161,7 @@
             w-switch(
               v-model="config.time"
               thin
+              label-on-left
               data-testid="time-enabled") Time
 
           .control
@@ -167,12 +210,14 @@
             w-switch(
               v-model="config.twelveHour"
               thin
+              label-on-left
               data-testid="twelve-hour") Twelve Hour
 
           .control
             w-switch(
               v-model="config.timeAtCursor"
               thin
+              label-on-left
               data-testid="time-at-cursor") Time At Cursor
 
           .control
@@ -191,36 +236,42 @@
             w-switch(
               v-model="config.allDayEvents"
               thin
+              label-on-left
               data-testid="all-day-events") All-Day Events
 
           .control
             w-switch(
               v-model="config.multidayEvents"
               thin
+              label-on-left
               data-testid="multiday-events") Multiday Events
 
           .control
             w-switch(
               v-model="config.eventsOnMonthView"
               thin
+              label-on-left
               data-testid="events-on-month-view") Events On Month View
 
           .control
             w-switch(
               v-model="config.stackEvents"
               thin
+              label-on-left
               data-testid="stack-events") Stack Events
 
           .control
             w-switch(
               v-model="editableEventsEnabled"
               thin
+              label-on-left
               data-testid="editable-events") Editable Events
 
           .control
             w-switch(
               v-model="eventCountEnabled"
               thin
+              label-on-left
               data-testid="event-count") Event Count
 
           .control
@@ -251,6 +302,7 @@
             w-switch(
               v-model="config.hideWeekends"
               thin
+              label-on-left
               data-testid="hide-weekends") Hide Weekends
 
           .control.w-flex.pa2.bdrs1.bd1.contrast-o05--bg
@@ -287,6 +339,7 @@
             w-switch(
               v-model="schedulesEnabled"
               thin
+              label-on-left
               data-testid="schedules-enabled") Enable Schedules
 
           .control(v-if="schedulesEnabled")
@@ -303,16 +356,18 @@
             w-switch(
               v-model="specialHoursEnabled"
               thin
+              label-on-left
               data-testid="special-hours-enabled") Enable Special Hours
 
       //- Event Actions.
       section.control-section
         h3 Event Actions
-        .controls
-          w-button(block @click="addEvent" data-testid="add-event-btn") Add Random Event
-          w-button(block @click="addAllDayEvent" data-testid="add-all-day-event-btn") Add All-Day Event
-          w-button(block @click="clearEvents" data-testid="clear-events-btn") Clear All Events
-          w-button(block @click="loadSampleEvents" data-testid="load-sample-events-btn") Load Sample Events
+        .controls.w-flex.column.gap2
+          .w-flex.gap2
+            w-button.grow(@click="addEvent" data-testid="add-event-btn") Add Random Event
+            w-button.grow(@click="addAllDayEvent" data-testid="add-all-day-event-btn") Add All-Day Event
+          w-button(@click="clearEvents" bg-color="orange-light1" color="white" data-testid="clear-events-btn") Clear All Events
+          w-button(@click="loadSampleEvents" bg-color="info" data-testid="load-sample-events-btn") Load Sample Events
 
   .calendar-wrap
     vue-cal(
@@ -625,16 +680,28 @@ setTimeout(() => {
 </script>
 
 <style lang="scss">
+.w-app:has(.page--test-comprehensive) {
+  height: 100vh;
+  overflow: hidden;
+}
+.page--test-comprehensive {overflow: hidden;}
+.page--test-comprehensive ~ footer {
+  margin-top: 0.3rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
+}
 .page--test-comprehensive aside {display: none;}
 .page--test-comprehensive main {
   padding-left: 0;
   border: none;
+  overflow: hidden;
 }
 
 .comprehensive-test-view {
   display: flex;
   height: 100vh;
   overflow: hidden;
+  gap: 20px;
 
   .controls-panel {
     width: 350px;
@@ -682,7 +749,8 @@ setTimeout(() => {
     flex-direction: column;
     gap: 5px;
 
-    label {
+    // Don't override Wave UI component internals (w-switch, w-checkbox, etc.)
+    label:not([class*="w-switch"]):not([class*="w-checkbox"]):not([class*="w-radio"]) {
       font-size: 13px;
       font-weight: 500;
       display: flex;
@@ -713,21 +781,11 @@ setTimeout(() => {
     }
   }
 
-  .checkbox-group {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-
-    label {
-      font-size: 12px;
-      font-weight: normal;
-    }
-  }
+  .w-checkbox__label {width: 2.5rem;}
 
   .calendar-wrap {
     flex: 1;
-    margin-left: 20px;
-    overflow: auto;
+    overflow: hidden;
 
     .vuecal {height: 100%;}
   }
