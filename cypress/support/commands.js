@@ -123,6 +123,14 @@ Cypress.Commands.add('getCellByDate', (date) => {
   return cy.get(`.vuecal__cell[data-date*="${date}"]`)
 })
 
+// Wave UI w-select: click to open, then click option by label (regex for exact match: "Year" not "Years")
+Cypress.Commands.add('wSelect', (testId, optionLabel) => {
+  cy.get(`[data-testid="${testId}"]`).click()
+  cy.get('[role="listbox"]').should('be.visible')
+  const escaped = optionLabel.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+  cy.get('[role="listbox"] [role="option"]').contains(new RegExp(`^${escaped}$`)).click()
+})
+
 // Command to create event by dragging in cell
 Cypress.Commands.add('createEventByDrag', (cellSelector, startY, endY) => {
   cy.get(cellSelector).then($cell => {
