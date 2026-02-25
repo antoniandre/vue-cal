@@ -65,7 +65,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="selected-date-input"]').clear().type(dateStr)
       cy.wait(300)
-      cy.get('.vuecal__cell--selected').should('exist')
+      cy.get('.vuecal__cell--selected').should('be.visible')
     })
 
     it('should change viewDate', () => {
@@ -86,23 +86,23 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="click-to-navigate"]').check({ force: true })
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="click-to-navigate"]').uncheck({ force: true })
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should toggle watchRealTime', () => {
-      cy.get('[data-testid="watch-real-time"]').should('not.be.checked')
+      cy.get('[data-testid="watch-real-time"]').scrollIntoView().should('not.be.checked')
 
       cy.get('[data-testid="watch-real-time"]').check()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="watch-real-time"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should apply minDate and maxDate in datePicker mode', () => {
@@ -125,24 +125,21 @@ describe('Vue Cal - Comprehensive Props Test', () => {
     })
 
     it('should toggle todayButton', () => {
-      // First ensure it's checked and visible
       cy.get('[data-testid="today-button"]').should('be.checked')
-      cy.get('.vuecal__title-bar .vuecal__nav--today').should('exist')
+      cy.get('.vuecal__title-bar .vuecal__nav--today').should('be.visible')
 
-      // Uncheck it
       cy.get('[data-testid="today-button"]').uncheck()
       cy.wait(300)
       cy.get('.vuecal__title-bar .vuecal__nav--today').should('not.exist')
 
-      // Check it again
       cy.get('[data-testid="today-button"]').check()
       cy.wait(300)
-      cy.get('.vuecal__title-bar .vuecal__nav--today').should('exist')
+      cy.get('.vuecal__title-bar .vuecal__nav--today').should('be.visible')
     })
 
     it('should toggle titleBar', () => {
       cy.get('[data-testid="title-bar"]').should('be.checked')
-      cy.get('.vuecal__title-bar').should('exist')
+      cy.get('.vuecal__title-bar').should('be.visible')
 
       cy.get('[data-testid="title-bar"]').uncheck()
       cy.wait(300)
@@ -150,12 +147,13 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="title-bar"]').check()
       cy.wait(300)
-      cy.get('.vuecal__title-bar').should('exist')
+      cy.get('.vuecal__title-bar').should('be.visible')
     })
 
     it('should toggle viewsBar', () => {
       cy.get('[data-testid="views-bar"]').should('be.checked')
-      cy.get('.vuecal__views-bar button').should('have.length.greaterThan', 3)
+      cy.get('.vuecal__views-bar').should('be.visible')
+      cy.get('.vuecal__view-button').should('have.length', 6)
 
       cy.get('[data-testid="views-bar"]').uncheck()
       cy.wait(300)
@@ -163,7 +161,8 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="views-bar"]').check()
       cy.wait(300)
-      cy.get('.vuecal__views-bar button').should('have.length.greaterThan', 3)
+      cy.get('.vuecal__views-bar').should('be.visible')
+      cy.get('.vuecal__view-button').should('have.length', 6)
     })
 
     it('should toggle startWeekOnSunday', () => {
@@ -187,7 +186,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="week-numbers"]').check()
       cy.wait(300)
-      cy.get('.vuecal__week-number').should('exist')
+      cy.get('.vuecal__week-number').should('be.visible')
       cy.get('.vuecal__week-number').should('have.length.greaterThan', 3)
 
       cy.get('[data-testid="week-numbers"]').uncheck()
@@ -198,15 +197,15 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
   describe('Display Props', () => {
     it('should toggle theme', () => {
-      cy.get('.vuecal').should('have.class', 'vuecal--default-theme')
+      cy.get('.vuecal').should('be.visible').and('have.class', 'vuecal--default-theme')
 
       cy.get('[data-testid="theme-select"]').select('None')
       cy.wait(300)
-      cy.get('.vuecal').should('not.have.class', 'vuecal--default-theme')
+      cy.get('.vuecal').should('be.visible').and('not.have.class', 'vuecal--default-theme')
 
       cy.get('[data-testid="theme-select"]').select('Default')
       cy.wait(300)
-      cy.get('.vuecal').should('have.class', 'vuecal--default-theme')
+      cy.get('.vuecal').should('be.visible').and('have.class', 'vuecal--default-theme')
     })
 
     it('should toggle dark mode', () => {
@@ -240,13 +239,18 @@ describe('Vue Cal - Comprehensive Props Test', () => {
     })
 
     it('should toggle horizontal mode', () => {
+      cy.get('[data-testid="view-select"]').select('Week')
+      cy.wait(300)
+
       cy.get('[data-testid="horizontal"]').check()
       cy.wait(300)
       cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="horizontal"]').uncheck()
       cy.wait(300)
       cy.get('.vuecal').should('not.have.class', 'vuecal--horizontal')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should toggle datePicker mode', () => {
@@ -267,7 +271,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.wait(300)
 
       cy.get('[data-testid="time-enabled"]').should('be.checked')
-      cy.get('.vuecal__time-column').should('exist')
+      cy.get('.vuecal__time-column').should('be.visible')
 
       cy.get('[data-testid="time-enabled"]').uncheck()
       cy.wait(300)
@@ -275,7 +279,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="time-enabled"]').check()
       cy.wait(300)
-      cy.get('.vuecal__time-column').should('exist')
+      cy.get('.vuecal__time-column').should('be.visible')
     })
 
     it('should change timeFrom', () => {
@@ -315,11 +319,11 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="twelve-hour"]').check()
       cy.wait(300)
-      cy.get('.vuecal__time-cell').first().should('exist')
+      cy.get('.vuecal__time-cell').first().should('be.visible')
 
       cy.get('[data-testid="twelve-hour"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal__time-cell').first().should('exist')
+      cy.get('.vuecal__time-cell').first().should('be.visible')
     })
 
     it('should toggle timeAtCursor', () => {
@@ -328,8 +332,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="time-at-cursor"]').check()
       cy.wait(300)
-      // Just verify the calendar still works
-      cy.get('.vuecal__body').should('exist')
+      cy.get('.vuecal__body').should('be.visible')
     })
 
     it('should change timeCellHeight', () => {
@@ -339,7 +342,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       // Select all and replace instead of clear (avoids Vue re-render issues)
       cy.get('[data-testid="time-cell-height"]').focus().type('{selectall}60')
       cy.wait(300)
-      cy.get('.vuecal__time-cell').first().should('exist')
+      cy.get('.vuecal__time-cell').first().should('be.visible')
     })
 
     it('should change timeFormat', () => {
@@ -348,7 +351,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="time-format"]').focus().type('{selectall}HH:mm')
       cy.wait(300)
-      cy.get('.vuecal__time-cell').first().should('exist')
+      cy.get('.vuecal__time-cell').first().should('be.visible')
 
       cy.get('[data-testid="time-format"]').focus().clear()
       cy.wait(300)
@@ -362,8 +365,9 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="all-day-events"]').check()
       cy.wait(300)
-      cy.get('.vuecal__all-day').should('exist')
+      cy.get('.vuecal__all-day').should('be.visible')
       cy.get('.vuecal__all-day-label').should('be.visible')
+      cy.get('.vuecal__all-day-label').invoke('text').should('match', /all-day|day/i)
 
       cy.get('[data-testid="all-day-events"]').uncheck()
       cy.wait(300)
@@ -375,20 +379,23 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="multiday-events"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="multiday-events"]').check()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should toggle eventsOnMonthView', () => {
       cy.get('[data-testid="view-select"]').select('Month')
       cy.wait(800) // View change has transition
 
+      cy.get('[data-testid="load-sample-events-btn"]').click()
+      cy.wait(500)
+
       cy.get('[data-testid="events-on-month-view"]').check()
       cy.wait(300)
-      cy.get('.vuecal__event').should('exist')
+      cy.get('.vuecal__event').first().should('be.visible')
 
       cy.get('[data-testid="events-on-month-view"]').uncheck()
       cy.wait(300)
@@ -401,21 +408,21 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="stack-events"]').check()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="stack-events"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should toggle editableEvents', () => {
       cy.get('[data-testid="editable-events"]').check()
       cy.wait(300)
-      cy.get('.vuecal__event').first().should('exist')
+      cy.get('.vuecal__event').first().should('be.visible')
 
       cy.get('[data-testid="editable-events"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal__event').first().should('exist')
+      cy.get('.vuecal__event').first().should('be.visible')
     })
 
     it('should toggle eventCount on month view', () => {
@@ -427,7 +434,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="event-count"]').check()
       cy.wait(300)
-      cy.get('.vuecal__cell-events-count').should('exist')
+      cy.get('.vuecal__cell-events-count').first().should('be.visible')
 
       cy.get('[data-testid="event-count"]').uncheck()
       cy.wait(300)
@@ -437,7 +444,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
     it('should change eventCreateMinDrag', () => {
       cy.get('[data-testid="event-create-min-drag"]').focus().type('{selectall}25')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="event-create-min-drag"]').focus().type('{selectall}15')
       cy.wait(300)
@@ -449,41 +456,36 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="snap-to-interval"]').focus().type('{selectall}15')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="snap-to-interval"]').focus().type('{selectall}0')
       cy.wait(300)
     })
 
     it('should add events', () => {
-      // Ensure we're in Week view and showing today (where new events are added)
       cy.get('[data-testid="view-select"]').select('Week')
-      cy.wait(800) // View change has transition
+      cy.wait(800)
 
-      // Clear first for deterministic count (multiday events create multiple DOM elements)
-      cy.get('[data-testid="clear-events-btn"]').click()
-      cy.wait(500)
-      cy.get('.vuecal__event').should('not.exist')
-
-      cy.get('[data-testid="add-event-btn"]').click()
-      cy.wait(500) // Allow Vue reactivity and DOM update
-      cy.get('.vuecal__event').should('have.length.at.least', 1)
+      cy.get('[data-testid="load-sample-events-btn"]').scrollIntoView().click()
+      cy.get('.vuecal__event', { timeout: 5000 }).its('length').then((initialCount) => {
+        cy.get('[data-testid="add-event-btn"]').scrollIntoView().click({ force: true })
+        cy.wait(500)
+        cy.get('.vuecal__event').should('have.length.greaterThan', initialCount)
+      })
     })
 
     it('should add all-day events', () => {
       cy.get('[data-testid="view-select"]').select('Week')
-      cy.wait(800) // View change has transition
+      cy.wait(800)
 
       cy.get('[data-testid="all-day-events"]').check()
-      cy.wait(500) // Allow all-day bar to render
-
-      // Clear events for deterministic test (sample events may not have all-day)
-      cy.get('[data-testid="clear-events-btn"]').click()
       cy.wait(500)
 
-      cy.get('[data-testid="add-all-day-event-btn"]').click()
-      cy.wait(500) // Allow Vue reactivity and DOM update
-      cy.get('.vuecal__all-day .vuecal__event').should('have.length.at.least', 1)
+      cy.get('.vuecal__all-day .vuecal__event').its('length').then((initialCount) => {
+        cy.get('[data-testid="add-all-day-event-btn"]').scrollIntoView().click({ force: true })
+        cy.wait(500)
+        cy.get('.vuecal__all-day .vuecal__event').should('have.length.greaterThan', initialCount)
+      })
     })
 
     it('should clear events', () => {
@@ -494,11 +496,12 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
     it('should load sample events', () => {
       cy.get('[data-testid="clear-events-btn"]').click()
-      cy.wait(500) // Allow DOM to clear
+      cy.wait(500)
 
       cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(500) // Allow events to render
+      cy.wait(500)
       cy.get('.vuecal__event').should('have.length.greaterThan', 5)
+      cy.get('.vuecal__event').first().should('be.visible')
     })
   })
 
@@ -533,9 +536,18 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="view-select"]').select('Week')
       cy.wait(300)
 
-      cy.get('[data-testid="disable-day-1"]').check() // Disable Monday
+      // disableDays expects date strings; use minDate to create disabled cells (before-min)
+      const tomorrow = new Date()
+      tomorrow.setDate(tomorrow.getDate() + 1)
+      const minDateStr = tomorrow.toISOString().split('T')[0]
+
+      cy.get('[data-testid="date-picker"]').uncheck()
+      cy.get('[data-testid="min-date-input"]').clear().type(minDateStr)
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal__cell--disabled, .vuecal__cell--before-min').should('have.length.greaterThan', 0)
+
+      cy.get('[data-testid="min-date-input"]').clear()
+      cy.wait(300)
     })
 
     it('should change viewDayOffset', () => {
@@ -544,7 +556,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="view-day-offset"]').focus().type('{selectall}2')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="view-day-offset"]').focus().type('{selectall}0')
       cy.wait(300)
@@ -552,13 +564,17 @@ describe('Vue Cal - Comprehensive Props Test', () => {
   })
 
   describe('Schedules & Special Hours', () => {
-    it('should enable schedules', () => {
+    it('should enable schedules and display schedule headings', () => {
       cy.get('[data-testid="view-select"]').select('Week')
       cy.wait(800) // View change has transition
 
       cy.get('[data-testid="schedules-enabled"]').check()
-      cy.wait(300)
+      cy.wait(500)
+      cy.get('.vuecal__schedule--heading').should('be.visible')
       cy.get('.vuecal__schedule--heading').should('have.length.greaterThan', 0)
+      cy.contains('Schedule 1').should('be.visible')
+      cy.contains('Schedule 2').should('be.visible')
+      cy.contains('Schedule 3').should('be.visible')
 
       cy.get('[data-testid="schedules-enabled"]').uncheck()
       cy.wait(300)
@@ -584,11 +600,11 @@ describe('Vue Cal - Comprehensive Props Test', () => {
 
       cy.get('[data-testid="special-hours-enabled"]').check()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="special-hours-enabled"]').uncheck()
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
   })
 
@@ -627,15 +643,17 @@ describe('Vue Cal - Comprehensive Props Test', () => {
     it('should change locale', () => {
       cy.get('[data-testid="locale-select"]').select('fr')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
+      cy.get('.vuecal__title').invoke('text').should('match', /janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre/i)
 
       cy.get('[data-testid="locale-select"]').select('es')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
+      cy.get('.vuecal__title').invoke('text').should('match', /enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre/i)
 
       cy.get('[data-testid="locale-select"]').select('')
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
   })
 
@@ -667,7 +685,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.wait(500)
 
       cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
-      cy.get('.vuecal__all-day').should('exist')
+      cy.get('.vuecal__all-day').should('be.visible')
 
       cy.get('[data-testid="horizontal"]').uncheck()
       cy.get('[data-testid="all-day-events"]').uncheck()
@@ -683,8 +701,8 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="stack-events"]').check()
       cy.wait(300)
 
-      cy.get('.vuecal__all-day').should('exist')
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal__all-day').should('be.visible')
+      cy.get('.vuecal').should('be.visible')
 
       cy.get('[data-testid="stack-events"]').uncheck()
       cy.get('[data-testid="all-day-events"]').uncheck()
@@ -702,7 +720,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="events-on-month-view"]').check()
       cy.wait(300)
 
-      cy.get('.vuecal__event').should('exist')
+      cy.get('.vuecal__event').first().should('be.visible')
 
       cy.get('[data-testid="events-on-month-view"]').uncheck()
       cy.get('[data-testid="multiday-events"]').uncheck()
@@ -721,8 +739,8 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.get('[data-testid="editable-events"]').check()
       cy.wait(300)
 
-      cy.get('.vuecal__schedule--heading').should('exist')
-      cy.get('.vuecal__event').first().should('exist')
+      cy.get('.vuecal__schedule--heading').should('be.visible')
+      cy.get('.vuecal__event').first().should('be.visible')
 
       cy.get('[data-testid="editable-events"]').uncheck()
       cy.get('[data-testid="schedules-enabled"]').uncheck()
@@ -773,7 +791,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.viewport(375, 667)
       cy.wait(300)
       cy.get('[data-testid="vue-cal"]').should('be.visible')
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should respond to touch events for event drag', () => {
@@ -804,7 +822,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
           .trigger('touchend', { force: true })
       })
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should allow event creation via long-press on touch device', () => {
@@ -835,7 +853,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
           .trigger('touchend', { force: true })
       })
       cy.wait(500)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
 
     it('should use touchDrag command for event interaction', () => {
@@ -853,7 +871,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
         cy.wrap($el).touchDrag(30, 40)
       })
       cy.wait(300)
-      cy.get('.vuecal').should('exist')
+      cy.get('.vuecal').should('be.visible')
     })
   })
 

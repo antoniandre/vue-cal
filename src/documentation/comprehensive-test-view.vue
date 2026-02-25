@@ -10,237 +10,300 @@
         h3 Basic Props
         .controls
           .control
-            label view:
-            select(v-model="config.view" data-testid="view-select")
-              option(value="years") Years
-              option(value="year") Year
-              option(value="month") Month
-              option(value="week") Week
-              option(value="day") Day
-              option(value="days") Days
+            w-select(
+              v-model="config.view"
+              :items="config.availableViews"
+              data-testid="view-select"
+              label-position="left"
+              outline) View:
 
           .control
-            label selectedDate:
-            input(type="date" v-model="selectedDateInput" data-testid="selected-date-input")
+            w-input(
+              v-model="selectedDateInput"
+              type="date"
+              data-testid="selected-date-input"
+              label-position="left"
+              outline) Selected Date:
 
           .control
-            label viewDate:
-            input(type="date" v-model="viewDateInput" data-testid="view-date-input")
+            w-input(
+              v-model="viewDateInput"
+              type="date"
+              data-testid="view-date-input"
+              label-position="left"
+              outline) View Date:
 
           .control
-            label locale:
-            select(v-model="config.locale" data-testid="locale-select")
-              option(value="") Default (en-us)
-              option(value="fr") French
-              option(value="es") Spanish
-              option(value="de") German
-              option(value="it") Italian
-              option(value="ja") Japanese
-              option(value="zh-cn") Chinese
+            w-select(
+              v-model="config.locale"
+              :items="config.locales"
+              data-testid="locale-select"
+              label-position="left"
+              outline) Locale:
 
           .control
-            label minDate:
-            input(type="date" v-model="minDateInput" data-testid="min-date-input")
+            w-input(
+              v-model="minDateInput"
+              type="date"
+              data-testid="min-date-input"
+              label-position="left"
+              outline) Min Date:
 
           .control
-            label maxDate:
-            input(type="date" v-model="maxDateInput" data-testid="max-date-input")
+            w-input(
+              v-model="maxDateInput"
+              type="date"
+              data-testid="max-date-input"
+              label-position="left"
+              outline) Max Date:
 
           .control
-            label
-              input(type="checkbox" v-model="config.startWeekOnSunday" data-testid="start-week-sunday")
-              | startWeekOnSunday
+            w-switch(
+              v-model="config.startWeekOnSunday"
+              thin
+              data-testid="start-week-sunday") Start Week On Sunday
 
           .control
-            label
-              input(type="checkbox" v-model="config.todayButton" data-testid="today-button")
-              | todayButton
+            w-switch(
+              v-model="config.todayButton"
+              thin
+              data-testid="today-button") Today Button
 
           .control
-            label
-              input(type="checkbox" v-model="config.titleBar" data-testid="title-bar")
-              | titleBar
+            w-switch(
+              v-model="config.watchRealTime"
+              thin
+              data-testid="watch-real-time") Watch Real Time
 
           .control
-            label
-              input(type="checkbox" v-model="config.viewsBar" data-testid="views-bar")
-              | viewsBar
-
-          .control
-            label
-              input(type="checkbox" v-model="config.clickToNavigate" data-testid="click-to-navigate")
-              | clickToNavigate
-
-          .control
-            label
-              input(type="checkbox" v-model="config.watchRealTime" data-testid="watch-real-time")
-              | watchRealTime
-
-          .control
-            label
-              input(type="checkbox" v-model="config.weekNumbers" data-testid="week-numbers")
-              | weekNumbers
+            w-switch(
+              v-model="config.weekNumbers"
+              thin
+              data-testid="week-numbers") Week Numbers
 
       //- Display Props.
       section.control-section
         h3 Display Props
         .controls
-          .control
-            label theme:
-            select(v-model="config.theme" data-testid="theme-select")
-              option(value="default") Default
-              option(:value="false") None
+          .w-flex.row.gap2
+            label.no-grow.body Theme:
+            w-radios.no-grow(
+              v-model="config.theme"
+              :items="config.themes"
+              data-testid="theme-select"
+              inline)
 
           .control
-            label
-              input(type="checkbox" v-model="config.dark" data-testid="dark-mode")
-              | dark
+            w-switch(
+              v-model="config.dark"
+              thin
+              data-testid="dark-mode") Dark Mode
 
           .control
-            label
-              input(type="checkbox" v-model="config.sm" data-testid="sm-size")
-              | sm (small)
+            w-switch(
+              v-model="config.datePicker"
+              thin
+              data-testid="date-picker") Date Picker
 
           .control
-            label
-              input(type="checkbox" v-model="config.xs" data-testid="xs-size")
-              | xs (extra small)
-
-          .control
-            label
-              input(type="checkbox" v-model="config.datePicker" data-testid="date-picker")
-              | datePicker
-
-          .control
-            label
-              input(type="checkbox" v-model="config.horizontal" data-testid="horizontal")
-              | horizontal
+            w-switch(
+              v-model="config.horizontal"
+              thin
+              data-testid="horizontal") Horizontal
 
       //- Time Props.
       section.control-section
         h3 Time Props
         .controls
           .control
-            label
-              input(type="checkbox" v-model="config.time" data-testid="time-enabled")
-              | time
+            w-switch(
+              v-model="config.time"
+              thin
+              data-testid="time-enabled") Time
 
           .control
-            label timeFrom (minutes):
-            input(type="number" v-model.number="config.timeFrom" min="0" max="1440" step="60" data-testid="time-from")
+            w-input(
+              v-model.number="config.timeFrom"
+              type="number"
+              min="0"
+              max="1440"
+              step="60"
+              data-testid="time-from"
+              label-position="left"
+              outline) Time From (minutes):
 
           .control
-            label timeTo (minutes):
-            input(type="number" v-model.number="config.timeTo" min="0" max="1440" step="60" data-testid="time-to")
+            w-input(
+              v-model.number="config.timeTo"
+              type="number"
+              min="0"
+              max="1440"
+              step="60"
+              data-testid="time-to"
+              label-position="left"
+              outline) Time To (minutes):
 
           .control
-            label timeStep (minutes):
-            input(type="number" v-model.number="config.timeStep" min="1" max="120" data-testid="time-step")
+            w-input(
+              v-model.number="config.timeStep"
+              type="number"
+              min="1"
+              max="120"
+              data-testid="time-step"
+              label-position="left"
+              outline) Time Step (minutes)
 
           .control
-            label timeCellHeight (px):
-            input(type="number" v-model.number="config.timeCellHeight" min="20" max="100" data-testid="time-cell-height")
+            w-input(
+              v-model.number="config.timeCellHeight"
+              type="number"
+              min="20"
+              max="100"
+              data-testid="time-cell-height"
+              label-position="left"
+              outline) Time Cell Height (px)
 
           .control
-            label
-              input(type="checkbox" v-model="config.twelveHour" data-testid="twelve-hour")
-              | twelveHour
+            w-switch(
+              v-model="config.twelveHour"
+              thin
+              data-testid="twelve-hour") Twelve Hour
 
           .control
-            label
-              input(type="checkbox" v-model="config.timeAtCursor" data-testid="time-at-cursor")
-              | timeAtCursor
+            w-switch(
+              v-model="config.timeAtCursor"
+              thin
+              data-testid="time-at-cursor") Time At Cursor
 
           .control
-            label timeFormat:
-            input(type="text" v-model="config.timeFormat" placeholder="HH:mm" data-testid="time-format")
+            w-input(
+              v-model="config.timeFormat"
+              placeholder="HH:mm"
+              data-testid="time-format"
+              label-position="left"
+              outline) Time Format
 
       //- Event Props.
       section.control-section
         h3 Event Props
         .controls
           .control
-            label
-              input(type="checkbox" v-model="config.allDayEvents" data-testid="all-day-events")
-              | allDayEvents
+            w-switch(
+              v-model="config.allDayEvents"
+              thin
+              data-testid="all-day-events") All-Day Events
 
           .control
-            label
-              input(type="checkbox" v-model="config.multidayEvents" data-testid="multiday-events")
-              | multidayEvents
+            w-switch(
+              v-model="config.multidayEvents"
+              thin
+              data-testid="multiday-events") Multiday Events
 
           .control
-            label
-              input(type="checkbox" v-model="config.eventsOnMonthView" data-testid="events-on-month-view")
-              | eventsOnMonthView
+            w-switch(
+              v-model="config.eventsOnMonthView"
+              thin
+              data-testid="events-on-month-view") Events On Month View
 
           .control
-            label
-              input(type="checkbox" v-model="config.stackEvents" data-testid="stack-events")
-              | stackEvents
+            w-switch(
+              v-model="config.stackEvents"
+              thin
+              data-testid="stack-events") Stack Events
 
           .control
-            label
-              input(type="checkbox" v-model="editableEventsEnabled" data-testid="editable-events")
-              | editableEvents
+            w-switch(
+              v-model="editableEventsEnabled"
+              thin
+              data-testid="editable-events") Editable Events
 
           .control
-            label
-              input(type="checkbox" v-model="eventCountEnabled" data-testid="event-count")
-              | eventCount
+            w-switch(
+              v-model="eventCountEnabled"
+              thin
+              data-testid="event-count") Event Count
 
           .control
-            label eventCreateMinDrag (px):
-            input(type="number" v-model.number="config.eventCreateMinDrag" min="0" max="100" data-testid="event-create-min-drag")
+            w-input(
+              v-model.number="config.eventCreateMinDrag"
+              type="number"
+              min="0"
+              max="100"
+              data-testid="event-create-min-drag"
+              label-position="left"
+              outline) Event Create Min Drag (px):
 
           .control
-            label snapToInterval (minutes):
-            input(type="number" v-model.number="config.snapToInterval" min="0" max="60" data-testid="snap-to-interval")
+            w-input(
+              v-model.number="config.snapToInterval"
+              type="number"
+              min="0"
+              max="60"
+              data-testid="snap-to-interval"
+              label-position="left"
+              outline) Snap To Interval (minutes):
 
       //- Weekday Props.
       section.control-section
         h3 Weekday Props
         .controls
           .control
-            label
-              input(type="checkbox" v-model="config.hideWeekends" data-testid="hide-weekends")
-              | hideWeekends
+            w-switch(
+              v-model="config.hideWeekends"
+              thin
+              data-testid="hide-weekends") Hide Weekends
+
+          .control.w-flex.pa2.bdrs1.bd1.contrast-o05--bg
+            w-checkboxes(
+              v-model="config.hideWeekdays"
+              :items="config.weekdays"
+              multiple
+              inline
+              label-position="left") Hide Weekdays
+
+          .control.w-flex.pa2.bdrs1.bd1.contrast-o05--bg
+            w-checkboxes(
+              v-model="config.disableDays"
+              :items="config.weekdays"
+              multiple
+              inline
+              label-position="left") Disable Days
 
           .control
-            label hideWeekdays:
-            .checkbox-group
-              label(v-for="day in [1,2,3,4,5,6,7]" :key="day")
-                input(type="checkbox" :value="day" v-model="config.hideWeekdays" :data-testid="`hide-weekday-${day}`")
-                | {{ ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][day-1] }}
-
-          .control
-            label disableDays:
-            .checkbox-group
-              label(v-for="day in [1,2,3,4,5,6,7]" :key="day")
-                input(type="checkbox" :value="day" v-model="config.disableDays" :data-testid="`disable-day-${day}`")
-                | {{ ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'][day-1] }}
-
-          .control
-            label viewDayOffset:
-            input(type="number" v-model.number="config.viewDayOffset" min="0" max="6" data-testid="view-day-offset")
+            w-input(
+              v-model.number="config.viewDayOffset"
+              type="number"
+              min="0"
+              max="6"
+              data-testid="view-day-offset"
+              label-position="left"
+              outline) View Day Offset
 
       //- Schedules & Special Hours.
       section.control-section
-        h3 Schedules & Special Hours
+        h3 Schedules &amp; Special Hours
         .controls
           .control
-            label
-              input(type="checkbox" v-model="schedulesEnabled" data-testid="schedules-enabled")
-              | Enable Schedules
+            w-switch(
+              v-model="schedulesEnabled"
+              thin
+              data-testid="schedules-enabled") Enable Schedules
 
           .control(v-if="schedulesEnabled")
-            label Number of Schedules:
-            input(type="number" v-model.number="scheduleCount" min="1" max="10" data-testid="schedule-count")
+            w-input(
+              v-model.number="scheduleCount"
+              type="number"
+              min="1"
+              max="10"
+              data-testid="schedule-count"
+              label-position="left"
+              outline) Number of Schedules
 
           .control
-            label
-              input(type="checkbox" v-model="specialHoursEnabled" data-testid="special-hours-enabled")
-              | Enable Special Hours
+            w-switch(
+              v-model="specialHoursEnabled"
+              thin
+              data-testid="special-hours-enabled") Enable Special Hours
 
       //- Event Actions.
       section.control-section
@@ -285,9 +348,26 @@ const vueCalRef = ref(null)
 // Config state.
 const config = reactive({
   view: 'week',
+  availableViews: [
+    { label: 'Years', value: 'years' },
+    { label: 'Year', value: 'year' },
+    { label: 'Month', value: 'month' },
+    { label: 'Week', value: 'week' },
+    { label: 'Day', value: 'day' },
+    { label: 'Days', value: 'days' }
+  ],
   selectedDate: null,
   viewDate: new Date(),
-  locale: '',
+  locale: 'en-us',
+  locales: [
+    { label: 'Default (en-us)', value: 'en-us' },
+    { label: 'French', value: 'fr' },
+    { label: 'Spanish', value: 'es' },
+    { label: 'German', value: 'de' },
+    { label: 'Italian', value: 'it' },
+    { label: 'Japanese', value: 'ja' },
+    { label: 'Chinese', value: 'zh-cn' }
+  ],
   minDate: '',
   maxDate: '',
   startWeekOnSunday: false,
@@ -298,6 +378,10 @@ const config = reactive({
   watchRealTime: false,
   weekNumbers: false,
   theme: 'default',
+  themes: [
+    { label: 'Default', value: 'default' },
+    { label: 'None', value: false }
+  ],
   dark: false,
   sm: false,
   xs: false,
@@ -321,7 +405,16 @@ const config = reactive({
   snapToInterval: 0,
   hideWeekends: false,
   hideWeekdays: [],
-  disableDays: [],
+  hideWeekdaysLabels: [],
+  weekdays: [
+    { label: 'Mon', value: 'mon' },
+    { label: 'Tue', value: 'tue' },
+    { label: 'Wed', value: 'wed' },
+    { label: 'Thu', value: 'thu' },
+    { label: 'Fri', value: 'fri' },
+    { label: 'Sat', value: 'sat' },
+    { label: 'Sun', value: 'sun' }
+  ],
   viewDayOffset: 0,
   schedules: [],
   specialHours: {},
@@ -603,15 +696,7 @@ setTimeout(() => {
     input[type="number"],
     input[type="date"],
     select {
-      padding: 5px 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
       font-size: 13px;
-
-      &:focus {
-        outline: none;
-        border-color: #1976D2;
-      }
     }
 
     button {
@@ -632,10 +717,6 @@ setTimeout(() => {
     display: flex;
     flex-wrap: wrap;
     gap: 8px;
-    padding: 5px;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
 
     label {
       font-size: 12px;
