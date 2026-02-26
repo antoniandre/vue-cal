@@ -393,10 +393,11 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, watch } from 'vue'
+import { ref, reactive, computed, watch, onMounted, inject } from 'vue'
 import { VueCal, addDatePrototypes } from '@/vue-cal'
 
 addDatePrototypes()
+const $waveui = inject('$waveui')
 
 const vueCalRef = ref(null)
 
@@ -542,6 +543,8 @@ watch(specialHoursEnabled, enabled => {
   else config.specialHours = {}
 })
 
+watch(() => $waveui.theme, theme => config.dark = theme === 'dark')
+
 // Computed calendar props.
 const calendarProps = computed(() => {
   const props = { ...config }
@@ -677,6 +680,10 @@ const loadSampleEvents = () => {
 setTimeout(() => {
   loadSampleEvents()
 }, 500)
+
+onMounted(() => {
+  config.dark = (localStorage.theme || $waveui.theme) === 'dark'
+})
 </script>
 
 <style lang="scss">
