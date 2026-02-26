@@ -1,13 +1,13 @@
 // ***********************************************
-// Custom commands for Vue Cal E2E testing
+// Custom commands for Vue Cal E2E testing.
 // ***********************************************
 
-// Command to wait for Vue Cal to be ready
+// Command to wait for Vue Cal to be ready.
 Cypress.Commands.add('waitForVueCal', () => {
   cy.get('.vuecal--ready', { timeout: 10000 }).should('exist')
 })
 
-// Command to check if element is visible in viewport
+// Command to check if element is visible in viewport.
 Cypress.Commands.add('isInViewport', { prevSubject: true }, (subject) => {
   const rect = subject[0].getBoundingClientRect()
 
@@ -19,7 +19,7 @@ Cypress.Commands.add('isInViewport', { prevSubject: true }, (subject) => {
   return subject
 })
 
-// Command to check alignment between two elements
+// Command to check alignment between two elements.
 Cypress.Commands.add('checkAlignment', (element1Selector, element2Selector, alignmentType = 'top') => {
   cy.get(element1Selector).then($el1 => {
     cy.get(element2Selector).then($el2 => {
@@ -54,7 +54,7 @@ Cypress.Commands.add('checkAlignment', (element1Selector, element2Selector, alig
   })
 })
 
-// Command to simulate drag and drop
+// Command to simulate drag and drop.
 Cypress.Commands.add('dragAndDrop', { prevSubject: 'element' }, (subject, targetSelector, options = {}) => {
   const dataTransfer = new DataTransfer()
 
@@ -74,7 +74,7 @@ Cypress.Commands.add('dragAndDrop', { prevSubject: 'element' }, (subject, target
   return cy.wrap(subject)
 })
 
-// Command to simulate touch drag
+// Command to simulate touch drag.
 Cypress.Commands.add('touchDrag', { prevSubject: 'element' }, (subject, deltaX, deltaY) => {
   const rect = subject[0].getBoundingClientRect()
   const startX = rect.left + rect.width / 2
@@ -98,7 +98,7 @@ Cypress.Commands.add('touchDrag', { prevSubject: 'element' }, (subject, deltaX, 
   return cy.wrap(subject)
 })
 
-// Command to check event position and size
+// Command to check event position and size.
 Cypress.Commands.add('checkEventBounds', { prevSubject: 'element' }, (subject, expectedBounds) => {
   const rect = subject[0].getBoundingClientRect()
 
@@ -118,12 +118,12 @@ Cypress.Commands.add('checkEventBounds', { prevSubject: 'element' }, (subject, e
   return cy.wrap(subject)
 })
 
-// Command to get cell by date
+// Command to get cell by date.
 Cypress.Commands.add('getCellByDate', (date) => {
   return cy.get(`.vuecal__cell[data-date*="${date}"]`)
 })
 
-// Wave UI w-select: click to open, then click option by label (regex for exact match: "Year" not "Years")
+// Wave UI w-select: click to open, then click option by label (regex for exact match: "Year" not "Years").
 Cypress.Commands.add('wSelect', (testId, optionLabel) => {
   cy.get(`[data-testid="${testId}"]`).click()
   cy.get('[role="listbox"]').should('be.visible')
@@ -131,7 +131,7 @@ Cypress.Commands.add('wSelect', (testId, optionLabel) => {
   cy.get('[role="listbox"] [role="option"]').contains(new RegExp(`^${escaped}$`)).click()
 })
 
-// Command to create event by dragging in cell
+// Command to create event by dragging in cell.
 Cypress.Commands.add('createEventByDrag', (cellSelector, startY, endY) => {
   cy.get(cellSelector).then($cell => {
     const rect = $cell[0].getBoundingClientRect()

@@ -490,71 +490,6 @@ const viewDateInput = ref(new Date().toISOString().split('T')[0])
 const minDateInput = ref('')
 const maxDateInput = ref('')
 
-// Watch date inputs.
-watch(selectedDateInput, (val) => {
-  config.selectedDate = val ? new Date(val) : null
-})
-
-watch(viewDateInput, (val) => {
-  config.viewDate = val ? new Date(val) : new Date()
-})
-
-watch(minDateInput, (val) => {
-  config.minDate = val ? new Date(val) : ''
-})
-
-watch(maxDateInput, (val) => {
-  config.maxDate = val ? new Date(val) : ''
-})
-
-// Watch editable events.
-watch(editableEventsEnabled, (val) => {
-  config.editableEvents = val ? { title: true, drag: true, resize: true, delete: true, create: true } : false
-})
-
-// Watch event count.
-watch(eventCountEnabled, (val) => {
-  config.eventCount = val
-})
-
-// Watch schedules.
-watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
-  if (enabled) {
-    config.schedules = Array.from({ length: count }, (_, i) => ({
-      label: `Schedule ${i + 1}`,
-      class: `schedule-${i + 1}`
-    }))
-  }
-  else config.schedules = []
-})
-
-// Watch special hours.
-watch(specialHoursEnabled, enabled => {
-  if (enabled) {
-    config.specialHours = {
-      mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
-      wed: [
-        { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
-        { from: 14 * 60, to: 18 * 60, class: 'special-wed-pm', label: 'Wed PM' }
-      ],
-      fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
-    }
-  }
-  else config.specialHours = {}
-})
-
-watch(() => $waveui.theme, theme => config.dark = theme === 'dark')
-
-// Computed calendar props.
-const calendarProps = computed(() => {
-  const props = { ...config }
-  // Remove helper properties
-  delete props.view
-  delete props.selectedDate
-  delete props.viewDate
-  return props
-})
-
 // Event handlers.
 const onReady = event => console.log('ready', event)
 const onViewChange = view => console.log('view-change', view)
@@ -573,6 +508,20 @@ const onCellClick = event => console.log('cell-click', event)
 const onCellDrag = event => console.log('cell-drag', event)
 const onCellDragEnd = event => console.log('cell-drag-end', event)
 
+// Computed props.
+// --------------------------------------------------------
+// Computed calendar props.
+const calendarProps = computed(() => {
+  const props = { ...config }
+  // Remove helper properties.
+  delete props.view
+  delete props.selectedDate
+  delete props.viewDate
+  return props
+})
+
+// Methods.
+// --------------------------------------------------------
 // Event actions.
 const addEvent = () => {
   // Create event TODAY so it's visible in current view (for testing).
@@ -618,9 +567,7 @@ const addAllDayEvent = () => {
   config.events.push(event)
 }
 
-const clearEvents = () => {
-  config.events = []
-}
+const clearEvents = () => config.events = []
 
 const loadSampleEvents = () => {
   const now = new Date()
@@ -643,9 +590,7 @@ const loadSampleEvents = () => {
       class: `event-${(i % 3) + 1}`
     }
 
-    if (config.schedules.length) {
-      event.schedule = (i % config.schedules.length) + 1
-    }
+    if (config.schedules.length) event.schedule = (i % config.schedules.length) + 1
 
     events.push(event)
   }
@@ -676,10 +621,58 @@ const loadSampleEvents = () => {
   config.events = events
 }
 
-// Initialize with some sample events.
-setTimeout(() => {
-  loadSampleEvents()
-}, 500)
+// Watchers.
+// --------------------------------------------------------
+// Watch date inputs.
+watch(selectedDateInput, val => config.selectedDate = val ? new Date(val) : null)
+
+watch(viewDateInput, val => config.viewDate = val ? new Date(val) : new Date())
+
+watch(minDateInput, val => config.minDate = val ? new Date(val) : '')
+
+watch(maxDateInput, val => config.maxDate = val ? new Date(val) : '')
+
+// Watch editable events.
+watch(editableEventsEnabled, val => {
+  config.editableEvents = val ? { title: true, drag: true, resize: true, delete: true, create: true } : false
+})
+
+// Watch event count.
+watch(eventCountEnabled, val => {
+  config.eventCount = val
+})
+
+// Watch schedules.
+watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
+  if (enabled) {
+    config.schedules = Array.from({ length: count }, (_, i) => ({
+      label: `Schedule ${i + 1}`,
+      class: `schedule-${i + 1}`
+    }))
+  }
+  else config.schedules = []
+})
+
+// Watch special hours.
+watch(specialHoursEnabled, enabled => {
+  if (enabled) {
+    config.specialHours = {
+      mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
+      wed: [
+        { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
+        { from: 14 * 60, to: 18 * 60, class: 'special-wed-pm', label: 'Wed PM' }
+      ],
+      fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
+    }
+  }
+  else config.specialHours = {}
+})
+
+watch(() => $waveui.theme, theme => config.dark = theme === 'dark')
+
+// Lifecycle hooks.
+// --------------------------------------------------------
+setTimeout(loadSampleEvents, 500) // Initialize with some sample events.
 
 onMounted(() => {
   config.dark = (localStorage.theme || $waveui.theme) === 'dark'
