@@ -45,11 +45,11 @@ top-bar(v-if="routeReady && $route.name !== 'home'" fixed)
         round
         xl)
 
-footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4(v-if="routeReady")
-  .w-flex.text-center.smu-text-left.copyright.align-end
+footer.page-container.w-flex.align-end.gap1.grey-dark1(v-if="routeReady")
+  .copyright.w-flex.lh2
     | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-  .made-with.text-right.smd-text-center.no-grow
-    .w-flex.gap1.mb1.justify-end.smd-justify-center
+  .made-with.w-flex.column.justify-center.no-grow.align-end.text-right.mla
+    .w-flex.gap1.justify-end.align-center.xs-hide
       | This documentation is made with
       w-tooltip(top)
         template(#activator="{ on }")
@@ -72,7 +72,12 @@ footer.page-container.grey-dark1.smd-column.smd-justify-center.gap4(v-if="routeR
         template(#activator="{ on }")
           w-icon.caption(v-on="on" size="1rem").heart mdi mdi-heart
         | Love
-    | View project on #[a(href="https://github.com/antoniandre/vue-cal" target="_blank") #[w-icon mdi mdi-github] Github].
+    .w-flex.align-center.justify-end
+      | View project on
+      a.w-flex.align-center.gap1.ml1(href="https://github.com/antoniandre/vue-cal" target="_blank")
+        w-icon mdi mdi-github
+        | Github
+      | .
 </template>
 
 <script setup>
