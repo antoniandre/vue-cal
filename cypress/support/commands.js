@@ -4,11 +4,11 @@
 
 // Command to wait for Vue Cal to be ready.
 Cypress.Commands.add('waitForVueCal', () => {
-  cy.get('.vuecal--ready', { timeout: 10000 }).should('exist')
+  cy.get('.vuecal--ready', { timeout: 5000 }).should('exist')
 })
 
 // Command to check if element is visible in viewport.
-Cypress.Commands.add('isInViewport', { prevSubject: true }, (subject) => {
+Cypress.Commands.add('isInViewport', { prevSubject: true }, subject => {
   const rect = subject[0].getBoundingClientRect()
 
   expect(rect.top).to.be.at.least(0)
@@ -55,7 +55,7 @@ Cypress.Commands.add('checkAlignment', (element1Selector, element2Selector, alig
 })
 
 // Command to simulate drag and drop.
-Cypress.Commands.add('dragAndDrop', { prevSubject: 'element' }, (subject, targetSelector, options = {}) => {
+Cypress.Commands.add('dragAndDrop', { prevSubject: 'element' }, (subject, targetSelector) => {
   const dataTransfer = new DataTransfer()
 
   cy.wrap(subject)
@@ -119,9 +119,7 @@ Cypress.Commands.add('checkEventBounds', { prevSubject: 'element' }, (subject, e
 })
 
 // Command to get cell by date.
-Cypress.Commands.add('getCellByDate', (date) => {
-  return cy.get(`.vuecal__cell[data-date*="${date}"]`)
-})
+Cypress.Commands.add('getCellByDate', date => cy.get(`.vuecal__cell[data-date*="${date}"]`))
 
 // Wave UI w-select: click to open, then click option by label (regex for exact match: "Year" not "Years").
 Cypress.Commands.add('wSelect', (testId, optionLabel) => {

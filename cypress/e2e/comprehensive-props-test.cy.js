@@ -7,10 +7,10 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       retryOnStatusCodeFailure: true,
       retryOnNetworkFailure: true
     })
-    // Wait for the comprehensive test view to load (async route + component)
+    // Wait for the comprehensive test view to load (async route + component).
     cy.get('.controls-panel', { timeout: 15000 }).should('be.visible')
     cy.get('[data-testid="vue-cal"]', { timeout: 15000 }).should('be.visible')
-    cy.wait(2500) // Wait for Vue Cal to be ready and sample events to load (loadSampleEvents runs at 500ms)
+    cy.wait(2500) // Wait for Vue Cal to be ready and sample events to load (loadSampleEvents runs at 500ms).
   })
 
   describe('Basic Props', () => {
@@ -452,7 +452,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.wSelect('view-select', 'Week')
       cy.wait(300)
 
-      // w-checkboxes: first checkbox in Hide Weekdays section is Mon
+      // w-checkboxes: first checkbox in Hide Weekdays section is Mon.
       cy.contains('Hide Weekdays').parent().find('input[type="checkbox"]').first().check({ force: true })
       cy.wait(300)
       cy.get('.vuecal__weekday').should('have.length', 6)
@@ -571,12 +571,12 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.wSelect('locale-select', 'French')
       cy.wait(300)
       cy.get('.vuecal').should('be.visible')
-      cy.get('.vuecal__title').invoke('text').should('match', /janvier|février|mars|avril|mai|juin|juillet|août|septembre|octobre|novembre|décembre/i)
+      cy.get('.vuecal__weekdays-headings').invoke('text').should('match', /lundi|mardi|mercredi|jeudi|vendredi|samedi|dimanche/i)
 
       cy.wSelect('locale-select', 'Spanish')
       cy.wait(300)
       cy.get('.vuecal').should('be.visible')
-      cy.get('.vuecal__title').invoke('text').should('match', /enero|febrero|marzo|abril|mayo|junio|julio|agosto|septiembre|octubre|noviembre|diciembre/i)
+      cy.get('.vuecal__weekdays-headings').invoke('text').should('match', /lunes|martes|miércoles|jueves|viernes|sábado|domingo/i)
 
       cy.wSelect('locale-select', 'Default (en-us)')
       cy.wait(300)
@@ -769,7 +769,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
             touches: [{ clientX: x, clientY: y }],
             force: true
           })
-        cy.wait(600) // Wait for 500ms long-press threshold
+        cy.wait(600) // Wait for 500ms long-press threshold.
         cy.wrap($cell)
           .trigger('touchmove', {
             touches: [{ clientX: x, clientY: y + 50 }],
@@ -792,9 +792,7 @@ describe('Vue Cal - Comprehensive Props Test', () => {
       cy.viewport(375, 667)
       cy.wait(300)
 
-      cy.get('.vuecal__event').first().then($el => {
-        cy.wrap($el).touchDrag(30, 40)
-      })
+      cy.get('.vuecal__event').first().then($el => cy.wrap($el).touchDrag(30, 40))
       cy.wait(300)
       cy.get('.vuecal').should('be.visible')
     })
