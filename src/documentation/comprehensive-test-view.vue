@@ -703,6 +703,11 @@ onMounted(() => {
   overflow: hidden;
   gap: 20px;
 
+  // w-switch hides its checkbox with `position: absolute; opacity: 0`, but the browser's
+  // focus-triggered scroll-into-view still scrolls ancestors to bring it into view.
+  // Using `position: fixed` makes the element always "in the viewport", so no scroll occurs.
+  .controls-panel .w-switch input[type="checkbox"] {position: fixed;}
+
   .controls-panel {
     width: 350px;
     padding: 20px;
