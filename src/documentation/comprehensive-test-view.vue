@@ -305,7 +305,7 @@
               label-on-left
               data-testid="hide-weekends") Hide Weekends
 
-          .control.w-flex.pa2.bdrs1.bd1.contrast-o05--bg
+          .control.w-flex.pa2.bdrs1.bd1.contrast-o05--bg(data-testid="hide-weekdays")
             w-checkboxes(
               v-model="config.hideWeekdays"
               :items="config.weekdays"
@@ -570,17 +570,18 @@ const addAllDayEvent = () => {
 const clearEvents = () => config.events = []
 
 const loadSampleEvents = () => {
-  const now = new Date()
+  const baseDate = config.viewDate || config.selectedDate || new Date()
+  const now = baseDate instanceof Date ? baseDate : new Date(baseDate)
   const events = []
 
-  // Add 10 regular events.
+  // Add 10 regular events - deterministic day offsets (-3 to 3) so they always fall in the visible week.
   for (let i = 0; i < 10; i++) {
-    const dayOffset = Math.floor(Math.random() * 7) - 3
-    const hourOffset = Math.floor(Math.random() * 10) + 8
+    const dayOffset = (i % 7) - 3
+    const hourOffset = 8 + (i % 10)
     const start = new Date(now)
     start.setDate(start.getDate() + dayOffset)
     start.setHours(hourOffset, 0, 0, 0)
-    const end = new Date(start.getTime() + (1 + Math.floor(Math.random() * 2)) * 60 * 60 * 1000)
+    const end = new Date(start.getTime() + (1 + (i % 2)) * 60 * 60 * 1000)
 
     const event = {
       title: `Event ${i + 1}`,
@@ -595,10 +596,10 @@ const loadSampleEvents = () => {
     events.push(event)
   }
 
-  // Add 3 all-day events if enabled.
+  // Add 3 all-day events if enabled - deterministic days (-2, 0, 2) to ensure visibility in week view.
   if (config.allDayEvents) {
     for (let i = 0; i < 3; i++) {
-      const dayOffset = Math.floor(Math.random() * 7) - 3
+      const dayOffset = (i - 1) * 2
       const start = new Date(now)
       start.setDate(start.getDate() + dayOffset)
       start.setHours(0, 0, 0, 0)
