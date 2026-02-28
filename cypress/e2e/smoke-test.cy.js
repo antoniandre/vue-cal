@@ -42,7 +42,7 @@ describe('Global Rendering', () => {
     cy.get('.vuecal').should('have.class', 'vuecal--week-view')
     cy.get('.vuecal__scrollable').should('have.class', 'vuecal__scrollable--week-view')
     cy.get('.vuecal__cell--today').should('be.visible')
-    cy.get('.vuecal__now-line').should('be.visible')
+    cy.get('.vuecal__now-line').scrollIntoView().should('be.visible')
     const hhmm = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false })
     cy.get('.vuecal__now-line').should('have.attr', 'title', hhmm)
   })
