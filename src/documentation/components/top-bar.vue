@@ -379,8 +379,13 @@ $lighter-text: #ccc;
 // Media queries.
 // --------------------------------------------------------
 @media screen and (max-width: $xs) {
-  .fixed .top-bar__logo {transform: scale(0.8);}
-
+  .theme-switch {top: 4px;right: 4px;}
+  .top-bar.fixed .top-bar__logo {transform: scale(0.8);}
+  .top-bar.fixed .top-bar__logo-title {
+    font-size: 0.8em;
+    letter-spacing: -0.5px;
+  }
+  .top-bar.fixed .version {font-size: 0.65rem;}
   .top-bar.fixed,
   .top-bar.fixed .w-toolbar__content,
   .fixed .w-flex.top-bar__logo-link {
@@ -388,12 +393,10 @@ $lighter-text: #ccc;
     gap: 8px;
   }
 
-  .top-bar__items .w-button {padding: 0 10px;}
+  .top-bar__items .w-button {padding: 0 8px;}
 }
 
 @media screen and (max-width: $xxs) {
-  .theme-switch {top: 4px;right: 4px;}
-
   .top-bar.fixed .top-bar__items {margin-right: 0;}
   .top-bar.fixed .top-bar__title > .w-flex {padding-left: 8px;}
   .top-bar__title {width: 14.5em;}
