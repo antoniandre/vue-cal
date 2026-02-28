@@ -1,6 +1,14 @@
 <template lang="pug">
-.comprehensive-test-view.ovh.fill-height
-  .controls-panel
+.comprehensive-test-view.ovh.fill-height(:class="{ 'drawer-open': drawerOpen }")
+  w-button.controls-toggle(
+    v-if="$waveui.breakpoint.xs"
+    round
+    :icon="drawerOpen ? 'mdi mdi-close' : 'mdi mdi-menu'"
+    @click="drawerOpen = !drawerOpen"
+    data-testid="controls-toggle")
+  controls-panel-wrapper(
+    :drawer-open="drawerOpen"
+    @update:drawer-open="drawerOpen = $event")
     h2 Vue Cal - Comprehensive Test View
     p.subtitle All Props Testing Interface
 
@@ -364,10 +372,29 @@
         h3 Event Actions
         .controls.w-flex.column.gap2
           .w-flex.gap2
-            w-button.grow(@click="addEvent" data-testid="add-event-btn") Add Random Event
-            w-button.grow(@click="addAllDayEvent" data-testid="add-all-day-event-btn") Add All-Day Event
-          w-button(@click="clearEvents" bg-color="orange-light1" color="white" data-testid="clear-events-btn") Clear All Events
-          w-button(@click="loadSampleEvents" bg-color="info" data-testid="load-sample-events-btn") Load Sample Events
+            w-button.grow(@click="addEvent" data-testid="add-event-btn")
+              w-icon.mr1 wi-plus
+              small Rand. Evt.
+            w-button.grow(@click="addAllDayEvent" data-testid="add-all-day-event-btn")
+              w-icon.mr1 wi-plus
+              small All-Day Evt.
+            w-button.grow(@click="addBackgroundEvent" data-testid="add-background-event-btn")
+              w-icon.mr1 wi-plus
+              small Bgd Evt.
+          .w-flex.gap2.basis-zero
+            w-button(
+              @click="clearEvents"
+              bg-color="orange-light1"
+              color="white"
+              data-testid="clear-events-btn")
+                w-icon.mr1 wi-minus
+                small Clear All Events
+            w-button(
+              @click="loadSampleEvents"
+              bg-color="info"
+              data-testid="load-sample-events-btn")
+                w-icon.mr1 mdi mdi-wand
+                small Load Sample Events
 
   .calendar-wrap
     vue-cal(
@@ -395,11 +422,13 @@
 <script setup>
 import { ref, reactive, computed, watch, onMounted, inject } from 'vue'
 import { VueCal, addDatePrototypes } from '@/vue-cal'
+import ControlsPanelWrapper from '@/documentation/components/controls-panel-wrapper.vue'
 
 addDatePrototypes()
 const $waveui = inject('$waveui')
 
 const vueCalRef = ref(null)
+const drawerOpen = ref(false)
 
 // Config state.
 const config = reactive({
@@ -567,6 +596,27 @@ const addAllDayEvent = () => {
   config.events.push(event)
 }
 
+const addBackgroundEvent = () => {
+  const now = new Date()
+  const start = new Date(now)
+  start.setHours(10, 0, 0, 0)
+  const end = new Date(start.getTime() + 2 * 60 * 60 * 1000)
+
+  const event = {
+    title: `Background ${config.events.filter(e => e.background).length + 1}`,
+    start,
+    end,
+    background: true,
+    class: 'background-event'
+  }
+
+  if (config.schedules.length) {
+    event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
+  }
+
+  config.events.push(event)
+}
+
 const clearEvents = () => config.events = []
 
 const loadSampleEvents = () => {
@@ -685,17 +735,22 @@ onMounted(() => {
   height: 100vh;
   overflow: hidden;
 }
-.page--test-comprehensive {overflow: hidden;}
-.page--test-comprehensive ~ footer {
-  margin-top: 0.3rem;
-  margin-bottom: 0.3rem;
-  font-size: 0.8rem;
-}
-.page--test-comprehensive aside {display: none;}
-.page--test-comprehensive main {
-  padding-left: 0;
-  border: none;
+.page--test-comprehensive {
   overflow: hidden;
+
+  ~ footer {
+    margin-top: 0.3rem;
+    margin-bottom: 0.3rem;
+    font-size: 0.8rem;
+  }
+
+  > aside {display: none;}
+
+  main {
+    padding-left: 0;
+    border: none;
+    overflow: hidden;
+  }
 }
 
 .comprehensive-test-view {
@@ -703,6 +758,14 @@ onMounted(() => {
   height: 100vh;
   overflow: hidden;
   gap: 20px;
+
+  .controls-toggle {
+    position: fixed;
+    top: 36px;
+    right: 4px;
+    z-index: 600;
+  }
+ &.drawer-open .controls-toggle {transform: translateY(-110%);}
 
   // w-switch hides its checkbox with `position: absolute; opacity: 0`, but the browser's
   // focus-triggered scroll-into-view still scrolls ancestors to bring it into view.
@@ -712,11 +775,13 @@ onMounted(() => {
   .controls-panel {
     width: 350px;
     padding: 20px;
-    background: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
     overflow-y: auto;
     border-right: 1px solid color-mix(in srgb, var(--w-contrast-bg-color) 8%, transparent);
     border-top-left-radius: 6px;
     border-bottom-left-radius: 6px;
+    background-color: color-mix(in srgb, var(--w-contrast-bg-color) 5%, transparent);
+
+    &.w-drawer {background-color: #fff;}
 
     h2 {
       margin: 0 0 5px 0;
@@ -796,12 +861,15 @@ onMounted(() => {
     .vuecal {height: 100%;}
   }
 
-
   // Event classes for testing.
   .vuecal__event.event-1 {background: #42A5F5;}
   .vuecal__event.event-2 {background: #66BB6A;}
   .vuecal__event.event-3 {background: #FFA726;}
   .vuecal__event.all-day-event {background: #AB47BC;}
+  .vuecal__event.background-event {
+    background: repeating-linear-gradient(45deg, transparent 0 8px, rgba(0, 0, 0, 0.08) 8px 16px);
+    border: none;
+  }
 
   .vuecal__special-hours.special-mon,
   .vuecal__special-hours.special-wed-am,
@@ -809,5 +877,11 @@ onMounted(() => {
   .vuecal__special-hours.special-fri {
     background: rgba(255, 235, 59, 0.2);
   }
+}
+
+// Media queries.
+// --------------------------------------------------------
+@media screen and (max-width: $xs) {
+  .page--test-comprehensive {padding: 8px;}
 }
 </style>

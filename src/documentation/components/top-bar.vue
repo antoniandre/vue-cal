@@ -18,7 +18,7 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       span.intro Vue.js full cal&nbsp; #[span.code --no-deps --no-bs]&nbsp; :metal:
 
   .top-bar__items.fill-height.mr3
-    w-button(
+    w-button.xxs-hide(
       v-if="!isProduction"
       route="/test"
       text
@@ -384,8 +384,9 @@ $lighter-text: #ccc;
   .top-bar.fixed .top-bar__logo-title {
     font-size: 0.8em;
     letter-spacing: -0.5px;
+    margin-top: -6px;
   }
-  .top-bar.fixed .version {font-size: 0.65rem;}
+  .top-bar.fixed .version {font-size: 0.65rem;bottom: -7px;}
   .top-bar.fixed,
   .top-bar.fixed .w-toolbar__content,
   .fixed .w-flex.top-bar__logo-link {
@@ -397,6 +398,8 @@ $lighter-text: #ccc;
 }
 
 @media screen and (max-width: $xxs) {
+  .w-app .xxs-hide {display: none;}
+
   .top-bar.fixed .top-bar__items {margin-right: 0;}
   .top-bar.fixed .top-bar__title > .w-flex {padding-left: 8px;}
   .top-bar__title {width: 14.5em;}
