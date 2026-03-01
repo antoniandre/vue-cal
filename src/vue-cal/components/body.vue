@@ -60,7 +60,7 @@ const bodyStyles = computed(() => ({
 const timeAtCursor = computed(() => {
   const isHzl = config.horizontal
   const cursorPercent = isHzl ? cursorXPercent.value : cursorYPercent.value
-  const time = dateUtils.formatTime(percentageToMinutes(cursorPercent, config))
+  const time = dateUtils.formatTime(percentageToMinutes(cursorPercent, config), config.twelveHour ? 'h:mm{am}' : 'HH:mm')
   return {
     style: { [isHzl ? 'left' : 'top']: `${cursorPercent}%` },
     time
