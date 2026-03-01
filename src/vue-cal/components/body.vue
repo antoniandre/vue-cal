@@ -147,6 +147,7 @@ onBeforeUnmount(() => {
     margin-right: 4px;
     padding: 0 3px;
     font-size: 0.7rem;
+    letter-spacing: -0.04em;
     backdrop-filter: blur(10px);
     border-radius: 99em;
   }
