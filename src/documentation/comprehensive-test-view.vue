@@ -570,9 +570,7 @@ const addEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  // Replace array to trigger VueCal's watcher.
-  // config.events.push(event)
-  config.events = [...config.events, event]
+  config.events.push(event)
 }
 
 const addAllDayEvent = () => {
@@ -593,9 +591,7 @@ const addAllDayEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  // Replace array to trigger VueCal's watcher.
-  // config.events.push(event)
-  config.events = [...config.events, event]
+  config.events.push(event)
 }
 
 const addBackgroundEvent = () => {
@@ -616,9 +612,7 @@ const addBackgroundEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  // Replace array to trigger VueCal's watcher.
-  // config.events.push(event)
-  config.events = [...config.events, event]
+  config.events.push(event)
 }
 
 const clearEvents = () => config.events = []

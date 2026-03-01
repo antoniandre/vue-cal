@@ -292,7 +292,12 @@ export const useConfig = (vuecal, props, attrs) => {
 
   // Keep a local copy of the events so the prop is not mandatory.
   const events = reactive(props.events || [])
-  watch(() => props.events, evts => events.splice(0, events.length, ...evts))
+  // Watch both reference (full replacement) and length (push/pop/splice) changes.
+  // Avoids deep watching which would traverse every event property on each mutation.
+  watch(
+    [() => props.events, () => props.events?.length],
+    ([evts]) => events.splice(0, events.length, ...(evts || []))
+  )
   watch(() => props.locale, newLocale => loadTexts(newLocale || 'en-us'))
 
   // If a locale is requested via prop, load it (async call).
