@@ -1,21 +1,20 @@
 /// <reference types="cypress" />
 
-describe('Vue Cal - Events Test', () => {
-  beforeEach(() => {
-    cy.visit('/test-comprehensive', {
-      timeout: 60000,
-      retryOnStatusCodeFailure: true,
-      retryOnNetworkFailure: true
-    })
-    cy.get('.controls-panel', { timeout: 15000 }).should('be.visible')
-    cy.get('[data-testid="vue-cal"]', { timeout: 15000 }).should('be.visible')
-    cy.wait(1500)
+beforeEach(() => {
+  cy.visit('/test-comprehensive', {
+    timeout: 60000,
+    retryOnStatusCodeFailure: true,
+    retryOnNetworkFailure: true
   })
+  cy.get('.controls-panel', { timeout: 15000 }).should('be.visible')
+  cy.get('[data-testid="vue-cal"]', { timeout: 15000 }).should('be.visible')
+  cy.wait(1500)
+})
 
+describe('Vue Cal - Events Test', () => {
   describe('Event Display', () => {
     it('should display timed events in week view', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -25,10 +24,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should display all-day events when enabled', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="all-day-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -38,11 +34,8 @@ describe('Vue Cal - Events Test', () => {
 
     it('should display events on month view when eventsOnMonthView is enabled', () => {
       cy.wSelect('view-select', 'Month')
-      cy.wait(300)
-
-      cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="events-on-month-view"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.get('.vuecal__event').should('have.length.at.least', 1)
@@ -55,10 +48,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should display event count on month view when eventCount is enabled', () => {
       cy.wSelect('view-select', 'Month')
-      cy.wait(300)
-
       cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="event-count"]').check({ force: true })
       cy.wait(300)
 
@@ -72,7 +62,6 @@ describe('Vue Cal - Events Test', () => {
     it('should display multiday events', () => {
       cy.get('[data-testid="multiday-events"]').should('be.checked')
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -81,10 +70,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should stack overlapping events when stackEvents is enabled', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="stack-events"]').check({ force: true })
       cy.wait(300)
 
@@ -92,12 +78,10 @@ describe('Vue Cal - Events Test', () => {
       cy.get('.vuecal__event').should('have.length.at.least', 1)
 
       cy.get('[data-testid="stack-events"]').uncheck({ force: true })
-      cy.wait(300)
     })
 
     it('should display events in day view', () => {
       cy.wSelect('view-select', 'Day')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -107,7 +91,6 @@ describe('Vue Cal - Events Test', () => {
 
     it('should display events in days view', () => {
       cy.wSelect('view-select', 'Days')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -117,10 +100,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should display timeless events when time is disabled', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="time-enabled"]').uncheck({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -133,7 +113,6 @@ describe('Vue Cal - Events Test', () => {
 
     it('should respond to event click', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -146,9 +125,9 @@ describe('Vue Cal - Events Test', () => {
   describe('Event Create - Programmatically', () => {
     it('should add timed event via button', () => {
       cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="load-sample-events-btn"]').scrollIntoView().click()
       cy.wait(300)
 
-      cy.get('[data-testid="load-sample-events-btn"]').scrollIntoView().click()
       cy.get('.vuecal__event', { timeout: 5000 }).its('length').then((initialCount) => {
         cy.get('[data-testid="add-event-btn"]').scrollIntoView().click({ force: true })
         cy.wait(300)
@@ -158,10 +137,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should add all-day event via button', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="all-day-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -174,8 +150,6 @@ describe('Vue Cal - Events Test', () => {
 
     it('should add background event via button', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -191,10 +165,7 @@ describe('Vue Cal - Events Test', () => {
   describe('Event Create - By Drag', () => {
     it('should create event by dragging in cell', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="editable-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -229,10 +200,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should delete event via double-click and delete button', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="editable-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -249,10 +217,7 @@ describe('Vue Cal - Events Test', () => {
   describe('Event Drag & Drop', () => {
     it('should allow dragging event to different cell', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="editable-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -284,10 +249,7 @@ describe('Vue Cal - Events Test', () => {
   describe('Event Resize', () => {
     it('should allow resizing event when editable', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="editable-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -310,41 +272,38 @@ describe('Vue Cal - Events Test', () => {
   describe('Layout - Horizontal vs Vertical', () => {
     it('should display events in horizontal layout', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
-      cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="horizontal"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
       cy.get('.vuecal__event').should('have.length.at.least', 1)
 
       cy.get('[data-testid="horizontal"]').uncheck({ force: true })
-      cy.wait(300)
     })
 
     it('should display all-day events in horizontal layout', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="all-day-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="horizontal"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.get('.vuecal').should('have.class', 'vuecal--horizontal')
-      cy.get('.vuecal__all-day').scrollIntoView().should('be.visible')
+      cy.get('.vuecal__all-day').should('exist')
+      cy.get('.vuecal__all-day .vuecal__event').should('have.length.at.least', 1)
+
+      cy.get('.vuecal__all-day .vuecal__event').first().scrollIntoView({ behavior: 'auto' })
+      cy.get('.vuecal__scrollable').then($el => { $el[0].scrollTop -= 30 })
+      // cy.pause() // Manual pause to see the event is indeed visible.
+      cy.get('.vuecal__all-day .vuecal__event').first().should('be.visible')
 
       cy.get('[data-testid="horizontal"]').uncheck({ force: true })
       cy.get('[data-testid="all-day-events"]').uncheck({ force: true })
-      cy.wait(300)
     })
 
     it('should display events in vertical layout (default)', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
@@ -356,13 +315,9 @@ describe('Vue Cal - Events Test', () => {
   describe('Event Prop Combinations', () => {
     it('should work with eventsOnMonthView + multidayEvents', () => {
       cy.wSelect('view-select', 'Month')
-      cy.wait(300)
-
-      cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="multiday-events"]').check({ force: true })
-      cy.wait(200)
       cy.get('[data-testid="events-on-month-view"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.get('.vuecal__event').first().scrollIntoView().should('be.visible')
@@ -374,10 +329,7 @@ describe('Vue Cal - Events Test', () => {
 
     it('should work with allDayEvents + stackEvents', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="all-day-events"]').check({ force: true })
-      cy.wait(300)
       cy.get('[data-testid="stack-events"]').check({ force: true })
       cy.wait(300)
 
@@ -391,13 +343,9 @@ describe('Vue Cal - Events Test', () => {
 
     it('should work with editableEvents + schedules', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="schedules-enabled"]').check({ force: true })
-      cy.wait(300)
-      cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="editable-events"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.get('.vuecal__schedule--heading').should('be.visible')
@@ -445,7 +393,6 @@ describe('Vue Cal - Events Test', () => {
   describe('Load Sample Events', () => {
     it('should load sample events', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="clear-events-btn"]').click()
       cy.wait(300)
 
@@ -459,9 +406,9 @@ describe('Vue Cal - Events Test', () => {
   describe('Touch Device - Events', () => {
     it('should respond to touch events for event drag', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
+
       cy.get('[data-testid="editable-events"]').check({ force: true })
       cy.wait(300)
 
@@ -490,7 +437,6 @@ describe('Vue Cal - Events Test', () => {
 
     it('should allow event creation via long-press on touch device', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
       cy.get('[data-testid="editable-events"]').check({ force: true })
       cy.wait(300)
 
@@ -521,10 +467,8 @@ describe('Vue Cal - Events Test', () => {
 
     it('should use touchDrag command for event interaction', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-      cy.get('[data-testid="load-sample-events-btn"]').click()
-      cy.wait(300)
       cy.get('[data-testid="editable-events"]').check({ force: true })
+      cy.get('[data-testid="load-sample-events-btn"]').click()
       cy.wait(300)
 
       cy.viewport(375, 667)
