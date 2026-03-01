@@ -260,8 +260,6 @@ describe('Vue Cal - Display Test', () => {
   describe('Time Props', () => {
     it('should toggle time column', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="time-enabled"]').should('be.checked')
       cy.get('.vuecal__time-column').should('be.visible')
 
@@ -276,8 +274,6 @@ describe('Vue Cal - Display Test', () => {
 
     it('should change timeFrom', () => {
       cy.wSelect('view-select', 'Day')
-      cy.wait(400)
-
       cy.get('[data-testid="time-from"]').focus().type('{selectall}480')
       cy.wait(300)
       cy.get('.vuecal__time-cell').should('have.length.greaterThan', 0)
@@ -285,8 +281,6 @@ describe('Vue Cal - Display Test', () => {
 
     it('should change timeTo', () => {
       cy.wSelect('view-select', 'Day')
-      cy.wait(400)
-
       cy.get('[data-testid="time-to"]').focus().type('{selectall}1080')
       cy.wait(300)
       cy.get('.vuecal__time-cell').should('have.length.greaterThan', 0)
@@ -295,8 +289,6 @@ describe('Vue Cal - Display Test', () => {
 
     it('should change timeStep', () => {
       cy.wSelect('view-select', 'Day')
-      cy.wait(400)
-
       cy.get('[data-testid="time-step"]').focus().type('{selectall}30')
       cy.wait(300)
       cy.get('.vuecal__time-cell').should('have.length.greaterThan', 24)
@@ -304,8 +296,6 @@ describe('Vue Cal - Display Test', () => {
 
     it('should toggle twelveHour format', () => {
       cy.wSelect('view-select', 'Day')
-      cy.wait(300)
-
       cy.get('[data-testid="twelve-hour"]').check({ force: true })
       cy.wait(300)
       cy.get('.vuecal__time-cell').first().should('be.visible')
@@ -317,11 +307,34 @@ describe('Vue Cal - Display Test', () => {
 
     it('should toggle timeAtCursor', () => {
       cy.wSelect('view-select', 'Week')
-      cy.wait(300)
-
       cy.get('[data-testid="time-at-cursor"]').check({ force: true })
       cy.wait(300)
       cy.get('.vuecal__body').should('be.visible')
+    })
+
+    it('should show timeAtCursor in 12h format when twelveHour is enabled', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="time-at-cursor"]').check({ force: true })
+      cy.get('[data-testid="twelve-hour"]').check({ force: true })
+      cy.wait(300)
+
+      // Move cursor over the calendar body to trigger the time-at-cursor label.
+      cy.get('.vuecal__body').then($body => {
+        const rect = $body[0].getBoundingClientRect()
+        cy.wrap($body).trigger('mousemove', {
+          clientX: rect.left + rect.width / 2,
+          clientY: rect.top + rect.height / 2,
+          force: true
+        })
+      })
+      cy.wait(200)
+
+      cy.get('.vuecal__time-at-cursor label').should('be.visible')
+        .invoke('text')
+        .should('match', /^\d{1,2}(:\d{2})?(am|pm)$/)
+
+      cy.get('[data-testid="twelve-hour"]').uncheck({ force: true })
+      cy.get('[data-testid="time-at-cursor"]').uncheck({ force: true })
     })
 
     it('should change timeCellHeight', () => {
