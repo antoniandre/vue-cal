@@ -99,7 +99,6 @@ const onBodyMouseleave = () => {
 const getCellUnderMouse = (mouseX, mouseY) => {
   // Use elementFromPoint for better performance as it's optimized by the browser.
   const element = document.elementFromPoint(mouseX, mouseY)
-  console.log(element?.closest('.vuecal__cell'))
   // Check if the element or its parent is a cell.
   return element?.closest('.vuecal__cell') || null
 }
