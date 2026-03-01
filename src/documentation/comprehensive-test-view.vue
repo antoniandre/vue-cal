@@ -522,9 +522,9 @@ const maxDateInput = ref('')
 // Event handlers.
 const onReady = event => console.log('ready', event)
 const onViewChange = view => console.log('view-change', view)
-const onEventCreate = event => {
+const onEventCreate = ({ event, resolve }) => {
   console.log('event-create', event)
-  config.events.push(event)
+  resolve(event) // Accept the event so Vue Cal creates it.
 }
 const onEventClick = event => console.log('event-click', event)
 const onEventDrag = event => console.log('event-drag', event)
@@ -553,8 +553,7 @@ const calendarProps = computed(() => {
 // --------------------------------------------------------
 // Event actions.
 const addEvent = () => {
-  // Create event TODAY so it's visible in current view (for testing).
-  const now = new Date()
+  const now = config.viewDate || new Date() // Use viewDate so events appear in the visible range.
   const start = new Date(now)
   start.setHours(10 + Math.floor(Math.random() * 6), 0, 0, 0) // Random hour between 10am and 3pm.
   const end = new Date(start.getTime() + (1 + Math.floor(Math.random() * 2)) * 60 * 60 * 1000)
@@ -571,12 +570,13 @@ const addEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  config.events.push(event)
+  // Replace array to trigger VueCal's watcher.
+  // config.events.push(event)
+  config.events = [...config.events, event]
 }
 
 const addAllDayEvent = () => {
-  // Create all-day event TODAY so it's visible in current view (for testing).
-  const now = new Date()
+  const now = config.viewDate || new Date() // Use viewDate so events appear in the visible range.
   const start = new Date(now)
   start.setHours(0, 0, 0, 0)
   const end = new Date(start.getTime() + 24 * 60 * 60 * 1000 - 1)
@@ -593,11 +593,13 @@ const addAllDayEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  config.events.push(event)
+  // Replace array to trigger VueCal's watcher.
+  // config.events.push(event)
+  config.events = [...config.events, event]
 }
 
 const addBackgroundEvent = () => {
-  const now = new Date()
+  const now = config.viewDate || new Date() // Use viewDate so events appear in the visible range.
   const start = new Date(now)
   start.setHours(10, 0, 0, 0)
   const end = new Date(start.getTime() + 2 * 60 * 60 * 1000)
@@ -614,7 +616,9 @@ const addBackgroundEvent = () => {
     event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
   }
 
-  config.events.push(event)
+  // Replace array to trigger VueCal's watcher.
+  // config.events.push(event)
+  config.events = [...config.events, event]
 }
 
 const clearEvents = () => config.events = []
