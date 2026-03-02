@@ -534,7 +534,7 @@ export const useEvents = vuecal => {
     // Set the end date to the hovered cell's start date while preserving the time at cursor position.
     if (resizeState.moveX && vuecal.touch?.currentHoveredCell && resizeState.cellEl) {
       // Get the current hovered cell date from global touch state.
-      const currentCellDate = new Date(vuecal.touch.currentHoveredCell.__vueParentComponent.props.start)
+      const currentCellDate = new Date(parseInt(vuecal.touch.currentHoveredCell.dataset.start))
 
       // Set the event end date to the hovered cell's date.
       // newEnd.setDate(currentCellDate.getDate())
@@ -578,7 +578,7 @@ export const useEvents = vuecal => {
 
     if (resizeState.fromResizer && resizeState.resizingEvent) {
       // Get the cell start date from the resizing event's cell
-      const cellStart = resizeState.cellEl.__vueParentComponent.props.start
+      const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
       const { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
 
       // If there's an @event-resize external listener, call it and ask for resizing approval.
@@ -613,8 +613,8 @@ export const useEvents = vuecal => {
 
   const onDocumentMouseup = async e => {
     if (vuecal.touch?.isResizingEvent && resizeState.resizingEvent) {
-      // Get the cell start date from the resizing event's cell
-      const cellStart = resizeState.cellEl.__vueParentComponent.props.start
+      // Get the cell start date from the resizing event's cell.
+      const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
       const { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
 
       // If there's an @event-resize-end external listener, call it.

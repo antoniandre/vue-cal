@@ -1,5 +1,9 @@
 <template lang="pug">
-.vuecal__cell(ref="cellEl" :class="classes" v-on="cellEventListeners")
+.vuecal__cell(
+  ref="cellEl"
+  v-on="cellEventListeners"
+  :data-start="props.start.getTime()"
+  :class="classes")
   slot(v-if="$slots.cell" name="cell" :cell="cellInfo")
 
   template(v-if="specialHours")
