@@ -403,8 +403,6 @@ export const useEvents = vuecal => {
     const endMonth = end.getMonth() + 1
     const startDay = start.getDate()
     const endDay = end.getDate()
-    const startTime = start.getTime()
-    const endTime = end.getTime()
     const rangeStartTimestamp = new Date(start).setHours(0, 0, 0, 0) // Don't modify the original date!
     const rangeEndTimestamp = new Date(end).setHours(23, 59, 59, 999) // Don't modify the original date!
 
