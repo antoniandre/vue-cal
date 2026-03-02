@@ -479,17 +479,20 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   function updateViewDate (date, emitUpdate = true, forceUpdate = false) {
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t navigate to the given date: invalid date provided to `updateViewDate(date)`.')
 
-    // If the provided date is already in the view range, we don't need/want to update the view and
-    // recompute all the cells! But if forced (forceUpdate), just do it.
     // Before checking if the date is in view range, use the firstCellDate and lastCellDate unless on month view
     // (where we still want to navigate when clicking a cell that is out of range).
     let [viewStart, viewEnd] = [firstCellDate.value, lastCellDate.value]
     if (viewId.value === 'month') ([viewStart, viewEnd] = [start.value, end.value])
+
+    date.setHours(0, 0, 0, 0)
+    // Always update viewDate so that switching to a narrower view (e.g. month → day) after setting
+    // a specific date within the current range correctly lands on that date. Only skip the expensive
+    // cell recomputation (updateView) when the date is already in range and no force is requested.
+    viewDate.value = date
+    if (emitUpdate) emit('update:viewDate', date)
+
     if (!dateUtils.isInRange(date, viewStart, viewEnd) || forceUpdate) {
-      date.setHours(0, 0, 0, 0)
       transitionDirection.value = date.getTime() < viewStart.getTime() ? 'left' : 'right'
-      viewDate.value = date
-      if (emitUpdate) emit('update:viewDate', date)
       updateView()
     }
   }
