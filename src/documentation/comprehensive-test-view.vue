@@ -387,13 +387,13 @@
               bg-color="orange-light1"
               color="white"
               data-testid="clear-events-btn")
-                w-icon.mr1 wi-minus
+                w-icon.mr1 mdi mdi-cancel
                 small Clear All Events
             w-button(
               @click="loadSampleEvents"
               bg-color="info"
               data-testid="load-sample-events-btn")
-                w-icon.mr1 mdi mdi-wand
+                w-icon.mr1 mdi mdi-creation
                 small Load Sample Events
 
   .calendar-wrap

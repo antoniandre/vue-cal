@@ -99,7 +99,6 @@ ul.kanban
       .task Support timezones
       .task Drag &amp; drop multiple day events
       .task Improve multiple day events Month view
-      .task Horizontal timeline
 </template>
 
 <script setup>

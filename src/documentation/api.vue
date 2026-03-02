@@ -705,7 +705,7 @@ w-accordion.mt2(
     template(#content)
       p.
         Accepts a JavaScript Date or a formatted string like #[code {{ (new Date()).format() }} {{ (new Date()).formatTime() }}].#[br]
-        Preselects a date and navigates to it on calendar load or whenever it changes.#[br]
+        Selects a date on the calendar. If you want to update the current view to show the selected date, use the #[router-link(to="/api#props--view-date") viewDate] prop.#[br]
         The selected date is a two-way binding: you can use it in a v-model to keep your variable
         up to date.
 
