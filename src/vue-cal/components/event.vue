@@ -46,6 +46,8 @@ const { config, view, dnd, touch: globalTouchState, dateUtils, eventsManager } =
 const { handleEventResize } = eventsManager
 const eventEl = ref(null)
 const event = reactive(props.event)
+// Kept outside the eventListeners computed so recomputes don't orphan a pending timeout.
+let clickTimeout = null
 
 const touch = reactive({
   dragging: false,
@@ -212,7 +214,6 @@ const eventListeners = computed(() => {
   }
 
   // `event-delayed-click` is only fired after 400ms if there was no dblclick.
-  let clickTimeout = null
   eventListeners.click = e => {
     externalHandlers.click?.({ e, event }) // Handle single click.
 
@@ -279,6 +280,7 @@ onBeforeUnmount(() => {
   // Clean up timers to prevent memory leaks.
   if (touch.holdTimer) touch.holdTimer = clearTimeout(touch.holdTimer)
   if (touch.touchAndDragTimer) touch.touchAndDragTimer = clearTimeout(touch.touchAndDragTimer)
+  if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
 
   event._.unregister()
 })

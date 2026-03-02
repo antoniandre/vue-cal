@@ -149,6 +149,8 @@ const touch = reactive({
   schedule: null
 })
 const awaitingEventCreation = ref(false)
+// Kept outside the cellEventListeners computed so recomputes don't orphan a pending timeout.
+let clickTimeout = null
 
 // Overlapping events calculation (only updates when event IDs or date ranges change).
 const overlappingEvents = ref({ cellOverlaps: {}, longestStreak: 0 })
@@ -409,7 +411,6 @@ const cellEventListeners = computed(() => {
   const externalHandlers = { ...eventListeners }
 
   // `cell-delayed-click` is only fired after 400ms if there was no dblclick.
-  let clickTimeout = null
   eventListeners.click = e => {
     onCellClick()
     const cursor = getTimeAtCursor(e)
@@ -702,6 +703,7 @@ onBeforeUnmount(async () => {
   for (const eventId of eventsDeleted.value) eventsManager.deleteEvent(eventId, 3)
 
   removeEventListeners() // Prevent potential memory leaks.
+  if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
   await nextTick() // Batch updates to avoid multiple re-renders.
 })
 </script>
