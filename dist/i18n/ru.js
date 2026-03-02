@@ -1,5 +1,5 @@
 /**
-  * vue-cal v5.0.1-rc.34
+  * vue-cal v5.0.1-rc.35
   * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
