@@ -1,6 +1,6 @@
 import { computed as Y, reactive as be, watch as De, toRefs as bt, ref as ue, onBeforeUnmount as Xe, nextTick as Be, inject as Pe, openBlock as O, createElementBlock as j, renderSlot as H, unref as M, Fragment as de, renderList as we, normalizeClass as pe, createCommentVNode as te, createElementVNode as he, createVNode as He, Transition as Ue, withCtx as N, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as ae, onMounted as Ze, toDisplayString as ce, createTextVNode as Ge, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as nt, guardReactiveProps as re } from "vue";
 /**
-  * vue-cal v5.0.1-rc.35
+  * vue-cal v5.0.1-rc.36
   * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
@@ -981,7 +981,7 @@ const lt = (y, t) => {
   function K(m, F = !0, ee = !1) {
     if (!t.isValid(m)) return console.warn("Vue Cal: can't navigate to the given date: invalid date provided to `updateViewDate(date)`.");
     let [x, ye] = [E.value, b.value];
-    d.value === "month" && ([x, ye] = [X.value, v.value]), (!t.isInRange(m, x, ye) || ee) && (m.setHours(0, 0, 0, 0), a.value = m.getTime() < x.getTime() ? "left" : "right", L.value = m, F && c("update:viewDate", m), J());
+    d.value === "month" && ([x, ye] = [X.value, v.value]), m.setHours(0, 0, 0, 0), L.value = m, F && c("update:viewDate", m), (!t.isInRange(m, x, ye) || ee) && (a.value = m.getTime() < x.getTime() ? "left" : "right", J());
   }
   function le(m, F = !0) {
     if (!t.isValid(m)) return console.warn("Vue Cal: can't update the selected date: invalid date provided to `updateSelectedDate(date)`.");
