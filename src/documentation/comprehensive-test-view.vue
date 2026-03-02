@@ -757,6 +757,8 @@ onMounted(() => {
   overflow: hidden;
   gap: 20px;
 
+  &:before {display: none;}
+
   .controls-toggle {
     position: fixed;
     top: 36px;
