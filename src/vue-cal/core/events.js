@@ -391,8 +391,11 @@ export const useEvents = vuecal => {
    * @returns {Array} Array of events in the range
    */
   const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false } = {}) => {
+    const { byId, byYear } = events.value
+    const totalEvents = Object.keys(byId).length
+
     // Fast path: if there are no events, return empty array immediately.
-    if (!Object.keys(events.value.byId).length) return []
+    if (!totalEvents) return []
 
     const startYear = start.getFullYear()
     const endYear = end.getFullYear()
@@ -409,8 +412,8 @@ export const useEvents = vuecal => {
     const eventsArray = []
 
     // If there are less than 100 events, we can use a simple loop to find events in the range.
-    if (Object.keys(events.value.byId).length <= 100) {
-      for (const event of Object.values(events.value.byId)) {
+    if (totalEvents <= 100) {
+      for (const event of Object.values(byId)) {
         if (!event || excludeSet.has(event._.id)) continue
         if (schedule !== null && schedule !== event.schedule) continue
         if (background === false && event.background) continue
@@ -425,7 +428,7 @@ export const useEvents = vuecal => {
     // We'll use the byYear index to find events in the range.
     for (let year = startYear; year <= endYear; year++) {
       const yearStr = `${year}`
-      const months = events.value.byYear[yearStr]
+      const months = byYear[yearStr]
       if (!months) continue
 
       const monthFrom = year === startYear ? startMonth : 1
