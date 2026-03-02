@@ -16,11 +16,11 @@ ul.kanban
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
       .task Resize Multiple day events on touch devices
-      .task Horizontal layout option
 
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task Horizontal layout option
       .task Multiple day events
       .task Improve touch device UX (events VS scroll)
       .task All-day events
@@ -97,8 +97,6 @@ ul.kanban
     .title 🕔 Later
     .w-flex.column.gap1.pa1
       .task Support timezones
-      .task
-        a(href="https://github.com/antoniandre/vue-cal/issues/168" target="_blank" style="text-decoration: underline;color: inherit") Full Typescript support
       .task Drag &amp; drop multiple day events
       .task Improve multiple day events Month view
       .task Horizontal timeline
