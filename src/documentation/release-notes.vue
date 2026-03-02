@@ -3,6 +3,21 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.35
+    ul
+      li The #[code timeAtCursor] prop now consistently uses the configured time format, including the #[code twelveHour] option.
+      li Fixed the TypeScript types export. #[issue-link 108]
+      li The events array can now be mutated directly with native array methods like #[code .push()], #[code .pop()] and #[code .splice()].
+      li Added horizontal layout. Use the new #[code horizontal] prop to render the calendar with a horizontal time axis.
+      li
+        | Renamed some CSS variables to support both vertical and horizontal orientations:
+        ul
+          li #[code --vuecal-time-cell-height] → #[code --vuecal-time-cell-size],
+          li #[code --vuecal-all-day-bar-height] → #[code --vuecal-all-day-bar-size],
+          li #[code --vuecal-min-cell-width] → #[code --vuecal-min-cell-size],
+          li #[code --vuecal-min-schedule-width] → #[code --vuecal-min-schedule-size].
+
+  li.patch
     strong.version 5.0.1-rc.34
     ul
       li Added Russian genitive case for month names. #[issue-link 100] &amp; #[issue-link 101]
@@ -51,7 +66,7 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.25
     ul
-      li Fix the display of overlapped events if allDayEvents is true. #[issue-link 59]
+      li Fix the display of overlapped events if #[code all-day-events] is true. #[issue-link 59]
 
   li.patch
     strong.version 5.0.1-rc.24
