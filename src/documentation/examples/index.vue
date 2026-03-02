@@ -1,6 +1,6 @@
 <template lang="pug">
 .examples-container.w-flex.grow.gap12(:class="{ 'examples-container--has-aside': showAside }")
-  .grow.w-flex.grow.column
+  .grow.w-flex.grow.column.ovh
     h1.title1
       | Examples
       template(v-if="$route.name !== 'examples-intro'")
@@ -37,6 +37,7 @@ const showAside = computed(() => {
   &, > div {overflow: hidden;}
 }
 
+.main--examples-view {overflow-x: hidden;}
 .main--examples {
   .example h2 {
     margin-top: 80px;
