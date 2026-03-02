@@ -3,6 +3,12 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.38
+    ul
+      li.
+        Only warn when the user explicitly sets an invalid view.
+        Silently use the first available view when no view is specified and the default isn't available. #[issue-link 86]
+  li.patch
     strong.version 5.0.1-rc.37
     ul
       li Fixed the event resizing which did not work in production. #[issue-link 96]
