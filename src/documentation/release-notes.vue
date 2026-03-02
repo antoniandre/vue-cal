@@ -5,6 +5,10 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.35
     ul
+      li Fix setting a new view date that is within the current view. #[issue-link 65]
+  li.patch
+    strong.version 5.0.1-rc.35
+    ul
       li The #[code timeAtCursor] prop now consistently uses the configured time format, including the #[code twelveHour] option.
       li Fixed the TypeScript types export. #[issue-link 108]
       li The events array can now be mutated directly with native array methods like #[code .push()], #[code .pop()] and #[code .splice()].
