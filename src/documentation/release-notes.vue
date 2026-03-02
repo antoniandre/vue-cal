@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.37
+    ul
+      li Fixed the event resizing which did not work in production. #[issue-link 96]
+  li.patch
     strong.version 5.0.1-rc.36
     ul
       li Fix setting a new view date that is within the current view. #[issue-link 65]
