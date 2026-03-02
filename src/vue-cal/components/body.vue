@@ -70,17 +70,22 @@ const timeAtCursor = computed(() => {
 const onBodyMousemove = e => {
   if (view.isMonth || view.isYear || view.isYears) return
 
-  const domEvent = e.touches?.[0] || e // Handle click or touch event.
-  const { clientX, clientY } = domEvent
-  const { top, left } = bodyEl.value.getBoundingClientRect()
-
-  if (config.horizontal) cursorXPercent.value = (clientX - left) * 100 / bodyEl.value.clientWidth
-  else cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
-
   // When resizing an event horizontally, update the current hovered cell from the body element,
   // so there is only one event listener and no need for cell coordinates calculation.
-  if (globalTouchState.isResizingEvent && config.editableEvents.resizeX) {
-    resizeState.cellEl = getCellUnderMouse(clientX, clientY)
+  const needsResizeCellUpdate = globalTouchState.isResizingEvent && config.editableEvents.resizeX
+
+  // Skip all DOM work when nothing needs updating (common case when timeAtCursor is off).
+  if (!config.timeAtCursor && !needsResizeCellUpdate) return
+
+  const domEvent = e.touches?.[0] || e // Handle click or touch event.
+  const { clientX, clientY } = domEvent
+
+  if (needsResizeCellUpdate) resizeState.cellEl = getCellUnderMouse(clientX, clientY)
+
+  if (config.timeAtCursor) {
+    const { top, left } = bodyEl.value.getBoundingClientRect()
+    if (config.horizontal) cursorXPercent.value = (clientX - left) * 100 / bodyEl.value.clientWidth
+    else cursorYPercent.value = pxToPercentage(clientY - top, bodyEl.value)
   }
 }
 
