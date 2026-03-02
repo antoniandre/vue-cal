@@ -69,6 +69,31 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
     :dark="store.darkMode")
 
 //- Example.
+example(title="Horizontal Layout" anchor="horizontal-layout")
+  template(#desc)
+    p.
+      Vue Cal supports a horizontal timeline layout where events flow from left to right.
+      This is perfect for displaying schedules, Gantt-style views, or when you prefer a
+      horizontal time axis.
+    p.mt2.
+      The horizontal layout is available on the #[code day], #[code days], and #[code week] views.
+
+  template(#code-html).
+    &lt;vue-cal horizontal :events="events" /&gt;
+  template(#code-js).
+    const events = [
+      { start: new Date().setHours(9, 0), end: new Date().setHours(11, 30), title: 'Team Meeting' },
+      { start: new Date().setHours(14, 0), end: new Date().setHours(16, 0), title: 'Project Review' },
+      { start: new Date().setHours(10, 0), end: new Date().setHours(12, 0), title: 'Client Call' }
+    ]
+
+  vue-cal(
+    horizontal
+    :events="exHorizontal.events"
+    :dark="store.darkMode"
+    style="height: 450px")
+
+//- Example.
 example(title="Internationalization" anchor="internationalization")
   template(#desc)
     p.
@@ -235,6 +260,14 @@ const exHideElements = reactive({
   time: ref(true),
   timeAtCursor: ref(false),
   weekNumbers: ref(false)
+})
+
+const exHorizontal = reactive({
+  events: [
+    { start: new Date(new Date().setHours(9, 0)), end: new Date(new Date().setHours(11, 30)), title: 'Team Meeting' },
+    { start: new Date(new Date().setHours(14, 0)), end: new Date(new Date().setHours(16, 0)), title: 'Project Review' },
+    { start: new Date(new Date().setHours(10, 0)), end: new Date(new Date().setHours(12, 0)), title: 'Client Call' }
+  ]
 })
 
 const defaultColor = formatHex(store.darkMode ? '#316191' : '#1976d2')
