@@ -587,9 +587,9 @@ w-accordion.mt2(
     template(#content)
       p.
         When set to #[span.code true], displays the calendar timeline horizontally.#[br]
-        This flips the default rows and columns for the #[span.code days] and #[span.code week] views.#[br]
+        This flips the default rows and columns for the #[span.code day], #[span.code days], and #[span.code week] views.#[br]
         Useful for creating horizontal timelines or schedules.
-      p See #[router-link(to="/examples/view#ex--layouts") Layouts] example.
+      p See #[router-link(to="/examples/view#ex--horizontal-layout") Horizontal Layout] example.
 
   w-accordion-item
     template(#title)

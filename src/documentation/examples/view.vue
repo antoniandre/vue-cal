@@ -77,9 +77,11 @@ example(title="Horizontal Layout" anchor="horizontal-layout")
       horizontal time axis.
     p.mt2.
       The horizontal layout is available on the #[code day], #[code days], and #[code week] views.
+    .w-flex.wrap.gap3.my2
+      w-switch(v-model="exHorizontal.horizontal") Horizontal
 
   template(#code-html).
-    &lt;vue-cal horizontal :events="events" /&gt;
+    &lt;vue-cal{{ exHorizontal.horizontal ? ' horizontal' : '' }} :events="events" /&gt;
   template(#code-js).
     const events = [
       { start: new Date().setHours(9, 0), end: new Date().setHours(11, 30), title: 'Team Meeting' },
@@ -88,7 +90,7 @@ example(title="Horizontal Layout" anchor="horizontal-layout")
     ]
 
   vue-cal(
-    horizontal
+    :horizontal="exHorizontal.horizontal"
     :events="exHorizontal.events"
     :dark="store.darkMode"
     style="height: 450px")
@@ -263,6 +265,7 @@ const exHideElements = reactive({
 })
 
 const exHorizontal = reactive({
+  horizontal: ref(true),
   events: [
     { start: new Date(new Date().setHours(9, 0)), end: new Date(new Date().setHours(11, 30)), title: 'Team Meeting' },
     { start: new Date(new Date().setHours(14, 0)), end: new Date(new Date().setHours(16, 0)), title: 'Project Review' },
