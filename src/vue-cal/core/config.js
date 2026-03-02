@@ -44,15 +44,22 @@ export const useConfig = (vuecal, props, attrs) => {
   const { dateUtils } = vuecal
   const ready = false
   const view = computed(() => {
-    if (availableViews.value[props.view]) return props.view
+    // If user explicitly provided a valid view, use it.
+    if (props.view && availableViews.value[props.view]) return props.view
 
+    // If user explicitly provided an invalid view, warn and use first available.
+    if (props.view && !availableViews.value[props.view]) {
+      console.warn(
+        `Vue Cal: the provided view \`${props.view}\` is not in the list of available views.` +
+        ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
+      return Object.keys(availableViews.value)[0]
+    }
+
+    // User didn't provide a view - use default fallback silently.
     const fallbackView = props.datePicker ? 'month' : 'week'
-    const view = props.view || fallbackView
-    if (availableViews.value[view]) return view
+    if (availableViews.value[fallbackView]) return fallbackView
 
-    console.warn(
-      `Vue Cal: the provided or default view \`${view}\` is either invalid or not in the list of available views.` +
-      ` The first available view will be chosen: \`${Object.keys(availableViews.value)[0]}\`.`)
+    // Default fallback not available, silently use first available.
     return Object.keys(availableViews.value)[0]
   })
   const sm = computed(() => props.sm && !props.xs)
