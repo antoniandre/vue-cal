@@ -439,15 +439,17 @@ export const useEvents = vuecal => {
 
         for (const dayStr in days) {
           const day = +dayStr
-          // Skip events that are starting after the end of the range or ending before the start of the range.
-          if (day > endDay || day < startDay) continue
+          // Only skip days outside the range at the boundary months/years to avoid false
+          // positives when the range crosses month or year boundaries.
+          if (year === startYear && month === startMonth && day < startDay) continue
+          if (year === endYear && month === endMonth && day > endDay) continue
 
           const dayEventIds = days[dayStr]
           if (!dayEventIds?.length) continue
 
           // Process events in this day in bulk.
           for (let i = 0; i < dayEventIds.length; i++) {
-            const e = events.value.byId[dayEventIds[i]]
+            const e = byId[dayEventIds[i]]
             if (!e || excludeSet.has(e._.id)) continue
             if (schedule !== null && schedule !== e.schedule) continue
             if (background === false && e.background) continue
