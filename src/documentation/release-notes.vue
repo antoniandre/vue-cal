@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.39
+    ul
+      li Fixed #[code scrollToCurrentTime()] and #[code scrollToTime()] incorrect scroll position when #[code timeFrom] is set. #[issue-link 83]
+  li.patch
     strong.version 5.0.1-rc.38
     ul
       li.
