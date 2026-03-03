@@ -99,6 +99,7 @@ A huge shoutout to our amazing sponsors who make Vue Cal possible. Want to see y
 <a href="https://github.com/cesar-lizurey"><img src="https://avatars.githubusercontent.com/cesar-lizurey?s=25" alt="cesar-lizurey" width="25"></a>
 <a href="https://github.com/nekomeowww"><img src="https://avatars.githubusercontent.com/nekomeowww?s=25" alt="nekomeowww" width="25"></a>
 <a href="https://github.com/gerardoibarra"><img src="https://avatars.githubusercontent.com/gerardoibarra?s=25" alt="gerardoibarra" width="25"></a>
+<a href="https://github.com/jammed-org"><img src="https://avatars.githubusercontent.com/jammed-org?s=25" alt="jammed-org" width="25"></a>
 
 ---
 
