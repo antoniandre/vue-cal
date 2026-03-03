@@ -540,7 +540,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
 
   function scrollToTime (minutes) {
     const scrollableEl = vuecalEl.value?.querySelector('.vuecal__scrollable')
-    const anchor = minutes ? minutes * config.timeCellHeight / config.timeStep : 0
+    const adjustedMinutes = minutes - config.timeFrom
+    const anchor = adjustedMinutes > 0 ? adjustedMinutes * config.timeCellHeight / config.timeStep : 0
     scrollableEl?.scrollTo({ top: anchor, behavior: 'smooth' })
   }
 
