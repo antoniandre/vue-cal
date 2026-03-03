@@ -1,10 +1,10 @@
-import { computed as E, reactive as be, watch as De, toRefs as bt, ref as de, onBeforeUnmount as Xe, nextTick as Be, inject as je, openBlock as V, createElementBlock as P, renderSlot as H, unref as T, Fragment as me, renderList as we, normalizeClass as pe, createCommentVNode as ee, createElementVNode as he, createVNode as He, Transition as qe, withCtx as N, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as se, onMounted as Ze, toDisplayString as fe, createTextVNode as Ge, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as nt, guardReactiveProps as re } from "vue";
+import { computed as E, reactive as be, watch as De, toRefs as bt, ref as de, onBeforeUnmount as Xe, nextTick as Be, inject as je, openBlock as V, createElementBlock as P, renderSlot as H, unref as T, Fragment as me, renderList as we, normalizeClass as pe, createCommentVNode as ee, createElementVNode as ye, createVNode as He, Transition as qe, withCtx as N, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as se, onMounted as Ze, toDisplayString as fe, createTextVNode as Ge, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as nt, guardReactiveProps as re } from "vue";
 /**
-  * vue-cal v5.0.1-rc.38
+  * vue-cal v5.0.1-rc.39
   * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
-const ge = {
+const he = {
   texts: {
     weekDays: Array(7).fill(""),
     weekDaysShort: [],
@@ -63,17 +63,17 @@ const ge = {
     let g = 0, $ = {};
     const a = t.views;
     if (n && !a) return {
-      month: { ...ge.availableViews.month },
-      year: { ...ge.availableViews.year },
-      years: { ...ge.availableViews.years }
+      month: { ...he.availableViews.month },
+      year: { ...he.availableViews.year },
+      years: { ...he.availableViews.years }
     };
     if (a)
-      Array.isArray(a) ? $ = a.reduce((R, U) => (typeof U == "string" && ge.availableViews[U] ? R[U] = ge.availableViews[U] : g++, R), {}) : typeof a == "object" && ($ = Object.entries(a).reduce((R, [U, Z]) => {
-        const { cols: x, rows: ae } = ge.availableViews[U];
+      Array.isArray(a) ? $ = a.reduce((R, U) => (typeof U == "string" && he.availableViews[U] ? R[U] = he.availableViews[U] : g++, R), {}) : typeof a == "object" && ($ = Object.entries(a).reduce((R, [U, Z]) => {
+        const { cols: x, rows: ae } = he.availableViews[U];
         return R[U] = { cols: Z.cols || x, rows: Z.rows || ae }, R;
-      }, {})), g && console.warn("Vue Cal: the provided `views` prop contains invalid views that will be ignored."), Object.keys($).length || (console.warn("Vue Cal: No valid view in the provided `views` prop. Falling back to default views."), $ = { ...ge.availableViews });
-    else if ($ = { ...ge.availableViews }, t.horizontal) {
-      const { days: R, week: U } = ge.availableViews;
+      }, {})), g && console.warn("Vue Cal: the provided `views` prop contains invalid views that will be ignored."), Object.keys($).length || (console.warn("Vue Cal: No valid view in the provided `views` prop. Falling back to default views."), $ = { ...he.availableViews });
+    else if ($ = { ...he.availableViews }, t.horizontal) {
+      const { days: R, week: U } = he.availableViews;
       $.days = { cols: R.rows, rows: R.cols }, $.week = { cols: U.rows, rows: U.cols };
     }
     return $;
@@ -128,7 +128,7 @@ const ge = {
       }
       g = await (($ = g[`../i18n/${n}.json`]) == null ? void 0 : $.call(g));
     }
-    h.texts = Object.assign(h.texts, Object.assign({ ...ge.texts }, g)), r.updateTexts(h.texts);
+    h.texts = Object.assign(h.texts, Object.assign({ ...he.texts }, g)), r.updateTexts(h.texts);
   }, M = be(t.events || []);
   return De(
     [() => t.events, () => {
@@ -823,13 +823,13 @@ const lt = (h, t) => {
         case "days":
         case "week":
         case "month": {
-          const ye = t.addDays(k.value, q), Re = ye.getDay() || 7;
+          const ge = t.addDays(k.value, q), Re = ge.getDay() || 7;
           if (F && h.hasHiddenDays && h.hideWeekdays[Re]) {
             Q++;
             continue;
           }
-          const Ve = new Date(ye);
-          Ve.setHours(23, 59, 59, 999), f.push({ start: ye, startFormatted: t.formatDate(ye), end: Ve });
+          const Ve = new Date(ge);
+          Ve.setHours(23, 59, 59, 999), f.push({ start: ge, startFormatted: t.formatDate(ge), end: Ve });
           break;
         }
         case "year":
@@ -859,11 +859,11 @@ const lt = (h, t) => {
     return Q && typeof q == "string" ? q.substring(0, 3) : q;
   }
   function R(f, F, Q) {
-    const { monthsArray: q, monthBeforeDay: ye, canTruncate: Re, xs: Ve } = Q, Me = f.getMonth(), Ee = f.getFullYear(), Ye = F.getMonth(), Pe = F.getFullYear(), We = Me !== Ye, $t = Ee !== Pe, Te = Re && (Ve || We), Ae = f.getDate(), Le = F.getDate();
-    return $t ? ye ? `${a(Me, q, Te)} ${Ae}, ${Ee} - ${a(Ye, q, Te)} ${Le}, ${Pe}` : `${Ae} ${a(Me, q, Te)} ${Ee} - ${Le} ${a(Ye, q, Te)} ${Pe}` : We ? ye ? `${a(Me, q, Te)} ${Ae} - ${a(Ye, q, Te)} ${Le}, ${Ee}` : `${Ae} ${a(Me, q, Te)} - ${Le} ${a(Ye, q, Te)} ${Ee}` : ye ? `${a(Me, q, Te)} ${Ae}-${Le}, ${Ee}` : `${Ae}-${Le} ${a(Me, q, Te)} ${Ee}`;
+    const { monthsArray: q, monthBeforeDay: ge, canTruncate: Re, xs: Ve } = Q, Me = f.getMonth(), Ee = f.getFullYear(), Ye = F.getMonth(), Pe = F.getFullYear(), We = Me !== Ye, $t = Ee !== Pe, Te = Re && (Ve || We), Ae = f.getDate(), Le = F.getDate();
+    return $t ? ge ? `${a(Me, q, Te)} ${Ae}, ${Ee} - ${a(Ye, q, Te)} ${Le}, ${Pe}` : `${Ae} ${a(Me, q, Te)} ${Ee} - ${Le} ${a(Ye, q, Te)} ${Pe}` : We ? ge ? `${a(Me, q, Te)} ${Ae} - ${a(Ye, q, Te)} ${Le}, ${Ee}` : `${Ae} ${a(Me, q, Te)} - ${Le} ${a(Ye, q, Te)} ${Ee}` : ge ? `${a(Me, q, Te)} ${Ae}-${Le}, ${Ee}` : `${Ae}-${Le} ${a(Me, q, Te)} ${Ee}`;
   }
   const U = E(() => {
-    const { dateFormat: f, months: F, monthsGenitive: Q, week: q, truncations: ye } = r, Re = h.locale, Ve = ye !== !1, Me = f.indexOf("M") < f.indexOf("D"), Ee = Q && Re === "el" ? Q : F;
+    const { dateFormat: f, months: F, monthsGenitive: Q, week: q, truncations: ge } = r, Re = h.locale, Ve = ge !== !1, Me = f.indexOf("M") < f.indexOf("D"), Ee = Q && Re === "el" ? Q : F;
     switch (d.value) {
       case "day":
         return t.formatDate(k.value, f);
@@ -981,8 +981,8 @@ const lt = (h, t) => {
   }
   function K(f, F = !0, Q = !1) {
     if (!t.isValid(f)) return console.warn("Vue Cal: can't navigate to the given date: invalid date provided to `updateViewDate(date)`.");
-    let [q, ye] = [k.value, M.value];
-    d.value === "month" && ([q, ye] = [z.value, u.value]), f.setHours(0, 0, 0, 0), A.value = f, F && c("update:viewDate", f), (!t.isInRange(f, q, ye) || Q) && (n.value = f.getTime() < q.getTime() ? "left" : "right", Z());
+    let [q, ge] = [k.value, M.value];
+    d.value === "month" && ([q, ge] = [z.value, u.value]), f.setHours(0, 0, 0, 0), A.value = f, F && c("update:viewDate", f), (!t.isInRange(f, q, ge) || Q) && (n.value = f.getTime() < q.getTime() ? "left" : "right", Z());
   }
   function oe(f, F = !0) {
     if (!t.isValid(f)) return console.warn("Vue Cal: can't update the selected date: invalid date provided to `updateSelectedDate(date)`.");
@@ -999,9 +999,9 @@ const lt = (h, t) => {
     Z();
   }
   function S(f) {
-    var q;
-    const F = (q = C.value) == null ? void 0 : q.querySelector(".vuecal__scrollable"), Q = f ? f * h.timeCellHeight / h.timeStep : 0;
-    F == null || F.scrollTo({ top: Q, behavior: "smooth" });
+    var ge;
+    const F = (ge = C.value) == null ? void 0 : ge.querySelector(".vuecal__scrollable"), Q = f - h.timeFrom, q = Q > 0 ? Q * h.timeCellHeight / h.timeStep : 0;
+    F == null || F.scrollTo({ top: q, behavior: "smooth" });
   }
   function w() {
     const f = /* @__PURE__ */ new Date();
@@ -1111,9 +1111,9 @@ const lt = (h, t) => {
   year: ut,
   years: it
 }, Symbol.toStringTag, { value: "Module" })), Fe = be({
-  texts: { ...ge.texts },
+  texts: { ...he.texts },
   // Make texts reactive before a locale is loaded.
-  dateUtils: lt(ge.texts, Qe)
+  dateUtils: lt(he.texts, Qe)
   // Some Date utils functions need localized texts.
 }), jt = ({ props: h, emit: t, attrs: c, vuecalEl: r, uid: m }) => {
   const C = be({
@@ -1142,7 +1142,7 @@ const lt = (h, t) => {
       // Track the cell currently being hovered during event resizing.
     }
   });
-  return C.dateUtils = lt(Object.assign(ge.texts, C.texts), Qe), C.config = Ct(C, h, c), C.eventsManager = Vt(C), C.view = Ot(C, r), C.dnd = zt(C), C;
+  return C.dateUtils = lt(Object.assign(he.texts, C.texts), Qe), C.config = Ct(C, h, c), C.eventsManager = Vt(C), C.view = Ot(C, r), C.dnd = zt(C), C;
 }, Pt = 1440, At = {
   allDayEvents: { type: Boolean, default: !1 },
   // Display all-day events in a fixed top bar on the day, days & week views.
@@ -1271,14 +1271,14 @@ const lt = (h, t) => {
           }, null, 10, Xt))), 256))
         ])) : ee("", !0),
         T(r).titleBar ? (V(), P("nav", Rt, [
-          he("button", {
+          ye("button", {
             class: pe(["vuecal__nav vuecal__nav--prev", { "vuecal__nav--default": !G.$slots["previous-button"] }]),
             onClick: d[0] || (d[0] = (...X) => T(c).previous && T(c).previous(...X)),
             type: "button"
           }, [
             H(G.$slots, "previous-button")
           ], 2),
-          he("div", Wt, [
+          ye("div", Wt, [
             He(qe, {
               name: `vuecal-slide-fade--${T(c).transitionDirection}`
             }, {
@@ -1319,7 +1319,7 @@ const lt = (h, t) => {
               innerHTML: T(t).texts.today
             }, null, 10, Nt))
           ], 64)) : ee("", !0),
-          he("button", {
+          ye("button", {
             class: pe(["vuecal__nav vuecal__nav--next", { "vuecal__nav--default": !G.$slots["next-button"] }]),
             onClick: d[2] || (d[2] = (...X) => T(c).next && T(c).next(...X)),
             type: "button"
@@ -1486,7 +1486,7 @@ const lt = (h, t) => {
       onDragstart: n[2] || (n[2] = (g) => u.value && T(C).eventDragStart(g, o)),
       onDragend: n[3] || (n[3] = (g) => u.value && T(C).eventDragEnd(g, o))
     }), [
-      he("div", Gt, [
+      ye("div", Gt, [
         M.$slots["event.all-day"] ? H(M.$slots, "event.all-day", {
           key: 0,
           event: o
@@ -1497,10 +1497,10 @@ const lt = (h, t) => {
           key: 2,
           event: o
         }, () => [
-          he("div", Ut, fe(o.title), 1),
+          ye("div", Ut, fe(o.title), 1),
           T(r).time && !h.inAllDayBar && !(o._.multiday && !l.value) ? (V(), P("div", qt, [
             T(m).isMonth ? (V(), P("span", Jt, ",")) : ee("", !0),
-            he("span", Zt, fe(o._[`startTimeFormatted${T(r).twelveHour ? 12 : 24}`]), 1),
+            ye("span", Zt, fe(o._[`startTimeFormatted${T(r).twelveHour ? 12 : 24}`]), 1),
             T(m).isMonth ? ee("", !0) : (V(), P("span", Kt, [
               Ge(" - " + fe(o._[`endTimeFormatted${T(r).twelveHour ? 12 : 24}`]), 1),
               o._.multiday && l.value ? (V(), P("span", Qt, "+" + fe(e.value) + "d", 1)) : ee("", !0)
@@ -1973,7 +1973,7 @@ const lt = (h, t) => {
           now: T(r).now,
           timeFormatted: x.currentTime
         }, () => [
-          he("span", null, fe(x.currentTime), 1)
+          ye("span", null, fe(x.currentTime), 1)
         ])
       ], 12, vn)) : ee("", !0)
     ], 16, tn));
@@ -2070,7 +2070,7 @@ const lt = (h, t) => {
             id: z.id,
             date: z.date
           }, () => [
-            he("span", hn, fe(z[G.value]), 1),
+            ye("span", hn, fe(z[G.value]), 1),
             T(r).isMonth ? ee("", !0) : (V(), P("strong", yn, fe(z.dateNumber), 1))
           ])
         ], 10, gn))), 128))
@@ -2117,7 +2117,7 @@ const lt = (h, t) => {
             key: "1"
           }
         ]), 1032, ["class", "start", "end", "index"]))), 128)),
-        he("div", {
+        ye("div", {
           class: "vuecal__all-day-resizer",
           onMousedown: j[0] || (j[0] = (...z) => A.handleMouseDown && A.handleMouseDown(...z)),
           onTouchstart: j[1] || (j[1] = (...z) => A.handleTouchStart && A.handleTouchStart(...z))
@@ -2167,7 +2167,7 @@ const lt = (h, t) => {
           format12: d.formatted12,
           format24: d.formatted24
         }, () => [
-          he("label", null, fe(T(c).twelveHour ? d.formatted12 : d.formatted24), 1)
+          ye("label", null, fe(T(c).twelveHour ? d.formatted12 : d.formatted24), 1)
         ])
       ], 4))), 128))
     ]));
@@ -2218,7 +2218,7 @@ const lt = (h, t) => {
             class: "vuecal__time-at-cursor",
             style: $e(j.value.style)
           }, [
-            he("label", null, fe(j.value.time), 1)
+            ye("label", null, fe(j.value.time), 1)
           ], 4)) : ee("", !0)
         ]),
         _: 1
@@ -2454,7 +2454,7 @@ const lt = (h, t) => {
             key: "11"
           } : void 0
         ]), 1024),
-        he("div", En, [
+        ye("div", En, [
           He(qe, {
             name: `vuecal-slide-fade--${T(X).transitionDirection}`
           }, {
@@ -2475,11 +2475,11 @@ const lt = (h, t) => {
                 T(d).weekNumbers && T(X).isMonth ? (V(), P("div", Yn, [
                   (V(!0), P(me, null, we(j.value, (e) => (V(), P("div", Sn, [
                     H(l.$slots, "week-number", {}, () => [
-                      he("small", null, fe(e), 1)
+                      ye("small", null, fe(e), 1)
                     ])
                   ]))), 256))
                 ])) : ee("", !0),
-                he("div", Cn, [
+                ye("div", Cn, [
                   He(_n, null, Ce({ _: 2 }, [
                     l.$slots["weekday-heading"] ? {
                       name: "weekday-heading",
@@ -2585,7 +2585,7 @@ const lt = (h, t) => {
     ], 14, Mn));
   }
 }, On = (h) => {
-  Fe.texts = { ...ge.texts, ...h }, Fe.dateUtils.updateTexts(Fe.texts);
+  Fe.texts = { ...he.texts, ...h }, Fe.dateUtils.updateTexts(Fe.texts);
 }, {
   addDatePrototypes: Hn,
   removeDatePrototypes: jn,
