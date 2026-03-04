@@ -305,13 +305,13 @@ div.ssh-pre {
     padding-right: 0;
   }
 
-  main {padding-left: 2.5rem;}
+  aside ~ main {padding-left: 2.5rem;}
 }
 
 @media screen and (max-width: 750px) {
   aside {display: none;}
 
-  main {padding-left: 0;border-left: none;}
+  aside ~ main {padding-left: 0;border-left: none;}
 }
 
 @media screen and (max-width: ($page-max-width + (2 * $container-padding-md))) {

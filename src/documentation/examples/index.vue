@@ -1,6 +1,6 @@
 <template lang="pug">
 .examples-container.w-flex.grow.gap12(:class="{ 'examples-container--has-aside': showAside }")
-  .grow.w-flex.grow.column.ovh
+  .grow.w-flex.grow.column.ovh.ml-2.pl2
     h1.title1
       | Examples
       template(v-if="$route.name !== 'examples-intro'")
