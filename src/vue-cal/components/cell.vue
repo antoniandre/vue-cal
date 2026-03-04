@@ -406,7 +406,7 @@ const cellEventListeners = computed(() => {
       if ((e.target || e.e?.target).closest?.('.vuecal__event')) return
 
       // Check if e.type to not rewrap the DOM event in an object if already done.
-      handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value } : e)
+      handler(e.type ? { e, cell: cellInfo.value, cursor: cursorInfo.value, view } : e)
     }
   }
 
@@ -419,14 +419,14 @@ const cellEventListeners = computed(() => {
     onCellClick()
     const cursor = getTimeAtCursor(e)
 
-    externalHandlers.click?.({ e, cell: cellInfo.value, cursor })
+    externalHandlers.click?.({ e, cell: cellInfo.value, cursor, view })
 
     if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
     else {
       clickTimeout = setTimeout(() => {
         clickTimeout = null
         // Handle delayed single click.
-        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor })
+        externalHandlers['delayed-click']?.({ e, cell: cellInfo.value, cursor, view })
       }, 400)
     }
   }
@@ -450,7 +450,7 @@ const cellEventListeners = computed(() => {
     // work because the dblclick can have a fast click and a long hold second click and it should
     // still fire.
     eventListeners.dblclick = e => {
-      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e) })
+      externalHandlers.dblclick?.({ e, cell: cellInfo.value, cursor: getTimeAtCursor(e), view })
     }
   }
 
@@ -560,7 +560,7 @@ const onMousedown = e => {
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
     // If there's a @cell-hold external listener, call it.
-    cellEventListeners.value.hold?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    cellEventListeners.value.hold?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
   }, 1000)
 }
 
@@ -671,7 +671,7 @@ const createEventIfAllowed = async e => {
 
   if (typeof createListener === 'function') {
     const eventCopy = eventToCreate
-    eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve, cursor: cursorInfo.value }))
+    eventToCreate = await new Promise(resolve => createListener({ e, event: eventToCreate, cell: cellInfo.value, resolve, cursor: cursorInfo.value, view }))
     // eventToCreate may be true, false or an updated event object to create.
     if (eventToCreate && typeof eventToCreate === 'object') view.createEvent(eventToCreate)
     if (eventToCreate && typeof eventToCreate === 'boolean') view.createEvent(eventCopy)
