@@ -78,7 +78,7 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       w-switch(v-model="exCreateEvents.eventCreateMinDrag") Event Create Drag Min: #[span.code.transparent--bg.inherit 15px]
   template(#code-html)
     | &lt;vue-cal
-    |   {{ exCreateEvents.createMethod === 'event-create' ? '' : 'ref="exCreateEventsVueCalEl"\n  ' }}{{ exCreateEvents.snapToInterval ? ':snap-to-interval="15"\n  ' : '' }}{{ exCreateEvents.eventCreateMinDrag ? ':event-create-min-drag="15"\n  ' : '' }}editable-events
+    |   {{ exCreateEvents.snapToInterval ? ':snap-to-interval="15"\n  ' : '' }}{{ exCreateEvents.eventCreateMinDrag ? ':event-create-min-drag="15"\n  ' : '' }}{{ exCreateEvents.createMethod === 'event-create' ? 'editable-events' : ':editable-events="{ edit: true, resize: true, create: false, delete: true }"' }}
     |   @{{ exCreateEvents.createMethod }}="createEvent"&gt;
     | &lt;/vue-cal&gt;
     template(v-if="!exCreateEvents.skipCreationDialog")
@@ -86,7 +86,6 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       |
       | &lt;!-- Using Wave UI - https://antoniandre.github.io/wave-ui --&gt;
       | &lt;w-dialog
-      |   v-if="newEvent"
       |   v-model="showCreationDialog"
       |   width="300"
       |   @close="cancelCreation"&gt;
@@ -101,11 +100,6 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
     span(v-else)
 
   template(#code-js)
-    template(v-if="exCreateEvents.createMethod === 'event-create'")
-    template(v-else)
-      | const exCreateEventsVueCalEl = ref(null)
-      |
-
     template(v-if="exCreateEvents.createMethod === 'event-create' && exCreateEvents.skipCreationDialog")
       | const createEvent = ({ event, resolve }) => {
       |   resolve({
@@ -119,12 +113,17 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       |   openCreationDialog({ event, resolve })
       | }
       |
+    template(v-else-if="exCreateEvents.createMethod !== 'event-create' && exCreateEvents.skipCreationDialog")
+      | const createEvent = ({ cursor, view }) => {
+      |   view.createEvent({
+      |     start: cursor.date,
+      |     end: cursor.date.addHours(1), // Uses Vue Cal's Date prototypes.
+      |     title: 'New Event'
+      |   })
+      | }
     template(v-else-if="exCreateEvents.createMethod !== 'event-create'")
-      |
-      | const createEvent = ({ event, cursor }) => {
-      |   event.start = cursor.date
-      |   event.end = cursor.date.addHours(1) // Uses Vue Cal's Date prototypes.
-      |   exCreateEventsVueCalEl.value.view.createEvent(event)
+      | const createEvent = ({ cursor, view }) => {
+      |   openCreationDialog({ cursor, view })
       | }
     template(v-else)
       |
@@ -133,23 +132,31 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       |
       | const showCreationDialog = ref(false)
       | const createEventFn = ref(null)
+      template(v-if="exCreateEvents.createMethod !== 'event-create'")
+        | const cursorDate = ref(null)
       | const newEvent = ref({
       |   title: '',
       |   background: false,
       |   class: ''
       | })
       |
-      | const openCreationDialog = ({ event, resolve }) => {
-      |   showCreationDialog.value = true
-      |   newEvent.value = event
-      |   createEventFn.value = resolve
-      | }
+      template(v-if="exCreateEvents.createMethod === 'event-create'")
+        | const openCreationDialog = ({ event, resolve }) => {
+        |   showCreationDialog.value = true
+        |   newEvent.value = event
+        |   createEventFn.value = resolve
+        | }
+      template(v-else)
+        | const openCreationDialog = ({ cursor, view }) => {
+        |   showCreationDialog.value = true
+        |   cursorDate.value = cursor.date
+        |   createEventFn.value = view.createEvent
+        | }
       |
       | const cancelCreation = () => {
       template(v-if="exCreateEvents.createMethod === 'event-create'")
         |
         |   createEventFn.value(false)
-      template(v-else)
       |
       |   showCreationDialog.value = false
       | }
@@ -157,10 +164,10 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       | const validateCreation = () => {
       template(v-if="exCreateEvents.createMethod !== 'event-create'")
         |
-        |   exCreateEventsVueCalEl.value.view.createEvent({
+        |   createEventFn.value({
         |     ...newEvent.value,
-        |     start: cursor.date,
-        |     end: cursor.date.addHours(1) // Uses Vue Cal's Date prototypes.
+        |     start: cursorDate.value,
+        |     end: cursorDate.value.addHours(1) // Uses Vue Cal's Date prototypes.
         |   })
       template(v-else)
         |
@@ -170,7 +177,6 @@ example(ref="exCreateEventsExampleEl" title="Create Events" anchor="create-event
       | }
     template(v-else)
   vue-cal(
-    ref="exCreateEventsVueCalEl"
     :editable-events="{ edit: true, resize: true, create: exCreateEvents.createMethod === 'event-create', delete: true }"
     @[exCreateEvents.createMethod]="exCreateEvents.createEvent"
     :events="exCreateEvents.events"
@@ -961,7 +967,6 @@ const events = [
 ]
 
 const exCreateEventsExampleEl = ref(null)
-const exCreateEventsVueCalEl = ref(null)
 const exCreateEvents = reactive({
   createMethods: [
     { value: 'event-create', label: 'Click & Drag' },
@@ -970,7 +975,7 @@ const exCreateEvents = reactive({
     { value: 'cell-hold', label: 'Click & Hold' }
   ],
   createMethod: ref('event-create'),
-  createEvent: ({ e, event, cell, resolve, cursor }) => {
+  createEvent: ({ e, event, cell, resolve, cursor, view }) => {
     e.preventDefault()
     event = {
       ...(event || {}),
@@ -979,7 +984,7 @@ const exCreateEvents = reactive({
       end: event?.end || cursor.date.addHours(1),
       class: 'blue-event'
     }
-    resolve = resolve || exCreateEventsVueCalEl.value.view.createEvent
+    resolve = resolve || view.createEvent
     if (exCreateEvents.skipCreationDialog) resolve(event)
     else exCreateEvents.openCreationDialog({ e, event, cell, resolve, cursor })
   },

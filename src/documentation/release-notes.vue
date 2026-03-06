@@ -6,6 +6,9 @@ ul.history.ml2
     strong.version 5.0.1-rc.39
     ul
       li Fixed #[code scrollToCurrentTime()] and #[code scrollToTime()] incorrect scroll position when #[code timeFrom] is set. #[issue-link 83]
+      li.
+        Added #[code view] object to cell and event creation payloads (#[code cell-click], #[code cell-dblclick], #[code cell-hold], #[code cell-contextmenu], #[code event-create], etc.)
+        providing access to #[code view.createEvent()], #[code view.deleteEvent()], and other view methods without needing a template ref. #[issue-link 73]
   li.patch
     strong.version 5.0.1-rc.38
     ul

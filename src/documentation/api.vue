@@ -1231,32 +1231,59 @@ w-accordion(
     template(#title)
       strong.code.title5 cell-*
     template(#content)
-      p Vue Cal forwards any DOM event on cells, where * can be any valid DOM event name.
-      p Returns: The native event object plus cell date information.
+      p.
+        Vue Cal forwards any DOM event on cells, where * can be any valid DOM event name
+        (e.g. #[code cell-click], #[code cell-dblclick], #[code cell-contextmenu], etc.).
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
   w-accordion-item
     template(#title)
       strong.code.title5 cell-drag-start
     template(#content)
       p Fired when starting to drag on a cell (when creating events by dragging).
-      p Returns: #[code {Date}] The cell's date with time at cursor position.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
   w-accordion-item
     template(#title)
       strong.code.title5 cell-drag
     template(#content)
       p Fired continuously while dragging on cells (when creating events by dragging).
-      p Returns: #[code {Date}] The current cell's date with time at cursor position.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
   w-accordion-item
     template(#title)
       strong.code.title5 cell-drag-end
     template(#content)
       p Fired when ending a drag on cells (when creating events by dragging).
-      p Returns: #[code {Date}] The final cell's date with time at cursor position.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
   w-accordion-item
     template(#title)
       strong.code.title5 cell-hold
     template(#content)
-      p Fired when a cell is clicked and held for a specific duration.
-      p Returns: #[code {Date}] The cell's date.
+      p Fired when a cell is clicked and held for a specific duration (~1 second).
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
 
   h5.mt2.base-color Event-related Events
   w-accordion-item
@@ -1264,19 +1291,35 @@ w-accordion(
       strong.code.title5 event-*
     template(#content)
       p Vue Cal forwards any DOM event on events, where * can be any valid DOM event name.
-      p Returns: The native event object plus the calendar event object.
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code event]: The calendar event object.
   w-accordion-item
     template(#title)
       strong.code.title5 event-hold
     template(#content)
-      p Fired when an event is clicked and held for a specific duration.
-      p Returns: #[code {Object}] The associated calendar event object.
+      p Fired when an event is clicked and held for a specific duration (~1 second).
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code event]: The calendar event object.
   w-accordion-item
     template(#title)
       strong.code.title5 event-create
     template(#content)
-      p Fired when an event is created via drag creation or programmatically via the Vue Cal #[code view.createEvent()] method.
-      p Returns: #[code {Object}] The newly created calendar event object.
+      p Fired when an event is created via drag creation (click &amp; drag on a cell).
+      p Returns an object containing:
+      ul
+        li #[code e]: The native DOM event object.
+        li #[code event]: The pre-populated event object with start/end from the drag.
+        li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
+        li #[code cursor]: Cursor position within the cell ({ x, y, date }).
+        li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
+        li #[code resolve]: Function to call with the event object to confirm creation, or #[code false] to cancel.
+      p.
+        Use #[code resolve(event)] to confirm creation or #[code resolve(false)] to cancel.
+        The #[code event] object can be modified before resolving.
   w-accordion-item
     template(#title)
       strong.code.title5 event-created
@@ -1374,13 +1417,13 @@ w-accordion(
         li #[code cell]: The cell object where the event was dropped.
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
 
-  h5.mt2.base-color Event Payload Structure Details
+  h5.mt2.base-color Payload Structure Details
 
   w-accordion-item
     template(#title)
-      strong.code.title5 Cell Event Payload Structure
+      strong.code.title5 Cell Event Payload - Full Structure
     template(#content)
-      p All cell-related events (like #[code cell-click], #[code cell-drag], etc.) return a consistent payload with:
+      p Detailed structure of the payload returned by all cell-related events:
       ssh-pre(language="js" :dark="store.darkMode").
         {
           e: {Event}, // The native DOM event
@@ -1399,8 +1442,21 @@ w-accordion(
             x: {Number}, // Cursor X position in percentage within cell
             y: {Number}, // Cursor Y position in percentage within cell
             date: {Date} // Date at cursor position (includes time)
-          }
+          },
+          view: {Object} // The view object (see below)
         }
+      p.
+        The #[code view] object provides access to view methods like #[code createEvent()], #[code deleteEvent()],
+        #[code scrollToTime()], #[code scrollToCurrentTime()], #[code switch()], etc. This allows creating events
+        directly from cell event handlers without needing a template ref:
+      ssh-pre.mt1(language="js" :dark="store.darkMode").
+        @cell-dblclick="({ cursor, view }) => {
+          view.createEvent({
+            start: cursor.date,
+            end: cursor.date.addHours(1),
+            title: 'New Event'
+          })
+        }"
       p.
         For events triggered by the cell's DOM events (like #[code cell-click], #[code cell-dblclick], etc.), the cursor
         position is calculated at the moment of the event, providing the exact time at the click position.
