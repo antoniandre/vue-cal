@@ -1706,26 +1706,26 @@ const lt = (h, t) => {
       for (const [w, O] of Object.entries(i))
         i[w] = (B) => {
           var W, ne, f;
-          (f = (ne = B.target || ((W = B.e) == null ? void 0 : W.target)).closest) != null && f.call(ne, ".vuecal__event") || O(B.type ? { e: B, cell: te.value, cursor: le.value } : B);
+          (f = (ne = B.target || ((W = B.e) == null ? void 0 : W.target)).closest) != null && f.call(ne, ".vuecal__event") || O(B.type ? { e: B, cell: te.value, cursor: le.value, view: r } : B);
         };
       const S = { ...i };
       return i.click = (w) => {
         var B;
         s();
         const O = ue(w);
-        (B = S.click) == null || B.call(S, { e: w, cell: te.value, cursor: O }), l ? l = clearTimeout(l) : l = setTimeout(() => {
+        (B = S.click) == null || B.call(S, { e: w, cell: te.value, cursor: O, view: r }), l ? l = clearTimeout(l) : l = setTimeout(() => {
           var W;
-          l = null, (W = S["delayed-click"]) == null || W.call(S, { e: w, cell: te.value, cursor: O });
+          l = null, (W = S["delayed-click"]) == null || W.call(S, { e: w, cell: te.value, cursor: O, view: r });
         }, 400);
       }, (m.time && r.isDay || r.isDays || r.isWeek) && (i.touchstart = (w) => {
         var O;
-        b(w.e || w), (O = S.touchstart) == null || O.call(S, { e: w, cell: te.value, cursor: le.value });
+        b(w.e || w), (O = S.touchstart) == null || O.call(S, { e: w, cell: te.value, cursor: le.value, view: r });
       }, i.mousedown = (w) => {
         var O;
-        b(w.e || w), (O = S.mousedown) == null || O.call(S, { e: w, cell: te.value, cursor: le.value });
+        b(w.e || w), (O = S.mousedown) == null || O.call(S, { e: w, cell: te.value, cursor: le.value, view: r });
       }), S.dblclick && (i.dblclick = (w) => {
         var O;
-        (O = S.dblclick) == null || O.call(S, { e: w, cell: te.value, cursor: ue(w) });
+        (O = S.dblclick) == null || O.call(S, { e: w, cell: te.value, cursor: ue(w), view: r });
       }), m.editableEvents.drag && (i.dragenter = (w) => d.cellDragEnter(w, te.value), i.dragover = (w) => {
         w.preventDefault(), d.cellDragOver(w, te.value);
       }, i.dragleave = (w) => d.cellDragLeave(w, te.value), i.drop = (w) => d.cellDragDrop(w, te.value, t.allDay)), i;
@@ -1760,7 +1760,7 @@ const lt = (h, t) => {
       const w = A.value.getBoundingClientRect();
       v.startX = (((O = i.touches) == null ? void 0 : O[0]) || i).clientX - w.left, v.startY = (((B = i.touches) == null ? void 0 : B[0]) || i).clientY - w.top, v.startPercentageX = v.startX * 100 / w.width, v.startPercentageY = v.startY * 100 / w.height, v.thresholdPassed = !1, document.addEventListener(S ? "touchmove" : "mousemove", y, { passive: !S }), document.addEventListener(S ? "touchend" : "mouseup", K, { once: !0 }), v.holdTimer = setTimeout(() => {
         var W, ne;
-        v.holding = !0, (ne = (W = ae.value).hold) == null || ne.call(W, { e: i, cell: te.value, cursor: le.value });
+        v.holding = !0, (ne = (W = ae.value).hold) == null || ne.call(W, { e: i, cell: te.value, cursor: le.value, view: r });
       }, 1e3);
     }, y = (i) => {
       var W, ne, f, F, Q, q;
@@ -1769,15 +1769,15 @@ const lt = (h, t) => {
         v.touchAndDragTimer && (clearTimeout(v.touchAndDragTimer), v.touchAndDragTimer = null), K(i);
         return;
       }
-      S && i.preventDefault(), v.dragging || (X.isDraggingCell = !0, (ne = (W = ae.value)["drag-start"]) == null || ne.call(W, { e: i, cell: te.value, cursor: le.value })), v.dragging = !0, v.holdTimer = clearTimeout(v.holdTimer), v.holding = !1;
+      S && i.preventDefault(), v.dragging || (X.isDraggingCell = !0, (ne = (W = ae.value)["drag-start"]) == null || ne.call(W, { e: i, cell: te.value, cursor: le.value, view: r })), v.dragging = !0, v.holdTimer = clearTimeout(v.holdTimer), v.holding = !1;
       const O = A.value.getBoundingClientRect();
       v.moveX = (((f = i.touches) == null ? void 0 : f[0]) || i).clientX - O.left, v.moveY = (((F = i.touches) == null ? void 0 : F[0]) || i).clientY - O.top, v.movePercentageX = v.moveX * 100 / O.width, v.movePercentageY = v.moveY * 100 / O.height;
       const B = Math.abs(w ? v.startX - v.moveX : v.startY - v.moveY);
-      m.eventCreateMinDrag && B > m.eventCreateMinDrag && (v.thresholdPassed = !0), (q = (Q = ae.value).drag) == null || q.call(Q, { e: i, cell: te.value, cursor: le.value });
+      m.eventCreateMinDrag && B > m.eventCreateMinDrag && (v.thresholdPassed = !0), (q = (Q = ae.value).drag) == null || q.call(Q, { e: i, cell: te.value, cursor: le.value, view: r });
     }, K = async (i) => {
       var w, O;
       const S = i.type === "touchend";
-      document.removeEventListener(S ? "touchmove" : "mousemove", y, { passive: !1 }), v.touchAndDragTimer && (clearTimeout(v.touchAndDragTimer), v.touchAndDragTimer = null), v.dragging && ((O = (w = ae.value)["drag-end"]) == null || O.call(w, { e: i, cell: te.value, cursor: le.value }), X.isDraggingCell = !1, m.editableEvents.create && v.canTouchAndDrag && (D.value = !0, await oe(i), D.value = !1)), v.holdTimer = clearTimeout(v.holdTimer), v.holding = !1, v.dragging = !1, v.startX = 0, v.startY = 0, v.moveX = 0, v.moveY = 0, v.startPercentageX = 0, v.startPercentageY = 0, v.movePercentageX = 0, v.movePercentageY = 0, v.thresholdPassed = !1, v.schedule = null, v.canTouchAndDrag = null;
+      document.removeEventListener(S ? "touchmove" : "mousemove", y, { passive: !1 }), v.touchAndDragTimer && (clearTimeout(v.touchAndDragTimer), v.touchAndDragTimer = null), v.dragging && ((O = (w = ae.value)["drag-end"]) == null || O.call(w, { e: i, cell: te.value, cursor: le.value, view: r }), X.isDraggingCell = !1, m.editableEvents.create && v.canTouchAndDrag && (D.value = !0, await oe(i), D.value = !1)), v.holdTimer = clearTimeout(v.holdTimer), v.holding = !1, v.dragging = !1, v.startX = 0, v.startY = 0, v.moveX = 0, v.moveY = 0, v.startPercentageX = 0, v.startPercentageY = 0, v.movePercentageX = 0, v.movePercentageY = 0, v.thresholdPassed = !1, v.schedule = null, v.canTouchAndDrag = null;
     }, oe = async (i) => {
       var f;
       if (!_.value) return;
@@ -1787,7 +1787,7 @@ const lt = (h, t) => {
       const { create: ne } = m.eventListeners.event;
       if (typeof ne == "function") {
         const F = W;
-        W = await new Promise((Q) => ne({ e: i, event: W, cell: te.value, resolve: Q, cursor: le.value })), W && typeof W == "object" && r.createEvent(W), W && typeof W == "boolean" && r.createEvent(F);
+        W = await new Promise((Q) => ne({ e: i, event: W, cell: te.value, resolve: Q, cursor: le.value, view: r })), W && typeof W == "object" && r.createEvent(W), W && typeof W == "boolean" && r.createEvent(F);
       } else r.createEvent(W);
       (f = navigator.vibrate) == null || f.call(navigator, 200);
     }, ve = () => {
