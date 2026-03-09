@@ -18,7 +18,6 @@ w-accordion(
 //- View Object.
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="view") The View Object
-  .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedViewObject = Array(10).fill($event)") Expand All
 p.caption.size--md.lh1.
   You can use the #[code.base-color view] object to access accurate information about the current view at any time.
@@ -72,8 +71,8 @@ w-accordion.mt3(
           p Example:
           ssh-pre.mt0(language="js" :dark="store.darkMode").
             {
-              fullRangeStart: "{{ new Date().subtractDays(1).toISOString() }}", // Standard JS Date object.
-              fullRangeEnd: "{{ new Date().addDays(42).toISOString() }}", // Standard JS Date object.
+              extendedStart: "{{ new Date().subtractDays(1).toISOString() }}", // Standard JS Date object.
+              extendedEnd: "{{ new Date().addDays(42).toISOString() }}", // Standard JS Date object.
               ...
             }
 
@@ -328,7 +327,6 @@ w-accordion.mt3(
 //- Options list.
 h2.w-flex.justify-space-between.mb2
   title-link(div anchor="options") Options
-  .todo-tag.ml2.mra TO REVIEW
   w-switch.my1.body(@update:model-value="expandedOptions = Array(99).fill($event)") Expand All
 
 p.caption.size--md.lh1.
