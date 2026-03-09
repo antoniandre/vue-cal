@@ -434,12 +434,12 @@ const cellEventListeners = computed(() => {
   if (config.time && view.isDay || view.isDays || view.isWeek) {
     eventListeners.touchstart = e => {
       onMousedown(e.e || e)
-      externalHandlers.touchstart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      externalHandlers.touchstart?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
     }
     eventListeners.mousedown = e => {
       onMousedown(e.e || e)
 
-      externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+      externalHandlers.mousedown?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
     }
   }
 
@@ -592,7 +592,7 @@ const onDocMousemove = e => {
     globalTouchState.isDraggingCell = true // Add a CSS class on wrapper while dragging.
 
     // If there's a @cell-drag-start external listener, call it.
-    cellEventListeners.value['drag-start']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    cellEventListeners.value['drag-start']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
   }
   touch.dragging = true
   touch.holdTimer = clearTimeout(touch.holdTimer)
@@ -611,7 +611,7 @@ const onDocMousemove = e => {
   }
 
   // If there's a @cell-drag external listener, call it.
-  cellEventListeners.value.drag?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+  cellEventListeners.value.drag?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
 }
 
 const onDocMouseup = async e => {
@@ -626,7 +626,7 @@ const onDocMouseup = async e => {
 
   if (touch.dragging) {
     // If there's a @cell-drag-end external listener, call it.
-    cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value })
+    cellEventListeners.value['drag-end']?.({ e, cell: cellInfo.value, cursor: cursorInfo.value, view })
     globalTouchState.isDraggingCell = false // Add a CSS class on wrapper while dragging.
 
     if (config.editableEvents.create && touch.canTouchAndDrag) {

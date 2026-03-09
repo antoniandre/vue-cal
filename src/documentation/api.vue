@@ -174,10 +174,14 @@ w-accordion.mt3(
           viewDate: "{{ new Date().toISOString() }}", // Standard JS Date object.
           selectedDate: "{{ new Date().toISOString() }}", // Standard JS Date object.
           now: "{{ new Date().toISOString() }}", // Standard JS Date object.
-          broaderView: "year",
+          broaderView: "year", // The next broader view ID, e.g. 'year' when on 'month'.
+          narrowerView: "week", // The next narrower view ID, e.g. 'week' when on 'month'.
           containsToday: true,
           cols: 7,
           rows: 6,
+          firstCellDate: "{{ new Date().toISOString() }}", // First visible cell date.
+          lastCellDate: "{{ new Date().toISOString() }}", // Last visible cell date.
+          transitionDirection: "right", // Animation direction: 'left' or 'right'.
           isDay: false,
           isDays: false,
           isWeek: false,
