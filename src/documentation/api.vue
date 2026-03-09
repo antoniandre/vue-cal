@@ -1284,6 +1284,50 @@ w-accordion(
         li #[code cell]: The cell object (start, end, events, schedule, navigation methods).
         li #[code cursor]: Cursor position within the cell ({ x, y, date }).
         li #[code view]: The view object with methods like #[code createEvent()], #[code deleteEvent()], etc.
+  w-accordion-item
+    template(#title)
+      strong.title5 Payload Full Structure
+    template(#content)
+      p Detailed structure of the payload returned by all cell-related events:
+      ssh-pre(language="js" :dark="store.darkMode").
+        {
+          e: {Event}, // The native DOM event
+          cell: {
+            start: {Date}, // The cell start date &amp; time
+            end: {Date}, // The cell end date &amp; time
+            events: {ComputedRef}, // List of events in this cell
+            schedule: {Number}, // (if applicable) The schedule ID
+            // Navigation methods
+            goNarrower: {Function},
+            goBroader: {Function},
+            broader: {String}, // ID of the broader view
+            narrower: {String} // ID of the narrower view
+          },
+          cursor: {
+            x: {Number}, // Cursor X position in percentage within cell
+            y: {Number}, // Cursor Y position in percentage within cell
+            date: {Date} // Date at cursor position (includes time)
+          },
+          view: {Object} // The view object (see below)
+        }
+      p.
+        The #[code view] object provides access to view methods like #[code createEvent()], #[code deleteEvent()],
+        #[code scrollToTime()], #[code scrollToCurrentTime()], #[code switch()], etc. This allows creating events
+        directly from cell event handlers without needing a template ref:
+      ssh-pre.mt1(language="js" :dark="store.darkMode").
+        @cell-dblclick="({ cursor, view }) => {
+          view.createEvent({
+            start: cursor.date,
+            end: cursor.date.addHours(1),
+            title: 'New Event'
+          })
+        }"
+      p.
+        For events triggered by the cell's DOM events (like #[code cell-click], #[code cell-dblclick], etc.), the cursor
+        position is calculated at the moment of the event, providing the exact time at the click position.
+      p.
+        For drag events (#[code cell-drag-start], #[code cell-drag], #[code cell-drag-end]), the cursor position is
+        continuously tracked during the drag operation.
 
   h5.mt2.base-color Event-related Events
   w-accordion-item
@@ -1401,7 +1445,6 @@ w-accordion(
         li #[code overlaps]: An array of all the overlapping events, or empty array if none.
         li #[code cell]: The cell object where the event was dropped.
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
-
   w-accordion-item
     template(#title)
       strong.code.title5 event-dropped
@@ -1416,57 +1459,9 @@ w-accordion(
         li #[code originalEvent]: The original event object before it was dropped.
         li #[code cell]: The cell object where the event was dropped.
         li #[code external]: Boolean indicating if the event is from an external Vue Cal instance.
-
-  h5.mt2.base-color Payload Structure Details
-
   w-accordion-item
     template(#title)
-      strong.code.title5 Cell Event Payload - Full Structure
-    template(#content)
-      p Detailed structure of the payload returned by all cell-related events:
-      ssh-pre(language="js" :dark="store.darkMode").
-        {
-          e: {Event}, // The native DOM event
-          cell: {
-            start: {Date}, // The cell start date & time
-            end: {Date}, // The cell end date & time
-            events: {ComputedRef}, // List of events in this cell
-            schedule: {Number}, // (if applicable) The schedule ID
-            // Navigation methods
-            goNarrower: {Function},
-            goBroader: {Function},
-            broader: {String}, // ID of the broader view
-            narrower: {String} // ID of the narrower view
-          },
-          cursor: {
-            x: {Number}, // Cursor X position in percentage within cell
-            y: {Number}, // Cursor Y position in percentage within cell
-            date: {Date} // Date at cursor position (includes time)
-          },
-          view: {Object} // The view object (see below)
-        }
-      p.
-        The #[code view] object provides access to view methods like #[code createEvent()], #[code deleteEvent()],
-        #[code scrollToTime()], #[code scrollToCurrentTime()], #[code switch()], etc. This allows creating events
-        directly from cell event handlers without needing a template ref:
-      ssh-pre.mt1(language="js" :dark="store.darkMode").
-        @cell-dblclick="({ cursor, view }) => {
-          view.createEvent({
-            start: cursor.date,
-            end: cursor.date.addHours(1),
-            title: 'New Event'
-          })
-        }"
-      p.
-        For events triggered by the cell's DOM events (like #[code cell-click], #[code cell-dblclick], etc.), the cursor
-        position is calculated at the moment of the event, providing the exact time at the click position.
-      p.
-        For drag events (#[code cell-drag-start], #[code cell-drag], #[code cell-drag-end]), the cursor position is
-        continuously tracked during the drag operation.
-
-  w-accordion-item
-    template(#title)
-      strong.code.title5 Event Event Payload Structure
+      strong.title5 Payload Full Structure
     template(#content)
       p All event-related events (like #[code event-click], #[code event-drag], etc.) return a consistent payload with:
       ssh-pre(language="js" :dark="store.darkMode").
@@ -1505,30 +1500,27 @@ w-accordion(
           external: {Boolean} // If the event comes from another Vue Cal instance
         }
 
+  h5.mt2.base-color Additional Notes About The Internal Manual Event Forwarding
   w-accordion-item
-    template(#title)
-      .title5 Additional Notes About The Internal Manual Event Forwarding
+    template(#title) #[strong.mr1 Vue Cal] uses two different mechanisms for event handling:
     template(#content)
+      p The standard Vue event emission system and direct DOM event forwarding.
       p.
-        Vue Cal uses two different mechanisms for event handling: the standard Vue event emission system
-        and direct DOM event forwarding.
-      p.
-        For DOM events on cells and events (like click, dblclick, mousedown, etc.), Vue Cal automatically
-        forwards these events by adding listeners to the cell and event elements. When these events occur,
-        Vue Cal enriches them with additional context (cell info, event info, cursor position) before
-        passing them to your handlers.
+        For DOM events on cells and events (like click, dblclick, mousedown, etc.), #[strong.base-color Vue Cal] automatically
+        forwards these events by adding listeners to the cell and event elements.#[br]
+        When these events occur, #[strong Vue Cal enriches them with additional context]
+        (cell info, event info, cursor position) before passing them to your handlers.
+      p If you wonder how this works internally, here's a simplified explanation:
       ssh-pre(language="js" :dark="store.darkMode").
-        // Example of what happens internally:
         eventListeners.click = e => {
-          // First process internal logic
-          onCellClick();
+          onCellClick() // First process internal Vue Cal logic.
 
-          // Then forward to external handler with enriched context
+          // Then forward to external handler (if any) with enriched context.
           externalHandlers.click?.({
-            e,
-            cell: cellInfo.value,
-            cursor: getTimeAtCursor(e)
-          });
+            e, // The original native DOM event object.
+            cell: cellInfo.value, // Injected cell information.
+            cursor: getTimeAtCursor(e) // Injected time at cursor position.
+          })
         }
       p.
         This approach allows Vue Cal to provide a consistent, rich API for all events while still
