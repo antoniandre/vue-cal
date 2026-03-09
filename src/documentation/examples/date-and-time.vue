@@ -89,11 +89,24 @@ example(title="Scroll the View to a Particular Time" anchor="scroll-to-time")
         p Scrolls the calendar body to the top.
       li.mt3
         code view.scrollToTime(minutes)
-        p Scrolls the calendar body to the given time in minutes. E.g. #[code view.scrollToCurrentTime(13 * 60)].
+        p Scrolls the calendar body to the given time in minutes. E.g. #[code view.scrollToTime(13 * 60)].
       li.mt3
         code view.scrollToCurrentTime()
         p Scrolls the calendar body to the current time.
     alert.mt2.d-iblock You can store the functions from #[code @ready] for later use.
+    h4.mt4 Custom Finer-Grain Scrolling
+    p
+      | For more control, you can scroll any element into view using the native
+      a.mx1(href="https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView" target="_blank")
+        | scrollIntoView()
+        w-icon.ml1(xs) mdi mdi-open-in-new
+      | method, then adjust the scroll position with an offset if needed:
+    ssh-pre.mt2(language="js" :dark="store.darkMode").
+      // Scroll any element into view (e.g., an event, a time cell, etc.)
+      eventEl.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+      // Optionally adjust the scroll position with an offset.
+      eventEl.closest('.vuecal__scrollable').scrollTop -= 30
     .w-flex.mb6.justify-end
       w-button.mt2.mr2(@click="exScrollToTime.scrollTop")
         w-icon mdi mdi-format-vertical-align-top
