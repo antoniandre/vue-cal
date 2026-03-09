@@ -26,6 +26,7 @@ const examples = [
   { route: { name: 'examples-view', hash: '#ex--layouts' }, label: 'Layouts' },
   { route: { name: 'examples-view', hash: '#ex--views' }, label: 'Views' },
   { route: { name: 'examples-view', hash: '#ex--hide-elements' }, label: 'Hide Elements & Toggles' },
+  { route: { name: 'examples-view', hash: '#ex--horizontal-layout' }, label: 'Horizontal Layout' },
   { route: { name: 'examples-view', hash: '#ex--internationalization' }, label: 'Internationalization' },
   { route: { name: 'examples-view', hash: '#ex--themes' }, label: 'Themes' },
   { route: { name: 'examples-view', hash: '#ex--css-variables' }, label: 'CSS Control' },
@@ -76,7 +77,6 @@ const examples = [
   { route: { name: 'examples-customization', hash: '#ex--custom-cells' }, label: 'Custom Cells' },
   { route: { name: 'examples-customization', hash: '#ex--custom-event-rendering' }, label: 'Custom Event Rendering' },
   { route: { name: 'examples-customization', hash: '#ex--custom-schedules-headings' }, label: 'Custom Day Schedules Headings' },
-  { route: { name: 'examples-customization', hash: '#ex--external-controls' }, label: 'External Controls' },
   { route: { name: 'examples-customization', hash: '#ex--events-on-month-view' }, label: 'Events on Month View' }
 
   // w-tag.ml2(color="primary" outline) NEW
