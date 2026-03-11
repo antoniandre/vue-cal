@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.40
+    ul
+      li Fixed #[code --vuecal-min-schedule-size] and #[code --vuecal-min-cell-size] being ignored in day view when using schedules. #[issue-link 93]
+  li.patch
     strong.version 5.0.1-rc.39
     ul
       li Fixed #[code scrollToCurrentTime()] and #[code scrollToTime()] incorrect scroll position when #[code timeFrom] is set. #[issue-link 83]
