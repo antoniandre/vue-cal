@@ -1,6 +1,6 @@
 import { computed as E, reactive as be, watch as De, toRefs as bt, ref as de, onBeforeUnmount as Xe, nextTick as Be, inject as je, openBlock as V, createElementBlock as P, renderSlot as H, unref as T, Fragment as me, renderList as we, normalizeClass as pe, createCommentVNode as ee, createElementVNode as ye, createVNode as He, Transition as qe, withCtx as N, createBlock as Se, resolveDynamicComponent as xe, mergeProps as ie, toHandlers as Ie, normalizeProps as se, onMounted as Ze, toDisplayString as fe, createTextVNode as Ge, withModifiers as et, normalizeStyle as $e, TransitionGroup as tt, createSlots as Ce, useTemplateRef as Tt, useId as Mt, useAttrs as Et, provide as nt, guardReactiveProps as re } from "vue";
 /**
-  * vue-cal v5.0.1-rc.39
+  * vue-cal v5.0.1-rc.40
   * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
@@ -2337,7 +2337,7 @@ const lt = (h, t) => {
       var l;
       return {
         "--vuecal-time-cell-size": d.timeCellHeight && `${d.timeCellHeight}px`,
-        "--vuecal-schedules-count": (l = d.schedules) == null ? void 0 : l.length
+        "--vuecal-schedules-count": ((l = d.schedules) == null ? void 0 : l.length) ?? 0
       };
     }), v = E(() => {
       var l, I;
