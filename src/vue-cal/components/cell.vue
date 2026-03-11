@@ -188,7 +188,7 @@ const eventPlaceholder = computed(() => {
     endMinutes,
     start: dateUtils.formatMinutes(startMinutes),
     end: dateUtils.formatMinutes(endMinutes),
-    ...(touch.schedule ? { schedule: touch.schedule } : {})
+    ...(touch.schedule != null ? { schedule: touch.schedule } : {})
   }
 })
 
