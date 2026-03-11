@@ -83,6 +83,7 @@
     justify-content: center;
     overflow: hidden;
   }
+  &__scrollable--day-view &__schedule,
   &__scrollable--days-view &__schedule,
   &__scrollable--week-view &__schedule {min-width: var(--vuecal-min-schedule-size, 0);}
 

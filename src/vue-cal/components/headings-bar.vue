@@ -201,6 +201,7 @@ onBeforeUnmount(() => {
     align-items: center;
     background-color: inherit;
 
+    .vuecal__scrollable--day-view &,
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
     .vuecal--horizontal .vuecal__scrollable--day-view &,
