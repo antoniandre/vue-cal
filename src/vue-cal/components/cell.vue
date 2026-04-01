@@ -278,7 +278,7 @@ const cellEventsPerSchedule = computed(() => {
 
 // Compute styles for event width & offset.
 const eventStyles = computed(() => {
-  if (view.isMonth || view.isYear || view.isYears || props.allDay) return {}
+  if (view.isMonth || view.isYear || view.isYears || props.allDay || !props.time) return {}
   const isRTL = typeof document !== 'undefined' && document.documentElement.getAttribute('dir') === 'rtl'
   const isHzl = config.horizontal
   const styles = {}
