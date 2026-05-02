@@ -857,9 +857,9 @@ onMounted(() => {
   .calendar-wrap {
     flex: 1;
     overflow: hidden;
-
-    .vuecal {height: 100%;}
   }
+
+  .vuecal:not(.vuecal--date-picker):not(.vuecal--xs) {height: 100%;}
 
   // Event classes for testing.
   .vuecal__event.event-1 {background: #42A5F5;}

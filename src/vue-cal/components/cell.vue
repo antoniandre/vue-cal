@@ -757,11 +757,13 @@ onBeforeUnmount(async () => {
     content: '';
     position: absolute;
     inset: 0;
-    background: linear-gradient(0deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
+    background-image: linear-gradient(0deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size));
+    background-position: 0 1px;
     background-size: 100% var(--vuecal-time-cell-size);
   }
   .vuecal--view-has-time.vuecal--horizontal &:before {
-    background: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size)) 0 1px;
+    background-image: linear-gradient(90deg, var(--vuecal-border-color, #ddd) 0, transparent 1px var(--vuecal-time-cell-size));
+    background-position: 0 1px;
     background-size: var(--vuecal-time-cell-size) 100%;
   }
 }
