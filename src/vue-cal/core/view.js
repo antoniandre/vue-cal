@@ -450,7 +450,10 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         break
       case 'week': {
         if (forward) {
-          newViewDate = dateUtils.addDays(extendedEnd.value, 1)
+          // Advance by one calendar week from the first visible cell (not extendedEnd + 1).
+          // When weekends are hidden and the week starts on Sunday, extendedEnd + 1 can land on a
+          // hidden Sunday; updateView then snaps back to the same week (#67).
+          newViewDate = dateUtils.addDays(firstCellDate.value, 7)
           newViewDate.setHours(0, 0, 0, 0)
         }
         else newViewDate = dateUtils.subtractDays(extendedStart.value, cellsCount.value)
