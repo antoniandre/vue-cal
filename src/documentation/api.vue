@@ -382,6 +382,29 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--current-time-label
+      strong.code.title5 currentTimeLabel
+      .type [Boolean]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code false
+    template(#content)
+      p.
+        When set to #[span.code true], a label with the current time is shown in the
+        #[router-link(to="/api#props--time") time] column on #[span.code day], #[span.code days], and
+        #[span.code week] views, aligned with the “now” position in the grid (same as the current time line).#[br]
+        The label uses the configured time format (see #[router-link(to="/api#props--twelve-hour") twelveHour]).
+      p.
+        Use the #[router-link(to="/api#slots--current-time-label") #current-time-label] slot to customize
+        that label. The #[router-link(to="/api#slots--now-line") #now-line] slot customizes the current
+        time line in the grid only.
+      p.
+        For the indicator to stay in sync with the clock while the page is idle, enable
+        #[router-link(to="/api#props--watch-real-time") watchRealTime].
+      p See #[router-link(to="/examples/view#ex--hide-elements") Hide Elements & Toggles] example.
+
+  w-accordion-item
+    template(#title)
       a#props--dark
       strong.code.title5 dark
       .type [Boolean]
@@ -1084,9 +1107,11 @@ w-accordion.mt2(
       p.
         More expensive, so only trigger on demand.#[br]
         When set to #[span.code true], the current time line in today's cell, on #[span.code week] and
-        #[span.code day] views, will stay in sync with real time.#[br]
+        #[span.code day] views, will stay in sync with real time. The same applies to the
+        #[router-link(to="/api#props--current-time-label") currentTimeLabel] in the time column when enabled.#[br]
         #[span.grey (This requires a #[span.code setTimeout] every minute)]#[br]
-        See also the #[router-link(to="/api#slots--now-line") #now-line] slot to customize the time line appearance.
+        See also the #[router-link(to="/api#slots--now-line") #now-line] slot for the grid line, and
+        #[router-link(to="/api#slots--current-time-label") #current-time-label] for the time-column label.
       p See #[router-link(to="/examples/date-and-time#ex--today-current-time") Today's Current Time] example.
 
   w-accordion-item
@@ -1812,7 +1837,10 @@ w-accordion(
       a#slots--now-line
       strong.code.title5 now-line
     template(#content)
-      p Customizes how the current time line is displayed.
+      p.
+        Customizes how the current time line is displayed in day, days, and week grid cells (not the
+        label in the #[router-link(to="/api#props--time") time] column; see
+        #[router-link(to="/api#slots--current-time-label") #current-time-label]).
       p Available parameters:
       ul
         li #[code.base-color now] - The current date
@@ -1820,6 +1848,25 @@ w-accordion(
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #now-line="{ now, timeFormatted }"&gt;
           &lt;div class="custom-now-line"&gt;{{ '\{\{ timeFormatted \}\}' }}&lt;/div&gt;
+        &lt;/template&gt;
+
+  w-accordion-item
+    template(#title)
+      a#slots--current-time-label
+      strong.code.title5 current-time-label
+    template(#content)
+      p.
+        Customizes the current time label in the #[router-link(to="/api#props--time") time] column when
+        #[router-link(to="/api#props--current-time-label") currentTimeLabel] is enabled.#[br]
+        This slot is separate from #[router-link(to="/api#slots--now-line") #now-line], which only affects
+        the horizontal line in the grid.
+      p Available parameters:
+      ul
+        li #[code.base-color now] - The current date
+        li #[code.base-color time-formatted] - The formatted time string
+      ssh-pre(language="html-vue" :dark="store.darkMode").
+        &lt;template #current-time-label="{ now, timeFormatted }"&gt;
+          &lt;span class="custom-current-time-label"&gt;{{ '\{\{ timeFormatted \}\}' }}&lt;/span&gt;
         &lt;/template&gt;
 
   w-accordion-item

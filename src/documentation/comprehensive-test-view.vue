@@ -229,6 +229,13 @@
               data-testid="time-at-cursor") Time At Cursor
 
           .control
+            w-switch(
+              v-model="config.currentTimeLabel"
+              thin
+              label-on-left
+              data-testid="current-time-label") Current Time Label
+
+          .control
             w-input(
               v-model="config.timeFormat"
               placeholder="HH:mm"
@@ -479,6 +486,7 @@ const config = reactive({
   timeCellHeight: 40,
   twelveHour: false,
   timeAtCursor: false,
+  currentTimeLabel: false,
   timeFormat: '',
   allDayEvents: false,
   multidayEvents: true,

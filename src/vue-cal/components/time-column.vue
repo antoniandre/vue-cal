@@ -19,7 +19,7 @@
       v-if="config.currentTimeLabel"
       :style="view.nowLine.style"
       :title="view.nowLine.currentTime")
-      slot(name="now-line" :now="view.now" :time-formatted="view.nowLine.currentTime")
+      slot(name="current-time-label" :now="view.now" :time-formatted="view.nowLine.currentTime")
         span {{ view.nowLine.currentTime }}
 </template>
 

@@ -85,6 +85,18 @@ export type VueCalSchedulesHidden = {
   hide?: boolean
 }
 
+/** Scoped props for the `now-line` slot (current time line in day / days / week cells). */
+export interface VueCalNowLineSlotProps {
+  now: Date
+  timeFormatted: string
+}
+
+/** Scoped props for the `current-time-label` slot (time column; requires `currentTimeLabel`). */
+export interface VueCalCurrentTimeLabelSlotProps {
+  now: Date
+  timeFormatted: string
+}
+
 export interface VueCalEvent {
   _eid?: undefined,
   _?: undefined,
@@ -105,6 +117,7 @@ export interface VueCalEvent {
 export interface VueCalConfig {
   allDayEvents?: boolean,
   clickToNavigate?: boolean, // Setting to false will force it off on date-picker.
+  currentTimeLabel?: boolean, // Show the current time label in the time column (day, days, week).
   dark?: boolean, // Dark theme.
   datePicker?: boolean, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   disableDays?: (Date | VueCalDateString)[], // Array of specific dates to disable.
@@ -120,6 +133,7 @@ export interface VueCalConfig {
   eventsOnMonthView?: boolean | 'short', // Displays events in full on month view.
   hideWeekdays?: VueCalWeekdays[], // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
   hideWeekends?: boolean, // Show or hide both Saturday and Sunday in days, week and month views.
+  horizontal?: boolean, // Show the calendar timeline horizontally (day, days, week).
   // en-us is the default and fallback if locale is not supported.
   // The locale can also be provided externally to avoid using Promises.
   locale?: VueCalLanguages, // A language to use for all the texts.

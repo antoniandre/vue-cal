@@ -43,6 +43,8 @@
           TimeColumn(v-if="hasTimeColumn")
             template(v-if="$slots['time-cell']" #time-cell="params")
               slot(name="time-cell" v-bind="params")
+            template(v-if="$slots['current-time-label']" #current-time-label="params")
+              slot(name="current-time-label" v-bind="params")
           .vuecal__week-numbers(v-if="config.weekNumbers && view.isMonth")
             .vuecal__week-number(v-for="i in weekNumbers")
               slot(name="week-number")

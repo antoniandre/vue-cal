@@ -47,6 +47,11 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
       w-tooltip
         template(#activator="{ on }")
           .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
+            w-switch(v-model="exHideElements.currentTimeLabel") Current Time Label
+        div Show the current time in the time column on #[strong day], #[strong days], and #[strong week] views when the time column is visible.<br>Use #[router-link(to="/api#props--watch-real-time") watch-real-time] to keep the label in sync with the clock while the page is idle.
+      w-tooltip
+        template(#activator="{ on }")
+          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
             w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
         | Show the time at the cursor on hover on day, days and month views.
       w-tooltip(align-left)
@@ -56,12 +61,13 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
         | Visible on month view
 
   template(#code-html).
-    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.timeAtCursor ? '\n  time-at-cursor' : '' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;
+    &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.currentTimeLabel ? '\n  current-time-label' : '' }}{{ exHideElements.timeAtCursor ? '\n  time-at-cursor' : '' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;
   vue-cal.mxa(
     :views-bar="exHideElements.viewsBar"
     :today-button="exHideElements.todayButton"
     :title-bar="exHideElements.titleBar"
     :time="exHideElements.time"
+    :current-time-label="exHideElements.currentTimeLabel"
     :time-at-cursor="exHideElements.timeAtCursor"
     :hide-weekends="exHideElements.hideWeekends"
     :start-week-on-sunday="exHideElements.startOnSunday"
@@ -260,6 +266,7 @@ const exHideElements = reactive({
   startOnSunday: ref(false),
   hideWeekends: ref(false),
   time: ref(true),
+  currentTimeLabel: ref(false),
   timeAtCursor: ref(false),
   weekNumbers: ref(false)
 })

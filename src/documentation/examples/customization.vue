@@ -22,6 +22,8 @@ alert
     li #[span.code weekday-heading]
     li #[span.code schedule-heading]
     li #[span.code time-cell]
+    li #[span.code current-time-label]
+    li #[span.code now-line]
     li #[span.code week-number-cell]
     li #[span.code cell]
     li #[span.code cell-content]
