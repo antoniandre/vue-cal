@@ -337,6 +337,35 @@ describe('Vue Cal - Display Test', () => {
       cy.get('[data-testid="time-at-cursor"]').uncheck({ force: true })
     })
 
+    it('should toggle currentTimeLabel in the time column', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="time-enabled"]').should('be.checked')
+      cy.get('[data-testid="current-time-label"]').should('not.be.checked')
+      cy.get('.vuecal__current-time').should('not.exist')
+
+      cy.get('[data-testid="current-time-label"]').scrollIntoView().check({ force: true })
+      cy.wait(300)
+      // Label may be clipped by fixed/overflow ancestors; assert DOM + formatted time.
+      cy.get('.vuecal__current-time').should('exist')
+      cy.get('.vuecal__current-time span').invoke('text').should('match', /^\d{1,2}:\d{2}$/)
+
+      cy.get('[data-testid="current-time-label"]').uncheck({ force: true })
+      cy.wait(300)
+      cy.get('.vuecal__current-time').should('not.exist')
+    })
+
+    it('should show currentTimeLabel in 12h format when twelveHour is enabled', () => {
+      cy.wSelect('view-select', 'Day')
+      cy.get('[data-testid="current-time-label"]').check({ force: true })
+      cy.get('[data-testid="twelve-hour"]').check({ force: true })
+      cy.wait(300)
+
+      cy.get('.vuecal__current-time span').invoke('text').should('match', /^\d{1,2}:\d{2}\s*(am|pm)$/i)
+
+      cy.get('[data-testid="twelve-hour"]').uncheck({ force: true })
+      cy.get('[data-testid="current-time-label"]').uncheck({ force: true })
+    })
+
     it('should change timeCellHeight', () => {
       cy.wSelect('view-select', 'Day')
       cy.wait(400)
