@@ -521,6 +521,10 @@ const schedulesEnabled = ref(false)
 const scheduleCount = ref(3)
 const specialHoursEnabled = ref(false)
 
+// Cypress sets this in `onBeforeLoad` so e2e can cover string schedule ids without a UI toggle.
+const e2eStringScheduleIds =
+  typeof window !== 'undefined' && !!window.__VUE_CAL_E2E_STRING_SCHEDULE_IDS__
+
 // Date inputs (for easier date picking).
 const selectedDateInput = ref('')
 const viewDateInput = ref(new Date().toISOString().split('T')[0])
@@ -575,7 +579,8 @@ const addEvent = () => {
   }
 
   if (config.schedules.length) {
-    event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
+    const i = Math.floor(Math.random() * config.schedules.length)
+    event.schedule = config.schedules[i].id ?? (i + 1)
   }
 
   config.events.push(event)
@@ -596,7 +601,8 @@ const addAllDayEvent = () => {
   }
 
   if (config.schedules.length) {
-    event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
+    const i = Math.floor(Math.random() * config.schedules.length)
+    event.schedule = config.schedules[i].id ?? (i + 1)
   }
 
   config.events.push(event)
@@ -617,7 +623,8 @@ const addBackgroundEvent = () => {
   }
 
   if (config.schedules.length) {
-    event.schedule = Math.floor(Math.random() * config.schedules.length) + 1
+    const i = Math.floor(Math.random() * config.schedules.length)
+    event.schedule = config.schedules[i].id ?? (i + 1)
   }
 
   config.events.push(event)
@@ -647,7 +654,10 @@ const loadSampleEvents = () => {
       class: `event-${(i % 3) + 1}`
     }
 
-    if (config.schedules.length) event.schedule = (i % config.schedules.length) + 1
+    if (config.schedules.length) {
+      const si = i % config.schedules.length
+      event.schedule = config.schedules[si].id ?? (si + 1)
+    }
 
     events.push(event)
   }
@@ -669,7 +679,10 @@ const loadSampleEvents = () => {
         class: 'all-day-event'
       }
 
-      if (config.schedules.length) event.schedule = (i % config.schedules.length) + 1
+      if (config.schedules.length) {
+        const si = i % config.schedules.length
+        event.schedule = config.schedules[si].id ?? (si + 1)
+      }
 
       events.push(event)
     }
@@ -699,10 +712,11 @@ watch(eventCountEnabled, val => {
   config.eventCount = val
 })
 
-// Watch schedules.
+// Watch schedules (explicit numeric ids by default; string ids only when window flag is set for e2e).
 watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
   if (enabled) {
     config.schedules = Array.from({ length: count }, (_, i) => ({
+      id: e2eStringScheduleIds ? `sch-${i + 1}` : (i + 1),
       label: `Schedule ${i + 1}`,
       class: `schedule-${i + 1}`
     }))

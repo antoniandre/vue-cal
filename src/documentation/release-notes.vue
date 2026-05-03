@@ -6,6 +6,7 @@ ul.history.ml2
     strong.version 5.0.1-rc.41
     ul
       li Added a current time label in the time column. #[issue-link 115]
+      li Schedules: support non-numeric schedule ids and #[code schedule: 0] in overlap checks, cell interaction, and drag-and-drop (no #[code ~~] coercion on ids). #[issue-link 72] #[issue-link 75]
   li.patch
     strong.version 5.0.1-rc.40
     ul

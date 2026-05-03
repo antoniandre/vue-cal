@@ -254,7 +254,7 @@ example(title="Custom Cells" anchor="custom-cells")
             end: {Date}, // JavaScript Date object.
             selectedDate: {Date} // JavaScript Date object.
           }
-      li #[span.code schedule], when schedules, object containing the current schedule info.
+      li #[span.code schedule], when schedules, object containing the current schedule info (including #[span.code id], which may be a number or string).
       li #[span.code events], array containing all the events of the current cell or schedule.
       li #[span.code goNarrower], function to navigate to narrower view if possible.
     alert.my3(info)

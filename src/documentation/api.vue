@@ -210,7 +210,7 @@ ssh-pre(language="js" :dark="store.darkMode").
     deletable: true,
     allDay: false,
     recurring: { frequency: 'week', amount: 1, start: new Date() },
-    schedule: 1,
+    schedule: 1, // or a string id matching schedules[].id, e.g. 'room-a'
     background: false,
     class: 'meeting',
 
@@ -283,8 +283,11 @@ w-accordion.mt3(
     template(#title)
       a#event--schedule
       strong.code.title5 schedule
-      .type [Number]
-    template(#content) Must be an integer of less than 10 digits.<br>The schedule ID the event belongs to, when multiple schedules are defined through the #[router-link(to="/api#props--schedules") schedules] prop. Ignored if no schedules are defined.
+      .type [Number, String]
+    template(#content)
+      | The schedule ID the event belongs to when multiple schedules are defined through the #[router-link(to="/api#props--schedules") schedules] prop. Ignored if no schedules are defined.#[br]
+      | Use the same value as the corresponding entry’s #[span.code id] in #[span.code schedules] (auto-generated as #[span.code 1], #[span.code 2], … when omitted), or a custom #[span.code id] such as a string/UUID.#[br]
+      | #[span.code 0] is a valid id. Values are not coerced with bitwise operators, so string ids stay strings.
   w-accordion-item
     template(#title)
       a#event--recurring
@@ -509,7 +512,7 @@ w-accordion.mt2(
             content: {String}, // Optional.
             class: {String}, // Optional - space-separated css classes.
             background: {Boolean} // Optional. (Event type not CSS property)
-            schedule: {Number} // Optional.
+            schedule: {Number | String} // Optional. Must match a schedule id (see schedules).
             allDay: {Boolean} // Optional.
             deletable: false // optional - force undeletable when events are editable.
             resizable: false // optional - force unresizable when events are editable.
@@ -528,10 +531,10 @@ w-accordion.mt2(
             The #[span.code background] attribute sets an event as a background event,
             which allows overlapping and disable the ability to drag &amp; resize.
           li.
-            When using #[router-link(to="/api#props--schedules") schedules], the #[span.code schedule] attribute accepts a number,
-            starting from 1, corresponding to the schedule you want the event to appear in.#[br]
-            Optionally, if you have set the #[span.code id] property in #[router-link(to="/api#props--schedules") schedules],
-            you have to use the same #[span.code id] here (Integer of less than 10 digits).
+            When using #[router-link(to="/api#props--schedules") schedules], the #[span.code schedule] value must match the
+            target column’s #[span.code id] (1-based integers by default, or any #[span.code id] you set, including #[span.code 0]
+            or a string).#[br]
+            DOM #[span.code data-schedule] attributes are strings; Vue Cal resolves them to your configured ids.
           li.
             When the #[router-link(to="/api#props--all-day-events") allDayEvents] and #[router-link(to="/api#props--time") time] options are set to
             #[span.code true], all the events with an attribute #[span.code allDay] set to
@@ -807,7 +810,7 @@ w-accordion.mt2(
         Accepts an array of objects defined like follows, where all attributes are optional:#[br]
       ssh-pre(language="js" :dark="store.darkMode").
         {
-          id: {Integer}, // All ids must be set if using `hide`.
+          id: {Integer | String}, // All ids must be set if using `hide`. Strings (e.g. UUIDs) are allowed.
           class: {String},
           label: {String},
           hide: {Boolean} // You can toggle the column on and of with this.
@@ -1323,7 +1326,7 @@ w-accordion(
             start: {Date}, // The cell start date &amp; time
             end: {Date}, // The cell end date &amp; time
             events: {ComputedRef}, // List of events in this cell
-            schedule: {Number}, // (if applicable) The schedule ID
+            schedule: {Number | String}, // (if applicable) The schedule ID
             // Navigation methods
             goNarrower: {Function},
             goBroader: {Function},
@@ -1723,7 +1726,7 @@ w-accordion(
       p See #[router-link(to="/examples/customization#ex--custom-schedules-headings") Custom Day Schedules Headings] example.
       p Available parameters:
       ul
-        li #[code.base-color schedule] - The schedule object containing id, label, and class
+        li #[code.base-color schedule] - The schedule object containing #[span.code id] (number or string), #[span.code label], and #[span.code class]
         li #[code.base-color view] - The current view object
       ssh-pre(language="html-vue" :dark="store.darkMode").
         &lt;template #schedule-heading="{ schedule, view }"&gt;

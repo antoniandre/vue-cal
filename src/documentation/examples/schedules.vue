@@ -199,7 +199,7 @@ example(title="Schedules & Schedule Events" anchor="schedules")
           title: 'Doctor appointment',
           content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
           class: 'health',
-          schedule: 1 // Has to match the id of the schedule you have set (or integers if none).
+          schedule: 1 // Must match the schedule id (1, 2, … if omitted, or your custom number/string id).
         },
         {
           start: '2018-11-19 18:30',
