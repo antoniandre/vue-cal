@@ -114,6 +114,7 @@
         padding-top: 0;
         padding-left: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
       }
+      .vuecal__time-column-inner {flex-direction: row;}
 
       .vuecal__all-day-label {
         height: 100%;

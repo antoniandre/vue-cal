@@ -4,6 +4,7 @@ export const props = {
   allDayEvents: { type: Boolean, default: false }, // Display all-day events in a fixed top bar on the day, days & week views.
   stackEvents: { type: Boolean, default: false },
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
+  currentTimeLabel: { type: Boolean, default: false }, // Show or hide the current time label in the time column.
   dark: { type: Boolean, default: false }, // Dark theme.
   datePicker: { type: Boolean, default: false }, // Shorthand for xs: true, views: [month, year, years], clickToNavigate: true.
   disableDays: { type: Array, default: () => [] }, // Array of specific dates to disable.
@@ -21,6 +22,7 @@ export const props = {
   eventsOnMonthView: { type: Boolean, default: false }, // Displays events in full on month view.
   hideWeekdays: { type: Array, default: () => [] }, // An array of strings. Possible values: 'mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'.
   hideWeekends: { type: Boolean, default: false }, // Show or hide both Saturday and Sunday in days, week and month views.
+  horizontal: { type: Boolean, default: false }, // Show the calendar timeline horizontally.
   // en-us is the default and fallback if locale is not supported.
   // The locale can also be provided externally to avoid using Promises.
   locale: { type: String, default: '' }, // A language to use for all the texts.
@@ -58,8 +60,7 @@ export const props = {
   viewsBar: { type: Boolean, default: true }, // Show or hide the headers view selection bar.
   watchRealTime: { type: Boolean, default: false }, // More expensive, so only trigger on demand.
   weekNumbers: { type: Boolean, default: false }, // Show the weeks numbers in a column on month view.
-  xs: { type: Boolean, default: false }, // Extra small size for date pickers (truncates texts + specific styles).
-  horizontal: { type: Boolean, default: false } // Show the calendar timeline horizontally.
+  xs: { type: Boolean, default: false } // Extra small size for date pickers (truncates texts + specific styles).
 
   // TODO:
   // minEventWidth: { type: Number, default: 0 },

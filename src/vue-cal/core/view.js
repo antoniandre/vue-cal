@@ -1,4 +1,5 @@
-import { ref, computed, watch, onBeforeUnmount, nextTick } from 'vue'
+import { ref, computed, watch, onBeforeUnmount, nextTick, reactive } from 'vue'
+import { minutesToPercentage } from '@/vue-cal/utils/conversions'
 
 export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vuecalEl) => {
   const { availableViews } = config
@@ -59,6 +60,23 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     const firstCellTime = firstCellDate.value.getTime()
     const lastCellTime = lastCellDate.value.getTime()
     return firstCellTime <= nowTime && nowTime <= lastCellTime
+  })
+
+  // Draw a line in today's cell at the exact current time.
+  // Also used in the time column if the option is enabled.
+  const nowLine = reactive({
+    show: computed(() => {
+      if (!['day', 'days', 'week'].includes(viewId.value)) return
+      if (!containsToday.value || !config.time || config.allDay) return
+      if (config.timeFrom > dateUtils.dateToMinutes(now.value)) return
+      if (dateUtils.dateToMinutes(now.value) > config.timeTo) return
+
+      return true
+    }),
+    nowInMinutes: computed(() => dateUtils.dateToMinutes(now.value)),
+    todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
+    style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
+    currentTime: computed(() => dateUtils.formatTime(now.value, config.twelveHour ? 'h:mm {am}' : 'HH:mm'))
   })
 
   /**
@@ -603,6 +621,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     firstCellDate,
     lastCellDate,
     containsToday,
+    nowLine,
     selectedDate,
     cellDates,
     cols,

@@ -1,25 +1,33 @@
 <template lang="pug">
 .vuecal__time-column
-  .vuecal__all-day-label(v-if="config.allDayEvents")
-    slot(name="all-day-label") {{ vuecal.texts.allDay }}
+  .vuecal__time-column-inner
+    .vuecal__all-day-label(v-if="config.allDayEvents")
+      slot(name="all-day-label") {{ vuecal.texts.allDay }}
 
-  .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i" :style="{ height: time.height || null }")
-    slot(
-      name="time-cell"
-      :index="i"
-      :minutes="time.minutes"
-      :hours="time.hours"
-      :minutes-sum="time.minutesSum"
-      :format12="time.formatted12"
-      :format24="time.formatted24")
-      label {{ config.twelveHour ? time.formatted12 : time.formatted24 }}
+    .vuecal__time-cell(v-for="(time, i) in timeCells" :key="i" :style="{ height: time.height || null }")
+      slot(
+        name="time-cell"
+        :index="i"
+        :minutes="time.minutes"
+        :hours="time.hours"
+        :minutes-sum="time.minutesSum"
+        :format12="time.formatted12"
+        :format24="time.formatted24")
+        label {{ config.twelveHour ? time.formatted12 : time.formatted24 }}
+
+    .vuecal__current-time(
+      v-if="config.currentTimeLabel"
+      :style="view.nowLine.style"
+      :title="view.nowLine.currentTime")
+      slot(name="now-line" :now="view.now" :time-formatted="view.nowLine.currentTime")
+        span {{ view.nowLine.currentTime }}
 </template>
 
 <script setup>
 import { computed, inject } from 'vue'
 
 const vuecal = inject('vuecal')
-const { config, texts } = vuecal
+const { config, texts, view } = vuecal
 
 const timeCells = computed(() => {
   const cells = []
@@ -64,6 +72,11 @@ const timeCells = computed(() => {
   top: 0; // For horizontal layout.
   z-index: 5; // Above the cells, headings bar and hovered events.
   border-right: 0.5px solid var(--vuecal-border-color);
+}
+
+.vuecal__time-column-inner {
+  position: relative;
+  flex-grow: 1;
 }
 
 .vuecal__all-day-label {
@@ -115,5 +128,17 @@ const timeCells = computed(() => {
     font-size: 0.9em;
     opacity: 0.4;
   }
+}
+
+.vuecal__time-column-inner {
+  display: flex;
+  flex-direction: column;
+}
+
+.vuecal__current-time {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 </style>

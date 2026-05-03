@@ -94,11 +94,11 @@
   .vuecal__cell-events-count(v-else-if="showCellEventCount") {{ cellForegroundEvents.length }}
 
   .vuecal__now-line(
-    v-if="nowLine.show"
-    :style="nowLine.style"
-    :title="nowLine.currentTime")
-    slot(name="now-line" :now="view.now" :time-formatted="nowLine.currentTime")
-      span {{ nowLine.currentTime }}
+    v-if="view.nowLine.show && isToday && !allDay"
+    :style="view.nowLine.style"
+    :title="view.nowLine.currentTime")
+    slot(name="now-line" :now="view.now" :time-formatted="view.nowLine.currentTime")
+      span {{ view.nowLine.currentTime }}
 </template>
 
 <script setup>
@@ -374,21 +374,6 @@ const isDisabled = computed(() => {
   const isYearsOrYearView = view.isYear || view.isYears
   if (disableDays.length && disableDays.includes(dateUtils.formatDate(props.start)) && !isYearsOrYearView) return true
   return isBeforeMinDate.value || isAfterMaxDate.value
-})
-
-// Draw a line in today's cell at the exact current time.
-const nowLine = reactive({
-  show: computed(() => {
-    if (!view.isDay && !view.isDays && !view.isWeek) return
-    if (!isToday.value || !config.time || props.allDay) return
-    if (config.timeFrom > dateUtils.dateToMinutes(view.now)) return
-    if (dateUtils.dateToMinutes(view.now) > config.timeTo) return
-    return true
-  }),
-  nowInMinutes: computed(() => dateUtils.dateToMinutes(view.now)),
-  todaysTimePosition: computed(() => minutesToPercentage(nowLine.nowInMinutes, config)),
-  style: computed(() => `${config.horizontal ? 'left' : 'top'}: ${nowLine.todaysTimePosition}%`),
-  currentTime: computed(() => dateUtils.formatTime(view.now, config.twelveHour ? 'h:mm {am}' : 'HH:mm'))
 })
 
 // Automatically forwards any event listener attached to vuecal starting with @cell- to the cell.

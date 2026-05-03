@@ -351,6 +351,20 @@
     background: none;
   }
 
+  .vuecal__current-time {
+    line-height: 1;
+    font-size: 10px;
+    pointer-events: none; // Let interactions go through on events.
+    z-index: 1;
+    backdrop-filter: blur(8px);
+    border-radius: 99em;
+    padding: 2px 4px;
+    display: flex;
+    align-items: center;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+  }
+
   // Calendar events.
   // ------------------------------------------------------
   .vuecal__event {
