@@ -18,9 +18,16 @@
     <meta itemprop="name" content="Vue Cal - Documentation">
     <meta itemprop="description" content="A Vue.js full calendar, no dependency, no BS. :metal:">
     <title>Vue Cal - Documentation</title>
-    <script type="text/javascript" src="https://antoniandre.github.io/vue-cal/ghspa.js"></script>
-    <script type="module" crossorigin src="/vue-cal/assets/index-D3rqYDeW.js"></script>
-    <link rel="stylesheet" crossorigin href="/vue-cal/assets/index-CZS1RlTE.css">
+    <script type="text/javascript">
+      const isLocal = location.hostname.startsWith('localhost')
+      if (!isLocal) {
+        const script = document.createElement('script')
+        script.src = 'https://antoniandre.github.io/vue-cal/ghspa.js'
+        document.head.appendChild(script)
+      }
+    </script>
+    <script type="module" crossorigin src="/vue-cal/assets/index-D4KAYekF.js"></script>
+    <link rel="stylesheet" crossorigin href="/vue-cal/assets/index-55IBd8KZ.css">
   </head>
   <body id="top">
     <noscript>
