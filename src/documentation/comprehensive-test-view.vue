@@ -388,7 +388,19 @@
             w-button.grow(@click="addBackgroundEvent" data-testid="add-background-event-btn")
               w-icon.mr1 wi-plus
               small Bgd Evt.
-          .w-flex.gap2.basis-zero
+          .w-flex.gap2.basis-zero.wrap
+            w-button(
+              @click="loadOverlappingEvents"
+              bg-color="success"
+              data-testid="load-overlapping-events-btn")
+                w-icon.mr1 mdi mdi-view-column
+                small Load Overlapping
+            w-button(
+              @click="loadSampleEvents"
+              bg-color="info"
+              data-testid="load-sample-events-btn")
+                w-icon.mr1 mdi mdi-creation
+                small Load Sample Events
             w-button(
               @click="clearEvents"
               bg-color="orange-light1"
@@ -396,12 +408,6 @@
               data-testid="clear-events-btn")
                 w-icon.mr1 mdi mdi-cancel
                 small Clear All Events
-            w-button(
-              @click="loadSampleEvents"
-              bg-color="info"
-              data-testid="load-sample-events-btn")
-                w-icon.mr1 mdi mdi-creation
-                small Load Sample Events
 
   .calendar-wrap
     vue-cal(
@@ -689,6 +695,27 @@ const loadSampleEvents = () => {
   }
 
   config.events = events
+}
+
+/** Deterministic same-day overlaps for E2E column-layout checks. */
+const loadOverlappingEvents = () => {
+  const baseDate = config.viewDate || config.selectedDate || new Date()
+  const day = baseDate instanceof Date ? new Date(baseDate) : new Date(baseDate)
+  day.setHours(0, 0, 0, 0)
+
+  const mk = (startH, startM, endH, endM, title) => {
+    const start = new Date(day)
+    start.setHours(startH, startM, 0, 0)
+    const end = new Date(day)
+    end.setHours(endH, endM, 0, 0)
+    return { title, start, end, class: 'overlap-test' }
+  }
+
+  config.events = [
+    mk(10, 0, 12, 0, 'Overlap 1'),
+    mk(10, 30, 13, 0, 'Overlap 2'),
+    mk(11, 0, 12, 30, 'Overlap 3')
+  ]
 }
 
 // Watchers.

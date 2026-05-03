@@ -80,6 +80,30 @@ describe('Vue Cal - Events Test', () => {
       cy.get('[data-testid="stack-events"]').uncheck({ force: true })
     })
 
+    it('should lay out overlapping timed events in columns (side-by-side)', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="time-enabled"]').check({ force: true })
+      cy.get('[data-testid="stack-events"]').uncheck({ force: true })
+      cy.get('[data-testid="load-overlapping-events-btn"]').click()
+      cy.wait(400)
+
+      cy.contains('.vuecal__event', 'Overlap 1')
+        .should('be.visible')
+        .closest('.vuecal__cell')
+        .find('.vuecal__event')
+        .should('have.length', 3)
+        .then($events => {
+          const cellEventsEl = $events[0].parentElement
+          const containerWidth = cellEventsEl.getBoundingClientRect().width
+          const a = $events[0].getBoundingClientRect()
+          const b = $events[1].getBoundingClientRect()
+          // Regression guard: if overlap styles are skipped, all events stay full width with the same x.
+          expect(Math.abs(a.left - b.left), 'overlapping events should not share the same horizontal column').to.be.greaterThan(4)
+          expect(a.width, 'each column should be narrower than the cell').to.be.lessThan(containerWidth * 0.55)
+          expect(b.width).to.be.lessThan(containerWidth * 0.55)
+        })
+    })
+
     it('should display events in day view', () => {
       cy.wSelect('view-select', 'Day')
       cy.get('[data-testid="load-sample-events-btn"]').click()
