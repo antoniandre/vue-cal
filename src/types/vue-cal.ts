@@ -72,14 +72,17 @@ export interface VueCalSpecialHoursConfigs {
 
 type VueCalSpecialHours = Partial<Record<VueCalWeekdays, VueCalSpecialHoursConfigs | VueCalSpecialHoursConfigs[]>>
 
+/** Schedule column identifier; must match `event.schedule` and may be numeric (including 0) or a string (e.g. UUID). */
+export type VueCalScheduleId = number | string
+
 export type VueCalSchedules = {
-  id?: number
+  id?: VueCalScheduleId
   class?: string
   label?: string
   hide?: false
 }
 export type VueCalSchedulesHidden = {
-  id: number
+  id: VueCalScheduleId
   class?: string
   label?: string
   hide?: boolean
@@ -107,7 +110,7 @@ export interface VueCalEvent {
   content?: string
   class?: string,
   background?: number,
-  schedule?: number,
+  schedule?: VueCalScheduleId,
   allDay?: boolean,
   resizable?: boolean,
   draggable?: boolean,
@@ -225,6 +228,8 @@ export interface VueCalCell {
   goNarrower: () => void
   start: Date
   end: Date
+  /** Present when interacting within a schedule column; mirrors that column's id (numeric or string). */
+  schedule?: VueCalScheduleId | null
 }
 
 export interface VueCalCellEvents {

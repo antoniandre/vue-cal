@@ -171,7 +171,8 @@ export const useEvents = vuecal => {
       event.getOverlappingEvents = function (at = null) {
         const eventStart = at?.start || this.start
         const eventEnd = at?.end || this.end
-        const eventSchedule = config.schedules?.length ? ~~(at?.schedule || this.schedule) : null
+        const rawSchedule = at?.schedule !== undefined && at?.schedule !== null ? at.schedule : this.schedule
+        const eventSchedule = config.schedules?.length ? rawSchedule : null
 
         return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule })
       }

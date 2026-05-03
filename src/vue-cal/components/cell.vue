@@ -456,7 +456,7 @@ const cellInfo = computed(() => ({
   start: props.start,
   end: props.end,
   events: cellEvents,
-  ...(touch.schedule ? { schedule: touch.schedule } : {}),
+  ...(touch.schedule !== null ? { schedule: touch.schedule } : {}),
   goNarrower: () => view.narrower(),
   goBroader: () => view.broader(),
   broader: view.broaderView,
@@ -531,7 +531,13 @@ const onMousedown = e => {
   // For mouse events, allow immediate event creation.
   else touch.canTouchAndDrag = true
 
-  touch.schedule = ~~e.target.dataset.schedule
+  // dataset.schedule is always a string; match config id (number, 0, or string/UID).
+  const rawSchedule = e.target.closest('[data-schedule]')?.dataset?.schedule
+  if (rawSchedule !== undefined && config.schedules?.length) {
+    const match = config.schedules.find(s => String(s.id) === String(rawSchedule))
+    touch.schedule = match ? match.id : rawSchedule
+  }
+  else touch.schedule = null
   const rect = cellEl.value.getBoundingClientRect()
   touch.startX = (e.touches?.[0] || e).clientX - rect.left // Handle click or touch event coords.
   touch.startY = (e.touches?.[0] || e).clientY - rect.top // Handle click or touch event coords.

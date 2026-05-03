@@ -463,6 +463,32 @@ describe('Vue Cal - Display Test', () => {
       cy.get('.vuecal__schedule--heading').should('not.exist')
     })
 
+    it('should expose string schedule ids on columns (e2e boot flag)', () => {
+      cy.visit('/test-comprehensive', {
+        timeout: 15_000,
+        retryOnStatusCodeFailure: true,
+        retryOnNetworkFailure: true,
+        onBeforeLoad (win) {
+          win.__VUE_CAL_E2E_STRING_SCHEDULE_IDS__ = true
+        }
+      })
+      cy.get('.controls-panel', { timeout: 8000 }).should('be.visible')
+      cy.get('[data-testid="vue-cal"]', { timeout: 8000 }).should('be.visible')
+      cy.wait(1000)
+
+      cy.wSelect('view-select', 'Week')
+      cy.wait(400)
+
+      cy.get('[data-testid="schedules-enabled"]').check({ force: true })
+      cy.wait(400)
+
+      cy.get('.vuecal__schedule--heading').should('be.visible')
+      cy.get('.vuecal__body .vuecal__schedule[data-schedule="sch-1"]').should('exist')
+
+      cy.get('[data-testid="schedules-enabled"]').uncheck({ force: true })
+      cy.wait(300)
+    })
+
     it('should change number of schedules', () => {
       cy.wSelect('view-select', 'Week')
       cy.wait(300)

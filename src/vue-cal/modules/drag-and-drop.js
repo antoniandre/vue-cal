@@ -289,7 +289,13 @@ export function useDragAndDrop (vuecal) {
     else ({ start: newStart, end: newEnd } = computeNewEventStartEnd(e, incomingEvent, cell.start))
 
     // Can drop on any DOM node, but look for a `schedule` in the ancestors and apply it if any.
-    const { schedule: newSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
+    let { schedule: rawSchedule } = e.target.closest('[data-schedule]')?.dataset || {}
+    let newSchedule
+    // Dataset are always strings.
+    if (rawSchedule !== undefined && String(rawSchedule).length) {
+      newSchedule = config.schedules?.find(s => String(s.id) === String(rawSchedule))?.id ?? rawSchedule
+    }
+
     let onAcceptedDrop = () => {}
 
     // Step 3: Find the event in the config.events array (source of truth) if any and prepare the event
@@ -306,7 +312,7 @@ export function useDragAndDrop (vuecal) {
           event.start = newStart
           event.end = newEnd
           event.allDay = allDay
-          if (newSchedule !== undefined) event.schedule = ~~newSchedule
+          if (newSchedule !== undefined) event.schedule = newSchedule
           // Allow event to be modified by the external handler except for the _ property.
           if (modifiedEvent && typeof modifiedEvent === 'object') {
             const { _, ...cleanModifiedEvent } = modifiedEvent
@@ -330,10 +336,10 @@ export function useDragAndDrop (vuecal) {
         ...incomingEvent,
         start: newStart,
         end: newEnd,
-        ...((newSchedule !== undefined) && { schedule: ~~newSchedule }),
+        ...((newSchedule !== undefined) && { schedule: newSchedule }),
         _: { id: incomingEvent._?.id || incomingEvent.id, duration: deltaMinutes(newStart, newEnd) },
         getOverlappingEvents: () => {
-          return eventsManager.getEventsInRange(newStart, newEnd, { schedule: ~~newSchedule })
+          return eventsManager.getEventsInRange(newStart, newEnd, { schedule: newSchedule })
         }
       }
       onAcceptedDrop = modifiedEvent => {
@@ -356,8 +362,8 @@ export function useDragAndDrop (vuecal) {
       // acceptDrop may be false, true or a modified event object.
       acceptDrop = await dropEventHandler({
         e,
-        event: { ...event, start: newStart, end: newEnd, schedule: ~~newSchedule },
-        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: ~~newSchedule }),
+        event: { ...event, start: newStart, end: newEnd, schedule: newSchedule },
+        overlaps: event.getOverlappingEvents({ start: newStart, end: newEnd, schedule: newSchedule }),
         cell,
         external: dragging.fromVueCal !== vuecalUid
       })
