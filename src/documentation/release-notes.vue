@@ -3,6 +3,10 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.42
+    ul
+      li Added per-schedule #[code specialHours] overrides through #[code specialHours[day].schedules], with #[code default] fallback support for schedules without an override.
+  li.patch
     strong.version 5.0.1-rc.41
     ul
       li Added a current time label in the time column. #[issue-link 115]

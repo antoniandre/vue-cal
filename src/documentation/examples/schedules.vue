@@ -2,20 +2,19 @@
 //- Example.
 example(title="Special Hours (or Business Hours)" anchor="special-hours")
   template(#desc)
-    .todo-tag.d-iflex MAKE THIS INTERACTIVE
-    p.
-      The special hours are visible on #[span.code week] and #[span.code day] views and allow
-      you to highlight a particular time range on each day of the week individually.#[br]
-      You can also add a label to each block to provide additional information.
-    p.
-      Note that you can provide an array of multiple blocks for the same day.
-
-    .w-flex.justify-end.gap2
-      label Show:
-      w-radios(
-        v-model="exSpecialHours.businessHoursType"
-        :items="exSpecialHours.choices")
-        w-icon.mr2 mdi mdi-{{ exSpecialHours.doctorHours ? 'close' : 'plus' }}
+    .w-flex.wrap.gap4.align-start
+      .grow.xs7
+        p.
+          The #[code specialHours] prop highlights one or more time ranges per weekday on day and week views.#[br]
+          It works well for business hours, team shifts, or any recurring availability window.
+        p.mt3.
+          Each weekday can contain a single block or an array of blocks.#[br]
+          Each block can also carry a #[code label] that you can style freely with CSS.
+      .w-flex.column.gap2.no-grow
+        label Show
+        w-radios(
+          v-model="exSpecialHours.variant"
+          :items="exSpecialHours.choices")
   template(#code-html).
     &lt;vue-cal
       :views="['day', 'week']"
@@ -23,7 +22,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       :time-to="20 * 60"
       :special-hours="specialHours"
     /&gt;
-  template(#code-js v-if="exSpecialHours.businessHoursType === 'simpleBusinessHours'").
+  template(#code-js v-if="exSpecialHours.variant === 'simpleBusinessHours'").
     const specialHours = {
       mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
       tue: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
@@ -34,7 +33,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
       fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
     }
-  template(#code-js v-else-if="exSpecialHours.businessHoursType === 'doctorHours'").
+  template(#code-js v-else).
     const specialHours = {
       mon: {
         from: 8 * 60,
@@ -88,7 +87,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       }
     }
   template(#code-css)
-    template(v-if="exSpecialHours.businessHoursType === 'doctorHours'")
+    template(v-if="exSpecialHours.variant === 'doctorHours'")
       | .vuecal__special-hours {
       |   text-align: center;
       |
@@ -99,11 +98,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       |     background: repeating-linear-gradient(-45deg, rgba(#fff, 0) 0 6px, rgba(#ffa257, 0.15) 6px 20px);
       |     color: hsl(27, 90%, 63%);
       |   }
-      |   em {
-      |     font-size: 0.9em;
-      |     color: #999;
-      |     line-height: 1.15;
-      |   }
+      |   em {font-size: 0.9em;color: #999;line-height: 1.15;}
       | }
     template(v-else)
       | .business-hours {background-color: #00daff21;}
@@ -113,234 +108,120 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
     :views="['day', 'week']"
     :time-from="7 * 60"
     :time-to="20 * 60"
-    :special-hours="exSpecialHours[exSpecialHours.businessHoursType]"
+    :special-hours="currentSpecialHours"
     style="height: 550px")
 
 //- Example.
 example(title="Schedules & Schedule Events" anchor="schedules")
   template(#desc)
-    .todo-tag.d-iflex REDO COLORS
-    .todo-tag.d-iflex.ml2 ADD MIN-WIDTH &amp; HIDE DAD
-    alert.text-bold This example will be completed soon.
-    //- .mb6
-      | Split each day into multiple containers passing a CSS class &amp; a label per schedule, and allow schedule-specific events.
-      br
-      br
-      | By default the body of the calendar will fit the container.#[br]
-      | But with the options #[span.code min-cell-width] or #[span.code min-schedule-width], you can increase the calendar
-      | body width and it will become scrollable horizontally.
-      br
-      | It's important to note that the layout could render unexpectedly if the #[span.code min-cell-size] is defined in em units or similar font-scale units, as it could be different when applied to the different elements.
-      //- ul
-        li #[span.code min-cell-width] will only be activated on week view, since there is only 1 cell in day view.
-        li If both #[span.code min-cell-width] and #[span.code min-schedule-width] are set, #[span.code min-schedule-width] will be used.
-
-      //- | You can toggle the schedules thanks to the #[span.code hide] property of each schedule in #[span.code schedules].#[br]#[br]
-
-      //- | Refer to the #[span.code min-cell-width], #[span.code min-schedule-width] and #[span.code schedules] option in the #[a(href="#api") API] section.#[br]#[br]
-
-      .w-flex.align-center.wrap
-        w-button.px2.mr2.my1(
-          :outline="!exSchedules.minCellWidth"
-          @click="exSchedules.minCellWidth = exSchedules.minCellWidth ? 0 : 400")
-          w-icon.mr2 mdi mdi-{{ exSchedules.minCellWidth ? 'close' : 'plus' }}
-          | {{ exSchedules.minCellWidth ? `Min cell width: ${exSchedules.minCellWidth}px` : 'Add min cell width' }}
-
-        w-button.px2.mr2.my1(
-          :outline="!exSchedules.minScheduleWidth"
-          @click="exSchedules.minScheduleWidth = exSchedules.minScheduleWidth ? 0 : 200")
-          w-icon.mr2 mdi mdi-{{ exSchedules.minScheduleWidth ? 'close' : 'plus' }}
-          | {{ exSchedules.minScheduleWidth ? `Min schedule width: ${exSchedules.minScheduleWidth}px` : 'Add min schedule width' }}
-
-        w-button.px2.my1(
-          :outline="exSchedules.schedules[1].hide"
-          @click="exSchedules.schedules[1].hide = !exSchedules.schedules[1].hide")
-          w-icon.mr2 mdi mdi-{{ exSchedules.schedules[1].hide ? 'plus' : 'close' }}
-          | {{ exSchedules.schedules[1].hide ? 'Show' : 'Hide' }} Dad
+    .w-flex.wrap.gap4.align-start
+      .grow.xs7
+        p.
+          Schedules split each day into dedicated columns for people, rooms, or resources, while events keep using
+          their #[code schedule] id.#[br]
+          This example also shows how #[code specialHours] can now target those same schedule ids.
+        p.mt3.
+          Each weekday can define a shared #[code default] range and optional overrides in #[code schedules].#[br]
+          Any schedule without an override falls back to #[code default].
+        p.mt3.
+          Use the CSS variables #[code --vuecal-min-cell-size] and #[code --vuecal-min-schedule-size] when you need
+          a wider, scrollable layout.
+      .w-flex.column.gap2.no-grow
+        label Special Hours
+        w-radios(
+          v-model="exSchedules.hoursMode"
+          :items="exSchedules.hoursChoices")
+        w-switch(v-model="exSchedules.schedules[1].hide")
+          | Hide Dr Kim
+        label Layout
+        w-radios(
+          v-model="exSchedules.widthMode"
+          :items="exSchedules.widthChoices")
   template(#code-html).
-    &lt;button @click="minCellWidth = minCellWidth ? 0 : 400"&gt;
-      {{ '\{\{ minCellWidth ? \'min cell width: 400px\' : \'Add min cell width\' \}\}' }}
-    &lt;/button&gt;
-    &lt;button @click="minScheduleWidth = minScheduleWidth ? 0 : 200"&gt;
-      {{ '\{\{ minScheduleWidth ? \'min schedule width: 200px\' : \'Add min schedule width\' \}\}' }}
-    &lt;/button&gt;
-    &lt;button @click="schedules[1].hide = !schedules[1].hide"&gt;
-      Show/Hide Dad
-    &lt;/button&gt;
-
     &lt;vue-cal
       :selected-date="stringToDate('2018-11-19')"
-      :time-from="8 * 60"
-      :time-step="30"
       :views="['day', 'week']"
-      editable-events
+      :time-from="7 * 60"
+      :time-to="21 * 60"
       :events="events"
       :schedules="schedules"
-      :min-cell-width="minCellWidth"
-      :min-schedule-width="minScheduleWidth"&gt;
-    &lt;/vue-cal&gt;
+      :special-hours="specialHours"
+      :style="{
+        '--vuecal-min-cell-size': '24rem',
+        '--vuecal-min-schedule-size': '13rem'
+      }"
+    /&gt;
   template(#code-js).
-    data: () => ({
-      minCellWidth: 400,
-      minScheduleWidth: 0,
-      schedules: [
-        // The id property is added automatically if none (starting from 1), but you can set a custom one.
-        // If you need to toggle the schedules, you must set the id explicitly.
-        { id: 1, class: 'mom', label: 'Mom' },
-        { id: 2, class: 'dad', label: 'Dad', hide: false },
-        { id: 3, class: 'kid1', label: 'Kid 1' },
-        { id: 4, class: 'kid2', label: 'Kid 2' },
-        { id: 5, class: 'kid3', label: 'Kid 3' }
-      ]
-      events: [
-        {
-          start: '2018-11-19 10:35',
-          end: '2018-11-19 11:30',
-          title: 'Doctor appointment',
-          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-          class: 'health',
-          schedule: 1 // Must match the schedule id (1, 2, … if omitted, or your custom number/string id).
-        },
-        {
-          start: '2018-11-19 18:30',
-          end: '2018-11-19 19:15',
-          title: 'Dentist appointment',
-          content: '&lt;i class="icon mdi mdi-hospital-box-outline"&gt;&lt;/i&gt;',
-          class: 'health',
-          schedule: 2
-        },
-        {
-          start: '2018-11-20 18:30',
-          end: '2018-11-20 20:30',
-          title: 'Cross-fit',
-          content: '&lt;i class="icon mdi mdi-dumbbell"&gt;&lt;/i&gt;',
-          class: 'sport',
-          schedule: 1
-        },
-        ...
-      ]
-    })
+    const schedules = [
+      { id: 'dr-lee', label: 'Dr Lee', class: 'doctor doctor--lee' },
+      { id: 'dr-kim', label: 'Dr Kim', class: 'doctor doctor--kim' },
+      { id: 'lab', label: 'Lab', class: 'doctor doctor--lab' }
+    ]
+    const events = [
+      { start: '2018-11-19 08:30', end: '2018-11-19 10:00', title: 'Rounds', class: 'health', schedule: 'dr-lee' },
+      { start: '2018-11-19 11:00', end: '2018-11-19 12:00', title: 'Consultation', class: 'health', schedule: 'dr-kim' },
+      { start: '2018-11-19 14:00', end: '2018-11-19 17:00', title: 'Tests', class: 'leisure', schedule: 'lab' }
+    ]
+    const specialHours = {
+      mon: {
+        default: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+        schedules: {
+          'dr-lee': [
+            { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: 'Dr Lee AM' },
+            { from: 13 * 60, to: 17 * 60, class: 'doctor-1', label: 'Dr Lee PM' }
+          ],
+          'dr-kim': { from: 10 * 60, to: 19 * 60, class: 'doctor-2', label: 'Late shift' }
+        }
+      }
+    }
   template(#code-css).
-    /* You can easily set a different style for each schedule of your days. */
-    .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-    .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-    .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-    .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-    .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-    .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 26px;}
-
-    .vuecal__event {color: #fff;border: 1px solid;}
-    .vuecal__event.leisure {background-color: #fd9c42d9;border-color: #e9882e;}
-    .vuecal__event.health {background-color: #57cea9cc;border-color: #90d2be;}
-    .vuecal__event.sport {background-color: #ff6666d9;border-color: #eb5252;}
+    .vuecal__schedule.doctor--lee {background-color: rgba(192, 235, 255, 0.32);}
+    .vuecal__schedule.doctor--kim {background-color: rgba(255, 221, 235, 0.28);}
+    .vuecal__schedule.doctor--lab {background-color: rgba(222, 255, 229, 0.28);}
+    .vuecal__schedule--heading {font-size: 14px;font-weight: 600;}
+    .vuecal__special-hours.clinic-hours {background-color: rgba(255, 235, 59, 0.18);}
+    .vuecal__special-hours.doctor-1 {background-color: rgba(76, 175, 80, 0.18);}
+    .vuecal__special-hours.doctor-2 {background-color: rgba(63, 81, 181, 0.18);}
+    .vuecal__special-hours.doctor-3 {background-color: rgba(156, 39, 176, 0.18);}
+    .vuecal__event.health {background-color: rgba(87, 206, 169, 0.82);border-color: rgba(76, 175, 80, 0.45);}
+    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border-color: rgba(233, 136, 46, 0.55);}
 
   vue-cal(
     :dark="store.darkMode"
     :selected-date="stringToDate('2018-11-19')"
-    :time-from="8 * 60"
-    :time-step="30"
-    :views="['day', 'week', 'month']"
+    :views="['day', 'week']"
+    :time-from="7 * 60"
+    :time-to="21 * 60"
     editable-events
-    :events="exSchedules.scheduleEvents"
+    :events="scheduleEvents"
     :schedules="exSchedules.schedules"
-    :min-cell-width="exSchedules.minCellWidth"
-    :min-schedule-width="exSchedules.minScheduleWidth")
-
-.todo-tag.d-iflex.mt6 ADD EXAMPLE WITH SCHEDULE EVENTS
+    :special-hours="currentScheduleSpecialHours"
+    :style="scheduleCalendarStyles")
 </template>
 
 <script setup>
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive } from 'vue'
 import { useAppStore } from '@/store'
 import { VueCal, stringToDate } from '@/vue-cal'
 
 const store = useAppStore()
 
-const events = [
-  {
-    start: '2018-10-30 10:30',
-    end: '2018-10-30 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2018-11-16 10:30',
-    end: '2018-11-16 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2018-11-19 10:35',
-    end: '2018-11-19 11:30',
-    title: 'Doctor appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 1
-  },
-  {
-    start: '2018-11-19 18:30',
-    end: '2018-11-19 19:15',
-    title: 'Dentist appointment',
-    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
-    class: 'health',
-    schedule: 2
-  },
-  {
-    start: '2018-11-20 18:30',
-    end: '2018-11-20 20:30',
-    title: 'Cross-fit',
-    content: '<i class="w-icon mdi mdi-dumbbell"></i>',
-    class: 'sport',
-    schedule: 2
-  },
-  {
-    start: '2018-11-21 11:00',
-    end: '2018-11-21 13:00',
-    title: 'Brunch with Jane',
-    content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-    class: 'leisure',
-    schedule: 1,
-    background: false
-  },
-  {
-    start: '2018-11-21 19:30',
-    end: '2018-11-21 23:00',
-    title: 'Swimming lesson',
-    content: '<i class="w-icon mdi mdi-pool"></i>',
-    class: 'sport',
-    schedule: 2
-  },
-  {
-    start: '2018-11-23 12:30',
-    end: '2018-11-23 13:00',
-    title: 'Macca\'s with Mark',
-    content: '<i class="w-icon mdi mdi-food"></i>',
-    class: 'leisure',
-    schedule: 2
-  },
-  {
-    start: '2018-11-23 21:00',
-    end: '2018-11-23 23:30',
-    title: 'Movie time',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure',
-    schedule: 1
-  },
-  {
-    start: '2018-11-30 21:00',
-    end: '2018-11-30 23:30',
-    title: 'Another movie tonight',
-    content: '<i class="w-icon mdi mdi-ticket"></i>',
-    class: 'leisure',
-    schedule: 1
-  }
-]
-
 const exSpecialHours = reactive({
+  variant: 'simpleBusinessHours',
+  choices: [
+    { value: 'simpleBusinessHours', label: 'Simple Business Hours' },
+    { value: 'doctorHours', label: 'Doctor Shifts' }
+  ],
+  simpleBusinessHours: {
+    mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+    tue: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+    wed: [
+      { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+      { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+    ],
+    thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+    fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+  },
   doctorHours: {
     mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
     tue: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
@@ -352,61 +233,160 @@ const exSpecialHours = reactive({
     fri: { from: 9 * 60, to: 18 * 60, class: 'doctor-3', label: '<strong>Doctor 3</strong><br><em>Full day shift</em>' },
     sat: { from: 9 * 60, to: 18 * 60, class: 'doctor-2', label: '<strong>Doctor 2</strong><br><em>Full day shift</em>' },
     sun: { from: 7 * 60, to: 20 * 60, class: 'closed', label: '<strong>Closed</strong>' }
-  },
-  simpleBusinessHours: {
-    mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-    tue: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-    wed: [
-      { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
-      { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-    ],
-    thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-    fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
-  },
-  choices: [
-    { value: 'simpleBusinessHours', label: 'Simple Business Hours' },
-    { value: 'doctorHours', label: 'Doctor\'s Hours' }
-  ],
-  businessHoursType: ref('simpleBusinessHours')
+  }
 })
 
-const exSchedules = reactive({
-  minCellWidth: 400,
-  minScheduleWidth: 0,
-  schedules: [
-    { id: 1, class: 'mom', label: 'Mom' },
-    { id: 2, class: 'dad', label: 'Dad', hide: false },
-    { id: 3, class: 'kid1', label: 'Kid 1' },
-    { id: 4, class: 'kid2', label: 'Kid 2' },
-    { id: 5, class: 'kid3', label: 'Kid 3' }
+const currentSpecialHours = computed(() => exSpecialHours[exSpecialHours.variant])
+
+const scheduleEvents = [
+  {
+    start: '2018-11-19 08:30',
+    end: '2018-11-19 10:00',
+    title: 'Rounds',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+    class: 'health',
+    schedule: 'dr-lee'
+  },
+  {
+    start: '2018-11-19 11:00',
+    end: '2018-11-19 12:00',
+    title: 'Consultation',
+    content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
+    class: 'health',
+    schedule: 'dr-kim'
+  },
+  {
+    start: '2018-11-19 14:00',
+    end: '2018-11-19 17:00',
+    title: 'Tests',
+    content: '<i class="w-icon mdi mdi-flask-outline"></i>',
+    class: 'leisure',
+    schedule: 'lab'
+  },
+  {
+    start: '2018-11-20 09:00',
+    end: '2018-11-20 10:30',
+    title: 'Ward round',
+    content: '<i class="w-icon mdi mdi-stethoscope"></i>',
+    class: 'health',
+    schedule: 'dr-lee'
+  },
+  {
+    start: '2018-11-20 13:00',
+    end: '2018-11-20 15:00',
+    title: 'Urgent care',
+    content: '<i class="w-icon mdi mdi-ambulance"></i>',
+    class: 'health',
+    schedule: 'dr-kim'
+  },
+  {
+    start: '2018-11-21 10:00',
+    end: '2018-11-21 12:30',
+    title: 'Screening',
+    content: '<i class="w-icon mdi mdi-microscope"></i>',
+    class: 'leisure',
+    schedule: 'lab'
+  },
+  {
+    start: '2018-11-22 13:30',
+    end: '2018-11-22 16:00',
+    title: 'Check-up',
+    content: '<i class="w-icon mdi mdi-heart-pulse"></i>',
+    class: 'health',
+    schedule: 'dr-lee'
+  },
+  {
+    start: '2018-11-23 18:00',
+    end: '2018-11-23 20:00',
+    title: 'Late consultation',
+    content: '<i class="w-icon mdi mdi-clock-outline"></i>',
+    class: 'health',
+    schedule: 'dr-kim'
+  }
+]
+
+const sharedScheduleHours = {
+  mon: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+  tue: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+  wed: [
+    { from: 8 * 60, to: 12 * 60, class: 'clinic-hours', label: 'Clinic open' },
+    { from: 13 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' }
   ],
-  scheduleEvents: [
-    ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.
-    {
-      start: '2018-11-21 12:00',
-      end: '2018-11-21 12:30',
-      title: 'Recall Dave',
-      content: '<i class="w-icon mdi mdi-coffee-outline"></i>',
-      class: 'leisure',
-      schedule: 1
-    },
-    {
-      start: '2018-11-21 20:00',
-      end: '2018-11-21 22:00',
-      title: 'Salsa',
-      content: '<i class="w-icon mdi mdi-walk"></i>',
-      class: 'sport',
-      schedule: 1
-    },
-    {
-      start: '2018-11-23 21:00',
-      end: '2018-11-23 23:30',
-      title: 'Movie time',
-      content: '<i class="w-icon mdi mdi-ticket"></i>',
-      class: 'leisure',
-      schedule: 2
+  thu: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+  fri: { from: 8 * 60, to: 16 * 60, class: 'clinic-hours', label: 'Clinic closes early' }
+}
+
+const scheduleSpecificHours = {
+  mon: {
+    default: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+    schedules: {
+      'dr-lee': [
+        { from: 8 * 60, to: 12 * 60, class: 'doctor-1', label: '<strong>Dr Lee</strong><br><em>Morning clinic</em>' },
+        { from: 13 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Dr Lee</strong><br><em>Afternoon clinic</em>' }
+      ],
+      'dr-kim': { from: 10 * 60, to: 19 * 60, class: 'doctor-2', label: '<strong>Dr Kim</strong><br><em>Late shift</em>' }
     }
+  },
+  tue: {
+    default: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' },
+    schedules: {
+      'dr-lee': { from: 8 * 60, to: 14 * 60, class: 'doctor-1', label: '<strong>Dr Lee</strong><br><em>Half day</em>' }
+    }
+  },
+  wed: {
+    default: [
+      { from: 8 * 60, to: 12 * 60, class: 'clinic-hours', label: 'Clinic open' },
+      { from: 13 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' }
+    ],
+    schedules: {
+      lab: [
+        { from: 7 * 60, to: 11 * 60, class: 'doctor-3', label: '<strong>Lab</strong><br><em>Prep</em>' },
+        { from: 12 * 60, to: 17 * 60, class: 'doctor-3', label: '<strong>Lab</strong><br><em>Testing</em>' }
+      ]
+    }
+  },
+  thu: { default: { from: 8 * 60, to: 18 * 60, class: 'clinic-hours', label: 'Clinic open' } },
+  fri: {
+    default: { from: 8 * 60, to: 16 * 60, class: 'clinic-hours', label: 'Clinic closes early' },
+    schedules: {
+      'dr-kim': { from: 12 * 60, to: 20 * 60, class: 'doctor-2', label: '<strong>Dr Kim</strong><br><em>Extended shift</em>' }
+    }
+  }
+}
+
+const exSchedules = reactive({
+  hoursMode: 'perSchedule',
+  widthMode: 'wideSchedules',
+  hoursChoices: [
+    { value: 'none', label: 'Off' },
+    { value: 'shared', label: 'Shared Hours' },
+    { value: 'perSchedule', label: 'Per Schedule' }
+  ],
+  widthChoices: [
+    { value: 'fit', label: 'Fit' },
+    { value: 'wideCells', label: 'Wider Day' },
+    { value: 'wideSchedules', label: 'Wider Schedules' }
+  ],
+  schedules: [
+    { id: 'dr-lee', class: 'doctor doctor--lee', label: 'Dr Lee' },
+    { id: 'dr-kim', class: 'doctor doctor--kim', label: 'Dr Kim', hide: false },
+    { id: 'lab', class: 'doctor doctor--lab', label: 'Lab' }
   ]
+})
+
+const currentScheduleSpecialHours = computed(() => {
+  if (exSchedules.hoursMode === 'none') return {}
+  if (exSchedules.hoursMode === 'shared') return sharedScheduleHours
+  return scheduleSpecificHours
+})
+
+const scheduleCalendarStyles = computed(() => {
+  const styles = { height: '620px' }
+
+  if (exSchedules.widthMode === 'wideCells') styles['--vuecal-min-cell-size'] = '24rem'
+  if (exSchedules.widthMode === 'wideSchedules') styles['--vuecal-min-schedule-size'] = '13rem'
+
+  return styles
 })
 </script>
 
@@ -426,45 +406,24 @@ const exSchedules = reactive({
         color: hsl(27, 90%, 63%);
       }
 
-      em {
-        font-size: 0.9em;
-        color: #999;
-        line-height: 1.15;
-      }
+      em {font-size: 0.9em;color: #999;line-height: 1.15;}
     }
   }
 
-  // Schedules example.
-  .vuecal__schedule.dad {background-color: rgba(221, 238, 255, 0.5);}
-  .vuecal__schedule.mom {background-color: rgba(255, 232, 251, 0.5);}
-  .vuecal__schedule.kid1 {background-color: rgba(221, 255, 239, 0.5);}
-  .vuecal__schedule.kid2 {background-color: rgba(255, 250, 196, 0.5);}
-  .vuecal__schedule.kid3 {background-color: rgba(255, 206, 178, 0.5);}
-  .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.5);font-size: 14px;font-weight: 500;}
-
-  .vuecal__time-cell-line.hours:before {border-color: var(--w-primary-color);}
-
-  // Schedules headings example.
-  .ex--custom-schedules-headings {
-    .schedule-heading {font-size: 11px;}
-    .vuecal__body .schedule1 {background-color: rgba(226, 242, 253, 0.7);}
-    .vuecal__body .schedule2 {background-color: rgba(232, 245, 233, 0.7);}
-    .vuecal__body .schedule3 {background-color: rgba(255, 243, 224, 0.7);}
-    .vuecal__body .schedule4 {background-color: rgba(255, 235, 238, 0.7);}
-  }
-}
-
-// Media queries.
-// --------------------------------------------------------
-@media screen and (max-width: 800px) {
-  .main--examples-schedules {
-    .vuecal--week-view.ex--custom-schedules-headings .vuecal__schedule--heading .w-icon {display: none;}
-    .ex--custom-schedules-headings .vuecal__schedule--heading strong {
-      overflow: hidden;
-      width: 0.9em;
-      font-size: 13px;
-      letter-spacing: 10px;
-    }
+  .example--schedules {
+    .vuecal__schedule.doctor--lee {background-color: rgba(192, 235, 255, 0.32);}
+    .vuecal__schedule.doctor--kim {background-color: rgba(255, 221, 235, 0.28);}
+    .vuecal__schedule.doctor--lab {background-color: rgba(222, 255, 229, 0.28);}
+    .vuecal__schedule--heading {color: rgba(0, 0, 0, 0.55);font-size: 14px;font-weight: 600;}
+    .vuecal__special-hours {text-align: center;}
+    .vuecal__special-hours.clinic-hours {background-color: rgba(255, 235, 59, 0.18);}
+    .vuecal__special-hours.doctor-1 {background-color: rgba(76, 175, 80, 0.18);color: #2f7d32;}
+    .vuecal__special-hours.doctor-2 {background-color: rgba(63, 81, 181, 0.18);color: #3146a6;}
+    .vuecal__special-hours.doctor-3 {background-color: rgba(156, 39, 176, 0.18);color: #7b1fa2;}
+    .vuecal__special-hours em {font-size: 0.82em;color: rgba(0, 0, 0, 0.6);}
+    .vuecal__event {color: #fff;border: 1px solid transparent;}
+    .vuecal__event.health {background-color: rgba(87, 206, 169, 0.82);border-color: rgba(76, 175, 80, 0.45);}
+    .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border-color: rgba(233, 136, 46, 0.55);}
   }
 }
 </style>

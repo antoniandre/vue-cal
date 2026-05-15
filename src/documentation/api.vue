@@ -770,10 +770,14 @@ w-accordion.mt2(
         See #[router-link(to="/examples/schedules#ex--special-hours") Special / Business Hours] example.#[br]
         The object must contain days definitions indexed by a 3-letter day ID in English, #[strong from #[code mon] to #[code sun]], of the
         days you want to highlight.#[br]
-        Each day must contain an object with a #[span.code from] and #[span.code to] properties
-        defining the beginning and the end of the time range #[strong in minutes].#[br]
+        Each day can contain a single block, an array of blocks, or an object with optional #[span.code default]
+        and #[span.code schedules] keys.#[br]
+        Each block must contain a #[span.code from] and #[span.code to] properties defining the beginning and the
+        end of the time range #[strong in minutes].#[br]
         In addition, you can set a CSS class for each day of the week.#[br]
         It is also possible to provide an array of special hours for the same day.#[br]
+        When #[router-link(to="/api#props--schedules") schedules] are enabled, #[span.code schedules] lets you target
+        a schedule id and override that day #[span.code default] special hours for that schedule only.#[br]
         A #[span.code label] can also be provided per special hour block, and styled via CSS.#[br]#[br]
 
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
@@ -793,6 +797,22 @@ w-accordion.mt2(
               { from: 8 * 60, to: 12 * 60, class: 'open' },
               { from: 14 * 60, to: 20 * 60, class: 'open' }
             ]
+          }
+        br
+        span.ml3 With per-schedule overrides:
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
+          // In the component's data.
+          specialHours: {
+            wed: {
+              default: { from: 8 * 60, to: 18 * 60, class: 'open' },
+              schedules: {
+                1: { from: 8 * 60, to: 12 * 60, class: 'doctor-1' },
+                'room-b': [
+                  { from: 9 * 60, to: 12 * 60, class: 'room-b-am' },
+                  { from: 13 * 60, to: 17 * 60, class: 'room-b-pm' }
+                ]
+              }
+            }
           }
 
   w-accordion-item
@@ -817,6 +837,8 @@ w-accordion.mt2(
         }
       p.
         Events must specify which schedule they belong to using the #[router-link(to="/api#event--schedule") schedule] property.#[br]
+        If you also use #[router-link(to="/api#props--special-hours") specialHours], you can target the same schedule ids
+        through #[span.code specialHours[day].schedules], with #[span.code default] acting as a fallback.#[br]
         See also the #[router-link(to="/api#slots--schedule-heading") #schedule-heading] slot to customize schedule headers.#[br]
         See #[router-link(to="/examples/schedules#ex--schedules") Schedules & Schedule Events] example.
 

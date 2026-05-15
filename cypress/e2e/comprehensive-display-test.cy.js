@@ -485,6 +485,10 @@ describe('Vue Cal - Display Test', () => {
       cy.get('.vuecal__schedule--heading').should('be.visible')
       cy.get('.vuecal__body .vuecal__schedule[data-schedule="sch-1"]').should('exist')
 
+      cy.get('[data-testid="special-hours-enabled"]').check({ force: true })
+      cy.wait(400)
+      cy.get('.vuecal__cell--mon .vuecal__schedule[data-schedule="sch-1"] .vuecal__special-hours.special-schedule-1').should('exist')
+
       cy.get('[data-testid="schedules-enabled"]').uncheck({ force: true })
       cy.wait(300)
     })
@@ -501,17 +505,34 @@ describe('Vue Cal - Display Test', () => {
       cy.get('.vuecal__schedule--heading').should('have.length', 35)
     })
 
-    it('should enable special hours', () => {
+    it('should render legacy special hours without schedules', () => {
       cy.wSelect('view-select', 'Week')
       cy.wait(300)
 
       cy.get('[data-testid="special-hours-enabled"]').check({ force: true })
-      cy.wait(300)
-      cy.get('.vuecal').should('be.visible')
+      cy.wait(400)
+      cy.get('.vuecal__cell--mon > .vuecal__special-hours.special-mon').should('exist')
+      cy.get('.vuecal__cell--wed > .vuecal__special-hours.special-wed-am').should('exist')
+      cy.get('.vuecal__cell--wed > .vuecal__special-hours.special-wed-pm').should('exist')
 
       cy.get('[data-testid="special-hours-enabled"]').uncheck({ force: true })
       cy.wait(300)
-      cy.get('.vuecal').should('be.visible')
+      cy.get('.vuecal__special-hours.special-mon').should('not.exist')
+    })
+
+    it('should render schedule-specific special hours with default fallback', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.wait(300)
+
+      cy.get('[data-testid="schedules-enabled"]').check({ force: true })
+      cy.wait(300)
+      cy.get('[data-testid="special-hours-enabled"]').check({ force: true })
+      cy.wait(400)
+
+      cy.get('.vuecal__cell--mon .vuecal__schedule[data-schedule="1"] .vuecal__special-hours.special-schedule-1').should('exist')
+      cy.get('.vuecal__cell--mon .vuecal__schedule[data-schedule="2"] .vuecal__special-hours.special-schedule-2').should('exist')
+      cy.get('.vuecal__cell--mon .vuecal__schedule[data-schedule="3"] .vuecal__special-hours.special-default').should('exist')
+      cy.get('.vuecal__cell--mon > .vuecal__special-hours').should('not.exist')
     })
   })
 

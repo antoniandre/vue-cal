@@ -531,6 +531,52 @@ const specialHoursEnabled = ref(false)
 const e2eStringScheduleIds =
   typeof window !== 'undefined' && !!window.__VUE_CAL_E2E_STRING_SCHEDULE_IDS__
 
+const getScheduleId = index => e2eStringScheduleIds ? `sch-${index + 1}` : (index + 1)
+
+const buildSchedules = count => {
+  return Array.from({ length: count }, (_, i) => ({
+    id: getScheduleId(i),
+    label: `Schedule ${i + 1}`,
+    class: `schedule-${i + 1}`
+  }))
+}
+
+const buildSpecialHours = () => {
+  if (!specialHoursEnabled.value) return {}
+
+  if (!schedulesEnabled.value) {
+    return {
+      mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
+      wed: [
+        { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
+        { from: 14 * 60, to: 18 * 60, class: 'special-wed-pm', label: 'Wed PM' }
+      ],
+      fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
+    }
+  }
+
+  const scheduleIds = Array.from({ length: scheduleCount.value }, (_, i) => getScheduleId(i))
+  const [firstScheduleId, secondScheduleId] = scheduleIds
+
+  return {
+    mon: {
+      default: { from: 8 * 60, to: 17 * 60, class: 'special-default', label: 'Default Hours' },
+      schedules: {
+        ...(firstScheduleId !== undefined ? {
+          [firstScheduleId]: { from: 8 * 60, to: 12 * 60, class: 'special-schedule-1', label: 'Schedule 1 AM' }
+        } : {}),
+        ...(secondScheduleId !== undefined ? {
+          [secondScheduleId]: { from: 10 * 60, to: 19 * 60, class: 'special-schedule-2', label: 'Schedule 2 Late' }
+        } : {})
+      }
+    },
+    wed: [
+      { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
+      { from: 14 * 60, to: 18 * 60, class: 'special-wed-pm', label: 'Wed PM' }
+    ]
+  }
+}
+
 // Date inputs (for easier date picking).
 const selectedDateInput = ref('')
 const viewDateInput = ref(new Date().toISOString().split('T')[0])
@@ -741,28 +787,15 @@ watch(eventCountEnabled, val => {
 
 // Watch schedules (explicit numeric ids by default; string ids only when window flag is set for e2e).
 watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
-  if (enabled) {
-    config.schedules = Array.from({ length: count }, (_, i) => ({
-      id: e2eStringScheduleIds ? `sch-${i + 1}` : (i + 1),
-      label: `Schedule ${i + 1}`,
-      class: `schedule-${i + 1}`
-    }))
-  }
+  if (enabled) config.schedules = buildSchedules(count)
   else config.schedules = []
+
+  if (specialHoursEnabled.value) config.specialHours = buildSpecialHours()
 })
 
 // Watch special hours.
 watch(specialHoursEnabled, enabled => {
-  if (enabled) {
-    config.specialHours = {
-      mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
-      wed: [
-        { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
-        { from: 14 * 60, to: 18 * 60, class: 'special-wed-pm', label: 'Wed PM' }
-      ],
-      fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
-    }
-  }
+  if (enabled) config.specialHours = buildSpecialHours()
   else config.specialHours = {}
 })
 
@@ -923,7 +956,10 @@ onMounted(() => {
   .vuecal__special-hours.special-mon,
   .vuecal__special-hours.special-wed-am,
   .vuecal__special-hours.special-wed-pm,
-  .vuecal__special-hours.special-fri {
+  .vuecal__special-hours.special-fri,
+  .vuecal__special-hours.special-default,
+  .vuecal__special-hours.special-schedule-1,
+  .vuecal__special-hours.special-schedule-2 {
     background: rgba(255, 235, 59, 0.2);
   }
 }
