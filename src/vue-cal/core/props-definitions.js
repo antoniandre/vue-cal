@@ -3,6 +3,8 @@ export const minutesInADay = 24 * 60 // Don't do the maths every time.
 export const props = {
   allDayEvents: { type: Boolean, default: false }, // Display all-day events in a fixed top bar on the day, days & week views.
   stackEvents: { type: Boolean, default: false },
+  // Alias for specialHours when specialHours is empty; same shape. Kept as separate prop for clearer naming (e.g. business hours).
+  businessHours: { type: Object, default: () => ({}) },
   clickToNavigate: { type: Boolean, default: undefined }, // Setting to false will force it off on date-picker.
   currentTimeLabel: { type: Boolean, default: false }, // Show or hide the current time label in the time column.
   dark: { type: Boolean, default: false }, // Dark theme.

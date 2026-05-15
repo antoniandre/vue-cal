@@ -66,8 +66,29 @@ type VueCalViewsLayout = Partial<Record<VueCalViewKeys, {
 export interface VueCalSpecialHoursConfigs {
   from: number
   to: number
-  class: string
+  class?: string
   label?: string
+  /** When false, events may not overlap this range (create, drag-and-drop, resize). Omitted or true: no restriction from this segment. */
+  allowEvents?: boolean
+}
+
+/** Plain minute ranges derived from `allowEvents: false` segments; exposed on `config` from `@ready` (read-only, not a prop). */
+export interface VueCalSpecialHoursDisallowedRange {
+  from: number
+  to: number
+}
+
+export interface VueCalSpecialHoursDisallowedDay {
+  default?: VueCalSpecialHoursDisallowedRange[]
+  schedules?: Partial<Record<VueCalScheduleId, VueCalSpecialHoursDisallowedRange[]>>
+}
+
+export type VueCalSpecialHoursDisallowed = Partial<Record<VueCalWeekdays, VueCalSpecialHoursDisallowedDay>>
+
+/** True when at least one blocked segment exists anywhere (fast path for validators). */
+export type VueCalSpecialHoursDisallowedPayload = {
+  hasAny: boolean
+  byWeekday: VueCalSpecialHoursDisallowed
 }
 
 /** Schedule column identifier; must match `event.schedule` and may be numeric (including 0) or a string (e.g. UUID). */
@@ -153,6 +174,8 @@ export interface VueCalConfig {
   selectedDate?: (Date | VueCalDateString | VueCalDateTimeString),
   sm?: boolean, // Small size (truncates texts + specific styles).
   specialHours?: VueCalSpecialHours, // Highlight special time ranges per weekday, with optional schedule-specific overrides.
+  /** Same shape as `specialHours`. Used when `specialHours` is empty (non-empty `specialHours` wins). */
+  businessHours?: VueCalSpecialHours,
   schedules?: VueCalSchedules[] | VueCalSchedulesHidden[], // Split a day in different persons/rooms/locations schedules.
   snapToInterval?: number, // Snap the event start and end to a specific interval in minutes.
   startWeekOnSunday?: boolean, // Shows Sunday before Monday in days, week and month views.
@@ -179,6 +202,8 @@ export interface VueCalConfig {
   watchRealTime?: false, // More expensive, so only trigger on demand.
   weekNumbers?: boolean, // Show the weeks numbers in a column on month view.
   xs?: boolean, // Extra small size for date pickers (truncates texts + specific styles).
+  /** @internal Derived on runtime `config` from `@ready` — precomputed `allowEvents: false` ranges; not a template prop. */
+  specialHoursDisallowed?: VueCalSpecialHoursDisallowedPayload,
 }
 
 export interface VueCalView {

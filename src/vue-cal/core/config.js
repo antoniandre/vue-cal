@@ -36,8 +36,9 @@ export const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', '
 export const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
 const isSpecialHoursRange = value => {
-  return !!value && typeof value === 'object' && !Array.isArray(value) &&
-    ('from' in value || 'to' in value || 'class' in value || 'label' in value)
+  if (!value || typeof value !== 'object' || Array.isArray(value)) return false
+  const hasCoords = 'from' in value || 'to' in value
+  return hasCoords && ('class' in value || 'label' in value || 'allowEvents' in value)
 }
 
 const normalizeSpecialHoursRanges = ranges => {
@@ -46,7 +47,7 @@ const normalizeSpecialHoursRanges = ranges => {
   const valid = []
   for (let i = 0; i < list.length; i++) {
     const item = list[i]
-    if (isSpecialHoursRange(item)) valid.push(item)
+    if (isSpecialHoursRange(item)) valid.push({ ...item })
   }
   return valid
 }
@@ -81,6 +82,65 @@ const normalizeSpecialHoursDay = dayConfig => {
 
   if (!normalized.default.length && !scheduleKeyCount) return null
   return normalized
+}
+
+/**
+ * Plain `{ from, to }` segments where `allowEvents === false`, keyed like normalized specialHours.
+ * Used for fast overlap checks (see `specialHoursDisallowed` computed).
+ * Tuned for few weekdays / ranges: avoid Object.keys arrays and empty per-day shells.
+ */
+const buildSpecialHoursDisallowed = normalizedByWeekday => {
+  const byWeekday = {}
+  let hasAny = false
+  for (const weekday in normalizedByWeekday) {
+    if (!Object.prototype.hasOwnProperty.call(normalizedByWeekday, weekday)) continue
+    const day = normalizedByWeekday[weekday]
+    if (!day) continue
+
+    let defOut = null
+    let schedulesOut = null
+
+    const def = day.default
+    if (def && def.length) {
+      for (let ri = 0; ri < def.length; ri++) {
+        const r = def[ri]
+        if (r && r.allowEvents === false && typeof r.from === 'number' && typeof r.to === 'number') {
+          if (!defOut) defOut = []
+          defOut.push({ from: r.from, to: r.to })
+          hasAny = true
+        }
+      }
+    }
+
+    const schedSrc = day.schedules
+    if (schedSrc && typeof schedSrc === 'object') {
+      for (const scheduleId in schedSrc) {
+        if (!Object.prototype.hasOwnProperty.call(schedSrc, scheduleId)) continue
+        const ranges = schedSrc[scheduleId]
+        if (!ranges || !ranges.length) continue
+        const arr = []
+        for (let ri = 0; ri < ranges.length; ri++) {
+          const r = ranges[ri]
+          if (r && r.allowEvents === false && typeof r.from === 'number' && typeof r.to === 'number') {
+            arr.push({ from: r.from, to: r.to })
+            hasAny = true
+          }
+        }
+        if (arr.length) {
+          if (!schedulesOut) schedulesOut = {}
+          schedulesOut[scheduleId] = arr
+        }
+      }
+    }
+
+    if (defOut || schedulesOut) {
+      const outDay = {}
+      if (defOut) outDay.default = defOut
+      if (schedulesOut) outDay.schedules = schedulesOut
+      byWeekday[weekday] = outDay
+    }
+  }
+  return { hasAny, byWeekday }
 }
 
 const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun.
@@ -266,10 +326,19 @@ export const useConfig = (vuecal, props, attrs) => {
     return (show && props.schedules?.map((s, i) => ({ ...s, id: s.id ?? (i + 1) }))) || undefined
   })
 
-  const specialHours = computed(() => {
-    if (!props.specialHours || typeof props.specialHours !== 'object') return {}
+  const rawSpecialHours = computed(() => {
+    const sh = props.specialHours
+    const bh = props.businessHours
+    if (sh && typeof sh === 'object' && !Array.isArray(sh) && Object.keys(sh).length) return sh
+    if (bh && typeof bh === 'object' && !Array.isArray(bh)) return bh
+    return {}
+  })
 
-    return Object.entries(props.specialHours).reduce((obj, [weekday, dayConfig]) => {
+  const specialHours = computed(() => {
+    const raw = rawSpecialHours.value
+    if (!raw || typeof raw !== 'object') return {}
+
+    return Object.entries(raw).reduce((obj, [weekday, dayConfig]) => {
       if (!weekdays.includes(weekday)) return obj
 
       const normalized = normalizeSpecialHoursDay(dayConfig)
@@ -277,6 +346,8 @@ export const useConfig = (vuecal, props, attrs) => {
       return obj
     }, {})
   })
+
+  const specialHoursDisallowed = computed(() => buildSpecialHoursDisallowed(specialHours.value))
 
   const editableEvents = computed(() => {
     const defaults = {
@@ -390,6 +461,7 @@ export const useConfig = (vuecal, props, attrs) => {
     maxTimestamp,
     schedules,
     specialHours,
+    specialHoursDisallowed,
     selectedDate,
     editableEvents,
     showCellEventCount,

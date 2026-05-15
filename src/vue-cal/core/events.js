@@ -1,5 +1,6 @@
 import { computed, reactive } from 'vue'
 import { percentageToMinutes } from '../utils/conversions'
+import { clampResizeProposedRange, eventRangeViolatesAllowEvents } from '../utils/special-hours-allow-events'
 
 /**
  * useEvents is a composable function that manages events for the Vue Cal component.
@@ -236,6 +237,22 @@ export const useEvents = vuecal => {
 
     // Create a clean deep copy of the event to prevent reference issues.
     newEvent = { ...newEvent }
+
+    const start = typeof newEvent.start === 'string' ? dateUtils.stringToDate(newEvent.start) : new Date(newEvent.start)
+    const end = typeof newEvent.end === 'string' ? dateUtils.stringToDate(newEvent.end) : new Date(newEvent.end)
+    if (!newEvent.allDay && config.time && config.specialHoursDisallowed?.hasAny &&
+      eventRangeViolatesAllowEvents({
+        start,
+        end,
+        schedule: newEvent.schedule,
+        disallowed: config.specialHoursDisallowed,
+        hasSchedules: !!(config.schedules && config.schedules.length)
+      })) {
+      console.warn('Vue Cal: Cannot create an event overlapping a time range where allowEvents is false.')
+      return
+    }
+    newEvent.start = start
+    newEvent.end = end
 
     // Always override any existing ID when created: it could come from an external source
     // with an existing _.id, but we need to ensure it's unique for internal management.
@@ -580,13 +597,38 @@ export const useEvents = vuecal => {
     if (resizeState.fromResizer && resizeState.resizingEvent) {
       // Get the cell start date from the resizing event's cell
       const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
-      const { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
+      const prevStart = new Date(resizeState.resizingEvent.start)
+      const prevEnd = new Date(resizeState.resizingEvent.end)
+      let { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
+
+      if (config.time && !resizeState.resizingEvent.allDay && config.specialHoursDisallowed?.hasAny) {
+        const clamped = clampResizeProposedRange({
+          proposedStart: newStart,
+          proposedEnd: newEnd,
+          prevStart,
+          prevEnd,
+          schedule: resizeState.resizingEvent.schedule,
+          disallowed: config.specialHoursDisallowed,
+          hasSchedules: !!(config.schedules && config.schedules.length)
+        })
+        newStart = clamped.start
+        newEnd = clamped.end
+      }
+
+      const internalOk = !config.time || resizeState.resizingEvent.allDay || !config.specialHoursDisallowed?.hasAny ||
+        !eventRangeViolatesAllowEvents({
+          start: newStart,
+          end: newEnd,
+          schedule: resizeState.resizingEvent.schedule,
+          disallowed: config.specialHoursDisallowed,
+          hasSchedules: !!(config.schedules && config.schedules.length)
+        })
 
       // If there's an @event-resize external listener, call it and ask for resizing approval.
-      let acceptResize = true
+      let acceptResize = internalOk
       const { resize: resizeEventHandler } = config.eventListeners?.event || {}
       // Call external validation of event resizing. If successful, update the event details.
-      if (resizeEventHandler) {
+      if (internalOk && resizeEventHandler) {
         acceptResize = await resizeEventHandler({
           e,
           event: { ...resizeState.resizingEvent, start: newStart, end: newEnd },
@@ -616,14 +658,39 @@ export const useEvents = vuecal => {
     if (vuecal.touch?.isResizingEvent && resizeState.resizingEvent) {
       // Get the cell start date from the resizing event's cell.
       const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
-      const { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
+      const prevStart = new Date(resizeState.resizingEvent.start)
+      const prevEnd = new Date(resizeState.resizingEvent.end)
+      let { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
+
+      if (config.time && !resizeState.resizingEvent.allDay && config.specialHoursDisallowed?.hasAny) {
+        const clamped = clampResizeProposedRange({
+          proposedStart: newStart,
+          proposedEnd: newEnd,
+          prevStart,
+          prevEnd,
+          schedule: resizeState.resizingEvent.schedule,
+          disallowed: config.specialHoursDisallowed,
+          hasSchedules: !!(config.schedules && config.schedules.length)
+        })
+        newStart = clamped.start
+        newEnd = clamped.end
+      }
+
+      const internalOk = !config.time || resizeState.resizingEvent.allDay || !config.specialHoursDisallowed?.hasAny ||
+        !eventRangeViolatesAllowEvents({
+          start: newStart,
+          end: newEnd,
+          schedule: resizeState.resizingEvent.schedule,
+          disallowed: config.specialHoursDisallowed,
+          hasSchedules: !!(config.schedules && config.schedules.length)
+        })
 
       // If there's an @event-resize-end external listener, call it.
-      let acceptResize = true
+      let acceptResize = internalOk
       const eventListeners = config.eventListeners?.event || {}
       const resizeEndHandler = eventListeners['resize-end']
       // Call external validation of event resize-end. If successful, update the event details.
-      if (resizeEndHandler) {
+      if (internalOk && resizeEndHandler) {
         acceptResize = await resizeEndHandler({
           e,
           event: resizeState.resizingEvent,

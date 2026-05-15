@@ -1,5 +1,6 @@
 import { reactive } from 'vue'
 import { pxToPercentage, percentageToMinutes } from '../utils/conversions'
+import { eventRangeViolatesAllowEvents } from '../utils/special-hours-allow-events'
 
 /**
  * Events drag and drop composable.
@@ -352,13 +353,25 @@ export function useDragAndDrop (vuecal) {
       }
     }
 
+    const scheduleForCheck = newSchedule !== undefined ? newSchedule : (event?.schedule !== undefined ? event.schedule : incomingEvent?.schedule)
+    const hasSchedules = !!(config.schedules && config.schedules.length)
+
     // Step 4: Call the external event drop handler if any, to ask for drop approval.
     // Then update the event in the events array (source of truth).
     // ----------------------------------------------------
     let acceptDrop = true
     const { drop: dropEventHandler } = config.eventListeners?.event
-    // Call external validation of event drop. If successful, update the event details.
-    if (dropEventHandler) {
+    if (!allDay && config.time && config.specialHoursDisallowed?.hasAny &&
+      eventRangeViolatesAllowEvents({
+        start: newStart,
+        end: newEnd,
+        schedule: scheduleForCheck,
+        disallowed: config.specialHoursDisallowed,
+        hasSchedules
+      })) {
+      acceptDrop = false
+    }
+    else if (dropEventHandler) {
       // acceptDrop may be false, true or a modified event object.
       acceptDrop = await dropEventHandler({
         e,

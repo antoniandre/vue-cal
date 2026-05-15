@@ -112,6 +112,7 @@
 import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, watch } from 'vue'
 import { months, weekdays } from '@/vue-cal/core/config'
 import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
+import { clampDragCreateDayMinutes } from '@/vue-cal/utils/special-hours-allow-events'
 import Event from './event.vue'
 
 const props = defineProps({
@@ -173,6 +174,9 @@ const eventPlaceholder = computed(() => {
   const startPercentageVal = isHzl ? touch.startPercentageX : touch.startPercentageY
   const movePercentageVal = isHzl ? touch.movePercentageX : touch.movePercentageY
 
+  const anchorDayMinutes = percentageToMinutes(startPercentageVal, config)
+  const cursorDayMinutes = percentageToMinutes(movePercentageVal, config)
+
   let startPercentage = Math.min(startPercentageVal, movePercentageVal)
   let endPercentage = Math.max(startPercentageVal, movePercentageVal)
   let startMinutes = percentageToMinutes(startPercentage, config)
@@ -182,6 +186,23 @@ const eventPlaceholder = computed(() => {
   if (config.snapToInterval) {
     startMinutes = dateUtils.snapToInterval(startMinutes, config.snapToInterval)
     endMinutes = dateUtils.snapToInterval(endMinutes, config.snapToInterval)
+    startPercentage = minutesToPercentage(startMinutes, config)
+    endPercentage = minutesToPercentage(endMinutes, config)
+  }
+
+  if (config.time && config.specialHoursDisallowed?.hasAny && !props.allDay) {
+    const clamped = clampDragCreateDayMinutes({
+      anchorDayMinutes,
+      cursorDayMinutes,
+      snappedLow: startMinutes,
+      snappedHigh: endMinutes,
+      cellDate: props.start,
+      schedule: touch.schedule,
+      disallowed: config.specialHoursDisallowed,
+      hasSchedules: !!(config.schedules && config.schedules.length)
+    })
+    startMinutes = clamped.low
+    endMinutes = clamped.high
     startPercentage = minutesToPercentage(startMinutes, config)
     endPercentage = minutesToPercentage(endMinutes, config)
   }
