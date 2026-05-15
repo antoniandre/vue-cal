@@ -503,4 +503,71 @@ describe('Vue Cal - Events Test', () => {
       cy.get('.vuecal').should('be.visible')
     })
   })
+
+  describe('Special hours allowEvents', () => {
+    it('should clamp cell drag create at blocked segment boundary', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="schedules-enabled"]').uncheck({ force: true })
+      cy.wait(200)
+      cy.get('[data-testid="editable-events"]').check({ force: true })
+      cy.get('[data-testid="clear-events-btn"]').click({ force: true })
+      cy.wait(300)
+      cy.get('.vuecal__event').should('not.exist')
+
+      cy.get('[data-testid="special-hours-enabled"]').check({ force: true })
+      cy.get('[data-testid="special-hours-blocked-segment"]').check({ force: true })
+      cy.wait(300)
+
+      cy.get('.vuecal__body .vuecal__cell--tue').first().scrollIntoView().then($c => {
+        const r = $c[0].getBoundingClientRect()
+        const x = r.left + r.width / 2
+        const y1 = r.top + (11 / 24) * r.height
+        const y2 = r.top + (13.5 / 24) * r.height
+        cy.wrap($c[0])
+          .trigger('mousedown', { clientX: x, clientY: y1, which: 1, bubbles: true, force: true })
+          .trigger('mousemove', { clientX: x, clientY: y2, bubbles: true, force: true })
+          .trigger('mouseup', { clientX: x, clientY: y2, which: 1, bubbles: true, force: true })
+      })
+      cy.wait(400)
+      cy.get('.vuecal__event').should('have.length', 1)
+      cy.get('.vuecal__event').first().find('.vuecal__event-time').invoke('text').should('match', /11:00[\s\S]*12:00/)
+
+      cy.get('[data-testid="special-hours-blocked-segment"]').uncheck({ force: true })
+      cy.get('[data-testid="special-hours-enabled"]').uncheck({ force: true })
+      cy.wait(200)
+    })
+
+    it('should clamp resize at blocked segment boundary instead of reverting', () => {
+      cy.wSelect('view-select', 'Week')
+      cy.get('[data-testid="schedules-enabled"]').uncheck({ force: true })
+      cy.wait(200)
+      cy.get('[data-testid="editable-events"]').check({ force: true })
+      cy.get('[data-testid="clear-events-btn"]').click({ force: true })
+      cy.wait(300)
+
+      cy.get('[data-testid="special-hours-enabled"]').check({ force: true })
+      cy.get('[data-testid="special-hours-blocked-segment"]').check({ force: true })
+      cy.wait(300)
+
+      cy.get('[data-testid="add-block-test-event-btn"]').click({ force: true })
+      cy.wait(300)
+
+      cy.get('.vuecal__body .vuecal__cell--tue .vuecal__event').first().scrollIntoView().as('blockTestEvt')
+      cy.get('@blockTestEvt').find('.vuecal__event-resizer').then($r => {
+        const rect = $r[0].getBoundingClientRect()
+        const x = rect.left + rect.width / 2
+        const y = rect.top + rect.height / 2
+        cy.wrap($r)
+          .trigger('mousedown', { clientX: x, clientY: y, which: 1, force: true })
+          .trigger('mousemove', { clientX: x, clientY: y + 200, force: true })
+          .trigger('mouseup', { clientX: x, clientY: y + 200, which: 1, force: true })
+      })
+      cy.wait(400)
+      cy.get('@blockTestEvt').find('.vuecal__event-time').invoke('text').should('match', /10:30[\s\S]*12:00/)
+
+      cy.get('[data-testid="special-hours-blocked-segment"]').uncheck({ force: true })
+      cy.get('[data-testid="special-hours-enabled"]').uncheck({ force: true })
+      cy.wait(200)
+    })
+  })
 })

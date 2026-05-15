@@ -778,7 +778,9 @@ w-accordion.mt2(
         It is also possible to provide an array of special hours for the same day.#[br]
         When #[router-link(to="/api#props--schedules") schedules] are enabled, #[span.code schedules] lets you target
         a schedule id and override that day #[span.code default] special hours for that schedule only.#[br]
-        A #[span.code label] can also be provided per special hour block, and styled via CSS.#[br]#[br]
+        A #[span.code label] can also be provided per special hour block, and styled via CSS.#[br]
+        Optional #[span.code allowEvents]: set to #[span.code false] on a block to forbid timed events from overlapping that range (drag-and-drop, resize, and cell create are rejected; #[span.code createEvent] returns without adding). Omitted or #[span.code true] does not add that restriction.#[br]
+        You can use the #[router-link(to="/api#props--business-hours") businessHours] prop as an alias for the same object shape when #[span.code specialHours] is empty.#[br]#[br]
 
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
       p
@@ -814,6 +816,19 @@ w-accordion.mt2(
               }
             }
           }
+
+  w-accordion-item
+    template(#title)
+      a#props--business-hours
+      strong.code.title5 businessHours
+      .type [Object]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code () => ({})
+    template(#content)
+      p.
+        Same shape as #[router-link(to="/api#props--special-hours") specialHours]. When #[span.code specialHours] is a non-empty object, it is used; otherwise #[span.code businessHours] is used.
+        Useful when you want clearer naming in templates (#[span.code :business-hours="myBusinessHours"]) without duplicating both props.
 
   w-accordion-item
     template(#title)

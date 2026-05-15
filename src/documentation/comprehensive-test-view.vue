@@ -374,6 +374,13 @@
               label-on-left
               data-testid="special-hours-enabled") Enable Special Hours
 
+          .control(v-if="specialHoursEnabled && !schedulesEnabled")
+            w-switch(
+              v-model="specialHoursBlockedSegmentEnabled"
+              thin
+              label-on-left
+              data-testid="special-hours-blocked-segment") Tue lunch block (no events 12:00–13:00)
+
       //- Event Actions.
       section.control-section
         h3 Event Actions
@@ -382,6 +389,9 @@
             w-button.grow(@click="addEvent" data-testid="add-event-btn")
               w-icon.mr1 wi-plus
               small Rand. Evt.
+            w-button.grow(@click="addTuesdayBlockTestEvent" data-testid="add-block-test-event-btn")
+              w-icon.mr1 wi-plus
+              small Tue test evt.
             w-button.grow(@click="addAllDayEvent" data-testid="add-all-day-event-btn")
               w-icon.mr1 wi-plus
               small All-Day Evt.
@@ -526,6 +536,7 @@ const eventCountEnabled = ref(false)
 const schedulesEnabled = ref(false)
 const scheduleCount = ref(3)
 const specialHoursEnabled = ref(false)
+const specialHoursBlockedSegmentEnabled = ref(false)
 
 // Cypress sets this in `onBeforeLoad` so e2e can cover string schedule ids without a UI toggle.
 const e2eStringScheduleIds =
@@ -545,7 +556,7 @@ const buildSpecialHours = () => {
   if (!specialHoursEnabled.value) return {}
 
   if (!schedulesEnabled.value) {
-    return {
+    const base = {
       mon: { from: 8 * 60, to: 17 * 60, class: 'special-mon', label: 'Mon Special' },
       wed: [
         { from: 8 * 60, to: 12 * 60, class: 'special-wed-am', label: 'Wed AM' },
@@ -553,6 +564,14 @@ const buildSpecialHours = () => {
       ],
       fri: { from: 9 * 60, to: 16 * 60, class: 'special-fri', label: 'Fri Special' }
     }
+    if (specialHoursBlockedSegmentEnabled.value) {
+      base.tue = [
+        { from: 9 * 60, to: 12 * 60, class: 'special-tue-am', label: 'Tue AM' },
+        { from: 12 * 60, to: 13 * 60, class: 'special-tue-lunch', allowEvents: false, label: 'Lunch' },
+        { from: 13 * 60, to: 17 * 60, class: 'special-tue-pm', label: 'Tue PM' }
+      ]
+    }
+    return base
   }
 
   const scheduleIds = Array.from({ length: scheduleCount.value }, (_, i) => getScheduleId(i))
@@ -616,6 +635,25 @@ const calendarProps = computed(() => {
 // Methods.
 // --------------------------------------------------------
 // Event actions.
+const addTuesdayBlockTestEvent = () => {
+  const base = config.viewDate instanceof Date ? new Date(config.viewDate) : new Date(config.viewDate || Date.now())
+  const weekStart = new Date(base)
+  const dow = weekStart.getDay()
+  const toMonday = dow === 0 ? -6 : 1 - dow
+  weekStart.setDate(weekStart.getDate() + toMonday)
+  weekStart.setHours(0, 0, 0, 0)
+  const d = new Date(weekStart)
+  d.setDate(d.getDate() + 1)
+  d.setHours(10, 30, 0, 0)
+  const end = new Date(d.getTime() + 30 * 60 * 1000)
+  config.events.push({
+    title: 'Block segment test',
+    start: d,
+    end,
+    class: 'event-1'
+  })
+}
+
 const addEvent = () => {
   const now = config.viewDate || new Date() // Use viewDate so events appear in the visible range.
   const start = new Date(now)
@@ -797,6 +835,10 @@ watch([schedulesEnabled, scheduleCount], ([enabled, count]) => {
 watch(specialHoursEnabled, enabled => {
   if (enabled) config.specialHours = buildSpecialHours()
   else config.specialHours = {}
+})
+
+watch(specialHoursBlockedSegmentEnabled, () => {
+  if (specialHoursEnabled.value) config.specialHours = buildSpecialHours()
 })
 
 watch(() => $waveui.theme, theme => config.dark = theme === 'dark')

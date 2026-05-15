@@ -197,6 +197,62 @@ example(title="Schedules & Schedule Events" anchor="schedules")
     :schedules="exSchedules.schedules"
     :special-hours="currentScheduleSpecialHours"
     :style="scheduleCalendarStyles")
+
+//- Example: allowEvents + business-hours alias.
+example(title="Blocked time (allowEvents) & businessHours alias" anchor="allow-events-hours")
+  template(#desc)
+    p.
+      The first calendar uses #[code allowEvents: false] on Wednesday lunch (12:00–13:00). Try dragging, resizing, or creating an event across that band — it snaps back or is not created.#[br]
+      The second calendar passes the same shape via #[code :business-hours] while #[code special-hours] stays empty (alias behavior).
+  template(#code-html).
+    &lt;vue-cal
+      :views="['week']"
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      editable-events
+      :special-hours="hoursWithLunchBlock"
+      :events="allowEventsDemoEvents"
+    /&gt;
+    &lt;vue-cal
+      :views="['week']"
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      :business-hours="hoursWithLunchBlock"
+      :events="[]"
+    /&gt;
+  template(#code-js).
+    const hoursWithLunchBlock = {
+      wed: [
+        { from: 9 * 60, to: 12 * 60, class: 'open-hours', label: 'Open' },
+        { from: 12 * 60, to: 13 * 60, class: 'lunch-break', allowEvents: false, label: 'Lunch' },
+        { from: 13 * 60, to: 18 * 60, class: 'open-hours', label: 'Open' }
+      ]
+    }
+    const allowEventsDemoEvents = [
+      { start: '2018-11-21 10:00', end: '2018-11-21 11:00', title: 'Drag / resize over lunch', class: 'health' }
+    ]
+  .w-flex.column.gap3
+    vue-cal.allow-events-demo-cal(
+      :dark="store.darkMode"
+      :views="['week']"
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      editable-events
+      :special-hours="hoursWithLunchBlock"
+      :events="allowEventsDemoEvents"
+      style="height: 380px")
+    vue-cal.allow-events-demo-cal(
+      :dark="store.darkMode"
+      :views="['week']"
+      :selected-date="stringToDate('2018-11-19')"
+      :time-from="7 * 60"
+      :time-to="20 * 60"
+      :business-hours="hoursWithLunchBlock"
+      :events="[]"
+      style="height: 220px")
 </template>
 
 <script setup>
@@ -388,6 +444,24 @@ const scheduleCalendarStyles = computed(() => {
 
   return styles
 })
+
+const hoursWithLunchBlock = {
+  wed: [
+    { from: 9 * 60, to: 12 * 60, class: 'open-hours', label: '<strong>Open</strong>' },
+    { from: 12 * 60, to: 13 * 60, class: 'lunch-break', allowEvents: false, label: '<strong>Lunch</strong> (no bookings)' },
+    { from: 13 * 60, to: 18 * 60, class: 'open-hours', label: '<strong>Open</strong>' }
+  ]
+}
+
+const allowEventsDemoEvents = [
+  {
+    start: '2018-11-21 10:00',
+    end: '2018-11-21 11:00',
+    title: 'Try drag / resize over lunch',
+    content: '<i class="w-icon mdi mdi-gesture-tap-hold"></i>',
+    class: 'health'
+  }
+]
 </script>
 
 <style lang="scss">
@@ -424,6 +498,15 @@ const scheduleCalendarStyles = computed(() => {
     .vuecal__event {color: #fff;border: 1px solid transparent;}
     .vuecal__event.health {background-color: rgba(87, 206, 169, 0.82);border-color: rgba(76, 175, 80, 0.45);}
     .vuecal__event.leisure {background-color: rgba(253, 156, 66, 0.85);border-color: rgba(233, 136, 46, 0.55);}
+  }
+
+  .example--allow-events-hours {
+    .open-hours {background-color: rgba(76, 175, 80, 0.15);}
+    .lunch-break {
+      background: repeating-linear-gradient(-45deg, rgba(#fff, 0) 0 5px, rgba(#000, 0.06) 5px 12px);
+      color: rgba(0, 0, 0, 0.55);
+    }
+    .vuecal__event.health {background-color: rgba(87, 206, 169, 0.82);border-color: rgba(76, 175, 80, 0.45);}
   }
 }
 </style>

@@ -5,6 +5,8 @@ ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.42
     ul
+      li Added #[code business-hours] as an alias for #[code special-hours] when #[code special-hours] is empty.
+      li Added #[code allowEvents: false] on #[code specialHours] / #[code businessHours] segments to block overlapping timed events (create, drag-and-drop, resize); precomputed internally for performance.
       li Added per-schedule #[code specialHours] overrides through #[code specialHours[day].schedules], with #[code default] fallback support for schedules without an override.
   li.patch
     strong.version 5.0.1-rc.41

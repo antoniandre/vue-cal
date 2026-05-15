@@ -20,6 +20,9 @@ ul.kanban
   li.kanban__column.kanban__column--done.xs-hide
     .title ✅ Done
     .w-flex.column.gap1.pa1
+      .task business-hours alias for special-hours
+      .task allowEvents: false on special-hours
+      .task per-schedule overrides on special-hours
       .task Horizontal layout option
       .task Multiple day events
       .task Improve touch device UX (events VS scroll)
