@@ -70,10 +70,17 @@ export interface VueCalSpecialHoursConfigs {
   label?: string
 }
 
-type VueCalSpecialHours = Partial<Record<VueCalWeekdays, VueCalSpecialHoursConfigs | VueCalSpecialHoursConfigs[]>>
-
 /** Schedule column identifier; must match `event.schedule` and may be numeric (including 0) or a string (e.g. UUID). */
 export type VueCalScheduleId = number | string
+
+export type VueCalSpecialHoursConfig = VueCalSpecialHoursConfigs | VueCalSpecialHoursConfigs[]
+
+export interface VueCalSpecialHoursDay {
+  default?: VueCalSpecialHoursConfig
+  schedules?: Partial<Record<VueCalScheduleId, VueCalSpecialHoursConfig>>
+}
+
+export type VueCalSpecialHours = Partial<Record<VueCalWeekdays, VueCalSpecialHoursConfig | VueCalSpecialHoursDay>>
 
 export type VueCalSchedules = {
   id?: VueCalScheduleId
@@ -145,7 +152,7 @@ export interface VueCalConfig {
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate?: (Date | VueCalDateString | VueCalDateTimeString),
   sm?: boolean, // Small size (truncates texts + specific styles).
-  specialHours?: VueCalSpecialHours, // Highlight a particular time range on each day of the week, individually.
+  specialHours?: VueCalSpecialHours, // Highlight special time ranges per weekday, with optional schedule-specific overrides.
   schedules?: VueCalSchedules[] | VueCalSchedulesHidden[], // Split a day in different persons/rooms/locations schedules.
   snapToInterval?: number, // Snap the event start and end to a specific interval in minutes.
   startWeekOnSunday?: boolean, // Shows Sunday before Monday in days, week and month views.

@@ -32,7 +32,7 @@ export const props = {
   // A 2-way binding that highlights the selected date in the calendar but does not navigate to it.
   selectedDate: { type: [String, Date], default: '' }, // The selected date in the calendar !== viewDate.
   sm: { type: Boolean, default: false }, // Small size (truncates texts + specific styles).
-  specialHours: { type: Object, default: () => ({}) }, // Highlight a particular time range on each day of the week, individually.
+  specialHours: { type: Object, default: () => ({}) }, // Highlight special time ranges per weekday, with optional schedule-specific overrides.
   schedules: { type: Array, default: () => [] }, // Split a day in different persons/rooms/locations schedules.
   snapToInterval: { type: Number, default: 0 }, // Snap the event start and end to a specific interval in minutes.
   startWeekOnSunday: { type: Boolean, default: false }, // Shows Sunday before Monday in days, week and month views.

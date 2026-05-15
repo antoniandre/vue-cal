@@ -6,20 +6,27 @@
   :class="classes")
   slot(v-if="$slots.cell" name="cell" :cell="cellInfo")
 
-  template(v-if="specialHours")
+  template(v-if="specialHours?.default?.length && !config.schedules?.length")
     .vuecal__special-hours(
-      v-for="(range, i) in specialHours"
+      v-for="(range, i) in specialHours.default"
       :style="range.style"
       :class="range.class"
       v-html="range.label || ''")
 
   template(v-if="!$slots.cell && config.schedules")
     .vuecal__schedule.vuecal__schedule--cell(
-      v-for="schedule in config.schedules"
+      v-for="({ schedule, ranges }) in schedulesWithCellSpecialHours"
       :key="schedule.id"
       :class="schedule.class"
       :style="schedule.style || null"
       :data-schedule="schedule.id")
+      template(v-if="ranges.length")
+        .vuecal__special-hours(
+          v-for="(range, i) in ranges"
+          :key="`${schedule.id}-${i}`"
+          :style="range.style"
+          :class="range.class"
+          v-html="range.label || ''")
       template(v-if="$slots['cell-events']")
         slot(name="cell-events" :cell="cellInfo")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
@@ -325,39 +332,73 @@ const showCellEventCount = computed(() => {
  * The special hours of the current cell day.
  * returns an array if the view is day, days, week and the specialHours prop is set correctly.
  */
-const specialHours = computed(() => {
-  if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
-  const weekday = weekdays[props.start.getDay()]
+const getPositionedSpecialHours = ranges => {
+  const list = ranges || []
   const isHzl = config.horizontal
+  const { timeFrom, timeTo } = config
+  const positioned = []
 
-  // The special hours ranges for the current cell day.
-  let daySpecialHours = config.specialHours?.[weekday]
-  if (!daySpecialHours) return
+  for (let i = 0; i < list.length; i++) {
+    const range = list[i]
+    let { from, to, class: classes, label } = range
 
-  if (!Array.isArray(daySpecialHours)) daySpecialHours = [daySpecialHours]
+    // Skip incorrect special hours or ranges completely outside the visible timeline.
+    if (isNaN(from) || isNaN(to) || timeFrom >= to || timeTo <= from) continue
 
-  // Foreach of the given ranges, return an object with CSS positioning in percentage.
-  return daySpecialHours.map(dayRanges => {
-    let { from, to, class: classes, label } = dayRanges
-
-    // Return if the special hours are incorrect or completely out of range.
-    if (isNaN(from) || isNaN(to) || config.timeFrom >= to || config.timeTo <= from) return
-
-    from = Math.max(config.timeFrom, from) // Ensure that from is in range.
-    to = Math.min(config.timeTo, to) // Ensure that to is in range.
+    from = Math.max(timeFrom, from)
+    to = Math.min(timeTo, to)
 
     const start = minutesToPercentage(from, config)
     const size = minutesToPercentage(to, config) - start
 
-    return {
+    positioned.push({
       style: {
         [isHzl ? 'left' : 'top']: `${start}%`,
         [isHzl ? 'width' : 'height']: `${size}%`
       },
       label,
       class: classes
-    }
-  }).filter(specialRanges => !!specialRanges)
+    })
+  }
+
+  return positioned
+}
+
+const specialHours = computed(() => {
+  if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
+  const weekday = weekdays[props.start.getDay()]
+
+  // The special hours ranges for the current cell day.
+  let daySpecialHours = config.specialHours?.[weekday]
+  if (!daySpecialHours) return
+
+  return {
+    default: getPositionedSpecialHours(daySpecialHours.default),
+    schedules: Object.entries(daySpecialHours.schedules || {}).reduce((obj, [scheduleId, ranges]) => {
+      obj[scheduleId] = getPositionedSpecialHours(ranges)
+      return obj
+    }, {})
+  }
+})
+
+// One lookup per schedule per computed refresh (avoids calling a lookup fn twice per render in the template).
+const schedulesWithCellSpecialHours = computed(() => {
+  const schedules = config.schedules
+  if (!schedules?.length) return []
+
+  const sh = specialHours.value
+  if (!sh) return schedules.map(schedule => ({ schedule, ranges: [] }))
+
+  const { default: defaultRanges, schedules: byScheduleId } = sh
+
+  return schedules.map(schedule => {
+    const scheduleKey = String(schedule.id)
+    const ranges = Object.prototype.hasOwnProperty.call(byScheduleId, scheduleKey)
+      ? byScheduleId[scheduleKey]
+      : defaultRanges
+
+    return { schedule, ranges }
+  })
 })
 
 const isBeforeMinDate = computed(() => {

@@ -35,6 +35,54 @@ export const defaults = {
 export const months = ['jan', 'feb', 'mar', 'apr', 'may', 'jun', 'jul', 'aug', 'sep', 'oct', 'nov', 'dec']
 export const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 
+const isSpecialHoursRange = value => {
+  return !!value && typeof value === 'object' && !Array.isArray(value) &&
+    ('from' in value || 'to' in value || 'class' in value || 'label' in value)
+}
+
+const normalizeSpecialHoursRanges = ranges => {
+  if (!ranges) return []
+  const list = Array.isArray(ranges) ? ranges : [ranges]
+  const valid = []
+  for (let i = 0; i < list.length; i++) {
+    const item = list[i]
+    if (isSpecialHoursRange(item)) valid.push(item)
+  }
+  return valid
+}
+
+const normalizeSpecialHoursDay = dayConfig => {
+  if (!dayConfig) return null
+
+  if (Array.isArray(dayConfig) || isSpecialHoursRange(dayConfig)) {
+    return {
+      default: normalizeSpecialHoursRanges(dayConfig),
+      schedules: {}
+    }
+  }
+
+  if (typeof dayConfig !== 'object') return null
+
+  const normalized = {
+    default: normalizeSpecialHoursRanges(dayConfig.default),
+    schedules: {}
+  }
+
+  let scheduleKeyCount = 0
+  const schedulesSrc = dayConfig.schedules
+  if (schedulesSrc && typeof schedulesSrc === 'object') {
+    const scheduleKeys = Object.keys(schedulesSrc)
+    scheduleKeyCount = scheduleKeys.length
+    for (let i = 0; i < scheduleKeys.length; i++) {
+      const scheduleId = scheduleKeys[i]
+      normalized.schedules[scheduleId] = normalizeSpecialHoursRanges(schedulesSrc[scheduleId])
+    }
+  }
+
+  if (!normalized.default.length && !scheduleKeyCount) return null
+  return normalized
+}
+
 const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun.
   obj[day] = i || 7
   return obj
@@ -218,6 +266,18 @@ export const useConfig = (vuecal, props, attrs) => {
     return (show && props.schedules?.map((s, i) => ({ ...s, id: s.id ?? (i + 1) }))) || undefined
   })
 
+  const specialHours = computed(() => {
+    if (!props.specialHours || typeof props.specialHours !== 'object') return {}
+
+    return Object.entries(props.specialHours).reduce((obj, [weekday, dayConfig]) => {
+      if (!weekdays.includes(weekday)) return obj
+
+      const normalized = normalizeSpecialHoursDay(dayConfig)
+      if (normalized) obj[weekday] = normalized
+      return obj
+    }, {})
+  })
+
   const editableEvents = computed(() => {
     const defaults = {
       drag: true,
@@ -329,6 +389,7 @@ export const useConfig = (vuecal, props, attrs) => {
     minTimestamp,
     maxTimestamp,
     schedules,
+    specialHours,
     selectedDate,
     editableEvents,
     showCellEventCount,
