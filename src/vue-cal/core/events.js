@@ -521,8 +521,12 @@ export const useEvents = vuecal => {
     documentMouseX: 0,
     documentMouseY: 0,
     resizeStartDate: null,
+    resizeBaselineEndMs: null,
     cellEl: null,
-    schedule: null
+    schedule: null,
+    resizeAnchorClientX: 0,
+    resizeAnchorClientY: 0,
+    resizeSlopExceeded: false
   })
 
   /**
@@ -569,11 +573,63 @@ export const useEvents = vuecal => {
     return { newStart, newEnd }
   }
 
+  const RESIZE_SLOP_SQ = 4 // 2px; ignore jitter until pointer moves farther than this from mousedown.
+
+  const syncResizePointerFromClient = (clientX, clientY) => {
+    if (!resizeState.cellEl) return
+    const { top, left, width, height } = resizeState.cellEl.getBoundingClientRect()
+    resizeState.moveX = clientX - left
+    resizeState.moveY = clientY - top
+    resizeState.movePercentageX = resizeState.moveX * 100 / width
+    resizeState.movePercentageY = resizeState.moveY * 100 / height
+    resizeState.documentMouseX = clientX
+    resizeState.documentMouseY = clientY
+  }
+
+  const getClampedResizeProposal = (ev, cellStart) => {
+    const prevStart = new Date(ev.start)
+    const prevEnd = new Date(ev.end)
+    let { newStart, newEnd } = computeEventStartEnd(ev, cellStart)
+
+    if (config.time && !ev.allDay && config.specialHoursDisallowed?.hasAny) {
+      const clamped = clampResizeProposedRange({
+        proposedStart: newStart,
+        proposedEnd: newEnd,
+        prevStart,
+        prevEnd,
+        schedule: ev.schedule,
+        disallowed: config.specialHoursDisallowed,
+        hasSchedules: !!(config.schedules && config.schedules.length)
+      })
+      newStart = clamped.start
+      newEnd = clamped.end
+    }
+
+    const internalOk = !config.time || ev.allDay || !config.specialHoursDisallowed?.hasAny ||
+      !eventRangeViolatesAllowEvents({
+        start: newStart,
+        end: newEnd,
+        schedule: ev.schedule,
+        disallowed: config.specialHoursDisallowed,
+        hasSchedules: !!(config.schedules && config.schedules.length)
+      })
+
+    return { newStart, newEnd, internalOk }
+  }
+
   // Document event handlers for event resizing.
   const onDocumentMousemove = async e => {
     const { clientX, clientY } = e.touches?.[0] || e // Handle click or touch event.
 
-    // Only the first mousemove to store original event and fire resize-start.
+    const adx = clientX - resizeState.resizeAnchorClientX
+    const ady = clientY - resizeState.resizeAnchorClientY
+    if (!resizeState.resizeSlopExceeded) {
+      if (adx * adx + ady * ady <= RESIZE_SLOP_SQ) return
+      resizeState.resizeSlopExceeded = true
+    }
+    syncResizePointerFromClient(clientX, clientY)
+
+    // Only the first committed move stores original event and fires resize-start.
     if (resizeState.fromResizer && !resizeState.resizingOriginalEvent) {
       resizeState.resizingOriginalEvent = { ...resizeState.resizingEvent, _: { ...resizeState.resizingEvent._ } }
 
@@ -582,47 +638,9 @@ export const useEvents = vuecal => {
       eventListeners['resize-start']?.({ e, event: resizeState.resizingEvent })
     }
 
-    if (resizeState.cellEl) {
-      const { top, left, width, height } = resizeState.cellEl.getBoundingClientRect()
-      resizeState.moveX = clientX - left
-      resizeState.moveY = clientY - top
-      resizeState.movePercentageX = resizeState.moveX * 100 / width
-      resizeState.movePercentageY = resizeState.moveY * 100 / height
-    }
-
-    // Store the current document mouse position for horizontal resizing.
-    resizeState.documentMouseX = clientX
-    resizeState.documentMouseY = clientY
-
     if (resizeState.fromResizer && resizeState.resizingEvent) {
-      // Get the cell start date from the resizing event's cell
       const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
-      const prevStart = new Date(resizeState.resizingEvent.start)
-      const prevEnd = new Date(resizeState.resizingEvent.end)
-      let { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
-
-      if (config.time && !resizeState.resizingEvent.allDay && config.specialHoursDisallowed?.hasAny) {
-        const clamped = clampResizeProposedRange({
-          proposedStart: newStart,
-          proposedEnd: newEnd,
-          prevStart,
-          prevEnd,
-          schedule: resizeState.resizingEvent.schedule,
-          disallowed: config.specialHoursDisallowed,
-          hasSchedules: !!(config.schedules && config.schedules.length)
-        })
-        newStart = clamped.start
-        newEnd = clamped.end
-      }
-
-      const internalOk = !config.time || resizeState.resizingEvent.allDay || !config.specialHoursDisallowed?.hasAny ||
-        !eventRangeViolatesAllowEvents({
-          start: newStart,
-          end: newEnd,
-          schedule: resizeState.resizingEvent.schedule,
-          disallowed: config.specialHoursDisallowed,
-          hasSchedules: !!(config.schedules && config.schedules.length)
-        })
+      const { newStart, newEnd, internalOk } = getClampedResizeProposal(resizeState.resizingEvent, cellStart)
 
       // If there's an @event-resize external listener, call it and ask for resizing approval.
       let acceptResize = internalOk
@@ -656,56 +674,38 @@ export const useEvents = vuecal => {
 
   const onDocumentMouseup = async e => {
     if (vuecal.touch?.isResizingEvent && resizeState.resizingEvent) {
-      // Get the cell start date from the resizing event's cell.
-      const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
-      const prevStart = new Date(resizeState.resizingEvent.start)
-      const prevEnd = new Date(resizeState.resizingEvent.end)
-      let { newStart, newEnd } = computeEventStartEnd(resizeState.resizingEvent, cellStart)
-
-      if (config.time && !resizeState.resizingEvent.allDay && config.specialHoursDisallowed?.hasAny) {
-        const clamped = clampResizeProposedRange({
-          proposedStart: newStart,
-          proposedEnd: newEnd,
-          prevStart,
-          prevEnd,
-          schedule: resizeState.resizingEvent.schedule,
-          disallowed: config.specialHoursDisallowed,
-          hasSchedules: !!(config.schedules && config.schedules.length)
-        })
-        newStart = clamped.start
-        newEnd = clamped.end
+      const { clientX, clientY } = e.changedTouches?.[0] || e
+      if (!resizeState.resizeSlopExceeded) {
+        resizeState.resizingEvent.start = new Date(resizeState.resizeStartDate)
+        resizeState.resizingEvent.end = new Date(resizeState.resizeBaselineEndMs)
       }
+      else {
+        syncResizePointerFromClient(clientX, clientY)
+        const cellStart = new Date(parseInt(resizeState.cellEl.dataset.start))
+        const { newStart, newEnd, internalOk } = getClampedResizeProposal(resizeState.resizingEvent, cellStart)
 
-      const internalOk = !config.time || resizeState.resizingEvent.allDay || !config.specialHoursDisallowed?.hasAny ||
-        !eventRangeViolatesAllowEvents({
-          start: newStart,
-          end: newEnd,
-          schedule: resizeState.resizingEvent.schedule,
-          disallowed: config.specialHoursDisallowed,
-          hasSchedules: !!(config.schedules && config.schedules.length)
-        })
+        // If there's an @event-resize-end external listener, call it.
+        let acceptResize = internalOk
+        const eventListeners = config.eventListeners?.event || {}
+        const resizeEndHandler = eventListeners['resize-end']
+        // Call external validation of event resize-end. If successful, update the event details.
+        if (internalOk && resizeEndHandler) {
+          acceptResize = await resizeEndHandler({
+            e,
+            event: resizeState.resizingEvent,
+            original: resizeState.resizingOriginalEvent, // Original event details before resizing.
+            overlaps: resizeState.resizingEvent.getOverlappingEvents({ start: newStart, end: newEnd })
+          })
+        }
 
-      // If there's an @event-resize-end external listener, call it.
-      let acceptResize = internalOk
-      const eventListeners = config.eventListeners?.event || {}
-      const resizeEndHandler = eventListeners['resize-end']
-      // Call external validation of event resize-end. If successful, update the event details.
-      if (internalOk && resizeEndHandler) {
-        acceptResize = await resizeEndHandler({
-          e,
-          event: resizeState.resizingEvent,
-          original: resizeState.resizingOriginalEvent, // Original event details before resizing.
-          overlaps: resizeState.resizingEvent.getOverlappingEvents({ start: newStart, end: newEnd })
-        })
-      }
-
-      // If the event resize is accepted apply new range, if refused (SPECIFICALLY FALSE) revert to original.
-      resizeState.resizingEvent.start = acceptResize === false ? (resizeState.resizingLastAcceptedEvent || resizeState.resizingOriginalEvent).start : (resizeState.resizingLastAcceptedEvent?.start || newStart)
-      resizeState.resizingEvent.end = acceptResize === false ? (resizeState.resizingLastAcceptedEvent || resizeState.resizingOriginalEvent).end : (resizeState.resizingLastAcceptedEvent?.end || newEnd)
-      // If resizing to less than 1 minute, revert to original.
-      if (resizeState.resizingEvent._.duration < 1) {
-        resizeState.resizingEvent.start = resizeState.resizingOriginalEvent.start
-        resizeState.resizingEvent.end = resizeState.resizingOriginalEvent.end
+        // If the event resize is accepted apply new range, if refused (SPECIFICALLY FALSE) revert to original.
+        resizeState.resizingEvent.start = acceptResize === false ? (resizeState.resizingLastAcceptedEvent || resizeState.resizingOriginalEvent).start : (resizeState.resizingLastAcceptedEvent?.start || newStart)
+        resizeState.resizingEvent.end = acceptResize === false ? (resizeState.resizingLastAcceptedEvent || resizeState.resizingOriginalEvent).end : (resizeState.resizingLastAcceptedEvent?.end || newEnd)
+        // If resizing to less than 1 minute, revert to original.
+        if (resizeState.resizingEvent._.duration < 1 && resizeState.resizingOriginalEvent) {
+          resizeState.resizingEvent.start = resizeState.resizingOriginalEvent.start
+          resizeState.resizingEvent.end = resizeState.resizingOriginalEvent.end
+        }
       }
       vuecal.touch.isResizingEvent = false // Add a CSS class on wrapper while resizing.
       vuecal.touch.currentHoveredCell = null // Reset current hovered cell.
@@ -732,7 +732,11 @@ export const useEvents = vuecal => {
     resizeState.documentMouseY = 0
     resizeState.cellEl = null
     resizeState.resizeStartDate = null
+    resizeState.resizeBaselineEndMs = null
     resizeState.schedule = null
+    resizeState.resizeAnchorClientX = 0
+    resizeState.resizeAnchorClientY = 0
+    resizeState.resizeSlopExceeded = false
   }
 
   // Handle mousedown/touchstart on event elements
@@ -752,10 +756,14 @@ export const useEvents = vuecal => {
       resizeState.startPercentageY = resizeState.startY * 100 / rect.height
       // Store the cell DOM node for a more efficient resizing calc in mousemove/touchmove.
       resizeState.cellEl = eventEl.closest('.vuecal__cell')
-      // Store the event start to apply on event end when resizing and end < start.
-      resizeState.resizeStartDate = event.start
+      // Immutable gesture start (swap logic + cancel if no real drag).
+      resizeState.resizeStartDate = new Date(event.start.getTime())
+      resizeState.resizeBaselineEndMs = event.end.getTime()
       // Store the event being resized.
       resizeState.resizingEvent = event
+      resizeState.resizeAnchorClientX = domEvent.clientX
+      resizeState.resizeAnchorClientY = domEvent.clientY
+      resizeState.resizeSlopExceeded = false
 
       // Make the event listener non-passive if resizing so we can prevent default scrolling.
       document.addEventListener(e.type === 'touchstart' ? 'touchmove' : 'mousemove', onDocumentMousemove, { passive: !resizeState.fromResizer })
