@@ -12,9 +12,7 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
           Each block can also carry a #[code label] that you can style freely with CSS.
       .w-flex.column.gap2.no-grow
         label Show
-        w-radios(
-          v-model="exSpecialHours.variant"
-          :items="exSpecialHours.choices")
+        w-radios(v-model="exSpecialHours.variant" :items="exSpecialHours.choices")
   template(#code-html).
     &lt;vue-cal
       :views="['day', 'week']"
@@ -139,7 +137,7 @@ example(title="Schedules & Schedule Events" anchor="schedules")
           :items="exSchedules.widthChoices")
   template(#code-html).
     &lt;vue-cal
-      :selected-date="stringToDate('2018-11-19')"
+      :view-date="stringToDate('2026-05-19')"
       :views="['day', 'week']"
       :time-from="7 * 60"
       :time-to="21 * 60"
@@ -158,9 +156,9 @@ example(title="Schedules & Schedule Events" anchor="schedules")
       { id: 'lab', label: 'Lab', class: 'doctor doctor--lab' }
     ]
     const events = [
-      { start: '2018-11-19 08:30', end: '2018-11-19 10:00', title: 'Rounds', class: 'health', schedule: 'dr-lee' },
-      { start: '2018-11-19 11:00', end: '2018-11-19 12:00', title: 'Consultation', class: 'health', schedule: 'dr-kim' },
-      { start: '2018-11-19 14:00', end: '2018-11-19 17:00', title: 'Tests', class: 'leisure', schedule: 'lab' }
+      { start: '2026-05-19 08:30', end: '2026-05-19 10:00', title: 'Rounds', class: 'health', schedule: 'dr-lee' },
+      { start: '2026-05-19 11:00', end: '2026-05-19 12:00', title: 'Consultation', class: 'health', schedule: 'dr-kim' },
+      { start: '2026-05-19 14:00', end: '2026-05-19 17:00', title: 'Tests', class: 'leisure', schedule: 'lab' }
     ]
     const specialHours = {
       mon: {
@@ -188,7 +186,7 @@ example(title="Schedules & Schedule Events" anchor="schedules")
 
   vue-cal(
     :dark="store.darkMode"
-    :selected-date="stringToDate('2018-11-19')"
+    :view-date="stringToDate('2026-05-19')"
     :views="['day', 'week']"
     :time-from="7 * 60"
     :time-to="21 * 60"
@@ -207,20 +205,11 @@ example(title="Blocked time (allowEvents) & businessHours alias" anchor="allow-e
   template(#code-html).
     &lt;vue-cal
       :views="['week']"
-      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="20 * 60"
       editable-events
       :special-hours="hoursWithLunchBlock"
       :events="allowEventsDemoEvents"
-    /&gt;
-    &lt;vue-cal
-      :views="['week']"
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="7 * 60"
-      :time-to="20 * 60"
-      :business-hours="hoursWithLunchBlock"
-      :events="[]"
     /&gt;
   template(#code-js).
     const hoursWithLunchBlock = {
@@ -231,28 +220,18 @@ example(title="Blocked time (allowEvents) & businessHours alias" anchor="allow-e
       ]
     }
     const allowEventsDemoEvents = [
-      { start: '2018-11-21 10:00', end: '2018-11-21 11:00', title: 'Drag / resize over lunch', class: 'health' }
+      { start: '2026-05-21 10:00', end: '2026-05-21 11:00', title: 'Drag / resize over lunch', class: 'health' }
     ]
   .w-flex.column.gap3
     vue-cal.allow-events-demo-cal(
       :dark="store.darkMode"
       :views="['week']"
-      :selected-date="stringToDate('2018-11-19')"
       :time-from="7 * 60"
       :time-to="20 * 60"
       editable-events
       :special-hours="hoursWithLunchBlock"
       :events="allowEventsDemoEvents"
       style="height: 380px")
-    vue-cal.allow-events-demo-cal(
-      :dark="store.darkMode"
-      :views="['week']"
-      :selected-date="stringToDate('2018-11-19')"
-      :time-from="7 * 60"
-      :time-to="20 * 60"
-      :business-hours="hoursWithLunchBlock"
-      :events="[]"
-      style="height: 220px")
 </template>
 
 <script setup>
@@ -296,64 +275,64 @@ const currentSpecialHours = computed(() => exSpecialHours[exSpecialHours.variant
 
 const scheduleEvents = [
   {
-    start: '2018-11-19 08:30',
-    end: '2018-11-19 10:00',
+    start: '2026-05-19 08:30',
+    end: '2026-05-19 10:00',
     title: 'Rounds',
     content: '<i class="w-icon mdi mdi-stethoscope"></i>',
     class: 'health',
     schedule: 'dr-lee'
   },
   {
-    start: '2018-11-19 11:00',
-    end: '2018-11-19 12:00',
+    start: '2026-05-19 11:00',
+    end: '2026-05-19 12:00',
     title: 'Consultation',
     content: '<i class="w-icon mdi mdi-hospital-box-outline"></i>',
     class: 'health',
     schedule: 'dr-kim'
   },
   {
-    start: '2018-11-19 14:00',
-    end: '2018-11-19 17:00',
+    start: '2026-05-19 14:00',
+    end: '2026-05-19 17:00',
     title: 'Tests',
     content: '<i class="w-icon mdi mdi-flask-outline"></i>',
     class: 'leisure',
     schedule: 'lab'
   },
   {
-    start: '2018-11-20 09:00',
-    end: '2018-11-20 10:30',
+    start: '2026-05-20 09:00',
+    end: '2026-05-20 10:30',
     title: 'Ward round',
     content: '<i class="w-icon mdi mdi-stethoscope"></i>',
     class: 'health',
     schedule: 'dr-lee'
   },
   {
-    start: '2018-11-20 13:00',
-    end: '2018-11-20 15:00',
+    start: '2026-05-20 13:00',
+    end: '2026-05-20 15:00',
     title: 'Urgent care',
     content: '<i class="w-icon mdi mdi-ambulance"></i>',
     class: 'health',
     schedule: 'dr-kim'
   },
   {
-    start: '2018-11-21 10:00',
-    end: '2018-11-21 12:30',
+    start: '2026-05-21 10:00',
+    end: '2026-05-21 12:30',
     title: 'Screening',
     content: '<i class="w-icon mdi mdi-microscope"></i>',
     class: 'leisure',
     schedule: 'lab'
   },
   {
-    start: '2018-11-22 13:30',
-    end: '2018-11-22 16:00',
+    start: '2026-05-22 13:30',
+    end: '2026-05-22 16:00',
     title: 'Check-up',
     content: '<i class="w-icon mdi mdi-heart-pulse"></i>',
     class: 'health',
     schedule: 'dr-lee'
   },
   {
-    start: '2018-11-23 18:00',
-    end: '2018-11-23 20:00',
+    start: '2026-05-23 18:00',
+    end: '2026-05-23 20:00',
     title: 'Late consultation',
     content: '<i class="w-icon mdi mdi-clock-outline"></i>',
     class: 'health',
@@ -455,8 +434,8 @@ const hoursWithLunchBlock = {
 
 const allowEventsDemoEvents = [
   {
-    start: '2018-11-21 10:00',
-    end: '2018-11-21 11:00',
+    start: '2026-05-21 10:00',
+    end: '2026-05-21 11:00',
     title: 'Try drag / resize over lunch',
     content: '<i class="w-icon mdi mdi-gesture-tap-hold"></i>',
     class: 'health'
