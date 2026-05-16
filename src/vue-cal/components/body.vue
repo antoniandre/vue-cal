@@ -156,7 +156,8 @@ onBeforeUnmount(() => {
     border-radius: 99em;
   }
 
-  .vuecal--horizontal & {
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  .vuecal__scrollable--horizontal & {
     left: auto;
     right: auto;
     top: 0;

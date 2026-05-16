@@ -151,6 +151,7 @@ const scrollableElClasses = computed(() => ({
   [`vuecal__scrollable--${view.id}-view`]: true,
   'vuecal__scrollable--has-schedules': config.schedules?.length,
   'vuecal__scrollable--no-schedules': !config.schedules?.length,
+  'vuecal__scrollable--horizontal': config.horizontal,
   'vuecal__scrollable--no-all-day-bar': !config.allDayEvents,
   'vuecal__scrollable--has-all-day-bar': config.allDayEvents
 }))

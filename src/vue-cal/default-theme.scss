@@ -139,14 +139,14 @@
     &--day-view {--vuecal-weekday-bar-size: 0px;}
     &--month-view, &--no-all-day-bar {--vuecal-all-day-bar-size: 0px;}
     &--year-view, &--years-view {overflow: hidden;} // Useful while transitioning.
-  }
-  &.vuecal--horizontal .vuecal__scrollable {
-    grid-template-columns: auto;
-    grid-template-rows: 1fr 0fr;
-  }
-  &.vuecal--horizontal .vuecal__scrollable--row {
-    grid-template-columns: auto;
-    grid-template-rows: 0fr 1fr;
+    &--horizontal {
+      grid-template-columns: auto;
+      grid-template-rows: 1fr 0fr;
+    }
+    &--horizontal.vuecal__scrollable--row {
+      grid-template-columns: auto;
+      grid-template-rows: 0fr 1fr;
+    }
   }
 
   .vuecal__scrollable--day-view .vuecal__body,
@@ -473,7 +473,8 @@
   // Horizontal layout - cosmetic styles only.
   // Structural layout styles are in index.scss.
   // ------------------------------------------------------
-  &.vuecal--horizontal {
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+  .vuecal__scrollable--horizontal {
     // Override size variables for horizontal layout.
     --vuecal-weekday-bar-size: 6rem;
     --vuecal-schedules-bar-size: 4rem;
@@ -508,8 +509,9 @@
       line-height: 1;
     }
 
-    .vuecal__scrollable--day-view.vuecal__scrollable--no-schedules .vuecal__time-cell:first-child label,
-    .vuecal__scrollable--has-all-day-bar .vuecal__time-cell:not(.vuecal__time-cell + .vuecal__time-cell) label {
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+    &.vuecal__scrollable--day-view.vuecal__scrollable--no-schedules .vuecal__time-cell:first-child label,
+    &.vuecal__scrollable--has-all-day-bar .vuecal__time-cell:not(.vuecal__time-cell + .vuecal__time-cell) label {
       display: none;
     }
 
@@ -548,9 +550,10 @@
       span {left: 2px;}
     }
 
-    .vuecal__scrollable--no-schedules.vuecal__scrollable--day-view .vuecal__cell-events,
-    .vuecal__scrollable--no-schedules.vuecal__scrollable--days-view .vuecal__cell-events,
-    .vuecal__scrollable--no-schedules.vuecal__scrollable--week-view .vuecal__cell-events {
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+    &.vuecal__scrollable--no-schedules.vuecal__scrollable--day-view .vuecal__cell-events,
+    &.vuecal__scrollable--no-schedules.vuecal__scrollable--days-view .vuecal__cell-events,
+    &.vuecal__scrollable--no-schedules.vuecal__scrollable--week-view .vuecal__cell-events {
       inset: 0 0 8px;
     }
 

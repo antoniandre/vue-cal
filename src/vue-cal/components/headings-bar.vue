@@ -187,7 +187,8 @@ onBeforeUnmount(() => {
     white-space: nowrap;
     background-color: var(--vuecal-secondary-color);
 
-    .vuecal--horizontal & {
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
+    .vuecal__scrollable--horizontal & {
       flex-direction: row;
       width: calc(var(--vuecal-weekday-bar-size) + var(--vuecal-schedules-bar-size) + var(--vuecal-all-day-bar-size));
       height: 100%;
@@ -201,12 +202,13 @@ onBeforeUnmount(() => {
     align-items: center;
     background-color: inherit;
 
+    // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
     .vuecal__scrollable--day-view &,
     .vuecal__scrollable--days-view &,
     .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
-    .vuecal--horizontal .vuecal__scrollable--day-view &,
-    .vuecal--horizontal .vuecal__scrollable--days-view &,
-    .vuecal--horizontal .vuecal__scrollable--week-view & {
+    .vuecal__scrollable--horizontal.vuecal__scrollable--day-view &,
+    .vuecal__scrollable--horizontal.vuecal__scrollable--days-view &,
+    .vuecal__scrollable--horizontal.vuecal__scrollable--week-view & {
       min-width: 0;
       min-height: var(--vuecal-min-cell-size, 0px);
     }

@@ -774,13 +774,14 @@ onBeforeUnmount(async () => {
   user-select: none;
   // touch-action: none; // Prevents browser default touch handling.
 
+  // Always use .vuecal__scrollable for view specific override for Vue transition to be smooth.
   .vuecal__scrollable--day-view &,
   .vuecal__scrollable--days-view &,
   .vuecal__scrollable--week-view & {min-width: var(--vuecal-min-cell-size, 0px);}
   // Min-size overrides for horizontal layout (min-height instead of min-width in vertical).
-  .vuecal--horizontal .vuecal__scrollable--day-view &,
-  .vuecal--horizontal .vuecal__scrollable--days-view &,
-  .vuecal--horizontal .vuecal__scrollable--week-view & {
+  .vuecal__scrollable--horizontal.vuecal__scrollable--day-view &,
+  .vuecal__scrollable--horizontal.vuecal__scrollable--days-view &,
+  .vuecal__scrollable--horizontal.vuecal__scrollable--week-view & {
     min-width: 0;
     min-height: var(--vuecal-min-cell-size, 0px);
   }
@@ -789,17 +790,12 @@ onBeforeUnmount(async () => {
   .vuecal__scrollable--week-view &--has-schedules {
     min-width: max(var(--vuecal-min-cell-size), calc(var(--vuecal-min-schedule-size, 0px) * var(--vuecal-schedules-count, 0)));
   }
-  .vuecal--horizontal .vuecal__scrollable--day-view &--has-schedules,
-  .vuecal--horizontal .vuecal__scrollable--days-view &--has-schedules,
-  .vuecal--horizontal .vuecal__scrollable--week-view &--has-schedules {
+  .vuecal__scrollable--horizontal.vuecal__scrollable--day-view &--has-schedules,
+  .vuecal__scrollable--horizontal.vuecal__scrollable--days-view &--has-schedules,
+  .vuecal__scrollable--horizontal.vuecal__scrollable--week-view &--has-schedules {
     min-width: 0;
     min-height: max(var(--vuecal-min-cell-size), calc(var(--vuecal-min-schedule-size, 0px) * var(--vuecal-schedules-count, 0)));
   }
-    // .vuecal__scrollable--days-view .vuecal__schedule,
-    // .vuecal__scrollable--week-view .vuecal__schedule {
-    //   min-width: 0;
-    //   min-height: var(--vuecal-min-schedule-size, 0px);
-    // }
 
   &--has-schedules {align-items: stretch;}
   &--out-of-range {opacity: 0.4;}
