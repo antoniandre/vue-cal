@@ -321,9 +321,15 @@ export const useConfig = (vuecal, props, attrs) => {
 
   const schedules = computed(() => {
     const { view } = vuecal
-    const show = props.schedules.length && (view.isDay || view.isDays || view.isWeek)
-    // Inject an id in each schedule if not present.
-    return (show && props.schedules?.map((s, i) => ({ ...s, id: s.id ?? (i + 1) }))) || undefined
+    const list = props.schedules
+    if (!list?.length || !(view.isDay || view.isDays || view.isWeek)) return undefined
+    const visible = []
+    for (let i = 0; i < list.length; i++) {
+      const s = list[i]
+      if (s.hide) continue
+      visible.push({ ...s, id: s.id ?? (i + 1) })
+    }
+    return visible.length ? visible : undefined
   })
 
   const rawSpecialHours = computed(() => {
