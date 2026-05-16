@@ -48,30 +48,20 @@ top-bar(v-if="routeReady && $route.name !== 'home'" fixed)
 footer.page-container.w-flex.align-end.gap1.grey-dark1(v-if="routeReady")
   .copyright.w-flex.lh2
     | Copyright © {{ (new Date()).getFullYear() }} Antoni André, all rights reserved.
-  .made-with.w-flex.column.justify-center.no-grow.align-end.text-right.mla
+  .made-with.w-flex.column.justify-center.no-grow.align-end.text-right.mla.mr10
     .w-flex.gap1.justify-end.align-center.xs-hide
       | This documentation is made with
-      w-tooltip(top)
-        template(#activator="{ on }")
-          w-icon.caption(v-on="on" size="1rem") mdi mdi-vuejs
-        | Vue
-      w-tooltip(top)
-        template(#activator="{ on }")
-          w-icon.caption(v-on="on" size="1rem") mdi mdi-language-html5
-        | HTML5 &amp; Pug
-      w-tooltip(top)
-        template(#activator="{ on }")
-          w-icon.caption(v-on="on" size="1rem") mdi mdi-language-css3
-        | CSS3
-      w-tooltip(top)
-        template(#activator="{ on }")
-          w-icon.caption(v-on="on" size="1rem") mdi mdi-sass
-        | SCSS
+      w-tooltip(top tooltip="Vue")
+        w-icon.caption(size="1rem") mdi mdi-vuejs
+      w-tooltip(top tooltip="HTML5 &amp; Pug")
+        w-icon.caption(size="1rem") mdi mdi-language-html5
+      w-tooltip(top tooltip="CSS3")
+        w-icon.caption(size="1rem") mdi mdi-language-css3
+      w-tooltip(top tooltip="SCSS")
+        w-icon.caption(size="1rem") mdi mdi-sass
       span &amp;
-      w-tooltip(top align-right)
-        template(#activator="{ on }")
-          w-icon.caption(v-on="on" size="1rem").heart mdi mdi-heart
-        | Love
+      w-tooltip(top align-right tooltip="Love")
+        w-icon.caption(size="1rem").heart mdi mdi-heart
     .w-flex.align-center.justify-end
       | View project on
       a.w-flex.align-center.gap1.ml1(href="https://github.com/antoniandre/vue-cal" target="_blank")

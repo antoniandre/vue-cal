@@ -45,20 +45,16 @@ example(title="Hide Elements & Toggles" anchor="hide-elements")
       w-switch(v-model="exHideElements.hideWeekends") Hide Weekends
       w-switch(v-model="exHideElements.time") Time
       w-tooltip
-        template(#activator="{ on }")
-          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
-            w-switch(v-model="exHideElements.currentTimeLabel") Current Time Label
-        div Show the current time in the time column on #[strong day], #[strong days], and #[strong week] views when the time column is visible.<br>Use #[router-link(to="/api#props--watch-real-time") watch-real-time] to keep the label in sync with the clock while the page is idle.
-      w-tooltip
-        template(#activator="{ on }")
-          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
-            w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
-        | Show the time at the cursor on hover on day, days and month views.
-      w-tooltip(align-left)
-        template(#activator="{ on }")
-          .d-iflex(@mouseenter="on.mouseenter" @mouseleave="on.mouseleave")
-            w-switch.mr3(v-model="exHideElements.weekNumbers") Show Week Numbers
-        | Visible on month view
+        .d-iflex
+          w-switch(v-model="exHideElements.currentTimeLabel") Current Time Label
+        template(#tooltip)
+          div Show the current time in the time column on #[strong day], #[strong days], and #[strong week] views when the time column is visible.<br>Use #[router-link(to="/api#props--watch-real-time") watch-real-time] to keep the label in sync with the clock while the page is idle.
+      w-tooltip(tooltip="Show the time at the cursor on hover on day, days and month views.")
+        .d-iflex
+          w-switch(v-model="exHideElements.timeAtCursor") Time At Cursor
+      w-tooltip(align-left tooltip="Visible on month view")
+        .d-iflex
+          w-switch.mr3(v-model="exHideElements.weekNumbers") Show Week Numbers
 
   template(#code-html).
     &lt;vue-cal{{ exHideElements.todayButton ? '' : '\n  :today-button="false"' }}{{ exHideElements.viewsBar ? '' : '\n  :views-bar="false"' }}{{ exHideElements.titleBar ? '' : '\n  :title-bar="false"' }}{{ exHideElements.time ? '' : '\n  :time="false"' }}{{ exHideElements.currentTimeLabel ? '\n  current-time-label' : '' }}{{ exHideElements.timeAtCursor ? '\n  time-at-cursor' : '' }}{{ exHideElements.hideWeekends ? '\n  hide-weekends' : '' }}{{ exHideElements.startOnSunday ? '\n  start-week-on-sunday' : '' }}{{ exHideElements.weekNumbers ? '\n  week-numbers' : '' }} /&gt;

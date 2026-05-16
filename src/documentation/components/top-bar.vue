@@ -35,28 +35,27 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       menu-class="mt0 top-menu top-menu--doc"
       append-to=".top-bar__items"
       custom)
-      template(#activator="{ on }")
-        w-button.bd0(
-          v-on="on"
-          text
-          tile
-          color="secondary"
-          height="100%")
-          w-icon.mr2(lg) mdi mdi-school
-          span DOC
+      w-button.bd0(
+        text
+        tile
+        color="secondary"
+        height="100%")
+        w-icon.mr2(lg) mdi mdi-school
+        span DOC
 
-      w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
-        nav
-        :items="docs"
-        item-class="pa0")
-        template(#item="{ item }")
-          w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
-          router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
-            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
-            span(v-html="item.label")
-          .py2(v-else)
-            w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
-            span(v-html="item.label")
+      template(#content)
+        w-list.mt0.pa0.sh2.base-color--bg.bdrs1(
+          nav
+          :items="docs"
+          item-class="pa0")
+          template(#item="{ item }")
+            w-divider.grow.pa0(v-if="(item.class || '').startsWith('divider')" color="grey-light1")
+            router-link.w-flex.grow.align-center.px5.py2(v-else-if="item.route" :to="item.route")
+              w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
+              span(v-html="item.label")
+            .py2(v-else)
+              w-icon.mr2(v-if="item.icon" lg) {{ item.icon }}
+              span(v-html="item.label")
 
     w-menu(
       show-on-hover
@@ -66,18 +65,17 @@ w-toolbar.top-bar.pa0(:class="{ fixed }")
       menu-class="mt0 top-menu top-menu--examples"
       append-to=".top-bar__items"
       custom)
-      template(#activator="{ on }")
-        w-button.bd0.mr10(
-          v-on="on"
-          text
-          tile
-          color="secondary"
-          route="/examples"
-          height="100%")
-          w-icon.mr2(lg) mdi mdi-apps
-          span EXAMPLES
-      examples-menu.mt0.pa0.sh2.base-color--bg.bdrs1(
-        style="max-height: 90vh;overflow: auto;white-space: nowrap")
+      w-button.bd0.mr10(
+        text
+        tile
+        color="secondary"
+        route="/examples"
+        height="100%")
+        w-icon.mr2(lg) mdi mdi-apps
+        span EXAMPLES
+      template(#content)
+        examples-menu.mt0.pa0.sh2.base-color--bg.bdrs1(
+          style="max-height: 90vh;overflow: auto;white-space: nowrap")
 </template>
 
 <script setup>

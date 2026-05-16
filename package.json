@@ -73,7 +73,7 @@
     "vite-plugin-static-copy": "^2.3.2",
     "vue": "^3.5.33",
     "vue-router": "^4.6.4",
-    "wave-ui": "^3.28.0"
+    "wave-ui": "^4.0.2"
   },
   "peerDependencies": {
     "vue": "^3.5.11"

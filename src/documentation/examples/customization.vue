@@ -107,13 +107,10 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
           |
           |   &lt;template #today-button&gt;
           |     &lt;!-- Using Wave UI --&gt;
-          |     &lt;w-tooltip&gt;
-          |       &lt;template #activator="{ on }"&gt;
-          |         &lt;w-btn v-on="on" icon="mdi mdi-calendar-today"&gt;
-          |         &lt;/w-btn&gt;
-          |         &lt;span&gt;Go to Today's date&lt;/span&gt;
-          |       &lt;/template&gt;
-          |     &lt;/w-tooltip&gt;
+          |     &lt;w-button
+          |       icon="mdi mdi-calendar-today"
+          |       tooltip="Go to Today's date"
+          |     /&gt;
           |   &lt;/template&gt;
         template(v-else)
 
@@ -151,17 +148,15 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
     :dark="store.darkMode"
     style="height: 331px")
     template(#today-button="{ navigate, active }" v-if="exSlots.todayButton")
-      w-tooltip(left)
-        template(#activator="{ on }")
-          w-button(
-            v-on="{ ...on, click: navigate }"
-            @click="navigate"
-            :disabled="active"
-            color="orange-light2"
-            text
-            icon="mdi mdi-calendar-today"
-            :icon-props="{ size: '1.2rem' }")
-        span Go to Today's date
+      w-button(
+        @click="navigate"
+        :disabled="active"
+        color="orange-light2"
+        text
+        icon="mdi mdi-calendar-today"
+        :icon-props="{ size: '1.2rem' }"
+        tooltip="Go to Today's date"
+        :tooltip-props="{ left: true }")
     template(#header="{ view, availableViews }" v-if="exSlots.header")
       .w-flex.gap2.pa1.align-center(:class="store.darkMode ? 'orange-dark3--bg' : 'orange-light5--bg'")
         w-button(color="base-color" icon="wi-chevron-left" @click="view.previous")
