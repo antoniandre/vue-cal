@@ -6,6 +6,7 @@ ul.history.ml2
     strong.version 5.0.1-rc.43
     ul
       li Corrected the Hungarian locale. #[issue-link 124]
+      li Updated the #[code cell-content], #[code cell-date], and #[code cell-events] slots to receive the schedule and events as parameters. #[issue-link 121]
       li Fixed a small CSS regression in the horizontal layout.
 
   li.patch
