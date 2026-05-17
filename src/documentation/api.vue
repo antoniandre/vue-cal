@@ -1834,12 +1834,16 @@ w-accordion(
       strong.code.title5 cell-date
     template(#content)
       p Customizes the date display in a calendar cell. This slot is ignored if the cell slot is used.
+      p When #[code schedules] are enabled in day, days, or week view, this slot is rendered once per schedule column inside each cell.
       p Available parameters:
       ul
-        li #[code.base-color cell] - The cell object with all its properties
+        li #[code.base-color cell] - The cell object (#[code start], #[code end], #[code events], navigation helpers on #[code goNarrower] / #[code goBroader], etc.)
+        li #[code.base-color view] - The active view object
+        li #[code.base-color schedule] - The schedule object for the current column (#[code id], #[code label], #[code color], etc.) — only when schedules are used
+        li #[code.base-color events] - Events in the current schedule column — only when schedules are used (#[code cell.events] still lists all cell events)
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;template #cell-date="{ cell }"&gt;
-          &lt;div class="custom-date-display"&gt;{{ '\{\{ cell.formattedDate \}\}' }}&lt;/div&gt;
+        &lt;template #cell-date="{ cell, view, schedule, events }"&gt;
+          &lt;div class="custom-date-display"&gt;{{ '\{\{ cell.start \}\}' }}&lt;/div&gt;
         &lt;/template&gt;
 
   w-accordion-item
@@ -1847,13 +1851,18 @@ w-accordion(
       strong.code.title5 cell-content
     template(#content)
       p Customizes additional content in a calendar cell. This slot is ignored if the cell slot is used.
+      p When #[code schedules] are enabled in day, days, or week view, this slot is rendered once per schedule column inside each cell.
       p Available parameters:
       ul
-        li #[code.base-color cell] - The cell object with all its properties
+        li #[code.base-color cell] - The cell object (#[code start], #[code end], #[code events], navigation helpers on #[code goNarrower] / #[code goBroader], etc.)
+        li #[code.base-color view] - The active view object
+        li #[code.base-color schedule] - The schedule object for the current column (#[code id], #[code label], #[code color], etc.) — only when schedules are used
+        li #[code.base-color events] - Events in the current schedule column — only when schedules are used (#[code cell.events] still lists all cell events)
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;template #cell-content="{ cell }"&gt;
+        &lt;template #cell-content="{ cell, view, schedule, events }"&gt;
           &lt;div class="custom-content"&gt;
-            &lt;i class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
+            &lt;span v-if="schedule"&gt;{{ '\{\{ schedule.label \}\}' }}: {{ '\{\{ events.length \}\}' }}&lt;/span&gt;
+            &lt;i v-else class="icon mdi mdi-party-popper"&gt;&lt;/i&gt;
           &lt;/div&gt;
         &lt;/template&gt;
 
@@ -1862,12 +1871,16 @@ w-accordion(
       strong.code.title5 cell-events
     template(#content)
       p Customizes how events are displayed within a cell. This slot is ignored if the cell slot is used.
+      p When #[code schedules] are enabled in day, days, or week view, this slot is rendered once per schedule column inside each cell.
       p Available parameters:
       ul
-        li #[code.base-color cell] - The cell object containing the events array
+        li #[code.base-color cell] - The cell object (#[code start], #[code end], #[code events], etc.)
+        li #[code.base-color view] - The active view object
+        li #[code.base-color schedule] - The schedule object for the current column — only when schedules are used
+        li #[code.base-color events] - Events in the current schedule column — only when schedules are used (use this instead of #[code cell.events] to render per-column events)
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;template #cell-events="{ cell }"&gt;
-          &lt;div v-for="event in cell.events" class="custom-event"&gt;
+        &lt;template #cell-events="{ cell, view, schedule, events }"&gt;
+          &lt;div v-for="event in (schedule ? events : cell.events)" :key="event._.id" class="custom-event"&gt;
             {{ '\{\{ event.title \}\}' }} ({{ '\{\{ event.start.formatTime() \}\}' }})
           &lt;/div&gt;
         &lt;/template&gt;
