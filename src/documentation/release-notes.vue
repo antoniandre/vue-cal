@@ -3,6 +3,12 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.43
+    ul
+      li Corrected the Hungarian locale. #[issue-link 124]
+      li Fixed a small CSS regression in the horizontal layout.
+
+  li.patch
     strong.version 5.0.1-rc.42
     ul
       li Added #[code business-hours] as an alias for #[code special-hours] when #[code special-hours] is empty.
