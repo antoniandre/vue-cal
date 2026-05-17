@@ -27,14 +27,27 @@
           :style="range.style"
           :class="range.class"
           v-html="range.label || ''")
-      template(v-if="$slots['cell-events']")
-        slot(name="cell-events" :cell="cellInfo")
       .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
-        slot(name="cell-date" :cell="cellInfo") {{ formattedCellDate }}
+        slot(
+          name="cell-date"
+          :cell="cellInfo"
+          :view="view"
+          :schedule="schedule"
+          :events="scheduleEvents(schedule)") {{ formattedCellDate }}
       .vuecal__cell-content(v-if="$slots['cell-content']")
-        slot(name="cell-content" :cell="cellInfo")
-      .vuecal__cell-events(v-if="$slots['cell-events'] && cellEvents.length")
-        slot(name="cell-events" :cell="cellInfo")
+        slot(
+          name="cell-content"
+          :cell="cellInfo"
+          :view="view"
+          :schedule="schedule"
+          :events="scheduleEvents(schedule)")
+      .vuecal__cell-events(v-if="$slots['cell-events']")
+        slot(
+          name="cell-events"
+          :cell="cellInfo"
+          :view="view"
+          :schedule="schedule"
+          :events="scheduleEvents(schedule)")
       //- Animate event deletions.
       transition-group.vuecal__cell-events(
         v-else-if="cellEvents.length || transitioning"
@@ -63,14 +76,12 @@
         | {{ eventPlaceholder.start }} - {{ eventPlaceholder.end }}
 
   template(v-if="!$slots.cell && !config.schedules")
-    template(v-if="$slots['cell-events']")
-      slot(name="cell-events" :cell="cellInfo")
     .vuecal__cell-date(v-if="formattedCellDate || $slots['cell-date']")
-      slot(name="cell-date" :cell="cellInfo") {{ formattedCellDate }}
+      slot(name="cell-date" :cell="cellInfo" :view="view") {{ formattedCellDate }}
     .vuecal__cell-content(v-if="$slots['cell-content']")
-      slot(name="cell-content" :cell="cellInfo")
+      slot(name="cell-content" :cell="cellInfo" :view="view")
     .vuecal__cell-events(v-if="$slots['cell-events'] && cellEvents.length")
-      slot(name="cell-events" :cell="cellInfo")
+      slot(name="cell-events" :cell="cellInfo" :view="view")
     //- Animate event deletions.
     transition-group.vuecal__cell-events(
       v-else-if="!(view.isMonth && !config.eventsOnMonthView) && !view.isYear && !view.isYears && (cellEvents.length || transitioning)"
@@ -524,6 +535,10 @@ const cellInfo = computed(() => ({
   broader: view.broaderView,
   narrower: view.narrowerView
 }))
+
+const scheduleEvents = schedule => {
+  return cellEventsPerSchedule.value[schedule.id] || []
+}
 
 /**
  * Get the time at the cursor position.
