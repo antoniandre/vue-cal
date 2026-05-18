@@ -1749,9 +1749,11 @@ w-accordion(
         li #[code.base-color label] - The day label (varies based on calendar size - full, abbreviated, or single letter)
         li #[code.base-color id] - The day identifier (mon, tue, wed, etc.)
         li #[code.base-color date] - The date of this particular day
+        li #[code.base-color view] - The active view object
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;template #weekday-heading="{ label, id, date }"&gt;
+        &lt;template #weekday-heading="{ label, id, date, view }"&gt;
           &lt;strong :class="id"&gt;{{ '\{\{ label \}\}' }}&lt;/strong&gt;
+          &lt;span v-if="view.isWeek"&gt;{{ '\{\{ date.getDate() \}\}' }}&lt;/span&gt;
         &lt;/template&gt;
 
   w-accordion-item
@@ -1759,16 +1761,18 @@ w-accordion(
       a#slots--schedule-heading
       strong.code.title5 schedule-heading
     template(#content)
-      p Customizes the schedule headings when schedules are enabled.
+      p Customizes the schedule headings when schedules are enabled. In days and week view, the slot is rendered once per day column and per schedule.
       p See #[router-link(to="/examples/customization#ex--custom-schedules-headings") Custom Day Schedules Headings] example.
       p Available parameters:
       ul
         li #[code.base-color schedule] - The schedule object containing #[span.code id] (number or string), #[span.code label], and #[span.code class]
         li #[code.base-color view] - The current view object
+        li #[code.base-color cell] - The day column this heading belongs to (#[code start], #[code end], #[code isToday], navigation helpers on #[code goNarrower] / #[code goBroader])
       ssh-pre(language="html-vue" :dark="store.darkMode").
-        &lt;template #schedule-heading="{ schedule, view }"&gt;
+        &lt;template #schedule-heading="{ schedule, view, cell }"&gt;
           &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
           &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
+          &lt;span v-if="view.isWeek"&gt;{{ '\{\{ cell.start.format('ddd D') \}\}' }}&lt;/span&gt;
         &lt;/template&gt;
 
   w-accordion-item

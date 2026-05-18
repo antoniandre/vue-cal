@@ -117,7 +117,7 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
         template(v-if="exSlots.weekdayHeading")
           |
           |
-          |   &lt;template #weekday-heading="{ label, id }"&gt;
+          |   &lt;template #weekday-heading="{ label, id, view }"&gt;
           |     &lt;strong&gt;{{ '\{\{ label \}\}' }}&lt;/strong&gt;
           |   &lt;/template&gt;
         template(v-else)
@@ -171,7 +171,7 @@ example(ref="exSlotsExampleEl" title="Simple Slots" anchor="slots")
             sm) {{ viewId }}
     template(#title="{ title }" v-if="exSlots.title")
       code.orange-light2(v-html="title")
-    template(#weekday-heading="{ label, id }" v-if="exSlots.weekdayHeading")
+    template(#weekday-heading="{ label, id, view }" v-if="exSlots.weekdayHeading")
       strong.orange-light2(v-html="label" :class="id")
     template(#previous-button v-if="exSlots.prevNextButtons")
       w-icon.orange-light2(md) mdi mdi-arrow-left
@@ -410,9 +410,10 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       view="day"
       :schedules="schedules"
       :hide-weekdays="['fri', 'sat', 'sun']"&gt;
-      &lt;template #schedule-heading="{ schedule, view }"&gt;
+      &lt;template #schedule-heading="{ schedule, view, cell }"&gt;
         &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
         &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
+        &lt;span v-if="view.isWeek"&gt;{{ '\{\{ cell.start.format('ddd D') \}\}' }}&lt;/span&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -435,9 +436,10 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
     view="day"
     :schedules="customDayScheduleHeadings"
     :hide-weekdays="['fri', 'sat', 'sun']")
-    template(#schedule-heading="{ schedule, view }")
+    template(#schedule-heading="{ schedule, view, cell }")
       w-icon(:color="schedule.color" size="18") mdi mdi-account
       strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
+      span.ml1.grey(v-if="view.isWeek") {{ cell.start.format('ddd D') }}
 
 //- Example.
 example(title="Events on Month View" anchor="events-on-month-view")

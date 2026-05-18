@@ -3,10 +3,16 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.44
+    ul
+      li Updated the #[code cell-content], #[code cell-date], and #[code cell-events] slots to receive #[code view], #[code schedule], and #[code events] when schedules are used. #[issue-link 121]
+      li #[code schedule-heading] now also receives #[code cell] (day column #[code start] / #[code end]) in days and week view. #[issue-link 121]
+      li #[code weekday-heading] now also receives #[code view].
+
+  li.patch
     strong.version 5.0.1-rc.43
     ul
       li Corrected the Hungarian locale. #[issue-link 124]
-      li Updated the #[code cell-content], #[code cell-date], and #[code cell-events] slots to receive the schedule and events as parameters. #[issue-link 121]
       li Fixed a small CSS regression in the horizontal layout.
 
   li.patch
@@ -17,6 +23,7 @@ ul.history.ml2
       li Added per-schedule #[code specialHours] overrides through #[code specialHours[day].schedules], with #[code default] fallback support for schedules without an override.
       li Schedules: #[code hide] on a schedule entry now omits that column in day, days, and week views (headings, cells, special-hour bands, and events for that schedule).
       li Improve the visual transition between month view and day, days, and week views with horizontal layout.
+
   li.patch
     strong.version 5.0.1-rc.41
     ul
@@ -24,10 +31,12 @@ ul.history.ml2
       li Schedules: support non-numeric schedule ids and #[code schedule: 0] in overlap checks, cell interaction, and drag-and-drop (no #[code ~~] coercion on ids). #[issue-link 72] #[issue-link 75]
       li Clear event stacking styles if #[code time] is false.
       li Week view: fix forward navigation when #[code hideWeekends] and #[code startWeekOnSunday] are both enabled (next arrow could appear stuck). #[issue-link 67]
+
   li.patch
     strong.version 5.0.1-rc.40
     ul
       li Fixed #[code --vuecal-min-schedule-size] and #[code --vuecal-min-cell-size] being ignored in day view when using schedules. #[issue-link 93]
+
   li.patch
     strong.version 5.0.1-rc.39
     ul
@@ -35,20 +44,24 @@ ul.history.ml2
       li.
         Added #[code view] object to cell and event creation payloads (#[code cell-click], #[code cell-dblclick], #[code cell-hold], #[code cell-contextmenu], #[code event-create], etc.)
         providing access to #[code view.createEvent()], #[code view.deleteEvent()], and other view methods without needing a template ref. #[issue-link 73]
+
   li.patch
     strong.version 5.0.1-rc.38
     ul
       li.
         Only warn when the user explicitly sets an invalid view.
         Silently use the first available view when no view is specified and the default isn't available. #[issue-link 86]
+
   li.patch
     strong.version 5.0.1-rc.37
     ul
       li Fixed the event resizing which did not work in production. #[issue-link 96]
+
   li.patch
     strong.version 5.0.1-rc.36
     ul
       li Fix setting a new view date that is within the current view. #[issue-link 65]
+
   li.patch
     strong.version 5.0.1-rc.35
     ul
