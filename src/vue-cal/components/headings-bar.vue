@@ -10,7 +10,8 @@
         name="weekday-heading"
         :label="day[dayLabelSize]"
         :id="day.id"
-        :date="day.date")
+        :date="day.date"
+        :view="view")
         span.vuecal__weekday-day {{ day[dayLabelSize] }}
         strong.vuecal__weekday-date(v-if="!view.isMonth") {{ day.dateNumber }}
   .vuecal__schedules-headings(v-if="config.schedules")
@@ -19,7 +20,11 @@
         .vuecal__schedule.vuecal__schedule--heading(
           v-if="$slots['schedule-heading']"
           :class="schedule.class")
-          slot(name="schedule-heading" :schedule="schedule" :view="view")
+          slot(
+            name="schedule-heading"
+            :schedule="schedule"
+            :view="view"
+            :cell="headingCell(day)")
         .vuecal__schedule.vuecal__schedule--heading(
           v-else
           :class="schedule.class"
@@ -76,6 +81,16 @@ const weekDays = computed(() => {
     'day-xs': dateUtils.formatDate(start, 'dd'),
     isToday: dateUtils.isToday(start)
   }))
+})
+
+const headingCell = day => ({
+  start: day.date,
+  end: new Date(day.date.getTime() + 24 * 60 * 60 * 1000 - 1),
+  isToday: day.isToday,
+  goNarrower: () => view.narrower(),
+  goBroader: () => view.broader(),
+  broader: view.broaderView,
+  narrower: view.narrowerView
 })
 
 const domEvents = {
