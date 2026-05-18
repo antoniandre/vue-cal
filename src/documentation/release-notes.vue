@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.45
+    ul
+      li Added a media query for smaller screens to adjust the padding of the view button, nav, title, and today button. #[issue-link 113]
+
+  li.patch
     strong.version 5.0.1-rc.44
     ul
       li Updated the #[code cell-content], #[code cell-date], and #[code cell-events] slots to receive #[code view], #[code schedule], and #[code events] when schedules are used. #[issue-link 121]
