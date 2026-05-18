@@ -32,10 +32,9 @@
         :events="demoExample.events"
         :dark="store.darkMode"
         style="height: 450px")
-        template(#schedule-heading="{ schedule, view, cell }")
+        template(#schedule-heading="{ schedule, view }")
           w-icon.mr1(:color="schedule.color" size="15") mdi mdi-account
           strong(:style="`color: ${schedule.color}`") {{ schedule.label }}
-          span.ml1.grey(v-if="view.isWeek") {{ cell.start.format('ddd D') }}
       .w-flex.justify-end.wrap.mt2
         a.w-flex.justify-end.grey-light1(
           href="https://github.com/antoniandre/vue-cal/blob/master/src/documentation/hero.vue"
