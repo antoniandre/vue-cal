@@ -676,3 +676,15 @@
     .vuecal--dark .vuecal__scrollable--years-view .vuecal__cell--selected:before {background-color: color-mix(in srgb, var(--vuecal-primary-color) 28%, transparent);}
   }
 }
+
+// Media queries.
+// --------------------------------------------------------
+@media (max-width: 500px) {
+  .vuecal--default-theme .vuecal__view-button,
+  .vuecal--default-theme .vuecal__nav,
+  .vuecal--default-theme button.vuecal__title,
+  .vuecal--default-theme .vuecal__nav--today {
+    padding-left: 6px;
+    padding-right: 6px;
+  }
+}
