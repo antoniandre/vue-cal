@@ -413,7 +413,6 @@ example(title="Custom Day Schedules Headings" anchor="custom-schedules-headings"
       &lt;template #schedule-heading="{ schedule, view, cell }"&gt;
         &lt;i class="icon mdi mdi-account"&gt;&lt;/i&gt;
         &lt;strong :style="`color: ${schedule.color}`"&gt;{{ '\{\{ schedule.label \}\}' }}&lt;/strong&gt;
-        &lt;span v-if="view.isWeek"&gt;{{ '\{\{ cell.start.format('ddd D') \}\}' }}&lt;/span&gt;
       &lt;/template&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
