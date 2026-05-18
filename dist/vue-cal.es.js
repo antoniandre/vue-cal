@@ -1,6 +1,6 @@
 import { computed as C, reactive as $e, watch as pe, toRefs as Ct, ref as de, onBeforeUnmount as We, nextTick as qe, inject as Le, openBlock as F, createElementBlock as G, renderSlot as N, unref as k, Fragment as fe, renderList as be, normalizeClass as De, createCommentVNode as te, createElementVNode as he, createVNode as Pe, Transition as Ue, withCtx as Q, createBlock as He, resolveDynamicComponent as st, mergeProps as ue, toHandlers as Je, normalizeProps as oe, onMounted as tt, toDisplayString as ve, createTextVNode as Ze, withModifiers as lt, normalizeStyle as we, TransitionGroup as rt, createSlots as Ae, useTemplateRef as Ot, useId as Ht, useAttrs as Vt, provide as ot, guardReactiveProps as ie } from "vue";
 /**
-  * vue-cal v5.0.1-rc.44
+  * vue-cal v5.0.1-rc.45
   * (c) 2024-2026 Antoni Andre <antoniandre.web@gmail.com>
   * @license MIT
   */
