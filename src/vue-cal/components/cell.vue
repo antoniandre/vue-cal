@@ -210,7 +210,8 @@ const eventPlaceholder = computed(() => {
       cellDate: props.start,
       schedule: touch.schedule,
       disallowed: config.specialHoursDisallowed,
-      hasSchedules: !!(config.schedules && config.schedules.length)
+      hasSchedules: !!(config.schedules && config.schedules.length),
+      dateUtils
     })
     startMinutes = clamped.low
     endMinutes = clamped.high
@@ -240,11 +241,14 @@ const isCreatingEvent = computed(() => {
 
 const classes = computed(() => {
   const now = new Date()
-  const viewYear = view.start.getFullYear()
-  const viewMonth = view.start.getMonth()
-  const y = props.start.getFullYear()
-  const m = props.start.getMonth()
-  const weekday = weekdays[props.start.getDay()]
+  const viewStartParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(view.start) : null
+  const cellStartParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(props.start) : null
+
+  const viewYear = viewStartParts ? viewStartParts.year : view.start.getFullYear()
+  const viewMonth = viewStartParts ? viewStartParts.month - 1 : view.start.getMonth()
+  const y = cellStartParts ? cellStartParts.year : props.start.getFullYear()
+  const m = cellStartParts ? cellStartParts.month - 1 : props.start.getMonth()
+  const weekday = weekdays[dateUtils.getZonedWeekdaySunFirst(props.start)]
 
   return {
     [`vuecal__cell--${weekday}`]: view.isDay || view.isDays || view.isWeek || view.isMonth,
@@ -398,7 +402,7 @@ const getPositionedSpecialHours = ranges => {
 
 const specialHours = computed(() => {
   if (!config.specialHours || view.isMonth || view.isYear || view.isYears || props.allDay) return
-  const weekday = weekdays[props.start.getDay()]
+  const weekday = weekdays[dateUtils.getZonedWeekdaySunFirst(props.start)]
 
   // The special hours ranges for the current cell day.
   let daySpecialHours = config.specialHours?.[weekday]
@@ -555,8 +559,8 @@ const getTimeAtCursor = e => {
     ? (clientX - left) * 100 / cellEl.value.clientWidth
     : pxToPercentage(clientY - top, cellEl.value)
 
-  const date = new Date(props.start)
-  date.setMinutes(percentageToMinutes(cursorPercent, config))
+  const minutes = percentageToMinutes(cursorPercent, config)
+  const date = dateUtils.instantFromZonedMinutes(props.start, minutes)
 
   return { [isHzl ? 'x' : 'y']: cursorPercent, date }
 }
@@ -568,8 +572,7 @@ const cursorInfo = computed(() => {
     ? (touch.movePercentageX || touch.startPercentageX)
     : (touch.movePercentageY || touch.startPercentageY)
   const minutes = percentageToMinutes(percentageVal, config)
-  const date = new Date(props.start)
-  date.setMinutes(minutes)
+  const date = dateUtils.instantFromZonedMinutes(props.start, minutes)
 
   return {
     x: touch.movePercentageX || touch.startPercentageX,
@@ -724,10 +727,8 @@ const createEventIfAllowed = async e => {
   if (!isCreatingEvent.value) return
 
   let { start, end, startMinutes, endMinutes } = eventPlaceholder.value
-  start = new Date(props.start)
-  start.setMinutes(startMinutes)
-  end = new Date(props.start)
-  end.setMinutes(endMinutes)
+  start = dateUtils.instantFromZonedMinutes(props.start, startMinutes)
+  end = dateUtils.instantFromZonedMinutes(props.start, endMinutes)
 
   let eventToCreate = { ...eventPlaceholder.value, start, end }
 

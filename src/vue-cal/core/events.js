@@ -63,12 +63,11 @@ export const useEvents = vuecal => {
         events.recurring.push(event._.id)
         // @todo: Possibly do other things here.
       }
-      // Remove 1ms in case the event ends at next midnight 00:00:00.
-      else if (!dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1))) {
+      else if (dateUtils.spansMultipleDays(event.start, event.end)) {
         event._.multiday = config.multidayEvents
         if (!config.multidayEvents) {
           console.info('Vue Cal: Multi-day events provided without being enabled. Truncating event end to next midnight.')
-          event.end = new Date(new Date(event.start).setHours(23, 59, 59, 999))
+          event.end = dateUtils.endOfZonedDay(event.start)
           injectMetaData(event) // Re-inject the event metadata for the new end date.
         }
         else events.multiday.push(event._.id)
@@ -96,6 +95,20 @@ export const useEvents = vuecal => {
     return events
   })
 
+  const normalizeInstantSeconds = (date, roundEnd59 = false) => {
+    if (dateUtils.hasTimeZone()) {
+      const p = dateUtils.getZonedParts(date)
+      if (roundEnd59 && p.second === 59) {
+        return dateUtils.zonedDateToInstant({ year: p.year, month: p.month, day: p.day, hour: p.hour, minute: p.minute + 1, second: 0 })
+      }
+      return dateUtils.zonedDateToInstant({ year: p.year, month: p.month, day: p.day, hour: p.hour, minute: p.minute, second: 0 })
+    }
+    const d = new Date(date.valueOf())
+    if (roundEnd59 && d.getSeconds() === 59) d.setMinutes(d.getMinutes() + 1, 0, 0)
+    else d.setSeconds(0, 0)
+    return d
+  }
+
   // Normalize event dates to ensure they are valid Date objects and add formatted dates.
   const normalizeEventDates = event => {
     // Skip processing if event is invalid (will be fixed by normalizeEventDates).
@@ -109,11 +122,8 @@ export const useEvents = vuecal => {
     if (typeof event.end === 'string') event.end = dateUtils.stringToDate(event.end)
 
     // Ensure seconds are normalized for consistent comparison.
-    event.start.setSeconds(0, 0)
-
-    // Set the event end to the next minute if the seconds count is 59.
-    if (event.end.getSeconds() === 59) event.end.setMinutes(event.end.getMinutes() + 1, 0, 0)
-    else event.end.setSeconds(0, 0) // For more accurate range and overlap comparison.
+    event.start = normalizeInstantSeconds(event.start)
+    event.end = normalizeInstantSeconds(event.end, true)
 
     if (isNaN(event.start) || isNaN(event.end) || (event.end.getTime() < event.start.getTime())) {
       if (isNaN(event.start)) console.error(`Vue Cal: invalid start date for event "${event.title}".`, event.start)
@@ -131,15 +141,18 @@ export const useEvents = vuecal => {
 
     // Always update these core properties as they depend on dates.
     event._.id = event._.id || ++uid
-    event._.multiday = !dateUtils.isSameDate(event.start, new Date(event.end.getTime() - 1)) // Remove 1ms if end is equal to next midnight.
-    event._.startFormatted = dateUtils.formatDate(event.start) // yyyy-mm-dd formatted date string.
-    event._.endFormatted = dateUtils.formatDate(event.end) // yyyy-mm-dd formatted date string.
-    event._.startMinutes = ~~dateUtils.dateToMinutes(event.start) // Integer (minutes).
-    event._.endMinutes = ~~dateUtils.dateToMinutes(event.end) // Integer (minutes).
-    const startHours = event.start.getHours()
-    const startMinutes = event.start.getMinutes().toString().padStart(2, 0)
-    const endHours = event.end.getHours()
-    const endMinutes = event.end.getMinutes().toString().padStart(2, 0)
+    event._.multiday = dateUtils.spansMultipleDays(event.start, event.end)
+    event._.startFormatted = dateUtils.formatDateLite(event.start) // yyyy-mm-dd formatted date string.
+    event._.endFormatted = dateUtils.formatDateLite(event.end) // yyyy-mm-dd formatted date string.
+    const timed = !event.allDay
+    event._.startMinutes = timed ? ~~dateUtils.dateToMinutes(event.start) : 0
+    event._.endMinutes = timed ? ~~dateUtils.dateToMinutes(event.end) : 24 * 60
+    const startP = timed && dateUtils.hasTimeZone() ? dateUtils.getZonedParts(event.start) : null
+    const endP = timed && dateUtils.hasTimeZone() ? dateUtils.getZonedParts(event.end) : null
+    const startHours = startP ? startP.hour : event.start.getHours()
+    const startMinutes = (startP ? startP.minute : event.start.getMinutes()).toString().padStart(2, 0)
+    const endHours = endP ? endP.hour : event.end.getHours()
+    const endMinutes = (endP ? endP.minute : event.end.getMinutes()).toString().padStart(2, 0)
     event._.startTimeFormatted24 = `${startHours.toString().padStart(2, 0)}:${startMinutes}`
     event._.startTimeFormatted12 = `${(startHours % 12) || 12}${startMinutes ? `:${startMinutes}` : ''} ${startHours < 12 ? 'AM' : 'PM'}`
     event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
@@ -246,7 +259,8 @@ export const useEvents = vuecal => {
         end,
         schedule: newEvent.schedule,
         disallowed: config.specialHoursDisallowed,
-        hasSchedules: !!(config.schedules && config.schedules.length)
+        hasSchedules: !!(config.schedules && config.schedules.length),
+        dateUtils
       })) {
       console.warn('Vue Cal: Cannot create an event overlapping a time range where allowEvents is false.')
       return
@@ -415,14 +429,16 @@ export const useEvents = vuecal => {
     // Fast path: if there are no events, return empty array immediately.
     if (!totalEvents) return []
 
-    const startYear = start.getFullYear()
-    const endYear = end.getFullYear()
-    const startMonth = start.getMonth() + 1
-    const endMonth = end.getMonth() + 1
-    const startDay = start.getDate()
-    const endDay = end.getDate()
-    const rangeStartTimestamp = new Date(start).setHours(0, 0, 0, 0) // Don't modify the original date!
-    const rangeEndTimestamp = new Date(end).setHours(23, 59, 59, 999) // Don't modify the original date!
+    const startParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(start) : null
+    const endParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(end) : null
+    const startYear = startParts ? startParts.year : start.getFullYear()
+    const endYear = endParts ? endParts.year : end.getFullYear()
+    const startMonth = startParts ? startParts.month : start.getMonth() + 1
+    const endMonth = endParts ? endParts.month : end.getMonth() + 1
+    const startDay = startParts ? startParts.day : start.getDate()
+    const endDay = endParts ? endParts.day : end.getDate()
+    const rangeStartTimestamp = dateUtils.startOfZonedDay(start).getTime()
+    const rangeEndTimestamp = dateUtils.endOfZonedDay(end).getTime()
 
     const excludeSet = new Set(excludeIds)
     const eventsArray = []
@@ -495,10 +511,10 @@ export const useEvents = vuecal => {
     // and discard the time from the date if any,
     const allDayOrTimeless = event.allDay || !config.time
 
-    const startTimestamp = allDayOrTimeless ? new Date(event.start).setHours(0, 0, 0, 0) : event.start.getTime()
-    const endTimestamp = allDayOrTimeless ? new Date(event.end).setHours(23, 59, 59, 999) : event.end.getTime()
-    const rangeStart = allDayOrTimeless ? new Date(start).setHours(0, 0, 0, 0) : start.getTime()
-    const rangeEnd = allDayOrTimeless ? new Date(end).setHours(23, 59, 59, 999) : end.getTime()
+    const startTimestamp = allDayOrTimeless ? dateUtils.startOfZonedDay(event.start).getTime() : event.start.getTime()
+    const endTimestamp = allDayOrTimeless ? dateUtils.endOfZonedDay(event.end).getTime() : event.end.getTime()
+    const rangeStart = allDayOrTimeless ? dateUtils.startOfZonedDay(start).getTime() : start.getTime()
+    const rangeEnd = allDayOrTimeless ? dateUtils.endOfZonedDay(end).getTime() : end.getTime()
     // Check the event is within the range, considering at least one second overlap.
     return endTimestamp > rangeStart && startTimestamp < rangeEnd
   }
@@ -550,7 +566,7 @@ export const useEvents = vuecal => {
     }
 
     let newStart = event.start
-    let newEnd = new Date(cellStart.getTime() + minutes * 60000)
+    let newEnd = dateUtils.instantFromZonedMinutes(cellStart, minutes)
 
     // If the event is resizing horizontally by the user dragging and crossing a cell,
     // Set the end date to the hovered cell's start date while preserving the time at cursor position.
@@ -599,7 +615,8 @@ export const useEvents = vuecal => {
         prevEnd,
         schedule: ev.schedule,
         disallowed: config.specialHoursDisallowed,
-        hasSchedules: !!(config.schedules && config.schedules.length)
+        hasSchedules: !!(config.schedules && config.schedules.length),
+        dateUtils
       })
       newStart = clamped.start
       newEnd = clamped.end
@@ -611,7 +628,8 @@ export const useEvents = vuecal => {
         end: newEnd,
         schedule: ev.schedule,
         disallowed: config.specialHoursDisallowed,
-        hasSchedules: !!(config.schedules && config.schedules.length)
+        hasSchedules: !!(config.schedules && config.schedules.length),
+        dateUtils
       })
 
     return { newStart, newEnd, internalOk }

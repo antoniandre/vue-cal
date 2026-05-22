@@ -68,10 +68,9 @@ export function useDragAndDrop (vuecal) {
       startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
     }
 
-    const start = new Date(new Date(cellDate).setMinutes(startTimeMinutes))
-    // Force the end of the event at next midnight maximum.
+    const start = dateUtils.instantFromZonedMinutes(cellDate, startTimeMinutes)
     const endTimeMinutes = Math.min(startTimeMinutes + duration, 24 * 60)
-    const end = new Date(new Date(cellDate).setMinutes(endTimeMinutes))
+    const end = dateUtils.instantFromZonedMinutes(cellDate, endTimeMinutes)
 
     return { start, end }
   }
@@ -367,7 +366,8 @@ export function useDragAndDrop (vuecal) {
         end: newEnd,
         schedule: scheduleForCheck,
         disallowed: config.specialHoursDisallowed,
-        hasSchedules
+        hasSchedules,
+        dateUtils
       })) {
       acceptDrop = false
     }

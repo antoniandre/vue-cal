@@ -120,7 +120,7 @@ const classes = computed(() => {
 
 const eventStartsInThisCell = computed(() => {
   if (event._.multiday) {
-    return new Date(event.start).setHours(0, 0, 0, 0) === props.cellStart.getTime()
+    return dateUtils.startOfZonedDay(event.start).getTime() === props.cellStart.getTime()
   }
   return true
 })
@@ -133,8 +133,8 @@ const eventEndsInThisCell = computed(() => {
 })
 
 const plusDaysIndicator = computed(() => {
-  const start = new Date(event.start).setHours(0, 0, 0, 0)
-  const end = new Date(event.end).setHours(0, 0, 0, 0)
+  const start = dateUtils.startOfZonedDay(event.start).getTime()
+  const end = dateUtils.startOfZonedDay(event.end).getTime()
   return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
 })
 

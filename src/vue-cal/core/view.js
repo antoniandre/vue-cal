@@ -1,10 +1,11 @@
-import { ref, computed, watch, onBeforeUnmount, nextTick, reactive } from 'vue'
+import { ref, computed, watch, onBeforeUnmount, nextTick, reactive, unref } from 'vue'
 import { minutesToPercentage } from '@/vue-cal/utils/conversions'
 
 export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vuecalEl) => {
-  const { availableViews } = config
-  const viewId = ref(config.view && availableViews[config.view] ? config.view : config.defaultView)
-  const selectedDate = ref(config.selectedDate || null)
+  const availableViews = unref(config.availableViews)
+  const initialView = unref(config.view)
+  const viewId = ref(initialView && availableViews[initialView] ? initialView : unref(config.defaultView))
+  const selectedDate = ref(unref(config.selectedDate) || null)
 
   // Dates.
   // ------------------------------------------------------
@@ -15,13 +16,24 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // The view date is the one given in prop. It can be any date within the view that will be
   // computed around it - not necessarily the first day of the view range.
   // E.g. [start, ..., viewDate, ..., end]
-  const viewDate = ref(new Date(config.viewDate || now.value))
-  viewDate.value.setHours(0, 0, 0, 0)
+  const parseConfigDate = d => {
+    d = unref(d)
+    if (!d) return now.value
+    if (d instanceof Date) return dateUtils.isValid(d) ? d : now.value
+    if (typeof d === 'string') {
+      const parsed = dateUtils.stringToDate(d.length === 10 ? `${d} 00:00` : d)
+      return dateUtils.isValid(parsed) ? parsed : now.value
+    }
+    const parsed = new Date(d)
+    return dateUtils.isValid(parsed) ? parsed : now.value
+  }
+
+  const viewDate = ref(dateUtils.startOfZonedDay(parseConfigDate(unref(config.viewDate))))
   // The starting point of all the calculations.
   // on created and on navigation, two date ranges are computed:
   // [start-end]: the common date range to use.
   // [firstCellDate-endCellDate]: the full visible range including out-of-scope days in month view.
-  const startTheoretical = ref(new Date(viewDate))
+  const startTheoretical = ref(new Date(viewDate.value))
 
   // For the now line when watchRealTime is true. 2 timeouts: 1 to snap to round minutes, then 1 every minute.
   let timeTickerId = null
@@ -31,7 +43,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     return firstCellDate.value
   })
   const end = computed(() => {
-    if (viewId.value === 'month') return new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth() + 1, 0, 23, 59, 59, 999)
+    if (viewId.value === 'month') return dateUtils.endOfZonedMonth(startTheoretical.value)
     return lastCellDate.value
   })
 
@@ -42,9 +54,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   })
   const extendedEnd = computed(() => {
     if (viewId.value === 'week') {
-      const endWeek = dateUtils.addDays(extendedStart.value, 7)
-      endWeek.setMilliseconds(-1)
-      return endWeek
+      return dateUtils.endOfZonedDay(dateUtils.addDays(extendedStart.value, 6))
     }
     if (viewId.value === 'month') return lastCellDate.value
     return end.value
@@ -102,17 +112,18 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // Cells.
   // ------------------------------------------------------
   const cols = computed(() => {
+    const views = unref(config.availableViews)
     // When switching to date-picker from week view, the first computation is done before the
     // availableViews object is updated, so we need to check if the view is available.
-    if (!config.availableViews[viewId.value]) return 1
+    if (!views[viewId.value]) return 1
 
     // Includes all the weekdays, but some may need to be hidden.
-    let cols = config.availableViews[viewId.value].cols
+    let cols = views[viewId.value].cols
     // In Week and month views only, the grid rows must be decreased from 7 to `7 - all hidden weekdays`.
     if (config.hasHiddenDays && ['week', 'month'].includes(viewId.value)) cols -= config.hasHiddenDays
     return cols
   })
-  const rows = computed(() => config.availableViews[viewId.value]?.rows || 1)
+  const rows = computed(() => unref(config.availableViews)[viewId.value]?.rows || 1)
 
   // Create as many grid cells as defined in the availableViews map (cols * rows).
   const cellsCount = computed(() => cols.value * rows.value)
@@ -124,7 +135,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
       // previous month. E.g.
       // M  T  W  T  F  S  S
       // 28 29 30 1  2  3  4
-      let weekday = startTheoretical.value.getDay() || 7 // 1-7, starting from Monday.
+      let weekday = dateUtils.hasTimeZone()
+        ? dateUtils.getZonedWeekdayMonFirst(startTheoretical.value)
+        : startTheoretical.value.getDay() || 7 // 1-7, starting from Monday.
 
       if (config.startWeekOnSunday && !config.hideWeekdays[7]) weekday += 1
       if (config.viewDayOffset) weekday -= config.viewDayOffset
@@ -165,7 +178,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         case 'week':
         case 'month': {
           const start = dateUtils.addDays(firstCellDate.value, i)
-          const weekday = start.getDay() || 7 // 1-7, starting from Monday.
+          const weekday = dateUtils.hasTimeZone()
+            ? dateUtils.getZonedWeekdayMonFirst(start)
+            : start.getDay() || 7 // 1-7, starting from Monday.
 
           // If hiding specific weekday or weekend and the current cell is one of these hidden days skip
           // it and add one more date at the end to fill up the cells.
@@ -174,23 +189,43 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
             continue
           }
 
-          const end = new Date(start)
-          end.setHours(23, 59, 59, 999)
-          dates.push({ start, startFormatted: dateUtils.formatDate(start), end })
+          const end = dateUtils.endOfZonedDay(start)
+          dates.push({ start: dateUtils.startOfZonedDay(start), startFormatted: dateUtils.formatDateLite(start), end })
           break
         }
-        case 'year':
-          dates.push({
-            start: new Date(firstCellDate.value.getFullYear(), i, 1, 0, 0, 0, 0),
-            end: new Date(firstCellDate.value.getFullYear(), i + 1, 0, 23, 59, 59, 999)
-          })
+        case 'year': {
+          const y = dateUtils.hasTimeZone()
+            ? dateUtils.getZonedParts(firstCellDate.value).year
+            : firstCellDate.value.getFullYear()
+          if (!dateUtils.hasTimeZone()) {
+            dates.push({
+              start: new Date(y, i, 1, 0, 0, 0, 0),
+              end: new Date(y, i + 1, 0, 23, 59, 59, 999)
+            })
+          }
+          else {
+            const start = dateUtils.zonedDateToInstant({ year: y, month: i + 1, day: 1, hour: 0, minute: 0, second: 0 })
+            dates.push({ start, end: dateUtils.endOfZonedMonth(start) })
+          }
           break
-        case 'years':
-          dates.push({
-            start: new Date(firstCellDate.value.getFullYear() + i, 0, 1, 0, 0, 0, 0),
-            end: new Date(firstCellDate.value.getFullYear() + i + 1, 0, 0, 23, 59, 59, 999)
-          })
+        }
+        case 'years': {
+          const y0 = dateUtils.hasTimeZone()
+            ? dateUtils.getZonedParts(firstCellDate.value).year
+            : firstCellDate.value.getFullYear()
+          const y = y0 + i
+          if (!dateUtils.hasTimeZone()) {
+            dates.push({
+              start: new Date(y, 0, 1, 0, 0, 0, 0),
+              end: new Date(y + 1, 0, 0, 23, 59, 59, 999)
+            })
+          }
+          else {
+            const start = dateUtils.zonedDateToInstant({ year: y, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
+            dates.push({ start, end: dateUtils.endOfZonedDay(dateUtils.zonedDateToInstant({ year: y, month: 12, day: 31, hour: 12, minute: 0, second: 0 })) })
+          }
           break
+        }
       }
     }
 
@@ -209,7 +244,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * {String|undefined} The next available broader view from the current view.
    */
   const broaderView = computed(() => {
-    const availableViews = Object.keys(config.availableViews)
+    const availableViews = Object.keys(unref(config.availableViews))
     return availableViews[availableViews.indexOf(viewId.value) + 1]
   })
 
@@ -217,7 +252,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * {String|undefined} The next available narrower view from the current view.
    */
   const narrowerView = computed(() => {
-    const availableViews = Object.keys(config.availableViews)
+    const availableViews = Object.keys(unref(config.availableViews))
     return availableViews[availableViews.indexOf(viewId.value) - 1]
   })
 
@@ -247,10 +282,13 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   function formatDateRange(start, end, options) {
     const { monthsArray, monthBeforeDay, canTruncate, xs } = options
 
-    const startMonth = start.getMonth()
-    const startYear = start.getFullYear()
-    const endMonth = end.getMonth()
-    const endYear = end.getFullYear()
+    const startParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(start) : null
+    const endParts = dateUtils.hasTimeZone() ? dateUtils.getZonedParts(end) : null
+
+    const startMonth = startParts ? startParts.month - 1 : start.getMonth()
+    const startYear = startParts ? startParts.year : start.getFullYear()
+    const endMonth = endParts ? endParts.month - 1 : end.getMonth()
+    const endYear = endParts ? endParts.year : end.getFullYear()
     const crossingMonth = startMonth !== endMonth
     const crossingYear = startYear !== endYear
 
@@ -258,8 +296,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     const shouldTruncate = canTruncate && (xs || crossingMonth)
 
     // Get day numbers directly.
-    const startDay = start.getDate()
-    const endDay = end.getDate()
+    const startDay = startParts ? startParts.day : start.getDate()
+    const endDay = endParts ? endParts.day : end.getDate()
 
     if (crossingYear) {
       // Different years.
@@ -339,8 +377,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * scope dates.
    */
   async function updateView () {
-    startTheoretical.value = new Date(viewDate.value || now.value)
-    startTheoretical.value.setHours(0, 0, 0, 0)
+    startTheoretical.value = dateUtils.startOfZonedDay(new Date(viewDate.value || now.value))
 
     switch (viewId.value) {
       case 'day':
@@ -351,16 +388,22 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
         startTheoretical.value = dateUtils.getPreviousFirstDayOfWeek(startTheoretical.value, config.startWeekOnSunday && !config.hideWeekdays[7])
         break
       case 'month':
-        startTheoretical.value = new Date(startTheoretical.value.getFullYear(), startTheoretical.value.getMonth(), 1, 0, 0, 0, 0)
+        startTheoretical.value = dateUtils.startOfZonedMonth(startTheoretical.value)
         break
       case 'year':
-        startTheoretical.value = new Date(startTheoretical.value.getFullYear(), 0, 1, 0, 0, 0, 0)
+        if (!dateUtils.hasTimeZone()) startTheoretical.value = new Date(startTheoretical.value.getFullYear(), 0, 1, 0, 0, 0, 0)
+        else {
+          const p = dateUtils.getZonedParts(startTheoretical.value)
+          startTheoretical.value = dateUtils.zonedDateToInstant({ year: p.year, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
+        }
         break
-      case 'years':
-        // The modulo is only here to always cut off at the same years regardless of the current year.
-        // E.g. always [1975-1999], [2000-2024], [2025-2099] for the default 5*5 grid.
-        startTheoretical.value = new Date(startTheoretical.value.getFullYear() - (startTheoretical.value.getFullYear() % cellsCount.value), 0, 1, 0, 0, 0, 0)
+      case 'years': {
+        const p = dateUtils.getZonedParts(startTheoretical.value)
+        const baseYear = p.year - (p.year % cellsCount.value)
+        if (!dateUtils.hasTimeZone()) startTheoretical.value = new Date(baseYear, 0, 1, 0, 0, 0, 0)
+        else startTheoretical.value = dateUtils.zonedDateToInstant({ year: baseYear, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
         break
+      }
     }
 
     // Updating `now` will re-trigger the computed `todaysTimePosition` in cell.vue.
@@ -393,14 +436,14 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    */
   function updateViewIfNeeded (views) {
     const currView = viewId.value
-    const currViewLayout = config.availableViews[currView] // cols * rows.
+    const currViewLayout = views[currView] // cols * rows.
     if (!(views[currView] && JSON.stringify(views[currView]) === JSON.stringify(currViewLayout))) {
       updateView()
     }
   }
 
   function switchView (id, emitUpdate = true, date = null) {
-    const availableViews = Object.keys(config.availableViews)
+    const availableViews = Object.keys(unref(config.availableViews))
 
     if (viewId.value === id && !date) return
     if (availableViews.includes(id)) {
@@ -453,25 +496,44 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
           // Advance by one calendar week from the first visible cell (not extendedEnd + 1).
           // When weekends are hidden and the week starts on Sunday, extendedEnd + 1 can land on a
           // hidden Sunday; updateView then snaps back to the same week (#67).
-          newViewDate = dateUtils.addDays(firstCellDate.value, 7)
-          newViewDate.setHours(0, 0, 0, 0)
+          newViewDate = dateUtils.startOfZonedDay(dateUtils.addDays(firstCellDate.value, 7))
         }
         else newViewDate = dateUtils.subtractDays(extendedStart.value, cellsCount.value)
         break
       }
       case 'month': {
         const increment = forward ? 1 : -1
-        newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + increment, 1, 0, 0, 0, 0)
+        if (dateUtils.hasTimeZone()) {
+          const p = dateUtils.getZonedParts(newViewDate)
+          const cd = new Date(Date.UTC(p.year, p.month - 1 + increment, 1))
+          newViewDate = dateUtils.zonedDateToInstant({
+            year: cd.getUTCFullYear(),
+            month: cd.getUTCMonth() + 1,
+            day: 1,
+            hour: 0,
+            minute: 0,
+            second: 0
+          })
+        }
+        else newViewDate = new Date(newViewDate.getFullYear(), newViewDate.getMonth() + increment, 1, 0, 0, 0, 0)
         break
       }
       case 'year': {
         const increment = forward ? 1 : -1
-        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
+        if (dateUtils.hasTimeZone()) {
+          const p = dateUtils.getZonedParts(newViewDate)
+          newViewDate = dateUtils.zonedDateToInstant({ year: p.year + increment, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
+        }
+        else newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
         break
       }
       case 'years': {
-        const increment = forward ? cellsCount.value : - (cellsCount.value)
-        newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
+        const increment = forward ? cellsCount.value : -cellsCount.value
+        if (dateUtils.hasTimeZone()) {
+          const p = dateUtils.getZonedParts(newViewDate)
+          newViewDate = dateUtils.zonedDateToInstant({ year: p.year + increment, month: 1, day: 1, hour: 0, minute: 0, second: 0 })
+        }
+        else newViewDate = new Date(newViewDate.getFullYear() + increment, 1, 1, 0, 0, 0, 0)
         break
       }
     }
@@ -480,9 +542,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   }
 
   function goToToday () {
-    const today = new Date()
-    today.setHours(0, 0, 0, 0)
-    updateViewDate(today)
+    updateViewDate(dateUtils.startOfZonedDay(new Date()))
   }
 
   /**
@@ -498,6 +558,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * @returns void
    */
   function updateViewDate (date, emitUpdate = true, forceUpdate = false) {
+    if (typeof date === 'string') date = dateUtils.stringToDate(date.length === 10 ? `${date} 00:00` : date)
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t navigate to the given date: invalid date provided to `updateViewDate(date)`.')
 
     // Before checking if the date is in view range, use the firstCellDate and lastCellDate unless on month view
@@ -505,27 +566,28 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     let [viewStart, viewEnd] = [firstCellDate.value, lastCellDate.value]
     if (viewId.value === 'month') ([viewStart, viewEnd] = [start.value, end.value])
 
-    date.setHours(0, 0, 0, 0)
+    const normalized = dateUtils.startOfZonedDay(date)
     // Always update viewDate so that switching to a narrower view (e.g. month → day) after setting
     // a specific date within the current range correctly lands on that date. Only skip the expensive
     // cell recomputation (updateView) when the date is already in range and no force is requested.
-    viewDate.value = date
-    if (emitUpdate) emit('update:viewDate', date)
+    viewDate.value = normalized
+    if (emitUpdate) emit('update:viewDate', normalized)
 
-    if (!dateUtils.isInRange(date, viewStart, viewEnd) || forceUpdate) {
-      transitionDirection.value = date.getTime() < viewStart.getTime() ? 'left' : 'right'
+    if (!dateUtils.isInRange(normalized, viewStart, viewEnd) || forceUpdate) {
+      transitionDirection.value = normalized.getTime() < viewStart.getTime() ? 'left' : 'right'
       updateView()
     }
   }
 
   function updateSelectedDate (date, emitUpdate = true) {
+    if (typeof date === 'string') date = dateUtils.stringToDate(date.length === 10 ? `${date} 00:00` : date)
     if (!dateUtils.isValid(date)) return console.warn('Vue Cal: can\'t update the selected date: invalid date provided to `updateSelectedDate(date)`.')
 
     const { isValid, isSameDate } = dateUtils
     if (!selectedDate.value || !isValid(selectedDate.value) || !isSameDate(date, selectedDate.value)) {
-      date.setHours(0, 0, 0, 0)
-        selectedDate.value = date
-      if (emitUpdate) emit('update:selectedDate', date)
+      const normalized = dateUtils.startOfZonedDay(date)
+      selectedDate.value = normalized
+      if (emitUpdate) emit('update:selectedDate', normalized)
     }
   }
 
@@ -535,7 +597,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * @param {Boolean} bool start the week on Sunday or not.
    */
   function switchWeekStart (bool) {
-    if (!bool && !startTheoretical.value.getDay()) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
+    if (!bool && dateUtils.getZonedWeekdaySunFirst(startTheoretical.value) === 0) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
     else {
       transitionDirection.value = 'left'
       updateView()
@@ -548,8 +610,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
    * @param {Boolean} hide hide weekends or not.
    */
   function toggleWeekends (hide) {
-    if (hide && config.startWeekOnSunday && !startTheoretical.value.getDay()) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
-    else if (!hide && config.startWeekOnSunday && startTheoretical.value.getDay() === 1) updateViewDate(dateUtils.subtractDays(startTheoretical.value, 1), true, true)
+    if (hide && config.startWeekOnSunday && dateUtils.getZonedWeekdaySunFirst(startTheoretical.value) === 0) updateViewDate(dateUtils.addDays(startTheoretical.value, 1), true, true)
+    else if (!hide && config.startWeekOnSunday && dateUtils.getZonedWeekdayMonFirst(startTheoretical.value) === 1) updateViewDate(dateUtils.subtractDays(startTheoretical.value, 1), true, true)
   }
 
   /**
@@ -567,8 +629,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   }
 
   function scrollToCurrentTime () {
-    const now = new Date()
-    scrollToTime(now.getHours() * 60 + now.getMinutes())
+    scrollToTime(dateUtils.dateToMinutes(new Date()))
   }
 
   function scrollTop () {
@@ -592,6 +653,7 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   watch(() => config.startWeekOnSunday, bool => switchWeekStart(bool))
   watch(() => config.hideWeekends, bool => toggleWeekends(bool))
   watch(() => config.hideWeekdays, toggleWeekdays)
+  watch(() => config.timezone, () => updateView())
   watch(() => cellsCount.value, () => {
     if (cellsCount.value > 90) console.warn('Vue Cal: high cell count detected. Performance may degrade when interactions are enabled.')
   })
