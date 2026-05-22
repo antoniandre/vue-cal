@@ -4,11 +4,274 @@
 
 import { ref } from 'vue'
 
+const PARTS_CACHE_MAX = 500
+const DAY_BOUNDS_CACHE_MAX = 200
+const WEEKDAY_SHORT = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+const HAS_ISO_OFFSET = /(?:Z|[+-]\d{2}:?\d{2})\s*$/i
+const HAS_ISO_T = /T/
+
 export const useDateUtils = (initTexts, EnUs) => {
   let now, todayDate, todayF
   let _dateObject = {}
   let _timeObject = {}
   const texts = ref(initTexts)
+
+  let resolvedTimeZone = ''
+  let intlLocale = 'en-US'
+  let invalidTzWarned = false
+
+  const partsCache = new Map()
+  const dayBoundsCache = new Map()
+  const formatterCache = new Map()
+
+  const clearCaches = () => {
+    partsCache.clear()
+    dayBoundsCache.clear()
+    formatterCache.clear()
+    _dateObject = {}
+    _timeObject = {}
+    todayF = null
+  }
+
+  const cacheSet = (map, key, value, max) => {
+    if (map.size >= max) map.clear()
+    map.set(key, value)
+  }
+
+  const hasTimeZone = () => !!resolvedTimeZone
+
+  const resolveTimeZone = tz => {
+    if (!tz) return ''
+    try {
+      Intl.DateTimeFormat(undefined, { timeZone: tz })
+      return tz
+    }
+    catch {
+      if (!invalidTzWarned) {
+        invalidTzWarned = true
+        console.warn(`Vue Cal: invalid timezone "${tz}", falling back to local.`)
+      }
+      return ''
+    }
+  }
+
+  const setTimeZone = tz => {
+    const next = resolveTimeZone(tz || '')
+    if (next === resolvedTimeZone) return
+    resolvedTimeZone = next
+    clearCaches()
+  }
+
+  const setIntlLocale = locale => {
+    const next = locale || 'en-US'
+    if (next === intlLocale) return
+    intlLocale = next
+    formatterCache.clear()
+    _dateObject = {}
+  }
+
+  const getFormatter = () => {
+    const key = `${intlLocale}|${resolvedTimeZone}`
+    if (!formatterCache.has(key)) {
+      formatterCache.set(key, new Intl.DateTimeFormat(intlLocale, {
+        timeZone: resolvedTimeZone,
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: false,
+        weekday: 'short'
+      }))
+    }
+    return formatterCache.get(key)
+  }
+
+  const _parseFormatterParts = parts => {
+    let year = 0
+    let month = 0
+    let day = 0
+    let hour = 0
+    let minute = 0
+    let second = 0
+    let weekdayShort = 'Sun'
+
+    for (let i = 0; i < parts.length; i++) {
+      const p = parts[i]
+      if (p.type === 'year') year = parseInt(p.value, 10)
+      else if (p.type === 'month') month = parseInt(p.value, 10)
+      else if (p.type === 'day') day = parseInt(p.value, 10)
+      else if (p.type === 'hour') hour = parseInt(p.value, 10) % 24
+      else if (p.type === 'minute') minute = parseInt(p.value, 10)
+      else if (p.type === 'second') second = parseInt(p.value, 10)
+      else if (p.type === 'weekday') weekdayShort = p.value.slice(0, 3)
+    }
+
+    const weekdaySunFirst = Math.max(0, WEEKDAY_SHORT.indexOf(weekdayShort))
+
+    return { year, month, day, hour, minute, second, weekdaySunFirst }
+  }
+
+  const getZonedParts = date => {
+    const time = date.getTime()
+    const cacheKey = `${time}|${resolvedTimeZone}`
+    if (partsCache.has(cacheKey)) return partsCache.get(cacheKey)
+
+    const parts = _parseFormatterParts(getFormatter().formatToParts(date))
+    cacheSet(partsCache, cacheKey, parts, PARTS_CACHE_MAX)
+    return parts
+  }
+
+  const _compareWall = (a, b) => {
+    if (a.year !== b.year) return a.year - b.year
+    if (a.month !== b.month) return a.month - b.month
+    if (a.day !== b.day) return a.day - b.day
+    if (a.hour !== b.hour) return a.hour - b.hour
+    if (a.minute !== b.minute) return a.minute - b.minute
+    return a.second - b.second
+  }
+
+  const zonedDateToInstant = (wall, preferLater = false) => {
+    if (!hasTimeZone()) {
+      return new Date(wall.year, wall.month - 1, wall.day, wall.hour || 0, wall.minute || 0, wall.second || 0, wall.ms || 0)
+    }
+
+    if (!_isValidWall(wall)) return new Date(NaN)
+
+    const target = {
+      year: wall.year,
+      month: wall.month,
+      day: wall.day,
+      hour: wall.hour || 0,
+      minute: wall.minute || 0,
+      second: wall.second || 0
+    }
+
+    let low = Date.UTC(wall.year, wall.month - 1, wall.day - 1, 0, 0, 0)
+    let high = Date.UTC(wall.year, wall.month - 1, wall.day + 1, 23, 59, 59)
+
+    for (let i = 0; i < 48; i++) {
+      const mid = Math.floor((low + high) / 2)
+      const cmp = _compareWall(getZonedParts(new Date(mid)), target)
+      if (cmp === 0) return new Date(mid)
+      if (cmp < 0) low = mid + 1
+      else high = mid - 1
+    }
+
+    // Spring-forward gap: snap to next valid instant.
+    let snap = preferLater ? low : high
+    if (snap < low) snap = low
+    if (snap > high) snap = high
+    return new Date(snap)
+  }
+
+  const startOfZonedDay = date => {
+    if (!isValid(date)) return new Date(NaN)
+
+    if (!hasTimeZone()) {
+      const d = new Date(date.valueOf())
+      d.setHours(0, 0, 0, 0)
+      return d
+    }
+
+    const p = getZonedParts(date)
+    const cacheKey = `s|${p.year}|${p.month}|${p.day}|${resolvedTimeZone}`
+    if (dayBoundsCache.has(cacheKey)) return new Date(dayBoundsCache.get(cacheKey))
+
+    const ms = zonedDateToInstant({ year: p.year, month: p.month, day: p.day, hour: 0, minute: 0, second: 0 }).getTime()
+    cacheSet(dayBoundsCache, cacheKey, ms, DAY_BOUNDS_CACHE_MAX)
+    return new Date(ms)
+  }
+
+  const endOfZonedDay = date => {
+    if (!isValid(date)) return new Date(NaN)
+
+    if (!hasTimeZone()) {
+      const d = new Date(date.valueOf())
+      d.setHours(23, 59, 59, 999)
+      return d
+    }
+
+    const p = getZonedParts(date)
+    const cacheKey = `e|${p.year}|${p.month}|${p.day}|${resolvedTimeZone}`
+    if (dayBoundsCache.has(cacheKey)) return new Date(dayBoundsCache.get(cacheKey))
+
+    // Last instant still on this civil day (23:59:59.999 + 999ms can roll into the next day).
+    const dayStart = startOfZonedDay(date).getTime()
+    const nextDayStart = startOfZonedDay(addZonedDays(startOfZonedDay(date), 1)).getTime()
+    let low = dayStart
+    let high = nextDayStart
+
+    while (high - low > 1) {
+      const mid = Math.floor((low + high) / 2)
+      const zp = getZonedParts(new Date(mid))
+      if (zp.year === p.year && zp.month === p.month && zp.day === p.day) low = mid
+      else high = mid
+    }
+
+    cacheSet(dayBoundsCache, cacheKey, low, DAY_BOUNDS_CACHE_MAX)
+    return new Date(low)
+  }
+
+  const startOfZonedMonth = date => {
+    if (!hasTimeZone()) {
+      const d = new Date(date.valueOf())
+      d.setDate(1)
+      d.setHours(0, 0, 0, 0)
+      return d
+    }
+    const p = getZonedParts(date)
+    return zonedDateToInstant({ year: p.year, month: p.month, day: 1, hour: 0, minute: 0, second: 0 })
+  }
+
+  const endOfZonedMonth = date => {
+    if (!hasTimeZone()) {
+      const d = new Date(date.valueOf())
+      d.setMonth(d.getMonth() + 1, 0)
+      d.setHours(23, 59, 59, 999)
+      return d
+    }
+    const p = getZonedParts(date)
+    const lastDay = new Date(Date.UTC(p.year, p.month, 0)).getUTCDate()
+    return endOfZonedDay(zonedDateToInstant({ year: p.year, month: p.month, day: lastDay, hour: 12, minute: 0, second: 0 }))
+  }
+
+  const addZonedDays = (date, days) => {
+    if (!hasTimeZone()) return addDays(date, days)
+
+    const p = getZonedParts(date)
+    const cd = new Date(Date.UTC(p.year, p.month - 1, p.day + days))
+    return zonedDateToInstant({
+      year: cd.getUTCFullYear(),
+      month: cd.getUTCMonth() + 1,
+      day: cd.getUTCDate(),
+      hour: 0,
+      minute: 0,
+      second: 0
+    })
+  }
+
+  const getZonedWeekdaySunFirst = date => {
+    if (!hasTimeZone()) return date.getDay()
+    return getZonedParts(date).weekdaySunFirst
+  }
+
+  const getZonedWeekdayMonFirst = date => {
+    const d = getZonedWeekdaySunFirst(date)
+    return d === 0 ? 7 : d
+  }
+
+  const _localYmd = date => {
+    const m = date.getMonth() + 1
+    const d = date.getDate()
+    return `${date.getFullYear()}-${m < 10 ? '0' : ''}${m}-${d < 10 ? '0' : ''}${d}`
+  }
+
+  const _zonedYmd = date => {
+    const p = getZonedParts(date)
+    return `${p.year}-${p.month < 10 ? '0' : ''}${p.month}-${p.day < 10 ? '0' : ''}${p.day}`
+  }
 
   const addDatePrototypes = () => {
     if (!texts.value.today) texts.value = EnUs // If no texts, use EnUs.
@@ -52,10 +315,13 @@ export const useDateUtils = (initTexts, EnUs) => {
   // Cache Today's date (to a maximum) for better isToday() performances. Formatted without leading 0.
   // We still need to update Today's date when Today changes without page refresh.
   const _todayFormatted = () => {
-    if (todayDate !== (new Date()).getDate()) {
+    const current = hasTimeZone() ? _zonedYmd(new Date()) : _localYmd(new Date())
+    const dayKey = hasTimeZone() ? getZonedParts(new Date()).day : (new Date()).getDate()
+
+    if (todayDate !== dayKey || todayF !== current) {
       now = new Date()
-      todayDate = now.getDate()
-      todayF = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`
+      todayDate = dayKey
+      todayF = current
     }
 
     return todayF
@@ -64,47 +330,34 @@ export const useDateUtils = (initTexts, EnUs) => {
   // UTILITIES.
   // ====================================================================
   const addDays = (date, days) => {
+    if (hasTimeZone()) return addZonedDays(date, days)
     const d = new Date(date.valueOf())
     d.setDate(d.getDate() + days)
     return d
   }
 
-  const subtractDays = (date, days) => {
-    const d = new Date(date.valueOf())
-    d.setDate(d.getDate() - days)
-    return d
-  }
+  const subtractDays = (date, days) => addDays(date, -days)
 
   const addHours = (date, hours) => {
     const d = new Date(date.valueOf())
-    d.setHours(d.getHours() + hours)
+    if (hasTimeZone()) d.setTime(d.getTime() + hours * 3600000)
+    else d.setHours(d.getHours() + hours)
     return d
   }
 
-  const subtractHours = (date, hours) => {
-    const d = new Date(date.valueOf())
-    d.setHours(d.getHours() - hours)
-    return d
-  }
+  const subtractHours = (date, hours) => addHours(date, -hours)
 
   const addMinutes = (date, minutes) => {
     const d = new Date(date.valueOf())
-    d.setMinutes(d.getMinutes() + minutes)
+    if (hasTimeZone()) d.setTime(d.getTime() + minutes * 60000)
+    else d.setMinutes(d.getMinutes() + minutes)
     return d
   }
 
-  const subtractMinutes = (date, minutes) => {
-    const d = new Date(date.valueOf())
-    d.setMinutes(d.getMinutes() - minutes)
-    return d
-  }
+  const subtractMinutes = (date, minutes) => addMinutes(date, -minutes)
 
   /**
    * Adjusts the given input to the nearest interval.
-   *
-   * @param {number|Date} input - The input to be adjusted. Can be a number representing minutes or a Date object.
-   * @param {number} interval - The interval to snap to.
-   * @returns {number|void} - Returns the adjusted minutes if the input is a number. If the input is a Date object, it modifies the Date object in place.
    */
   const snapToInterval = (input, interval) => {
     const adjustMinutes = minutes => {
@@ -117,54 +370,64 @@ export const useDateUtils = (initTexts, EnUs) => {
 
     if (typeof input === 'number') return adjustMinutes(input)
     else if (input instanceof Date) {
-      let minutes = adjustMinutes(input.getMinutes())
-      if (minutes >= 60) {
-        input.setHours(input.getHours() + 1)
-        minutes = 0
+      let totalMinutes = adjustMinutes(dateToMinutes(input))
+      let hours = Math.floor(totalMinutes / 60)
+      let minutes = totalMinutes % 60
+      if (hasTimeZone()) {
+        const p = getZonedParts(input)
+        const snapped = zonedDateToInstant({ year: p.year, month: p.month, day: p.day, hour: hours, minute: minutes, second: 0 }, true)
+        input.setTime(snapped.getTime())
       }
-      input.setMinutes(minutes, 0, 0)
+      else input.setHours(hours, minutes, 0, 0)
     }
   }
 
-  /**
-   * Get the week number for the given date.
-   * Note: If starting the week on Sunday, 1 is added to the result because it's the first day
-   * of the next week - compared to start from Monday where the Sunday is in the past week.
-   *
-   * @param {Date} date the date to know the week for.
-   * @param {Boolean} weekStartsOnSunday if the week starts on Sunday. Default Monday.
-   * @returns {Number} the week number ranging from 1 to 53.
-   */
   const getWeek = (date, weekStartsOnSunday = false) => {
-    const d = new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()))
-    const dayNum = d.getUTCDay() || 7
-    d.setUTCDate(d.getUTCDate() + 4 - dayNum)
-    const yearStart = new Date(Date.UTC(d.getUTCFullYear(), 0, 1))
-    return Math.ceil((((d - yearStart) / 86400000) + 1) / 7) + (weekStartsOnSunday ? 1 : 0)
+    const y = hasTimeZone() ? getZonedParts(date).year : date.getFullYear()
+    const m = hasTimeZone() ? getZonedParts(date).month : date.getMonth() + 1
+    const d = hasTimeZone() ? getZonedParts(date).day : date.getDate()
+    const utc = new Date(Date.UTC(y, m - 1, d))
+    const dayNum = utc.getUTCDay() || 7
+    utc.setUTCDate(utc.getUTCDate() + 4 - dayNum)
+    const yearStart = new Date(Date.UTC(utc.getUTCFullYear(), 0, 1))
+    return Math.ceil((((utc - yearStart) / 86400000) + 1) / 7) + (weekStartsOnSunday ? 1 : 0)
   }
 
   const isToday = date => {
-    return `${date.getFullYear()}-${date.getMonth()}-${date.getDate()}` === _todayFormatted()
+    if (!isValid(date)) return false
+    if (hasTimeZone()) return _zonedYmd(date) === _todayFormatted()
+    return _localYmd(date) === _todayFormatted()
   }
 
-  /**
-   * Compares 2 dates and returns true if they are the same day (does not care about the time).
-   *
-   * @param {Date} date1
-   * @param {Date} date2
-   * @returns {Boolean}
-   */
   const isSameDate = (date1, date2) => {
     if (!date1 || !date2) return console.warn(`Vue Cal: missing date${!date1 ? '1' : '2'} parameter for comparison with \`isSameDate(date1, date2)\`.`)
     else if (!isValid(date1)) return console.warn(`Vue Cal: invalid date1 provided for comparison with \`isSameDate(date1, date2)\`: \`${date1}\`.`)
     else if (!isValid(date2)) return console.warn(`Vue Cal: invalid date2 provided for comparison with \`isSameDate(date1, date2)\`: \`${date2}\`.`)
 
-    // Most efficient way to compare dates without time.
+    if (hasTimeZone()) return _zonedYmd(date1) === _zonedYmd(date2)
+
     return (
       date1.getFullYear() === date2.getFullYear() &&
       date1.getMonth() === date2.getMonth() &&
       date1.getDate() === date2.getDate()
     )
+  }
+
+  /**
+   * True when start and end fall on different civil days. An end at the next day's
+   * midnight (exclusive) still counts as a single day — unlike end - 1ms with zoned instants.
+   */
+  const spansMultipleDays = (start, end) => {
+    if (!isValid(start) || !isValid(end)) return false
+
+    const startDay = startOfZonedDay(start).getTime()
+    const endDay = startOfZonedDay(end).getTime()
+    if (endDay <= startDay) return false
+
+    const nextDayStart = startOfZonedDay(addDays(startOfZonedDay(start), 1)).getTime()
+    if (end.getTime() <= nextDayStart) return false
+
+    return true
   }
 
   const isInRange = (date, rangeStart, rangeEnd) => {
@@ -174,91 +437,117 @@ export const useDateUtils = (initTexts, EnUs) => {
   }
 
   const isLeapYear = date => {
-    const year = date.getFullYear()
+    const year = hasTimeZone() ? getZonedParts(date).year : date.getFullYear()
     return !(year % 400) || (year % 100 && !(year % 4))
   }
 
-  // Returns the last Monday or Sunday (depending on weekStartsOnSunday) before a date or that date if it is.
-  // If no date is given, today is used.
   const getPreviousFirstDayOfWeek = (date = null, weekStartsOnSunday) => {
-    const prevFirstDayOfWeek = (date && new Date(date.valueOf())) || new Date()
+    const base = (date && new Date(date.valueOf())) || new Date()
+    if (!hasTimeZone()) {
+      const prevFirstDayOfWeek = base
+      const dayModifier = weekStartsOnSunday ? 7 : 6
+      prevFirstDayOfWeek.setDate(prevFirstDayOfWeek.getDate() - (prevFirstDayOfWeek.getDay() + dayModifier) % 7)
+      return prevFirstDayOfWeek
+    }
+
+    const p = getZonedParts(base)
+    const cd = new Date(Date.UTC(p.year, p.month - 1, p.day))
     const dayModifier = weekStartsOnSunday ? 7 : 6
-    prevFirstDayOfWeek.setDate(prevFirstDayOfWeek.getDate() - (prevFirstDayOfWeek.getDay() + dayModifier) % 7)
-    return prevFirstDayOfWeek
+    const weekday = cd.getUTCDay()
+    cd.setUTCDate(cd.getUTCDate() - (weekday + dayModifier) % 7)
+    return startOfZonedDay(zonedDateToInstant({
+      year: cd.getUTCFullYear(),
+      month: cd.getUTCMonth() + 1,
+      day: cd.getUTCDate(),
+      hour: 0,
+      minute: 0,
+      second: 0
+    }))
   }
 
-  /**
-   * Converts a string to a Javascript Date object. If a Date object is passed, return it as is.
-   *
-   * @param {String | Date} date the string to convert to Date.
-   * @return {Date} the equivalent Javascript Date object.
-   */
+  const _parseZoneLessString = str => {
+    const normalized = String(str).replace(/-/g, '/').trim()
+    const [datePart, timePart = '00:00'] = normalized.split(/\s+/)
+    const [y, mo, d] = datePart.split('/').map(Number)
+    const [h = 0, mi = 0, s = 0] = timePart.split(':').map(Number)
+    return { year: y, month: mo, day: d, hour: h || 0, minute: mi || 0, second: s || 0 }
+  }
+
+  const _isValidWall = wall => wall && Number.isFinite(wall.year) && Number.isFinite(wall.month) && Number.isFinite(wall.day)
+
   const stringToDate = date => {
     if (date instanceof Date) return date
-    // Regexp way is less performant: https://jsperf.com/string-to-date-regexp-vs-new-date
-    // const [, y, m, d, h = 0, min = 0] = date.match(/(\d{4})-(\d{2})-(\d{2})(?: (\d{2}):(\d{2}))?/)
-    // return new Date(y, parseInt(m) - 1, d, h, min)
+
+    if (typeof date === 'string' && (HAS_ISO_T.test(date) || HAS_ISO_OFFSET.test(date))) {
+      const parsed = new Date(date)
+      if (!isNaN(parsed.getTime())) return parsed
+    }
+
+    if (hasTimeZone()) {
+      const wall = _parseZoneLessString(date.length === 10 ? `${date} 00:00` : date)
+      const instant = zonedDateToInstant(wall)
+      if (!isValid(instant)) return new Date(NaN)
+      return instant
+    }
 
     if (date.length === 10) date += ' 00:00'
     return new Date(date.replace(/-/g, '/')) // replace '-' with '/' for Safari.
   }
 
-  /**
-   * Simply takes a Date and returns the associated time in minutes (sum of hours + minutes).
-   *
-   * @param {Date} date the JavaScript Date to extract minutes from.
-   * @return {Number} the number of minutes (total of hours plus minutes).
-   */
-  const dateToMinutes = date => date.getHours() * 60 + date.getMinutes()
+  const dateToMinutes = date => {
+    if (hasTimeZone()) {
+      const p = getZonedParts(date)
+      return p.hour * 60 + p.minute
+    }
+    return date.getHours() * 60 + date.getMinutes()
+  }
 
-  /**
-   * Count the number of days this date range spans onto.
-   * E.g. countDays(2019-11-02 18:00, 2019-11-03 02:00) = 2
-   *
-   * @param {String | Date} start the start date
-   * @param {String | Date} end the end date
-   * @return {Integer} The number of days this date range involves
-   */
   const countDays = (start, end) => {
+    if (hasTimeZone()) {
+      if (typeof start === 'string') start = stringToDate(start)
+      if (typeof end === 'string') end = stringToDate(end)
+      let cursor = startOfZonedDay(start)
+      const last = startOfZonedDay(end).getTime()
+      let count = 0
+      while (cursor.getTime() <= last) {
+        count++
+        cursor = addDays(cursor, 1)
+      }
+      return count
+    }
+
     // replace '-' with '/' for Safari.
     if (typeof start === 'string') start = start.replace(/-/g, '/')
     if (typeof end === 'string') end = end.replace(/-/g, '/')
 
-    // Set start & end at midnight then compare the delta. Don't modify the original dates.
     start = (new Date(start)).setHours(0, 0, 0, 0)
-    // Set end at midnight plus 1 sec, so Math.ceil will round it up to a full day.
     end = (new Date(end)).setHours(0, 0, 1, 0)
 
-    // Remove the potential daylight saving delta.
     const timezoneDiffMs = (new Date(end).getTimezoneOffset() - new Date(start).getTimezoneOffset()) * 60 * 1000
     return Math.ceil((end - start - timezoneDiffMs) / (24 * 3600 * 1000))
   }
 
-  /**
-   * Take 2 dates and check if within the same time step (useful in overlapping events).
-   *
-   * @return {Boolean} `true` if their time is included in the same time step,
-   *                   this means these 2 dates are very close.
-   */
   const datesInSameTimeStep = (date1, date2, timeStep) => {
     return Math.abs(date1.getTime() - date2.getTime()) <= timeStep * 60 * 1000
   }
 
   const isValid = date => (date && date instanceof Date && !isNaN(date))
-  // ====================================================================
+
+  const instantFromZonedMinutes = (dayStart, minutes) => {
+    if (!hasTimeZone()) {
+      const d = new Date(dayStart.valueOf())
+      d.setHours(0, 0, 0, 0)
+      d.setMinutes(minutes)
+      return d
+    }
+    const p = getZonedParts(dayStart)
+    const h = Math.floor(minutes / 60)
+    const m = minutes % 60
+    return zonedDateToInstant({ year: p.year, month: p.month, day: p.day, hour: h, minute: m, second: 0 }, true)
+  }
 
   // FORMATTERS.
   // ====================================================================
-  /**
-   * Formats a date/time to the given format and returns the formatted string.
-   *
-   * @param {Date} date a JavaScript Date object to format.
-   * @param {String} format the wanted format.
-   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this.#texts.
-   *                       This becomes useful when showing multiple instances with different languages,
-   *                       like in the documentation page.
-   * @return {String} the formatted date.
-   */
   const formatDate = (date, format = 'YYYY-MM-DD', txts = null) => {
     if (!txts) txts = texts.value
     if (!format) format = 'YYYY-MM-DD' // Allows passing null for default format.
@@ -268,7 +557,6 @@ export const useDateUtils = (initTexts, EnUs) => {
     _dateObject = {}
     _timeObject = {}
 
-    // Each keyword is a function to load the dateObject or timeObject on demand: no wasted resource.
     const dateObj = {
       YYYY: () => _hydrateDateObject(date, txts).YYYY,
       YY: () => _hydrateDateObject(date, txts).YY(),
@@ -301,28 +589,20 @@ export const useDateUtils = (initTexts, EnUs) => {
     })
   }
 
-  // More performant function to convert a Date to `YYYY-MM-DD` formatted string only.
   const formatDateLite = date => {
+    if (hasTimeZone()) return _zonedYmd(date)
     const m = date.getMonth() + 1
     const d = date.getDate()
     return `${date.getFullYear()}-${m < 10 ? '0' : ''}${m}-${d < 10 ? '0' : ''}${d}`
   }
 
-  /**
-   * Formats a time (from Date or number of mins) to the given format and returns the formatted string.
-   *
-   * @param {Date | Number} date a JavaScript Date object or a time in minutes.
-   * @param {String} format the wanted format.
-   * @param {Object} texts Optional: the localized texts object to override the vue-cal one in this.#texts.
-   *                       This becomes useful when showing multiple instances with different languages,
-   *                       like in the documentation page.
-   * @param {Boolean} round if time is 23:59:59, rounds up to 24:00 for formatting only.
-   * @return {String} the formatted time.
-   */
   const formatTime = (date, format = 'HH:mm', txts = null, round = false) => {
     let shouldRound = false
     if (round) {
-      const [h, m, s] = [date.getHours(), date.getMinutes(), date.getSeconds()]
+      const p = hasTimeZone() ? getZonedParts(date) : null
+      const h = p ? p.hour : date.getHours()
+      const m = p ? p.minute : date.getMinutes()
+      const s = p ? p.second : date.getSeconds()
       if ((h + m + s) === (23 + 59 + 59)) shouldRound = true
     }
 
@@ -337,18 +617,14 @@ export const useDateUtils = (initTexts, EnUs) => {
       return result !== undefined ? result : contents
     })
 
-    // Round 23:59:59 to 24:00. For 12-hour format there is nothing to replace: as both are 12am.
-    // Also don't return `24:00` straight away as the user format may be different.
     return shouldRound ? formatted.replace('23:59', '24:00') : formatted
   }
 
-  /**
-   * Formats a time to 'HH:mm' from a Date and returns the formatted string.
-   *
-   * @param {Date} date a JavaScript Date object to format.
-   * @return {String} the formatted time.
-   */
   const formatTimeLite = date => {
+    if (hasTimeZone()) {
+      const p = getZonedParts(date)
+      return `${(p.hour < 10 ? '0' : '') + p.hour}:${(p.minute < 10 ? '0' : '') + p.minute}`
+    }
     const h = date.getHours()
     const m = date.getMinutes()
     return `${(h < 10 ? '0' : '') + h}:${(m < 10 ? '0' : '') + m}`
@@ -373,35 +649,37 @@ export const useDateUtils = (initTexts, EnUs) => {
   const _hydrateDateObject = (date, txts) => {
     if (_dateObject.D) return _dateObject
 
-    const YYYY = date.getFullYear()
-    const M = date.getMonth() + 1
-    const D = date.getDate()
-    const day = date.getDay() // Day of the week.
-    const dayNumber = (day - 1 + 7) % 7 // Day of the week. 0 to 6 with 6 = Sunday.
-    // Some of this props are functions, to only calculate on demand.
+    let YYYY, M, D, dayNumber
+
+    if (hasTimeZone()) {
+      const p = getZonedParts(date)
+      YYYY = p.year
+      M = p.month
+      D = p.day
+      dayNumber = (p.weekdaySunFirst - 1 + 7) % 7
+    }
+    else {
+      YYYY = date.getFullYear()
+      M = date.getMonth() + 1
+      D = date.getDate()
+      dayNumber = (date.getDay() - 1 + 7) % 7
+    }
+
     _dateObject = {
-      // Year.
-      YYYY, // 2024.
-      YY: () => YYYY.toString().substring(2), // 24.
-
-      // Month.
-      M, // 1 to 12.
-      MM: () => M.toString().padStart(2, 0), // 01 to 12.
-      MMM: () => txts.months[M - 1].substring(0, 3), // Jan to Dec.
-      MMMM: () => txts.months[M - 1], // January to December.
-      MMMMG: () => (txts.monthsGenitive || txts.months)[M - 1], // January to December in genitive form (Greek...)
-
-      // Day.
-      D, // 1 to 31.
-      DD: () => D.toString().padStart(2, 0), // 01 to 31.
-      S: () => _nth(D), // st, nd, rd, th.
-
-      // Day of the week.
-      d: dayNumber + 1, // 1 to 7 with 7 = Sunday.
-      // Some locales have same start for all the days, so they have specific abbrev in weekDaysShort.
-      dd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber][0], // M to S.
-      ddd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber].substr(0, 3), // Mon to Sun.
-      dddd: () => txts.weekDays[dayNumber] // Monday to Sunday.
+      YYYY,
+      YY: () => YYYY.toString().substring(2),
+      M,
+      MM: () => M.toString().padStart(2, 0),
+      MMM: () => txts.months[M - 1].substring(0, 3),
+      MMMM: () => txts.months[M - 1],
+      MMMMG: () => (txts.monthsGenitive || txts.months)[M - 1],
+      D,
+      DD: () => D.toString().padStart(2, 0),
+      S: () => _nth(D),
+      d: dayNumber + 1,
+      dd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber][0],
+      ddd: () => txts.weekDaysShort.length ? txts.weekDaysShort[dayNumber] : txts.weekDays[dayNumber].substr(0, 3),
+      dddd: () => txts.weekDays[dayNumber]
     }
 
     return _dateObject
@@ -412,9 +690,17 @@ export const useDateUtils = (initTexts, EnUs) => {
 
     let H, m, s
     if (date instanceof Date) {
-      H = date.getHours()
-      m = date.getMinutes()
-      s = date.getSeconds()
+      if (hasTimeZone()) {
+        const p = getZonedParts(date)
+        H = p.hour
+        m = p.minute
+        s = p.second
+      }
+      else {
+        H = date.getHours()
+        m = date.getMinutes()
+        s = date.getSeconds()
+      }
     }
     else {
       H = Math.floor(date / 60)
@@ -443,6 +729,20 @@ export const useDateUtils = (initTexts, EnUs) => {
     addDatePrototypes,
     removeDatePrototypes,
     updateTexts,
+    setTimeZone,
+    setIntlLocale,
+    hasTimeZone,
+    getZonedParts,
+    zonedDateToInstant,
+    startOfZonedDay,
+    endOfZonedDay,
+    startOfZonedMonth,
+    endOfZonedMonth,
+    addZonedDays,
+    getZonedWeekdaySunFirst,
+    getZonedWeekdayMonFirst,
+    instantFromZonedMinutes,
+    clearCaches,
     addDays,
     subtractDays,
     addHours,
@@ -453,6 +753,7 @@ export const useDateUtils = (initTexts, EnUs) => {
     getWeek,
     isToday,
     isSameDate,
+    spansMultipleDays,
     isInRange,
     isLeapYear,
     getPreviousFirstDayOfWeek,
