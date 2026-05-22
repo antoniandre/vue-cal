@@ -46,6 +46,8 @@ export const props = {
   timeFrom: { type: Number, default: 0 }, // Start time of the time column, in minutes.
   timeStep: { type: Number, default: 60 }, // Step amount for the time in the time column, in minutes.
   timeTo: { type: Number, default: minutesInADay }, // End time of the time column, in minutes.
+  // IANA timezone for display (grid, labels, positioning). Empty = browser local.
+  timezone: { type: String, default: '' },
   titleBar: { type: Boolean, default: true }, // Show or hide the header title bar.
   todayButton: { type: Boolean, default: true }, // Show or hide the header today button.
   twelveHour: { type: Boolean, default: false }, // 12 or 24 hour format are respectively written like 1pm and 13:00.

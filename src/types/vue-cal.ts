@@ -187,6 +187,8 @@ export interface VueCalConfig {
   timeFrom?: number, // Start time of the time column, in minutes.
   timeStep?: number, // Step amount for the time in the time column, in minutes.
   timeTo?: number, // End time of the time column, in minutes.
+  /** IANA timezone for calendar display. Empty = browser local. */
+  timezone?: string,
   titleBar?: boolean, // Show or hide the header title bar.
   todayButton?: boolean, // Show or hide the header today button.
   twelveHour?: boolean, // 12 or 24 hour format are respectively written like 1pm and 13:00.

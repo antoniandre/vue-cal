@@ -148,6 +148,18 @@ const weekdaysMap = weekdays.reduce((obj, day, i) => { // 1 - 7, from Mon to Sun
   return obj
 }, {})
 
+const toIntlLocale = locale => {
+  if (!locale) return 'en-US'
+  const parts = locale.split('-')
+  if (parts.length === 2) return `${parts[0]}-${parts[1].toUpperCase()}`
+  return locale
+}
+
+const applyDateUtilsZone = (dateUtils, timezone, locale) => {
+  dateUtils.setTimeZone(timezone || '')
+  dateUtils.setIntlLocale(toIntlLocale(locale || 'en-us'))
+}
+
 export const useConfig = (vuecal, props, attrs) => {
   const { dateUtils } = vuecal
   const ready = false
@@ -442,7 +454,23 @@ export const useConfig = (vuecal, props, attrs) => {
     [() => props.events, () => props.events?.length],
     ([evts]) => events.splice(0, events.length, ...(evts || []))
   )
-  watch(() => props.locale, newLocale => loadTexts(newLocale || 'en-us'))
+  watch(() => props.locale, newLocale => {
+    loadTexts(newLocale || 'en-us')
+    applyDateUtilsZone(dateUtils, props.timezone, newLocale || 'en-us')
+  })
+
+  watch(() => props.timezone, newTimezone => {
+    applyDateUtilsZone(dateUtils, newTimezone, props.locale)
+    for (let i = 0; i < events.length; i++) {
+      const e = events[i]
+      if (e._) {
+        delete e._.cachedStart
+        delete e._.cachedEnd
+      }
+    }
+  })
+
+  applyDateUtilsZone(dateUtils, props.timezone, props.locale)
 
   // If a locale is requested via prop, load it (async call).
   // But if a locale is directly provided from external source using useLocale(),
