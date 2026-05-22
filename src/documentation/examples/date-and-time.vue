@@ -272,6 +272,28 @@ example(title="Hide Particular Week Days" anchor="hiding-particular-week-days")
   vue-cal(
     :hide-weekdays="exHideWeekDays.weekdaysToHide"
     :dark="store.darkMode")
+
+//- Example.
+example(title="Timezone" anchor="timezone")
+  template(#desc)
+    p.
+      Set an IANA #[code timezone] so the grid and labels use that zone while #[code start] / #[code end]
+      stay instants (#[code Date] or ISO with offset). Zone-less strings like #[code 2025-05-17 14:00]
+      are read as wall time in the display zone.
+    .w-flex.justify-end.mt4
+      w-select(
+        v-model="exTimezone.zone"
+        :items="exTimezone.zones"
+        label="Display timezone"
+        fit-to-content)
+  template(#code-html).
+    &lt;vue-cal timezone="{{ exTimezone.zone }}" /&gt;
+  vue-cal(
+    :timezone="exTimezone.zone"
+    view="week"
+    :events="exTimezone.events"
+    :dark="store.darkMode"
+    style="height: 320px")
 </template>
 
 <script setup>
@@ -337,6 +359,21 @@ const exDisableDays = reactive({
 const exHideWeekDays = reactive({
   weekdays: ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'],
   weekdaysToHide: ref(['tue', 'wed', 'fri'])
+})
+
+const exTimezone = reactive({
+  zone: 'Europe/Paris',
+  zones: [
+    { label: 'Europe/Paris', value: 'Europe/Paris' },
+    { value: 'America/New_York' },
+    { label: 'America/Vancouver', value: 'America/Vancouver' },
+    { label: 'Asia/Tokyo', value: 'Asia/Tokyo' },
+    { label: 'UTC', value: 'UTC' }
+  ],
+  events: [
+    { title: 'Zone-less string', start: '2025-05-17 14:00', end: '2025-05-17 15:00' },
+    { title: 'ISO instant', start: new Date('2025-05-17T12:00:00Z'), end: new Date('2025-05-17T13:00:00Z') }
+  ]
 })
 </script>
 

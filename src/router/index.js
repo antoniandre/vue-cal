@@ -108,6 +108,11 @@ const routes = [
     component: () => import('@/documentation/comprehensive-test-view.vue')
   },
   {
+    path: '/test-timezone',
+    name: 'test-timezone',
+    component: () => import('@/documentation/timezone-test-view.vue')
+  },
+  {
     path: '/:pathMatch(.*)',
     name: 'not-found',
     component: () => import('@/documentation/404.vue'),

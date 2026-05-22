@@ -1023,6 +1023,25 @@ w-accordion.mt2(
 
   w-accordion-item
     template(#title)
+      a#props--timezone
+      strong.code.title5 timezone
+      .type [String]
+      | ,
+      .body.grey.mx1 default:
+      strong.default.code ''
+    template(#content)
+      p.
+        IANA timezone identifier for calendar display (grid columns, labels, event positioning, “today”, now line).
+        When empty, the browser local timezone is used (previous behavior).#[br]
+        Event #[code start] and #[code end] remain JavaScript #[code Date] instants on emit; persist UTC or ISO with offset in your backend.
+      ul.ml3
+        li ISO strings with #[code Z] or #[code +02:00] are unambiguous instants.
+        li Zone-less strings (#[code YYYY-MM-DD] or #[code YYYY-MM-DD HH:mm]) are interpreted in this display zone when set.
+        li #[code allDay] events and date-only strings stay on the same calendar date when the display zone changes.
+      p See #[router-link(to="/examples/date-and-time#ex--timezone") Timezone] example.
+
+  w-accordion-item
+    template(#title)
       a#props--title-bar
       strong.code.title5 titleBar
       .type [Boolean]
