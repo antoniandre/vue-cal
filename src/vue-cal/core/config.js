@@ -457,6 +457,15 @@ export const useConfig = (vuecal, props, attrs) => {
   watch(() => props.locale, newLocale => {
     loadTexts(newLocale || 'en-us')
     applyDateUtilsZone(dateUtils, props.timezone, newLocale || 'en-us')
+    for (let i = 0; i < events.length; i++) {
+      const e = events[i]
+      if (e._) {
+        delete e._.cachedStart
+        delete e._.cachedEnd
+        delete e._.register
+      }
+    }
+    events.splice(events.length, 0)
   })
 
   watch(() => props.timezone, newTimezone => {
@@ -466,8 +475,13 @@ export const useConfig = (vuecal, props, attrs) => {
       if (e._) {
         delete e._.cachedStart
         delete e._.cachedEnd
+        // Force injectMetaData to re-run via the missingMethods check so startMinutes
+        // and startFormatted are recomputed with the new timezone.
+        delete e._.register
       }
     }
+    // Trigger the processEvents computed to re-run immediately with the new timezone.
+    events.splice(events.length, 0)
   })
 
   applyDateUtilsZone(dateUtils, props.timezone, props.locale)
