@@ -420,7 +420,6 @@ export const useEvents = vuecal => {
    *                         options.schedule The schedule to filter events by.
    *                         options.background Whether to include background events.
    *                         options.allDay Whether to include all-day events.
-   *                         options.exactTime Whether to use precise timestamps for overlap checks.
    * @returns {Array} Array of events in the range
    */
   const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false, exactTime = false } = {}) => {
@@ -438,8 +437,10 @@ export const useEvents = vuecal => {
     const endMonth = endParts ? endParts.month : end.getMonth() + 1
     const startDay = startParts ? startParts.day : start.getDate()
     const endDay = endParts ? endParts.day : end.getDate()
-    const rangeStartTimestamp = dateUtils.startOfZonedDay(start).getTime()
-    const rangeEndTimestamp = dateUtils.endOfZonedDay(end).getTime()
+    // exactTime: use precise timestamps (for overlap checks); otherwise normalize to zoned day boundaries
+    // (for view/cell range queries where any event on the date should be included).
+    const rangeStartTimestamp = exactTime ? start.getTime() : dateUtils.startOfZonedDay(start).getTime()
+    const rangeEndTimestamp = exactTime ? end.getTime() : dateUtils.endOfZonedDay(end).getTime()
 
     const excludeSet = new Set(excludeIds)
     const eventsArray = []
