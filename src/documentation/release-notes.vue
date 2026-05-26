@@ -3,6 +3,11 @@ h1.title1 Release Notes
 
 ul.history.ml2
   li.patch
+    strong.version 5.0.1-rc.46
+    ul
+      li Fixed overlap detection falsely blocking valid drag-and-drop and resize operations when a non-overlapping event existed elsewhere in the same day cell. #[issue-link 120]
+
+  li.patch
     strong.version 5.0.1-rc.45
     ul
       li Added a media query for smaller screens to adjust the padding of the view button, nav, title, and today button. #[issue-link 113]
