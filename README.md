@@ -8,7 +8,7 @@
 
 # Vue Cal v5 - A Flexible and Beautiful Vue 3 Calendar 📅✨
 
-Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable.
+Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable. Need the backend too? **[Planisto](https://planisto.io)** is the scheduling infrastructure built by the same author, always powered by the latest Vue Cal.
 
 ---
 
@@ -48,6 +48,16 @@ Experience Vue Cal in action or dive into the docs for setup instructions and AP
 > [**V4 Demo & Documentation**](https://antoniandre.github.io/vue-cal-v4)
 
 > [**V4 Repo**](https://antoniandre.github.io/vue-cal-v4)
+
+---
+
+## 🗓️ Need a backend for your Vue Cal integration?
+
+Vue Cal handles the UI. **[Planisto](https://planisto.io)** handles everything behind it — REST API, event storage, team management, booking engine, and embeds — built by the same author, always running the latest Vue Cal.
+
+Because Planisto is maintained by the same developer, Vue Cal improvements land in Planisto automatically. And the other way around: features Planisto users need get built back into Vue Cal for everyone.
+
+> [planisto.io](https://planisto.io) — free to start, no card required.
 
 ---
 
