@@ -2,11 +2,16 @@
 h1.title1 Release Notes
 
 ul.history.ml2
-  li.patch
-    strong.version 5.0.1-rc.46
+  li.minor
+    strong.version 5.1.0
     ul
       li Added #[code timezone] prop (IANA display zone). Grid, labels, and positioning use the zone; emitted events stay #[code Date] instants.
       li Zone-less date strings are interpreted in the display zone when #[code timezone] is set. #[code allDay] events use calendar dates.
+
+  li.patch
+    strong.version 5.0.1-rc.46
+    ul
+      li Fixed overlap detection falsely blocking valid drag-and-drop and resize operations when a non-overlapping event existed elsewhere in the same day cell. #[issue-link 120]
 
   li.patch
     strong.version 5.0.1-rc.45

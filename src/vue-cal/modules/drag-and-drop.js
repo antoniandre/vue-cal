@@ -339,7 +339,7 @@ export function useDragAndDrop (vuecal) {
         ...((newSchedule !== undefined) && { schedule: newSchedule }),
         _: { id: incomingEvent._?.id || incomingEvent.id, duration: deltaMinutes(newStart, newEnd) },
         getOverlappingEvents: () => {
-          return eventsManager.getEventsInRange(newStart, newEnd, { schedule: newSchedule })
+          return eventsManager.getEventsInRange(newStart, newEnd, { schedule: newSchedule, exactTime: true })
         }
       }
       onAcceptedDrop = modifiedEvent => {

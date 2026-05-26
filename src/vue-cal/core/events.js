@@ -188,7 +188,7 @@ export const useEvents = vuecal => {
         const rawSchedule = at?.schedule !== undefined && at?.schedule !== null ? at.schedule : this.schedule
         const eventSchedule = config.schedules?.length ? rawSchedule : null
 
-        return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule })
+        return getEventsInRange(eventStart, eventEnd, { excludeIds: [this._.id], schedule: eventSchedule, exactTime: true })
       }
     }
 
@@ -420,9 +420,10 @@ export const useEvents = vuecal => {
    *                         options.schedule The schedule to filter events by.
    *                         options.background Whether to include background events.
    *                         options.allDay Whether to include all-day events.
+   *                         options.exactTime Whether to use precise timestamps for overlap checks.
    * @returns {Array} Array of events in the range
    */
-  const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false } = {}) => {
+  const getEventsInRange = (start, end, { excludeIds = [], schedule = null, background = true, allDay = false, exactTime = false } = {}) => {
     const { byId, byYear } = events.value
     const totalEvents = Object.keys(byId).length
 

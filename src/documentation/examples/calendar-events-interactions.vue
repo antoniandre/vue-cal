@@ -560,13 +560,13 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
     .w-flex.wrap.gap3.justify-end.mt8
       w-switch(v-model="exDragAndDrop.draggableEvents" label-color="base") Draggable Events
       w-tooltip(align-right tooltip="Allow dropping events on top of other events")
-        div(v-on="on")
+        div
           w-switch(v-model="exDragAndDrop.overlappableEvents" label-color="base") Overlappable Events
       w-tooltip(align-right tooltip="Snap the event to the closest round hour when dropped or resized")
-        div(v-on="on")
+        div
           w-switch(v-model="exDragAndDrop.snapToInterval" label-color="base") Snap to Interval
       w-tooltip(align-right tooltip="Override the default event dragging CSS styles")
-        div(v-on="on")
+        div
           w-switch(v-model="exDragAndDrop.overrideDragCss" label-color="base") Override Draggable CSS
 
   template(#code-html).
