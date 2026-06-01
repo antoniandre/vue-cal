@@ -113,6 +113,11 @@ const routes = [
     component: () => import('@/documentation/timezone-test-view.vue')
   },
   {
+    path: '/test-events-sync',
+    name: 'test-events-sync',
+    component: () => import('@/documentation/events-external-sync-test-view.vue')
+  },
+  {
     path: '/:pathMatch(.*)',
     name: 'not-found',
     component: () => import('@/documentation/404.vue'),

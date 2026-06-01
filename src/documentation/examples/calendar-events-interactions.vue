@@ -407,6 +407,42 @@ example(title="Edit Events" anchor="edit-events")
       p(v-html="event.content")
 
 //- Example.
+example(title="Patch a Single Event" anchor="patch-event")
+  template(#desc)
+    p.mb2.
+      After an API save, update one row in place with #[code event.patch()] or #[code view.updateEvent()]
+      instead of rebuilding the whole #[code events] array.
+      See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
+    p Click an event to append “ ✓” to its title via #[code event.patch].
+  template(#code-html).
+    &lt;vue-cal
+      :events="events"
+      @event-click="({ event }) => event.patch({ title: event.title + ' ✓' })" /&gt;
+
+    &lt;!-- Or with the server id only: --&gt;
+    &lt;vue-cal
+      :events="events"
+      @ready="({ view }) => calView = view"
+      @event-click="({ event }) => calView.updateEvent({ id: event.id }, { title: event.title + ' ✓' })" /&gt;
+  template(#code-js).
+    const events = [
+      { id: '1', title: 'Meeting', start: new Date(...), end: new Date(...) }
+    ]
+
+  vue-cal(
+    :events="exPatchEvent.events"
+    @event-click="exPatchEvent.onClick"
+    :time-from="9 * 60"
+    :time-to="15 * 60"
+    :views="{ days: { cols: 5, rows: 1 } }"
+    view="days"
+    :views-bar="false"
+    :dark="store.darkMode")
+    template(#event="{ event }")
+      strong {{ event.title }}
+      p {{ event.start.formatTime() }} - {{ event.end.formatTime() }}
+
+//- Example.
 example(title="Events v-model" anchor="events-v-model")
   template(#desc)
     p.
@@ -1046,6 +1082,14 @@ const exDeleteEvents = reactive({
 })
 
 const exEditEventsVuecalRef = ref(null)
+const exPatchEvent = reactive({
+  events: [
+    ...events.map(e => ({ ...e, id: String(e.id ?? e.title) }))
+  ],
+  onClick: ({ event }) => {
+    event.patch({ title: `${event.title} ✓` })
+  }
+})
 const exEditEvents = reactive({
   events: [
     ...events.map(e => ({ ...e })), // Clone events when reusing, so events are independent.

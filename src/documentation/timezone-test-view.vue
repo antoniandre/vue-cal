@@ -8,7 +8,7 @@
     ref="vueCalRef"
     timezone="America/New_York"
     view="day"
-    view-date="2025-03-09"
+    view-date="2026-06-09"
     :events="events"
     :views="{ day: {} }"
     :views-bar="false"
@@ -24,27 +24,27 @@ const vueCalRef = ref(null)
 const cellSpanMs = ref(0)
 
 setTimeZone('America/New_York')
-const exclusiveMultiday = spansMultipleDays(stringToDate('2025-03-10'), stringToDate('2025-03-11'))
-const countDaysDst = countDays('2025-03-08', '2025-03-10')
+const exclusiveMultiday = spansMultipleDays(stringToDate('2026-06-10'), stringToDate('2026-06-11'))
+const countDaysDst = countDays('2026-06-08', '2026-06-10')
 
 const events = [
   {
     title: 'Late',
-    start: '2025-03-09 23:30',
-    end: '2025-03-09 23:45',
+    start: '2026-06-09 23:30',
+    end: '2026-06-09 23:45',
     class: 'tz-test-event'
   },
   {
     title: 'All day',
-    start: '2025-03-10',
-    end: '2025-03-10',
+    start: '2026-06-10',
+    end: '2026-06-10',
     allDay: true,
     class: 'tz-test-allday'
   },
   {
     title: 'Exclusive end',
-    start: '2025-03-10',
-    end: '2025-03-11',
+    start: '2026-06-10',
+    end: '2026-06-11',
     allDay: true,
     class: 'tz-test-exclusive-allday'
   }

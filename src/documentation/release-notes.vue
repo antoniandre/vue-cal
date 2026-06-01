@@ -9,6 +9,19 @@ ul.history.ml2
       li Zone-less date strings are interpreted in the display zone when #[code timezone] is set. #[code allDay] events use calendar dates.
 
   li.patch
+    strong.version 5.0.1-rc.47
+    ul
+      li.
+        #[strong New:] #[code event.patch(partial)] on each event — update one event in place (ideal after an API save or in custom event UI).
+      li #[strong New:] #[code view.updateEvent()] and #[code view.refreshEvents()] on the view object.
+      li #[strong New:] Incremental events index — targeted add/update/remove without rebuilding the whole grid.
+      li.
+        #[strong Improved:] #[code :events] / #[code v-model:events] merge by #[code id] — refetching a full list no longer flashes the whole calendar when ids are stable.
+      li #[strong Improved:] #[code update:events] is emitted when the calendar creates, updates, deletes, drags, or resizes events.
+      li #[strong New:] #[code event-updated] emit after #[code event.patch] or #[code view.updateEvent].
+      li See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
+
+  li.patch
     strong.version 5.0.1-rc.46
     ul
       li Fixed overlap detection falsely blocking valid drag-and-drop and resize operations when a non-overlapping event existed elsewhere in the same day cell. #[issue-link 120]

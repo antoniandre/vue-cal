@@ -49,6 +49,13 @@ ul
   li Exposed event overlap detection for more external control.
   li Supports dynamic event colors.
 
+title-link(h2 anchor="events-from-your-app") Updating events from your app (5.0.1-rc.47+)
+p.
+  Server-driven apps can keep using #[code :events] / #[code v-model:events]. When each event has a stable
+  #[code id], refetches merge in place without redrawing every event. For a single row after an API save,
+  #[code event.patch(partial)] and #[code view.updateEvent(criteria, partial)] are available on calendar instances.
+p See the #[router-link(to="/api#updating-events-from-your-app") API section] for details.
+
 title-link(h2 anchor="global-changes") Global Changes
 ul
   li

@@ -152,6 +152,12 @@ w-accordion.mt3(
           strong.code deleteEvent(id, stage)
           |  - Deletes an event given its ID and a deletion stage (1, 2, 3).
         li
+          strong.code updateEvent(criteria, partial, options)
+          |  - Finds an event by criteria (e.g. #[code { id }]) and merges partial fields in place.
+        li
+          strong.code refreshEvents({ ids })
+          |  - Recomputes layout metadata for all events, or only the given ids. Usually unnecessary when using #[code :events] merge or #[code updateEvent].
+        li
           strong.code scrollToCurrentTime()
           |  - Scrolls the calendar body to the current time.
         li
@@ -1249,6 +1255,77 @@ w-accordion.mt2(
         Resizing on the X axis is only available on #[span.code week] view.
 
 h2.w-flex.justify-space-between.mb2
+  title-link(div anchor="updating-events-from-your-app") Updating events from your app
+
+p.
+  Vue Cal gives you several ways to keep the calendar in sync with your app. The familiar
+  #[code :events] / #[code v-model:events] binding still works great — especially with a stable
+  #[code id] on each event, so refetches merge smoothly without redrawing the whole grid.
+  #[strong New in v5.0.1-rc.47:] each event also exposes #[code event.patch(partial)], and the view
+  exposes #[code updateEvent()], so you can update a single event in place after an API call.
+
+h5.mt4 Ways to keep the calendar in sync
+table.w-table.mb4
+  thead
+    tr
+      th Approach
+      th What you pass
+      th Best for
+  tbody
+    tr
+      td #[code :events] / #[code v-model:events] (default merge)
+      td Full list on the calendar (stable #[code id] per row)
+      td Initial load, refetching a range, replacing the whole set
+    tr
+      td #[code event.patch(partial)] (new)
+      td Fields to change on this event
+      td Slot handlers, #[code @event-click], one row after save
+    tr
+      td #[code view.updateEvent(criteria, partial)] (new)
+      td Lookup (e.g. #[code { id }]) + partial fields
+      td Dialogs / stores when you have an id but not the instance
+    tr
+      td #[code view.deleteEvent()]
+      td Existing API
+      td Removing one event
+    tr
+      td One-item array to #[code :events]
+      td Easy to mistake for a patch
+      td Avoid — merge treats the prop as the full list. Use #[code event.patch] or pass the full list.
+
+w-alert.mb4(info)
+  | When you update the #[code events] prop, pass the #[strong complete] list you want on the calendar
+  | (events left out are removed). If you only changed one row after an API call,
+  | #[code event.patch()] or #[code view.updateEvent()] is often simpler than rebuilding the array.
+
+h5.mt4 Patch a single event (new)
+p.
+  Like #[code event.delete()], #[code event.patch()] is available on each rendered event — in the
+  #[code #event] slot, #[code @event-click], and other handlers. Pass only the fields you want to change.
+
+ssh-pre(language="html-vue" :dark="store.darkMode").
+  &lt;template #event="{ event }"&gt;
+    &lt;span&gt;{{ event.title }}&lt;/span&gt;
+    &lt;button @click.stop="event.patch({ title: 'Saved ✓' })"&gt;Rename&lt;/button&gt;
+  &lt;/template&gt;
+
+h5.mt4 view.updateEvent(criteria, partial)
+p.
+  Same behavior when you only have #[code { id }] from the server:
+  #[code view.updateEvent({ id: eventId }, { title: 'New title' })].
+
+h5.mt4 Refetch or replace the full list
+p.
+  Assign a new array with stable public #[code id]s on each item — Vue Cal merges in place so
+  object identity and internal rendering stay smooth.
+
+h5.mt4 Choosing an approach
+ul
+  li #[strong Single field after API] → #[code event.patch] or #[code view.updateEvent]
+  li #[strong Whole list refreshed] → update #[code events] with the full mapped array
+  li #[strong Common mistake] → #[code events = [onlyUpdatedRow]] removes other events; use patch or the full list
+
+h2.w-flex.justify-space-between.mb2
   title-link(div anchor="emitted-events") Emitted Events
   w-switch.my1.body(@update:model-value="expandedEmittedEvents = Array(50).fill($event)") Expand All
 
@@ -1309,8 +1386,16 @@ w-accordion(
     template(#title)
       strong.code.title5 update:events
     template(#content)
-      p Fired when events are created, modified, or deleted. Part of v-model binding for the events property.
+      p.
+        Fired when the calendar mutates the events array: create, #[code updateEvent] / #[code event.patch],
+        delete, drag-and-drop, and resize. Part of v-model binding for the events property.
       p Returns: #[code {Array}] The updated array of calendar events.
+  w-accordion-item
+    template(#title)
+      strong.code.title5 event-updated
+    template(#content)
+      p Fired after a successful #[code event.patch] or #[code view.updateEvent].
+      p Returns: #[code { event, partial }] — the calendar event instance and the sanitized partial that was applied.
 
   h5.mt2.base-color Cell-related Events
   w-accordion-item
