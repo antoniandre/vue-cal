@@ -105,6 +105,7 @@ const emit = defineEmits([
   'update:selectedDate',
   'update:viewDate',
   'update:events',
+  'event-updated',
   'event-delete',
   'event-created',
   'event-dropped',

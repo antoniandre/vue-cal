@@ -133,7 +133,7 @@ export interface VueCalEvent {
   _?: undefined,
   start: Date | VueCalDateTimeString,
   end: Date | VueCalDateTimeString,
-  id?: string,
+  id?: number | string,
   title?: string,
   content?: string
   class?: string,
@@ -143,6 +143,9 @@ export interface VueCalEvent {
   resizable?: boolean,
   draggable?: boolean,
   deletable?: boolean,
+  /** In-place partial update (calendar-managed instances). */
+  patch?: (partial: Partial<VueCalEvent>) => VueCalEvent | false | void
+  delete?: (forcedStage?: number) => boolean | void
 }
 
 export interface VueCalConfig {
@@ -235,7 +238,13 @@ export interface VueCalView {
   updateViewDate: (date: Date) => void
   updateSelectedDate: (date: Date) => void
   createEvent: (event: VueCalEvent) => void
-  deleteEvent: (eventId: number, forceStage?: number) => void
+  deleteEvent: (eventId: number | string | Record<string, unknown>, forceStage?: number) => void
+  updateEvent: (
+    criteria: VueCalEvent | number | string | Record<string, unknown>,
+    partial: Partial<VueCalEvent>,
+    options?: { emit?: boolean }
+  ) => VueCalEvent | false | void
+  refreshEvents: (options?: { ids?: (number | string)[] }) => boolean | void
   scrollToCurrentTime: () => void
   scrollToTime: (minutes: number) => void
   scrollTop: () => void
@@ -308,6 +317,7 @@ export interface VueCalEmits extends Record<string, ((...args: any[]) => any)> {
   'event-resize-end': (value: VueCalEventEvents & {original: VueCalEvent, overlaps: VueCalEvent[]}) => any
   'event-drop': (value: VueCalEventEvents & {overlaps: VueCalEvent[], cell: VueCalCell, external: boolean}) => any
   'event-dropped': (value: VueCalEventEvents & {originalEvent: VueCalEvent, cell: VueCalCell, external: boolean}) => any
+  'event-updated': (value: { event: VueCalEvent, partial: Partial<VueCalEvent> }) => any
 }
 
 export declare const VueCal: DefineSetupFnComponent<VueCalConfig, VueCalEmits>

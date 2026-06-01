@@ -16,7 +16,8 @@ export const props = {
   // Minimum drag distance in pixels to create an event (prevents accidental event creation when trying to navigate).
   eventCreateMinDrag: { type: Number, default: 15 }, // The minimum drag distance in pixels to create an event.
   // The array of events to display in Vue Cal.
-  // Can hold just the view events and be updated or the full array of all events available.
+  // When updated from the parent, merge-by-id keeps object identity per stable public `id`
+  // (patch changed rows, add new ids, remove ids missing from the snapshot).
   events: { type: Array, default: () => [] },
   // Displays an events counter in each cell on month view or year view.
   // Can be a boolean or an array of views to display the event count on.

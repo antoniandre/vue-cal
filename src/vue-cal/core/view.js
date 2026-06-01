@@ -643,6 +643,9 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   const createEvent = eventsManager.createEvent
 
   const deleteEvent = eventsManager.deleteEvent
+  // Criteria can be an event object, an event id/string, or a criteria object like { id: '...' }.
+  const updateEvent = (criteria, partial, options) => eventsManager.updateEvent(criteria, partial, options)
+  const refreshEvents = options => eventsManager.refreshEvents(options)
   // ------------------------------------------------------
 
   watch(() => config.view, view => switchView(view, false))
@@ -710,6 +713,8 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
     scrollTop,
     createEvent,
     deleteEvent,
+    updateEvent,
+    refreshEvents,
     // Getters.
     get isDay () { return viewId.value === 'day' },
     get isDays () { return viewId.value === 'days' },

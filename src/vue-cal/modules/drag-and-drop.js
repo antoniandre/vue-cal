@@ -383,8 +383,18 @@ export function useDragAndDrop (vuecal) {
       // Can externally use event.isOverlapping() to check if the event overlaps with other events.
     }
     // If the event drop is accepted, add the event to the events array (source of truth).
-    if (acceptDrop !== false) onAcceptedDrop(acceptDrop)
-
+    if (acceptDrop !== false) {
+      onAcceptedDrop(acceptDrop)
+      if (event?._?.id && dragging.fromVueCal === vuecalUid) {
+        eventsManager.updateEvent(event, { start: event.start, end: event.end }, { emit: false })
+        const moved = !incomingEvent.start || !incomingEvent.end ||
+          event.start.getTime() !== incomingEvent.start.getTime() ||
+          event.end.getTime() !== incomingEvent.end.getTime() ||
+          event.schedule !== incomingEvent.schedule ||
+          !!event.allDay !== !!incomingEvent.allDay
+        if (moved) eventsManager.emitEventsChange()
+      }
+    }
     cell.highlighted = false
     cell.highlightedSchedule = null
     cancelViewChange = false

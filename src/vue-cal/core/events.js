@@ -1,6 +1,8 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, shallowRef, triggerRef } from 'vue'
 import { percentageToMinutes } from '../utils/conversions'
 import { clampResizeProposedRange, eventRangeViolatesAllowEvents } from '../utils/special-hours-allow-events'
+import { sanitizeEventPartial, incomingEventChanged } from './events-sync'
+import { createEventsIndex, rebuildEventsIndex, addOrUpdateEventInIndex, removeEventFromIndex } from './events-index'
 
 /**
  * useEvents is a composable function that manages events for the Vue Cal component.
@@ -12,88 +14,25 @@ import { clampResizeProposedRange, eventRangeViolatesAllowEvents } from '../util
 export const useEvents = vuecal => {
   const { dateUtils, config } = vuecal
   let uid = 0 // Internal unique ID events counter.
+  const eventsIndex = shallowRef(createEventsIndex())
+  const events = computed(() => eventsIndex.value)
+  const multidayWarned = { value: false }
 
-  // Computed property to manage and organize events.
-  const events = computed(() => {
-    const events = {
-      // A map of events indexed by { YYYY: { MM: { DD: [] } } }.
-      // Each year contains a map of 12 months starting from 1, each containing a map of days starting from 1, each containing an array of event IDs.
-      byYear: {},
-      byDate: {}, // A map of single-day events indexed by date.
-      recurring: [], // An array of events IDs that are recurring.
-      multiday: [], // An array of events IDs that are multiday.
-      byId: {} // A map of all the events indexed by ID for fast lookup. Each event is the original full event object.
-    }
+  const devWarn = import.meta.env.DEV ? msg => console.warn(msg) : null
 
-    // First sort the events by start date so the latest comes last in the DOM and has a natural
-    // higher z-index for readability when overlapping.
-    // Use stable sort to avoid unnecessary reordering when dates haven't changed.
-    const sortedEvents = config.events.slice().sort((a, b) => a.start - b.start < 0 ? -1 : 1)
-
-    for (let event of sortedEvents) {
-      // Check if event needs processing.
-      // --------------------------------------------------
-      // First check if dates are strings (need normalization) or methods are missing.
-      const hasStringDates = typeof event.start === 'string' || typeof event.end === 'string'
-      const missingMethods = !event._?.register || !event.isOverlapping || !event.delete
-
-      // Only check cached timestamps if we have Date objects and cached values.
-      let datesChanged = false
-      if (!hasStringDates && event._?.cachedStart && event._?.cachedEnd) {
-        datesChanged = event.start.getTime() !== event._?.cachedStart ||
-        event.end.getTime() !== event._?.cachedEnd
-      }
-      // --------------------------------------------------
-
-      // If any of the conditions are true, we need to process the event.
-      if (hasStringDates || missingMethods || datesChanged) {
-        // Make sure the dates are valid Date objects, and add formatted start date in `event._`.
-        if (!normalizeEventDates(event)) continue // Skip if invalid.
-
-        injectMetaData(event) // Inject core logic and utilities in each event.
-
-        // Cache the timestamps to detect future changes.
-        event._.cachedStart = event.start.getTime()
-        event._.cachedEnd = event.end.getTime()
-      }
-
-      events.byId[event._.id] = event // Save and index the event in the byId map.
-
-      if (event.recurring) {
-        events.recurring.push(event._.id)
-        // @todo: Possibly do other things here.
-      }
-      else if (dateUtils.spansMultipleDays(event.start, event.end)) {
-        event._.multiday = config.multidayEvents
-        if (!config.multidayEvents) {
-          console.info('Vue Cal: Multi-day events provided without being enabled. Truncating event end to next midnight.')
-          event.end = dateUtils.endOfZonedDay(event.start)
-          injectMetaData(event) // Re-inject the event metadata for the new end date.
-        }
-        else events.multiday.push(event._.id)
-
-        // @todo: handle multiday events. For now, index the event by its start date.
-        if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
-        events.byDate[event._.startFormatted].push(event._.id)
-      }
-      else {
-        // Index this event by its start date.
-        if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
-        events.byDate[event._.startFormatted].push(event._.id)
-
-        // Index this event by its start year and month.
-        const year = event._.startFormatted.substring(0, 4)
-        const month = event._.startFormatted.substring(5, 7)
-        const day = event._.startFormatted.substring(8, 10)
-        if (!events.byYear[year]) events.byYear[year] = {}
-        if (!events.byYear[year][month]) events.byYear[year][month] = {}
-        if (!events.byYear[year][month][day]) events.byYear[year][month][day] = []
-        events.byYear[year][month][day].push(event._.id)
-      }
-    }
-
-    return events
+  const getIndexCtx = () => ({
+    config,
+    dateUtils,
+    multidayWarned,
+    processEventForIndex
   })
+
+  const rebuildIndex = () => {
+    rebuildEventsIndex(eventsIndex.value, config.events, getIndexCtx())
+    triggerRef(eventsIndex)
+  }
+
+  const touchEventsIndex = () => triggerRef(eventsIndex)
 
   const normalizeInstantSeconds = (date, roundEnd59 = false) => {
     if (dateUtils.hasTimeZone()) {
@@ -107,6 +46,20 @@ export const useEvents = vuecal => {
     if (roundEnd59 && d.getSeconds() === 59) d.setMinutes(d.getMinutes() + 1, 0, 0)
     else d.setSeconds(0, 0)
     return d
+  }
+
+  const readEventInstant = (value, roundEnd59 = false) => {
+    if (value == null) return NaN
+    let d = value instanceof Date ? new Date(value.getTime()) : (typeof value === 'string' ? dateUtils.stringToDate(value) : null)
+    if (!d || isNaN(d.getTime())) return NaN
+    return normalizeInstantSeconds(d, roundEnd59).getTime()
+  }
+
+  const incomingDatesChanged = (target, incoming) => {
+    if (!('start' in incoming) && !('end' in incoming)) return false
+    if ('start' in incoming && readEventInstant(incoming.start) !== readEventInstant(target.start)) return true
+    if ('end' in incoming && readEventInstant(incoming.end, true) !== readEventInstant(target.end, true)) return true
+    return false
   }
 
   // Normalize event dates to ensure they are valid Date objects and add formatted dates.
@@ -135,15 +88,95 @@ export const useEvents = vuecal => {
     return true
   }
 
-  // Inject core logic and utilities in each event.
-  const injectMetaData = event => {
-    if (!event._) event._ = {}
+  vuecal.isIncomingEventChanged = (target, inc) => incomingEventChanged(target, inc, {
+    isDatesChanged: incomingDatesChanged
+  })
 
-    // Always update these core properties as they depend on dates.
-    event._.id = event._.id || ++uid
-    event._.multiday = dateUtils.spansMultipleDays(event.start, event.end)
-    event._.startFormatted = dateUtils.formatDateLite(event.start) // yyyy-mm-dd formatted date string.
-    event._.endFormatted = dateUtils.formatDateLite(event.end) // yyyy-mm-dd formatted date string.
+  const emitEventsChange = () => vuecal.emit('update:events', config.events)
+
+  const resolveEventTarget = target => {
+    if (!target) return undefined
+    if (typeof target === 'number' || (typeof target === 'string' && target !== '' && !isNaN(target))) {
+      const n = +target
+      return config.events.find(e => e._?.id === n) ||
+        config.events.find(e => String(e.id) === String(target))
+    }
+    if (typeof target === 'object') {
+      if (target._?.id) {
+        const byInternal = events.value.byId[target._.id]
+        if (byInternal) return byInternal
+        return config.events.find(e => e._?.id === target._.id)
+      }
+      if (target.id !== undefined && target.id !== null && target.id !== '')
+        return config.events.find(e => String(e.id) === String(target.id))
+      if (config.events.includes(target)) return target
+      const entries = Object.entries(target)
+      if (entries.length) {
+        const [criteriaKey, criteriaValue] = entries[0]
+        return config.events.find(event => event[criteriaKey] === criteriaValue)
+      }
+    }
+    return undefined
+  }
+
+  function updateEvent(target, partial, { emit = true } = {}) {
+    const event = resolveEventTarget(target)
+    if (!event) {
+      console.warn('Vue Cal: Cannot update unknown event.', target)
+      return false
+    }
+
+    const clean = sanitizeEventPartial(partial, { warn: devWarn })
+    const oldStartFormatted = event._.startFormatted
+    const savedStart = event.start
+    const savedEnd = event.end
+
+    const patch = { ...clean }
+    if (patch.start !== undefined) {
+      patch.start = typeof patch.start === 'string' ? dateUtils.stringToDate(patch.start) : new Date(patch.start)
+    }
+    if (patch.end !== undefined) {
+      patch.end = typeof patch.end === 'string' ? dateUtils.stringToDate(patch.end) : new Date(patch.end)
+    }
+
+    Object.assign(event, patch)
+    if (!normalizeEventDates(event)) {
+      event.start = savedStart
+      event.end = savedEnd
+      console.warn('Vue Cal: Invalid dates in event patch.', partial)
+      return false
+    }
+    injectMetaData(event)
+
+    addOrUpdateEventInIndex(eventsIndex.value, event, getIndexCtx(), oldStartFormatted)
+    touchEventsIndex()
+
+    if (emit) {
+      emitEventsChange()
+      vuecal.emit('event-updated', { event, partial: clean })
+    }
+    return event
+  }
+
+  function refreshEvents({ ids } = {}) {
+    if (!ids?.length) {
+      rebuildIndex()
+      return true
+    }
+    for (let i = 0; i < ids.length; i++) {
+      const event = resolveEventTarget(ids[i])
+      if (event && normalizeEventDates(event)) {
+        injectMetaData(event)
+        addOrUpdateEventInIndex(eventsIndex.value, event, getIndexCtx())
+        touchEventsIndex()
+      }
+    }
+    return true
+  }
+
+  // Inject core logic and utilities in each event.
+  const refreshEventTimeMeta = event => {
+    if (!event._) event._ = {}
     const timed = !event.allDay
     event._.startMinutes = timed ? ~~dateUtils.dateToMinutes(event.start) : 0
     event._.endMinutes = timed ? ~~dateUtils.dateToMinutes(event.end) : 24 * 60
@@ -158,11 +191,26 @@ export const useEvents = vuecal => {
     event._.endTimeFormatted24 = `${endHours.toString().padStart(2, 0)}:${endMinutes}`
     event._.endTimeFormatted12 = `${(endHours % 12) || 12}${endMinutes ? `:${endMinutes}` : ''} ${endHours < 12 ? 'AM' : 'PM'}`
     event._.duration = Math.abs(~~((event.end - event.start) / 60000)) // Integer (minutes).
+  }
+
+  const injectMetaData = event => {
+    if (!event._) event._ = {}
+
+    // Always update these core properties as they depend on dates.
+    event._.id = event._.id || ++uid
+    event._.multiday = dateUtils.spansMultipleDays(event.start, event.end)
+    event._.startFormatted = dateUtils.formatDateLite(event.start) // yyyy-mm-dd formatted date string.
+    event._.endFormatted = dateUtils.formatDateLite(event.end) // yyyy-mm-dd formatted date string.
+    refreshEventTimeMeta(event)
 
     // Inject a delete function in each event and set the deleting flag to false.
     if (!event.delete) {
       // Use a shared function ref to avoid creating a new closure for each event.
       event.delete = function (forcedStage) { return deleteEvent(this._.id, forcedStage) }
+    }
+
+    if (!event.patch) {
+      event.patch = function (partial) { return updateEvent(this, partial) }
     }
 
     if (event._.deleting === undefined) event._.deleting = false
@@ -193,7 +241,7 @@ export const useEvents = vuecal => {
     }
 
     // Only inject register/unregister methods if they don't exist
-    if (!event._.register) {
+    if (typeof event._.register !== 'function') {
       // Register the event DOM node in the event in order to emit DOM events.
       // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
       event._.register = domNode => {
@@ -206,17 +254,41 @@ export const useEvents = vuecal => {
     }
 
     if (!event._.unregister) {
-      // Unregister the event DOM node and cleanup preventing potential memory leaks.
-      // Can't use `this` and avoid new closure for each event: here it would refer to `event._`.
+      // Unregister the event DOM node. Methods stay on the object — same identity may remount after prop merge.
       event._.unregister = () => {
         // Break any circular references in the event object.
         event._.$el = null
-        event._.register = null
-        // Clear any methods that might create closures.
-        event.isOverlapping = null
-        event.getOverlappingEvents = null
-        event.delete = null
+        // Component unmount only — event object may stay in config.events and remount (merge, HMR).
+        // Clear DOM ref; keep methods on the data object.
       }
+    }
+  }
+
+  const ensureEventMethods = event => {
+    if (!event) return false
+    if (!normalizeEventDates(event)) return false
+    injectMetaData(event)
+    return true
+  }
+
+  const processEventForIndex = event => ensureEventMethods(event)
+
+  vuecal.onEventsPropSync = syncResult => {
+    const mode = typeof syncResult === 'string' ? syncResult : syncResult?.mode
+    if (mode === 'locale' || mode === 'timezone' || mode === 'replace') {
+      rebuildIndex()
+      return
+    }
+    if (mode === 'merge') {
+      const changed = syncResult?.changed || []
+      const removed = syncResult?.removed || []
+      for (let i = 0; i < removed.length; i++) removeEventFromIndex(eventsIndex.value, removed[i])
+      for (let i = 0; i < changed.length; i++) {
+        const ev = changed[i]
+        const oldStart = ev._?.startFormatted
+        if (processEventForIndex(ev)) addOrUpdateEventInIndex(eventsIndex.value, ev, getIndexCtx(), oldStart)
+      }
+      if (changed.length || removed.length) touchEventsIndex()
     }
   }
 
@@ -275,6 +347,11 @@ export const useEvents = vuecal => {
 
     newEvent._.fireCreated = true // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
+    if (processEventForIndex(newEvent)) {
+      addOrUpdateEventInIndex(eventsIndex.value, newEvent, getIndexCtx())
+      touchEventsIndex()
+    }
+    emitEventsChange()
     return newEvent
   }
 
@@ -291,22 +368,18 @@ export const useEvents = vuecal => {
    */
   const deleteEvent = async (eventIdOrCriteria, forcedStage = 0) => {
     if (!eventIdOrCriteria) return console.warn('Vue Cal: Cannot delete event without its ID or criteria.')
-    let eventId = typeof eventIdOrCriteria === 'string' || !isNaN(eventIdOrCriteria) ? eventIdOrCriteria : null
-    const eventCriteria = typeof eventIdOrCriteria === 'object' ? Object.entries(eventIdOrCriteria) : null
-    if (eventCriteria) {
-      const [criteriaKey, criteriaValue] = eventCriteria[0]
-      eventId = config.events.find(event => event[criteriaKey] === criteriaValue)?._.id
-    }
 
     if (!config.editableEvents.delete) {
       return console.info('Vue Cal: Event deletion is disabled. Enable it with the `editable-events` props.')
     }
-    if (!eventId) return console.warn('Vue Cal: Cannot delete event without its ID.')
 
+    const event = resolveEventTarget(eventIdOrCriteria)
+    if (!event?._?.id) return console.warn('Vue Cal: Cannot delete event without its ID.')
+
+    const eventId = event._.id
     const index = config.events.findIndex(item => item._.id === eventId)
     if (index === -1) return console.warn(`Vue Cal: Cannot delete unknown event \`${eventId}\`.`)
 
-    const event = config.events[index]
     if (event.deletable === false) return console.warn(`Vue Cal: Can't delete event \`${eventId}\` since it was explicitely set to \`delete: false\`.`)
 
     switch (forcedStage) {
@@ -314,7 +387,12 @@ export const useEvents = vuecal => {
         if (!event._.deleting) event._.deleting = true
         // If the event is already marked as deleting, delete completely from the source of truth
         // by default, and skip the stage 2. Stage 2 (for visual deletion) will stay on specific demand.
-        else config.events.splice(index, 1) // Remove the event from the source of truth.
+        else {
+          config.events.splice(index, 1) // Remove the event from the source of truth.
+          removeEventFromIndex(eventsIndex.value, event)
+          touchEventsIndex()
+          emitEventsChange()
+        }
         break
       // Display the delete button.
       case 1:
@@ -334,7 +412,9 @@ export const useEvents = vuecal => {
         // Removing the event from the source of truth causes a reactivity update cascade that rerenders
         // all the cells and sub-components. This is not a bug, but in most cases, not the ideal behavior.
         config.events.splice(index, 1) // Remove the event from the source of truth.
-        vuecal.emit('update:events', config.events)
+        removeEventFromIndex(eventsIndex.value, event)
+        touchEventsIndex()
+        emitEventsChange()
         vuecal.emit('event-delete', event)
         break
     }
@@ -677,6 +757,7 @@ export const useEvents = vuecal => {
       if (acceptResize !== false) {
         resizeState.resizingEvent.start = newStart
         resizeState.resizingEvent.end = newEnd
+        refreshEventTimeMeta(resizeState.resizingEvent)
         // Reset last accepted event details if existing and accepting again.
         if (resizeState.resizingLastAcceptedEvent) resizeState.resizingLastAcceptedEvent = null
 
@@ -726,6 +807,13 @@ export const useEvents = vuecal => {
           resizeState.resizingEvent.start = resizeState.resizingOriginalEvent.start
           resizeState.resizingEvent.end = resizeState.resizingOriginalEvent.end
         }
+        const resized = resizeState.resizingEvent
+        const original = resizeState.resizingOriginalEvent
+        const moved = acceptResize !== false && (!original ||
+          resized.start.getTime() !== original.start.getTime() ||
+          resized.end.getTime() !== original.end.getTime())
+        updateEvent(resized, { start: resized.start, end: resized.end }, { emit: false })
+        if (moved) emitEventsChange()
       }
       vuecal.touch.isResizingEvent = false // Add a CSS class on wrapper while resizing.
       vuecal.touch.currentHoveredCell = null // Reset current hovered cell.
@@ -791,6 +879,8 @@ export const useEvents = vuecal => {
     }
   }
 
+  rebuildIndex()
+
   return {
     events,
     resizeState,
@@ -800,6 +890,10 @@ export const useEvents = vuecal => {
     getEventsInRange,
     createEvent,
     deleteEvent,
+    updateEvent,
+    refreshEvents,
+    emitEventsChange,
+    ensureEventMethods,
     isEventInRange,
     handleEventResize
   }

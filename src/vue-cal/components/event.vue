@@ -45,7 +45,6 @@ const emit = defineEmits(['event-drag-start', 'event-drag-end', 'event-resize-st
 const { config, view, dnd, touch: globalTouchState, dateUtils, eventsManager } = inject('vuecal')
 const { handleEventResize } = eventsManager
 const eventEl = ref(null)
-const event = reactive(props.event)
 // Kept outside the eventListeners computed so recomputes don't orphan a pending timeout.
 let clickTimeout = null
 
@@ -74,18 +73,24 @@ const touch = reactive({
 })
 
 const isDraggable = computed(() => {
+  const event = props.event
   return config.editableEvents.drag && event.draggable !== false && !event.background && touch.canTouchAndDrag !== false
 })
 
 const isResizable = computed(() => {
+  const event = props.event
   if (view.isMonth || view.isYear || view.isYears || props.inAllDayBar) return false
   if (event._.multiday && !eventEndsInThisCell.value) return false
   return config.time && config.editableEvents.resize && event.resizable !== false && !event.background
 })
 
-const isDeletable = computed(() => config.editableEvents.delete && event.deletable !== false && !event.background)
+const isDeletable = computed(() => {
+  const event = props.event
+  return config.editableEvents.delete && event.deletable !== false && !event.background
+})
 
 const classes = computed(() => {
+  const event = props.event
   const isMultiday = !!event._?.multiday
   const isHzl = config.horizontal
 
@@ -119,6 +124,7 @@ const classes = computed(() => {
 })
 
 const eventStartsInThisCell = computed(() => {
+  const event = props.event
   if (event._.multiday) {
     return dateUtils.startOfZonedDay(event.start).getTime() === props.cellStart.getTime()
   }
@@ -126,6 +132,7 @@ const eventStartsInThisCell = computed(() => {
 })
 
 const eventEndsInThisCell = computed(() => {
+  const event = props.event
   if (event._.multiday) {
     return dateUtils.isSameDate(new Date(new Date(event.end).setMilliseconds(-1)), props.cellEnd)
   }
@@ -133,12 +140,14 @@ const eventEndsInThisCell = computed(() => {
 })
 
 const plusDaysIndicator = computed(() => {
+  const event = props.event
   const start = dateUtils.startOfZonedDay(event.start).getTime()
   const end = dateUtils.startOfZonedDay(event.end).getTime()
   return Math.ceil((end - start) / (1000 * 60 * 60 * 24))
 })
 
 const styles = computed(() => {
+  const event = props.event
   const hasPosition = (view.isDay || view.isDays || view.isWeek) && config.time && !props.inAllDayBar
   const isHzl = config.horizontal
 
@@ -188,7 +197,7 @@ const eventListeners = computed(() => {
 
         // Check if e.type to not rewrap the DOM event in an object if already done.
         // `event-drop` is handled in the drag-and-drop composable.
-        if (e.type !== 'drop') handler(e.type ? { e, event } : e)
+        if (e.type !== 'drop') handler(e.type ? { e, event: props.event } : e)
       }
     }
   }
@@ -204,32 +213,32 @@ const eventListeners = computed(() => {
     }, 500)
     onMousedown(e)
 
-    externalHandlers.touchstart?.({ e, event })
+    externalHandlers.touchstart?.({ e, event: props.event })
   }
   eventListeners.mousedown = e => {
     e.stopPropagation()
     onMousedown(e)
 
-    externalHandlers.mousedown?.({ e, event })
+    externalHandlers.mousedown?.({ e, event: props.event })
   }
 
   // `event-delayed-click` is only fired after 400ms if there was no dblclick.
   eventListeners.click = e => {
-    externalHandlers.click?.({ e, event }) // Handle single click.
+    externalHandlers.click?.({ e, event: props.event }) // Handle single click.
 
     // Handle double click in eventListeners.dblclick.
     if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
     else {
       clickTimeout = setTimeout(() => {
         clickTimeout = null
-        externalHandlers['delayed-click']?.({ e, event }) // Handle delayed single click.
+        externalHandlers['delayed-click']?.({ e, event: props.event }) // Handle delayed single click.
       }, 400)
     }
   }
   eventListeners.dblclick = e => {
-    if (externalHandlers.dblclick) externalHandlers.dblclick({ e, event })
+    if (externalHandlers.dblclick) externalHandlers.dblclick({ e, event: props.event })
     // Show delete button on event on double click by default except if dblclick is used externally.
-    else event.delete(1)
+    else props.event.delete(1)
   }
 
   return eventListeners
@@ -242,6 +251,7 @@ const RECT_CACHE_DURATION = 16 // ~60fps
 
 // On mousedown OR TOUCHSTART on the event.
 const onMousedown = e => {
+  const event = props.event
   const domEvent = e.touches?.[0] || e // Handle click or touch event.
 
   // If the event target is the resizer, set the resizing flag.
@@ -269,12 +279,16 @@ const onMousedown = e => {
   touch.holdTimer = setTimeout(() => {
     touch.holding = true
     // If there's an @event-hold external listener, call it after holding 1s.
-    eventListeners.value.hold?.({ e, event })
+    eventListeners.value.hold?.({ e, event: props.event })
   }, 1000)
 }
 
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
-onMounted(() => event._.register(eventEl.value))
+onMounted(() => {
+  const event = props.event
+  eventsManager.ensureEventMethods(event)
+  event._.register(eventEl.value)
+})
 
 onBeforeUnmount(() => {
   // Clean up timers to prevent memory leaks.
@@ -282,7 +296,7 @@ onBeforeUnmount(() => {
   if (touch.touchAndDragTimer) touch.touchAndDragTimer = clearTimeout(touch.touchAndDragTimer)
   if (clickTimeout) clickTimeout = clearTimeout(clickTimeout)
 
-  event._.unregister()
+  props.event._.unregister()
 })
 </script>
 

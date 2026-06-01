@@ -1,4 +1,5 @@
 import { computed, reactive, toRefs, watch } from 'vue'
+import { syncEventsFromProp } from './events-sync'
 
 export const defaults = {
   texts: {
@@ -446,42 +447,33 @@ export const useConfig = (vuecal, props, attrs) => {
     dateUtils.updateTexts(vuecal.texts)
   }
 
+  const devWarn = import.meta.env.DEV ? msg => console.warn(msg) : null
+
   // Keep a local copy of the events so the prop is not mandatory.
   const events = reactive(props.events || [])
+
   // Watch both reference (full replacement) and length (push/pop/splice) changes.
   // Avoids deep watching which would traverse every event property on each mutation.
   watch(
     [() => props.events, () => props.events?.length],
-    ([evts]) => events.splice(0, events.length, ...(evts || []))
+    ([evts]) => {
+      const syncResult = syncEventsFromProp(events, evts, {
+        warn: devWarn,
+        isChanged: (target, inc) => vuecal.isIncomingEventChanged?.(target, inc)
+      })
+      vuecal.onEventsPropSync?.(syncResult)
+    },
+    { immediate: true }
   )
   watch(() => props.locale, newLocale => {
     loadTexts(newLocale || 'en-us')
     applyDateUtilsZone(dateUtils, props.timezone, newLocale || 'en-us')
-    for (let i = 0; i < events.length; i++) {
-      const e = events[i]
-      if (e._) {
-        delete e._.cachedStart
-        delete e._.cachedEnd
-        delete e._.register
-      }
-    }
-    events.splice(events.length, 0)
+    vuecal.onEventsPropSync?.('locale')
   })
 
   watch(() => props.timezone, newTimezone => {
     applyDateUtilsZone(dateUtils, newTimezone, props.locale)
-    for (let i = 0; i < events.length; i++) {
-      const e = events[i]
-      if (e._) {
-        delete e._.cachedStart
-        delete e._.cachedEnd
-        // Force injectMetaData to re-run via the missingMethods check so startMinutes
-        // and startFormatted are recomputed with the new timezone.
-        delete e._.register
-      }
-    }
-    // Trigger the processEvents computed to re-run immediately with the new timezone.
-    events.splice(events.length, 0)
+    vuecal.onEventsPropSync?.('timezone')
   })
 
   applyDateUtilsZone(dateUtils, props.timezone, props.locale)
