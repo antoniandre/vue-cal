@@ -473,17 +473,11 @@ example(title="All Day Events" anchor="all-day-events")
 
 //- Example.
 example(title="Multiple Day Events" anchor="multiple-day-events")
-  template(#title)
-      | Multiple Day Events
-      .todo-tag.prod.d-iflex.ml2 COMING SOON
   template(#desc)
     p.
       Multiple day events work like a set of single day events linked together.#[br]
-      Deleting one of the day of a multiple day event, will also delete all the other days.#[br]
-      Updating the duration by dragging will also update on all the days.#[br]
-      Try to resize, rename and delete the events.#[br]You can also resize horizontally thanks to
-      the option #[code editableEvents.resizeX].
-    strong Drag &amp; drop is not available on multiple day events for now.
+      Dragging, resizing, renaming or deleting any day segment affects the whole event.#[br]
+      You can also resize horizontally across days with #[code editableEvents.resizeX].
 
     alert(tip).
       3 CSS classes are available to target the event first day, the last day and all the days in between:
@@ -494,7 +488,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
       :time-to="23 * 60"
       :views="['day', 'week']"
       hide-weekends
-      :editable-events="{ resizeX: true }"
+      :editable-events="{ drag: true, resizeX: true }"
       :events="events"&gt;
     &lt;/vue-cal&gt;
   template(#code-js).
@@ -528,7 +522,7 @@ example(title="Multiple Day Events" anchor="multiple-day-events")
     :views="{ day: {}, days: { cols: 5, rows: 1 }, week: {}, month: {} }"
     :dark="store.darkMode"
     events-count-on-year-view
-    :editable-events="{ resizeX: true }"
+    :editable-events="{ drag: true, resizeX: true }"
     :events="exMultipleDayEvents.events"
     @ready="({ view }) => view.scrollToCurrentTime()"
     style="height: 506px")

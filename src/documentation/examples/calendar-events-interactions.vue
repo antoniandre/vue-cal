@@ -513,10 +513,10 @@ example(title="Event Drag & Drop" anchor="drag-and-drop")
   template(#desc)
     .todo-tag.d-iflex FINISH THIS EXAMPLE - DISABLE A DAY
     p.
-      The drag &amp; drop functionality is available for single-day foreground events only and is powered by
-      the native HTML5 drag &amp; drop API (widely supports touch devices).#[br]
+      The drag &amp; drop functionality is powered by the native HTML5 drag &amp; drop API (widely supports
+      touch devices).#[br]
       It allows you to move an event from one cell to another, or from an external source to the calendar
-      and vice-versa.
+      and vice-versa. Multi-day events are supported — the entire span shifts proportionally to the drop position.
     .title5.mt4 Good to Know:
     ul
       li.mt2.
