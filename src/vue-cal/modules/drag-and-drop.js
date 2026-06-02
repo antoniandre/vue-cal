@@ -19,6 +19,14 @@ const dragging = reactive({
   toVueCal: null
 })
 
+/**
+ * Shift an event's start and end by the same delta in ms (pure, exported for tests).
+ */
+export const shiftEventRangeByDelta = (start, end, deltaMs) => ({
+  start: new Date(start.getTime() + deltaMs),
+  end: new Date(end.getTime() + deltaMs)
+})
+
 export function useDragAndDrop (vuecal) {
   const { config, view, eventsManager, emit, uid: vuecalUid, dateUtils } = vuecal
 
@@ -55,23 +63,35 @@ export function useDragAndDrop (vuecal) {
    * @param {Date} cellDate The hovered cell starting date.
    */
   const computeNewEventStartEnd = (e, transferData, cellDate) => {
-    // If no duration calculate it from event end - event start
-    // before we modify the start and end.
-    const duration = transferData.duration || deltaMinutes(transferData.start, transferData.end) || config.timeStep
+    const { start: origStart, end: origEnd } = transferData
 
-    // Force the start of the event at previous midnight minimum.
+    // Multi-day: shift the whole span by (cursor drop position – cursor grab position).
+    if (config.multidayEvents && origStart && origEnd && dateUtils.spansMultipleDays(origStart, origEnd)) {
+      const { clientX, clientY } = e.touches?.[0] || e
+      const { top, left, width } = e.currentTarget.getBoundingClientRect()
+      const rawPercent = config.horizontal
+        ? (clientX - left) * 100 / width
+        : pxToPercentage(clientY - top, e.currentTarget)
+      let dropMinutes = Math.max(percentageToMinutes(rawPercent, config), 0)
+      if (config.snapToInterval) {
+        const plusHalf = dropMinutes + config.snapToInterval / 2
+        dropMinutes = plusHalf - (plusHalf % config.snapToInterval)
+      }
+      const dropAnchorMs = dateUtils.instantFromZonedMinutes(cellDate, dropMinutes).getTime()
+      const grabAnchorMs = parseInt(e.dataTransfer.getData('grab-anchor-ms')) || origStart.getTime()
+      return shiftEventRangeByDelta(origStart, origEnd, dropAnchorMs - grabAnchorMs)
+    }
+
+    // Single-day: place event start at cursor minus in-event grab offset, cap end to same day.
+    const duration = transferData.duration || deltaMinutes(origStart, origEnd) || config.timeStep
     let startTimeMinutes = Math.max(getEventStart(e), 0)
-
-    // On drop, snap to time every X minutes if the option is on.
     if (config.snapToInterval) {
       const plusHalfSnapTime = startTimeMinutes + config.snapToInterval / 2
       startTimeMinutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
     }
-
     const start = dateUtils.instantFromZonedMinutes(cellDate, startTimeMinutes)
     const endTimeMinutes = Math.min(startTimeMinutes + duration, 24 * 60)
     const end = dateUtils.instantFromZonedMinutes(cellDate, endTimeMinutes)
-
     return { start, end }
   }
 
@@ -114,6 +134,18 @@ export function useDragAndDrop (vuecal) {
       // when later dropping the event, we need to subtract the cursor position in the event.
       // Use offsetX for horizontal layout, offsetY for vertical.
       e.dataTransfer.setData('cursor-grab-at', config.horizontal ? e.offsetX : e.offsetY) // In pixels.
+      // For multi-day events store the cursor's absolute time so the whole span can be shifted on drop.
+      if (event._.multiday) {
+        const cellEl = e.target.closest('.vuecal__cell')
+        if (cellEl?.dataset.start) {
+          const cellDate = new Date(parseInt(cellEl.dataset.start))
+          const { top, left, width } = cellEl.getBoundingClientRect()
+          const raw = config.horizontal
+            ? (e.clientX - left) * 100 / width
+            : pxToPercentage(e.clientY - top, cellEl)
+          e.dataTransfer.setData('grab-anchor-ms', dateUtils.instantFromZonedMinutes(cellDate, Math.max(percentageToMinutes(raw, config), 0)).getTime())
+        }
+      }
     }
     catch (err) {
       console.warn('Vue Cal: Failed to set drag data:', err)
@@ -282,7 +314,13 @@ export function useDragAndDrop (vuecal) {
     let event
     let newStart
     let newEnd
-    if (allDay) {
+    if (allDay && config.multidayEvents && !incomingEvent.allDay &&
+        incomingEvent.start && incomingEvent.end && dateUtils.spansMultipleDays(incomingEvent.start, incomingEvent.end)) {
+      // Timed multiday dropped on all-day bar: shift span to the drop day, preserve duration.
+      newStart = new Date(cell.start)
+      newEnd = new Date(newStart.getTime() + (incomingEvent.end.getTime() - incomingEvent.start.getTime()))
+    }
+    else if (allDay) {
       newStart = new Date(cell.start)
       newEnd = new Date(cell.end)
     }

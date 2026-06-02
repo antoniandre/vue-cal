@@ -646,7 +646,8 @@ export const useEvents = vuecal => {
       minutes = plusHalfSnapTime - (plusHalfSnapTime % config.snapToInterval)
     }
 
-    let newStart = event.start
+    // Always anchor to the immutable resize start (never event.start, which mutates on swap).
+    let newStart = resizeState.resizeStartDate
     let newEnd = dateUtils.instantFromZonedMinutes(cellStart, minutes)
 
     // If the event is resizing horizontally by the user dragging and crossing a cell,
