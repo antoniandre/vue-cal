@@ -81,4 +81,24 @@ describe('events-sync', () => {
     assert.equal(target[0].title, 'A')
   })
 
+  it('replaces snapshot when incoming events have no public id', () => {
+    const old = { title: 'Old', start: 1, end: 2, _: { id: 1 } }
+    const target = [old]
+    const incoming = [{ title: 'New', start: 3, end: 4 }]
+    const r = syncEventsFromProp(target, incoming, {})
+    assert.equal(r.mode, 'replace')
+    assert.equal(target.length, 1)
+    assert.equal(target[0].title, 'New')
+    assert.equal(r.removed.length, 1)
+    assert.equal(r.removed[0], old)
+  })
+
+  it('does not accumulate orphans when prop returns new objects without id', () => {
+    const target = []
+    syncEventsFromProp(target, [{ title: 'A', start: 1, end: 2 }], {})
+    syncEventsFromProp(target, [{ title: 'B', start: 3, end: 4 }], {})
+    assert.equal(target.length, 1)
+    assert.equal(target[0].title, 'B')
+  })
+
 })
