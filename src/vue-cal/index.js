@@ -27,6 +27,7 @@ export const {
   isToday,
   isSameDate,
   spansMultipleDays,
+  exclusiveEndLastDay,
   isInRange,
   isLeapYear,
   getPreviousFirstDayOfWeek,

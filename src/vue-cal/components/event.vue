@@ -125,17 +125,13 @@ const classes = computed(() => {
 
 const eventStartsInThisCell = computed(() => {
   const event = props.event
-  if (event._.multiday) {
-    return dateUtils.startOfZonedDay(event.start).getTime() === props.cellStart.getTime()
-  }
+  if (event._.multiday) return dateUtils.isSameDate(event.start, props.cellStart)
   return true
 })
 
 const eventEndsInThisCell = computed(() => {
   const event = props.event
-  if (event._.multiday) {
-    return dateUtils.isSameDate(new Date(new Date(event.end).setMilliseconds(-1)), props.cellEnd)
-  }
+  if (event._.multiday) return dateUtils.isSameDate(dateUtils.exclusiveEndLastDay(event.end), props.cellStart)
   return true
 })
 

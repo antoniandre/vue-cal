@@ -1,8 +1,8 @@
-import { computed, reactive, shallowRef, triggerRef } from 'vue'
+import { computed, reactive } from 'vue'
 import { percentageToMinutes } from '../utils/conversions'
 import { clampResizeProposedRange, eventRangeViolatesAllowEvents } from '../utils/special-hours-allow-events'
 import { sanitizeEventPartial, incomingEventChanged } from './events-sync'
-import { createEventsIndex, rebuildEventsIndex, addOrUpdateEventInIndex, removeEventFromIndex } from './events-index'
+import { useEventsIndex } from './events-index'
 
 /**
  * useEvents is a composable function that manages events for the Vue Cal component.
@@ -14,25 +14,8 @@ import { createEventsIndex, rebuildEventsIndex, addOrUpdateEventInIndex, removeE
 export const useEvents = vuecal => {
   const { dateUtils, config } = vuecal
   let uid = 0 // Internal unique ID events counter.
-  const eventsIndex = shallowRef(createEventsIndex())
-  const events = computed(() => eventsIndex.value)
-  const multidayWarned = { value: false }
 
   const devWarn = import.meta.env.DEV ? msg => console.warn(msg) : null
-
-  const getIndexCtx = () => ({
-    config,
-    dateUtils,
-    multidayWarned,
-    processEventForIndex
-  })
-
-  const rebuildIndex = () => {
-    rebuildEventsIndex(eventsIndex.value, config.events, getIndexCtx())
-    triggerRef(eventsIndex)
-  }
-
-  const touchEventsIndex = () => triggerRef(eventsIndex)
 
   const normalizeInstantSeconds = (date, roundEnd59 = false) => {
     if (dateUtils.hasTimeZone()) {
@@ -85,92 +68,6 @@ export const useEvents = vuecal => {
       return false
     }
 
-    return true
-  }
-
-  vuecal.isIncomingEventChanged = (target, inc) => incomingEventChanged(target, inc, {
-    isDatesChanged: incomingDatesChanged
-  })
-
-  const emitEventsChange = () => vuecal.emit('update:events', config.events)
-
-  const resolveEventTarget = target => {
-    if (!target) return undefined
-    if (typeof target === 'number' || (typeof target === 'string' && target !== '' && !isNaN(target))) {
-      const n = +target
-      return config.events.find(e => e._?.id === n) ||
-        config.events.find(e => String(e.id) === String(target))
-    }
-    if (typeof target === 'object') {
-      if (target._?.id) {
-        const byInternal = events.value.byId[target._.id]
-        if (byInternal) return byInternal
-        return config.events.find(e => e._?.id === target._.id)
-      }
-      if (target.id !== undefined && target.id !== null && target.id !== '')
-        return config.events.find(e => String(e.id) === String(target.id))
-      if (config.events.includes(target)) return target
-      const entries = Object.entries(target)
-      if (entries.length) {
-        const [criteriaKey, criteriaValue] = entries[0]
-        return config.events.find(event => event[criteriaKey] === criteriaValue)
-      }
-    }
-    return undefined
-  }
-
-  function updateEvent(target, partial, { emit = true } = {}) {
-    const event = resolveEventTarget(target)
-    if (!event) {
-      console.warn('Vue Cal: Cannot update unknown event.', target)
-      return false
-    }
-
-    const clean = sanitizeEventPartial(partial, { warn: devWarn })
-    const oldStartFormatted = event._.startFormatted
-    const savedStart = event.start
-    const savedEnd = event.end
-
-    const patch = { ...clean }
-    if (patch.start !== undefined) {
-      patch.start = typeof patch.start === 'string' ? dateUtils.stringToDate(patch.start) : new Date(patch.start)
-    }
-    if (patch.end !== undefined) {
-      patch.end = typeof patch.end === 'string' ? dateUtils.stringToDate(patch.end) : new Date(patch.end)
-    }
-
-    Object.assign(event, patch)
-    if (!normalizeEventDates(event)) {
-      event.start = savedStart
-      event.end = savedEnd
-      console.warn('Vue Cal: Invalid dates in event patch.', partial)
-      return false
-    }
-    injectMetaData(event)
-
-    addOrUpdateEventInIndex(eventsIndex.value, event, getIndexCtx(), oldStartFormatted)
-    touchEventsIndex()
-
-    if (emit) {
-      emitEventsChange()
-      vuecal.emit('event-updated', { event, partial: clean })
-    }
-    return event
-  }
-
-  function refreshEvents({ ids } = {}) {
-    if (!ids?.length) {
-      rebuildIndex()
-      return true
-    }
-    for (let i = 0; i < ids.length; i++) {
-      const event = resolveEventTarget(ids[i])
-      if (event && normalizeEventDates(event)) {
-        injectMetaData(event)
-        addOrUpdateEventInIndex(eventsIndex.value, event, getIndexCtx())
-        touchEventsIndex()
-      }
-    }
     return true
   }
 
@@ -271,7 +168,102 @@ export const useEvents = vuecal => {
     return true
   }
 
-  const processEventForIndex = event => ensureEventMethods(event)
+  const eventsIndexApi = useEventsIndex(vuecal, ensureEventMethods)
+  const eventsIndex = eventsIndexApi.index
+  const events = computed(() => eventsIndex.value)
+
+  const rebuildIndex = () => {
+    eventsIndexApi.rebuild()
+    eventsIndexApi.touch()
+  }
+
+  const touchEventsIndex = () => eventsIndexApi.touch()
+
+  vuecal.isIncomingEventChanged = (target, inc) => incomingEventChanged(target, inc, {
+    isDatesChanged: incomingDatesChanged
+  })
+
+  const emitEventsChange = () => vuecal.emit('update:events', config.events)
+
+  const resolveEventTarget = target => {
+    if (!target) return undefined
+    if (typeof target === 'number' || (typeof target === 'string' && target !== '' && !isNaN(target))) {
+      const n = +target
+      return config.events.find(e => e._?.id === n) ||
+        config.events.find(e => String(e.id) === String(target))
+    }
+    if (typeof target === 'object') {
+      if (target._?.id) {
+        const byInternal = events.value.byId[target._.id]
+        if (byInternal) return byInternal
+        return config.events.find(e => e._?.id === target._.id)
+      }
+      if (target.id !== undefined && target.id !== null && target.id !== '')
+        return config.events.find(e => String(e.id) === String(target.id))
+      if (config.events.includes(target)) return target
+      const entries = Object.entries(target)
+      if (entries.length) {
+        const [criteriaKey, criteriaValue] = entries[0]
+        return config.events.find(event => event[criteriaKey] === criteriaValue)
+      }
+    }
+    return undefined
+  }
+
+  function updateEvent(target, partial, { emit = true } = {}) {
+    const event = resolveEventTarget(target)
+    if (!event) {
+      console.warn('Vue Cal: Cannot update unknown event.', target)
+      return false
+    }
+
+    const clean = sanitizeEventPartial(partial, { warn: devWarn })
+    const oldStartFormatted = event._.startFormatted
+    const savedStart = event.start
+    const savedEnd = event.end
+
+    const patch = { ...clean }
+    if (patch.start !== undefined) {
+      patch.start = typeof patch.start === 'string' ? dateUtils.stringToDate(patch.start) : new Date(patch.start)
+    }
+    if (patch.end !== undefined) {
+      patch.end = typeof patch.end === 'string' ? dateUtils.stringToDate(patch.end) : new Date(patch.end)
+    }
+
+    Object.assign(event, patch)
+    if (!normalizeEventDates(event)) {
+      event.start = savedStart
+      event.end = savedEnd
+      console.warn('Vue Cal: Invalid dates in event patch.', partial)
+      return false
+    }
+    injectMetaData(event)
+
+    eventsIndexApi.addOrUpdate(event, oldStartFormatted)
+    touchEventsIndex()
+
+    if (emit) {
+      emitEventsChange()
+      vuecal.emit('event-updated', { event, partial: clean })
+    }
+    return event
+  }
+
+  function refreshEvents({ ids } = {}) {
+    if (!ids?.length) {
+      rebuildIndex()
+      return true
+    }
+    for (let i = 0; i < ids.length; i++) {
+      const event = resolveEventTarget(ids[i])
+      if (event && normalizeEventDates(event)) {
+        injectMetaData(event)
+        eventsIndexApi.addOrUpdate(event)
+        touchEventsIndex()
+      }
+    }
+    return true
+  }
 
   vuecal.onEventsPropSync = syncResult => {
     const mode = typeof syncResult === 'string' ? syncResult : syncResult?.mode
@@ -282,11 +274,11 @@ export const useEvents = vuecal => {
     if (mode === 'merge') {
       const changed = syncResult?.changed || []
       const removed = syncResult?.removed || []
-      for (let i = 0; i < removed.length; i++) removeEventFromIndex(eventsIndex.value, removed[i])
+      for (let i = 0; i < removed.length; i++) eventsIndexApi.remove(removed[i])
       for (let i = 0; i < changed.length; i++) {
-        const ev = changed[i]
-        const oldStart = ev._?.startFormatted
-        if (processEventForIndex(ev)) addOrUpdateEventInIndex(eventsIndex.value, ev, getIndexCtx(), oldStart)
+        const evt = changed[i]
+        const oldStart = evt._?.startFormatted
+        if (ensureEventMethods(evt)) eventsIndexApi.addOrUpdate(evt, oldStart)
       }
       if (changed.length || removed.length) touchEventsIndex()
     }
@@ -348,7 +340,7 @@ export const useEvents = vuecal => {
     newEvent._.fireCreated = true // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
     if (processEventForIndex(newEvent)) {
-      addOrUpdateEventInIndex(eventsIndex.value, newEvent, getIndexCtx())
+      eventsIndexApi.addOrUpdate(newEvent)
       touchEventsIndex()
     }
     emitEventsChange()
@@ -389,7 +381,7 @@ export const useEvents = vuecal => {
         // by default, and skip the stage 2. Stage 2 (for visual deletion) will stay on specific demand.
         else {
           config.events.splice(index, 1) // Remove the event from the source of truth.
-          removeEventFromIndex(eventsIndex.value, event)
+          eventsIndexApi.remove(event)
           touchEventsIndex()
           emitEventsChange()
         }
@@ -412,7 +404,7 @@ export const useEvents = vuecal => {
         // Removing the event from the source of truth causes a reactivity update cascade that rerenders
         // all the cells and sub-components. This is not a bug, but in most cases, not the ideal behavior.
         config.events.splice(index, 1) // Remove the event from the source of truth.
-        removeEventFromIndex(eventsIndex.value, event)
+        eventsIndexApi.remove(event)
         touchEventsIndex()
         emitEventsChange()
         vuecal.emit('event-delete', event)
@@ -538,6 +530,8 @@ export const useEvents = vuecal => {
       return eventsArray
     }
 
+    const seenIds = new Set()
+
     // If there are more than 100 events, we need to use a more efficient approach.
     // We'll use the byYear index to find events in the range.
     for (let year = startYear; year <= endYear; year++) {
@@ -571,7 +565,12 @@ export const useEvents = vuecal => {
             if (background === false && e.background) continue
             if (config.allDayEvents && ((allDay && !e.allDay) || (!allDay && e.allDay))) continue
             // Accept events that overlap the range.
-            if (e.start.getTime() < rangeEndTimestamp && e.end.getTime() > rangeStartTimestamp) eventsArray.push(e)
+            if (e.start.getTime() < rangeEndTimestamp && e.end.getTime() > rangeStartTimestamp) {
+              if (!seenIds.has(e._.id)) {
+                seenIds.add(e._.id)
+                eventsArray.push(e)
+              }
+            }
           }
         }
       }

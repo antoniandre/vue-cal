@@ -85,6 +85,15 @@ export function syncEventsFromProp(target, incoming, { warn = null, isChanged } 
 
   if (list === target) return empty
 
+  // Incoming snapshot has no public ids — replace in place (avoids orphan accumulation on each new array).
+  const allLackPublicId = list.every(ev => getPublicEventId(ev) === null)
+  if (allLackPublicId && (list.length > 0 || target.length > 0)) {
+    if (listsSameRefs(target, list)) return empty
+    const removed = target.slice()
+    target.splice(0, target.length, ...list)
+    return { mode: 'replace', changed: list.slice(), removed }
+  }
+
   if (target.length === 0) {
     target.splice(0, target.length, ...list)
     return { mode: 'replace', changed: list.slice(), removed: [] }

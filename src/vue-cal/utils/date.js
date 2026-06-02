@@ -430,6 +430,21 @@ export const useDateUtils = (initTexts, EnUs) => {
     return true
   }
 
+  /**
+   * At which zoned calendar day does this range end?
+   * Start of the last civil day included by a range ending at `end`.
+   * When `end` is exactly at a day's midnight (exclusive end), returns the previous day —
+   * same rule as spansMultipleDays / countDays.
+   */
+  const exclusiveEndLastDay = end => {
+    if (!isValid(end)) return console.warn(`Vue Cal: invalid date provided to \`exclusiveEndLastDay(end)\`: \`${end}\`.`)
+
+    const endMs = end.getTime()
+    const endDayStart = startOfZonedDay(end).getTime()
+    if (endMs <= endDayStart) return startOfZonedDay(addDays(end, -1))
+    return startOfZonedDay(end)
+  }
+
   const isInRange = (date, rangeStart, rangeEnd) => {
     if (!isValid(date)) return console.warn(`Vue Cal: invalid date provided to \`isInRange(date, rangeStart, rangeEnd)\`: \`${date}\`.`)
 
@@ -754,6 +769,7 @@ export const useDateUtils = (initTexts, EnUs) => {
     isToday,
     isSameDate,
     spansMultipleDays,
+    exclusiveEndLastDay,
     isInRange,
     isLeapYear,
     getPreviousFirstDayOfWeek,
