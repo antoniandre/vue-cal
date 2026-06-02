@@ -2,24 +2,22 @@
 h1.title1 Release Notes
 
 ul.history.ml2
-  li.minor
-    strong.version 5.1.0
+  li.major
+    strong.version.op10 5.1.0 - First Stable v5 Release 🚀
     ul
-      li Added #[code timezone] prop (IANA display zone). Grid, labels, and positioning use the zone; emitted events stay #[code Date] instants.
-      li Zone-less date strings are interpreted in the display zone when #[code timezone] is set. #[code allDay] events use calendar dates.
-
-  li.patch
-    strong.version 5.0.1-rc.47
-    ul
-      li.
-        #[strong New:] #[code event.patch(partial)] on each event — update one event in place (ideal after an API save or in custom event UI).
-      li #[strong New:] #[code view.updateEvent()] and #[code view.refreshEvents()] on the view object.
-      li #[strong New:] Incremental events index — targeted add/update/remove without rebuilding the whole grid.
-      li.
-        #[strong Improved:] #[code :events] / #[code v-model:events] merge by #[code id] — refetching a full list no longer flashes the whole calendar when ids are stable.
-      li #[strong Improved:] #[code update:events] is emitted when the calendar creates, updates, deletes, drags, or resizes events.
-      li #[strong New:] #[code event-updated] emit after #[code event.patch] or #[code view.updateEvent].
-      li See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
+      li
+        strong New timezone support
+        ul
+          li Added #[code timezone] prop (IANA display zone). Grid, labels, and positioning use the zone; emitted events stay #[code Date] instants.
+          li Zone-less date strings are interpreted in the display zone when #[code timezone] is set. #[code allDay] events use calendar dates.
+      li
+        strong New event merging strategy
+        ul
+          li In-place updates: #[code event.patch(partial)], #[code view.updateEvent()], #[code view.refreshEvents()] (API saves, custom event UI).
+          li Incremental events index — add/update/remove without rebuilding the grid.
+          li #[code :events] / #[code v-model:events] merge by #[code id] on refetch (no flash when ids are stable). #[code update:events] on create/edit/delete/drag/resize; #[code event-updated] after #[code patch] / #[code updateEvent].
+          li See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
+      li Completed feature: Drag &amp; drop on multi-day events now preserves the full span — dropping any segment shifts the whole event without truncation.
 
   li.patch
     strong.version 5.0.1-rc.46
