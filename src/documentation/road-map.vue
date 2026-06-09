@@ -15,6 +15,8 @@ ul.kanban
   li.kanban__column.kanban__column--doing
     .title 🚧 Doing
     .w-flex.column.gap1.pa1
+      .task Support timezones
+      .task #[code event.patch()] &amp; smarter API #[code events] merge
       .task Resize Multiple day events on touch devices
 
   li.kanban__column.kanban__column--done.xs-hide

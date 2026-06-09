@@ -49,7 +49,7 @@
     "build-bundle": "BUNDLE=true vite build && node scripts/emit-i18n-dist.mjs && cp src/types/vue-cal.ts dist/vue-cal.d.ts",
     "preview": "vite preview --base /vue-cal/",
     "lint": "vite lint",
-    "publish-doc": "npm run build && npm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag",
+    "publish-doc": "pnpm run build && pnpm run build-bundle && git add . && git commit -m 'Publish documentation on Github.' && git push && git push --tag",
     "test:e2e": "cypress open",
     "test:e2e:headless": "cypress run",
     "test:component": "cypress open --component",
