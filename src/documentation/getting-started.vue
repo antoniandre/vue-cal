@@ -11,6 +11,12 @@ ul.ml4
     .w-flex.align-center.mt2.xs-column.xs-align-start
       ssh-pre.my0(language="shell" :dark="store.darkMode") npm i vue-cal@next
 
+    p.mt4.mb0.
+      The first v5 #[strong stable] release is almost here — timezone support, #[code event.patch()],
+      and smarter API-driven event updates. See the #[router-link(to="/release-notes") Release Notes] for details.<br>
+      Building a full product? #[a(href="https://planisto.io/coming-soon" target="_blank") Planisto.io]
+      (scheduling backend) pairs with Vue Cal from the same author.
+
     p.mt6.mb3 Then import Vue Cal in your Vue component and use it.
     .w-flex.gap6.smd-column.wrap
       w-tabs.w-flex.column.bdrs2(:items="2" content-class="pa0 fill-height")

@@ -1,6 +1,17 @@
 <template lang="pug">
 h1.title1 Release Notes
 
+alert.mb6(success)
+  strong Vue Cal 5 stable is on the way!
+  ul.mt2.mb2
+    li Timezone support
+    li #[code event.patch()] for surgical event updates from your API
+    li Smarter #[code events] prop merges — re-render only what changed when possible
+  p.mb0
+    | Still on #[code vue-cal@next] until stable ships. Need a scheduling backend?
+    a.ml1(href="https://planisto.io/coming-soon" target="_blank") Planisto.io
+    |  is coming soon too — built on Vue Cal by the same author.
+
 ul.history.ml2
   li.patch
     strong.version 5.0.1-rc.46

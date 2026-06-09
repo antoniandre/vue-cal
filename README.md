@@ -8,7 +8,7 @@
 
 # Vue Cal v5 - A Flexible and Beautiful Vue 3 Calendar 📅✨
 
-Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable.
+Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features, it's **highly customizable**, **elegant**, and designed to fit all kinds of scheduling needs. Whether you’re building a personal planner, a booking system, or a productivity tool, Vue Cal is here to make your job easier and more enjoyable. Need the backend too? **[Planisto](https://planisto.io/coming-soon)** is the scheduling infrastructure built by the same author, always powered by the latest Vue Cal.
 
 ---
 
@@ -22,17 +22,19 @@ Vue Cal is your ultimate Vue 3 calendar solution! Packed with powerful features,
 
 ___
 
-## 🚀 v5 is Here! A New Era Begins
+## 🎉 First stable release — coming soon
 
-The long-awaited v5 is now officially released! This version has been rebuilt from the ground up, bringing powerful new features, performance improvements, and a solid foundation for future growth.
+**Vue Cal 5’s first stable release is almost here — and it’s a big one.**
 
-Every line of code has been carefully crafted to maintain the highest standards, ensuring reliability, flexibility, and ease of use for our community.
+We’re putting the finishing touches on v5 stable after an incredible RC run. Alongside everything you already enjoy in the RC line:
 
-### 💡 Your Support Fuels the Future
+- **Timezone support** — schedule confidently across regions without the calendar fighting your clock.
+- **`event.patch()`** — update a single event in place instead of replacing the whole list. Ideal when your API streams changes and you want the UI to stay snappy.
+- **Smarter API-driven updates** — when your `events` array refreshes, Vue Cal merges by `id` and only re-renders what actually changed whenever it can.
 
-🌟 Whether you’re using this project for a hobby, a commercial product, or to explore new technologies, your support makes a huge difference! Sponsorships help us continue improving, refining documentation, and ensuring long-term stability. 🚀
+Keep using `vue-cal@next` today; stable lands on npm when the timezone work merges.
 
-Let me know if you’d like any tweaks! 🎉
+**Love Vue Cal?** If it powers your product, side project, or dream calendar UI, [sponsoring on GitHub](https://github.com/sponsors/antoniandre) genuinely helps us ship faster, polish docs, and keep the project free for everyone. Every bit counts — thank you!
 
 ---
 
@@ -51,9 +53,19 @@ Experience Vue Cal in action or dive into the docs for setup instructions and AP
 
 ---
 
+## 🗓️ Need a backend for your Vue Cal integration?
+
+Vue Cal handles the UI. **[Planisto](https://planisto.io/coming-soon)** handles everything behind it — REST API, event storage, team management, booking engine, and embeds — built by the same author, always running the latest Vue Cal.
+
+Because Planisto is maintained by the same developer, Vue Cal improvements land in Planisto automatically. And the other way around: features Planisto users need get built back into Vue Cal for everyone.
+
+> [planisto.io/coming-soon](https://planisto.io/coming-soon) — coming soon. Get notified when we launch.
+
+---
+
 ## 📦 Installation
 
-Install the latest prerelease of Vue Cal V5 with your favorite package manager:
+Install the latest prerelease of Vue Cal V5 with your favorite package manager (stable follows the upcoming timezone release):
 
 ```bash
 npm i vue-cal@next
@@ -68,6 +80,8 @@ With over **1.2k stars** on GitHub and trusted by developers around the globe, V
 ---
 
 ## 🤝 Support the Project
+
+We’re racing toward v5 stable — timezone support, `event.patch()`, and sharper API-driven rendering. Your sponsorship helps us cross the finish line.
 
 ### **Why Sponsor?** 💛
 
