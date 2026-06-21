@@ -638,7 +638,10 @@ export const useView = ({ config, dateUtils, emit, texts, eventsManager }, vueca
   // ------------------------------------------------------
 
   // Array of IDs inside an object indexed by cell dates.
-  const events = computed(() => eventsManager.getViewEvents(cellDates.value))
+  const events = computed(() => {
+    void eventsManager.eventsRevision.value
+    return eventsManager.getViewEvents(cellDates.value)
+  })
 
   const createEvent = eventsManager.createEvent
 

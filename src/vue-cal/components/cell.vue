@@ -297,6 +297,9 @@ const formattedCellDate = computed(() => {
 
 const cellEvents = computed(() => {
   if (config.datePicker) return []
+  // Force a re-evaluation of the cell events when the events revision changes.
+  void eventsManager.eventsRevision.value
+
   return eventsManager.getEventsInRange(
     props.start,
     props.end,

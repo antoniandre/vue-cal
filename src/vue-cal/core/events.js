@@ -1,4 +1,4 @@
-import { computed, reactive } from 'vue'
+import { computed, reactive, ref } from 'vue'
 import { percentageToMinutes } from '../utils/conversions'
 import { clampResizeProposedRange, eventRangeViolatesAllowEvents } from '../utils/special-hours-allow-events'
 import { sanitizeEventPartial, incomingEventChanged } from './events-sync'
@@ -171,13 +171,16 @@ export const useEvents = vuecal => {
   const eventsIndexApi = useEventsIndex(vuecal, ensureEventMethods)
   const eventsIndex = eventsIndexApi.index
   const events = computed(() => eventsIndex.value)
-
+  const eventsRevision = ref(0) // cells void this to bust their computed cache on any index change
   const rebuildIndex = () => {
-    eventsIndexApi.rebuild()
-    eventsIndexApi.touch()
+    eventsIndexApi.rebuild() // assigns eventsIndex.value → already triggers the shallowRef
+    eventsRevision.value++
   }
 
-  const touchEventsIndex = () => eventsIndexApi.touch()
+  const touchEventsIndex = () => {
+    eventsIndexApi.touch()
+    eventsRevision.value++
+  }
 
   vuecal.isIncomingEventChanged = (target, inc) => incomingEventChanged(target, inc, {
     isDatesChanged: incomingDatesChanged
@@ -883,6 +886,7 @@ export const useEvents = vuecal => {
 
   return {
     events,
+    eventsRevision,
     resizeState,
     getEvent,
     getViewEvents,

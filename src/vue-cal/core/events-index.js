@@ -122,12 +122,7 @@ export const useEventsIndex = (vuecal, prepareEvent) => {
    * Full rebuild of the events index from config.events.
    */
   const rebuild = (eventsArray = config.events) => {
-    const index = eventsIndex.value
-    index.byId = {}
-    index.byDate = {}
-    index.byYear = {}
-    index.multiday = []
-    index.recurring = []
+    const index = createEventsIndex()
     multidayWarned = false
 
     const sorted = eventsArray.slice().sort((a, b) => (a.start < b.start ? -1 : 1))
@@ -136,6 +131,8 @@ export const useEventsIndex = (vuecal, prepareEvent) => {
       if (!prepareEvent(event)) continue
       indexOneEvent(index, event)
     }
+
+    eventsIndex.value = index
   }
 
   /**

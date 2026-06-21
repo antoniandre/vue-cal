@@ -1,4 +1,4 @@
-import { reactive } from 'vue'
+import { markRaw, reactive } from 'vue'
 import { defaults, useConfig } from './config'
 import { useDragAndDrop } from '../modules/drag-and-drop'
 import { useDateUtils } from '../utils/date'
@@ -59,8 +59,9 @@ export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
 
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts), EnUs)
   state.config = useConfig(state, props, attrs)
-  state.eventsManager = useEvents(state)
-  state.view = useView(state, vuecalEl)
+  // markRaw: reactive() would unwrap refs inside composables and break cell invalidation.
+  state.eventsManager = markRaw(useEvents(state))
+  state.view = markRaw(useView(state, vuecalEl))
   state.dnd = useDragAndDrop(state)
 
   return state
