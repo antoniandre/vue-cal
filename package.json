@@ -56,24 +56,24 @@
     "test:all": "cypress run --component && cypress run"
   },
   "devDependencies": {
-    "@babel/core": "^7.29.0",
-    "@babel/eslint-parser": "^7.28.6",
+    "@babel/core": "^7.29.7",
+    "@babel/eslint-parser": "^7.29.7",
     "@mdi/font": "^7.4.47",
     "@vitejs/plugin-vue": "^5.2.4",
-    "autoprefixer": "^10.5.0",
-    "cypress": "^15.14.2",
+    "autoprefixer": "^10.5.2",
+    "cypress": "^15.18.0",
     "eslint": "^8.57.1",
     "pinia": "^3.0.4",
-    "postcss": "^8.5.13",
+    "postcss": "^8.5.15",
     "pug": "^3.0.4",
-    "rollup": "^4.60.2",
-    "sass": "^1.99.0",
-    "simple-syntax-highlighter": "^3.1.1",
-    "vite": "^6.4.2",
+    "rollup": "^4.62.2",
+    "sass": "^1.101.0",
+    "simple-syntax-highlighter": "^3.2.0",
+    "vite": "^6.4.3",
     "vite-plugin-static-copy": "^2.3.2",
-    "vue": "^3.5.33",
+    "vue": "^3.5.38",
     "vue-router": "^4.6.4",
-    "wave-ui": "^4.0.2"
+    "wave-ui": "^4.2.5"
   },
   "peerDependencies": {
     "vue": "^3.5.11"
