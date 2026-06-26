@@ -59,9 +59,9 @@ export const useVueCal = ({ props, emit, attrs, vuecalEl, uid }) => {
 
   state.dateUtils = useDateUtils(Object.assign(defaults.texts, state.texts), EnUs)
   state.config = useConfig(state, props, attrs)
-  // markRaw: reactive() would unwrap refs inside composables and break cell invalidation.
+  // markRaw: reactive() would unwrap eventsRevision ref and break cell invalidation.
   state.eventsManager = markRaw(useEvents(state))
-  state.view = markRaw(useView(state, vuecalEl))
+  state.view = useView(state, vuecalEl)
   state.dnd = useDragAndDrop(state)
 
   return state
