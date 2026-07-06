@@ -282,7 +282,7 @@ const onMousedown = e => {
 // Register the DOM node within the event in order to emit `event-deleted` to the cell.
 onMounted(() => {
   const event = props.event
-  eventsManager.ensureEventMethods(event)
+  eventsManager.prepareEvent(event)
   event._.register(eventEl.value)
 })
 

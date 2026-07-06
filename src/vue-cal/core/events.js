@@ -161,14 +161,14 @@ export const useEvents = vuecal => {
     }
   }
 
-  const ensureEventMethods = event => {
+  const prepareEvent = event => {
     if (!event) return false
     if (!normalizeEventDates(event)) return false
     injectMetaData(event)
     return true
   }
 
-  const eventsIndexApi = useEventsIndex(vuecal, ensureEventMethods)
+  const eventsIndexApi = useEventsIndex(vuecal, prepareEvent)
   const eventsIndex = eventsIndexApi.index
   const events = computed(() => eventsIndex.value)
   const eventsRevision = ref(0) // cells void this to bust their computed cache on any index change
@@ -281,7 +281,7 @@ export const useEvents = vuecal => {
       for (let i = 0; i < changed.length; i++) {
         const evt = changed[i]
         const oldStart = evt._?.startFormatted
-        if (ensureEventMethods(evt)) eventsIndexApi.addOrUpdate(evt, oldStart)
+        if (prepareEvent(evt)) eventsIndexApi.addOrUpdate(evt, oldStart)
       }
       if (changed.length || removed.length) touchEventsIndex()
     }
@@ -342,7 +342,7 @@ export const useEvents = vuecal => {
 
     newEvent._.fireCreated = true // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
-    if (processEventForIndex(newEvent)) {
+    if (prepareEvent(newEvent)) {
       eventsIndexApi.addOrUpdate(newEvent)
       touchEventsIndex()
     }
@@ -897,7 +897,7 @@ export const useEvents = vuecal => {
     updateEvent,
     refreshEvents,
     emitEventsChange,
-    ensureEventMethods,
+    prepareEvent,
     isEventInRange,
     handleEventResize
   }
