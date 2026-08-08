@@ -342,6 +342,15 @@ export const useEvents = vuecal => {
 
     newEvent._.fireCreated = true // Flag to fire the 'event-created' event on first mounted.
     config.events.push(newEvent) // Add the new event to the source of truth.
+    // `config.events` is a deep-reactive array (`reactive([...])`): pushing a plain object into it
+    // does NOT make our `newEvent` closure variable reactive — Vue only wraps it in a reactive proxy
+    // when read back *through* the array. Re-read it here so the index (and therefore `props.event`
+    // in event.vue) stores that proxy, not the raw object. Otherwise direct mutations during a
+    // resize/drag gesture (`event._.startMinutes = ...` in refreshEventTimeMeta, done every mousemove
+    // for performance, without an explicit eventsRevision bump) are invisible to the `styles` computed
+    // until something else forces a recompute (e.g. our own post-save patch) — i.e. no live visual
+    // feedback while dragging/resizing a just-created event, only a snap on release.
+    newEvent = config.events[config.events.length - 1]
     if (prepareEvent(newEvent)) {
       eventsIndexApi.addOrUpdate(newEvent)
       touchEventsIndex()
