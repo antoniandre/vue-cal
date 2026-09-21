@@ -73,28 +73,40 @@ export const useEvents = vuecal => {
         }
         else events.multiday.push(event._.id)
 
-        // @todo: handle multiday events. For now, index the event by its start date.
+        // Index the event by its start date in byDate, and by every day it spans in byYear.
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
         events.byDate[event._.startFormatted].push(event._.id)
+
+        const lastDay = new Date(event.end.getTime() - 1).setHours(0, 0, 0, 0)
+        const date = new Date(event.start)
+        date.setHours(0, 0, 0, 0)
+        for (; date.getTime() <= lastDay; date.setDate(date.getDate() + 1)) {
+          indexByYear(events, date, event._.id)
+        }
       }
       else {
         // Index this event by its start date.
         if (!events.byDate[event._.startFormatted]) events.byDate[event._.startFormatted] = []
         events.byDate[event._.startFormatted].push(event._.id)
 
-        // Index this event by its start year and month.
-        const year = event._.startFormatted.substring(0, 4)
-        const month = event._.startFormatted.substring(5, 7)
-        const day = event._.startFormatted.substring(8, 10)
-        if (!events.byYear[year]) events.byYear[year] = {}
-        if (!events.byYear[year][month]) events.byYear[year][month] = {}
-        if (!events.byYear[year][month][day]) events.byYear[year][month][day] = []
-        events.byYear[year][month][day].push(event._.id)
+        indexByYear(events, event.start, event._.id)
       }
     }
 
     return events
   })
+
+  // Index an event ID in the byYear map under the given date.
+  const indexByYear = (events, date, id) => {
+    const formatted = dateUtils.formatDate(date)
+    const year = formatted.substring(0, 4)
+    const month = formatted.substring(5, 7)
+    const day = formatted.substring(8, 10)
+    if (!events.byYear[year]) events.byYear[year] = {}
+    if (!events.byYear[year][month]) events.byYear[year][month] = {}
+    if (!events.byYear[year][month][day]) events.byYear[year][month][day] = []
+    events.byYear[year][month][day].push(id)
+  }
 
   // Normalize event dates to ensure they are valid Date objects and add formatted dates.
   const normalizeEventDates = event => {
@@ -428,6 +440,7 @@ export const useEvents = vuecal => {
     const rangeEndTimestamp = exactTime ? end.getTime() : new Date(end).setHours(23, 59, 59, 999)
 
     const excludeSet = new Set(excludeIds)
+    const seen = new Set()
     const eventsArray = []
 
     // If there are less than 100 events, we can use a simple loop to find events in the range.
@@ -471,7 +484,8 @@ export const useEvents = vuecal => {
           // Process events in this day in bulk.
           for (let i = 0; i < dayEventIds.length; i++) {
             const e = byId[dayEventIds[i]]
-            if (!e || excludeSet.has(e._.id)) continue
+            if (!e || excludeSet.has(e._.id) || seen.has(e._.id)) continue
+            seen.add(e._.id)
             if (schedule !== null && schedule !== e.schedule) continue
             if (background === false && e.background) continue
             if (config.allDayEvents && ((allDay && !e.allDay) || (!allDay && e.allDay))) continue
