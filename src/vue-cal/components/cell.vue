@@ -124,6 +124,7 @@ import { computed, inject, nextTick, onBeforeUnmount, onMounted, reactive, ref, 
 import { months, weekdays } from '@/vue-cal/core/config'
 import { minutesToPercentage, percentageToMinutes, pxToPercentage } from '@/vue-cal/utils/conversions'
 import { clampDragCreateDayMinutes } from '@/vue-cal/utils/special-hours-allow-events'
+import { computeOuterSegments } from '@/vue-cal/utils/special-hours-outer'
 import Event from './event.vue'
 
 const props = defineProps({
@@ -377,12 +378,20 @@ const getPositionedSpecialHours = ranges => {
   const { timeFrom, timeTo } = config
   const positioned = []
 
+  // Collect outer-flagged ranges separately; skip rendering them as normal ranges.
+  const outerRanges = []
+
   for (let i = 0; i < list.length; i++) {
     const range = list[i]
-    let { from, to, class: classes, label } = range
+    let { from, to, class: classes, label, outer } = range
 
     // Skip incorrect special hours or ranges completely outside the visible timeline.
     if (isNaN(from) || isNaN(to) || timeFrom >= to || timeTo <= from) continue
+
+    if (outer) {
+      outerRanges.push({ from, to, class: classes, label })
+      continue
+    }
 
     from = Math.max(timeFrom, from)
     to = Math.min(timeTo, to)
@@ -398,6 +407,24 @@ const getPositionedSpecialHours = ranges => {
       label,
       class: classes
     })
+  }
+
+  // Compute the complement of the union of outer ranges and push as extra items.
+  if (outerRanges.length) {
+    const outerConfig = outerRanges[0] // class/label from first outer range
+    const segments = computeOuterSegments(outerRanges, timeFrom, timeTo)
+    for (const seg of segments) {
+      const start = minutesToPercentage(seg.from, config)
+      const size = minutesToPercentage(seg.to, config) - start
+      positioned.push({
+        style: {
+          [isHzl ? 'left' : 'top']: `${start}%`,
+          [isHzl ? 'width' : 'height']: `${size}%`
+        },
+        label: outerConfig.label,
+        class: outerConfig.class || 'vuecal__special-hours--outer'
+      })
+    }
   }
 
   return positioned
@@ -853,6 +880,10 @@ onBeforeUnmount(async () => {
     top: 0;
     bottom: 0;
   }
+}
+
+.vuecal__special-hours--outer {
+  background-image: repeating-linear-gradient(-45deg, transparent, transparent 4px, rgba(0, 0, 0, .06) 4px, rgba(0, 0, 0, .06) 8px);
 }
 
 .vuecal__now-line {

@@ -39,7 +39,7 @@ export const weekdays = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat']
 const isSpecialHoursRange = value => {
   if (!value || typeof value !== 'object' || Array.isArray(value)) return false
   const hasCoords = 'from' in value || 'to' in value
-  return hasCoords && ('class' in value || 'label' in value || 'allowEvents' in value)
+  return hasCoords && ('class' in value || 'label' in value || 'allowEvents' in value || 'outer' in value)
 }
 
 const normalizeSpecialHoursRanges = ranges => {

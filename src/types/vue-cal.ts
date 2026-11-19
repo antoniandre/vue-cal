@@ -70,6 +70,8 @@ export interface VueCalSpecialHoursConfigs {
   label?: string
   /** When false, events may not overlap this range (create, drag-and-drop, resize). Omitted or true: no restriction from this segment. */
   allowEvents?: boolean
+  /** When true: paint the complement of this range (the time outside it) instead of the range itself. The class/label apply to the outer segments. */
+  outer?: boolean
 }
 
 /** Plain minute ranges derived from `allowEvents: false` segments; exposed on `config` from `@ready` (read-only, not a prop). */
