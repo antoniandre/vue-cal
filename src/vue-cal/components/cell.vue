@@ -376,6 +376,10 @@ const getPositionedSpecialHours = ranges => {
   const list = ranges || []
   const isHzl = config.horizontal
   const { timeFrom, timeTo } = config
+  // Hoist style keys and the percentage scale factor — reused for every segment.
+  const posKey = isHzl ? 'left' : 'top'
+  const sizeKey = isHzl ? 'width' : 'height'
+  const scale = 100 / (timeTo - timeFrom) // avoids recomputing the division inside minutesToPercentage
   const positioned = []
 
   // Collect outer-flagged ranges separately; skip rendering them as normal ranges.
@@ -389,21 +393,18 @@ const getPositionedSpecialHours = ranges => {
     if (isNaN(from) || isNaN(to) || timeFrom >= to || timeTo <= from) continue
 
     if (outer) {
-      outerRanges.push({ from, to, class: classes, label })
+      outerRanges.push(range) // pass original — computeOuterSegments only reads from/to
       continue
     }
 
     from = Math.max(timeFrom, from)
     to = Math.min(timeTo, to)
 
-    const start = minutesToPercentage(from, config)
-    const size = minutesToPercentage(to, config) - start
+    const start = (from - timeFrom) * scale
+    const size = (to - from) * scale
 
     positioned.push({
-      style: {
-        [isHzl ? 'left' : 'top']: `${start}%`,
-        [isHzl ? 'width' : 'height']: `${size}%`
-      },
+      style: { [posKey]: `${start}%`, [sizeKey]: `${size}%` },
       label,
       class: classes
     })
@@ -413,14 +414,12 @@ const getPositionedSpecialHours = ranges => {
   if (outerRanges.length) {
     const outerConfig = outerRanges[0] // class/label from first outer range
     const segments = computeOuterSegments(outerRanges, timeFrom, timeTo)
-    for (const seg of segments) {
-      const start = minutesToPercentage(seg.from, config)
-      const size = minutesToPercentage(seg.to, config) - start
+    for (let i = 0; i < segments.length; i++) {
+      const { from, to } = segments[i]
+      const start = (from - timeFrom) * scale
+      const size = (to - from) * scale
       positioned.push({
-        style: {
-          [isHzl ? 'left' : 'top']: `${start}%`,
-          [isHzl ? 'width' : 'height']: `${size}%`
-        },
+        style: { [posKey]: `${start}%`, [sizeKey]: `${size}%` },
         label: outerConfig.label,
         class: outerConfig.class || 'vuecal__special-hours--outer'
       })
