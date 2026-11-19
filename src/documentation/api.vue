@@ -786,6 +786,7 @@ w-accordion.mt2(
         a schedule id and override that day #[span.code default] special hours for that schedule only.#[br]
         A #[span.code label] can also be provided per special hour block, and styled via CSS.#[br]
         Optional #[span.code allowEvents]: set to #[span.code false] on a block to forbid timed events from overlapping that range (drag-and-drop, resize, and cell create are rejected; #[span.code createEvent] returns without adding). Omitted or #[span.code true] does not add that restriction.#[br]
+        Optional #[span.code outer]: set to #[span.code true] on a block to paint its complement instead — the time #[strong outside] that range (before it, between multiple such ranges, and after it). The #[span.code class] and #[span.code label] on that block apply to those outer segments. The built-in class #[span.code vuecal__special-hours--outer] (a subtle diagonal stripe) is used automatically when no #[span.code class] is provided.#[br]
         You can use the #[router-link(to="/api#props--business-hours") businessHours] prop as an alias for the same object shape when #[span.code specialHours] is empty.#[br]#[br]
 
       p.subtitle-1 Example for Wednesday: #[span.code :special-hours="specialHours"]
@@ -821,6 +822,29 @@ w-accordion.mt2(
                 ]
               }
             }
+          }
+        br
+        span.ml3 Painting the closed hours (outside the defined range):
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
+          // In the component's data. The range itself is not painted — only the outer
+          // segments (before 8am, after 6pm) are rendered with the given class.
+          specialHours: {
+            wed: { from: 8 * 60, to: 18 * 60, outer: true, class: 'closed' }
+          }
+        br
+        span.ml3 Multiple open ranges — outer paints all gaps:
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
+          specialHours: {
+            wed: [
+              { from: 8 * 60, to: 12 * 60, outer: true, class: 'closed' },
+              { from: 14 * 60, to: 18 * 60, outer: true, class: 'closed' }
+            ]
+          }
+        br
+        span.ml3 Omit #[span.code class] to use the built-in diagonal stripe pattern (#[span.code vuecal__special-hours--outer]):
+        ssh-pre.mt1.ml3(language="js" :dark="store.darkMode").
+          specialHours: {
+            wed: { from: 8 * 60, to: 18 * 60, outer: true }
           }
 
   w-accordion-item

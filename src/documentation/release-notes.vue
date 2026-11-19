@@ -28,6 +28,12 @@ ul.history.ml2
           li Incremental events index — add/update/remove without rebuilding the grid.
           li #[code :events] / #[code v-model:events] merge by #[code id] on refetch (no flash when ids are stable). #[code update:events] on create/edit/delete/drag/resize; #[code event-updated] after #[code patch] / #[code updateEvent].
           li See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
+      li
+        strong New #[code specialHours] #[code outer] flag
+        ul
+          li Set #[code outer: true] on a range to paint its complement — the time #[strong outside] the defined range — instead of the range itself. Useful for marking closed hours without painting the open ones.
+          li Gaps before, between, and after all #[code outer: true] ranges are computed automatically and rendered as extra #[code .vuecal__special-hours] elements.
+          li Provide a #[code class] and optional #[code label] on the same range object to style the outer segments. Omit #[code class] to use the built-in #[code vuecal__special-hours--outer] diagonal stripe pattern.
       li Completed feature: Drag &amp; drop on multi-day events now preserves the full span — dropping any segment shifts the whole event without truncation.
       li Fixed: Drag &amp; drop on month view now only moves the date; on year view only the month changes — clock time is always preserved on drop.
       li Fixed: Newly created events now respond live to drag and resize immediately — no snap-on-release after creation.

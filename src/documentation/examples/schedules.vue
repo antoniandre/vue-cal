@@ -10,6 +10,11 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
         p.mt3.
           Each weekday can contain a single block or an array of blocks.#[br]
           Each block can also carry a #[code label] that you can style freely with CSS.
+        p.mt3(v-if="exSpecialHours.variant === 'outerHours'").
+          Add #[code outer: true] to a range to paint its #[strong complement] instead — the time #[em outside] that range.#[br]
+          The defined ranges act as boundaries: before them, between them (gaps), and after them are rendered.#[br]
+          The #[code class] and #[code label] on the same block apply to those outer segments.#[br]
+          Omit #[code class] to use the built-in #[code vuecal__special-hours--outer] diagonal stripe.
       .w-flex.column.gap2.no-grow
         label Show
         w-radios(v-model="exSpecialHours.variant" :items="exSpecialHours.choices")
@@ -20,70 +25,86 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       :time-to="20 * 60"
       :special-hours="specialHours"
     /&gt;
-  template(#code-js v-if="exSpecialHours.variant === 'simpleBusinessHours'").
-    const specialHours = {
-      mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-      tue: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-      wed: [
-        { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
-        { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
-      ],
-      thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
-      fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
-    }
-  template(#code-js v-else).
-    const specialHours = {
-      mon: {
-        from: 8 * 60,
-        to: 17 * 60,
-        class: 'doctor-1',
-        label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
-      },
-      tue: {
-        from: 9 * 60,
-        to: 18 * 60,
-        class: 'doctor-2',
-        label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
-      },
-      wed: [
-        {
-          from: 8 * 60,
-          to: 12 * 60,
-          class: 'doctor-1',
-          label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Morning shift&lt;/em&gt;'
-        },
-        {
-          from: 14 * 60,
-          to: 19 * 60,
-          class: 'doctor-3',
-          label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Afternoon shift&lt;/em&gt;'
-        }
-      ],
-      thu: {
-        from: 8 * 60,
-        to: 17 * 60,
-        class: 'doctor-1',
-        label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
-      },
-      fri: {
-        from: 9 * 60,
-        to: 18 * 60,
-        class: 'doctor-3',
-        label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
-      },
-      sat: {
-        from: 9 * 60,
-        to: 18 * 60,
-        class: 'doctor-2',
-        label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
-      },
-      sun: {
-        from: 7 * 60,
-        to: 20 * 60,
-        class: 'closed',
-        label: '&lt;strong&gt;Closed&lt;/strong&gt;'
-      }
-    }
+  template(#code-js)
+    template(v-if="exSpecialHours.variant === 'simpleBusinessHours'")
+      | const specialHours = {
+      |   mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+      |   tue: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+      |   wed: [
+      |     { from: 9 * 60, to: 12 * 60, class: 'business-hours' },
+      |     { from: 14 * 60, to: 18 * 60, class: 'business-hours' }
+      |   ],
+      |   thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
+      |   fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+      | }
+    template(v-else-if="exSpecialHours.variant === 'outerHours'")
+      | // outer: true → paint the complement (everything OUTSIDE the defined range).
+      | // For fully closed days (sat/sun), just paint them directly.
+      | const specialHours = {
+      |   mon: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+      |   tue: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+      |   wed: [
+      |     { from: 9 * 60, to: 12 * 60, outer: true, class: 'closed-hours' },
+      |     { from: 14 * 60, to: 18 * 60, outer: true, class: 'closed-hours' }
+      |   ],
+      |   thu: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+      |   fri: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+      |   sat: { from: 7 * 60, to: 20 * 60, class: 'closed-hours' },
+      |   sun: { from: 7 * 60, to: 20 * 60, class: 'closed-hours' }
+      | }
+    template(v-else)
+      | const specialHours = {
+      |   mon: {
+      |     from: 8 * 60,
+      |     to: 17 * 60,
+      |     class: 'doctor-1',
+      |     label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
+      |   },
+      |   tue: {
+      |     from: 9 * 60,
+      |     to: 18 * 60,
+      |     class: 'doctor-2',
+      |     label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
+      |   },
+      |   wed: [
+      |     {
+      |       from: 8 * 60,
+      |       to: 12 * 60,
+      |       class: 'doctor-1',
+      |       label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Morning shift&lt;/em&gt;'
+      |     },
+      |     {
+      |       from: 14 * 60,
+      |       to: 19 * 60,
+      |       class: 'doctor-3',
+      |       label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Afternoon shift&lt;/em&gt;'
+      |     }
+      |   ],
+      |   thu: {
+      |     from: 8 * 60,
+      |     to: 17 * 60,
+      |     class: 'doctor-1',
+      |     label: '&lt;strong&gt;Doctor 1&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
+      |   },
+      |   fri: {
+      |     from: 9 * 60,
+      |     to: 18 * 60,
+      |     class: 'doctor-3',
+      |     label: '&lt;strong&gt;Doctor 3&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
+      |   },
+      |   sat: {
+      |     from: 9 * 60,
+      |     to: 18 * 60,
+      |     class: 'doctor-2',
+      |     label: '&lt;strong&gt;Doctor 2&lt;/strong&gt;&lt;br&gt;&lt;em&gt;Full day shift&lt;/em&gt;'
+      |   },
+      |   sun: {
+      |     from: 7 * 60,
+      |     to: 20 * 60,
+      |     class: 'closed',
+      |     label: '&lt;strong&gt;Closed&lt;/strong&gt;'
+      |   }
+      | }
   template(#code-css)
     template(v-if="exSpecialHours.variant === 'doctorHours'")
       | .vuecal__special-hours {
@@ -97,6 +118,11 @@ example(title="Special Hours (or Business Hours)" anchor="special-hours")
       |     color: hsl(27, 90%, 63%);
       |   }
       |   em {font-size: 0.9em;color: #999;line-height: 1.15;}
+      | }
+    template(v-else-if="exSpecialHours.variant === 'outerHours'")
+      | /* Closed hours segments rendered by outer: true */
+      | .closed-hours {
+      |   background: repeating-linear-gradient(-45deg, transparent 0 4px, rgba(0, 0, 0, .05) 4px 8px);
       | }
     template(v-else)
       | .business-hours {background-color: #00daff21;}
@@ -245,7 +271,8 @@ const exSpecialHours = reactive({
   variant: 'simpleBusinessHours',
   choices: [
     { value: 'simpleBusinessHours', label: 'Simple Business Hours' },
-    { value: 'doctorHours', label: 'Doctor Shifts' }
+    { value: 'doctorHours', label: 'Doctor Shifts' },
+    { value: 'outerHours', label: 'Outer / Closed Hours' }
   ],
   simpleBusinessHours: {
     mon: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
@@ -256,6 +283,18 @@ const exSpecialHours = reactive({
     ],
     thu: { from: 9 * 60, to: 18 * 60, class: 'business-hours' },
     fri: { from: 9 * 60, to: 18 * 60, class: 'business-hours' }
+  },
+  outerHours: {
+    mon: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+    tue: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+    wed: [
+      { from: 9 * 60, to: 12 * 60, outer: true, class: 'closed-hours' },
+      { from: 14 * 60, to: 18 * 60, outer: true, class: 'closed-hours' }
+    ],
+    thu: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+    fri: { from: 9 * 60, to: 18 * 60, outer: true, class: 'closed-hours' },
+    sat: { from: 7 * 60, to: 20 * 60, class: 'closed-hours' },
+    sun: { from: 7 * 60, to: 20 * 60, class: 'closed-hours' }
   },
   doctorHours: {
     mon: { from: 8 * 60, to: 17 * 60, class: 'doctor-1', label: '<strong>Doctor 1</strong><br><em>Full day shift</em>' },
@@ -447,6 +486,7 @@ const allowEventsDemoEvents = [
 .main--examples-schedules {
   .example--special-hours {
     .business-hours {background-color: #00daff21;}
+    .closed-hours {background: repeating-linear-gradient(-45deg, transparent 0 4px, rgba(0, 0, 0, .05) 4px 8px);}
 
     .vuecal__special-hours {
       text-align: center;
