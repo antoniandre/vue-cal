@@ -29,6 +29,8 @@ ul.history.ml2
           li #[code :events] / #[code v-model:events] merge by #[code id] on refetch (no flash when ids are stable). #[code update:events] on create/edit/delete/drag/resize; #[code event-updated] after #[code patch] / #[code updateEvent].
           li See #[router-link(to="/api#updating-events-from-your-app") Updating events from your app].
       li Completed feature: Drag &amp; drop on multi-day events now preserves the full span — dropping any segment shifts the whole event without truncation.
+      li Fixed: Drag &amp; drop on month view now only moves the date; on year view only the month changes — clock time is always preserved on drop.
+      li Fixed: Newly created events now respond live to drag and resize immediately — no snap-on-release after creation.
 
   li.patch
     strong.version 5.0.1-rc.46

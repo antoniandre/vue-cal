@@ -65,6 +65,34 @@ export function useDragAndDrop (vuecal) {
   const computeNewEventStartEnd = (e, transferData, cellDate) => {
     const { start: origStart, end: origEnd } = transferData
 
+    // Month/year cells have no time axis: patch only the date or month, never touch the clock time.
+    if ((view.isMonth || view.isYear) && origStart && origEnd) {
+      const parts = d => dateUtils.hasTimeZone() ? dateUtils.getZonedParts(d) : {
+        year: d.getFullYear(), month: d.getMonth() + 1, day: d.getDate(),
+        hour: d.getHours(), minute: d.getMinutes(), second: d.getSeconds()
+      }
+      const mk = p => dateUtils.zonedDateToInstant(p, true)
+      const dp = parts(cellDate)
+
+      if (view.isYear) {
+        // Patch the month only; clamp day if the target month is shorter.
+        const maxDay = new Date(dp.year, dp.month, 0).getDate()
+        const patch = d => { const p = parts(d); return mk({ ...p, year: dp.year, month: dp.month, day: Math.min(p.day, maxDay) }) }
+        return { start: patch(origStart), end: patch(origEnd) }
+      }
+
+      // Month view: shift all dates by the civil-day delta, keep clock times.
+      const srcMs = parseInt(e.dataTransfer?.getData('source-cell-start'))
+      const srcDate = Number.isFinite(srcMs) ? new Date(srcMs) : origStart
+      const delta = Math.round((dateUtils.startOfZonedDay(cellDate) - dateUtils.startOfZonedDay(srcDate)) / 86400000)
+      const shift = d => {
+        const p = parts(d)
+        const q = parts(dateUtils.addDays(dateUtils.startOfZonedDay(d), delta))
+        return mk({ ...p, year: q.year, month: q.month, day: q.day })
+      }
+      return { start: shift(origStart), end: shift(origEnd) }
+    }
+
     // Multi-day: shift the whole span by (cursor drop position – cursor grab position).
     if (config.multidayEvents && origStart && origEnd && dateUtils.spansMultipleDays(origStart, origEnd)) {
       const { clientX, clientY } = e.touches?.[0] || e
@@ -134,10 +162,11 @@ export function useDragAndDrop (vuecal) {
       // when later dropping the event, we need to subtract the cursor position in the event.
       // Use offsetX for horizontal layout, offsetY for vertical.
       e.dataTransfer.setData('cursor-grab-at', config.horizontal ? e.offsetX : e.offsetY) // In pixels.
-      // For multi-day events store the cursor's absolute time so the whole span can be shifted on drop.
-      if (event._.multiday) {
-        const cellEl = e.target.closest('.vuecal__cell')
-        if (cellEl?.dataset.start) {
+      const cellEl = e.target.closest('.vuecal__cell')
+      if (cellEl?.dataset.start) {
+        e.dataTransfer.setData('source-cell-start', cellEl.dataset.start)
+        // For multi-day events store the cursor's absolute time so the whole span can be shifted on drop.
+        if (event._.multiday) {
           const cellDate = new Date(parseInt(cellEl.dataset.start))
           const { top, left, width } = cellEl.getBoundingClientRect()
           const raw = config.horizontal
